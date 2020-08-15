@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         ANpcSpawn,
         IANpcInternal,
         ILoquiObjectSetter<ANpc>,
-        IEquatable<ANpc>,
-        IEqualsMask
+        IEquatable<ANpc>
     {
         #region Ctor
         protected ANpc()
@@ -305,7 +304,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => ANpcCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ANpcCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ANpcCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANpcCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANpcCommon.Instance.RemapLinks(this, mapping);
         public ANpc(FormKey formKey)
@@ -342,8 +341,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IANpcGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -362,7 +359,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IANpc :
         IANpcGetter,
         IANpcSpawn,
-        ILoquiObjectSetter<IANpcInternal>
+        ILoquiObjectSetter<IANpcInternal>,
+        ILinkedFormKeyContainer
     {
     }
 
@@ -376,7 +374,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IANpcGetter :
         IANpcSpawnGetter,
         ILoquiObject<IANpcGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => ANpc_Registration.Instance;
@@ -426,24 +424,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IANpcGetter item,
-            ANpc.Mask<bool?> checkMask)
-        {
-            return ((ANpcCommon)((IANpcGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static ANpc.Mask<bool> GetHasBeenSetMask(this IANpcGetter item)
-        {
-            var ret = new ANpc.Mask<bool>(false);
-            ((ANpcCommon)((IANpcGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -515,17 +495,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IANpcInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IANpcInternal item,
             MutagenFrame frame,
@@ -870,24 +839,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-        }
-        
-        public bool HasBeenSet(
-            IANpcGetter item,
-            ANpc.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IANpcGetter item,
-            ANpc.Mask<bool> mask)
-        {
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static ANpc_FieldIndex ConvertFieldIndex(ANpcSpawn_FieldIndex index)
@@ -1316,15 +1267,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IANpcGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => ANpcCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ANpcCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANpcCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANpcCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ANpcCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ANpcBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

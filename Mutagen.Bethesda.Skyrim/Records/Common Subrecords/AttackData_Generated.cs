@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class AttackData :
         IAttackData,
         ILoquiObjectSetter<AttackData>,
-        IEquatable<AttackData>,
-        IEqualsMask
+        IEquatable<AttackData>
     {
         #region Ctor
         public AttackData()
@@ -49,7 +48,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Spell
         public FormLink<ASpell> Spell { get; set; } = new FormLink<ASpell>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IASpellGetter> IAttackDataGetter.Spell => this.Spell;
+        FormLink<IASpellGetter> IAttackDataGetter.Spell => this.Spell.ToGetter<ASpell, IASpellGetter>();
         #endregion
         #region Flags
         public AttackData.Flag Flags { get; set; } = default;
@@ -66,7 +65,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region AttackType
         public FormLink<Keyword> AttackType { get; set; } = new FormLink<Keyword>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IKeywordGetter> IAttackDataGetter.AttackType => this.AttackType;
+        FormLink<IKeywordGetter> IAttackDataGetter.AttackType => this.AttackType.ToGetter<Keyword, IKeywordGetter>();
         #endregion
         #region Knockdown
         public Single Knockdown { get; set; } = default;
@@ -659,7 +658,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => AttackDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => AttackDataCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => AttackDataCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AttackDataCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AttackDataCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -679,14 +678,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static AttackData CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static AttackData CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -713,8 +704,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAttackDataGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -732,7 +721,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IAttackData :
         IAttackDataGetter,
-        ILoquiObjectSetter<IAttackData>
+        ILoquiObjectSetter<IAttackData>,
+        ILinkedFormKeyContainer
     {
         new Single DamageMult { get; set; }
         new Single Chance { get; set; }
@@ -750,7 +740,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IAttackDataGetter :
         ILoquiObject,
         ILoquiObject<IAttackDataGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -762,12 +752,12 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => AttackData_Registration.Instance;
         Single DamageMult { get; }
         Single Chance { get; }
-        IFormLink<IASpellGetter> Spell { get; }
+        FormLink<IASpellGetter> Spell { get; }
         AttackData.Flag Flags { get; }
         Single AttackAngle { get; }
         Single StrikeAngle { get; }
         Single Stagger { get; }
-        IFormLink<IKeywordGetter> AttackType { get; }
+        FormLink<IKeywordGetter> AttackType { get; }
         Single Knockdown { get; }
         Single RecoveryTime { get; }
         Single StaminaMult { get; }
@@ -817,24 +807,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IAttackDataGetter item,
-            AttackData.Mask<bool?> checkMask)
-        {
-            return ((AttackDataCommon)((IAttackDataGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static AttackData.Mask<bool> GetHasBeenSetMask(this IAttackDataGetter item)
-        {
-            var ret = new AttackData.Mask<bool>(false);
-            ((AttackDataCommon)((IAttackDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -929,17 +901,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IAttackData item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IAttackData item,
             MutagenFrame frame,
@@ -1391,7 +1352,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Spell ?? true)
             {
-                fg.AppendItem(item.Spell, "Spell");
+                fg.AppendItem(item.Spell.FormKey, "Spell");
             }
             if (printMask?.Flags ?? true)
             {
@@ -1411,7 +1372,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.AttackType ?? true)
             {
-                fg.AppendItem(item.AttackType, "AttackType");
+                fg.AppendItem(item.AttackType.FormKey, "AttackType");
             }
             if (printMask?.Knockdown ?? true)
             {
@@ -1425,30 +1386,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.StaminaMult, "StaminaMult");
             }
-        }
-        
-        public bool HasBeenSet(
-            IAttackDataGetter item,
-            AttackData.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IAttackDataGetter item,
-            AttackData.Mask<bool> mask)
-        {
-            mask.DamageMult = true;
-            mask.Chance = true;
-            mask.Spell = true;
-            mask.Flags = true;
-            mask.AttackAngle = true;
-            mask.StrikeAngle = true;
-            mask.Stagger = true;
-            mask.AttackType = true;
-            mask.Knockdown = true;
-            mask.RecoveryTime = true;
-            mask.StaminaMult = true;
         }
         
         #region Equals and Hash
@@ -1530,7 +1467,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AttackData_FieldIndex.Spell) ?? true))
             {
-                item.Spell = rhs.Spell.FormKey;
+                item.Spell = new FormLink<ASpell>(rhs.Spell.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)AttackData_FieldIndex.Flags) ?? true))
             {
@@ -1550,7 +1487,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AttackData_FieldIndex.AttackType) ?? true))
             {
-                item.AttackType = rhs.AttackType.FormKey;
+                item.AttackType = new FormLink<Keyword>(rhs.AttackType.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)AttackData_FieldIndex.Knockdown) ?? true))
             {
@@ -1751,12 +1688,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IAttackDataGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((AttackDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1788,15 +1726,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAttackDataGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => AttackDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => AttackDataCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AttackDataCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AttackDataCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => AttackDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => AttackDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1813,12 +1747,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public Single DamageMult => _data.Slice(0x0, 0x4).Float();
         public Single Chance => _data.Slice(0x4, 0x4).Float();
-        public IFormLink<IASpellGetter> Spell => new FormLink<IASpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
+        public FormLink<IASpellGetter> Spell => new FormLink<IASpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
         public AttackData.Flag Flags => (AttackData.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xC, 0x4));
         public Single AttackAngle => _data.Slice(0x10, 0x4).Float();
         public Single StrikeAngle => _data.Slice(0x14, 0x4).Float();
         public Single Stagger => _data.Slice(0x18, 0x4).Float();
-        public IFormLink<IKeywordGetter> AttackType => new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x1C, 0x4))));
+        public FormLink<IKeywordGetter> AttackType => new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x1C, 0x4))));
         public Single Knockdown => _data.Slice(0x20, 0x4).Float();
         public Single RecoveryTime => _data.Slice(0x24, 0x4).Float();
         public Single StaminaMult => _data.Slice(0x28, 0x4).Float();

@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ListGroup<T> :
         IListGroup<T>,
         ILoquiObjectSetter<ListGroup<T>>,
-        IEquatable<ListGroup<T>>,
-        IEqualsMask
+        IEquatable<ListGroup<T>>
         where T : class, ICellBlock, IBinaryItem
     {
         #region Ctor
@@ -105,7 +104,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => ListGroupCommon<T>.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ListGroupCommon<T>.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ListGroupCommon<T>.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ListGroupCommon<T>.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ListGroupCommon<T>.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
@@ -137,14 +136,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static ListGroup<T> CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static ListGroup<T> CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -171,8 +162,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IListGroupGetter<T>)rhs, include);
 
         void IClearable.Clear()
         {
@@ -191,7 +180,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IListGroup<T> :
         IListGroupGetter<T>,
         IMajorRecordEnumerable,
-        ILoquiObjectSetter<IListGroup<T>>
+        ILoquiObjectSetter<IListGroup<T>>,
+        ILinkedFormKeyContainer
         where T : class, ICellBlock, IBinaryItem
     {
         new GroupTypeEnum Type { get; set; }
@@ -204,7 +194,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject,
         IMajorRecordGetterEnumerable,
         ILoquiObject<IListGroupGetter<T>>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
         where T : class, ICellBlockGetter, IBinaryItem
     {
@@ -269,26 +259,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet<T>(
-            this IListGroupGetter<T> item,
-            ListGroup.Mask<bool?> checkMask)
-            where T : class, ICellBlockGetter, IBinaryItem
-        {
-            return ((ListGroupCommon<T>)((IListGroupGetter<T>)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static ListGroup.Mask<bool> GetHasBeenSetMask<T>(this IListGroupGetter<T> item)
-            where T : class, ICellBlockGetter, IBinaryItem
-        {
-            var ret = new ListGroup.Mask<bool>(false);
-            ((ListGroupCommon<T>)((IListGroupGetter<T>)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals<T>(
@@ -473,18 +443,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary<T>(
-            this IListGroup<T> item,
-            MutagenFrame frame)
-            where T : CellBlock, IBinaryItem
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary<T>(
             this IListGroup<T> item,
             MutagenFrame frame,
@@ -897,24 +855,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IListGroupGetter<T> item,
-            ListGroup.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IListGroupGetter<T> item,
-            ListGroup.Mask<bool> mask)
-        {
-            mask.Type = true;
-            mask.LastModified = true;
-            mask.Unknown = true;
-            var RecordsItem = item.Records;
-            mask.Records = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, CellBlock.Mask<bool>?>>?>(true, RecordsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, CellBlock.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IListGroupGetter<T>? lhs,
@@ -978,92 +918,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (type.Name)
             {
                 case "IMajorRecordCommon":
-                case "IMajorRecordCommonGetter":
+                case "IMajorRecord":
                 case "MajorRecord":
                 case "ISkyrimMajorRecord":
-                case "ISkyrimMajorRecordGetter":
                 case "SkyrimMajorRecord":
+                    if (!ListGroup_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
                     foreach (var item in this.EnumerateMajorRecords(obj))
                     {
                         yield return item;
                     }
                     yield break;
-                case "Cell":
-                case "ICellGetter":
-                case "ICell":
-                case "ICellInternal":
-                    foreach (var item in obj.Records)
+                case "IMajorRecordGetter":
+                case "IMajorRecordCommonGetter":
+                case "ISkyrimMajorRecordGetter":
+                    foreach (var item in this.EnumerateMajorRecords(obj))
                     {
-                        foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return subItem;
-                        }
-                    }
-                    yield break;
-                case "Landscape":
-                case "ILandscapeGetter":
-                case "ILandscape":
-                case "ILandscapeInternal":
-                    foreach (var item in obj.Records)
-                    {
-                        foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return subItem;
-                        }
-                    }
-                    yield break;
-                case "ANavigationMesh":
-                case "IANavigationMeshGetter":
-                case "IANavigationMesh":
-                case "IANavigationMeshInternal":
-                    foreach (var item in obj.Records)
-                    {
-                        foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return subItem;
-                        }
-                    }
-                    yield break;
-                case "PlacedNpc":
-                case "IPlacedNpcGetter":
-                case "IPlacedNpc":
-                case "IPlacedNpcInternal":
-                    foreach (var item in obj.Records)
-                    {
-                        foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return subItem;
-                        }
-                    }
-                    yield break;
-                case "PlacedObject":
-                case "IPlacedObjectGetter":
-                case "IPlacedObject":
-                case "IPlacedObjectInternal":
-                    foreach (var item in obj.Records)
-                    {
-                        foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return subItem;
-                        }
-                    }
-                    yield break;
-                case "APlacedTrap":
-                case "IAPlacedTrapGetter":
-                case "IAPlacedTrap":
-                case "IAPlacedTrapInternal":
-                    foreach (var item in obj.Records)
-                    {
-                        foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return subItem;
-                        }
+                        yield return item;
                     }
                     yield break;
                 default:
                     foreach (var item in obj.Records)
                     {
-                        foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                         {
                             yield return subItem;
                         }
@@ -1354,14 +1230,15 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary<T, T_ErrMask>(
             this IListGroupGetter<T> item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
             where T : class, ICellBlockGetter, IBinaryItem
             where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
         {
             ((ListGroupBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1371,9 +1248,7 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class ListGroupBinaryOverlay<T> :
-        BinaryOverlay,
-        IListGroupGetter<T>
+    public partial class ListGroupBinaryOverlay<T> : IListGroupGetter<T>
         where T : class, ICellBlockGetter, IBinaryItem
     {
         #region Common Routing
@@ -1394,15 +1269,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IListGroupGetter<T>)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => ListGroupCommon<T>.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ListGroupCommon<T>.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ListGroupCommon<T>.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ListGroupCommon<T>.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ListGroupCommon<T>.Instance.GetLinkFormKeys(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

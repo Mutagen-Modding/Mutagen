@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         ScriptProperty,
         IScriptStringListProperty,
         ILoquiObjectSetter<ScriptStringListProperty>,
-        IEquatable<ScriptStringListProperty>,
-        IEqualsMask
+        IEquatable<ScriptStringListProperty>
     {
         #region Ctor
         public ScriptStringListProperty()
@@ -435,14 +434,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new ScriptStringListProperty CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static ScriptStringListProperty CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -469,8 +460,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptStringListPropertyGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -549,24 +538,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IScriptStringListPropertyGetter item,
-            ScriptStringListProperty.Mask<bool?> checkMask)
-        {
-            return ((ScriptStringListPropertyCommon)((IScriptStringListPropertyGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static ScriptStringListProperty.Mask<bool> GetHasBeenSetMask(this IScriptStringListPropertyGetter item)
-        {
-            var ret = new ScriptStringListProperty.Mask<bool>(false);
-            ((ScriptStringListPropertyCommon)((IScriptStringListPropertyGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IScriptStringListPropertyGetter item,
             IScriptStringListPropertyGetter rhs)
@@ -636,17 +607,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IScriptStringListProperty item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IScriptStringListProperty item,
             MutagenFrame frame,
@@ -991,25 +951,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IScriptStringListPropertyGetter item,
-            ScriptStringListProperty.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IScriptStringListPropertyGetter item,
-            ScriptStringListProperty.Mask<bool> mask)
-        {
-            mask.Data = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static ScriptStringListProperty_FieldIndex ConvertFieldIndex(ScriptProperty_FieldIndex index)
         {
             switch (index)
@@ -1315,8 +1256,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptStringListPropertyGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ScriptStringListPropertyBinaryWriteTranslation.Instance;

@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class SpeedOverrides :
         ISpeedOverrides,
         ILoquiObjectSetter<SpeedOverrides>,
-        IEquatable<SpeedOverrides>,
-        IEqualsMask
+        IEquatable<SpeedOverrides>
     {
         #region Ctor
         public SpeedOverrides()
@@ -669,14 +668,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static SpeedOverrides CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static SpeedOverrides CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -703,8 +694,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISpeedOverridesGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -808,24 +797,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this ISpeedOverridesGetter item,
-            SpeedOverrides.Mask<bool?> checkMask)
-        {
-            return ((SpeedOverridesCommon)((ISpeedOverridesGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static SpeedOverrides.Mask<bool> GetHasBeenSetMask(this ISpeedOverridesGetter item)
-        {
-            var ret = new SpeedOverrides.Mask<bool>(false);
-            ((SpeedOverridesCommon)((ISpeedOverridesGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this ISpeedOverridesGetter item,
             ISpeedOverridesGetter rhs)
@@ -918,17 +889,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ISpeedOverrides item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ISpeedOverrides item,
             MutagenFrame frame,
@@ -1416,30 +1376,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            ISpeedOverridesGetter item,
-            SpeedOverrides.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            ISpeedOverridesGetter item,
-            SpeedOverrides.Mask<bool> mask)
-        {
-            mask.LeftWalk = true;
-            mask.LeftRun = true;
-            mask.RightWalk = true;
-            mask.RightRun = true;
-            mask.ForwardWalk = true;
-            mask.ForwardRun = true;
-            mask.BackWalk = true;
-            mask.BackRun = true;
-            mask.RotateWalk = true;
-            mask.RotateRun = true;
-            mask.Unknown = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             ISpeedOverridesGetter? lhs,
@@ -1733,12 +1669,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this ISpeedOverridesGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((SpeedOverridesBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1770,8 +1707,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISpeedOverridesGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => SpeedOverridesBinaryWriteTranslation.Instance;

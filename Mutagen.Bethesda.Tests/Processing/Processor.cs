@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda.Tests
         protected string SourcePath;
         protected TempFolder TempFolder;
         public bool DoMultithreading = true;
-        public ModKey ModKey => ModKey.Factory(Path.GetFileName(SourcePath));
+        public ModKey ModKey => ModKey.FromNameAndExtension(Path.GetFileName(SourcePath));
         public delegate void DynamicProcessor(MajorRecordFrame majorFrame, long fileOffset);
         public delegate void DynamicStreamProcessor(IMutagenReadStream stream, MajorRecordFrame majorFrame, long fileOffset);
         protected Dictionary<RecordType, List<DynamicProcessor>> DynamicProcessors = new Dictionary<RecordType, List<DynamicProcessor>>();
@@ -140,20 +140,20 @@ namespace Mutagen.Bethesda.Tests
 
         protected void AddDynamicProcessing(RecordType type, DynamicProcessor processor)
         {
-            DynamicProcessors.TryCreateValue(type).Add(processor);
+            DynamicProcessors.GetOrAdd(type).Add(processor);
         }
 
         protected void AddDynamicProcessing(DynamicProcessor processor, params RecordType[] types)
         {
             foreach (var type in types)
             {
-                DynamicProcessors.TryCreateValue(type).Add(processor);
+                DynamicProcessors.GetOrAdd(type).Add(processor);
             }
         }
 
         protected void AddDynamicProcessing(RecordType type, DynamicStreamProcessor processor)
         {
-            DynamicStreamProcessors.TryCreateValue(type).Add(processor);
+            DynamicStreamProcessors.GetOrAdd(type).Add(processor);
         }
 
         protected void ProcessDynamicType(RecordType type, Func<IMutagenReadStream> streamGetter)
@@ -608,7 +608,7 @@ namespace Mutagen.Bethesda.Tests
 
             stream.Position = 0;
             var mod = stream.ReadModHeader();
-            if (!EnumExt.HasFlag(mod.Flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag)) return ListExt.Empty<KeyValuePair<uint, uint>>();
+            if (!EnumExt.HasFlag(mod.Flags, (int)ModHeaderCommonFlag.Localized)) return ListExt.Empty<KeyValuePair<uint, uint>>();
 
             stream.Position = 0;
             var locs = RecordLocator.GetFileLocations(
@@ -642,7 +642,7 @@ namespace Mutagen.Bethesda.Tests
 
             var outFolder = Path.Combine(this.TempFolder.Dir.Path, "Strings/Processed");
             var stringsOverlay = StringsFolderLookupOverlay.TypicalFactory(dataFolder.FullName, null, modKey);
-            using var writer = new StringsWriter(ModKey.Factory(Path.GetFileName(this.SourcePath)), outFolder);
+            using var writer = new StringsWriter(ModKey.FromNameAndExtension(Path.GetFileName(this.SourcePath)), outFolder);
             var dict = stringsOverlay.Get(source);
             foreach (var lang in dict)
             {

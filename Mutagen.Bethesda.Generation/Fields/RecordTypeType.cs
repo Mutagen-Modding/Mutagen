@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override string GetDefault(bool getter)
         {
-            if (this.HasBeenSet)
+            if (this.Nullable)
             {
                 return $"default(RecordType?)";
             }

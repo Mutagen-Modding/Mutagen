@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IPlaceInternal,
         ILoquiObjectSetter<Place>,
-        IEquatable<Place>,
-        IEqualsMask
+        IEquatable<Place>
     {
         #region Ctor
         protected Place()
@@ -305,7 +304,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PlaceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PlaceCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PlaceCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlaceCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlaceCommon.Instance.RemapLinks(this, mapping);
         public Place(FormKey formKey)
@@ -354,8 +353,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPlaceGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -375,7 +372,8 @@ namespace Mutagen.Bethesda.Oblivion
         IPlaceGetter,
         IOblivionMajorRecord,
         IMajorRecordEnumerable,
-        ILoquiObjectSetter<IPlaceInternal>
+        ILoquiObjectSetter<IPlaceInternal>,
+        ILinkedFormKeyContainer
     {
     }
 
@@ -390,7 +388,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         IMajorRecordGetterEnumerable,
         ILoquiObject<IPlaceGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Place_Registration.Instance;
@@ -440,24 +438,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IPlaceGetter item,
-            Place.Mask<bool?> checkMask)
-        {
-            return ((PlaceCommon)((IPlaceGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Place.Mask<bool> GetHasBeenSetMask(this IPlaceGetter item)
-        {
-            var ret = new Place.Mask<bool>(false);
-            ((PlaceCommon)((IPlaceGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -592,17 +572,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IPlaceInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IPlaceInternal item,
             MutagenFrame frame,
@@ -955,24 +924,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 printMask: printMask);
         }
         
-        public bool HasBeenSet(
-            IPlaceGetter item,
-            Place.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IPlaceGetter item,
-            Place.Mask<bool> mask)
-        {
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static Place_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -1094,11 +1045,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (type.Name)
             {
                 case "IMajorRecordCommon":
-                case "IMajorRecordCommonGetter":
+                case "IMajorRecord":
                 case "MajorRecord":
                 case "IOblivionMajorRecord":
-                case "IOblivionMajorRecordGetter":
                 case "OblivionMajorRecord":
+                    if (!Place_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IMajorRecordGetter":
+                case "IMajorRecordCommonGetter":
+                case "IOblivionMajorRecordGetter":
                     foreach (var item in this.EnumerateMajorRecords(obj))
                     {
                         yield return item;
@@ -1364,15 +1323,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPlaceGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PlaceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PlaceCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlaceCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlaceCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PlaceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

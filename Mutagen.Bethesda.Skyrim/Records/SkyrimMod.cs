@@ -16,26 +16,12 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SkyrimMod : AMod
     {
-        public const uint DefaultInitialNextObjectID = 0x800;
-        private uint GetDefaultInitialNextObjectID() => DefaultInitialNextObjectID;
+        public const uint DefaultInitialNextFormID = 0x800;
+        private uint GetDefaultInitialNextFormID() => DefaultInitialNextFormID;
     }
 
     namespace Internals
     {
-        public partial class SkyrimModBinaryWriteTranslation
-        {
-            public static void WriteModHeader(
-                ISkyrimModGetter mod,
-                MutagenWriter writer,
-                ModKey modKey)
-            {
-                var modHeader = mod.ModHeader.DeepCopy() as ModHeader;
-                modHeader.Flags = modHeader.Flags.SetFlag(ModHeader.HeaderFlag.Master, modKey.Master);
-                modHeader.MasterReferences.SetTo(writer.MetaData.MasterReferences!.Masters.Select(m => m.DeepCopy()));
-                modHeader.WriteToBinary(writer);
-            }
-        }
-
         public partial class SkyrimModCommon
         {
             public static void WriteCellsParallel(
@@ -161,7 +147,7 @@ namespace Mutagen.Bethesda.Skyrim
                     GroupBinaryWriteTranslation.WriteEmbedded<IWorldspaceGetter>(group, stream);
                 }
                 streams[0] = groupByteStream;
-                Parallel.ForEach(group.Records, (worldspace, worldspaceState, worldspaceCounter) =>
+                Parallel.ForEach(group, (worldspace, worldspaceState, worldspaceCounter) =>
                 {
                     var worldTrib = new MemoryTributary();
                     using (var writer = new MutagenWriter(worldTrib, bundle, dispose: false))
@@ -218,7 +204,7 @@ namespace Mutagen.Bethesda.Skyrim
 
                     worldGroupWriter.Position = 4;
                     worldGroupWriter.Write((uint)(subStreams.NotNull().Select(s => s.Length).Sum()));
-                    streams[worldspaceCounter + 1] = new CompositeReadStream(worldTrib.And(subStreams), resetPositions: true);
+                    streams[worldspaceCounter + 1] = new CompositeReadStream(worldTrib.AsEnumerable().And(subStreams), resetPositions: true);
                 });
                 UtilityTranslation.CompileSetGroupLength(streams, groupBytes);
                 streamDepositArray[targetIndex] = new CompositeReadStream(streams, resetPositions: true);
@@ -302,7 +288,7 @@ namespace Mutagen.Bethesda.Skyrim
                 where T : class, ISkyrimMajorRecordGetter, IBinaryItem
             {
                 if (group.RecordCache.Count == 0) return;
-                var cuts = group.Records.Cut(CutCount).ToArray();
+                var cuts = group.Cut(CutCount).ToArray();
                 Stream[] subStreams = new Stream[cuts.Length + 1];
                 byte[] groupBytes = new byte[gameConstants.GroupConstants.HeaderLength];
                 BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);

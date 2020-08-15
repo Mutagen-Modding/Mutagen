@@ -1,6 +1,7 @@
 using Ionic.Zlib;
 using Loqui;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Core;
 using Mutagen.Bethesda.Internals;
 using Noggog;
 using System;
@@ -109,7 +110,7 @@ namespace Mutagen.Bethesda
                     {
                         recordParseCount = new Dictionary<RecordType, int>();
                     }
-                    recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.TryCreateValue(parsed.DuplicateParseMarker!.Value) + 1;
+                    recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.GetOrAdd(parsed.DuplicateParseMarker!.Value) + 1;
                 }
                 if (targetFrame.Position < finalPos)
                 {
@@ -162,7 +163,7 @@ namespace Mutagen.Bethesda
                     {
                         recordParseCount = new Dictionary<RecordType, int>();
                     }
-                    recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.TryCreateValue(parsed.DuplicateParseMarker!.Value) + 1;
+                    recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.GetOrAdd(parsed.DuplicateParseMarker!.Value) + 1;
                 }
                 if (frame.Position < finalPos)
                 {
@@ -219,7 +220,7 @@ namespace Mutagen.Bethesda
                     {
                         recordParseCount = new Dictionary<RecordType, int>();
                     }
-                    recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.TryCreateValue(parsed.DuplicateParseMarker!.Value) + 1;
+                    recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.GetOrAdd(parsed.DuplicateParseMarker!.Value) + 1;
                 }
                 lastParsed = parsed.ParsedIndex;
             }
@@ -271,7 +272,6 @@ namespace Mutagen.Bethesda
             TMod record,
             MutagenFrame frame,
             TImportMask importMask,
-            RecordTypeConverter? recordTypeConverter,
             RecordStructFill<TMod> fillStructs,
             ModRecordTypeFill<TMod, TImportMask> fillTyped)
             where TMod : IMod
@@ -283,7 +283,7 @@ namespace Mutagen.Bethesda
                 importMask: importMask,
                 nextRecordType: modHeader.RecordType,
                 contentLength: checked((int)modHeader.ContentLength),
-                recordTypeConverter: recordTypeConverter);
+                recordTypeConverter: null);
             frame.Reader.MetaData.MasterReferences = new MasterReferenceReader(record.ModKey, record.MasterReferences);
             while (!frame.Complete)
             {
@@ -305,7 +305,7 @@ namespace Mutagen.Bethesda
                     importMask: importMask,
                     nextRecordType: groupHeader.ContainedRecordType,
                     contentLength: len,
-                    recordTypeConverter: recordTypeConverter);
+                    recordTypeConverter: null);
                 if (!parsed.KeepParsing) break;
                 if (frame.Position < finalPos)
                 {
@@ -314,34 +314,6 @@ namespace Mutagen.Bethesda
             }
             frame.SetToFinalPosition();
             return record;
-        }
-
-        public static MasterReferenceReader ConstructWriteMasters(IModGetter mod, BinaryWriteParameters param)
-        {
-            MasterReferenceReader ret = new MasterReferenceReader(mod.ModKey);
-            HashSet<ModKey> modKeys = new HashSet<ModKey>();
-            switch (param.MastersListSync)
-            {
-                case BinaryWriteParameters.MastersListSyncOption.NoCheck:
-                    modKeys.Add(mod.MasterReferences.Select(m => m.Master));
-                    break;
-                case BinaryWriteParameters.MastersListSyncOption.Iterate:
-                    modKeys.Add(
-                        // All FormKeys of links
-                        mod.LinkFormKeys.Select(f => f.ModKey)
-                        // All FormKeys of records themselves
-                        .And(mod.EnumerateMajorRecords().Select(m => m.FormKey.ModKey)));
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
-            modKeys.Remove(mod.ModKey);
-            modKeys.Remove(ModKey.Null);
-            ret.SetTo(modKeys.Select(m => new MasterReference()
-            {
-                Master = m
-            }));
-            return ret;
         }
 
         public static ReadOnlyMemorySlice<byte> DecompressSpan(ReadOnlyMemorySlice<byte> slice, GameConstants meta)

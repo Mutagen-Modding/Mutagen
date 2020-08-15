@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class Ownership :
         IOwnership,
         ILoquiObjectSetter<Ownership>,
-        IEquatable<Ownership>,
-        IEqualsMask
+        IEquatable<Ownership>
     {
         #region Ctor
         public Ownership()
@@ -43,7 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Owner
         public FormLinkNullable<IOwner> Owner { get; set; } = new FormLinkNullable<IOwner>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IOwnerGetter> IOwnershipGetter.Owner => this.Owner;
+        FormLinkNullable<IOwnerGetter> IOwnershipGetter.Owner => this.Owner.ToGetter<IOwner, IOwnerGetter>();
         #endregion
         #region FactionRank
         public Int32? FactionRank { get; set; }
@@ -379,7 +378,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => OwnershipCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => OwnershipCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => OwnershipCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OwnershipCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OwnershipCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -399,14 +398,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static Ownership CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static Ownership CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -433,8 +424,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IOwnershipGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -452,7 +441,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IOwnership :
         IOwnershipGetter,
-        ILoquiObjectSetter<IOwnership>
+        ILoquiObjectSetter<IOwnership>,
+        ILinkedFormKeyContainer
     {
         new FormLinkNullable<IOwner> Owner { get; set; }
         new Int32? FactionRank { get; set; }
@@ -461,7 +451,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IOwnershipGetter :
         ILoquiObject,
         ILoquiObject<IOwnershipGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -471,7 +461,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => Ownership_Registration.Instance;
-        IFormLinkNullable<IOwnerGetter> Owner { get; }
+        FormLinkNullable<IOwnerGetter> Owner { get; }
         Int32? FactionRank { get; }
 
     }
@@ -519,24 +509,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IOwnershipGetter item,
-            Ownership.Mask<bool?> checkMask)
-        {
-            return ((OwnershipCommon)((IOwnershipGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Ownership.Mask<bool> GetHasBeenSetMask(this IOwnershipGetter item)
-        {
-            var ret = new Ownership.Mask<bool>(false);
-            ((OwnershipCommon)((IOwnershipGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -631,17 +603,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IOwnership item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IOwnership item,
             MutagenFrame frame,
@@ -966,33 +927,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             Ownership.Mask<bool>? printMask = null)
         {
-            if ((printMask?.Owner ?? true)
-                && item.Owner.TryGet(out var OwnerItem))
+            if (printMask?.Owner ?? true)
             {
-                fg.AppendItem(OwnerItem, "Owner");
+                fg.AppendItem(item.Owner.FormKey, "Owner");
             }
             if ((printMask?.FactionRank ?? true)
                 && item.FactionRank.TryGet(out var FactionRankItem))
             {
                 fg.AppendItem(FactionRankItem, "FactionRank");
             }
-        }
-        
-        public bool HasBeenSet(
-            IOwnershipGetter item,
-            Ownership.Mask<bool?> checkMask)
-        {
-            if (checkMask.Owner.HasValue && checkMask.Owner.Value != (item.Owner.FormKey != null)) return false;
-            if (checkMask.FactionRank.HasValue && checkMask.FactionRank.Value != (item.FactionRank != null)) return false;
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IOwnershipGetter item,
-            Ownership.Mask<bool> mask)
-        {
-            mask.Owner = (item.Owner.FormKey != null);
-            mask.FactionRank = (item.FactionRank != null);
         }
         
         #region Equals and Hash
@@ -1010,10 +953,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IOwnershipGetter item)
         {
             var hash = new HashCode();
-            if (item.Owner.TryGet(out var Owneritem))
-            {
-                hash.Add(Owneritem);
-            }
+            hash.Add(item.Owner);
             if (item.FactionRank.TryGet(out var FactionRankitem))
             {
                 hash.Add(FactionRankitem);
@@ -1056,7 +996,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)Ownership_FieldIndex.Owner) ?? true))
             {
-                item.Owner = rhs.Owner.FormKey;
+                item.Owner = new FormLinkNullable<IOwner>(rhs.Owner.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Ownership_FieldIndex.FactionRank) ?? true))
             {
@@ -1237,12 +1177,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IOwnershipGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((OwnershipBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1274,15 +1215,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IOwnershipGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => OwnershipCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => OwnershipCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OwnershipCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OwnershipCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => OwnershipCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => OwnershipBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1299,8 +1236,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Owner
         private int? _OwnerLocation;
-        public bool Owner_IsSet => _OwnerLocation.HasValue;
-        public IFormLinkNullable<IOwnerGetter> Owner => _OwnerLocation.HasValue ? new FormLinkNullable<IOwnerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _OwnerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOwnerGetter>.Null;
+        public FormLinkNullable<IOwnerGetter> Owner => _OwnerLocation.HasValue ? new FormLinkNullable<IOwnerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _OwnerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOwnerGetter>.Null;
         #endregion
         #region FactionRank
         private int? _FactionRankLocation;

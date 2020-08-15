@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         APerkEffect,
         IAPerkEntryPointEffect,
         ILoquiObjectSetter<APerkEntryPointEffect>,
-        IEquatable<APerkEntryPointEffect>,
-        IEqualsMask
+        IEquatable<APerkEntryPointEffect>
     {
         #region Ctor
         public APerkEntryPointEffect()
@@ -378,7 +377,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => APerkEntryPointEffectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => APerkEntryPointEffectCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => APerkEntryPointEffectCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APerkEntryPointEffectCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APerkEntryPointEffectCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -398,8 +397,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAPerkEntryPointEffectGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -418,7 +415,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IAPerkEntryPointEffect :
         IAPerkEntryPointEffectGetter,
         IAPerkEffect,
-        ILoquiObjectSetter<IAPerkEntryPointEffect>
+        ILoquiObjectSetter<IAPerkEntryPointEffect>,
+        ILinkedFormKeyContainer
     {
         new APerkEntryPointEffect.EntryType EntryPoint { get; set; }
         new Byte PerkConditionTabCount { get; set; }
@@ -427,7 +425,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IAPerkEntryPointEffectGetter :
         IAPerkEffectGetter,
         ILoquiObject<IAPerkEntryPointEffectGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => APerkEntryPointEffect_Registration.Instance;
@@ -479,24 +477,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IAPerkEntryPointEffectGetter item,
-            APerkEntryPointEffect.Mask<bool?> checkMask)
-        {
-            return ((APerkEntryPointEffectCommon)((IAPerkEntryPointEffectGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static APerkEntryPointEffect.Mask<bool> GetHasBeenSetMask(this IAPerkEntryPointEffectGetter item)
-        {
-            var ret = new APerkEntryPointEffect.Mask<bool>(false);
-            ((APerkEntryPointEffectCommon)((IAPerkEntryPointEffectGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -568,17 +548,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IAPerkEntryPointEffect item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IAPerkEntryPointEffect item,
             MutagenFrame frame,
@@ -920,26 +889,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.PerkConditionTabCount, "PerkConditionTabCount");
             }
-        }
-        
-        public bool HasBeenSet(
-            IAPerkEntryPointEffectGetter item,
-            APerkEntryPointEffect.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IAPerkEntryPointEffectGetter item,
-            APerkEntryPointEffect.Mask<bool> mask)
-        {
-            mask.EntryPoint = true;
-            mask.PerkConditionTabCount = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static APerkEntryPointEffect_FieldIndex ConvertFieldIndex(APerkEffect_FieldIndex index)
@@ -1293,15 +1242,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAPerkEntryPointEffectGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => APerkEntryPointEffectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => APerkEntryPointEffectCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APerkEntryPointEffectCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APerkEntryPointEffectCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => APerkEntryPointEffectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => APerkEntryPointEffectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

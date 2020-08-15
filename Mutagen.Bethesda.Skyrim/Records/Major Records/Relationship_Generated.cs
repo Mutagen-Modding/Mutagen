@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IRelationshipInternal,
         ILoquiObjectSetter<Relationship>,
-        IEquatable<Relationship>,
-        IEqualsMask
+        IEquatable<Relationship>
     {
         #region Ctor
         protected Relationship()
@@ -46,12 +45,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Parent
         public FormLink<Npc> Parent { get; set; } = new FormLink<Npc>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<INpcGetter> IRelationshipGetter.Parent => this.Parent;
+        FormLink<INpcGetter> IRelationshipGetter.Parent => this.Parent.ToGetter<Npc, INpcGetter>();
         #endregion
         #region Child
         public FormLink<Npc> Child { get; set; } = new FormLink<Npc>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<INpcGetter> IRelationshipGetter.Child => this.Child;
+        FormLink<INpcGetter> IRelationshipGetter.Child => this.Child.ToGetter<Npc, INpcGetter>();
         #endregion
         #region Rank
         public Relationship.RankType Rank { get; set; } = default;
@@ -65,7 +64,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region AssociationType
         public FormLink<AssociationType> AssociationType { get; set; } = new FormLink<AssociationType>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IAssociationTypeGetter> IRelationshipGetter.AssociationType => this.AssociationType;
+        FormLink<IAssociationTypeGetter> IRelationshipGetter.AssociationType => this.AssociationType.ToGetter<AssociationType, IAssociationTypeGetter>();
         #endregion
         #region DATADataTypeState
         public Relationship.DATADataType DATADataTypeState { get; set; } = default;
@@ -544,7 +543,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => RelationshipCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => RelationshipCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => RelationshipCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RelationshipCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RelationshipCommon.Instance.RemapLinks(this, mapping);
         public Relationship(FormKey formKey)
@@ -588,14 +587,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new Relationship CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static Relationship CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -622,8 +613,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRelationshipGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -642,7 +631,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IRelationship :
         IRelationshipGetter,
         ISkyrimMajorRecord,
-        ILoquiObjectSetter<IRelationshipInternal>
+        ILoquiObjectSetter<IRelationshipInternal>,
+        ILinkedFormKeyContainer
     {
         new FormLink<Npc> Parent { get; set; }
         new FormLink<Npc> Child { get; set; }
@@ -667,16 +657,16 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IRelationshipGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IRelationshipGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Relationship_Registration.Instance;
-        IFormLink<INpcGetter> Parent { get; }
-        IFormLink<INpcGetter> Child { get; }
+        FormLink<INpcGetter> Parent { get; }
+        FormLink<INpcGetter> Child { get; }
         Relationship.RankType Rank { get; }
         Byte Unknown { get; }
         Relationship.Flag Flags { get; }
-        IFormLink<IAssociationTypeGetter> AssociationType { get; }
+        FormLink<IAssociationTypeGetter> AssociationType { get; }
         Relationship.DATADataType DATADataTypeState { get; }
 
         #region Mutagen
@@ -728,24 +718,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IRelationshipGetter item,
-            Relationship.Mask<bool?> checkMask)
-        {
-            return ((RelationshipCommon)((IRelationshipGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Relationship.Mask<bool> GetHasBeenSetMask(this IRelationshipGetter item)
-        {
-            var ret = new Relationship.Mask<bool>(false);
-            ((RelationshipCommon)((IRelationshipGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -817,17 +789,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IRelationshipInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IRelationshipInternal item,
             MutagenFrame frame,
@@ -1257,11 +1218,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.Parent ?? true)
             {
-                fg.AppendItem(item.Parent, "Parent");
+                fg.AppendItem(item.Parent.FormKey, "Parent");
             }
             if (printMask?.Child ?? true)
             {
-                fg.AppendItem(item.Child, "Child");
+                fg.AppendItem(item.Child.FormKey, "Child");
             }
             if (printMask?.Rank ?? true)
             {
@@ -1277,37 +1238,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.AssociationType ?? true)
             {
-                fg.AppendItem(item.AssociationType, "AssociationType");
+                fg.AppendItem(item.AssociationType.FormKey, "AssociationType");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
                 fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
-        }
-        
-        public bool HasBeenSet(
-            IRelationshipGetter item,
-            Relationship.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IRelationshipGetter item,
-            Relationship.Mask<bool> mask)
-        {
-            mask.Parent = true;
-            mask.Child = true;
-            mask.Rank = true;
-            mask.Unknown = true;
-            mask.Flags = true;
-            mask.AssociationType = true;
-            mask.DATADataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static Relationship_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1475,11 +1411,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.Parent) ?? true))
             {
-                item.Parent = rhs.Parent.FormKey;
+                item.Parent = new FormLink<Npc>(rhs.Parent.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.Child) ?? true))
             {
-                item.Child = rhs.Child.FormKey;
+                item.Child = new FormLink<Npc>(rhs.Child.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.Rank) ?? true))
             {
@@ -1495,7 +1431,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.AssociationType) ?? true))
             {
-                item.AssociationType = rhs.AssociationType.FormKey;
+                item.AssociationType = new FormLink<AssociationType>(rhs.AssociationType.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.DATADataTypeState) ?? true))
             {
@@ -1814,15 +1750,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRelationshipGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => RelationshipCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => RelationshipCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RelationshipCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RelationshipCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => RelationshipCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RelationshipBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1841,12 +1773,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Parent
         private int _ParentLocation => _DATALocation!.Value;
         private bool _Parent_IsSet => _DATALocation.HasValue;
-        public IFormLink<INpcGetter> Parent => _Parent_IsSet ? new FormLink<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ParentLocation, 0x4)))) : FormLink<INpcGetter>.Null;
+        public FormLink<INpcGetter> Parent => _Parent_IsSet ? new FormLink<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ParentLocation, 0x4)))) : FormLink<INpcGetter>.Null;
         #endregion
         #region Child
         private int _ChildLocation => _DATALocation!.Value + 0x4;
         private bool _Child_IsSet => _DATALocation.HasValue;
-        public IFormLink<INpcGetter> Child => _Child_IsSet ? new FormLink<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ChildLocation, 0x4)))) : FormLink<INpcGetter>.Null;
+        public FormLink<INpcGetter> Child => _Child_IsSet ? new FormLink<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ChildLocation, 0x4)))) : FormLink<INpcGetter>.Null;
         #endregion
         #region Rank
         private int _RankLocation => _DATALocation!.Value + 0x8;
@@ -1866,7 +1798,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region AssociationType
         private int _AssociationTypeLocation => _DATALocation!.Value + 0xC;
         private bool _AssociationType_IsSet => _DATALocation.HasValue;
-        public IFormLink<IAssociationTypeGetter> AssociationType => _AssociationType_IsSet ? new FormLink<IAssociationTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_AssociationTypeLocation, 0x4)))) : FormLink<IAssociationTypeGetter>.Null;
+        public FormLink<IAssociationTypeGetter> AssociationType => _AssociationType_IsSet ? new FormLink<IAssociationTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_AssociationTypeLocation, 0x4)))) : FormLink<IAssociationTypeGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

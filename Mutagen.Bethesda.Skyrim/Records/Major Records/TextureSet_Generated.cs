@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ITextureSetInternal,
         ILoquiObjectSetter<TextureSet>,
-        IEquatable<TextureSet>,
-        IEqualsMask
+        IEquatable<TextureSet>
     {
         #region Ctor
         protected TextureSet()
@@ -735,14 +734,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new TextureSet CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static TextureSet CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -769,8 +760,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITextureSetGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -880,24 +869,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this ITextureSetGetter item,
-            TextureSet.Mask<bool?> checkMask)
-        {
-            return ((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static TextureSet.Mask<bool> GetHasBeenSetMask(this ITextureSetGetter item)
-        {
-            var ret = new TextureSet.Mask<bool>(false);
-            ((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this ITextureSetGetter item,
             ITextureSetGetter rhs)
@@ -967,17 +938,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ITextureSetInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ITextureSetInternal item,
             MutagenFrame frame,
@@ -1520,47 +1480,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
-        }
-        
-        public bool HasBeenSet(
-            ITextureSetGetter item,
-            TextureSet.Mask<bool?> checkMask)
-        {
-            if (checkMask.Diffuse.HasValue && checkMask.Diffuse.Value != (item.Diffuse != null)) return false;
-            if (checkMask.NormalOrGloss.HasValue && checkMask.NormalOrGloss.Value != (item.NormalOrGloss != null)) return false;
-            if (checkMask.EnvironmentMaskOrSubsurfaceTint.HasValue && checkMask.EnvironmentMaskOrSubsurfaceTint.Value != (item.EnvironmentMaskOrSubsurfaceTint != null)) return false;
-            if (checkMask.GlowOrDetailMap.HasValue && checkMask.GlowOrDetailMap.Value != (item.GlowOrDetailMap != null)) return false;
-            if (checkMask.Height.HasValue && checkMask.Height.Value != (item.Height != null)) return false;
-            if (checkMask.Environment.HasValue && checkMask.Environment.Value != (item.Environment != null)) return false;
-            if (checkMask.Multilayer.HasValue && checkMask.Multilayer.Value != (item.Multilayer != null)) return false;
-            if (checkMask.BacklightMaskOrSpecular.HasValue && checkMask.BacklightMaskOrSpecular.Value != (item.BacklightMaskOrSpecular != null)) return false;
-            if (checkMask.Decal?.Overall.HasValue ?? false && checkMask.Decal.Overall.Value != (item.Decal != null)) return false;
-            if (checkMask.Decal?.Specific != null && (item.Decal == null || !item.Decal.HasBeenSet(checkMask.Decal.Specific))) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            ITextureSetGetter item,
-            TextureSet.Mask<bool> mask)
-        {
-            mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
-            mask.Diffuse = (item.Diffuse != null);
-            mask.NormalOrGloss = (item.NormalOrGloss != null);
-            mask.EnvironmentMaskOrSubsurfaceTint = (item.EnvironmentMaskOrSubsurfaceTint != null);
-            mask.GlowOrDetailMap = (item.GlowOrDetailMap != null);
-            mask.Height = (item.Height != null);
-            mask.Environment = (item.Environment != null);
-            mask.Multilayer = (item.Multilayer != null);
-            mask.BacklightMaskOrSpecular = (item.BacklightMaskOrSpecular != null);
-            var itemDecal = item.Decal;
-            mask.Decal = new MaskItem<bool, Decal.Mask<bool>?>(itemDecal != null, itemDecal?.GetHasBeenSetMask());
-            mask.Flags = (item.Flags != null);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static TextureSet_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -2247,8 +2166,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITextureSetGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => TextureSetBinaryWriteTranslation.Instance;
@@ -2302,7 +2219,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Decal
         private RangeInt32? _DecalLocation;
         public IDecalGetter? Decal => _DecalLocation.HasValue ? DecalBinaryOverlay.DecalFactory(new OverlayStream(_data.Slice(_DecalLocation!.Value.Min), _package), _package) : default;
-        public bool Decal_IsSet => _DecalLocation.HasValue;
         #endregion
         #region Flags
         private int? _FlagsLocation;

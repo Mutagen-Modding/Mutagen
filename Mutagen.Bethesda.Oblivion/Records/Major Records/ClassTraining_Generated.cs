@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class ClassTraining :
         IClassTraining,
         ILoquiObjectSetter<ClassTraining>,
-        IEquatable<ClassTraining>,
-        IEqualsMask
+        IEquatable<ClassTraining>
     {
         #region Ctor
         public ClassTraining()
@@ -418,14 +417,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static ClassTraining CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static ClassTraining CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -452,8 +443,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IClassTrainingGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -539,24 +528,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IClassTrainingGetter item,
-            ClassTraining.Mask<bool?> checkMask)
-        {
-            return ((ClassTrainingCommon)((IClassTrainingGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static ClassTraining.Mask<bool> GetHasBeenSetMask(this IClassTrainingGetter item)
-        {
-            var ret = new ClassTraining.Mask<bool>(false);
-            ((ClassTrainingCommon)((IClassTrainingGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -651,17 +622,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IClassTraining item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IClassTraining item,
             MutagenFrame frame,
@@ -1001,22 +961,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IClassTrainingGetter item,
-            ClassTraining.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IClassTrainingGetter item,
-            ClassTraining.Mask<bool> mask)
-        {
-            mask.TrainedSkill = true;
-            mask.MaximumTrainingLevel = true;
-            mask.Unknown = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IClassTrainingGetter? lhs,
@@ -1221,12 +1165,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this IClassTrainingGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((ClassTrainingBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1258,8 +1203,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IClassTrainingGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ClassTrainingBinaryWriteTranslation.Instance;

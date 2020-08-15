@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class Effect :
         IEffect,
         ILoquiObjectSetter<Effect>,
-        IEquatable<Effect>,
-        IEqualsMask
+        IEquatable<Effect>
     {
         #region Ctor
         public Effect()
@@ -44,7 +43,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region BaseEffect
         public FormLinkNullable<MagicEffect> BaseEffect { get; set; } = new FormLinkNullable<MagicEffect>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IMagicEffectGetter> IEffectGetter.BaseEffect => this.BaseEffect;
+        FormLinkNullable<IMagicEffectGetter> IEffectGetter.BaseEffect => this.BaseEffect.ToGetter<MagicEffect, IMagicEffectGetter>();
         #endregion
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -512,7 +511,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => EffectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => EffectCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => EffectCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EffectCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EffectCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -532,14 +531,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static Effect CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static Effect CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -566,8 +557,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEffectGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -585,7 +574,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IEffect :
         IEffectGetter,
-        ILoquiObjectSetter<IEffect>
+        ILoquiObjectSetter<IEffect>,
+        ILinkedFormKeyContainer
     {
         new FormLinkNullable<MagicEffect> BaseEffect { get; set; }
         new EffectData? Data { get; set; }
@@ -595,7 +585,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IEffectGetter :
         ILoquiObject,
         ILoquiObject<IEffectGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -605,7 +595,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => Effect_Registration.Instance;
-        IFormLinkNullable<IMagicEffectGetter> BaseEffect { get; }
+        FormLinkNullable<IMagicEffectGetter> BaseEffect { get; }
         IEffectDataGetter? Data { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
 
@@ -654,24 +644,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IEffectGetter item,
-            Effect.Mask<bool?> checkMask)
-        {
-            return ((EffectCommon)((IEffectGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Effect.Mask<bool> GetHasBeenSetMask(this IEffectGetter item)
-        {
-            var ret = new Effect.Mask<bool>(false);
-            ((EffectCommon)((IEffectGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -766,17 +738,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IEffect item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IEffect item,
             MutagenFrame frame,
@@ -1125,10 +1086,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             Effect.Mask<bool>? printMask = null)
         {
-            if ((printMask?.BaseEffect ?? true)
-                && item.BaseEffect.TryGet(out var BaseEffectItem))
+            if (printMask?.BaseEffect ?? true)
             {
-                fg.AppendItem(BaseEffectItem, "BaseEffect");
+                fg.AppendItem(item.BaseEffect.FormKey, "BaseEffect");
             }
             if ((printMask?.Data?.Overall ?? true)
                 && item.Data.TryGet(out var DataItem))
@@ -1155,27 +1115,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IEffectGetter item,
-            Effect.Mask<bool?> checkMask)
-        {
-            if (checkMask.BaseEffect.HasValue && checkMask.BaseEffect.Value != (item.BaseEffect.FormKey != null)) return false;
-            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
-            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IEffectGetter item,
-            Effect.Mask<bool> mask)
-        {
-            mask.BaseEffect = (item.BaseEffect.FormKey != null);
-            var itemData = item.Data;
-            mask.Data = new MaskItem<bool, EffectData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
-            var ConditionsItem = item.Conditions;
-            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IEffectGetter? lhs,
@@ -1192,10 +1131,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IEffectGetter item)
         {
             var hash = new HashCode();
-            if (item.BaseEffect.TryGet(out var BaseEffectitem))
-            {
-                hash.Add(BaseEffectitem);
-            }
+            hash.Add(item.BaseEffect);
             if (item.Data.TryGet(out var Dataitem))
             {
                 hash.Add(Dataitem);
@@ -1219,7 +1155,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return BaseEffectKey;
             }
-            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainer> ()
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter> ()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
@@ -1244,7 +1180,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)Effect_FieldIndex.BaseEffect) ?? true))
             {
-                item.BaseEffect = rhs.BaseEffect.FormKey;
+                item.BaseEffect = new FormLinkNullable<MagicEffect>(rhs.BaseEffect.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Effect_FieldIndex.Data) ?? true))
             {
@@ -1501,12 +1437,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IEffectGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((EffectBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1538,15 +1475,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEffectGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => EffectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => EffectCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EffectCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EffectCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => EffectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => EffectBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1563,13 +1496,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region BaseEffect
         private int? _BaseEffectLocation;
-        public bool BaseEffect_IsSet => _BaseEffectLocation.HasValue;
-        public IFormLinkNullable<IMagicEffectGetter> BaseEffect => _BaseEffectLocation.HasValue ? new FormLinkNullable<IMagicEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseEffectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMagicEffectGetter>.Null;
+        public FormLinkNullable<IMagicEffectGetter> BaseEffect => _BaseEffectLocation.HasValue ? new FormLinkNullable<IMagicEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseEffectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMagicEffectGetter>.Null;
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
         public IEffectDataGetter? Data => _DataLocation.HasValue ? EffectDataBinaryOverlay.EffectDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
-        public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region Conditions
         partial void ConditionsCustomParse(

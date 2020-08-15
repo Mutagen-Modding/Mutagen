@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IAcousticSpaceInternal,
         ILoquiObjectSetter<AcousticSpace>,
-        IEquatable<AcousticSpace>,
-        IEqualsMask
+        IEquatable<AcousticSpace>
     {
         #region Ctor
         protected AcousticSpace()
@@ -51,17 +50,17 @@ namespace Mutagen.Bethesda.Skyrim
         #region AmbientSound
         public FormLinkNullable<SoundDescriptor> AmbientSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ISoundDescriptorGetter> IAcousticSpaceGetter.AmbientSound => this.AmbientSound;
+        FormLinkNullable<ISoundDescriptorGetter> IAcousticSpaceGetter.AmbientSound => this.AmbientSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
         #endregion
         #region UseSoundFromRegion
         public FormLinkNullable<Region> UseSoundFromRegion { get; set; } = new FormLinkNullable<Region>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IRegionGetter> IAcousticSpaceGetter.UseSoundFromRegion => this.UseSoundFromRegion;
+        FormLinkNullable<IRegionGetter> IAcousticSpaceGetter.UseSoundFromRegion => this.UseSoundFromRegion.ToGetter<Region, IRegionGetter>();
         #endregion
         #region EnvironmentType
         public FormLinkNullable<ReverbParameters> EnvironmentType { get; set; } = new FormLinkNullable<ReverbParameters>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IReverbParametersGetter> IAcousticSpaceGetter.EnvironmentType => this.EnvironmentType;
+        FormLinkNullable<IReverbParametersGetter> IAcousticSpaceGetter.EnvironmentType => this.EnvironmentType.ToGetter<ReverbParameters, IReverbParametersGetter>();
         #endregion
 
         #region To String
@@ -461,7 +460,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => AcousticSpaceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => AcousticSpaceCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => AcousticSpaceCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AcousticSpaceCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AcousticSpaceCommon.Instance.RemapLinks(this, mapping);
         public AcousticSpace(FormKey formKey)
@@ -496,14 +495,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new AcousticSpace CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static AcousticSpace CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -530,8 +521,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAcousticSpaceGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -551,7 +540,8 @@ namespace Mutagen.Bethesda.Skyrim
         IAcousticSpaceGetter,
         ISkyrimMajorRecord,
         IObjectBounded,
-        ILoquiObjectSetter<IAcousticSpaceInternal>
+        ILoquiObjectSetter<IAcousticSpaceInternal>,
+        ILinkedFormKeyContainer
     {
         new ObjectBounds ObjectBounds { get; set; }
         new FormLinkNullable<SoundDescriptor> AmbientSound { get; set; }
@@ -570,14 +560,14 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IObjectBoundedGetter,
         ILoquiObject<IAcousticSpaceGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => AcousticSpace_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }
-        IFormLinkNullable<ISoundDescriptorGetter> AmbientSound { get; }
-        IFormLinkNullable<IRegionGetter> UseSoundFromRegion { get; }
-        IFormLinkNullable<IReverbParametersGetter> EnvironmentType { get; }
+        FormLinkNullable<ISoundDescriptorGetter> AmbientSound { get; }
+        FormLinkNullable<IRegionGetter> UseSoundFromRegion { get; }
+        FormLinkNullable<IReverbParametersGetter> EnvironmentType { get; }
 
     }
 
@@ -624,24 +614,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IAcousticSpaceGetter item,
-            AcousticSpace.Mask<bool?> checkMask)
-        {
-            return ((AcousticSpaceCommon)((IAcousticSpaceGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static AcousticSpace.Mask<bool> GetHasBeenSetMask(this IAcousticSpaceGetter item)
-        {
-            var ret = new AcousticSpace.Mask<bool>(false);
-            ((AcousticSpaceCommon)((IAcousticSpaceGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -713,17 +685,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IAcousticSpaceInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IAcousticSpaceInternal item,
             MutagenFrame frame,
@@ -1114,46 +1075,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.ObjectBounds?.ToString(fg, "ObjectBounds");
             }
-            if ((printMask?.AmbientSound ?? true)
-                && item.AmbientSound.TryGet(out var AmbientSoundItem))
+            if (printMask?.AmbientSound ?? true)
             {
-                fg.AppendItem(AmbientSoundItem, "AmbientSound");
+                fg.AppendItem(item.AmbientSound.FormKey, "AmbientSound");
             }
-            if ((printMask?.UseSoundFromRegion ?? true)
-                && item.UseSoundFromRegion.TryGet(out var UseSoundFromRegionItem))
+            if (printMask?.UseSoundFromRegion ?? true)
             {
-                fg.AppendItem(UseSoundFromRegionItem, "UseSoundFromRegion");
+                fg.AppendItem(item.UseSoundFromRegion.FormKey, "UseSoundFromRegion");
             }
-            if ((printMask?.EnvironmentType ?? true)
-                && item.EnvironmentType.TryGet(out var EnvironmentTypeItem))
+            if (printMask?.EnvironmentType ?? true)
             {
-                fg.AppendItem(EnvironmentTypeItem, "EnvironmentType");
+                fg.AppendItem(item.EnvironmentType.FormKey, "EnvironmentType");
             }
-        }
-        
-        public bool HasBeenSet(
-            IAcousticSpaceGetter item,
-            AcousticSpace.Mask<bool?> checkMask)
-        {
-            if (checkMask.AmbientSound.HasValue && checkMask.AmbientSound.Value != (item.AmbientSound.FormKey != null)) return false;
-            if (checkMask.UseSoundFromRegion.HasValue && checkMask.UseSoundFromRegion.Value != (item.UseSoundFromRegion.FormKey != null)) return false;
-            if (checkMask.EnvironmentType.HasValue && checkMask.EnvironmentType.Value != (item.EnvironmentType.FormKey != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IAcousticSpaceGetter item,
-            AcousticSpace.Mask<bool> mask)
-        {
-            mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
-            mask.AmbientSound = (item.AmbientSound.FormKey != null);
-            mask.UseSoundFromRegion = (item.UseSoundFromRegion.FormKey != null);
-            mask.EnvironmentType = (item.EnvironmentType.FormKey != null);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static AcousticSpace_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1231,18 +1164,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.ObjectBounds);
-            if (item.AmbientSound.TryGet(out var AmbientSounditem))
-            {
-                hash.Add(AmbientSounditem);
-            }
-            if (item.UseSoundFromRegion.TryGet(out var UseSoundFromRegionitem))
-            {
-                hash.Add(UseSoundFromRegionitem);
-            }
-            if (item.EnvironmentType.TryGet(out var EnvironmentTypeitem))
-            {
-                hash.Add(EnvironmentTypeitem);
-            }
+            hash.Add(item.AmbientSound);
+            hash.Add(item.UseSoundFromRegion);
+            hash.Add(item.EnvironmentType);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1355,15 +1279,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.AmbientSound) ?? true))
             {
-                item.AmbientSound = rhs.AmbientSound.FormKey;
+                item.AmbientSound = new FormLinkNullable<SoundDescriptor>(rhs.AmbientSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.UseSoundFromRegion) ?? true))
             {
-                item.UseSoundFromRegion = rhs.UseSoundFromRegion.FormKey;
+                item.UseSoundFromRegion = new FormLinkNullable<Region>(rhs.UseSoundFromRegion.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.EnvironmentType) ?? true))
             {
-                item.EnvironmentType = rhs.EnvironmentType.FormKey;
+                item.EnvironmentType = new FormLinkNullable<ReverbParameters>(rhs.EnvironmentType.FormKey);
             }
         }
         
@@ -1676,15 +1600,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAcousticSpaceGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => AcousticSpaceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => AcousticSpaceCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AcousticSpaceCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AcousticSpaceCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => AcousticSpaceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => AcousticSpaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1704,18 +1624,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region AmbientSound
         private int? _AmbientSoundLocation;
-        public bool AmbientSound_IsSet => _AmbientSoundLocation.HasValue;
-        public IFormLinkNullable<ISoundDescriptorGetter> AmbientSound => _AmbientSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AmbientSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public FormLinkNullable<ISoundDescriptorGetter> AmbientSound => _AmbientSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AmbientSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region UseSoundFromRegion
         private int? _UseSoundFromRegionLocation;
-        public bool UseSoundFromRegion_IsSet => _UseSoundFromRegionLocation.HasValue;
-        public IFormLinkNullable<IRegionGetter> UseSoundFromRegion => _UseSoundFromRegionLocation.HasValue ? new FormLinkNullable<IRegionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _UseSoundFromRegionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRegionGetter>.Null;
+        public FormLinkNullable<IRegionGetter> UseSoundFromRegion => _UseSoundFromRegionLocation.HasValue ? new FormLinkNullable<IRegionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _UseSoundFromRegionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRegionGetter>.Null;
         #endregion
         #region EnvironmentType
         private int? _EnvironmentTypeLocation;
-        public bool EnvironmentType_IsSet => _EnvironmentTypeLocation.HasValue;
-        public IFormLinkNullable<IReverbParametersGetter> EnvironmentType => _EnvironmentTypeLocation.HasValue ? new FormLinkNullable<IReverbParametersGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EnvironmentTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IReverbParametersGetter>.Null;
+        public FormLinkNullable<IReverbParametersGetter> EnvironmentType => _EnvironmentTypeLocation.HasValue ? new FormLinkNullable<IReverbParametersGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EnvironmentTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IReverbParametersGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

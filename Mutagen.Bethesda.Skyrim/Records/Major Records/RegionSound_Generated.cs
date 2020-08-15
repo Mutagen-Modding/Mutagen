@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class RegionSound :
         IRegionSound,
         ILoquiObjectSetter<RegionSound>,
-        IEquatable<RegionSound>,
-        IEqualsMask
+        IEquatable<RegionSound>
     {
         #region Ctor
         public RegionSound()
@@ -43,7 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Sound
         public FormLink<SoundDescriptor> Sound { get; set; } = new FormLink<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ISoundDescriptorGetter> IRegionSoundGetter.Sound => this.Sound;
+        FormLink<ISoundDescriptorGetter> IRegionSoundGetter.Sound => this.Sound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
         #endregion
         #region Flags
         public RegionSound.Flag Flags { get; set; } = default;
@@ -409,7 +408,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => RegionSoundCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => RegionSoundCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => RegionSoundCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionSoundCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionSoundCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -429,14 +428,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static RegionSound CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static RegionSound CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -463,8 +454,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionSoundGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -482,7 +471,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IRegionSound :
         IRegionSoundGetter,
-        ILoquiObjectSetter<IRegionSound>
+        ILoquiObjectSetter<IRegionSound>,
+        ILinkedFormKeyContainer
     {
         new FormLink<SoundDescriptor> Sound { get; set; }
         new RegionSound.Flag Flags { get; set; }
@@ -492,7 +482,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IRegionSoundGetter :
         ILoquiObject,
         ILoquiObject<IRegionSoundGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -502,7 +492,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => RegionSound_Registration.Instance;
-        IFormLink<ISoundDescriptorGetter> Sound { get; }
+        FormLink<ISoundDescriptorGetter> Sound { get; }
         RegionSound.Flag Flags { get; }
         Single Chance { get; }
 
@@ -551,24 +541,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IRegionSoundGetter item,
-            RegionSound.Mask<bool?> checkMask)
-        {
-            return ((RegionSoundCommon)((IRegionSoundGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static RegionSound.Mask<bool> GetHasBeenSetMask(this IRegionSoundGetter item)
-        {
-            var ret = new RegionSound.Mask<bool>(false);
-            ((RegionSoundCommon)((IRegionSoundGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -663,17 +635,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IRegionSound item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IRegionSound item,
             MutagenFrame frame,
@@ -1001,7 +962,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.Sound ?? true)
             {
-                fg.AppendItem(item.Sound, "Sound");
+                fg.AppendItem(item.Sound.FormKey, "Sound");
             }
             if (printMask?.Flags ?? true)
             {
@@ -1011,22 +972,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.Chance, "Chance");
             }
-        }
-        
-        public bool HasBeenSet(
-            IRegionSoundGetter item,
-            RegionSound.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IRegionSoundGetter item,
-            RegionSound.Mask<bool> mask)
-        {
-            mask.Sound = true;
-            mask.Flags = true;
-            mask.Chance = true;
         }
         
         #region Equals and Hash
@@ -1083,7 +1028,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RegionSound_FieldIndex.Sound) ?? true))
             {
-                item.Sound = rhs.Sound.FormKey;
+                item.Sound = new FormLink<SoundDescriptor>(rhs.Sound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)RegionSound_FieldIndex.Flags) ?? true))
             {
@@ -1240,12 +1185,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IRegionSoundGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((RegionSoundBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1277,15 +1223,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionSoundGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => RegionSoundCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => RegionSoundCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionSoundCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionSoundCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => RegionSoundCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => RegionSoundBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1300,7 +1242,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<ISoundDescriptorGetter> Sound => new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<ISoundDescriptorGetter> Sound => new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public RegionSound.Flag Flags => (RegionSound.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
         public Single Chance => _data.Slice(0x8, 0x4).Float();
         partial void CustomFactoryEnd(

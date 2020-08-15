@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         ALocationTarget,
         ILocationFallback,
         ILoquiObjectSetter<LocationFallback>,
-        IEquatable<LocationFallback>,
-        IEqualsMask
+        IEquatable<LocationFallback>
     {
         #region Ctor
         public LocationFallback()
@@ -378,14 +377,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new LocationFallback CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static LocationFallback CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -412,8 +403,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILocationFallbackGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -494,24 +483,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this ILocationFallbackGetter item,
-            LocationFallback.Mask<bool?> checkMask)
-        {
-            return ((LocationFallbackCommon)((ILocationFallbackGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static LocationFallback.Mask<bool> GetHasBeenSetMask(this ILocationFallbackGetter item)
-        {
-            var ret = new LocationFallback.Mask<bool>(false);
-            ((LocationFallbackCommon)((ILocationFallbackGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this ILocationFallbackGetter item,
             ILocationFallbackGetter rhs)
@@ -581,17 +552,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ILocationFallback item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ILocationFallback item,
             MutagenFrame frame,
@@ -935,26 +895,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            ILocationFallbackGetter item,
-            LocationFallback.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            ILocationFallbackGetter item,
-            LocationFallback.Mask<bool> mask)
-        {
-            mask.Type = true;
-            mask.Data = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static LocationFallback_FieldIndex ConvertFieldIndex(ALocationTarget_FieldIndex index)
         {
             switch (index)
@@ -1227,8 +1167,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILocationFallbackGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LocationFallbackBinaryWriteTranslation.Instance;

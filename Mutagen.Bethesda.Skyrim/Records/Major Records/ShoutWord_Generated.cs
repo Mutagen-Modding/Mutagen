@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ShoutWord :
         IShoutWord,
         ILoquiObjectSetter<ShoutWord>,
-        IEquatable<ShoutWord>,
-        IEqualsMask
+        IEquatable<ShoutWord>
     {
         #region Ctor
         public ShoutWord()
@@ -43,12 +42,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Word
         public FormLink<WordOfPower> Word { get; set; } = new FormLink<WordOfPower>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IWordOfPowerGetter> IShoutWordGetter.Word => this.Word;
+        FormLink<IWordOfPowerGetter> IShoutWordGetter.Word => this.Word.ToGetter<WordOfPower, IWordOfPowerGetter>();
         #endregion
         #region Spell
         public FormLink<Spell> Spell { get; set; } = new FormLink<Spell>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ISpellGetter> IShoutWordGetter.Spell => this.Spell;
+        FormLink<ISpellGetter> IShoutWordGetter.Spell => this.Spell.ToGetter<Spell, ISpellGetter>();
         #endregion
         #region RecoveryTime
         public Single RecoveryTime { get; set; } = default;
@@ -411,7 +410,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => ShoutWordCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ShoutWordCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ShoutWordCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ShoutWordCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ShoutWordCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -431,14 +430,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static ShoutWord CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static ShoutWord CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -465,8 +456,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IShoutWordGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -484,7 +473,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IShoutWord :
         IShoutWordGetter,
-        ILoquiObjectSetter<IShoutWord>
+        ILoquiObjectSetter<IShoutWord>,
+        ILinkedFormKeyContainer
     {
         new FormLink<WordOfPower> Word { get; set; }
         new FormLink<Spell> Spell { get; set; }
@@ -494,7 +484,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IShoutWordGetter :
         ILoquiObject,
         ILoquiObject<IShoutWordGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -504,8 +494,8 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => ShoutWord_Registration.Instance;
-        IFormLink<IWordOfPowerGetter> Word { get; }
-        IFormLink<ISpellGetter> Spell { get; }
+        FormLink<IWordOfPowerGetter> Word { get; }
+        FormLink<ISpellGetter> Spell { get; }
         Single RecoveryTime { get; }
 
     }
@@ -553,24 +543,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IShoutWordGetter item,
-            ShoutWord.Mask<bool?> checkMask)
-        {
-            return ((ShoutWordCommon)((IShoutWordGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static ShoutWord.Mask<bool> GetHasBeenSetMask(this IShoutWordGetter item)
-        {
-            var ret = new ShoutWord.Mask<bool>(false);
-            ((ShoutWordCommon)((IShoutWordGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -665,17 +637,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IShoutWord item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IShoutWord item,
             MutagenFrame frame,
@@ -1007,32 +968,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.Word ?? true)
             {
-                fg.AppendItem(item.Word, "Word");
+                fg.AppendItem(item.Word.FormKey, "Word");
             }
             if (printMask?.Spell ?? true)
             {
-                fg.AppendItem(item.Spell, "Spell");
+                fg.AppendItem(item.Spell.FormKey, "Spell");
             }
             if (printMask?.RecoveryTime ?? true)
             {
                 fg.AppendItem(item.RecoveryTime, "RecoveryTime");
             }
-        }
-        
-        public bool HasBeenSet(
-            IShoutWordGetter item,
-            ShoutWord.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IShoutWordGetter item,
-            ShoutWord.Mask<bool> mask)
-        {
-            mask.Word = true;
-            mask.Spell = true;
-            mask.RecoveryTime = true;
         }
         
         #region Equals and Hash
@@ -1090,11 +1035,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)ShoutWord_FieldIndex.Word) ?? true))
             {
-                item.Word = rhs.Word.FormKey;
+                item.Word = new FormLink<WordOfPower>(rhs.Word.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ShoutWord_FieldIndex.Spell) ?? true))
             {
-                item.Spell = rhs.Spell.FormKey;
+                item.Spell = new FormLink<Spell>(rhs.Spell.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ShoutWord_FieldIndex.RecoveryTime) ?? true))
             {
@@ -1254,12 +1199,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IShoutWordGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((ShoutWordBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1291,15 +1237,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IShoutWordGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => ShoutWordCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ShoutWordCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ShoutWordCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ShoutWordCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ShoutWordCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ShoutWordBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1314,8 +1256,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<IWordOfPowerGetter> Word => new FormLink<IWordOfPowerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public IFormLink<ISpellGetter> Spell => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public FormLink<IWordOfPowerGetter> Word => new FormLink<IWordOfPowerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<ISpellGetter> Spell => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         public Single RecoveryTime => _data.Slice(0x8, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,

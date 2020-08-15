@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         BookTeachTarget,
         IBookSkill,
         ILoquiObjectSetter<BookSkill>,
-        IEquatable<BookSkill>,
-        IEqualsMask
+        IEquatable<BookSkill>
     {
         #region Ctor
         public BookSkill()
@@ -342,14 +341,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new BookSkill CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static BookSkill CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -376,8 +367,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBookSkillGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -456,24 +445,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IBookSkillGetter item,
-            BookSkill.Mask<bool?> checkMask)
-        {
-            return ((BookSkillCommon)((IBookSkillGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static BookSkill.Mask<bool> GetHasBeenSetMask(this IBookSkillGetter item)
-        {
-            var ret = new BookSkill.Mask<bool>(false);
-            ((BookSkillCommon)((IBookSkillGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IBookSkillGetter item,
             IBookSkillGetter rhs)
@@ -543,17 +514,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IBookSkill item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IBookSkill item,
             MutagenFrame frame,
@@ -880,26 +840,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IBookSkillGetter item,
-            BookSkill.Mask<bool?> checkMask)
-        {
-            if (checkMask.Skill.HasValue && checkMask.Skill.Value != (item.Skill != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IBookSkillGetter item,
-            BookSkill.Mask<bool> mask)
-        {
-            mask.Skill = (item.Skill != null);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static BookSkill_FieldIndex ConvertFieldIndex(BookTeachTarget_FieldIndex index)
         {
             switch (index)
@@ -1168,8 +1108,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBookSkillGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => BookSkillBinaryWriteTranslation.Instance;

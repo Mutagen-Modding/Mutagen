@@ -1,21 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <Nullable>disable</Nullable>
-  </PropertyGroup>
-
   <ItemGroup>
-    <None Remove="override.esp" />
-    <None Remove="test.esp" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Loqui" Version="1.1.18" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.0.31" />
+    <PackageReference Include="Loqui" Version="1.2.0" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.1.0" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
       <PrivateAssets>all</PrivateAssets>

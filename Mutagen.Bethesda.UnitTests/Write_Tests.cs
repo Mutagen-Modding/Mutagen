@@ -9,8 +9,8 @@ namespace Mutagen.Bethesda.UnitTests
 {
     public class Write_Tests
     {
-        public static readonly ModKey WriteKey = new ModKey("Write", false);
-        public static readonly ModKey BadWriteKey = new ModKey("BadWrite", false);
+        public static readonly ModKey WriteKey = new ModKey("Write", ModType.Plugin);
+        public static readonly ModKey BadWriteKey = new ModKey("BadWrite", ModType.Plugin);
 
         public static TempFile GetFile()
         {
@@ -27,8 +27,8 @@ namespace Mutagen.Bethesda.UnitTests
                 tmp.File.Path,
                 new BinaryWriteParameters()
                 {
-                    ModKeySync = BinaryWriteParameters.ModKeySyncOption.NoCheck,
-                    MastersListSync = BinaryWriteParameters.MastersListSyncOption.NoCheck
+                    ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
+                    MastersListContent = BinaryWriteParameters.MastersListContentOption.NoCheck
                 });
         }
 
@@ -42,8 +42,8 @@ namespace Mutagen.Bethesda.UnitTests
                 tmp.File.Path,
                 new BinaryWriteParameters()
                 {
-                    ModKeySync = BinaryWriteParameters.ModKeySyncOption.NoCheck,
-                    MastersListSync = BinaryWriteParameters.MastersListSyncOption.NoCheck
+                    ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
+                    MastersListContent = BinaryWriteParameters.MastersListContentOption.NoCheck
                 });
         }
 
@@ -58,8 +58,8 @@ namespace Mutagen.Bethesda.UnitTests
                     tmp.File.Path,
                     new BinaryWriteParameters()
                     {
-                        ModKeySync = BinaryWriteParameters.ModKeySyncOption.ThrowIfMisaligned,
-                        MastersListSync = BinaryWriteParameters.MastersListSyncOption.NoCheck,
+                        ModKey = BinaryWriteParameters.ModKeyOption.ThrowIfMisaligned,
+                        MastersListContent = BinaryWriteParameters.MastersListContentOption.NoCheck,
                     }));
         }
 
@@ -74,8 +74,8 @@ namespace Mutagen.Bethesda.UnitTests
                     tmp.File.Path,
                     new BinaryWriteParameters()
                     {
-                        ModKeySync = BinaryWriteParameters.ModKeySyncOption.ThrowIfMisaligned,
-                        MastersListSync = BinaryWriteParameters.MastersListSyncOption.NoCheck,
+                        ModKey = BinaryWriteParameters.ModKeyOption.ThrowIfMisaligned,
+                        MastersListContent = BinaryWriteParameters.MastersListContentOption.NoCheck,
                     }));
         }
 
@@ -91,8 +91,8 @@ namespace Mutagen.Bethesda.UnitTests
                     tmp.File.Path,
                     new BinaryWriteParameters()
                     {
-                        ModKeySync = BinaryWriteParameters.ModKeySyncOption.NoCheck,
-                        MastersListSync = BinaryWriteParameters.MastersListSyncOption.NoCheck,
+                        ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
+                        MastersListContent = BinaryWriteParameters.MastersListContentOption.NoCheck,
                     }));
         }
 
@@ -108,8 +108,8 @@ namespace Mutagen.Bethesda.UnitTests
                     tmp.File.Path,
                     new BinaryWriteParameters()
                     {
-                        ModKeySync = BinaryWriteParameters.ModKeySyncOption.NoCheck,
-                        MastersListSync = BinaryWriteParameters.MastersListSyncOption.NoCheck,
+                        ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
+                        MastersListContent = BinaryWriteParameters.MastersListContentOption.NoCheck,
                     }));
         }
 
@@ -124,8 +124,8 @@ namespace Mutagen.Bethesda.UnitTests
                 tmp.File.Path,
                 new BinaryWriteParameters()
                 {
-                    ModKeySync = BinaryWriteParameters.ModKeySyncOption.NoCheck,
-                    MastersListSync = BinaryWriteParameters.MastersListSyncOption.Iterate,
+                    ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
+                    MastersListContent = BinaryWriteParameters.MastersListContentOption.Iterate,
                 });
         }
 
@@ -140,8 +140,8 @@ namespace Mutagen.Bethesda.UnitTests
                 tmp.File.Path,
                 new BinaryWriteParameters()
                 {
-                    ModKeySync = BinaryWriteParameters.ModKeySyncOption.NoCheck,
-                    MastersListSync = BinaryWriteParameters.MastersListSyncOption.Iterate,
+                    ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
+                    MastersListContent = BinaryWriteParameters.MastersListContentOption.Iterate,
                 });
         }
     }

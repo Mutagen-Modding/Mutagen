@@ -4,7 +4,7 @@
     <Interface>IModeled</Interface>
     <Interface>IObjectBounded</Interface>
     <Fields>
-      <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <RefDirect name="Model" refName="Model" />
       <Data>
         <Fields>
@@ -20,7 +20,7 @@
           <Float name="ColorRange" />
           <Float name="WavePeriod" />
           <Enum name="Flags" enumName="Grass.Flag" byteLength="1" />
-          <ByteArray name="Unknown3" hasBeenSet="False" byteLength="3" />
+          <ByteArray name="Unknown3" nullable="False" byteLength="3" />
         </Fields>
       </Data>
     </Fields>

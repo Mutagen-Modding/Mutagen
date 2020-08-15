@@ -33,8 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IRegionInternal,
         ILoquiObjectSetter<Region>,
-        IEquatable<Region>,
-        IEqualsMask
+        IEquatable<Region>
     {
         #region Ctor
         protected Region()
@@ -52,7 +51,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Worldspace
         public FormLinkNullable<Worldspace> Worldspace { get; set; } = new FormLinkNullable<Worldspace>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IWorldspaceGetter> IRegionGetter.Worldspace => this.Worldspace;
+        FormLinkNullable<IWorldspaceGetter> IRegionGetter.Worldspace => this.Worldspace.ToGetter<Worldspace, IWorldspaceGetter>();
         #endregion
         #region RegionAreas
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -788,7 +787,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => RegionCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => RegionCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => RegionCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionCommon.Instance.RemapLinks(this, mapping);
         public Region(FormKey formKey)
@@ -828,14 +827,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new Region CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static Region CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -862,8 +853,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -883,7 +872,8 @@ namespace Mutagen.Bethesda.Skyrim
         IRegionGetter,
         ISkyrimMajorRecord,
         IEmittance,
-        ILoquiObjectSetter<IRegionInternal>
+        ILoquiObjectSetter<IRegionInternal>,
+        ILinkedFormKeyContainer
     {
         new Color? MapColor { get; set; }
         new FormLinkNullable<Worldspace> Worldspace { get; set; }
@@ -911,12 +901,12 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IEmittanceGetter,
         ILoquiObject<IRegionGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Region_Registration.Instance;
         Color? MapColor { get; }
-        IFormLinkNullable<IWorldspaceGetter> Worldspace { get; }
+        FormLinkNullable<IWorldspaceGetter> Worldspace { get; }
         IReadOnlyList<IRegionAreaGetter> RegionAreas { get; }
         IRegionObjectsGetter? Objects { get; }
         IRegionWeatherGetter? Weather { get; }
@@ -974,24 +964,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IRegionGetter item,
-            Region.Mask<bool?> checkMask)
-        {
-            return ((RegionCommon)((IRegionGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Region.Mask<bool> GetHasBeenSetMask(this IRegionGetter item)
-        {
-            var ret = new Region.Mask<bool>(false);
-            ((RegionCommon)((IRegionGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -1063,17 +1035,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IRegionInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IRegionInternal item,
             MutagenFrame frame,
@@ -1563,10 +1524,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(MapColorItem, "MapColor");
             }
-            if ((printMask?.Worldspace ?? true)
-                && item.Worldspace.TryGet(out var WorldspaceItem))
+            if (printMask?.Worldspace ?? true)
             {
-                fg.AppendItem(WorldspaceItem, "Worldspace");
+                fg.AppendItem(item.Worldspace.FormKey, "Worldspace");
             }
             if (printMask?.RegionAreas?.Overall ?? true)
             {
@@ -1616,54 +1576,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 SoundsItem?.ToString(fg, "Sounds");
             }
-        }
-        
-        public bool HasBeenSet(
-            IRegionGetter item,
-            Region.Mask<bool?> checkMask)
-        {
-            if (checkMask.MapColor.HasValue && checkMask.MapColor.Value != (item.MapColor != null)) return false;
-            if (checkMask.Worldspace.HasValue && checkMask.Worldspace.Value != (item.Worldspace.FormKey != null)) return false;
-            if (checkMask.Objects?.Overall.HasValue ?? false && checkMask.Objects.Overall.Value != (item.Objects != null)) return false;
-            if (checkMask.Objects?.Specific != null && (item.Objects == null || !item.Objects.HasBeenSet(checkMask.Objects.Specific))) return false;
-            if (checkMask.Weather?.Overall.HasValue ?? false && checkMask.Weather.Overall.Value != (item.Weather != null)) return false;
-            if (checkMask.Weather?.Specific != null && (item.Weather == null || !item.Weather.HasBeenSet(checkMask.Weather.Specific))) return false;
-            if (checkMask.Map?.Overall.HasValue ?? false && checkMask.Map.Overall.Value != (item.Map != null)) return false;
-            if (checkMask.Map?.Specific != null && (item.Map == null || !item.Map.HasBeenSet(checkMask.Map.Specific))) return false;
-            if (checkMask.Land?.Overall.HasValue ?? false && checkMask.Land.Overall.Value != (item.Land != null)) return false;
-            if (checkMask.Land?.Specific != null && (item.Land == null || !item.Land.HasBeenSet(checkMask.Land.Specific))) return false;
-            if (checkMask.Grasses?.Overall.HasValue ?? false && checkMask.Grasses.Overall.Value != (item.Grasses != null)) return false;
-            if (checkMask.Grasses?.Specific != null && (item.Grasses == null || !item.Grasses.HasBeenSet(checkMask.Grasses.Specific))) return false;
-            if (checkMask.Sounds?.Overall.HasValue ?? false && checkMask.Sounds.Overall.Value != (item.Sounds != null)) return false;
-            if (checkMask.Sounds?.Specific != null && (item.Sounds == null || !item.Sounds.HasBeenSet(checkMask.Sounds.Specific))) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IRegionGetter item,
-            Region.Mask<bool> mask)
-        {
-            mask.MapColor = (item.MapColor != null);
-            mask.Worldspace = (item.Worldspace.FormKey != null);
-            var RegionAreasItem = item.RegionAreas;
-            mask.RegionAreas = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RegionArea.Mask<bool>?>>?>(true, RegionAreasItem.WithIndex().Select((i) => new MaskItemIndexed<bool, RegionArea.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            var itemObjects = item.Objects;
-            mask.Objects = new MaskItem<bool, RegionObjects.Mask<bool>?>(itemObjects != null, itemObjects?.GetHasBeenSetMask());
-            var itemWeather = item.Weather;
-            mask.Weather = new MaskItem<bool, RegionWeather.Mask<bool>?>(itemWeather != null, itemWeather?.GetHasBeenSetMask());
-            var itemMap = item.Map;
-            mask.Map = new MaskItem<bool, RegionMap.Mask<bool>?>(itemMap != null, itemMap?.GetHasBeenSetMask());
-            var itemLand = item.Land;
-            mask.Land = new MaskItem<bool, RegionLand.Mask<bool>?>(itemLand != null, itemLand?.GetHasBeenSetMask());
-            var itemGrasses = item.Grasses;
-            mask.Grasses = new MaskItem<bool, RegionGrasses.Mask<bool>?>(itemGrasses != null, itemGrasses?.GetHasBeenSetMask());
-            var itemSounds = item.Sounds;
-            mask.Sounds = new MaskItem<bool, RegionSounds.Mask<bool>?>(itemSounds != null, itemSounds?.GetHasBeenSetMask());
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static Region_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1749,10 +1661,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(MapColoritem);
             }
-            if (item.Worldspace.TryGet(out var Worldspaceitem))
-            {
-                hash.Add(Worldspaceitem);
-            }
+            hash.Add(item.Worldspace);
             hash.Add(item.RegionAreas);
             if (item.Objects.TryGet(out var Objectsitem))
             {
@@ -1892,7 +1801,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.Worldspace) ?? true))
             {
-                item.Worldspace = rhs.Worldspace.FormKey;
+                item.Worldspace = new FormLinkNullable<Worldspace>(rhs.Worldspace.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.RegionAreas) ?? true))
             {
@@ -2410,15 +2319,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => RegionCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => RegionCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => RegionCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RegionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2438,8 +2343,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Worldspace
         private int? _WorldspaceLocation;
-        public bool Worldspace_IsSet => _WorldspaceLocation.HasValue;
-        public IFormLinkNullable<IWorldspaceGetter> Worldspace => _WorldspaceLocation.HasValue ? new FormLinkNullable<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WorldspaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWorldspaceGetter>.Null;
+        public FormLinkNullable<IWorldspaceGetter> Worldspace => _WorldspaceLocation.HasValue ? new FormLinkNullable<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WorldspaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWorldspaceGetter>.Null;
         #endregion
         public IReadOnlyList<IRegionAreaGetter> RegionAreas { get; private set; } = ListExt.Empty<RegionAreaBinaryOverlay>();
         #region RegionAreaLogic

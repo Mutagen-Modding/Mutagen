@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         RegionData,
         IRegionWeather,
         ILoquiObjectSetter<RegionWeather>,
-        IEquatable<RegionWeather>,
-        IEqualsMask
+        IEquatable<RegionWeather>
     {
         #region Ctor
         public RegionWeather()
@@ -429,7 +428,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => RegionWeatherCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => RegionWeatherCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => RegionWeatherCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionWeatherCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionWeatherCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -447,14 +446,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new RegionWeather CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static RegionWeather CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -481,8 +472,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionWeatherGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -501,7 +490,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IRegionWeather :
         IRegionWeatherGetter,
         IRegionData,
-        ILoquiObjectSetter<IRegionWeather>
+        ILoquiObjectSetter<IRegionWeather>,
+        ILinkedFormKeyContainer
     {
         new IExtendedList<WeatherType>? Weathers { get; set; }
     }
@@ -509,7 +499,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IRegionWeatherGetter :
         IRegionDataGetter,
         ILoquiObject<IRegionWeatherGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => RegionWeather_Registration.Instance;
@@ -560,24 +550,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IRegionWeatherGetter item,
-            RegionWeather.Mask<bool?> checkMask)
-        {
-            return ((RegionWeatherCommon)((IRegionWeatherGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static RegionWeather.Mask<bool> GetHasBeenSetMask(this IRegionWeatherGetter item)
-        {
-            var ret = new RegionWeather.Mask<bool>(false);
-            ((RegionWeatherCommon)((IRegionWeatherGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -649,17 +621,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IRegionWeather item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IRegionWeather item,
             MutagenFrame frame,
@@ -1018,29 +979,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IRegionWeatherGetter item,
-            RegionWeather.Mask<bool?> checkMask)
-        {
-            if (checkMask.Weathers?.Overall.HasValue ?? false && checkMask.Weathers!.Overall.Value != (item.Weathers != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IRegionWeatherGetter item,
-            RegionWeather.Mask<bool> mask)
-        {
-            if (item.Weathers.TryGet(out var WeathersItem))
-            {
-                mask.Weathers = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WeatherType.Mask<bool>?>>?>(true, WeathersItem.WithIndex().Select((i) => new MaskItemIndexed<bool, WeatherType.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static RegionWeather_FieldIndex ConvertFieldIndex(RegionData_FieldIndex index)
         {
             switch (index)
@@ -1390,15 +1328,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionWeatherGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => RegionWeatherCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => RegionWeatherCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionWeatherCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionWeatherCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => RegionWeatherCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RegionWeatherBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

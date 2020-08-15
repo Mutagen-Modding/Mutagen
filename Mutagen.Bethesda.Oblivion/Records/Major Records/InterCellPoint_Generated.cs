@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class InterCellPoint :
         IInterCellPoint,
         ILoquiObjectSetter<InterCellPoint>,
-        IEquatable<InterCellPoint>,
-        IEqualsMask
+        IEquatable<InterCellPoint>
     {
         #region Ctor
         public InterCellPoint()
@@ -386,14 +385,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static InterCellPoint CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static InterCellPoint CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -420,8 +411,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IInterCellPointGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -505,24 +494,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IInterCellPointGetter item,
-            InterCellPoint.Mask<bool?> checkMask)
-        {
-            return ((InterCellPointCommon)((IInterCellPointGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static InterCellPoint.Mask<bool> GetHasBeenSetMask(this IInterCellPointGetter item)
-        {
-            var ret = new InterCellPoint.Mask<bool>(false);
-            ((InterCellPointCommon)((IInterCellPointGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -617,17 +588,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IInterCellPoint item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IInterCellPoint item,
             MutagenFrame frame,
@@ -949,21 +909,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IInterCellPointGetter item,
-            InterCellPoint.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IInterCellPointGetter item,
-            InterCellPoint.Mask<bool> mask)
-        {
-            mask.PointID = true;
-            mask.Point = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IInterCellPointGetter? lhs,
@@ -1159,12 +1104,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this IInterCellPointGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((InterCellPointBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1196,8 +1142,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IInterCellPointGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => InterCellPointBinaryWriteTranslation.Instance;

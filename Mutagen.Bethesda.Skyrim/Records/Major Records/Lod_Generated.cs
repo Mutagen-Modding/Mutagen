@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class Lod :
         ILod,
         ILoquiObjectSetter<Lod>,
-        IEquatable<Lod>,
-        IEqualsMask
+        IEquatable<Lod>
     {
         #region Ctor
         public Lod()
@@ -608,14 +607,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static Lod CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static Lod CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -642,8 +633,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILodGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -741,24 +730,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this ILodGetter item,
-            Lod.Mask<bool?> checkMask)
-        {
-            return ((LodCommon)((ILodGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Lod.Mask<bool> GetHasBeenSetMask(this ILodGetter item)
-        {
-            var ret = new Lod.Mask<bool>(false);
-            ((LodCommon)((ILodGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this ILodGetter item,
             ILodGetter rhs)
@@ -851,17 +822,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ILod item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ILod item,
             MutagenFrame frame,
@@ -1299,31 +1259,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            ILodGetter item,
-            Lod.Mask<bool?> checkMask)
-        {
-            if (checkMask.Level0Extra.HasValue && checkMask.Level0Extra.Value != (item.Level0Extra != null)) return false;
-            if (checkMask.Level1Extra.HasValue && checkMask.Level1Extra.Value != (item.Level1Extra != null)) return false;
-            if (checkMask.Level2Extra.HasValue && checkMask.Level2Extra.Value != (item.Level2Extra != null)) return false;
-            if (checkMask.Level3Extra.HasValue && checkMask.Level3Extra.Value != (item.Level3Extra != null)) return false;
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            ILodGetter item,
-            Lod.Mask<bool> mask)
-        {
-            mask.Level0 = true;
-            mask.Level0Extra = (item.Level0Extra != null);
-            mask.Level1 = true;
-            mask.Level1Extra = (item.Level1Extra != null);
-            mask.Level2 = true;
-            mask.Level2Extra = (item.Level2Extra != null);
-            mask.Level3 = true;
-            mask.Level3Extra = (item.Level3Extra != null);
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             ILodGetter? lhs,
@@ -1618,12 +1553,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this ILodGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((LodBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1655,8 +1591,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILodGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LodBinaryWriteTranslation.Instance;

@@ -28,13 +28,13 @@ namespace Mutagen.Bethesda.Tests.GUI.Views
             InitializeComponent();
             this.WhenActivated(disposable =>
             {
-                this.WhenAny(x => x.ViewModel!.Groups)
+                this.WhenAnyValue(x => x.ViewModel!.Groups)
                     .BindToStrict(this, x => x.PassthroughGroupsList.ItemsSource)
                     .DisposeWith(disposable);
-                this.WhenAny(x => x.ViewModel.SelectedPassthrough!.TestsDisplay)
+                this.WhenAnyValue(x => x.ViewModel.SelectedPassthrough!.TestsDisplay)
                     .BindToStrict(this, x => x.SelectedTestsControl.ItemsSource)
                     .DisposeWith(disposable);
-                this.WhenAny(x => x.ViewModel!.SelectedTest!.Output)
+                this.WhenAnyValue(x => x.ViewModel!.SelectedTest!.Output)
                     .BindToStrict(this, x => x.TerminalControl.ItemsSource)
                     .DisposeWith(disposable);
             });

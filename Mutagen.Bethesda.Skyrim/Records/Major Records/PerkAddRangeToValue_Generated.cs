@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         APerkEntryPointEffect,
         IPerkAddRangeToValue,
         ILoquiObjectSetter<PerkAddRangeToValue>,
-        IEquatable<PerkAddRangeToValue>,
-        IEqualsMask
+        IEquatable<PerkAddRangeToValue>
     {
         #region Ctor
         public PerkAddRangeToValue()
@@ -394,14 +393,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new PerkAddRangeToValue CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static PerkAddRangeToValue CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -428,8 +419,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPerkAddRangeToValueGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -510,24 +499,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IPerkAddRangeToValueGetter item,
-            PerkAddRangeToValue.Mask<bool?> checkMask)
-        {
-            return ((PerkAddRangeToValueCommon)((IPerkAddRangeToValueGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static PerkAddRangeToValue.Mask<bool> GetHasBeenSetMask(this IPerkAddRangeToValueGetter item)
-        {
-            var ret = new PerkAddRangeToValue.Mask<bool>(false);
-            ((PerkAddRangeToValueCommon)((IPerkAddRangeToValueGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IPerkAddRangeToValueGetter item,
             IPerkAddRangeToValueGetter rhs)
@@ -597,17 +568,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IPerkAddRangeToValue item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IPerkAddRangeToValue item,
             MutagenFrame frame,
@@ -975,26 +935,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IPerkAddRangeToValueGetter item,
-            PerkAddRangeToValue.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IPerkAddRangeToValueGetter item,
-            PerkAddRangeToValue.Mask<bool> mask)
-        {
-            mask.From = true;
-            mask.To = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static PerkAddRangeToValue_FieldIndex ConvertFieldIndex(APerkEntryPointEffect_FieldIndex index)
         {
             switch (index)
@@ -1346,8 +1286,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPerkAddRangeToValueGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PerkAddRangeToValueBinaryWriteTranslation.Instance;

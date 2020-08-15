@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         AStoryManagerNode,
         IStoryManagerBranchNodeInternal,
         ILoquiObjectSetter<StoryManagerBranchNode>,
-        IEquatable<StoryManagerBranchNode>,
-        IEqualsMask
+        IEquatable<StoryManagerBranchNode>
     {
         #region Ctor
         protected StoryManagerBranchNode()
@@ -428,14 +427,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new StoryManagerBranchNode CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static StoryManagerBranchNode CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -462,8 +453,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IStoryManagerBranchNodeGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -551,24 +540,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IStoryManagerBranchNodeGetter item,
-            StoryManagerBranchNode.Mask<bool?> checkMask)
-        {
-            return ((StoryManagerBranchNodeCommon)((IStoryManagerBranchNodeGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static StoryManagerBranchNode.Mask<bool> GetHasBeenSetMask(this IStoryManagerBranchNodeGetter item)
-        {
-            var ret = new StoryManagerBranchNode.Mask<bool>(false);
-            ((StoryManagerBranchNodeCommon)((IStoryManagerBranchNodeGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IStoryManagerBranchNodeGetter item,
             IStoryManagerBranchNodeGetter rhs)
@@ -638,17 +609,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IStoryManagerBranchNodeInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IStoryManagerBranchNodeInternal item,
             MutagenFrame frame,
@@ -1035,28 +995,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendLine($"XNAM => {SpanExt.ToHexString(XNAMItem)}");
             }
-        }
-        
-        public bool HasBeenSet(
-            IStoryManagerBranchNodeGetter item,
-            StoryManagerBranchNode.Mask<bool?> checkMask)
-        {
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
-            if (checkMask.XNAM.HasValue && checkMask.XNAM.Value != (item.XNAM != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IStoryManagerBranchNodeGetter item,
-            StoryManagerBranchNode.Mask<bool> mask)
-        {
-            mask.Flags = (item.Flags != null);
-            mask.XNAM = (item.XNAM != null);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static StoryManagerBranchNode_FieldIndex ConvertFieldIndex(AStoryManagerNode_FieldIndex index)
@@ -1594,8 +1532,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IStoryManagerBranchNodeGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => StoryManagerBranchNodeBinaryWriteTranslation.Instance;

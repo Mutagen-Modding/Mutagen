@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ILeveledItemInternal,
         ILoquiObjectSetter<LeveledItem>,
-        IEquatable<LeveledItem>,
-        IEqualsMask
+        IEquatable<LeveledItem>
     {
         #region Ctor
         protected LeveledItem()
@@ -57,7 +56,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Global
         public FormLinkNullable<Global> Global { get; set; } = new FormLinkNullable<Global>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IGlobalGetter> ILeveledItemGetter.Global => this.Global;
+        FormLinkNullable<IGlobalGetter> ILeveledItemGetter.Global => this.Global.ToGetter<Global, IGlobalGetter>();
         #endregion
         #region Entries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -575,7 +574,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => LeveledItemCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LeveledItemCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LeveledItemCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledItemCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledItemCommon.Instance.RemapLinks(this, mapping);
         public LeveledItem(FormKey formKey)
@@ -610,14 +609,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new LeveledItem CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static LeveledItem CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -644,8 +635,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILeveledItemGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -668,7 +657,8 @@ namespace Mutagen.Bethesda.Skyrim
         IHarvestTarget,
         IOutfitTarget,
         IObjectBounded,
-        ILoquiObjectSetter<ILeveledItemInternal>
+        ILoquiObjectSetter<ILeveledItemInternal>,
+        ILinkedFormKeyContainer
     {
         new ObjectBounds ObjectBounds { get; set; }
         new Byte ChanceNone { get; set; }
@@ -691,14 +681,14 @@ namespace Mutagen.Bethesda.Skyrim
         IOutfitTargetGetter,
         IObjectBoundedGetter,
         ILoquiObject<ILeveledItemGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => LeveledItem_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }
         Byte ChanceNone { get; }
         LeveledItem.Flag Flags { get; }
-        IFormLinkNullable<IGlobalGetter> Global { get; }
+        FormLinkNullable<IGlobalGetter> Global { get; }
         IReadOnlyList<ILeveledItemEntryGetter>? Entries { get; }
 
     }
@@ -746,24 +736,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ILeveledItemGetter item,
-            LeveledItem.Mask<bool?> checkMask)
-        {
-            return ((LeveledItemCommon)((ILeveledItemGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static LeveledItem.Mask<bool> GetHasBeenSetMask(this ILeveledItemGetter item)
-        {
-            var ret = new LeveledItem.Mask<bool>(false);
-            ((LeveledItemCommon)((ILeveledItemGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -835,17 +807,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ILeveledItemInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ILeveledItemInternal item,
             MutagenFrame frame,
@@ -1262,10 +1223,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.Flags, "Flags");
             }
-            if ((printMask?.Global ?? true)
-                && item.Global.TryGet(out var GlobalItem))
+            if (printMask?.Global ?? true)
             {
-                fg.AppendItem(GlobalItem, "Global");
+                fg.AppendItem(item.Global.FormKey, "Global");
             }
             if ((printMask?.Entries?.Overall ?? true)
                 && item.Entries.TryGet(out var EntriesItem))
@@ -1286,34 +1246,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-        }
-        
-        public bool HasBeenSet(
-            ILeveledItemGetter item,
-            LeveledItem.Mask<bool?> checkMask)
-        {
-            if (checkMask.Global.HasValue && checkMask.Global.Value != (item.Global.FormKey != null)) return false;
-            if (checkMask.Entries?.Overall.HasValue ?? false && checkMask.Entries!.Overall.Value != (item.Entries != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            ILeveledItemGetter item,
-            LeveledItem.Mask<bool> mask)
-        {
-            mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
-            mask.ChanceNone = true;
-            mask.Flags = true;
-            mask.Global = (item.Global.FormKey != null);
-            if (item.Entries.TryGet(out var EntriesItem))
-            {
-                mask.Entries = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LeveledItemEntry.Mask<bool>?>>?>(true, EntriesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, LeveledItemEntry.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static LeveledItem_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1394,10 +1326,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.ObjectBounds);
             hash.Add(item.ChanceNone);
             hash.Add(item.Flags);
-            if (item.Global.TryGet(out var Globalitem))
-            {
-                hash.Add(Globalitem);
-            }
+            hash.Add(item.Global);
             hash.Add(item.Entries);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1434,7 +1363,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (obj.Entries.TryGet(out var EntriesItem))
             {
-                foreach (var item in EntriesItem.WhereCastable<ILeveledItemEntryGetter, ILinkedFormKeyContainer> ()
+                foreach (var item in EntriesItem.WhereCastable<ILeveledItemEntryGetter, ILinkedFormKeyContainerGetter> ()
                     .SelectMany((f) => f.LinkFormKeys))
                 {
                     yield return item;
@@ -1519,7 +1448,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Global) ?? true))
             {
-                item.Global = rhs.Global.FormKey;
+                item.Global = new FormLinkNullable<Global>(rhs.Global.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Entries) ?? true))
             {
@@ -1889,15 +1818,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILeveledItemGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => LeveledItemCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LeveledItemCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledItemCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledItemCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LeveledItemCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LeveledItemBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1925,8 +1850,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Global
         private int? _GlobalLocation;
-        public bool Global_IsSet => _GlobalLocation.HasValue;
-        public IFormLinkNullable<IGlobalGetter> Global => _GlobalLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _GlobalLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        public FormLinkNullable<IGlobalGetter> Global => _GlobalLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _GlobalLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
         #endregion
         public IReadOnlyList<ILeveledItemEntryGetter>? Entries { get; private set; }
         partial void CustomFactoryEnd(

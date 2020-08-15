@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IEffectShaderInternal,
         ILoquiObjectSetter<EffectShader>,
-        IEquatable<EffectShader>,
-        IEqualsMask
+        IEquatable<EffectShader>
     {
         #region Ctor
         protected EffectShader()
@@ -461,14 +460,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new EffectShader CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static EffectShader CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -495,8 +486,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEffectShaderGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -586,24 +575,6 @@ namespace Mutagen.Bethesda.Oblivion
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IEffectShaderGetter item,
-            EffectShader.Mask<bool?> checkMask)
-        {
-            return ((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static EffectShader.Mask<bool> GetHasBeenSetMask(this IEffectShaderGetter item)
-        {
-            var ret = new EffectShader.Mask<bool>(false);
-            ((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IEffectShaderGetter item,
             IEffectShaderGetter rhs)
@@ -673,17 +644,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IEffectShaderInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IEffectShaderInternal item,
             MutagenFrame frame,
@@ -1074,32 +1034,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 DataItem?.ToString(fg, "Data");
             }
-        }
-        
-        public bool HasBeenSet(
-            IEffectShaderGetter item,
-            EffectShader.Mask<bool?> checkMask)
-        {
-            if (checkMask.FillTexture.HasValue && checkMask.FillTexture.Value != (item.FillTexture != null)) return false;
-            if (checkMask.ParticleShaderTexture.HasValue && checkMask.ParticleShaderTexture.Value != (item.ParticleShaderTexture != null)) return false;
-            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
-            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IEffectShaderGetter item,
-            EffectShader.Mask<bool> mask)
-        {
-            mask.FillTexture = (item.FillTexture != null);
-            mask.ParticleShaderTexture = (item.ParticleShaderTexture != null);
-            var itemData = item.Data;
-            mask.Data = new MaskItem<bool, EffectShaderData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static EffectShader_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
@@ -1598,8 +1532,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEffectShaderGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => EffectShaderBinaryWriteTranslation.Instance;
@@ -1624,7 +1556,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Data
         private RangeInt32? _DataLocation;
         public IEffectShaderDataGetter? Data => _DataLocation.HasValue ? EffectShaderDataBinaryOverlay.EffectShaderDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
-        public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         APerkEntryPointEffect,
         IPerkModifyActorValue,
         ILoquiObjectSetter<PerkModifyActorValue>,
-        IEquatable<PerkModifyActorValue>,
-        IEqualsMask
+        IEquatable<PerkModifyActorValue>
     {
         #region Ctor
         public PerkModifyActorValue()
@@ -43,7 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region ActorValue
-        public ActorValueExtended ActorValue { get; set; } = default;
+        public ActorValue ActorValue { get; set; } = default;
         #endregion
         #region Value
         public Single Value { get; set; } = default;
@@ -425,14 +424,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new PerkModifyActorValue CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static PerkModifyActorValue CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -459,8 +450,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPerkModifyActorValueGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -481,7 +470,7 @@ namespace Mutagen.Bethesda.Skyrim
         IAPerkEntryPointEffect,
         ILoquiObjectSetter<IPerkModifyActorValue>
     {
-        new ActorValueExtended ActorValue { get; set; }
+        new ActorValue ActorValue { get; set; }
         new Single Value { get; set; }
         new PerkModifyActorValue.ModificationType Modification { get; set; }
     }
@@ -492,7 +481,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static new ILoquiRegistration Registration => PerkModifyActorValue_Registration.Instance;
-        ActorValueExtended ActorValue { get; }
+        ActorValue ActorValue { get; }
         Single Value { get; }
         PerkModifyActorValue.ModificationType Modification { get; }
 
@@ -541,24 +530,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IPerkModifyActorValueGetter item,
-            PerkModifyActorValue.Mask<bool?> checkMask)
-        {
-            return ((PerkModifyActorValueCommon)((IPerkModifyActorValueGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static PerkModifyActorValue.Mask<bool> GetHasBeenSetMask(this IPerkModifyActorValueGetter item)
-        {
-            var ret = new PerkModifyActorValue.Mask<bool>(false);
-            ((PerkModifyActorValueCommon)((IPerkModifyActorValueGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -630,17 +601,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IPerkModifyActorValue item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IPerkModifyActorValue item,
             MutagenFrame frame,
@@ -825,7 +785,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case PerkModifyActorValue_FieldIndex.ActorValue:
-                    return typeof(ActorValueExtended);
+                    return typeof(ActorValue);
                 case PerkModifyActorValue_FieldIndex.Value:
                     return typeof(Single);
                 case PerkModifyActorValue_FieldIndex.Modification:
@@ -1024,27 +984,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.Modification, "Modification");
             }
-        }
-        
-        public bool HasBeenSet(
-            IPerkModifyActorValueGetter item,
-            PerkModifyActorValue.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IPerkModifyActorValueGetter item,
-            PerkModifyActorValue.Mask<bool> mask)
-        {
-            mask.ActorValue = true;
-            mask.Value = true;
-            mask.Modification = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static PerkModifyActorValue_FieldIndex ConvertFieldIndex(APerkEntryPointEffect_FieldIndex index)
@@ -1301,7 +1240,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             APerkEntryPointEffectBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValueExtended>.Instance.Write(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
                 writer,
                 item.ActorValue,
                 length: 4);
@@ -1374,7 +1313,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             APerkEntryPointEffectBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.ActorValue = EnumBinaryTranslation<ActorValueExtended>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.ActorValue = EnumBinaryTranslation<ActorValue>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.Value = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.Modification = EnumBinaryTranslation<PerkModifyActorValue.ModificationType>.Instance.Parse(frame: frame.SpawnWithLength(4));
         }
@@ -1410,8 +1349,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPerkModifyActorValueGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PerkModifyActorValueBinaryWriteTranslation.Instance;
@@ -1425,7 +1362,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public ActorValueExtended ActorValue => (ActorValueExtended)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x2, 0x4));
+        public ActorValue ActorValue => (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x2, 0x4));
         public Single Value => _data.Slice(0x6, 0x4).Float();
         public PerkModifyActorValue.ModificationType Modification => (PerkModifyActorValue.ModificationType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xA, 0x4));
         partial void CustomFactoryEnd(

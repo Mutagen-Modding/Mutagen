@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ILandscapeTextureInternal,
         ILoquiObjectSetter<LandscapeTexture>,
-        IEquatable<LandscapeTexture>,
-        IEqualsMask
+        IEquatable<LandscapeTexture>
     {
         #region Ctor
         protected LandscapeTexture()
@@ -46,12 +45,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region TextureSet
         public FormLinkNullable<TextureSet> TextureSet { get; set; } = new FormLinkNullable<TextureSet>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ITextureSetGetter> ILandscapeTextureGetter.TextureSet => this.TextureSet;
+        FormLinkNullable<ITextureSetGetter> ILandscapeTextureGetter.TextureSet => this.TextureSet.ToGetter<TextureSet, ITextureSetGetter>();
         #endregion
         #region MaterialType
         public FormLink<MaterialType> MaterialType { get; set; } = new FormLink<MaterialType>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IMaterialTypeGetter> ILandscapeTextureGetter.MaterialType => this.MaterialType;
+        FormLink<IMaterialTypeGetter> ILandscapeTextureGetter.MaterialType => this.MaterialType.ToGetter<MaterialType, IMaterialTypeGetter>();
         #endregion
         #region HavokFriction
         public Byte HavokFriction { get; set; } = default;
@@ -659,7 +658,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => LandscapeTextureCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LandscapeTextureCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LandscapeTextureCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LandscapeTextureCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LandscapeTextureCommon.Instance.RemapLinks(this, mapping);
         public LandscapeTexture(FormKey formKey)
@@ -698,14 +697,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new LandscapeTexture CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static LandscapeTexture CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -732,8 +723,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILandscapeTextureGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -753,7 +742,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILandscapeTextureGetter,
         ISkyrimMajorRecord,
         IRegionTarget,
-        ILoquiObjectSetter<ILandscapeTextureInternal>
+        ILoquiObjectSetter<ILandscapeTextureInternal>,
+        ILinkedFormKeyContainer
     {
         new FormLinkNullable<TextureSet> TextureSet { get; set; }
         new FormLink<MaterialType> MaterialType { get; set; }
@@ -776,12 +766,12 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IRegionTargetGetter,
         ILoquiObject<ILandscapeTextureGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => LandscapeTexture_Registration.Instance;
-        IFormLinkNullable<ITextureSetGetter> TextureSet { get; }
-        IFormLink<IMaterialTypeGetter> MaterialType { get; }
+        FormLinkNullable<ITextureSetGetter> TextureSet { get; }
+        FormLink<IMaterialTypeGetter> MaterialType { get; }
         Byte HavokFriction { get; }
         Byte HavokRestitution { get; }
         Byte TextureSpecularExponent { get; }
@@ -834,24 +824,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ILandscapeTextureGetter item,
-            LandscapeTexture.Mask<bool?> checkMask)
-        {
-            return ((LandscapeTextureCommon)((ILandscapeTextureGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static LandscapeTexture.Mask<bool> GetHasBeenSetMask(this ILandscapeTextureGetter item)
-        {
-            var ret = new LandscapeTexture.Mask<bool>(false);
-            ((LandscapeTextureCommon)((ILandscapeTextureGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -923,17 +895,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ILandscapeTextureInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ILandscapeTextureInternal item,
             MutagenFrame frame,
@@ -1379,14 +1340,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if ((printMask?.TextureSet ?? true)
-                && item.TextureSet.TryGet(out var TextureSetItem))
+            if (printMask?.TextureSet ?? true)
             {
-                fg.AppendItem(TextureSetItem, "TextureSet");
+                fg.AppendItem(item.TextureSet.FormKey, "TextureSet");
             }
             if (printMask?.MaterialType ?? true)
             {
-                fg.AppendItem(item.MaterialType, "MaterialType");
+                fg.AppendItem(item.MaterialType.FormKey, "MaterialType");
             }
             if (printMask?.HavokFriction ?? true)
             {
@@ -1411,7 +1371,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendItem(subItem);
+                            fg.AppendItem(subItem.FormKey);
                         }
                         fg.AppendLine("]");
                     }
@@ -1427,34 +1387,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.HNAMDataTypeState, "HNAMDataTypeState");
             }
-        }
-        
-        public bool HasBeenSet(
-            ILandscapeTextureGetter item,
-            LandscapeTexture.Mask<bool?> checkMask)
-        {
-            if (checkMask.TextureSet.HasValue && checkMask.TextureSet.Value != (item.TextureSet.FormKey != null)) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            ILandscapeTextureGetter item,
-            LandscapeTexture.Mask<bool> mask)
-        {
-            mask.TextureSet = (item.TextureSet.FormKey != null);
-            mask.MaterialType = true;
-            mask.HavokFriction = true;
-            mask.HavokRestitution = true;
-            mask.TextureSpecularExponent = true;
-            mask.Grasses = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
-            mask.Flags = (item.Flags != null);
-            mask.HNAMDataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static LandscapeTexture_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1535,10 +1467,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(ILandscapeTextureGetter item)
         {
             var hash = new HashCode();
-            if (item.TextureSet.TryGet(out var TextureSetitem))
-            {
-                hash.Add(TextureSetitem);
-            }
+            hash.Add(item.TextureSet);
             hash.Add(item.MaterialType);
             hash.Add(item.HavokFriction);
             hash.Add(item.HavokRestitution);
@@ -1636,11 +1565,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.TextureSet) ?? true))
             {
-                item.TextureSet = rhs.TextureSet.FormKey;
+                item.TextureSet = new FormLinkNullable<TextureSet>(rhs.TextureSet.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.MaterialType) ?? true))
             {
-                item.MaterialType = rhs.MaterialType.FormKey;
+                item.MaterialType = new FormLink<MaterialType>(rhs.MaterialType.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.HavokFriction) ?? true))
             {
@@ -2038,15 +1967,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILandscapeTextureGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => LandscapeTextureCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LandscapeTextureCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LandscapeTextureCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LandscapeTextureCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LandscapeTextureCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LandscapeTextureBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2061,13 +1986,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region TextureSet
         private int? _TextureSetLocation;
-        public bool TextureSet_IsSet => _TextureSetLocation.HasValue;
-        public IFormLinkNullable<ITextureSetGetter> TextureSet => _TextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
+        public FormLinkNullable<ITextureSetGetter> TextureSet => _TextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
         #endregion
         #region MaterialType
         private int? _MaterialTypeLocation;
-        public bool MaterialType_IsSet => _MaterialTypeLocation.HasValue;
-        public IFormLink<IMaterialTypeGetter> MaterialType => _MaterialTypeLocation.HasValue ? new FormLink<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MaterialTypeLocation.Value, _package.MetaData.Constants)))) : FormLink<IMaterialTypeGetter>.Null;
+        public FormLink<IMaterialTypeGetter> MaterialType => _MaterialTypeLocation.HasValue ? new FormLink<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MaterialTypeLocation.Value, _package.MetaData.Constants)))) : FormLink<IMaterialTypeGetter>.Null;
         #endregion
         private int? _HNAMLocation;
         public LandscapeTexture.HNAMDataType HNAMDataTypeState { get; private set; }

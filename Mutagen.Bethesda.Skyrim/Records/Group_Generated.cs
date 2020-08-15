@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class Group<T> :
         IGroup<T>,
         ILoquiObjectSetter<Group<T>>,
-        IEquatable<Group<T>>,
-        IEqualsMask
+        IEquatable<Group<T>>
         where T : class, ISkyrimMajorRecordInternal, IBinaryItem
     {
         #region Ctor
@@ -102,7 +101,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => GroupCommon<T>.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => GroupCommon<T>.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => GroupCommon<T>.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GroupCommon<T>.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GroupCommon<T>.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
@@ -134,14 +133,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static Group<T> CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static Group<T> CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -168,8 +159,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGroupGetter<T>)rhs, include);
 
         void IClearable.Clear()
         {
@@ -188,7 +177,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IGroup<T> :
         IGroupGetter<T>,
         IMajorRecordEnumerable,
-        ILoquiObjectSetter<IGroup<T>>
+        ILoquiObjectSetter<IGroup<T>>,
+        ILinkedFormKeyContainer
         where T : class, ISkyrimMajorRecordInternal, IBinaryItem
     {
         new GroupTypeEnum Type { get; set; }
@@ -201,7 +191,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject,
         IMajorRecordGetterEnumerable,
         ILoquiObject<IGroupGetter<T>>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
         where T : class, ISkyrimMajorRecordGetter, IBinaryItem
     {
@@ -266,26 +256,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet<T>(
-            this IGroupGetter<T> item,
-            Group.Mask<bool?> checkMask)
-            where T : class, ISkyrimMajorRecordGetter, IBinaryItem
-        {
-            return ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Group.Mask<bool> GetHasBeenSetMask<T>(this IGroupGetter<T> item)
-            where T : class, ISkyrimMajorRecordGetter, IBinaryItem
-        {
-            var ret = new Group.Mask<bool>(false);
-            ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals<T>(
@@ -470,18 +440,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary<T>(
-            this IGroup<T> item,
-            MutagenFrame frame)
-            where T : SkyrimMajorRecord, IBinaryItem
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary<T>(
             this IGroup<T> item,
             MutagenFrame frame,
@@ -893,23 +851,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IGroupGetter<T> item,
-            Group.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IGroupGetter<T> item,
-            Group.Mask<bool> mask)
-        {
-            mask.Type = true;
-            mask.LastModified = true;
-            mask.Unknown = true;
-            mask.RecordCache = new MaskItem<bool, IEnumerable<MaskItemIndexed<FormKey, bool, SkyrimMajorRecord.Mask<bool>?>>?>(true, item.RecordCache.Items.Select((i) => new MaskItemIndexed<FormKey, bool, SkyrimMajorRecord.Mask<bool>?>(i.FormKey, true, i.GetHasBeenSetMask())));
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IGroupGetter<T>? lhs,
@@ -946,7 +887,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<FormKey> GetLinkFormKeys(IGroupGetter<T> obj)
         {
-            foreach (var item in obj.RecordCache.Items.WhereCastable<T, ILinkedFormKeyContainer>()
+            foreach (var item in obj.RecordCache.Items.WhereCastable<T, ILinkedFormKeyContainerGetter>()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
@@ -975,11 +916,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (type.Name)
             {
                 case "IMajorRecordCommon":
-                case "IMajorRecordCommonGetter":
+                case "IMajorRecord":
                 case "MajorRecord":
                 case "ISkyrimMajorRecord":
-                case "ISkyrimMajorRecordGetter":
                 case "SkyrimMajorRecord":
+                    if (!Group_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IMajorRecordGetter":
+                case "IMajorRecordCommonGetter":
+                case "ISkyrimMajorRecordGetter":
                     foreach (var item in this.EnumerateMajorRecords(obj))
                     {
                         yield return item;
@@ -1282,14 +1231,15 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary<T, T_ErrMask>(
             this IGroupGetter<T> item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
             where T : class, ISkyrimMajorRecordGetter, IBinaryItem
             where T_ErrMask : SkyrimMajorRecord.ErrorMask, IErrorMask<T_ErrMask>
         {
             ((GroupBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1299,9 +1249,7 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class GroupBinaryOverlay<T> :
-        BinaryOverlay,
-        IGroupGetter<T>
+    public partial class GroupBinaryOverlay<T> : IGroupGetter<T>
         where T : class, ISkyrimMajorRecordGetter, IBinaryItem
     {
         #region Common Routing
@@ -1322,15 +1270,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGroupGetter<T>)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => GroupCommon<T>.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => GroupCommon<T>.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GroupCommon<T>.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GroupCommon<T>.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => GroupCommon<T>.Instance.GetLinkFormKeys(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

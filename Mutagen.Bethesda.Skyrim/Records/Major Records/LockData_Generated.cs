@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class LockData :
         ILockData,
         ILoquiObjectSetter<LockData>,
-        IEquatable<LockData>,
-        IEqualsMask
+        IEquatable<LockData>
     {
         #region Ctor
         public LockData()
@@ -57,7 +56,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Key
         public FormLink<Key> Key { get; set; } = new FormLink<Key>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IKeyGetter> ILockDataGetter.Key => this.Key;
+        FormLink<IKeyGetter> ILockDataGetter.Key => this.Key.ToGetter<Key, IKeyGetter>();
         #endregion
         #region Flags
         public LockData.Flag Flags { get; set; } = default;
@@ -487,7 +486,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => LockDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LockDataCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LockDataCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LockDataCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LockDataCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -507,14 +506,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static LockData CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static LockData CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -541,8 +532,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILockDataGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -560,7 +549,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface ILockData :
         ILockDataGetter,
-        ILoquiObjectSetter<ILockData>
+        ILoquiObjectSetter<ILockData>,
+        ILinkedFormKeyContainer
     {
         new LockLevel Level { get; set; }
         new MemorySlice<Byte> Unused { get; set; }
@@ -572,7 +562,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILockDataGetter :
         ILoquiObject,
         ILoquiObject<ILockDataGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -584,7 +574,7 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => LockData_Registration.Instance;
         LockLevel Level { get; }
         ReadOnlyMemorySlice<Byte> Unused { get; }
-        IFormLink<IKeyGetter> Key { get; }
+        FormLink<IKeyGetter> Key { get; }
         LockData.Flag Flags { get; }
         ReadOnlyMemorySlice<Byte> Unused2 { get; }
 
@@ -633,24 +623,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ILockDataGetter item,
-            LockData.Mask<bool?> checkMask)
-        {
-            return ((LockDataCommon)((ILockDataGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static LockData.Mask<bool> GetHasBeenSetMask(this ILockDataGetter item)
-        {
-            var ret = new LockData.Mask<bool>(false);
-            ((LockDataCommon)((ILockDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -745,17 +717,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ILockData item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ILockData item,
             MutagenFrame frame,
@@ -1123,7 +1084,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Key ?? true)
             {
-                fg.AppendItem(item.Key, "Key");
+                fg.AppendItem(item.Key.FormKey, "Key");
             }
             if (printMask?.Flags ?? true)
             {
@@ -1133,24 +1094,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendLine($"Unused2 => {SpanExt.ToHexString(item.Unused2)}");
             }
-        }
-        
-        public bool HasBeenSet(
-            ILockDataGetter item,
-            LockData.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            ILockDataGetter item,
-            LockData.Mask<bool> mask)
-        {
-            mask.Level = true;
-            mask.Unused = true;
-            mask.Key = true;
-            mask.Flags = true;
-            mask.Unused2 = true;
         }
         
         #region Equals and Hash
@@ -1219,7 +1162,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LockData_FieldIndex.Key) ?? true))
             {
-                item.Key = rhs.Key.FormKey;
+                item.Key = new FormLink<Key>(rhs.Key.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LockData_FieldIndex.Flags) ?? true))
             {
@@ -1391,12 +1334,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this ILockDataGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((LockDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1428,15 +1372,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILockDataGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => LockDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LockDataCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LockDataCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LockDataCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LockDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LockDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1453,7 +1393,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public LockLevel Level => (LockLevel)_data.Span.Slice(0x0, 0x1)[0];
         public ReadOnlyMemorySlice<Byte> Unused => _data.Span.Slice(0x1, 0x3).ToArray();
-        public IFormLink<IKeyGetter> Key => new FormLink<IKeyGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public FormLink<IKeyGetter> Key => new FormLink<IKeyGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         public LockData.Flag Flags => (LockData.Flag)_data.Span.Slice(0x8, 0x1)[0];
         public ReadOnlyMemorySlice<Byte> Unused2 => _data.Span.Slice(0x9, 0xB).ToArray();
         partial void CustomFactoryEnd(

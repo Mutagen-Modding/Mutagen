@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         ITreeInternal,
         ILoquiObjectSetter<Tree>,
-        IEquatable<Tree>,
-        IEqualsMask
+        IEquatable<Tree>
     {
         #region Ctor
         protected Tree()
@@ -637,14 +636,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new Tree CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static Tree CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -671,8 +662,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITreeGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -766,24 +755,6 @@ namespace Mutagen.Bethesda.Oblivion
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this ITreeGetter item,
-            Tree.Mask<bool?> checkMask)
-        {
-            return ((TreeCommon)((ITreeGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Tree.Mask<bool> GetHasBeenSetMask(this ITreeGetter item)
-        {
-            var ret = new Tree.Mask<bool>(false);
-            ((TreeCommon)((ITreeGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this ITreeGetter item,
             ITreeGetter rhs)
@@ -853,17 +824,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ITreeInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ITreeInternal item,
             MutagenFrame frame,
@@ -1318,40 +1278,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 BillboardDimensionsItem?.ToString(fg, "BillboardDimensions");
             }
-        }
-        
-        public bool HasBeenSet(
-            ITreeGetter item,
-            Tree.Mask<bool?> checkMask)
-        {
-            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
-            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.Icon.HasValue && checkMask.Icon.Value != (item.Icon != null)) return false;
-            if (checkMask.SpeedTreeSeeds?.Overall.HasValue ?? false && checkMask.SpeedTreeSeeds!.Overall.Value != (item.SpeedTreeSeeds != null)) return false;
-            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
-            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
-            if (checkMask.BillboardDimensions?.Overall.HasValue ?? false && checkMask.BillboardDimensions.Overall.Value != (item.BillboardDimensions != null)) return false;
-            if (checkMask.BillboardDimensions?.Specific != null && (item.BillboardDimensions == null || !item.BillboardDimensions.HasBeenSet(checkMask.BillboardDimensions.Specific))) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            ITreeGetter item,
-            Tree.Mask<bool> mask)
-        {
-            var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            mask.Icon = (item.Icon != null);
-            mask.SpeedTreeSeeds = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.SpeedTreeSeeds != null), default);
-            var itemData = item.Data;
-            mask.Data = new MaskItem<bool, TreeData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
-            var itemBillboardDimensions = item.BillboardDimensions;
-            mask.BillboardDimensions = new MaskItem<bool, Dimensions.Mask<bool>?>(itemBillboardDimensions != null, itemBillboardDimensions?.GetHasBeenSetMask());
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static Tree_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
@@ -1959,8 +1885,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITreeGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => TreeBinaryWriteTranslation.Instance;
@@ -1983,12 +1907,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Data
         private RangeInt32? _DataLocation;
         public ITreeDataGetter? Data => _DataLocation.HasValue ? TreeDataBinaryOverlay.TreeDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
-        public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region BillboardDimensions
         private RangeInt32? _BillboardDimensionsLocation;
         public IDimensionsGetter? BillboardDimensions => _BillboardDimensionsLocation.HasValue ? DimensionsBinaryOverlay.DimensionsFactory(new OverlayStream(_data.Slice(_BillboardDimensionsLocation!.Value.Min), _package), _package) : default;
-        public bool BillboardDimensions_IsSet => _BillboardDimensionsLocation.HasValue;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IFloraInternal,
         ILoquiObjectSetter<Flora>,
-        IEquatable<Flora>,
-        IEqualsMask
+        IEquatable<Flora>
     {
         #region Ctor
         protected Flora()
@@ -128,12 +127,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Ingredient
         public FormLinkNullable<IHarvestTarget> Ingredient { get; set; } = new FormLinkNullable<IHarvestTarget>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IHarvestTargetGetter> IFloraGetter.Ingredient => this.Ingredient;
+        FormLinkNullable<IHarvestTargetGetter> IFloraGetter.Ingredient => this.Ingredient.ToGetter<IHarvestTarget, IHarvestTargetGetter>();
         #endregion
         #region HarvestSound
         public FormLinkNullable<SoundDescriptor> HarvestSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ISoundDescriptorGetter> IFloraGetter.HarvestSound => this.HarvestSound;
+        FormLinkNullable<ISoundDescriptorGetter> IFloraGetter.HarvestSound => this.HarvestSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
         #endregion
         #region Production
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -873,7 +872,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => FloraCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => FloraCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => FloraCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FloraCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FloraCommon.Instance.RemapLinks(this, mapping);
         public Flora(FormKey formKey)
@@ -908,14 +907,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new Flora CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static Flora CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -942,8 +933,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFloraGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -966,7 +955,8 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedRequired,
         IModeled,
         IObjectBounded,
-        ILoquiObjectSetter<IFloraInternal>
+        ILoquiObjectSetter<IFloraInternal>,
+        ILinkedFormKeyContainer
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
@@ -996,7 +986,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeledGetter,
         IObjectBoundedGetter,
         ILoquiObject<IFloraGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Flora_Registration.Instance;
@@ -1009,8 +999,8 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? PNAM { get; }
         TranslatedString? ActivateTextOverride { get; }
         ReadOnlyMemorySlice<Byte>? FNAM { get; }
-        IFormLinkNullable<IHarvestTargetGetter> Ingredient { get; }
-        IFormLinkNullable<ISoundDescriptorGetter> HarvestSound { get; }
+        FormLinkNullable<IHarvestTargetGetter> Ingredient { get; }
+        FormLinkNullable<ISoundDescriptorGetter> HarvestSound { get; }
         ISeasonalIngredientProductionGetter? Production { get; }
 
     }
@@ -1058,24 +1048,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IFloraGetter item,
-            Flora.Mask<bool?> checkMask)
-        {
-            return ((FloraCommon)((IFloraGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Flora.Mask<bool> GetHasBeenSetMask(this IFloraGetter item)
-        {
-            var ret = new Flora.Mask<bool>(false);
-            ((FloraCommon)((IFloraGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -1147,17 +1119,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IFloraInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IFloraInternal item,
             MutagenFrame frame,
@@ -1711,7 +1672,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendItem(subItem);
+                            fg.AppendItem(subItem.FormKey);
                         }
                         fg.AppendLine("]");
                     }
@@ -1733,69 +1694,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendLine($"FNAM => {SpanExt.ToHexString(FNAMItem)}");
             }
-            if ((printMask?.Ingredient ?? true)
-                && item.Ingredient.TryGet(out var IngredientItem))
+            if (printMask?.Ingredient ?? true)
             {
-                fg.AppendItem(IngredientItem, "Ingredient");
+                fg.AppendItem(item.Ingredient.FormKey, "Ingredient");
             }
-            if ((printMask?.HarvestSound ?? true)
-                && item.HarvestSound.TryGet(out var HarvestSoundItem))
+            if (printMask?.HarvestSound ?? true)
             {
-                fg.AppendItem(HarvestSoundItem, "HarvestSound");
+                fg.AppendItem(item.HarvestSound.FormKey, "HarvestSound");
             }
             if ((printMask?.Production?.Overall ?? true)
                 && item.Production.TryGet(out var ProductionItem))
             {
                 ProductionItem?.ToString(fg, "Production");
             }
-        }
-        
-        public bool HasBeenSet(
-            IFloraGetter item,
-            Flora.Mask<bool?> checkMask)
-        {
-            if (checkMask.VirtualMachineAdapter?.Overall.HasValue ?? false && checkMask.VirtualMachineAdapter.Overall.Value != (item.VirtualMachineAdapter != null)) return false;
-            if (checkMask.VirtualMachineAdapter?.Specific != null && (item.VirtualMachineAdapter == null || !item.VirtualMachineAdapter.HasBeenSet(checkMask.VirtualMachineAdapter.Specific))) return false;
-            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
-            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.Destructible?.Overall.HasValue ?? false && checkMask.Destructible.Overall.Value != (item.Destructible != null)) return false;
-            if (checkMask.Destructible?.Specific != null && (item.Destructible == null || !item.Destructible.HasBeenSet(checkMask.Destructible.Specific))) return false;
-            if (checkMask.Keywords?.Overall.HasValue ?? false && checkMask.Keywords!.Overall.Value != (item.Keywords != null)) return false;
-            if (checkMask.PNAM.HasValue && checkMask.PNAM.Value != (item.PNAM != null)) return false;
-            if (checkMask.ActivateTextOverride.HasValue && checkMask.ActivateTextOverride.Value != (item.ActivateTextOverride != null)) return false;
-            if (checkMask.FNAM.HasValue && checkMask.FNAM.Value != (item.FNAM != null)) return false;
-            if (checkMask.Ingredient.HasValue && checkMask.Ingredient.Value != (item.Ingredient.FormKey != null)) return false;
-            if (checkMask.HarvestSound.HasValue && checkMask.HarvestSound.Value != (item.HarvestSound.FormKey != null)) return false;
-            if (checkMask.Production?.Overall.HasValue ?? false && checkMask.Production.Overall.Value != (item.Production != null)) return false;
-            if (checkMask.Production?.Specific != null && (item.Production == null || !item.Production.HasBeenSet(checkMask.Production.Specific))) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IFloraGetter item,
-            Flora.Mask<bool> mask)
-        {
-            var itemVirtualMachineAdapter = item.VirtualMachineAdapter;
-            mask.VirtualMachineAdapter = new MaskItem<bool, VirtualMachineAdapter.Mask<bool>?>(itemVirtualMachineAdapter != null, itemVirtualMachineAdapter?.GetHasBeenSetMask());
-            mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
-            mask.Name = true;
-            var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            var itemDestructible = item.Destructible;
-            mask.Destructible = new MaskItem<bool, Destructible.Mask<bool>?>(itemDestructible != null, itemDestructible?.GetHasBeenSetMask());
-            mask.Keywords = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Keywords != null), default);
-            mask.PNAM = (item.PNAM != null);
-            mask.ActivateTextOverride = (item.ActivateTextOverride != null);
-            mask.FNAM = (item.FNAM != null);
-            mask.Ingredient = (item.Ingredient.FormKey != null);
-            mask.HarvestSound = (item.HarvestSound.FormKey != null);
-            var itemProduction = item.Production;
-            mask.Production = new MaskItem<bool, SeasonalIngredientProduction.Mask<bool>?>(itemProduction != null, itemProduction?.GetHasBeenSetMask());
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static Flora_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1907,14 +1818,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(FNAMItem);
             }
-            if (item.Ingredient.TryGet(out var Ingredientitem))
-            {
-                hash.Add(Ingredientitem);
-            }
-            if (item.HarvestSound.TryGet(out var HarvestSounditem))
-            {
-                hash.Add(HarvestSounditem);
-            }
+            hash.Add(item.Ingredient);
+            hash.Add(item.HarvestSound);
             if (item.Production.TryGet(out var Productionitem))
             {
                 hash.Add(Productionitem);
@@ -1948,7 +1853,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainer VirtualMachineAdapterlinkCont)
+            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainerGetter VirtualMachineAdapterlinkCont)
             {
                 foreach (var item in VirtualMachineAdapterlinkCont.LinkFormKeys)
                 {
@@ -2190,11 +2095,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Ingredient) ?? true))
             {
-                item.Ingredient = rhs.Ingredient.FormKey;
+                item.Ingredient = new FormLinkNullable<IHarvestTarget>(rhs.Ingredient.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.HarvestSound) ?? true))
             {
-                item.HarvestSound = rhs.HarvestSound.FormKey;
+                item.HarvestSound = new FormLinkNullable<SoundDescriptor>(rhs.HarvestSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Production) ?? true))
             {
@@ -2650,15 +2555,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFloraGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => FloraCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => FloraCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FloraCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FloraCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => FloraCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => FloraBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2674,7 +2575,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
         public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
-        public bool VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
         #endregion
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
@@ -2702,18 +2602,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Ingredient
         private int? _IngredientLocation;
-        public bool Ingredient_IsSet => _IngredientLocation.HasValue;
-        public IFormLinkNullable<IHarvestTargetGetter> Ingredient => _IngredientLocation.HasValue ? new FormLinkNullable<IHarvestTargetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IngredientLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IHarvestTargetGetter>.Null;
+        public FormLinkNullable<IHarvestTargetGetter> Ingredient => _IngredientLocation.HasValue ? new FormLinkNullable<IHarvestTargetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IngredientLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IHarvestTargetGetter>.Null;
         #endregion
         #region HarvestSound
         private int? _HarvestSoundLocation;
-        public bool HarvestSound_IsSet => _HarvestSoundLocation.HasValue;
-        public IFormLinkNullable<ISoundDescriptorGetter> HarvestSound => _HarvestSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HarvestSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public FormLinkNullable<ISoundDescriptorGetter> HarvestSound => _HarvestSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HarvestSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region Production
         private RangeInt32? _ProductionLocation;
         public ISeasonalIngredientProductionGetter? Production => _ProductionLocation.HasValue ? SeasonalIngredientProductionBinaryOverlay.SeasonalIngredientProductionFactory(new OverlayStream(_data.Slice(_ProductionLocation!.Value.Min), _package), _package) : default;
-        public bool Production_IsSet => _ProductionLocation.HasValue;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

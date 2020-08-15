@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IDoorInternal,
         ILoquiObjectSetter<Door>,
-        IEquatable<Door>,
-        IEqualsMask
+        IEquatable<Door>
     {
         #region Ctor
         protected Door()
@@ -89,17 +88,17 @@ namespace Mutagen.Bethesda.Skyrim
         #region OpenSound
         public FormLinkNullable<SoundDescriptor> OpenSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ISoundDescriptorGetter> IDoorGetter.OpenSound => this.OpenSound;
+        FormLinkNullable<ISoundDescriptorGetter> IDoorGetter.OpenSound => this.OpenSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
         #endregion
         #region CloseSound
         public FormLinkNullable<SoundDescriptor> CloseSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ISoundDescriptorGetter> IDoorGetter.CloseSound => this.CloseSound;
+        FormLinkNullable<ISoundDescriptorGetter> IDoorGetter.CloseSound => this.CloseSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
         #endregion
         #region LoopSound
         public FormLinkNullable<SoundDescriptor> LoopSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ISoundDescriptorGetter> IDoorGetter.LoopSound => this.LoopSound;
+        FormLinkNullable<ISoundDescriptorGetter> IDoorGetter.LoopSound => this.LoopSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
         #endregion
         #region Flags
         public Door.Flag Flags { get; set; } = default;
@@ -666,7 +665,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => DoorCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => DoorCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => DoorCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DoorCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DoorCommon.Instance.RemapLinks(this, mapping);
         public Door(FormKey formKey)
@@ -706,14 +705,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new Door CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static Door CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -740,8 +731,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDoorGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -765,7 +754,8 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamed,
         IModeled,
         IObjectBounded,
-        ILoquiObjectSetter<IDoorInternal>
+        ILoquiObjectSetter<IDoorInternal>,
+        ILinkedFormKeyContainer
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
@@ -797,7 +787,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeledGetter,
         IObjectBoundedGetter,
         ILoquiObject<IDoorGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Door_Registration.Instance;
@@ -806,9 +796,9 @@ namespace Mutagen.Bethesda.Skyrim
         TranslatedString? Name { get; }
         IModelGetter? Model { get; }
         IDestructibleGetter? Destructible { get; }
-        IFormLinkNullable<ISoundDescriptorGetter> OpenSound { get; }
-        IFormLinkNullable<ISoundDescriptorGetter> CloseSound { get; }
-        IFormLinkNullable<ISoundDescriptorGetter> LoopSound { get; }
+        FormLinkNullable<ISoundDescriptorGetter> OpenSound { get; }
+        FormLinkNullable<ISoundDescriptorGetter> CloseSound { get; }
+        FormLinkNullable<ISoundDescriptorGetter> LoopSound { get; }
         Door.Flag Flags { get; }
 
         #region Mutagen
@@ -860,24 +850,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IDoorGetter item,
-            Door.Mask<bool?> checkMask)
-        {
-            return ((DoorCommon)((IDoorGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Door.Mask<bool> GetHasBeenSetMask(this IDoorGetter item)
-        {
-            var ret = new Door.Mask<bool>(false);
-            ((DoorCommon)((IDoorGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -949,17 +921,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IDoorInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IDoorInternal item,
             MutagenFrame frame,
@@ -1452,65 +1413,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 DestructibleItem?.ToString(fg, "Destructible");
             }
-            if ((printMask?.OpenSound ?? true)
-                && item.OpenSound.TryGet(out var OpenSoundItem))
+            if (printMask?.OpenSound ?? true)
             {
-                fg.AppendItem(OpenSoundItem, "OpenSound");
+                fg.AppendItem(item.OpenSound.FormKey, "OpenSound");
             }
-            if ((printMask?.CloseSound ?? true)
-                && item.CloseSound.TryGet(out var CloseSoundItem))
+            if (printMask?.CloseSound ?? true)
             {
-                fg.AppendItem(CloseSoundItem, "CloseSound");
+                fg.AppendItem(item.CloseSound.FormKey, "CloseSound");
             }
-            if ((printMask?.LoopSound ?? true)
-                && item.LoopSound.TryGet(out var LoopSoundItem))
+            if (printMask?.LoopSound ?? true)
             {
-                fg.AppendItem(LoopSoundItem, "LoopSound");
+                fg.AppendItem(item.LoopSound.FormKey, "LoopSound");
             }
             if (printMask?.Flags ?? true)
             {
                 fg.AppendItem(item.Flags, "Flags");
             }
-        }
-        
-        public bool HasBeenSet(
-            IDoorGetter item,
-            Door.Mask<bool?> checkMask)
-        {
-            if (checkMask.VirtualMachineAdapter?.Overall.HasValue ?? false && checkMask.VirtualMachineAdapter.Overall.Value != (item.VirtualMachineAdapter != null)) return false;
-            if (checkMask.VirtualMachineAdapter?.Specific != null && (item.VirtualMachineAdapter == null || !item.VirtualMachineAdapter.HasBeenSet(checkMask.VirtualMachineAdapter.Specific))) return false;
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
-            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.Destructible?.Overall.HasValue ?? false && checkMask.Destructible.Overall.Value != (item.Destructible != null)) return false;
-            if (checkMask.Destructible?.Specific != null && (item.Destructible == null || !item.Destructible.HasBeenSet(checkMask.Destructible.Specific))) return false;
-            if (checkMask.OpenSound.HasValue && checkMask.OpenSound.Value != (item.OpenSound.FormKey != null)) return false;
-            if (checkMask.CloseSound.HasValue && checkMask.CloseSound.Value != (item.CloseSound.FormKey != null)) return false;
-            if (checkMask.LoopSound.HasValue && checkMask.LoopSound.Value != (item.LoopSound.FormKey != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IDoorGetter item,
-            Door.Mask<bool> mask)
-        {
-            var itemVirtualMachineAdapter = item.VirtualMachineAdapter;
-            mask.VirtualMachineAdapter = new MaskItem<bool, VirtualMachineAdapter.Mask<bool>?>(itemVirtualMachineAdapter != null, itemVirtualMachineAdapter?.GetHasBeenSetMask());
-            mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
-            mask.Name = (item.Name != null);
-            var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            var itemDestructible = item.Destructible;
-            mask.Destructible = new MaskItem<bool, Destructible.Mask<bool>?>(itemDestructible != null, itemDestructible?.GetHasBeenSetMask());
-            mask.OpenSound = (item.OpenSound.FormKey != null);
-            mask.CloseSound = (item.CloseSound.FormKey != null);
-            mask.LoopSound = (item.LoopSound.FormKey != null);
-            mask.Flags = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static Door_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1609,18 +1527,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Destructibleitem);
             }
-            if (item.OpenSound.TryGet(out var OpenSounditem))
-            {
-                hash.Add(OpenSounditem);
-            }
-            if (item.CloseSound.TryGet(out var CloseSounditem))
-            {
-                hash.Add(CloseSounditem);
-            }
-            if (item.LoopSound.TryGet(out var LoopSounditem))
-            {
-                hash.Add(LoopSounditem);
-            }
+            hash.Add(item.OpenSound);
+            hash.Add(item.CloseSound);
+            hash.Add(item.LoopSound);
             hash.Add(item.Flags);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1651,7 +1560,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainer VirtualMachineAdapterlinkCont)
+            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainerGetter VirtualMachineAdapterlinkCont)
             {
                 foreach (var item in VirtualMachineAdapterlinkCont.LinkFormKeys)
                 {
@@ -1837,15 +1746,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.OpenSound) ?? true))
             {
-                item.OpenSound = rhs.OpenSound.FormKey;
+                item.OpenSound = new FormLinkNullable<SoundDescriptor>(rhs.OpenSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.CloseSound) ?? true))
             {
-                item.CloseSound = rhs.CloseSound.FormKey;
+                item.CloseSound = new FormLinkNullable<SoundDescriptor>(rhs.CloseSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.LoopSound) ?? true))
             {
-                item.LoopSound = rhs.LoopSound.FormKey;
+                item.LoopSound = new FormLinkNullable<SoundDescriptor>(rhs.LoopSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.Flags) ?? true))
             {
@@ -2230,15 +2139,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDoorGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => DoorCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => DoorCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DoorCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DoorCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => DoorCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => DoorBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2255,7 +2160,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
         public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
-        public bool VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
         #endregion
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
@@ -2270,18 +2174,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IDestructibleGetter? Destructible { get; private set; }
         #region OpenSound
         private int? _OpenSoundLocation;
-        public bool OpenSound_IsSet => _OpenSoundLocation.HasValue;
-        public IFormLinkNullable<ISoundDescriptorGetter> OpenSound => _OpenSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _OpenSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public FormLinkNullable<ISoundDescriptorGetter> OpenSound => _OpenSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _OpenSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region CloseSound
         private int? _CloseSoundLocation;
-        public bool CloseSound_IsSet => _CloseSoundLocation.HasValue;
-        public IFormLinkNullable<ISoundDescriptorGetter> CloseSound => _CloseSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CloseSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public FormLinkNullable<ISoundDescriptorGetter> CloseSound => _CloseSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CloseSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region LoopSound
         private int? _LoopSoundLocation;
-        public bool LoopSound_IsSet => _LoopSoundLocation.HasValue;
-        public IFormLinkNullable<ISoundDescriptorGetter> LoopSound => _LoopSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LoopSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public FormLinkNullable<ISoundDescriptorGetter> LoopSound => _LoopSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LoopSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region Flags
         private int? _FlagsLocation;

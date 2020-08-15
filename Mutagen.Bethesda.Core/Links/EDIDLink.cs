@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda
             }
             // ToDo
             // Improve to not be a forloop
-            var group = mod.GetGroupGetter<TMajor>();
+            var group = mod.GetTopLevelGroupGetter<TMajor>();
             foreach (var rec in group.Items)
             {
                 if (this.EDID.Type.Equals(rec.EditorID))
@@ -98,7 +98,7 @@ namespace Mutagen.Bethesda
                 major = default!;
                 return false;
             }
-            foreach (var mod in package)
+            foreach (var mod in package.PriorityOrder)
             {
                 if (TryLinkToMod(mod, out var item))
                 {

@@ -33,8 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class SkyrimMod :
         ISkyrimMod,
         ILoquiObjectSetter<SkyrimMod>,
-        IEquatable<SkyrimMod>,
-        IEqualsMask
+        IEquatable<SkyrimMod>
     {
         #region Ctor
         protected SkyrimMod()
@@ -158,10 +157,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region ModHeader
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly ModHeader _ModHeader_Object = new ModHeader();
-        public ModHeader ModHeader => _ModHeader_Object;
+        private readonly SkyrimModHeader _ModHeader_Object = new SkyrimModHeader();
+        public SkyrimModHeader ModHeader => _ModHeader_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IModHeaderGetter ISkyrimModGetter.ModHeader => _ModHeader_Object;
+        ISkyrimModHeaderGetter ISkyrimModGetter.ModHeader => _ModHeader_Object;
         #endregion
         #region GameSettings
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -992,7 +991,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(initialValue, new ModHeader.Mask<TItem>(initialValue));
+                this.ModHeader = new MaskItem<TItem, SkyrimModHeader.Mask<TItem>?>(initialValue, new SkyrimModHeader.Mask<TItem>(initialValue));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Keywords = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.LocationReferenceTypes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
@@ -1224,7 +1223,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem ReverbParameters,
                 TItem VolumetricLightings)
             {
-                this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
+                this.ModHeader = new MaskItem<TItem, SkyrimModHeader.Mask<TItem>?>(ModHeader, new SkyrimModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
                 this.Keywords = new MaskItem<TItem, Group.Mask<TItem>?>(Keywords, new Group.Mask<TItem>(Keywords));
                 this.LocationReferenceTypes = new MaskItem<TItem, Group.Mask<TItem>?>(LocationReferenceTypes, new Group.Mask<TItem>(LocationReferenceTypes));
@@ -1349,7 +1348,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public MaskItem<TItem, ModHeader.Mask<TItem>?>? ModHeader { get; set; }
+            public MaskItem<TItem, SkyrimModHeader.Mask<TItem>?>? ModHeader { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? GameSettings { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Keywords { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? LocationReferenceTypes { get; set; }
@@ -2877,7 +2876,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.ModHeader = this.ModHeader == null ? null : new MaskItem<R, ModHeader.Mask<R>?>(eval(this.ModHeader.Overall), this.ModHeader.Specific?.Translate(eval));
+                obj.ModHeader = this.ModHeader == null ? null : new MaskItem<R, SkyrimModHeader.Mask<R>?>(eval(this.ModHeader.Overall), this.ModHeader.Specific?.Translate(eval));
                 obj.GameSettings = this.GameSettings == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.GameSettings.Overall), this.GameSettings.Specific?.Translate(eval));
                 obj.Keywords = this.Keywords == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Keywords.Overall), this.Keywords.Specific?.Translate(eval));
                 obj.LocationReferenceTypes = this.LocationReferenceTypes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.LocationReferenceTypes.Overall), this.LocationReferenceTypes.Specific?.Translate(eval));
@@ -3494,7 +3493,7 @@ namespace Mutagen.Bethesda.Skyrim
                     return _warnings;
                 }
             }
-            public MaskItem<Exception?, ModHeader.ErrorMask?>? ModHeader;
+            public MaskItem<Exception?, SkyrimModHeader.ErrorMask?>? ModHeader;
             public MaskItem<Exception?, Group.ErrorMask<GameSetting.ErrorMask>?>? GameSettings;
             public MaskItem<Exception?, Group.ErrorMask<Keyword.ErrorMask>?>? Keywords;
             public MaskItem<Exception?, Group.ErrorMask<LocationReferenceType.ErrorMask>?>? LocationReferenceTypes;
@@ -3855,7 +3854,7 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (enu)
                 {
                     case SkyrimMod_FieldIndex.ModHeader:
-                        this.ModHeader = new MaskItem<Exception?, ModHeader.ErrorMask?>(ex, null);
+                        this.ModHeader = new MaskItem<Exception?, SkyrimModHeader.ErrorMask?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.GameSettings:
                         this.GameSettings = new MaskItem<Exception?, Group.ErrorMask<GameSetting.ErrorMask>?>(ex, null);
@@ -4207,7 +4206,7 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (enu)
                 {
                     case SkyrimMod_FieldIndex.ModHeader:
-                        this.ModHeader = (MaskItem<Exception?, ModHeader.ErrorMask?>?)obj;
+                        this.ModHeader = (MaskItem<Exception?, SkyrimModHeader.ErrorMask?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.GameSettings:
                         this.GameSettings = (MaskItem<Exception?, Group.ErrorMask<GameSetting.ErrorMask>?>?)obj;
@@ -4961,7 +4960,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public MaskItem<bool, ModHeader.TranslationMask?> ModHeader;
+            public MaskItem<bool, SkyrimModHeader.TranslationMask?> ModHeader;
             public MaskItem<bool, Group.TranslationMask<GameSetting.TranslationMask>?> GameSettings;
             public MaskItem<bool, Group.TranslationMask<Keyword.TranslationMask>?> Keywords;
             public MaskItem<bool, Group.TranslationMask<LocationReferenceType.TranslationMask>?> LocationReferenceTypes;
@@ -5080,7 +5079,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.ModHeader = new MaskItem<bool, ModHeader.TranslationMask?>(defaultOn, null);
+                this.ModHeader = new MaskItem<bool, SkyrimModHeader.TranslationMask?>(defaultOn, null);
                 this.GameSettings = new MaskItem<bool, Group.TranslationMask<GameSetting.TranslationMask>?>(defaultOn, null);
                 this.Keywords = new MaskItem<bool, Group.TranslationMask<Keyword.TranslationMask>?>(defaultOn, null);
                 this.LocationReferenceTypes = new MaskItem<bool, Group.TranslationMask<LocationReferenceType.TranslationMask>?>(defaultOn, null);
@@ -5331,7 +5330,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = SkyrimMod_Registration.TriggeringRecordType;
         public SkyrimRelease SkyrimRelease { get; }
         public override GameRelease GameRelease => SkyrimRelease.ToGameRelease();
-        IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => this.GetGroupGetter<T>();
+        IReadOnlyCache<T, FormKey> IModGetter.GetTopLevelGroupGetter<T>() => this.GetTopLevelGroupGetter<T>();
         ICache<T, FormKey> IMod.GetGroup<T>() => this.GetGroup<T>();
         void IModGetter.WriteToBinary(string path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
         void IModGetter.WriteToBinaryParallel(string path, BinaryWriteParameters? param) => this.WriteToBinaryParallel(path, param);
@@ -5341,17 +5340,17 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        uint IMod.NextObjectID
+        uint IMod.NextFormID
         {
-            get => this.ModHeader.Stats.NextObjectID;
-            set => this.ModHeader.Stats.NextObjectID = value;
+            get => this.ModHeader.Stats.NextFormID;
+            set => this.ModHeader.Stats.NextFormID = value;
         }
         public SkyrimMod(
             ModKey modKey,
             SkyrimRelease release)
             : base(modKey)
         {
-            this.ModHeader.Stats.NextObjectID = GetDefaultInitialNextObjectID();
+            this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID();
             this.SkyrimRelease = release;
             _GameSettings_Object = new Group<GameSetting>(this);
             _Keywords_Object = new Group<Keyword>(this);
@@ -6726,7 +6725,7 @@ namespace Mutagen.Bethesda.Skyrim
             var router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var mapping = new Dictionary<FormKey, FormKey>();
-            var package = this.CreateLinkCache();
+            var package = this.ToImmutableLinkCache();
             foreach (var rec in router.Values)
             {
                 rec.RemapLinks(mapping);
@@ -6739,132 +6738,132 @@ namespace Mutagen.Bethesda.Skyrim
             this.ModHeader.Stats.NumRecords = GetRecordCount();
         }
 
-        public int GetRecordCount()
+        public uint GetRecordCount()
         {
-            int count = this.EnumerateMajorRecords().Count();
-            count += GameSettings.RecordCache.Count > 0 ? 1 : 0;
-            count += Keywords.RecordCache.Count > 0 ? 1 : 0;
-            count += LocationReferenceTypes.RecordCache.Count > 0 ? 1 : 0;
-            count += Actions.RecordCache.Count > 0 ? 1 : 0;
-            count += TextureSets.RecordCache.Count > 0 ? 1 : 0;
-            count += Globals.RecordCache.Count > 0 ? 1 : 0;
-            count += Classes.RecordCache.Count > 0 ? 1 : 0;
-            count += Factions.RecordCache.Count > 0 ? 1 : 0;
-            count += HeadParts.RecordCache.Count > 0 ? 1 : 0;
-            count += Hairs.RecordCache.Count > 0 ? 1 : 0;
-            count += Eyes.RecordCache.Count > 0 ? 1 : 0;
-            count += Races.RecordCache.Count > 0 ? 1 : 0;
-            count += SoundMarkers.RecordCache.Count > 0 ? 1 : 0;
-            count += AcousticSpaces.RecordCache.Count > 0 ? 1 : 0;
-            count += MagicEffects.RecordCache.Count > 0 ? 1 : 0;
-            count += LandscapeTextures.RecordCache.Count > 0 ? 1 : 0;
-            count += ObjectEffects.RecordCache.Count > 0 ? 1 : 0;
-            count += Spells.RecordCache.Count > 0 ? 1 : 0;
-            count += Scrolls.RecordCache.Count > 0 ? 1 : 0;
-            count += Activators.RecordCache.Count > 0 ? 1 : 0;
-            count += TalkingActivators.RecordCache.Count > 0 ? 1 : 0;
-            count += Armors.RecordCache.Count > 0 ? 1 : 0;
-            count += Books.RecordCache.Count > 0 ? 1 : 0;
-            count += Containers.RecordCache.Count > 0 ? 1 : 0;
-            count += Doors.RecordCache.Count > 0 ? 1 : 0;
-            count += Ingredients.RecordCache.Count > 0 ? 1 : 0;
-            count += Lights.RecordCache.Count > 0 ? 1 : 0;
-            count += MiscItems.RecordCache.Count > 0 ? 1 : 0;
-            count += AlchemicalApparatuses.RecordCache.Count > 0 ? 1 : 0;
-            count += Statics.RecordCache.Count > 0 ? 1 : 0;
-            count += MoveableStatics.RecordCache.Count > 0 ? 1 : 0;
-            count += Grasses.RecordCache.Count > 0 ? 1 : 0;
-            count += Trees.RecordCache.Count > 0 ? 1 : 0;
-            count += Florae.RecordCache.Count > 0 ? 1 : 0;
-            count += Furniture.RecordCache.Count > 0 ? 1 : 0;
-            count += Weapons.RecordCache.Count > 0 ? 1 : 0;
-            count += Ammunitions.RecordCache.Count > 0 ? 1 : 0;
-            count += Npcs.RecordCache.Count > 0 ? 1 : 0;
-            count += LeveledNpcs.RecordCache.Count > 0 ? 1 : 0;
-            count += Keys.RecordCache.Count > 0 ? 1 : 0;
-            count += Ingestibles.RecordCache.Count > 0 ? 1 : 0;
-            count += IdleMarkers.RecordCache.Count > 0 ? 1 : 0;
-            count += ConstructibleObjects.RecordCache.Count > 0 ? 1 : 0;
-            count += Projectiles.RecordCache.Count > 0 ? 1 : 0;
-            count += Hazards.RecordCache.Count > 0 ? 1 : 0;
-            count += SoulGems.RecordCache.Count > 0 ? 1 : 0;
-            count += LeveledItems.RecordCache.Count > 0 ? 1 : 0;
-            count += Weathers.RecordCache.Count > 0 ? 1 : 0;
-            count += Climates.RecordCache.Count > 0 ? 1 : 0;
-            count += ShaderParticleGeometries.RecordCache.Count > 0 ? 1 : 0;
-            count += VisualEffects.RecordCache.Count > 0 ? 1 : 0;
-            count += Regions.RecordCache.Count > 0 ? 1 : 0;
-            count += NavigationMeshInfoMaps.RecordCache.Count > 0 ? 1 : 0;
-            count += Cells.Records.Count > 0 ? 1 : 0;
-            count += Worldspaces.RecordCache.Count > 0 ? 1 : 0;
-            count += DialogTopics.RecordCache.Count > 0 ? 1 : 0;
-            count += Quests.RecordCache.Count > 0 ? 1 : 0;
-            count += IdleAnimations.RecordCache.Count > 0 ? 1 : 0;
-            count += Packages.RecordCache.Count > 0 ? 1 : 0;
-            count += CombatStyles.RecordCache.Count > 0 ? 1 : 0;
-            count += LoadScreens.RecordCache.Count > 0 ? 1 : 0;
-            count += LeveledSpells.RecordCache.Count > 0 ? 1 : 0;
-            count += AnimatedObjects.RecordCache.Count > 0 ? 1 : 0;
-            count += Waters.RecordCache.Count > 0 ? 1 : 0;
-            count += EffectShaders.RecordCache.Count > 0 ? 1 : 0;
-            count += Explosions.RecordCache.Count > 0 ? 1 : 0;
-            count += Debris.RecordCache.Count > 0 ? 1 : 0;
-            count += ImageSpaces.RecordCache.Count > 0 ? 1 : 0;
-            count += ImageSpaceAdapters.RecordCache.Count > 0 ? 1 : 0;
-            count += FormLists.RecordCache.Count > 0 ? 1 : 0;
-            count += Perks.RecordCache.Count > 0 ? 1 : 0;
-            count += BodyParts.RecordCache.Count > 0 ? 1 : 0;
-            count += AddonNodes.RecordCache.Count > 0 ? 1 : 0;
-            count += ActorValueInformation.RecordCache.Count > 0 ? 1 : 0;
-            count += CameraShots.RecordCache.Count > 0 ? 1 : 0;
-            count += CameraPaths.RecordCache.Count > 0 ? 1 : 0;
-            count += VoiceTypes.RecordCache.Count > 0 ? 1 : 0;
-            count += MaterialTypes.RecordCache.Count > 0 ? 1 : 0;
-            count += Impacts.RecordCache.Count > 0 ? 1 : 0;
-            count += ImpactDataSets.RecordCache.Count > 0 ? 1 : 0;
-            count += ArmorAddons.RecordCache.Count > 0 ? 1 : 0;
-            count += EncounterZones.RecordCache.Count > 0 ? 1 : 0;
-            count += Locations.RecordCache.Count > 0 ? 1 : 0;
-            count += Messages.RecordCache.Count > 0 ? 1 : 0;
-            count += DefaultObjectManagers.RecordCache.Count > 0 ? 1 : 0;
-            count += LightingTemplates.RecordCache.Count > 0 ? 1 : 0;
-            count += MusicTypes.RecordCache.Count > 0 ? 1 : 0;
-            count += Footsteps.RecordCache.Count > 0 ? 1 : 0;
-            count += FootstepSets.RecordCache.Count > 0 ? 1 : 0;
-            count += StoryManagerBranchNodes.RecordCache.Count > 0 ? 1 : 0;
-            count += StoryManagerQuestNodes.RecordCache.Count > 0 ? 1 : 0;
-            count += StoryManagerEventNodes.RecordCache.Count > 0 ? 1 : 0;
-            count += DialogBranches.RecordCache.Count > 0 ? 1 : 0;
-            count += MusicTracks.RecordCache.Count > 0 ? 1 : 0;
-            count += DialogViews.RecordCache.Count > 0 ? 1 : 0;
-            count += WordsOfPower.RecordCache.Count > 0 ? 1 : 0;
-            count += Shouts.RecordCache.Count > 0 ? 1 : 0;
-            count += EquipTypes.RecordCache.Count > 0 ? 1 : 0;
-            count += Relationships.RecordCache.Count > 0 ? 1 : 0;
-            count += Scenes.RecordCache.Count > 0 ? 1 : 0;
-            count += AssociationTypes.RecordCache.Count > 0 ? 1 : 0;
-            count += Outfits.RecordCache.Count > 0 ? 1 : 0;
-            count += ArtObjects.RecordCache.Count > 0 ? 1 : 0;
-            count += MaterialObjects.RecordCache.Count > 0 ? 1 : 0;
-            count += MovementTypes.RecordCache.Count > 0 ? 1 : 0;
-            count += SoundDescriptors.RecordCache.Count > 0 ? 1 : 0;
-            count += DualCastData.RecordCache.Count > 0 ? 1 : 0;
-            count += SoundCategories.RecordCache.Count > 0 ? 1 : 0;
-            count += SoundOutputModels.RecordCache.Count > 0 ? 1 : 0;
-            count += CollisionLayers.RecordCache.Count > 0 ? 1 : 0;
-            count += Colors.RecordCache.Count > 0 ? 1 : 0;
-            count += ReverbParameters.RecordCache.Count > 0 ? 1 : 0;
-            count += VolumetricLightings.RecordCache.Count > 0 ? 1 : 0;
+            uint count = (uint)this.EnumerateMajorRecords().Count();
+            count += GameSettings.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Keywords.RecordCache.Count > 0 ? 1 : default(uint);
+            count += LocationReferenceTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Actions.RecordCache.Count > 0 ? 1 : default(uint);
+            count += TextureSets.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Globals.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Classes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Factions.RecordCache.Count > 0 ? 1 : default(uint);
+            count += HeadParts.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Hairs.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Eyes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Races.RecordCache.Count > 0 ? 1 : default(uint);
+            count += SoundMarkers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += AcousticSpaces.RecordCache.Count > 0 ? 1 : default(uint);
+            count += MagicEffects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += LandscapeTextures.RecordCache.Count > 0 ? 1 : default(uint);
+            count += ObjectEffects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Spells.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Scrolls.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Activators.RecordCache.Count > 0 ? 1 : default(uint);
+            count += TalkingActivators.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Armors.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Books.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Containers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Doors.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Ingredients.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Lights.RecordCache.Count > 0 ? 1 : default(uint);
+            count += MiscItems.RecordCache.Count > 0 ? 1 : default(uint);
+            count += AlchemicalApparatuses.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Statics.RecordCache.Count > 0 ? 1 : default(uint);
+            count += MoveableStatics.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Grasses.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Trees.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Florae.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Furniture.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Weapons.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Ammunitions.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Npcs.RecordCache.Count > 0 ? 1 : default(uint);
+            count += LeveledNpcs.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Keys.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Ingestibles.RecordCache.Count > 0 ? 1 : default(uint);
+            count += IdleMarkers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += ConstructibleObjects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Projectiles.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Hazards.RecordCache.Count > 0 ? 1 : default(uint);
+            count += SoulGems.RecordCache.Count > 0 ? 1 : default(uint);
+            count += LeveledItems.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Weathers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Climates.RecordCache.Count > 0 ? 1 : default(uint);
+            count += ShaderParticleGeometries.RecordCache.Count > 0 ? 1 : default(uint);
+            count += VisualEffects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Regions.RecordCache.Count > 0 ? 1 : default(uint);
+            count += NavigationMeshInfoMaps.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Cells.Records.Count > 0 ? 1 : default(uint);
+            count += Worldspaces.RecordCache.Count > 0 ? 1 : default(uint);
+            count += DialogTopics.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Quests.RecordCache.Count > 0 ? 1 : default(uint);
+            count += IdleAnimations.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Packages.RecordCache.Count > 0 ? 1 : default(uint);
+            count += CombatStyles.RecordCache.Count > 0 ? 1 : default(uint);
+            count += LoadScreens.RecordCache.Count > 0 ? 1 : default(uint);
+            count += LeveledSpells.RecordCache.Count > 0 ? 1 : default(uint);
+            count += AnimatedObjects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Waters.RecordCache.Count > 0 ? 1 : default(uint);
+            count += EffectShaders.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Explosions.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Debris.RecordCache.Count > 0 ? 1 : default(uint);
+            count += ImageSpaces.RecordCache.Count > 0 ? 1 : default(uint);
+            count += ImageSpaceAdapters.RecordCache.Count > 0 ? 1 : default(uint);
+            count += FormLists.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Perks.RecordCache.Count > 0 ? 1 : default(uint);
+            count += BodyParts.RecordCache.Count > 0 ? 1 : default(uint);
+            count += AddonNodes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += ActorValueInformation.RecordCache.Count > 0 ? 1 : default(uint);
+            count += CameraShots.RecordCache.Count > 0 ? 1 : default(uint);
+            count += CameraPaths.RecordCache.Count > 0 ? 1 : default(uint);
+            count += VoiceTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += MaterialTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Impacts.RecordCache.Count > 0 ? 1 : default(uint);
+            count += ImpactDataSets.RecordCache.Count > 0 ? 1 : default(uint);
+            count += ArmorAddons.RecordCache.Count > 0 ? 1 : default(uint);
+            count += EncounterZones.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Locations.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Messages.RecordCache.Count > 0 ? 1 : default(uint);
+            count += DefaultObjectManagers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += LightingTemplates.RecordCache.Count > 0 ? 1 : default(uint);
+            count += MusicTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Footsteps.RecordCache.Count > 0 ? 1 : default(uint);
+            count += FootstepSets.RecordCache.Count > 0 ? 1 : default(uint);
+            count += StoryManagerBranchNodes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += StoryManagerQuestNodes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += StoryManagerEventNodes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += DialogBranches.RecordCache.Count > 0 ? 1 : default(uint);
+            count += MusicTracks.RecordCache.Count > 0 ? 1 : default(uint);
+            count += DialogViews.RecordCache.Count > 0 ? 1 : default(uint);
+            count += WordsOfPower.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Shouts.RecordCache.Count > 0 ? 1 : default(uint);
+            count += EquipTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Relationships.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Scenes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += AssociationTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Outfits.RecordCache.Count > 0 ? 1 : default(uint);
+            count += ArtObjects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += MaterialObjects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += MovementTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += SoundDescriptors.RecordCache.Count > 0 ? 1 : default(uint);
+            count += DualCastData.RecordCache.Count > 0 ? 1 : default(uint);
+            count += SoundCategories.RecordCache.Count > 0 ? 1 : default(uint);
+            count += SoundOutputModels.RecordCache.Count > 0 ? 1 : default(uint);
+            count += CollisionLayers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Colors.RecordCache.Count > 0 ? 1 : default(uint);
+            count += ReverbParameters.RecordCache.Count > 0 ? 1 : default(uint);
+            count += VolumetricLightings.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
 
-        partial void GetCustomRecordCount(Action<int> setter);
+        partial void GetCustomRecordCount(Action<uint> setter);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => SkyrimModCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => SkyrimModCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => SkyrimModCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimModCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimModCommon.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
@@ -6883,26 +6882,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Binary Translation
         #region Binary Create
-        [DebuggerStepThrough]
         public static SkyrimMod CreateFromBinary(
             MutagenFrame frame,
             SkyrimRelease release,
             ModKey modKey,
-            GroupMask? importMask = null)
-        {
-            return CreateFromBinary(
-                release: release,
-                importMask: importMask,
-                modKey: modKey,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
-        public static SkyrimMod CreateFromBinary(
-            MutagenFrame frame,
-            SkyrimRelease release,
-            ModKey modKey,
-            RecordTypeConverter? recordTypeConverter = null,
             GroupMask? importMask = null)
         {
             var ret = new SkyrimMod(
@@ -6914,23 +6897,21 @@ namespace Mutagen.Bethesda.Skyrim
                 release: release,
                 importMask: importMask,
                 modKey: modKey,
-                frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                frame: frame);
             return ret;
         }
 
         public static SkyrimMod CreateFromBinary(
-            string path,
+            ModPath path,
             SkyrimRelease release,
-            ModKey? modKeyOverride = null,
             GroupMask? importMask = null,
             StringsReadParameters? stringsParam = null,
             bool parallel = true)
         {
             var gameRelease = release.ToGameRelease();
-            using (var reader = new MutagenBinaryReadStream(path, gameRelease))
+            using (var reader = new MutagenBinaryReadStream(path.Path, gameRelease))
             {
-                var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
+                var modKey = path.ModKey;
                 var frame = new MutagenFrame(reader);
                 frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, gameRelease));
                 frame.MetaData.Parallel = parallel;
@@ -6939,9 +6920,9 @@ namespace Mutagen.Bethesda.Skyrim
                     throw new ArgumentException("File stream was too short to parse flags");
                 }
                 var flags = reader.GetInt32(offset: 8);
-                if (EnumExt.HasFlag(flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag))
+                if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
                 {
-                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path), stringsParam, modKey);
+                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path.Path), stringsParam, path.ModKey);
                 }
                 return CreateFromBinary(
                     release: release,
@@ -6952,18 +6933,17 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static SkyrimMod CreateFromBinary(
-            string path,
+            ModPath path,
             SkyrimRelease release,
             ErrorMaskBuilder? errorMask,
-            ModKey? modKeyOverride = null,
             GroupMask? importMask = null,
             StringsReadParameters? stringsParam = null,
             bool parallel = true)
         {
             var gameRelease = release.ToGameRelease();
-            using (var reader = new MutagenBinaryReadStream(path, gameRelease))
+            using (var reader = new MutagenBinaryReadStream(path.Path, gameRelease))
             {
-                var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
+                var modKey = path.ModKey;
                 var frame = new MutagenFrame(reader);
                 frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, gameRelease));
                 frame.MetaData.Parallel = parallel;
@@ -6972,16 +6952,15 @@ namespace Mutagen.Bethesda.Skyrim
                     throw new ArgumentException("File stream was too short to parse flags");
                 }
                 var flags = reader.GetInt32(offset: 8);
-                if (EnumExt.HasFlag(flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag))
+                if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
                 {
-                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path), stringsParam, modKey);
+                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path.Path), stringsParam, path.ModKey);
                 }
                 return CreateFromBinary(
                     release: release,
                     importMask: importMask,
                     modKey: modKey,
-                    frame: frame,
-                    recordTypeConverter: null);
+                    frame: frame);
             }
         }
 
@@ -7024,8 +7003,7 @@ namespace Mutagen.Bethesda.Skyrim
                     release: release,
                     importMask: importMask,
                     modKey: modKey,
-                    frame: frame,
-                    recordTypeConverter: null);
+                    frame: frame);
             }
         }
 
@@ -7050,25 +7028,23 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static ISkyrimModDisposableGetter CreateFromBinaryOverlay(
-            string path,
+            ModPath path,
             SkyrimRelease release,
-            ModKey? modKeyOverride = null,
             StringsReadParameters? stringsParam = null)
         {
             return SkyrimModBinaryOverlay.SkyrimModFactory(
                 path: path,
-                modKeyOverride ?? ModKey.Factory(Path.GetFileName(path)),
                 stringsParam: stringsParam,
                 release: release);
         }
 
         public static ISkyrimModDisposableGetter CreateFromBinaryOverlay(
-            IMutagenReadStream stream,
+            Stream stream,
             SkyrimRelease release,
             ModKey modKey)
         {
             return SkyrimModBinaryOverlay.SkyrimModFactory(
-                stream: stream,
+                stream: new MutagenBinaryReadStream(stream, release.ToGameRelease()),
                 modKey: modKey,
                 release: release,
                 shouldDispose: false);
@@ -7077,8 +7053,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkyrimModGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -7098,9 +7072,10 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimModGetter,
         IMajorRecordEnumerable,
         ILoquiObjectSetter<ISkyrimMod>,
-        IMod
+        IMod,
+        ILinkedFormKeyContainer
     {
-        new ModHeader ModHeader { get; }
+        new SkyrimModHeader ModHeader { get; }
         new Group<GameSetting> GameSettings { get; }
         new Group<Keyword> Keywords { get; }
         new Group<LocationReferenceType> LocationReferenceTypes { get; }
@@ -7221,7 +7196,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMajorRecordGetterEnumerable,
         ILoquiObject<ISkyrimModGetter>,
         IModGetter,
-        ILinkedFormKeyContainer
+        ILinkedFormKeyContainerGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -7230,7 +7205,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => SkyrimMod_Registration.Instance;
-        IModHeaderGetter ModHeader { get; }
+        ISkyrimModHeaderGetter ModHeader { get; }
         IGroupGetter<IGameSettingGetter> GameSettings { get; }
         IGroupGetter<IKeywordGetter> Keywords { get; }
         IGroupGetter<ILocationReferenceTypeGetter> LocationReferenceTypes { get; }
@@ -7396,24 +7371,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this ISkyrimModGetter item,
-            SkyrimMod.Mask<bool?> checkMask)
-        {
-            return ((SkyrimModCommon)((ISkyrimModGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static SkyrimMod.Mask<bool> GetHasBeenSetMask(this ISkyrimModGetter item)
-        {
-            var ret = new SkyrimMod.Mask<bool>(false);
-            ((SkyrimModCommon)((ISkyrimModGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this ISkyrimModGetter item,
             ISkyrimModGetter rhs)
@@ -7506,7 +7463,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Mutagen
-        public static IReadOnlyCache<T, FormKey> GetGroupGetter<T>(this ISkyrimModGetter obj)
+        public static IReadOnlyCache<T, FormKey> GetTopLevelGroupGetter<T>(this ISkyrimModGetter obj)
             where T : IMajorRecordCommonGetter
         {
             return (IReadOnlyCache<T, FormKey>)((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()!).GetGroup<T>(obj: obj);
@@ -7540,7 +7497,7 @@ namespace Mutagen.Bethesda.Skyrim
                 mod: item,
                 path: path);
             bool disposeStrings = param.StringsWriter == null;
-            param.StringsWriter ??= EnumExt.HasFlag((int)item.ModHeader.Flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag) ? new StringsWriter(modKey, Path.Combine(Path.GetDirectoryName(path), "Strings")) : null;
+            param.StringsWriter ??= EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(modKey, Path.Combine(Path.GetDirectoryName(path), "Strings")) : null;
             using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write))
             {
                 SkyrimModCommon.WriteParallel(
@@ -7618,29 +7575,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Binary Translation
-        [DebuggerStepThrough]
         public static void CopyInFromBinary(
             this ISkyrimMod item,
             MutagenFrame frame,
             SkyrimRelease release,
             ModKey modKey,
-            GroupMask? importMask = null)
-        {
-            CopyInFromBinary(
-                item: item,
-                release: release,
-                importMask: importMask,
-                modKey: modKey,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
-        public static void CopyInFromBinary(
-            this ISkyrimMod item,
-            MutagenFrame frame,
-            SkyrimRelease release,
-            ModKey modKey,
-            RecordTypeConverter? recordTypeConverter = null,
             GroupMask? importMask = null)
         {
             ((SkyrimModSetterCommon)((ISkyrimModGetter)item).CommonSetterInstance()!).CopyInFromBinary(
@@ -7648,23 +7587,21 @@ namespace Mutagen.Bethesda.Skyrim
                 release: release,
                 importMask: importMask,
                 modKey: modKey,
-                frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                frame: frame);
         }
 
         public static void CopyInFromBinary(
             this ISkyrimMod item,
-            string path,
+            ModPath path,
             SkyrimRelease release,
-            ModKey? modKeyOverride = null,
             GroupMask? importMask = null,
             StringsReadParameters? stringsParam = null,
             bool parallel = true)
         {
             var gameRelease = release.ToGameRelease();
-            using (var reader = new MutagenBinaryReadStream(path, gameRelease))
+            using (var reader = new MutagenBinaryReadStream(path.Path, gameRelease))
             {
-                var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
+                var modKey = path.ModKey;
                 var frame = new MutagenFrame(reader);
                 frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, gameRelease));
                 frame.MetaData.Parallel = parallel;
@@ -7673,9 +7610,9 @@ namespace Mutagen.Bethesda.Skyrim
                     throw new ArgumentException("File stream was too short to parse flags");
                 }
                 var flags = reader.GetInt32(offset: 8);
-                if (EnumExt.HasFlag(flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag))
+                if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
                 {
-                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path), stringsParam, modKey);
+                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path.Path), stringsParam, path.ModKey);
                 }
                 CopyInFromBinary(
                     item: item,
@@ -8987,7 +8924,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case SkyrimMod_FieldIndex.ModHeader:
-                    return typeof(ModHeader);
+                    return typeof(SkyrimModHeader);
                 case SkyrimMod_FieldIndex.GameSettings:
                     return typeof(Group<GameSetting>);
                 case SkyrimMod_FieldIndex.Keywords:
@@ -9404,14 +9341,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             SkyrimRelease release,
             ModKey modKey,
-            RecordTypeConverter? recordTypeConverter = null,
             GroupMask? importMask = null)
         {
             UtilityTranslation.ModParse(
                 record: item,
                 frame: frame,
                 importMask: importMask,
-                recordTypeConverter: recordTypeConverter,
                 fillStructs: SkyrimModBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: SkyrimModBinaryCreateTranslation.FillBinaryRecordTypes);
         }
@@ -10060,133 +9995,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.VolumetricLightings?.ToString(fg, "VolumetricLightings");
             }
-        }
-        
-        public bool HasBeenSet(
-            ISkyrimModGetter item,
-            SkyrimMod.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            ISkyrimModGetter item,
-            SkyrimMod.Mask<bool> mask)
-        {
-            mask.ModHeader = new MaskItem<bool, ModHeader.Mask<bool>?>(true, item.ModHeader?.GetHasBeenSetMask());
-            mask.GameSettings = new MaskItem<bool, Group.Mask<bool>?>(true, item.GameSettings?.GetHasBeenSetMask());
-            mask.Keywords = new MaskItem<bool, Group.Mask<bool>?>(true, item.Keywords?.GetHasBeenSetMask());
-            mask.LocationReferenceTypes = new MaskItem<bool, Group.Mask<bool>?>(true, item.LocationReferenceTypes?.GetHasBeenSetMask());
-            mask.Actions = new MaskItem<bool, Group.Mask<bool>?>(true, item.Actions?.GetHasBeenSetMask());
-            mask.TextureSets = new MaskItem<bool, Group.Mask<bool>?>(true, item.TextureSets?.GetHasBeenSetMask());
-            mask.Globals = new MaskItem<bool, Group.Mask<bool>?>(true, item.Globals?.GetHasBeenSetMask());
-            mask.Classes = new MaskItem<bool, Group.Mask<bool>?>(true, item.Classes?.GetHasBeenSetMask());
-            mask.Factions = new MaskItem<bool, Group.Mask<bool>?>(true, item.Factions?.GetHasBeenSetMask());
-            mask.HeadParts = new MaskItem<bool, Group.Mask<bool>?>(true, item.HeadParts?.GetHasBeenSetMask());
-            mask.Hairs = new MaskItem<bool, Group.Mask<bool>?>(true, item.Hairs?.GetHasBeenSetMask());
-            mask.Eyes = new MaskItem<bool, Group.Mask<bool>?>(true, item.Eyes?.GetHasBeenSetMask());
-            mask.Races = new MaskItem<bool, Group.Mask<bool>?>(true, item.Races?.GetHasBeenSetMask());
-            mask.SoundMarkers = new MaskItem<bool, Group.Mask<bool>?>(true, item.SoundMarkers?.GetHasBeenSetMask());
-            mask.AcousticSpaces = new MaskItem<bool, Group.Mask<bool>?>(true, item.AcousticSpaces?.GetHasBeenSetMask());
-            mask.MagicEffects = new MaskItem<bool, Group.Mask<bool>?>(true, item.MagicEffects?.GetHasBeenSetMask());
-            mask.LandscapeTextures = new MaskItem<bool, Group.Mask<bool>?>(true, item.LandscapeTextures?.GetHasBeenSetMask());
-            mask.ObjectEffects = new MaskItem<bool, Group.Mask<bool>?>(true, item.ObjectEffects?.GetHasBeenSetMask());
-            mask.Spells = new MaskItem<bool, Group.Mask<bool>?>(true, item.Spells?.GetHasBeenSetMask());
-            mask.Scrolls = new MaskItem<bool, Group.Mask<bool>?>(true, item.Scrolls?.GetHasBeenSetMask());
-            mask.Activators = new MaskItem<bool, Group.Mask<bool>?>(true, item.Activators?.GetHasBeenSetMask());
-            mask.TalkingActivators = new MaskItem<bool, Group.Mask<bool>?>(true, item.TalkingActivators?.GetHasBeenSetMask());
-            mask.Armors = new MaskItem<bool, Group.Mask<bool>?>(true, item.Armors?.GetHasBeenSetMask());
-            mask.Books = new MaskItem<bool, Group.Mask<bool>?>(true, item.Books?.GetHasBeenSetMask());
-            mask.Containers = new MaskItem<bool, Group.Mask<bool>?>(true, item.Containers?.GetHasBeenSetMask());
-            mask.Doors = new MaskItem<bool, Group.Mask<bool>?>(true, item.Doors?.GetHasBeenSetMask());
-            mask.Ingredients = new MaskItem<bool, Group.Mask<bool>?>(true, item.Ingredients?.GetHasBeenSetMask());
-            mask.Lights = new MaskItem<bool, Group.Mask<bool>?>(true, item.Lights?.GetHasBeenSetMask());
-            mask.MiscItems = new MaskItem<bool, Group.Mask<bool>?>(true, item.MiscItems?.GetHasBeenSetMask());
-            mask.AlchemicalApparatuses = new MaskItem<bool, Group.Mask<bool>?>(true, item.AlchemicalApparatuses?.GetHasBeenSetMask());
-            mask.Statics = new MaskItem<bool, Group.Mask<bool>?>(true, item.Statics?.GetHasBeenSetMask());
-            mask.MoveableStatics = new MaskItem<bool, Group.Mask<bool>?>(true, item.MoveableStatics?.GetHasBeenSetMask());
-            mask.Grasses = new MaskItem<bool, Group.Mask<bool>?>(true, item.Grasses?.GetHasBeenSetMask());
-            mask.Trees = new MaskItem<bool, Group.Mask<bool>?>(true, item.Trees?.GetHasBeenSetMask());
-            mask.Florae = new MaskItem<bool, Group.Mask<bool>?>(true, item.Florae?.GetHasBeenSetMask());
-            mask.Furniture = new MaskItem<bool, Group.Mask<bool>?>(true, item.Furniture?.GetHasBeenSetMask());
-            mask.Weapons = new MaskItem<bool, Group.Mask<bool>?>(true, item.Weapons?.GetHasBeenSetMask());
-            mask.Ammunitions = new MaskItem<bool, Group.Mask<bool>?>(true, item.Ammunitions?.GetHasBeenSetMask());
-            mask.Npcs = new MaskItem<bool, Group.Mask<bool>?>(true, item.Npcs?.GetHasBeenSetMask());
-            mask.LeveledNpcs = new MaskItem<bool, Group.Mask<bool>?>(true, item.LeveledNpcs?.GetHasBeenSetMask());
-            mask.Keys = new MaskItem<bool, Group.Mask<bool>?>(true, item.Keys?.GetHasBeenSetMask());
-            mask.Ingestibles = new MaskItem<bool, Group.Mask<bool>?>(true, item.Ingestibles?.GetHasBeenSetMask());
-            mask.IdleMarkers = new MaskItem<bool, Group.Mask<bool>?>(true, item.IdleMarkers?.GetHasBeenSetMask());
-            mask.ConstructibleObjects = new MaskItem<bool, Group.Mask<bool>?>(true, item.ConstructibleObjects?.GetHasBeenSetMask());
-            mask.Projectiles = new MaskItem<bool, Group.Mask<bool>?>(true, item.Projectiles?.GetHasBeenSetMask());
-            mask.Hazards = new MaskItem<bool, Group.Mask<bool>?>(true, item.Hazards?.GetHasBeenSetMask());
-            mask.SoulGems = new MaskItem<bool, Group.Mask<bool>?>(true, item.SoulGems?.GetHasBeenSetMask());
-            mask.LeveledItems = new MaskItem<bool, Group.Mask<bool>?>(true, item.LeveledItems?.GetHasBeenSetMask());
-            mask.Weathers = new MaskItem<bool, Group.Mask<bool>?>(true, item.Weathers?.GetHasBeenSetMask());
-            mask.Climates = new MaskItem<bool, Group.Mask<bool>?>(true, item.Climates?.GetHasBeenSetMask());
-            mask.ShaderParticleGeometries = new MaskItem<bool, Group.Mask<bool>?>(true, item.ShaderParticleGeometries?.GetHasBeenSetMask());
-            mask.VisualEffects = new MaskItem<bool, Group.Mask<bool>?>(true, item.VisualEffects?.GetHasBeenSetMask());
-            mask.Regions = new MaskItem<bool, Group.Mask<bool>?>(true, item.Regions?.GetHasBeenSetMask());
-            mask.NavigationMeshInfoMaps = new MaskItem<bool, Group.Mask<bool>?>(true, item.NavigationMeshInfoMaps?.GetHasBeenSetMask());
-            mask.Cells = new MaskItem<bool, ListGroup.Mask<bool>?>(true, item.Cells?.GetHasBeenSetMask());
-            mask.Worldspaces = new MaskItem<bool, Group.Mask<bool>?>(true, item.Worldspaces?.GetHasBeenSetMask());
-            mask.DialogTopics = new MaskItem<bool, Group.Mask<bool>?>(true, item.DialogTopics?.GetHasBeenSetMask());
-            mask.Quests = new MaskItem<bool, Group.Mask<bool>?>(true, item.Quests?.GetHasBeenSetMask());
-            mask.IdleAnimations = new MaskItem<bool, Group.Mask<bool>?>(true, item.IdleAnimations?.GetHasBeenSetMask());
-            mask.Packages = new MaskItem<bool, Group.Mask<bool>?>(true, item.Packages?.GetHasBeenSetMask());
-            mask.CombatStyles = new MaskItem<bool, Group.Mask<bool>?>(true, item.CombatStyles?.GetHasBeenSetMask());
-            mask.LoadScreens = new MaskItem<bool, Group.Mask<bool>?>(true, item.LoadScreens?.GetHasBeenSetMask());
-            mask.LeveledSpells = new MaskItem<bool, Group.Mask<bool>?>(true, item.LeveledSpells?.GetHasBeenSetMask());
-            mask.AnimatedObjects = new MaskItem<bool, Group.Mask<bool>?>(true, item.AnimatedObjects?.GetHasBeenSetMask());
-            mask.Waters = new MaskItem<bool, Group.Mask<bool>?>(true, item.Waters?.GetHasBeenSetMask());
-            mask.EffectShaders = new MaskItem<bool, Group.Mask<bool>?>(true, item.EffectShaders?.GetHasBeenSetMask());
-            mask.Explosions = new MaskItem<bool, Group.Mask<bool>?>(true, item.Explosions?.GetHasBeenSetMask());
-            mask.Debris = new MaskItem<bool, Group.Mask<bool>?>(true, item.Debris?.GetHasBeenSetMask());
-            mask.ImageSpaces = new MaskItem<bool, Group.Mask<bool>?>(true, item.ImageSpaces?.GetHasBeenSetMask());
-            mask.ImageSpaceAdapters = new MaskItem<bool, Group.Mask<bool>?>(true, item.ImageSpaceAdapters?.GetHasBeenSetMask());
-            mask.FormLists = new MaskItem<bool, Group.Mask<bool>?>(true, item.FormLists?.GetHasBeenSetMask());
-            mask.Perks = new MaskItem<bool, Group.Mask<bool>?>(true, item.Perks?.GetHasBeenSetMask());
-            mask.BodyParts = new MaskItem<bool, Group.Mask<bool>?>(true, item.BodyParts?.GetHasBeenSetMask());
-            mask.AddonNodes = new MaskItem<bool, Group.Mask<bool>?>(true, item.AddonNodes?.GetHasBeenSetMask());
-            mask.ActorValueInformation = new MaskItem<bool, Group.Mask<bool>?>(true, item.ActorValueInformation?.GetHasBeenSetMask());
-            mask.CameraShots = new MaskItem<bool, Group.Mask<bool>?>(true, item.CameraShots?.GetHasBeenSetMask());
-            mask.CameraPaths = new MaskItem<bool, Group.Mask<bool>?>(true, item.CameraPaths?.GetHasBeenSetMask());
-            mask.VoiceTypes = new MaskItem<bool, Group.Mask<bool>?>(true, item.VoiceTypes?.GetHasBeenSetMask());
-            mask.MaterialTypes = new MaskItem<bool, Group.Mask<bool>?>(true, item.MaterialTypes?.GetHasBeenSetMask());
-            mask.Impacts = new MaskItem<bool, Group.Mask<bool>?>(true, item.Impacts?.GetHasBeenSetMask());
-            mask.ImpactDataSets = new MaskItem<bool, Group.Mask<bool>?>(true, item.ImpactDataSets?.GetHasBeenSetMask());
-            mask.ArmorAddons = new MaskItem<bool, Group.Mask<bool>?>(true, item.ArmorAddons?.GetHasBeenSetMask());
-            mask.EncounterZones = new MaskItem<bool, Group.Mask<bool>?>(true, item.EncounterZones?.GetHasBeenSetMask());
-            mask.Locations = new MaskItem<bool, Group.Mask<bool>?>(true, item.Locations?.GetHasBeenSetMask());
-            mask.Messages = new MaskItem<bool, Group.Mask<bool>?>(true, item.Messages?.GetHasBeenSetMask());
-            mask.DefaultObjectManagers = new MaskItem<bool, Group.Mask<bool>?>(true, item.DefaultObjectManagers?.GetHasBeenSetMask());
-            mask.LightingTemplates = new MaskItem<bool, Group.Mask<bool>?>(true, item.LightingTemplates?.GetHasBeenSetMask());
-            mask.MusicTypes = new MaskItem<bool, Group.Mask<bool>?>(true, item.MusicTypes?.GetHasBeenSetMask());
-            mask.Footsteps = new MaskItem<bool, Group.Mask<bool>?>(true, item.Footsteps?.GetHasBeenSetMask());
-            mask.FootstepSets = new MaskItem<bool, Group.Mask<bool>?>(true, item.FootstepSets?.GetHasBeenSetMask());
-            mask.StoryManagerBranchNodes = new MaskItem<bool, Group.Mask<bool>?>(true, item.StoryManagerBranchNodes?.GetHasBeenSetMask());
-            mask.StoryManagerQuestNodes = new MaskItem<bool, Group.Mask<bool>?>(true, item.StoryManagerQuestNodes?.GetHasBeenSetMask());
-            mask.StoryManagerEventNodes = new MaskItem<bool, Group.Mask<bool>?>(true, item.StoryManagerEventNodes?.GetHasBeenSetMask());
-            mask.DialogBranches = new MaskItem<bool, Group.Mask<bool>?>(true, item.DialogBranches?.GetHasBeenSetMask());
-            mask.MusicTracks = new MaskItem<bool, Group.Mask<bool>?>(true, item.MusicTracks?.GetHasBeenSetMask());
-            mask.DialogViews = new MaskItem<bool, Group.Mask<bool>?>(true, item.DialogViews?.GetHasBeenSetMask());
-            mask.WordsOfPower = new MaskItem<bool, Group.Mask<bool>?>(true, item.WordsOfPower?.GetHasBeenSetMask());
-            mask.Shouts = new MaskItem<bool, Group.Mask<bool>?>(true, item.Shouts?.GetHasBeenSetMask());
-            mask.EquipTypes = new MaskItem<bool, Group.Mask<bool>?>(true, item.EquipTypes?.GetHasBeenSetMask());
-            mask.Relationships = new MaskItem<bool, Group.Mask<bool>?>(true, item.Relationships?.GetHasBeenSetMask());
-            mask.Scenes = new MaskItem<bool, Group.Mask<bool>?>(true, item.Scenes?.GetHasBeenSetMask());
-            mask.AssociationTypes = new MaskItem<bool, Group.Mask<bool>?>(true, item.AssociationTypes?.GetHasBeenSetMask());
-            mask.Outfits = new MaskItem<bool, Group.Mask<bool>?>(true, item.Outfits?.GetHasBeenSetMask());
-            mask.ArtObjects = new MaskItem<bool, Group.Mask<bool>?>(true, item.ArtObjects?.GetHasBeenSetMask());
-            mask.MaterialObjects = new MaskItem<bool, Group.Mask<bool>?>(true, item.MaterialObjects?.GetHasBeenSetMask());
-            mask.MovementTypes = new MaskItem<bool, Group.Mask<bool>?>(true, item.MovementTypes?.GetHasBeenSetMask());
-            mask.SoundDescriptors = new MaskItem<bool, Group.Mask<bool>?>(true, item.SoundDescriptors?.GetHasBeenSetMask());
-            mask.DualCastData = new MaskItem<bool, Group.Mask<bool>?>(true, item.DualCastData?.GetHasBeenSetMask());
-            mask.SoundCategories = new MaskItem<bool, Group.Mask<bool>?>(true, item.SoundCategories?.GetHasBeenSetMask());
-            mask.SoundOutputModels = new MaskItem<bool, Group.Mask<bool>?>(true, item.SoundOutputModels?.GetHasBeenSetMask());
-            mask.CollisionLayers = new MaskItem<bool, Group.Mask<bool>?>(true, item.CollisionLayers?.GetHasBeenSetMask());
-            mask.Colors = new MaskItem<bool, Group.Mask<bool>?>(true, item.Colors?.GetHasBeenSetMask());
-            mask.ReverbParameters = new MaskItem<bool, Group.Mask<bool>?>(true, item.ReverbParameters?.GetHasBeenSetMask());
-            mask.VolumetricLightings = new MaskItem<bool, Group.Mask<bool>?>(true, item.VolumetricLightings?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -11023,129 +10831,130 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BinaryWriteParameters param,
             ModKey modKey)
         {
-            var masterRefs = UtilityTranslation.ConstructWriteMasters(item, param);
             var gameConstants = GameConstants.Get(item.SkyrimRelease.ToGameRelease());
             var bundle = new WritingBundle(gameConstants);
-            bundle.MasterReferences = masterRefs;
-            SkyrimModBinaryWriteTranslation.WriteModHeader(
-                item,
-                new MutagenWriter(stream, bundle),
-                modKey);
+            var writer = new MutagenWriter(stream, bundle);
+            ModHeaderWriteLogic.WriteHeader(
+                param: param,
+                writer: writer,
+                mod: item,
+                modHeader: item.ModHeader.DeepCopy(),
+                modKey: modKey);
             Stream[] outputStreams = new Stream[113];
             List<Action> toDo = new List<Action>();
-            toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.LocationReferenceTypes, masterRefs, 2, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Actions, masterRefs, 3, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.TextureSets, masterRefs, 4, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Globals, masterRefs, 5, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Classes, masterRefs, 6, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Factions, masterRefs, 7, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.HeadParts, masterRefs, 8, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Hairs, masterRefs, 9, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Eyes, masterRefs, 10, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Races, masterRefs, 11, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.SoundMarkers, masterRefs, 12, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.AcousticSpaces, masterRefs, 13, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.MagicEffects, masterRefs, 14, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.LandscapeTextures, masterRefs, 15, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.ObjectEffects, masterRefs, 16, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Spells, masterRefs, 17, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Scrolls, masterRefs, 18, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Activators, masterRefs, 19, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.TalkingActivators, masterRefs, 20, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Armors, masterRefs, 21, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Books, masterRefs, 22, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Containers, masterRefs, 23, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Doors, masterRefs, 24, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Ingredients, masterRefs, 25, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Lights, masterRefs, 26, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.MiscItems, masterRefs, 27, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.AlchemicalApparatuses, masterRefs, 28, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Statics, masterRefs, 29, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.MoveableStatics, masterRefs, 30, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Grasses, masterRefs, 31, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Trees, masterRefs, 32, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Florae, masterRefs, 33, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Furniture, masterRefs, 34, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Weapons, masterRefs, 35, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Ammunitions, masterRefs, 36, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Npcs, masterRefs, 37, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.LeveledNpcs, masterRefs, 38, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Keys, masterRefs, 39, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Ingestibles, masterRefs, 40, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.IdleMarkers, masterRefs, 41, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, masterRefs, 42, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Projectiles, masterRefs, 43, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Hazards, masterRefs, 44, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.SoulGems, masterRefs, 45, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.LeveledItems, masterRefs, 46, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Weathers, masterRefs, 47, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Climates, masterRefs, 48, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.ShaderParticleGeometries, masterRefs, 49, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.VisualEffects, masterRefs, 50, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Regions, masterRefs, 51, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.NavigationMeshInfoMaps, masterRefs, 52, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteCellsParallel(item.Cells, masterRefs, 53, gameConstants, outputStreams));
-            toDo.Add(() => WriteWorldspacesParallel(item.Worldspaces, masterRefs, 54, gameConstants, outputStreams));
-            toDo.Add(() => WriteDialogTopicsParallel(item.DialogTopics, masterRefs, 55, gameConstants, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Quests, masterRefs, 56, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.IdleAnimations, masterRefs, 57, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Packages, masterRefs, 58, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.CombatStyles, masterRefs, 59, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.LoadScreens, masterRefs, 60, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.LeveledSpells, masterRefs, 61, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, masterRefs, 62, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Waters, masterRefs, 63, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.EffectShaders, masterRefs, 64, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Explosions, masterRefs, 65, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Debris, masterRefs, 66, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.ImageSpaces, masterRefs, 67, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.ImageSpaceAdapters, masterRefs, 68, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.FormLists, masterRefs, 69, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Perks, masterRefs, 70, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.BodyParts, masterRefs, 71, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.AddonNodes, masterRefs, 72, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueInformation, masterRefs, 73, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.CameraShots, masterRefs, 74, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.CameraPaths, masterRefs, 75, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.VoiceTypes, masterRefs, 76, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.MaterialTypes, masterRefs, 77, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Impacts, masterRefs, 78, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.ImpactDataSets, masterRefs, 79, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.ArmorAddons, masterRefs, 80, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.EncounterZones, masterRefs, 81, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Locations, masterRefs, 82, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Messages, masterRefs, 83, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.DefaultObjectManagers, masterRefs, 84, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.LightingTemplates, masterRefs, 85, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.MusicTypes, masterRefs, 86, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Footsteps, masterRefs, 87, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.FootstepSets, masterRefs, 88, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.StoryManagerBranchNodes, masterRefs, 89, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.StoryManagerQuestNodes, masterRefs, 90, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.StoryManagerEventNodes, masterRefs, 91, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.DialogBranches, masterRefs, 92, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.MusicTracks, masterRefs, 93, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.DialogViews, masterRefs, 94, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.WordsOfPower, masterRefs, 95, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Shouts, masterRefs, 96, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.EquipTypes, masterRefs, 97, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Relationships, masterRefs, 98, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Scenes, masterRefs, 99, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.AssociationTypes, masterRefs, 100, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Outfits, masterRefs, 101, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.ArtObjects, masterRefs, 102, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.MaterialObjects, masterRefs, 103, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.MovementTypes, masterRefs, 104, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.SoundDescriptors, masterRefs, 105, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.DualCastData, masterRefs, 106, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.SoundCategories, masterRefs, 107, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.SoundOutputModels, masterRefs, 108, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.CollisionLayers, masterRefs, 109, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Colors, masterRefs, 110, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.ReverbParameters, masterRefs, 111, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.VolumetricLightings, masterRefs, 112, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.GameSettings, writer.MetaData.MasterReferences!, 0, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Keywords, writer.MetaData.MasterReferences!, 1, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.LocationReferenceTypes, writer.MetaData.MasterReferences!, 2, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Actions, writer.MetaData.MasterReferences!, 3, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.TextureSets, writer.MetaData.MasterReferences!, 4, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Globals, writer.MetaData.MasterReferences!, 5, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Classes, writer.MetaData.MasterReferences!, 6, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Factions, writer.MetaData.MasterReferences!, 7, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.HeadParts, writer.MetaData.MasterReferences!, 8, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Hairs, writer.MetaData.MasterReferences!, 9, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Eyes, writer.MetaData.MasterReferences!, 10, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Races, writer.MetaData.MasterReferences!, 11, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.SoundMarkers, writer.MetaData.MasterReferences!, 12, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.AcousticSpaces, writer.MetaData.MasterReferences!, 13, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.MagicEffects, writer.MetaData.MasterReferences!, 14, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.LandscapeTextures, writer.MetaData.MasterReferences!, 15, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ObjectEffects, writer.MetaData.MasterReferences!, 16, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Spells, writer.MetaData.MasterReferences!, 17, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Scrolls, writer.MetaData.MasterReferences!, 18, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Activators, writer.MetaData.MasterReferences!, 19, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.TalkingActivators, writer.MetaData.MasterReferences!, 20, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Armors, writer.MetaData.MasterReferences!, 21, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Books, writer.MetaData.MasterReferences!, 22, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Containers, writer.MetaData.MasterReferences!, 23, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Doors, writer.MetaData.MasterReferences!, 24, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Ingredients, writer.MetaData.MasterReferences!, 25, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Lights, writer.MetaData.MasterReferences!, 26, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.MiscItems, writer.MetaData.MasterReferences!, 27, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.AlchemicalApparatuses, writer.MetaData.MasterReferences!, 28, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Statics, writer.MetaData.MasterReferences!, 29, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.MoveableStatics, writer.MetaData.MasterReferences!, 30, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Grasses, writer.MetaData.MasterReferences!, 31, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Trees, writer.MetaData.MasterReferences!, 32, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Florae, writer.MetaData.MasterReferences!, 33, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Furniture, writer.MetaData.MasterReferences!, 34, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Weapons, writer.MetaData.MasterReferences!, 35, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Ammunitions, writer.MetaData.MasterReferences!, 36, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Npcs, writer.MetaData.MasterReferences!, 37, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.LeveledNpcs, writer.MetaData.MasterReferences!, 38, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Keys, writer.MetaData.MasterReferences!, 39, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Ingestibles, writer.MetaData.MasterReferences!, 40, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.IdleMarkers, writer.MetaData.MasterReferences!, 41, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, writer.MetaData.MasterReferences!, 42, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Projectiles, writer.MetaData.MasterReferences!, 43, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Hazards, writer.MetaData.MasterReferences!, 44, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.SoulGems, writer.MetaData.MasterReferences!, 45, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.LeveledItems, writer.MetaData.MasterReferences!, 46, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Weathers, writer.MetaData.MasterReferences!, 47, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Climates, writer.MetaData.MasterReferences!, 48, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ShaderParticleGeometries, writer.MetaData.MasterReferences!, 49, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.VisualEffects, writer.MetaData.MasterReferences!, 50, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Regions, writer.MetaData.MasterReferences!, 51, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.NavigationMeshInfoMaps, writer.MetaData.MasterReferences!, 52, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteCellsParallel(item.Cells, writer.MetaData.MasterReferences!, 53, gameConstants, outputStreams));
+            toDo.Add(() => WriteWorldspacesParallel(item.Worldspaces, writer.MetaData.MasterReferences!, 54, gameConstants, outputStreams));
+            toDo.Add(() => WriteDialogTopicsParallel(item.DialogTopics, writer.MetaData.MasterReferences!, 55, gameConstants, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Quests, writer.MetaData.MasterReferences!, 56, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.IdleAnimations, writer.MetaData.MasterReferences!, 57, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Packages, writer.MetaData.MasterReferences!, 58, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.CombatStyles, writer.MetaData.MasterReferences!, 59, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.LoadScreens, writer.MetaData.MasterReferences!, 60, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.LeveledSpells, writer.MetaData.MasterReferences!, 61, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, writer.MetaData.MasterReferences!, 62, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Waters, writer.MetaData.MasterReferences!, 63, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.EffectShaders, writer.MetaData.MasterReferences!, 64, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Explosions, writer.MetaData.MasterReferences!, 65, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Debris, writer.MetaData.MasterReferences!, 66, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ImageSpaces, writer.MetaData.MasterReferences!, 67, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ImageSpaceAdapters, writer.MetaData.MasterReferences!, 68, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.FormLists, writer.MetaData.MasterReferences!, 69, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Perks, writer.MetaData.MasterReferences!, 70, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.BodyParts, writer.MetaData.MasterReferences!, 71, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.AddonNodes, writer.MetaData.MasterReferences!, 72, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueInformation, writer.MetaData.MasterReferences!, 73, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.CameraShots, writer.MetaData.MasterReferences!, 74, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.CameraPaths, writer.MetaData.MasterReferences!, 75, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.VoiceTypes, writer.MetaData.MasterReferences!, 76, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.MaterialTypes, writer.MetaData.MasterReferences!, 77, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Impacts, writer.MetaData.MasterReferences!, 78, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ImpactDataSets, writer.MetaData.MasterReferences!, 79, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ArmorAddons, writer.MetaData.MasterReferences!, 80, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.EncounterZones, writer.MetaData.MasterReferences!, 81, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Locations, writer.MetaData.MasterReferences!, 82, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Messages, writer.MetaData.MasterReferences!, 83, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.DefaultObjectManagers, writer.MetaData.MasterReferences!, 84, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.LightingTemplates, writer.MetaData.MasterReferences!, 85, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.MusicTypes, writer.MetaData.MasterReferences!, 86, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Footsteps, writer.MetaData.MasterReferences!, 87, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.FootstepSets, writer.MetaData.MasterReferences!, 88, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.StoryManagerBranchNodes, writer.MetaData.MasterReferences!, 89, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.StoryManagerQuestNodes, writer.MetaData.MasterReferences!, 90, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.StoryManagerEventNodes, writer.MetaData.MasterReferences!, 91, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.DialogBranches, writer.MetaData.MasterReferences!, 92, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.MusicTracks, writer.MetaData.MasterReferences!, 93, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.DialogViews, writer.MetaData.MasterReferences!, 94, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.WordsOfPower, writer.MetaData.MasterReferences!, 95, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Shouts, writer.MetaData.MasterReferences!, 96, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.EquipTypes, writer.MetaData.MasterReferences!, 97, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Relationships, writer.MetaData.MasterReferences!, 98, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Scenes, writer.MetaData.MasterReferences!, 99, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.AssociationTypes, writer.MetaData.MasterReferences!, 100, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Outfits, writer.MetaData.MasterReferences!, 101, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ArtObjects, writer.MetaData.MasterReferences!, 102, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.MaterialObjects, writer.MetaData.MasterReferences!, 103, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.MovementTypes, writer.MetaData.MasterReferences!, 104, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.SoundDescriptors, writer.MetaData.MasterReferences!, 105, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.DualCastData, writer.MetaData.MasterReferences!, 106, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.SoundCategories, writer.MetaData.MasterReferences!, 107, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.SoundOutputModels, writer.MetaData.MasterReferences!, 108, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.CollisionLayers, writer.MetaData.MasterReferences!, 109, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Colors, writer.MetaData.MasterReferences!, 110, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ReverbParameters, writer.MetaData.MasterReferences!, 111, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.VolumetricLightings, writer.MetaData.MasterReferences!, 112, gameConstants, outputStreams, param.StringsWriter));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -11162,7 +10971,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             where T : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
             if (group.RecordCache.Count == 0) return;
-            var cuts = group.Records.Cut(CutCount).ToArray();
+            var cuts = group.Cut(CutCount).ToArray();
             Stream[] subStreams = new Stream[cuts.Length + 1];
             byte[] groupBytes = new byte[gameConstants.GroupConstants.HeaderLength];
             BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);
@@ -11200,371 +11009,371 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.GameSettings is ILinkedFormKeyContainer GameSettingslinkCont)
+            if (obj.GameSettings is ILinkedFormKeyContainerGetter GameSettingslinkCont)
             {
                 foreach (var item in GameSettingslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Keywords is ILinkedFormKeyContainer KeywordslinkCont)
+            if (obj.Keywords is ILinkedFormKeyContainerGetter KeywordslinkCont)
             {
                 foreach (var item in KeywordslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.LocationReferenceTypes is ILinkedFormKeyContainer LocationReferenceTypeslinkCont)
+            if (obj.LocationReferenceTypes is ILinkedFormKeyContainerGetter LocationReferenceTypeslinkCont)
             {
                 foreach (var item in LocationReferenceTypeslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Actions is ILinkedFormKeyContainer ActionslinkCont)
+            if (obj.Actions is ILinkedFormKeyContainerGetter ActionslinkCont)
             {
                 foreach (var item in ActionslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.TextureSets is ILinkedFormKeyContainer TextureSetslinkCont)
+            if (obj.TextureSets is ILinkedFormKeyContainerGetter TextureSetslinkCont)
             {
                 foreach (var item in TextureSetslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Globals is ILinkedFormKeyContainer GlobalslinkCont)
+            if (obj.Globals is ILinkedFormKeyContainerGetter GlobalslinkCont)
             {
                 foreach (var item in GlobalslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Classes is ILinkedFormKeyContainer ClasseslinkCont)
+            if (obj.Classes is ILinkedFormKeyContainerGetter ClasseslinkCont)
             {
                 foreach (var item in ClasseslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Factions is ILinkedFormKeyContainer FactionslinkCont)
+            if (obj.Factions is ILinkedFormKeyContainerGetter FactionslinkCont)
             {
                 foreach (var item in FactionslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.HeadParts is ILinkedFormKeyContainer HeadPartslinkCont)
+            if (obj.HeadParts is ILinkedFormKeyContainerGetter HeadPartslinkCont)
             {
                 foreach (var item in HeadPartslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Hairs is ILinkedFormKeyContainer HairslinkCont)
+            if (obj.Hairs is ILinkedFormKeyContainerGetter HairslinkCont)
             {
                 foreach (var item in HairslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Eyes is ILinkedFormKeyContainer EyeslinkCont)
+            if (obj.Eyes is ILinkedFormKeyContainerGetter EyeslinkCont)
             {
                 foreach (var item in EyeslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Races is ILinkedFormKeyContainer RaceslinkCont)
+            if (obj.Races is ILinkedFormKeyContainerGetter RaceslinkCont)
             {
                 foreach (var item in RaceslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.SoundMarkers is ILinkedFormKeyContainer SoundMarkerslinkCont)
+            if (obj.SoundMarkers is ILinkedFormKeyContainerGetter SoundMarkerslinkCont)
             {
                 foreach (var item in SoundMarkerslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.AcousticSpaces is ILinkedFormKeyContainer AcousticSpaceslinkCont)
+            if (obj.AcousticSpaces is ILinkedFormKeyContainerGetter AcousticSpaceslinkCont)
             {
                 foreach (var item in AcousticSpaceslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.MagicEffects is ILinkedFormKeyContainer MagicEffectslinkCont)
+            if (obj.MagicEffects is ILinkedFormKeyContainerGetter MagicEffectslinkCont)
             {
                 foreach (var item in MagicEffectslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.LandscapeTextures is ILinkedFormKeyContainer LandscapeTextureslinkCont)
+            if (obj.LandscapeTextures is ILinkedFormKeyContainerGetter LandscapeTextureslinkCont)
             {
                 foreach (var item in LandscapeTextureslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.ObjectEffects is ILinkedFormKeyContainer ObjectEffectslinkCont)
+            if (obj.ObjectEffects is ILinkedFormKeyContainerGetter ObjectEffectslinkCont)
             {
                 foreach (var item in ObjectEffectslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Spells is ILinkedFormKeyContainer SpellslinkCont)
+            if (obj.Spells is ILinkedFormKeyContainerGetter SpellslinkCont)
             {
                 foreach (var item in SpellslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Scrolls is ILinkedFormKeyContainer ScrollslinkCont)
+            if (obj.Scrolls is ILinkedFormKeyContainerGetter ScrollslinkCont)
             {
                 foreach (var item in ScrollslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Activators is ILinkedFormKeyContainer ActivatorslinkCont)
+            if (obj.Activators is ILinkedFormKeyContainerGetter ActivatorslinkCont)
             {
                 foreach (var item in ActivatorslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.TalkingActivators is ILinkedFormKeyContainer TalkingActivatorslinkCont)
+            if (obj.TalkingActivators is ILinkedFormKeyContainerGetter TalkingActivatorslinkCont)
             {
                 foreach (var item in TalkingActivatorslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Armors is ILinkedFormKeyContainer ArmorslinkCont)
+            if (obj.Armors is ILinkedFormKeyContainerGetter ArmorslinkCont)
             {
                 foreach (var item in ArmorslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Books is ILinkedFormKeyContainer BookslinkCont)
+            if (obj.Books is ILinkedFormKeyContainerGetter BookslinkCont)
             {
                 foreach (var item in BookslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Containers is ILinkedFormKeyContainer ContainerslinkCont)
+            if (obj.Containers is ILinkedFormKeyContainerGetter ContainerslinkCont)
             {
                 foreach (var item in ContainerslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Doors is ILinkedFormKeyContainer DoorslinkCont)
+            if (obj.Doors is ILinkedFormKeyContainerGetter DoorslinkCont)
             {
                 foreach (var item in DoorslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Ingredients is ILinkedFormKeyContainer IngredientslinkCont)
+            if (obj.Ingredients is ILinkedFormKeyContainerGetter IngredientslinkCont)
             {
                 foreach (var item in IngredientslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Lights is ILinkedFormKeyContainer LightslinkCont)
+            if (obj.Lights is ILinkedFormKeyContainerGetter LightslinkCont)
             {
                 foreach (var item in LightslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.MiscItems is ILinkedFormKeyContainer MiscItemslinkCont)
+            if (obj.MiscItems is ILinkedFormKeyContainerGetter MiscItemslinkCont)
             {
                 foreach (var item in MiscItemslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.AlchemicalApparatuses is ILinkedFormKeyContainer AlchemicalApparatuseslinkCont)
+            if (obj.AlchemicalApparatuses is ILinkedFormKeyContainerGetter AlchemicalApparatuseslinkCont)
             {
                 foreach (var item in AlchemicalApparatuseslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Statics is ILinkedFormKeyContainer StaticslinkCont)
+            if (obj.Statics is ILinkedFormKeyContainerGetter StaticslinkCont)
             {
                 foreach (var item in StaticslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.MoveableStatics is ILinkedFormKeyContainer MoveableStaticslinkCont)
+            if (obj.MoveableStatics is ILinkedFormKeyContainerGetter MoveableStaticslinkCont)
             {
                 foreach (var item in MoveableStaticslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Grasses is ILinkedFormKeyContainer GrasseslinkCont)
+            if (obj.Grasses is ILinkedFormKeyContainerGetter GrasseslinkCont)
             {
                 foreach (var item in GrasseslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Trees is ILinkedFormKeyContainer TreeslinkCont)
+            if (obj.Trees is ILinkedFormKeyContainerGetter TreeslinkCont)
             {
                 foreach (var item in TreeslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Florae is ILinkedFormKeyContainer FloraelinkCont)
+            if (obj.Florae is ILinkedFormKeyContainerGetter FloraelinkCont)
             {
                 foreach (var item in FloraelinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Furniture is ILinkedFormKeyContainer FurniturelinkCont)
+            if (obj.Furniture is ILinkedFormKeyContainerGetter FurniturelinkCont)
             {
                 foreach (var item in FurniturelinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Weapons is ILinkedFormKeyContainer WeaponslinkCont)
+            if (obj.Weapons is ILinkedFormKeyContainerGetter WeaponslinkCont)
             {
                 foreach (var item in WeaponslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Ammunitions is ILinkedFormKeyContainer AmmunitionslinkCont)
+            if (obj.Ammunitions is ILinkedFormKeyContainerGetter AmmunitionslinkCont)
             {
                 foreach (var item in AmmunitionslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Npcs is ILinkedFormKeyContainer NpcslinkCont)
+            if (obj.Npcs is ILinkedFormKeyContainerGetter NpcslinkCont)
             {
                 foreach (var item in NpcslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.LeveledNpcs is ILinkedFormKeyContainer LeveledNpcslinkCont)
+            if (obj.LeveledNpcs is ILinkedFormKeyContainerGetter LeveledNpcslinkCont)
             {
                 foreach (var item in LeveledNpcslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Keys is ILinkedFormKeyContainer KeyslinkCont)
+            if (obj.Keys is ILinkedFormKeyContainerGetter KeyslinkCont)
             {
                 foreach (var item in KeyslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Ingestibles is ILinkedFormKeyContainer IngestibleslinkCont)
+            if (obj.Ingestibles is ILinkedFormKeyContainerGetter IngestibleslinkCont)
             {
                 foreach (var item in IngestibleslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.IdleMarkers is ILinkedFormKeyContainer IdleMarkerslinkCont)
+            if (obj.IdleMarkers is ILinkedFormKeyContainerGetter IdleMarkerslinkCont)
             {
                 foreach (var item in IdleMarkerslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.ConstructibleObjects is ILinkedFormKeyContainer ConstructibleObjectslinkCont)
+            if (obj.ConstructibleObjects is ILinkedFormKeyContainerGetter ConstructibleObjectslinkCont)
             {
                 foreach (var item in ConstructibleObjectslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Projectiles is ILinkedFormKeyContainer ProjectileslinkCont)
+            if (obj.Projectiles is ILinkedFormKeyContainerGetter ProjectileslinkCont)
             {
                 foreach (var item in ProjectileslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Hazards is ILinkedFormKeyContainer HazardslinkCont)
+            if (obj.Hazards is ILinkedFormKeyContainerGetter HazardslinkCont)
             {
                 foreach (var item in HazardslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.SoulGems is ILinkedFormKeyContainer SoulGemslinkCont)
+            if (obj.SoulGems is ILinkedFormKeyContainerGetter SoulGemslinkCont)
             {
                 foreach (var item in SoulGemslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.LeveledItems is ILinkedFormKeyContainer LeveledItemslinkCont)
+            if (obj.LeveledItems is ILinkedFormKeyContainerGetter LeveledItemslinkCont)
             {
                 foreach (var item in LeveledItemslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Weathers is ILinkedFormKeyContainer WeatherslinkCont)
+            if (obj.Weathers is ILinkedFormKeyContainerGetter WeatherslinkCont)
             {
                 foreach (var item in WeatherslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Climates is ILinkedFormKeyContainer ClimateslinkCont)
+            if (obj.Climates is ILinkedFormKeyContainerGetter ClimateslinkCont)
             {
                 foreach (var item in ClimateslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.ShaderParticleGeometries is ILinkedFormKeyContainer ShaderParticleGeometrieslinkCont)
+            if (obj.ShaderParticleGeometries is ILinkedFormKeyContainerGetter ShaderParticleGeometrieslinkCont)
             {
                 foreach (var item in ShaderParticleGeometrieslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.VisualEffects is ILinkedFormKeyContainer VisualEffectslinkCont)
+            if (obj.VisualEffects is ILinkedFormKeyContainerGetter VisualEffectslinkCont)
             {
                 foreach (var item in VisualEffectslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Regions is ILinkedFormKeyContainer RegionslinkCont)
+            if (obj.Regions is ILinkedFormKeyContainerGetter RegionslinkCont)
             {
                 foreach (var item in RegionslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.NavigationMeshInfoMaps is ILinkedFormKeyContainer NavigationMeshInfoMapslinkCont)
+            if (obj.NavigationMeshInfoMaps is ILinkedFormKeyContainerGetter NavigationMeshInfoMapslinkCont)
             {
                 foreach (var item in NavigationMeshInfoMapslinkCont.LinkFormKeys)
                 {
@@ -11575,413 +11384,413 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Worldspaces is ILinkedFormKeyContainer WorldspaceslinkCont)
+            if (obj.Worldspaces is ILinkedFormKeyContainerGetter WorldspaceslinkCont)
             {
                 foreach (var item in WorldspaceslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.DialogTopics is ILinkedFormKeyContainer DialogTopicslinkCont)
+            if (obj.DialogTopics is ILinkedFormKeyContainerGetter DialogTopicslinkCont)
             {
                 foreach (var item in DialogTopicslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Quests is ILinkedFormKeyContainer QuestslinkCont)
+            if (obj.Quests is ILinkedFormKeyContainerGetter QuestslinkCont)
             {
                 foreach (var item in QuestslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.IdleAnimations is ILinkedFormKeyContainer IdleAnimationslinkCont)
+            if (obj.IdleAnimations is ILinkedFormKeyContainerGetter IdleAnimationslinkCont)
             {
                 foreach (var item in IdleAnimationslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Packages is ILinkedFormKeyContainer PackageslinkCont)
+            if (obj.Packages is ILinkedFormKeyContainerGetter PackageslinkCont)
             {
                 foreach (var item in PackageslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.CombatStyles is ILinkedFormKeyContainer CombatStyleslinkCont)
+            if (obj.CombatStyles is ILinkedFormKeyContainerGetter CombatStyleslinkCont)
             {
                 foreach (var item in CombatStyleslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.LoadScreens is ILinkedFormKeyContainer LoadScreenslinkCont)
+            if (obj.LoadScreens is ILinkedFormKeyContainerGetter LoadScreenslinkCont)
             {
                 foreach (var item in LoadScreenslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.LeveledSpells is ILinkedFormKeyContainer LeveledSpellslinkCont)
+            if (obj.LeveledSpells is ILinkedFormKeyContainerGetter LeveledSpellslinkCont)
             {
                 foreach (var item in LeveledSpellslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.AnimatedObjects is ILinkedFormKeyContainer AnimatedObjectslinkCont)
+            if (obj.AnimatedObjects is ILinkedFormKeyContainerGetter AnimatedObjectslinkCont)
             {
                 foreach (var item in AnimatedObjectslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Waters is ILinkedFormKeyContainer WaterslinkCont)
+            if (obj.Waters is ILinkedFormKeyContainerGetter WaterslinkCont)
             {
                 foreach (var item in WaterslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.EffectShaders is ILinkedFormKeyContainer EffectShaderslinkCont)
+            if (obj.EffectShaders is ILinkedFormKeyContainerGetter EffectShaderslinkCont)
             {
                 foreach (var item in EffectShaderslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Explosions is ILinkedFormKeyContainer ExplosionslinkCont)
+            if (obj.Explosions is ILinkedFormKeyContainerGetter ExplosionslinkCont)
             {
                 foreach (var item in ExplosionslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Debris is ILinkedFormKeyContainer DebrislinkCont)
+            if (obj.Debris is ILinkedFormKeyContainerGetter DebrislinkCont)
             {
                 foreach (var item in DebrislinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.ImageSpaces is ILinkedFormKeyContainer ImageSpaceslinkCont)
+            if (obj.ImageSpaces is ILinkedFormKeyContainerGetter ImageSpaceslinkCont)
             {
                 foreach (var item in ImageSpaceslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.ImageSpaceAdapters is ILinkedFormKeyContainer ImageSpaceAdapterslinkCont)
+            if (obj.ImageSpaceAdapters is ILinkedFormKeyContainerGetter ImageSpaceAdapterslinkCont)
             {
                 foreach (var item in ImageSpaceAdapterslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.FormLists is ILinkedFormKeyContainer FormListslinkCont)
+            if (obj.FormLists is ILinkedFormKeyContainerGetter FormListslinkCont)
             {
                 foreach (var item in FormListslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Perks is ILinkedFormKeyContainer PerkslinkCont)
+            if (obj.Perks is ILinkedFormKeyContainerGetter PerkslinkCont)
             {
                 foreach (var item in PerkslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.BodyParts is ILinkedFormKeyContainer BodyPartslinkCont)
+            if (obj.BodyParts is ILinkedFormKeyContainerGetter BodyPartslinkCont)
             {
                 foreach (var item in BodyPartslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.AddonNodes is ILinkedFormKeyContainer AddonNodeslinkCont)
+            if (obj.AddonNodes is ILinkedFormKeyContainerGetter AddonNodeslinkCont)
             {
                 foreach (var item in AddonNodeslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.ActorValueInformation is ILinkedFormKeyContainer ActorValueInformationlinkCont)
+            if (obj.ActorValueInformation is ILinkedFormKeyContainerGetter ActorValueInformationlinkCont)
             {
                 foreach (var item in ActorValueInformationlinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.CameraShots is ILinkedFormKeyContainer CameraShotslinkCont)
+            if (obj.CameraShots is ILinkedFormKeyContainerGetter CameraShotslinkCont)
             {
                 foreach (var item in CameraShotslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.CameraPaths is ILinkedFormKeyContainer CameraPathslinkCont)
+            if (obj.CameraPaths is ILinkedFormKeyContainerGetter CameraPathslinkCont)
             {
                 foreach (var item in CameraPathslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.VoiceTypes is ILinkedFormKeyContainer VoiceTypeslinkCont)
+            if (obj.VoiceTypes is ILinkedFormKeyContainerGetter VoiceTypeslinkCont)
             {
                 foreach (var item in VoiceTypeslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.MaterialTypes is ILinkedFormKeyContainer MaterialTypeslinkCont)
+            if (obj.MaterialTypes is ILinkedFormKeyContainerGetter MaterialTypeslinkCont)
             {
                 foreach (var item in MaterialTypeslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Impacts is ILinkedFormKeyContainer ImpactslinkCont)
+            if (obj.Impacts is ILinkedFormKeyContainerGetter ImpactslinkCont)
             {
                 foreach (var item in ImpactslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.ImpactDataSets is ILinkedFormKeyContainer ImpactDataSetslinkCont)
+            if (obj.ImpactDataSets is ILinkedFormKeyContainerGetter ImpactDataSetslinkCont)
             {
                 foreach (var item in ImpactDataSetslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.ArmorAddons is ILinkedFormKeyContainer ArmorAddonslinkCont)
+            if (obj.ArmorAddons is ILinkedFormKeyContainerGetter ArmorAddonslinkCont)
             {
                 foreach (var item in ArmorAddonslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.EncounterZones is ILinkedFormKeyContainer EncounterZoneslinkCont)
+            if (obj.EncounterZones is ILinkedFormKeyContainerGetter EncounterZoneslinkCont)
             {
                 foreach (var item in EncounterZoneslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Locations is ILinkedFormKeyContainer LocationslinkCont)
+            if (obj.Locations is ILinkedFormKeyContainerGetter LocationslinkCont)
             {
                 foreach (var item in LocationslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Messages is ILinkedFormKeyContainer MessageslinkCont)
+            if (obj.Messages is ILinkedFormKeyContainerGetter MessageslinkCont)
             {
                 foreach (var item in MessageslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.DefaultObjectManagers is ILinkedFormKeyContainer DefaultObjectManagerslinkCont)
+            if (obj.DefaultObjectManagers is ILinkedFormKeyContainerGetter DefaultObjectManagerslinkCont)
             {
                 foreach (var item in DefaultObjectManagerslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.LightingTemplates is ILinkedFormKeyContainer LightingTemplateslinkCont)
+            if (obj.LightingTemplates is ILinkedFormKeyContainerGetter LightingTemplateslinkCont)
             {
                 foreach (var item in LightingTemplateslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.MusicTypes is ILinkedFormKeyContainer MusicTypeslinkCont)
+            if (obj.MusicTypes is ILinkedFormKeyContainerGetter MusicTypeslinkCont)
             {
                 foreach (var item in MusicTypeslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Footsteps is ILinkedFormKeyContainer FootstepslinkCont)
+            if (obj.Footsteps is ILinkedFormKeyContainerGetter FootstepslinkCont)
             {
                 foreach (var item in FootstepslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.FootstepSets is ILinkedFormKeyContainer FootstepSetslinkCont)
+            if (obj.FootstepSets is ILinkedFormKeyContainerGetter FootstepSetslinkCont)
             {
                 foreach (var item in FootstepSetslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.StoryManagerBranchNodes is ILinkedFormKeyContainer StoryManagerBranchNodeslinkCont)
+            if (obj.StoryManagerBranchNodes is ILinkedFormKeyContainerGetter StoryManagerBranchNodeslinkCont)
             {
                 foreach (var item in StoryManagerBranchNodeslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.StoryManagerQuestNodes is ILinkedFormKeyContainer StoryManagerQuestNodeslinkCont)
+            if (obj.StoryManagerQuestNodes is ILinkedFormKeyContainerGetter StoryManagerQuestNodeslinkCont)
             {
                 foreach (var item in StoryManagerQuestNodeslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.StoryManagerEventNodes is ILinkedFormKeyContainer StoryManagerEventNodeslinkCont)
+            if (obj.StoryManagerEventNodes is ILinkedFormKeyContainerGetter StoryManagerEventNodeslinkCont)
             {
                 foreach (var item in StoryManagerEventNodeslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.DialogBranches is ILinkedFormKeyContainer DialogBrancheslinkCont)
+            if (obj.DialogBranches is ILinkedFormKeyContainerGetter DialogBrancheslinkCont)
             {
                 foreach (var item in DialogBrancheslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.MusicTracks is ILinkedFormKeyContainer MusicTrackslinkCont)
+            if (obj.MusicTracks is ILinkedFormKeyContainerGetter MusicTrackslinkCont)
             {
                 foreach (var item in MusicTrackslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.DialogViews is ILinkedFormKeyContainer DialogViewslinkCont)
+            if (obj.DialogViews is ILinkedFormKeyContainerGetter DialogViewslinkCont)
             {
                 foreach (var item in DialogViewslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.WordsOfPower is ILinkedFormKeyContainer WordsOfPowerlinkCont)
+            if (obj.WordsOfPower is ILinkedFormKeyContainerGetter WordsOfPowerlinkCont)
             {
                 foreach (var item in WordsOfPowerlinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Shouts is ILinkedFormKeyContainer ShoutslinkCont)
+            if (obj.Shouts is ILinkedFormKeyContainerGetter ShoutslinkCont)
             {
                 foreach (var item in ShoutslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.EquipTypes is ILinkedFormKeyContainer EquipTypeslinkCont)
+            if (obj.EquipTypes is ILinkedFormKeyContainerGetter EquipTypeslinkCont)
             {
                 foreach (var item in EquipTypeslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Relationships is ILinkedFormKeyContainer RelationshipslinkCont)
+            if (obj.Relationships is ILinkedFormKeyContainerGetter RelationshipslinkCont)
             {
                 foreach (var item in RelationshipslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Scenes is ILinkedFormKeyContainer SceneslinkCont)
+            if (obj.Scenes is ILinkedFormKeyContainerGetter SceneslinkCont)
             {
                 foreach (var item in SceneslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.AssociationTypes is ILinkedFormKeyContainer AssociationTypeslinkCont)
+            if (obj.AssociationTypes is ILinkedFormKeyContainerGetter AssociationTypeslinkCont)
             {
                 foreach (var item in AssociationTypeslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Outfits is ILinkedFormKeyContainer OutfitslinkCont)
+            if (obj.Outfits is ILinkedFormKeyContainerGetter OutfitslinkCont)
             {
                 foreach (var item in OutfitslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.ArtObjects is ILinkedFormKeyContainer ArtObjectslinkCont)
+            if (obj.ArtObjects is ILinkedFormKeyContainerGetter ArtObjectslinkCont)
             {
                 foreach (var item in ArtObjectslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.MaterialObjects is ILinkedFormKeyContainer MaterialObjectslinkCont)
+            if (obj.MaterialObjects is ILinkedFormKeyContainerGetter MaterialObjectslinkCont)
             {
                 foreach (var item in MaterialObjectslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.MovementTypes is ILinkedFormKeyContainer MovementTypeslinkCont)
+            if (obj.MovementTypes is ILinkedFormKeyContainerGetter MovementTypeslinkCont)
             {
                 foreach (var item in MovementTypeslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.SoundDescriptors is ILinkedFormKeyContainer SoundDescriptorslinkCont)
+            if (obj.SoundDescriptors is ILinkedFormKeyContainerGetter SoundDescriptorslinkCont)
             {
                 foreach (var item in SoundDescriptorslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.DualCastData is ILinkedFormKeyContainer DualCastDatalinkCont)
+            if (obj.DualCastData is ILinkedFormKeyContainerGetter DualCastDatalinkCont)
             {
                 foreach (var item in DualCastDatalinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.SoundCategories is ILinkedFormKeyContainer SoundCategorieslinkCont)
+            if (obj.SoundCategories is ILinkedFormKeyContainerGetter SoundCategorieslinkCont)
             {
                 foreach (var item in SoundCategorieslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.SoundOutputModels is ILinkedFormKeyContainer SoundOutputModelslinkCont)
+            if (obj.SoundOutputModels is ILinkedFormKeyContainerGetter SoundOutputModelslinkCont)
             {
                 foreach (var item in SoundOutputModelslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.CollisionLayers is ILinkedFormKeyContainer CollisionLayerslinkCont)
+            if (obj.CollisionLayers is ILinkedFormKeyContainerGetter CollisionLayerslinkCont)
             {
                 foreach (var item in CollisionLayerslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Colors is ILinkedFormKeyContainer ColorslinkCont)
+            if (obj.Colors is ILinkedFormKeyContainerGetter ColorslinkCont)
             {
                 foreach (var item in ColorslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.ReverbParameters is ILinkedFormKeyContainer ReverbParameterslinkCont)
+            if (obj.ReverbParameters is ILinkedFormKeyContainerGetter ReverbParameterslinkCont)
             {
                 foreach (var item in ReverbParameterslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.VolumetricLightings is ILinkedFormKeyContainer VolumetricLightingslinkCont)
+            if (obj.VolumetricLightings is ILinkedFormKeyContainerGetter VolumetricLightingslinkCont)
             {
                 foreach (var item in VolumetricLightingslinkCont.LinkFormKeys)
                 {
@@ -12456,11 +12265,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (type.Name)
             {
                 case "IMajorRecordCommon":
-                case "IMajorRecordCommonGetter":
+                case "IMajorRecord":
                 case "MajorRecord":
                 case "ISkyrimMajorRecord":
-                case "ISkyrimMajorRecordGetter":
                 case "SkyrimMajorRecord":
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IMajorRecordGetter":
+                case "IMajorRecordCommonGetter":
+                case "ISkyrimMajorRecordGetter":
                     foreach (var item in this.EnumerateMajorRecords(obj))
                     {
                         yield return item;
@@ -12470,7 +12287,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IGameSettingGetter":
                 case "IGameSetting":
                 case "IGameSettingInternal":
-                    foreach (var item in obj.GameSettings.EnumerateMajorRecords(type))
+                    foreach (var item in obj.GameSettings.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12479,7 +12296,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IKeywordGetter":
                 case "IKeyword":
                 case "IKeywordInternal":
-                    foreach (var item in obj.Keywords.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Keywords.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12488,7 +12305,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILocationReferenceTypeGetter":
                 case "ILocationReferenceType":
                 case "ILocationReferenceTypeInternal":
-                    foreach (var item in obj.LocationReferenceTypes.EnumerateMajorRecords(type))
+                    foreach (var item in obj.LocationReferenceTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12497,7 +12314,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IActionRecordGetter":
                 case "IActionRecord":
                 case "IActionRecordInternal":
-                    foreach (var item in obj.Actions.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Actions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12506,7 +12323,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ITextureSetGetter":
                 case "ITextureSet":
                 case "ITextureSetInternal":
-                    foreach (var item in obj.TextureSets.EnumerateMajorRecords(type))
+                    foreach (var item in obj.TextureSets.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12515,7 +12332,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IGlobalGetter":
                 case "IGlobal":
                 case "IGlobalInternal":
-                    foreach (var item in obj.Globals.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Globals.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12524,7 +12341,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IClassGetter":
                 case "IClass":
                 case "IClassInternal":
-                    foreach (var item in obj.Classes.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Classes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12533,7 +12350,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IFactionGetter":
                 case "IFaction":
                 case "IFactionInternal":
-                    foreach (var item in obj.Factions.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Factions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12542,7 +12359,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IHeadPartGetter":
                 case "IHeadPart":
                 case "IHeadPartInternal":
-                    foreach (var item in obj.HeadParts.EnumerateMajorRecords(type))
+                    foreach (var item in obj.HeadParts.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12551,7 +12368,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IHairGetter":
                 case "IHair":
                 case "IHairInternal":
-                    foreach (var item in obj.Hairs.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Hairs.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12560,7 +12377,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IEyesGetter":
                 case "IEyes":
                 case "IEyesInternal":
-                    foreach (var item in obj.Eyes.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Eyes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12569,7 +12386,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IRaceGetter":
                 case "IRace":
                 case "IRaceInternal":
-                    foreach (var item in obj.Races.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Races.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12578,7 +12395,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ISoundMarkerGetter":
                 case "ISoundMarker":
                 case "ISoundMarkerInternal":
-                    foreach (var item in obj.SoundMarkers.EnumerateMajorRecords(type))
+                    foreach (var item in obj.SoundMarkers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12587,7 +12404,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAcousticSpaceGetter":
                 case "IAcousticSpace":
                 case "IAcousticSpaceInternal":
-                    foreach (var item in obj.AcousticSpaces.EnumerateMajorRecords(type))
+                    foreach (var item in obj.AcousticSpaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12596,7 +12413,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMagicEffectGetter":
                 case "IMagicEffect":
                 case "IMagicEffectInternal":
-                    foreach (var item in obj.MagicEffects.EnumerateMajorRecords(type))
+                    foreach (var item in obj.MagicEffects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12605,7 +12422,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILandscapeTextureGetter":
                 case "ILandscapeTexture":
                 case "ILandscapeTextureInternal":
-                    foreach (var item in obj.LandscapeTextures.EnumerateMajorRecords(type))
+                    foreach (var item in obj.LandscapeTextures.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12614,7 +12431,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IObjectEffectGetter":
                 case "IObjectEffect":
                 case "IObjectEffectInternal":
-                    foreach (var item in obj.ObjectEffects.EnumerateMajorRecords(type))
+                    foreach (var item in obj.ObjectEffects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12623,7 +12440,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ISpellGetter":
                 case "ISpell":
                 case "ISpellInternal":
-                    foreach (var item in obj.Spells.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Spells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12632,7 +12449,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IScrollGetter":
                 case "IScroll":
                 case "IScrollInternal":
-                    foreach (var item in obj.Scrolls.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Scrolls.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12641,7 +12458,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IActivatorGetter":
                 case "IActivator":
                 case "IActivatorInternal":
-                    foreach (var item in obj.Activators.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Activators.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12650,7 +12467,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ITalkingActivatorGetter":
                 case "ITalkingActivator":
                 case "ITalkingActivatorInternal":
-                    foreach (var item in obj.TalkingActivators.EnumerateMajorRecords(type))
+                    foreach (var item in obj.TalkingActivators.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12659,7 +12476,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IArmorGetter":
                 case "IArmor":
                 case "IArmorInternal":
-                    foreach (var item in obj.Armors.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Armors.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12668,7 +12485,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IBookGetter":
                 case "IBook":
                 case "IBookInternal":
-                    foreach (var item in obj.Books.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Books.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12677,7 +12494,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IContainerGetter":
                 case "IContainer":
                 case "IContainerInternal":
-                    foreach (var item in obj.Containers.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Containers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12686,7 +12503,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IDoorGetter":
                 case "IDoor":
                 case "IDoorInternal":
-                    foreach (var item in obj.Doors.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Doors.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12695,7 +12512,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IIngredientGetter":
                 case "IIngredient":
                 case "IIngredientInternal":
-                    foreach (var item in obj.Ingredients.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Ingredients.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12704,7 +12521,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILightGetter":
                 case "ILight":
                 case "ILightInternal":
-                    foreach (var item in obj.Lights.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Lights.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12713,7 +12530,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMiscItemGetter":
                 case "IMiscItem":
                 case "IMiscItemInternal":
-                    foreach (var item in obj.MiscItems.EnumerateMajorRecords(type))
+                    foreach (var item in obj.MiscItems.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12722,7 +12539,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAlchemicalApparatusGetter":
                 case "IAlchemicalApparatus":
                 case "IAlchemicalApparatusInternal":
-                    foreach (var item in obj.AlchemicalApparatuses.EnumerateMajorRecords(type))
+                    foreach (var item in obj.AlchemicalApparatuses.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12731,7 +12548,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IStaticGetter":
                 case "IStatic":
                 case "IStaticInternal":
-                    foreach (var item in obj.Statics.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Statics.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12740,7 +12557,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMoveableStaticGetter":
                 case "IMoveableStatic":
                 case "IMoveableStaticInternal":
-                    foreach (var item in obj.MoveableStatics.EnumerateMajorRecords(type))
+                    foreach (var item in obj.MoveableStatics.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12749,7 +12566,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IGrassGetter":
                 case "IGrass":
                 case "IGrassInternal":
-                    foreach (var item in obj.Grasses.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Grasses.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12758,7 +12575,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ITreeGetter":
                 case "ITree":
                 case "ITreeInternal":
-                    foreach (var item in obj.Trees.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Trees.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12767,7 +12584,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IFloraGetter":
                 case "IFlora":
                 case "IFloraInternal":
-                    foreach (var item in obj.Florae.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Florae.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12776,7 +12593,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IFurnitureGetter":
                 case "IFurniture":
                 case "IFurnitureInternal":
-                    foreach (var item in obj.Furniture.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Furniture.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12785,7 +12602,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IWeaponGetter":
                 case "IWeapon":
                 case "IWeaponInternal":
-                    foreach (var item in obj.Weapons.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Weapons.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12794,7 +12611,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAmmunitionGetter":
                 case "IAmmunition":
                 case "IAmmunitionInternal":
-                    foreach (var item in obj.Ammunitions.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Ammunitions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12803,7 +12620,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "INpcGetter":
                 case "INpc":
                 case "INpcInternal":
-                    foreach (var item in obj.Npcs.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Npcs.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12812,7 +12629,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILeveledNpcGetter":
                 case "ILeveledNpc":
                 case "ILeveledNpcInternal":
-                    foreach (var item in obj.LeveledNpcs.EnumerateMajorRecords(type))
+                    foreach (var item in obj.LeveledNpcs.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12821,7 +12638,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IKeyGetter":
                 case "IKey":
                 case "IKeyInternal":
-                    foreach (var item in obj.Keys.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Keys.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12830,7 +12647,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IIngestibleGetter":
                 case "IIngestible":
                 case "IIngestibleInternal":
-                    foreach (var item in obj.Ingestibles.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Ingestibles.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12839,7 +12656,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IIdleMarkerGetter":
                 case "IIdleMarker":
                 case "IIdleMarkerInternal":
-                    foreach (var item in obj.IdleMarkers.EnumerateMajorRecords(type))
+                    foreach (var item in obj.IdleMarkers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12848,7 +12665,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IConstructibleObjectGetter":
                 case "IConstructibleObject":
                 case "IConstructibleObjectInternal":
-                    foreach (var item in obj.ConstructibleObjects.EnumerateMajorRecords(type))
+                    foreach (var item in obj.ConstructibleObjects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12857,7 +12674,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IProjectileGetter":
                 case "IProjectile":
                 case "IProjectileInternal":
-                    foreach (var item in obj.Projectiles.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Projectiles.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12866,7 +12683,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IHazardGetter":
                 case "IHazard":
                 case "IHazardInternal":
-                    foreach (var item in obj.Hazards.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Hazards.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12875,7 +12692,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ISoulGemGetter":
                 case "ISoulGem":
                 case "ISoulGemInternal":
-                    foreach (var item in obj.SoulGems.EnumerateMajorRecords(type))
+                    foreach (var item in obj.SoulGems.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12884,7 +12701,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILeveledItemGetter":
                 case "ILeveledItem":
                 case "ILeveledItemInternal":
-                    foreach (var item in obj.LeveledItems.EnumerateMajorRecords(type))
+                    foreach (var item in obj.LeveledItems.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12893,7 +12710,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IWeatherGetter":
                 case "IWeather":
                 case "IWeatherInternal":
-                    foreach (var item in obj.Weathers.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Weathers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12902,7 +12719,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IClimateGetter":
                 case "IClimate":
                 case "IClimateInternal":
-                    foreach (var item in obj.Climates.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Climates.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12911,7 +12728,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IShaderParticleGeometryGetter":
                 case "IShaderParticleGeometry":
                 case "IShaderParticleGeometryInternal":
-                    foreach (var item in obj.ShaderParticleGeometries.EnumerateMajorRecords(type))
+                    foreach (var item in obj.ShaderParticleGeometries.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12920,7 +12737,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IVisualEffectGetter":
                 case "IVisualEffect":
                 case "IVisualEffectInternal":
-                    foreach (var item in obj.VisualEffects.EnumerateMajorRecords(type))
+                    foreach (var item in obj.VisualEffects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12929,7 +12746,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IRegionGetter":
                 case "IRegion":
                 case "IRegionInternal":
-                    foreach (var item in obj.Regions.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Regions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12938,7 +12755,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "INavigationMeshInfoMapGetter":
                 case "INavigationMeshInfoMap":
                 case "INavigationMeshInfoMapInternal":
-                    foreach (var item in obj.NavigationMeshInfoMaps.EnumerateMajorRecords(type))
+                    foreach (var item in obj.NavigationMeshInfoMaps.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12946,7 +12763,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "CellBlock":
                 case "ICellBlockGetter":
                 case "ICellBlock":
-                    foreach (var item in obj.Cells.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12955,7 +12772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IWorldspaceGetter":
                 case "IWorldspace":
                 case "IWorldspaceInternal":
-                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12964,7 +12781,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IDialogTopicGetter":
                 case "IDialogTopic":
                 case "IDialogTopicInternal":
-                    foreach (var item in obj.DialogTopics.EnumerateMajorRecords(type))
+                    foreach (var item in obj.DialogTopics.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12973,7 +12790,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IQuestGetter":
                 case "IQuest":
                 case "IQuestInternal":
-                    foreach (var item in obj.Quests.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Quests.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12982,7 +12799,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IIdleAnimationGetter":
                 case "IIdleAnimation":
                 case "IIdleAnimationInternal":
-                    foreach (var item in obj.IdleAnimations.EnumerateMajorRecords(type))
+                    foreach (var item in obj.IdleAnimations.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12991,7 +12808,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPackageGetter":
                 case "IPackage":
                 case "IPackageInternal":
-                    foreach (var item in obj.Packages.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Packages.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13000,7 +12817,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ICombatStyleGetter":
                 case "ICombatStyle":
                 case "ICombatStyleInternal":
-                    foreach (var item in obj.CombatStyles.EnumerateMajorRecords(type))
+                    foreach (var item in obj.CombatStyles.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13009,7 +12826,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILoadScreenGetter":
                 case "ILoadScreen":
                 case "ILoadScreenInternal":
-                    foreach (var item in obj.LoadScreens.EnumerateMajorRecords(type))
+                    foreach (var item in obj.LoadScreens.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13018,7 +12835,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILeveledSpellGetter":
                 case "ILeveledSpell":
                 case "ILeveledSpellInternal":
-                    foreach (var item in obj.LeveledSpells.EnumerateMajorRecords(type))
+                    foreach (var item in obj.LeveledSpells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13027,7 +12844,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAnimatedObjectGetter":
                 case "IAnimatedObject":
                 case "IAnimatedObjectInternal":
-                    foreach (var item in obj.AnimatedObjects.EnumerateMajorRecords(type))
+                    foreach (var item in obj.AnimatedObjects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13036,7 +12853,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IWaterGetter":
                 case "IWater":
                 case "IWaterInternal":
-                    foreach (var item in obj.Waters.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Waters.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13045,7 +12862,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IEffectShaderGetter":
                 case "IEffectShader":
                 case "IEffectShaderInternal":
-                    foreach (var item in obj.EffectShaders.EnumerateMajorRecords(type))
+                    foreach (var item in obj.EffectShaders.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13054,7 +12871,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IExplosionGetter":
                 case "IExplosion":
                 case "IExplosionInternal":
-                    foreach (var item in obj.Explosions.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Explosions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13063,7 +12880,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IDebrisGetter":
                 case "IDebris":
                 case "IDebrisInternal":
-                    foreach (var item in obj.Debris.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Debris.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13072,7 +12889,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IImageSpaceGetter":
                 case "IImageSpace":
                 case "IImageSpaceInternal":
-                    foreach (var item in obj.ImageSpaces.EnumerateMajorRecords(type))
+                    foreach (var item in obj.ImageSpaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13081,7 +12898,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IImageSpaceAdapterGetter":
                 case "IImageSpaceAdapter":
                 case "IImageSpaceAdapterInternal":
-                    foreach (var item in obj.ImageSpaceAdapters.EnumerateMajorRecords(type))
+                    foreach (var item in obj.ImageSpaceAdapters.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13090,7 +12907,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IFormListGetter":
                 case "IFormList":
                 case "IFormListInternal":
-                    foreach (var item in obj.FormLists.EnumerateMajorRecords(type))
+                    foreach (var item in obj.FormLists.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13099,7 +12916,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPerkGetter":
                 case "IPerk":
                 case "IPerkInternal":
-                    foreach (var item in obj.Perks.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Perks.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13108,7 +12925,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IBodyPartDataGetter":
                 case "IBodyPartData":
                 case "IBodyPartDataInternal":
-                    foreach (var item in obj.BodyParts.EnumerateMajorRecords(type))
+                    foreach (var item in obj.BodyParts.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13117,7 +12934,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAddonNodeGetter":
                 case "IAddonNode":
                 case "IAddonNodeInternal":
-                    foreach (var item in obj.AddonNodes.EnumerateMajorRecords(type))
+                    foreach (var item in obj.AddonNodes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13126,7 +12943,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IActorValueInformationGetter":
                 case "IActorValueInformation":
                 case "IActorValueInformationInternal":
-                    foreach (var item in obj.ActorValueInformation.EnumerateMajorRecords(type))
+                    foreach (var item in obj.ActorValueInformation.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13135,7 +12952,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ICameraShotGetter":
                 case "ICameraShot":
                 case "ICameraShotInternal":
-                    foreach (var item in obj.CameraShots.EnumerateMajorRecords(type))
+                    foreach (var item in obj.CameraShots.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13144,7 +12961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ICameraPathGetter":
                 case "ICameraPath":
                 case "ICameraPathInternal":
-                    foreach (var item in obj.CameraPaths.EnumerateMajorRecords(type))
+                    foreach (var item in obj.CameraPaths.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13153,7 +12970,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IVoiceTypeGetter":
                 case "IVoiceType":
                 case "IVoiceTypeInternal":
-                    foreach (var item in obj.VoiceTypes.EnumerateMajorRecords(type))
+                    foreach (var item in obj.VoiceTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13162,7 +12979,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMaterialTypeGetter":
                 case "IMaterialType":
                 case "IMaterialTypeInternal":
-                    foreach (var item in obj.MaterialTypes.EnumerateMajorRecords(type))
+                    foreach (var item in obj.MaterialTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13171,7 +12988,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IImpactGetter":
                 case "IImpact":
                 case "IImpactInternal":
-                    foreach (var item in obj.Impacts.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Impacts.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13180,7 +12997,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IImpactDataSetGetter":
                 case "IImpactDataSet":
                 case "IImpactDataSetInternal":
-                    foreach (var item in obj.ImpactDataSets.EnumerateMajorRecords(type))
+                    foreach (var item in obj.ImpactDataSets.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13189,7 +13006,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IArmorAddonGetter":
                 case "IArmorAddon":
                 case "IArmorAddonInternal":
-                    foreach (var item in obj.ArmorAddons.EnumerateMajorRecords(type))
+                    foreach (var item in obj.ArmorAddons.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13198,7 +13015,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IEncounterZoneGetter":
                 case "IEncounterZone":
                 case "IEncounterZoneInternal":
-                    foreach (var item in obj.EncounterZones.EnumerateMajorRecords(type))
+                    foreach (var item in obj.EncounterZones.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13207,7 +13024,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILocationGetter":
                 case "ILocation":
                 case "ILocationInternal":
-                    foreach (var item in obj.Locations.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Locations.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13216,7 +13033,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMessageGetter":
                 case "IMessage":
                 case "IMessageInternal":
-                    foreach (var item in obj.Messages.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Messages.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13225,7 +13042,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IDefaultObjectManagerGetter":
                 case "IDefaultObjectManager":
                 case "IDefaultObjectManagerInternal":
-                    foreach (var item in obj.DefaultObjectManagers.EnumerateMajorRecords(type))
+                    foreach (var item in obj.DefaultObjectManagers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13234,7 +13051,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILightingTemplateGetter":
                 case "ILightingTemplate":
                 case "ILightingTemplateInternal":
-                    foreach (var item in obj.LightingTemplates.EnumerateMajorRecords(type))
+                    foreach (var item in obj.LightingTemplates.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13243,7 +13060,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMusicTypeGetter":
                 case "IMusicType":
                 case "IMusicTypeInternal":
-                    foreach (var item in obj.MusicTypes.EnumerateMajorRecords(type))
+                    foreach (var item in obj.MusicTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13252,7 +13069,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IFootstepGetter":
                 case "IFootstep":
                 case "IFootstepInternal":
-                    foreach (var item in obj.Footsteps.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Footsteps.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13261,7 +13078,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IFootstepSetGetter":
                 case "IFootstepSet":
                 case "IFootstepSetInternal":
-                    foreach (var item in obj.FootstepSets.EnumerateMajorRecords(type))
+                    foreach (var item in obj.FootstepSets.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13270,7 +13087,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IStoryManagerBranchNodeGetter":
                 case "IStoryManagerBranchNode":
                 case "IStoryManagerBranchNodeInternal":
-                    foreach (var item in obj.StoryManagerBranchNodes.EnumerateMajorRecords(type))
+                    foreach (var item in obj.StoryManagerBranchNodes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13279,7 +13096,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IStoryManagerQuestNodeGetter":
                 case "IStoryManagerQuestNode":
                 case "IStoryManagerQuestNodeInternal":
-                    foreach (var item in obj.StoryManagerQuestNodes.EnumerateMajorRecords(type))
+                    foreach (var item in obj.StoryManagerQuestNodes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13288,7 +13105,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IStoryManagerEventNodeGetter":
                 case "IStoryManagerEventNode":
                 case "IStoryManagerEventNodeInternal":
-                    foreach (var item in obj.StoryManagerEventNodes.EnumerateMajorRecords(type))
+                    foreach (var item in obj.StoryManagerEventNodes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13297,7 +13114,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IDialogBranchGetter":
                 case "IDialogBranch":
                 case "IDialogBranchInternal":
-                    foreach (var item in obj.DialogBranches.EnumerateMajorRecords(type))
+                    foreach (var item in obj.DialogBranches.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13306,7 +13123,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMusicTrackGetter":
                 case "IMusicTrack":
                 case "IMusicTrackInternal":
-                    foreach (var item in obj.MusicTracks.EnumerateMajorRecords(type))
+                    foreach (var item in obj.MusicTracks.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13315,7 +13132,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IDialogViewGetter":
                 case "IDialogView":
                 case "IDialogViewInternal":
-                    foreach (var item in obj.DialogViews.EnumerateMajorRecords(type))
+                    foreach (var item in obj.DialogViews.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13324,7 +13141,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IWordOfPowerGetter":
                 case "IWordOfPower":
                 case "IWordOfPowerInternal":
-                    foreach (var item in obj.WordsOfPower.EnumerateMajorRecords(type))
+                    foreach (var item in obj.WordsOfPower.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13333,7 +13150,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IShoutGetter":
                 case "IShout":
                 case "IShoutInternal":
-                    foreach (var item in obj.Shouts.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Shouts.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13342,7 +13159,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IEquipTypeGetter":
                 case "IEquipType":
                 case "IEquipTypeInternal":
-                    foreach (var item in obj.EquipTypes.EnumerateMajorRecords(type))
+                    foreach (var item in obj.EquipTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13351,7 +13168,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IRelationshipGetter":
                 case "IRelationship":
                 case "IRelationshipInternal":
-                    foreach (var item in obj.Relationships.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Relationships.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13360,7 +13177,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ISceneGetter":
                 case "IScene":
                 case "ISceneInternal":
-                    foreach (var item in obj.Scenes.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Scenes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13369,7 +13186,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAssociationTypeGetter":
                 case "IAssociationType":
                 case "IAssociationTypeInternal":
-                    foreach (var item in obj.AssociationTypes.EnumerateMajorRecords(type))
+                    foreach (var item in obj.AssociationTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13378,7 +13195,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IOutfitGetter":
                 case "IOutfit":
                 case "IOutfitInternal":
-                    foreach (var item in obj.Outfits.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Outfits.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13387,7 +13204,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IArtObjectGetter":
                 case "IArtObject":
                 case "IArtObjectInternal":
-                    foreach (var item in obj.ArtObjects.EnumerateMajorRecords(type))
+                    foreach (var item in obj.ArtObjects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13396,7 +13213,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMaterialObjectGetter":
                 case "IMaterialObject":
                 case "IMaterialObjectInternal":
-                    foreach (var item in obj.MaterialObjects.EnumerateMajorRecords(type))
+                    foreach (var item in obj.MaterialObjects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13405,7 +13222,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMovementTypeGetter":
                 case "IMovementType":
                 case "IMovementTypeInternal":
-                    foreach (var item in obj.MovementTypes.EnumerateMajorRecords(type))
+                    foreach (var item in obj.MovementTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13414,7 +13231,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ISoundDescriptorGetter":
                 case "ISoundDescriptor":
                 case "ISoundDescriptorInternal":
-                    foreach (var item in obj.SoundDescriptors.EnumerateMajorRecords(type))
+                    foreach (var item in obj.SoundDescriptors.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13423,7 +13240,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IDualCastDataGetter":
                 case "IDualCastData":
                 case "IDualCastDataInternal":
-                    foreach (var item in obj.DualCastData.EnumerateMajorRecords(type))
+                    foreach (var item in obj.DualCastData.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13432,7 +13249,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ISoundCategoryGetter":
                 case "ISoundCategory":
                 case "ISoundCategoryInternal":
-                    foreach (var item in obj.SoundCategories.EnumerateMajorRecords(type))
+                    foreach (var item in obj.SoundCategories.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13441,7 +13258,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ISoundOutputModelGetter":
                 case "ISoundOutputModel":
                 case "ISoundOutputModelInternal":
-                    foreach (var item in obj.SoundOutputModels.EnumerateMajorRecords(type))
+                    foreach (var item in obj.SoundOutputModels.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13450,7 +13267,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ICollisionLayerGetter":
                 case "ICollisionLayer":
                 case "ICollisionLayerInternal":
-                    foreach (var item in obj.CollisionLayers.EnumerateMajorRecords(type))
+                    foreach (var item in obj.CollisionLayers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13459,7 +13276,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IColorRecordGetter":
                 case "IColorRecord":
                 case "IColorRecordInternal":
-                    foreach (var item in obj.Colors.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Colors.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13468,7 +13285,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IReverbParametersGetter":
                 case "IReverbParameters":
                 case "IReverbParametersInternal":
-                    foreach (var item in obj.ReverbParameters.EnumerateMajorRecords(type))
+                    foreach (var item in obj.ReverbParameters.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13477,7 +13294,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IVolumetricLightingGetter":
                 case "IVolumetricLighting":
                 case "IVolumetricLightingInternal":
-                    foreach (var item in obj.VolumetricLightings.EnumerateMajorRecords(type))
+                    foreach (var item in obj.VolumetricLightings.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13486,11 +13303,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ICellGetter":
                 case "ICell":
                 case "ICellInternal":
-                    foreach (var item in obj.Cells.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13499,11 +13316,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILandscapeGetter":
                 case "ILandscape":
                 case "ILandscapeInternal":
-                    foreach (var item in obj.Cells.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13512,11 +13329,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IANavigationMeshGetter":
                 case "IANavigationMesh":
                 case "IANavigationMeshInternal":
-                    foreach (var item in obj.Cells.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13525,11 +13342,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedNpcGetter":
                 case "IPlacedNpc":
                 case "IPlacedNpcInternal":
-                    foreach (var item in obj.Cells.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13538,11 +13355,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedObjectGetter":
                 case "IPlacedObject":
                 case "IPlacedObjectInternal":
-                    foreach (var item in obj.Cells.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13551,11 +13368,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAPlacedTrapGetter":
                 case "IAPlacedTrap":
                 case "IAPlacedTrapInternal":
-                    foreach (var item in obj.Cells.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type))
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13564,386 +13381,940 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IDialogResponsesGetter":
                 case "IDialogResponses":
                 case "IDialogResponsesInternal":
-                    foreach (var item in obj.DialogTopics.EnumerateMajorRecords(type))
+                    foreach (var item in obj.DialogTopics.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IIdleRelation":
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IIdleAnimationGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "IIdleRelationGetter":
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ActionRecord), throwIfUnknown))
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IdleAnimation), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IIdleAnimationGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
+                }
                 case "IObjectId":
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IActivatorGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IBookGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IContainerGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IDoorGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFurnitureGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IIdleMarkerGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IKeyGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILightGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IMoveableStaticGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(INpcGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IProjectileGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IScrollGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IShoutGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ISoundMarkerGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IStaticGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ITextureSetGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "IObjectIdGetter":
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Activator), throwIfUnknown))
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IActivatorGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Ammunition), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Armor), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Book), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IBookGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Container), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IContainerGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Door), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IDoorGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Faction), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(FormList), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Furniture), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFurnitureGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IdleMarker), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IIdleMarkerGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Ingestible), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Key), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IKeyGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Light), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILightGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(MiscItem), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(MoveableStatic), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IMoveableStaticGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Npc), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(INpcGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Projectile), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IProjectileGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Scroll), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IScrollGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Shout), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IShoutGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(SoundMarker), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ISoundMarkerGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Spell), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Static), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IStaticGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(TextureSet), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ITextureSetGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Weapon), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
+                }
                 case "IItem":
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IAlchemicalApparatusGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IBookGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IIngredientGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IKeyGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILightGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IScrollGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ISoulGemGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "IItemGetter":
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(AlchemicalApparatus), throwIfUnknown))
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IAlchemicalApparatusGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Ammunition), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Armor), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Book), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IBookGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Ingestible), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Ingredient), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IIngredientGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Key), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IKeyGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(LeveledItem), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Light), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILightGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(MiscItem), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Scroll), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IScrollGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(SoulGem), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ISoulGemGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Weapon), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
+                }
                 case "IOutfitTarget":
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "IOutfitTargetGetter":
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Armor), throwIfUnknown))
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(LeveledItem), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
+                }
                 case "IComplexLocation":
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IWorldspaceGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "IComplexLocationGetter":
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Worldspace), throwIfUnknown))
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IWorldspaceGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
+                }
                 case "IDialog":
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IDialogTopicGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "IDialogGetter":
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(DialogTopic), throwIfUnknown))
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IDialogTopicGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
+                }
                 case "ILocationTargetable":
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IDoorGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "ILocationTargetableGetter":
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Door), throwIfUnknown))
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IDoorGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
+                }
                 case "IOwner":
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "IOwnerGetter":
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Faction), throwIfUnknown))
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
+                }
                 case "IRelatable":
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IRaceGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "IRelatableGetter":
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Faction), throwIfUnknown))
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Race), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IRaceGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
+                }
                 case "IRegionTarget":
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFloraGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILandscapeTextureGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IMoveableStaticGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IStaticGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ITreeGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "IRegionTargetGetter":
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Flora), throwIfUnknown))
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFloraGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(LandscapeTexture), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILandscapeTextureGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(MoveableStatic), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IMoveableStaticGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Static), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IStaticGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Tree), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ITreeGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
+                }
                 case "IAliasVoiceType":
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(INpcGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "IAliasVoiceTypeGetter":
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(FormList), throwIfUnknown))
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Npc), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(INpcGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
+                }
                 case "ILockList":
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(INpcGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "ILockListGetter":
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(FormList), throwIfUnknown))
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Npc), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(INpcGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
+                }
                 case "IPlacedTrapTarget":
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IHazardGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IProjectileGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "IPlacedTrapTargetGetter":
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Hazard), throwIfUnknown))
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IHazardGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Projectile), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IProjectileGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
+                }
                 case "IHarvestTarget":
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IIngredientGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "IHarvestTargetGetter":
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Ingestible), throwIfUnknown))
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Ingredient), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IIngredientGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(LeveledItem), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(MiscItem), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
+                }
                 case "IKeywordLinkedReference":
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IKeywordGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "IKeywordLinkedReferenceGetter":
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Keyword), throwIfUnknown))
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IKeywordGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
+                }
                 case "INpcSpawn":
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledNpcGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(INpcGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "INpcSpawnGetter":
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(LeveledNpc), throwIfUnknown))
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledNpcGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Npc), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(INpcGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
+                }
                 case "ISpellSpawn":
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledSpellGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "ISpellSpawnGetter":
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(LeveledSpell), throwIfUnknown))
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledSpellGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Spell), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
+                }
                 case "IEmittance":
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILightGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IRegionGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "IEmittanceGetter":
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Light), throwIfUnknown))
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILightGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Region), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IRegionGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
+                }
                 case "ILocationRecord":
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILocationGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILocationReferenceTypeGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "ILocationRecordGetter":
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Location), throwIfUnknown))
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILocationGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(LocationReferenceType), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILocationReferenceTypeGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
+                }
                 case "IEffectRecord":
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IObjectEffectGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "IEffectRecordGetter":
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ObjectEffect), throwIfUnknown))
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IObjectEffectGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Spell), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
+                }
                 case "ILinkedReference":
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "ILinkedReferenceGetter":
+                {
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
                     yield break;
+                }
                 case "IPlaced":
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "IPlacedGetter":
+                {
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
                     yield break;
+                }
                 case "IPlacedSimple":
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "IPlacedSimpleGetter":
+                {
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
                     yield break;
+                }
                 case "IPlacedThing":
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "IPlacedThingGetter":
+                {
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
                     yield break;
+                }
                 case "ISound":
-                case "ISoundGetter":
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(SoundDescriptor), throwIfUnknown))
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ISoundDescriptorGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(SoundMarker), throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ISoundMarkerGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
+                }
+                case "ISoundGetter":
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ISoundDescriptorGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ISoundMarkerGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 default:
                     if (throwIfUnknown)
                     {
@@ -16574,8 +16945,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public enum SkyrimRelease
     {
-        SkyrimLE,
-        SkyrimSE
+        SkyrimLE = 1,
+        SkyrimSE = 2
     }
 
     public static class SkyrimReleaseExt
@@ -16614,14 +16985,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISkyrimModGetter item,
             MutagenWriter writer,
             GroupMask? importMask,
-            ModKey modKey,
-            BinaryWriteParameters param,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
-            WriteModHeader(
-                mod: item,
-                writer: writer,
-                modKey: modKey);
             if (importMask?.GameSettings ?? true)
             {
                 var GameSettingsItem = item.GameSettings;
@@ -17871,26 +18236,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             ISkyrimModGetter item,
             ModKey modKey,
-            RecordTypeConverter? recordTypeConverter = null,
             BinaryWriteParameters? param = null,
             GroupMask? importMask = null)
         {
-            param ??= BinaryWriteParameters.Default;
-            writer.MetaData.MasterReferences = UtilityTranslation.ConstructWriteMasters(item, param);
+            ModHeaderWriteLogic.WriteHeader(
+                param: param,
+                writer: writer,
+                mod: item,
+                modHeader: item.ModHeader.DeepCopy(),
+                modKey: modKey);
             WriteRecordTypes(
                 item: item,
                 writer: writer,
-                importMask: importMask,
-                modKey: modKey,
-                param: param,
-                recordTypeConverter: recordTypeConverter);
+                importMask: importMask);
         }
 
         public void Write(
             MutagenWriter writer,
             object item,
             ModKey modKey,
-            RecordTypeConverter? recordTypeConverter = null,
             BinaryWriteParameters? param = null,
             GroupMask? importMask = null)
         {
@@ -17899,8 +18263,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 importMask: importMask,
                 writer: writer,
                 param: param,
-                modKey: modKey,
-                recordTypeConverter: recordTypeConverter);
+                modKey: modKey);
         }
 
     }
@@ -19541,8 +19904,7 @@ namespace Mutagen.Bethesda.Skyrim
                 importMask: importMask,
                 writer: writer,
                 param: param,
-                modKey: modKey,
-                recordTypeConverter: null);
+                modKey: modKey);
         }
 
         public static void WriteToBinary(
@@ -19556,7 +19918,7 @@ namespace Mutagen.Bethesda.Skyrim
                 mod: item,
                 path: path);
             bool disposeStrings = param.StringsWriter == null;
-            var stringsWriter = param.StringsWriter ?? (EnumExt.HasFlag((int)item.ModHeader.Flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag) ? new StringsWriter(modKey, Path.Combine(Path.GetDirectoryName(path), "Strings")) : null);
+            var stringsWriter = param.StringsWriter ?? (EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(modKey, Path.Combine(Path.GetDirectoryName(path), "Strings")) : null);
             var bundle = new WritingBundle(item.SkyrimRelease.ToGameRelease())
             {
                 StringsWriter = stringsWriter
@@ -19572,8 +19934,7 @@ namespace Mutagen.Bethesda.Skyrim
                     importMask: importMask,
                     writer: writer,
                     param: param,
-                    modKey: modKey,
-                    recordTypeConverter: null);
+                    modKey: modKey);
             }
             using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
             {
@@ -19603,8 +19964,7 @@ namespace Mutagen.Bethesda.Skyrim
                     importMask: importMask,
                     writer: writer,
                     param: param,
-                    modKey: modKey,
-                    recordTypeConverter: null);
+                    modKey: modKey);
             }
         }
 
@@ -19615,6 +19975,7 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
+    [DebuggerDisplay("{GameRelease} {ModKey.ToString()}")]
     public partial class SkyrimModBinaryOverlay : ISkyrimModDisposableGetter
     {
         #region Common Routing
@@ -19635,12 +19996,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkyrimModGetter)rhs, include);
 
         public SkyrimRelease SkyrimRelease { get; }
         public GameRelease GameRelease => SkyrimRelease.ToGameRelease();
-        IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => this.GetGroupGetter<T>();
+        IReadOnlyCache<T, FormKey> IModGetter.GetTopLevelGroupGetter<T>() => this.GetTopLevelGroupGetter<T>();
         void IModGetter.WriteToBinary(string path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
         void IModGetter.WriteToBinaryParallel(string path, BinaryWriteParameters? param) => this.WriteToBinaryParallel(path, param: param);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
@@ -19648,9 +20007,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => SkyrimModCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => SkyrimModCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimModCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimModCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => SkyrimModCommon.Instance.GetLinkFormKeys(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -19669,8 +20026,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region ModHeader
         private RangeInt64? _ModHeaderLocation;
-        private IModHeaderGetter? _ModHeader => _ModHeaderLocation.HasValue ? ModHeaderBinaryOverlay.ModHeaderFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _ModHeaderLocation!.Value.Min, _ModHeaderLocation!.Value.Max), _package), _package) : default;
-        public IModHeaderGetter ModHeader => _ModHeader ?? new ModHeader();
+        private ISkyrimModHeaderGetter? _ModHeader => _ModHeaderLocation.HasValue ? SkyrimModHeaderBinaryOverlay.SkyrimModHeaderFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _ModHeaderLocation!.Value.Min, _ModHeaderLocation!.Value.Max), _package), _package) : default;
+        public ISkyrimModHeaderGetter ModHeader => _ModHeader ?? new SkyrimModHeader();
         #endregion
         #region GameSettings
         private RangeInt64? _GameSettingsLocation;
@@ -20270,30 +20627,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static SkyrimModBinaryOverlay SkyrimModFactory(
-            string path,
-            ModKey modKey,
+            ModPath path,
             SkyrimRelease release,
             StringsReadParameters? stringsParam = null)
         {
             var meta = new ParsingBundle(release.ToGameRelease())
             {
-                RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, release.ToGameRelease()))
+                RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path.Path, release.ToGameRelease()))
             };
             var stream = new MutagenBinaryReadStream(
-                path: path,
+                path: path.Path,
                 metaData: meta);
             if (stream.Remaining < 12)
             {
                 throw new ArgumentException("File stream was too short to parse flags");
             }
             var flags = stream.GetInt32(offset: 8);
-            if (EnumExt.HasFlag(flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag))
+            if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
             {
-                meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path), stringsParam, modKey);
+                meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path.Path), stringsParam, path.ModKey);
             }
             return SkyrimModFactory(
                 stream: stream,
-                modKey: modKey,
+                path.ModKey,
                 release: release,
                 shouldDispose: true);
         }

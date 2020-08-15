@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Generation
     {
         public static MutagenObjData GetObjectData(this ObjectGeneration objGen)
         {
-            return (MutagenObjData)objGen.CustomData.TryCreateValue(Constants.DataKey, () => new MutagenObjData(objGen));
+            return (MutagenObjData)objGen.CustomData.GetOrAdd(Constants.DataKey, () => new MutagenObjData(objGen));
         }
 
         public static RecordType GetRecordType(this ObjectGeneration objGen)
@@ -125,11 +125,11 @@ namespace Mutagen.Bethesda.Generation
             return $"RecordTypes.{recType.CheckedType}";
         }
 
-        public static bool StructHasBeenSet(this ObjectGeneration objGen)
+        public static bool StructNullable(this ObjectGeneration objGen)
         {
             return objGen.IterateFields().Any((f) =>
             {
-                if (!f.HasBeenSet) return false;
+                if (!f.Nullable) return false;
                 var data = f.GetFieldData();
                 return !data.HasTrigger;
             });

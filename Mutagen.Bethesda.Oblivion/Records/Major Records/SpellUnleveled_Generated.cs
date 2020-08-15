@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         Spell,
         ISpellUnleveledInternal,
         ILoquiObjectSetter<SpellUnleveled>,
-        IEquatable<SpellUnleveled>,
-        IEqualsMask
+        IEquatable<SpellUnleveled>
     {
         #region Ctor
         protected SpellUnleveled()
@@ -486,7 +485,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => SpellUnleveledCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => SpellUnleveledCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => SpellUnleveledCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SpellUnleveledCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SpellUnleveledCommon.Instance.RemapLinks(this, mapping);
         public SpellUnleveled(FormKey formKey)
@@ -521,14 +520,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new SpellUnleveled CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static SpellUnleveled CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -555,8 +546,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISpellUnleveledGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -575,7 +564,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ISpellUnleveled :
         ISpellUnleveledGetter,
         ISpell,
-        ILoquiObjectSetter<ISpellUnleveledInternal>
+        ILoquiObjectSetter<ISpellUnleveledInternal>,
+        ILinkedFormKeyContainer
     {
         new SpellData? Data { get; set; }
         new IExtendedList<Effect> Effects { get; }
@@ -591,7 +581,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ISpellUnleveledGetter :
         ISpellGetter,
         ILoquiObject<ISpellUnleveledGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => SpellUnleveled_Registration.Instance;
@@ -643,24 +633,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ISpellUnleveledGetter item,
-            SpellUnleveled.Mask<bool?> checkMask)
-        {
-            return ((SpellUnleveledCommon)((ISpellUnleveledGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static SpellUnleveled.Mask<bool> GetHasBeenSetMask(this ISpellUnleveledGetter item)
-        {
-            var ret = new SpellUnleveled.Mask<bool>(false);
-            ((SpellUnleveledCommon)((ISpellUnleveledGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -732,17 +704,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ISpellUnleveledInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ISpellUnleveledInternal item,
             MutagenFrame frame,
@@ -1163,30 +1124,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 fg.AppendLine("]");
             }
-        }
-        
-        public bool HasBeenSet(
-            ISpellUnleveledGetter item,
-            SpellUnleveled.Mask<bool?> checkMask)
-        {
-            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
-            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            ISpellUnleveledGetter item,
-            SpellUnleveled.Mask<bool> mask)
-        {
-            var itemData = item.Data;
-            mask.Data = new MaskItem<bool, SpellData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
-            var EffectsItem = item.Effects;
-            mask.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect.Mask<bool>?>>?>(true, EffectsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static SpellUnleveled_FieldIndex ConvertFieldIndex(Spell_FieldIndex index)
@@ -1835,15 +1772,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISpellUnleveledGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => SpellUnleveledCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => SpellUnleveledCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SpellUnleveledCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SpellUnleveledCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => SpellUnleveledCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SpellUnleveledBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1859,7 +1792,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Data
         private RangeInt32? _DataLocation;
         public ISpellDataGetter? Data => _DataLocation.HasValue ? SpellDataBinaryOverlay.SpellDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
-        public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         public IReadOnlyList<IEffectGetter> Effects { get; private set; } = ListExt.Empty<EffectBinaryOverlay>();
         partial void CustomFactoryEnd(

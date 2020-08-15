@@ -33,8 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IEffectShaderInternal,
         ILoquiObjectSetter<EffectShader>,
-        IEquatable<EffectShader>,
-        IEqualsMask
+        IEquatable<EffectShader>
     {
         #region Ctor
         protected EffectShader()
@@ -263,7 +262,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region AddonModels
         public FormLink<Debris> AddonModels { get; set; } = new FormLink<Debris>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IDebrisGetter> IEffectShaderGetter.AddonModels => this.AddonModels;
+        FormLink<IDebrisGetter> IEffectShaderGetter.AddonModels => this.AddonModels.ToGetter<Debris, IDebrisGetter>();
         #endregion
         #region HolesStartTime
         public Single HolesStartTime { get; set; } = default;
@@ -313,7 +312,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region AmbientSound
         public FormLink<ISound> AmbientSound { get; set; } = new FormLink<ISound>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ISoundGetter> IEffectShaderGetter.AmbientSound => this.AmbientSound;
+        FormLink<ISoundGetter> IEffectShaderGetter.AmbientSound => this.AmbientSound.ToGetter<ISound, ISoundGetter>();
         #endregion
         #region FillColorKey2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -3887,7 +3886,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => EffectShaderCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => EffectShaderCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => EffectShaderCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EffectShaderCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EffectShaderCommon.Instance.RemapLinks(this, mapping);
         public EffectShader(FormKey formKey)
@@ -3930,14 +3929,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new EffectShader CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static EffectShader CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -3964,8 +3955,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEffectShaderGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -3984,7 +3973,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IEffectShader :
         IEffectShaderGetter,
         ISkyrimMajorRecord,
-        ILoquiObjectSetter<IEffectShaderInternal>
+        ILoquiObjectSetter<IEffectShaderInternal>,
+        ILinkedFormKeyContainer
     {
         new String? FillTexture { get; set; }
         new String? ParticleShaderTexture { get; set; }
@@ -4104,7 +4094,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IEffectShaderGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IEffectShaderGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => EffectShader_Registration.Instance;
@@ -4174,7 +4164,7 @@ namespace Mutagen.Bethesda.Skyrim
         Single ParticleInitialRotationDegreePlusMinus { get; }
         Single ParticleRotationSpeedDegreePerSec { get; }
         Single ParticleRotationSpeedDegreePerSecPlusMinus { get; }
-        IFormLink<IDebrisGetter> AddonModels { get; }
+        FormLink<IDebrisGetter> AddonModels { get; }
         Single HolesStartTime { get; }
         Single HolesEndTime { get; }
         Single HolesStartValue { get; }
@@ -4190,7 +4180,7 @@ namespace Mutagen.Bethesda.Skyrim
         Single AddonModelsScaleEnd { get; }
         Single AddonModelsScaleInTime { get; }
         Single AddonModelsScaleOutTime { get; }
-        IFormLink<ISoundGetter> AmbientSound { get; }
+        FormLink<ISoundGetter> AmbientSound { get; }
         Color FillColorKey2 { get; }
         Color FillColorKey3 { get; }
         Single FillColorKey1Scale { get; }
@@ -4262,24 +4252,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IEffectShaderGetter item,
-            EffectShader.Mask<bool?> checkMask)
-        {
-            return ((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static EffectShader.Mask<bool> GetHasBeenSetMask(this IEffectShaderGetter item)
-        {
-            var ret = new EffectShader.Mask<bool>(false);
-            ((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IEffectShaderGetter item,
             IEffectShaderGetter rhs)
@@ -4349,17 +4321,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IEffectShaderInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IEffectShaderInternal item,
             MutagenFrame frame,
@@ -6444,7 +6405,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.AddonModels ?? true)
             {
-                fg.AppendItem(item.AddonModels, "AddonModels");
+                fg.AppendItem(item.AddonModels.FormKey, "AddonModels");
             }
             if (printMask?.HolesStartTime ?? true)
             {
@@ -6508,7 +6469,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.AmbientSound ?? true)
             {
-                fg.AppendItem(item.AmbientSound, "AmbientSound");
+                fg.AppendItem(item.AmbientSound.FormKey, "AmbientSound");
             }
             if (printMask?.FillColorKey2 ?? true)
             {
@@ -6602,135 +6563,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
-        }
-        
-        public bool HasBeenSet(
-            IEffectShaderGetter item,
-            EffectShader.Mask<bool?> checkMask)
-        {
-            if (checkMask.FillTexture.HasValue && checkMask.FillTexture.Value != (item.FillTexture != null)) return false;
-            if (checkMask.ParticleShaderTexture.HasValue && checkMask.ParticleShaderTexture.Value != (item.ParticleShaderTexture != null)) return false;
-            if (checkMask.HolesTexture.HasValue && checkMask.HolesTexture.Value != (item.HolesTexture != null)) return false;
-            if (checkMask.MembranePaletteTexture.HasValue && checkMask.MembranePaletteTexture.Value != (item.MembranePaletteTexture != null)) return false;
-            if (checkMask.ParticlePaletteTexture.HasValue && checkMask.ParticlePaletteTexture.Value != (item.ParticlePaletteTexture != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IEffectShaderGetter item,
-            EffectShader.Mask<bool> mask)
-        {
-            mask.FillTexture = (item.FillTexture != null);
-            mask.ParticleShaderTexture = (item.ParticleShaderTexture != null);
-            mask.HolesTexture = (item.HolesTexture != null);
-            mask.MembranePaletteTexture = (item.MembranePaletteTexture != null);
-            mask.ParticlePaletteTexture = (item.ParticlePaletteTexture != null);
-            mask.Unknown = true;
-            mask.MembraneSourceBlendMode = true;
-            mask.MembraneBlendOperation = true;
-            mask.MembraneZTest = true;
-            mask.FillColorKey1 = true;
-            mask.FillAlphaFadeInTime = true;
-            mask.FillFullAlphaTime = true;
-            mask.FillFadeOutTime = true;
-            mask.FillPersistentAlphaRatio = true;
-            mask.FillAlphaPulseAmplitude = true;
-            mask.FillAlphaPulseFrequency = true;
-            mask.FillTextureAnimationSpeedU = true;
-            mask.FillTextureAnimationSpeedV = true;
-            mask.EdgeEffectFallOff = true;
-            mask.EdgeEffectColor = true;
-            mask.EdgeEffectAlphaFadeInTime = true;
-            mask.EdgeEffectFullAlphaTime = true;
-            mask.EdgeEffectAlphaFadeOutTime = true;
-            mask.EdgeEffectPersistentAlphaRatio = true;
-            mask.EdgeEffectAlphaPulseAmplitude = true;
-            mask.EdgeEffectAlphaPulseFrequency = true;
-            mask.FillFullAlphaRatio = true;
-            mask.EdgeEffectFullAlphaRatio = true;
-            mask.MembraneDestBlendMode = true;
-            mask.ParticleSourceBlendMode = true;
-            mask.ParticleBlendOperation = true;
-            mask.ParticleZTest = true;
-            mask.ParticleDestBlendMode = true;
-            mask.ParticleBirthRampUpTime = true;
-            mask.ParticleFullBirthTime = true;
-            mask.ParticleBirthRampDownTime = true;
-            mask.ParticleFullBirthRatio = true;
-            mask.ParticlePeristentCount = true;
-            mask.ParticleLifetime = true;
-            mask.ParticleLifetimePlusMinus = true;
-            mask.ParticleInitialSpeedAlongNormal = true;
-            mask.ParticleAccelerationAlongNormal = true;
-            mask.ParticleInitialVelocity1 = true;
-            mask.ParticleInitialVelocity2 = true;
-            mask.ParticleInitialVelocity3 = true;
-            mask.ParticleAcceleration1 = true;
-            mask.ParticleAcceleration2 = true;
-            mask.ParticleAcceleration3 = true;
-            mask.ParticleScaleKey1 = true;
-            mask.ParticleScaleKey2 = true;
-            mask.ParticleScaleKey1Time = true;
-            mask.ParticleScaleKey2Time = true;
-            mask.ColorKey1 = true;
-            mask.ColorKey2 = true;
-            mask.ColorKey3 = true;
-            mask.ColorKey1Alpha = true;
-            mask.ColorKey2Alpha = true;
-            mask.ColorKey3Alpha = true;
-            mask.ColorKey1Time = true;
-            mask.ColorKey2Time = true;
-            mask.ColorKey3Time = true;
-            mask.ParticleInitialSpeedAlongNormalPlusMinus = true;
-            mask.ParticleInitialRotationDegree = true;
-            mask.ParticleInitialRotationDegreePlusMinus = true;
-            mask.ParticleRotationSpeedDegreePerSec = true;
-            mask.ParticleRotationSpeedDegreePerSecPlusMinus = true;
-            mask.AddonModels = true;
-            mask.HolesStartTime = true;
-            mask.HolesEndTime = true;
-            mask.HolesStartValue = true;
-            mask.HolesEndValue = true;
-            mask.EdgeWidth = true;
-            mask.EdgeColor = true;
-            mask.ExplosionWindSpeed = true;
-            mask.TextureCountU = true;
-            mask.TextureCountV = true;
-            mask.AddonModelsFadeInTime = true;
-            mask.AddonModelsFadeOutTime = true;
-            mask.AddonModelsScaleStart = true;
-            mask.AddonModelsScaleEnd = true;
-            mask.AddonModelsScaleInTime = true;
-            mask.AddonModelsScaleOutTime = true;
-            mask.AmbientSound = true;
-            mask.FillColorKey2 = true;
-            mask.FillColorKey3 = true;
-            mask.FillColorKey1Scale = true;
-            mask.FillColorKey2Scale = true;
-            mask.FillColorKey3Scale = true;
-            mask.FillColorKey1Time = true;
-            mask.FillColorKey2Time = true;
-            mask.FillColorKey3Time = true;
-            mask.ColorScale = true;
-            mask.BirthPositionOffset = true;
-            mask.BirthPositionOffsetRangePlusMinus = true;
-            mask.ParticleAnimatedStartFrame = true;
-            mask.ParticleAnimatedStartFrameVariation = true;
-            mask.ParticleAnimatedEndFrame = true;
-            mask.ParticleAnimatedLoopStartFrame = true;
-            mask.ParticleAnimatedLoopStartVariation = true;
-            mask.ParticleAnimatedFrameCount = true;
-            mask.ParticleAnimatedFrameCountVariation = true;
-            mask.Flags = true;
-            mask.FillTextureScaleU = true;
-            mask.FillTextureScaleV = true;
-            mask.SceneGraphEmitDepthLimit = true;
-            mask.DATADataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static EffectShader_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -7374,7 +7206,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.AddonModels) ?? true))
             {
-                item.AddonModels = rhs.AddonModels.FormKey;
+                item.AddonModels = new FormLink<Debris>(rhs.AddonModels.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesStartTime) ?? true))
             {
@@ -7438,7 +7270,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.AmbientSound) ?? true))
             {
-                item.AmbientSound = rhs.AmbientSound.FormKey;
+                item.AmbientSound = new FormLink<ISound>(rhs.AmbientSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey2) ?? true))
             {
@@ -8303,15 +8135,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEffectShaderGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => EffectShaderCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => EffectShaderCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EffectShaderCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EffectShaderCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => EffectShaderCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => EffectShaderBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -8654,7 +8482,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region AddonModels
         private int _AddonModelsLocation => _DATALocation!.Value + 0xF4;
         private bool _AddonModels_IsSet => _DATALocation.HasValue;
-        public IFormLink<IDebrisGetter> AddonModels => _AddonModels_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_AddonModelsLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
+        public FormLink<IDebrisGetter> AddonModels => _AddonModels_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_AddonModelsLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
         #endregion
         #region HolesStartTime
         private int _HolesStartTimeLocation => _DATALocation!.Value + 0xF8;
@@ -8734,7 +8562,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region AmbientSound
         private int _AmbientSoundLocation => _DATALocation!.Value + 0x134;
         private bool _AmbientSound_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
-        public IFormLink<ISoundGetter> AmbientSound => _AmbientSound_IsSet ? new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_AmbientSoundLocation, 0x4)))) : FormLink<ISoundGetter>.Null;
+        public FormLink<ISoundGetter> AmbientSound => _AmbientSound_IsSet ? new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_AmbientSoundLocation, 0x4)))) : FormLink<ISoundGetter>.Null;
         #endregion
         #region FillColorKey2
         private int _FillColorKey2Location => _DATALocation!.Value + 0x138;

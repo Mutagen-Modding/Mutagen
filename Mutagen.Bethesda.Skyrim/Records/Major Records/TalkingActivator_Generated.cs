@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ITalkingActivatorInternal,
         ILoquiObjectSetter<TalkingActivator>,
-        IEquatable<TalkingActivator>,
-        IEqualsMask
+        IEquatable<TalkingActivator>
     {
         #region Ctor
         protected TalkingActivator()
@@ -108,7 +107,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region LoopingSound
         public FormLinkNullable<SoundMarker> LoopingSound { get; set; } = new FormLinkNullable<SoundMarker>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ISoundMarkerGetter> ITalkingActivatorGetter.LoopingSound => this.LoopingSound;
+        FormLinkNullable<ISoundMarkerGetter> ITalkingActivatorGetter.LoopingSound => this.LoopingSound.ToGetter<SoundMarker, ISoundMarkerGetter>();
         #endregion
         #region FNAM
         public Int16? FNAM { get; set; }
@@ -118,7 +117,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region VoiceType
         public FormLinkNullable<VoiceType> VoiceType { get; set; } = new FormLinkNullable<VoiceType>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IVoiceTypeGetter> ITalkingActivatorGetter.VoiceType => this.VoiceType;
+        FormLinkNullable<IVoiceTypeGetter> ITalkingActivatorGetter.VoiceType => this.VoiceType.ToGetter<VoiceType, IVoiceTypeGetter>();
         #endregion
 
         #region To String
@@ -783,7 +782,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => TalkingActivatorCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => TalkingActivatorCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => TalkingActivatorCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TalkingActivatorCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TalkingActivatorCommon.Instance.RemapLinks(this, mapping);
         public TalkingActivator(FormKey formKey)
@@ -823,14 +822,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new TalkingActivator CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static TalkingActivator CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -857,8 +848,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITalkingActivatorGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -880,7 +869,8 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamed,
         IModeled,
         IObjectBounded,
-        ILoquiObjectSetter<ITalkingActivatorInternal>
+        ILoquiObjectSetter<ITalkingActivatorInternal>,
+        ILinkedFormKeyContainer
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
@@ -911,7 +901,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeledGetter,
         IObjectBoundedGetter,
         ILoquiObject<ITalkingActivatorGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => TalkingActivator_Registration.Instance;
@@ -922,9 +912,9 @@ namespace Mutagen.Bethesda.Skyrim
         IDestructibleGetter? Destructible { get; }
         IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; }
         Int32? PNAM { get; }
-        IFormLinkNullable<ISoundMarkerGetter> LoopingSound { get; }
+        FormLinkNullable<ISoundMarkerGetter> LoopingSound { get; }
         Int16? FNAM { get; }
-        IFormLinkNullable<IVoiceTypeGetter> VoiceType { get; }
+        FormLinkNullable<IVoiceTypeGetter> VoiceType { get; }
 
         #region Mutagen
         TalkingActivator.MajorFlag MajorFlags { get; }
@@ -975,24 +965,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ITalkingActivatorGetter item,
-            TalkingActivator.Mask<bool?> checkMask)
-        {
-            return ((TalkingActivatorCommon)((ITalkingActivatorGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static TalkingActivator.Mask<bool> GetHasBeenSetMask(this ITalkingActivatorGetter item)
-        {
-            var ret = new TalkingActivator.Mask<bool>(false);
-            ((TalkingActivatorCommon)((ITalkingActivatorGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -1064,17 +1036,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ITalkingActivatorInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ITalkingActivatorInternal item,
             MutagenFrame frame,
@@ -1597,7 +1558,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendItem(subItem);
+                            fg.AppendItem(subItem.FormKey);
                         }
                         fg.AppendLine("]");
                     }
@@ -1609,64 +1570,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(PNAMItem, "PNAM");
             }
-            if ((printMask?.LoopingSound ?? true)
-                && item.LoopingSound.TryGet(out var LoopingSoundItem))
+            if (printMask?.LoopingSound ?? true)
             {
-                fg.AppendItem(LoopingSoundItem, "LoopingSound");
+                fg.AppendItem(item.LoopingSound.FormKey, "LoopingSound");
             }
             if ((printMask?.FNAM ?? true)
                 && item.FNAM.TryGet(out var FNAMItem))
             {
                 fg.AppendItem(FNAMItem, "FNAM");
             }
-            if ((printMask?.VoiceType ?? true)
-                && item.VoiceType.TryGet(out var VoiceTypeItem))
+            if (printMask?.VoiceType ?? true)
             {
-                fg.AppendItem(VoiceTypeItem, "VoiceType");
+                fg.AppendItem(item.VoiceType.FormKey, "VoiceType");
             }
-        }
-        
-        public bool HasBeenSet(
-            ITalkingActivatorGetter item,
-            TalkingActivator.Mask<bool?> checkMask)
-        {
-            if (checkMask.VirtualMachineAdapter?.Overall.HasValue ?? false && checkMask.VirtualMachineAdapter.Overall.Value != (item.VirtualMachineAdapter != null)) return false;
-            if (checkMask.VirtualMachineAdapter?.Specific != null && (item.VirtualMachineAdapter == null || !item.VirtualMachineAdapter.HasBeenSet(checkMask.VirtualMachineAdapter.Specific))) return false;
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
-            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.Destructible?.Overall.HasValue ?? false && checkMask.Destructible.Overall.Value != (item.Destructible != null)) return false;
-            if (checkMask.Destructible?.Specific != null && (item.Destructible == null || !item.Destructible.HasBeenSet(checkMask.Destructible.Specific))) return false;
-            if (checkMask.Keywords?.Overall.HasValue ?? false && checkMask.Keywords!.Overall.Value != (item.Keywords != null)) return false;
-            if (checkMask.PNAM.HasValue && checkMask.PNAM.Value != (item.PNAM != null)) return false;
-            if (checkMask.LoopingSound.HasValue && checkMask.LoopingSound.Value != (item.LoopingSound.FormKey != null)) return false;
-            if (checkMask.FNAM.HasValue && checkMask.FNAM.Value != (item.FNAM != null)) return false;
-            if (checkMask.VoiceType.HasValue && checkMask.VoiceType.Value != (item.VoiceType.FormKey != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            ITalkingActivatorGetter item,
-            TalkingActivator.Mask<bool> mask)
-        {
-            var itemVirtualMachineAdapter = item.VirtualMachineAdapter;
-            mask.VirtualMachineAdapter = new MaskItem<bool, VirtualMachineAdapter.Mask<bool>?>(itemVirtualMachineAdapter != null, itemVirtualMachineAdapter?.GetHasBeenSetMask());
-            mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
-            mask.Name = (item.Name != null);
-            var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            var itemDestructible = item.Destructible;
-            mask.Destructible = new MaskItem<bool, Destructible.Mask<bool>?>(itemDestructible != null, itemDestructible?.GetHasBeenSetMask());
-            mask.Keywords = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Keywords != null), default);
-            mask.PNAM = (item.PNAM != null);
-            mask.LoopingSound = (item.LoopingSound.FormKey != null);
-            mask.FNAM = (item.FNAM != null);
-            mask.VoiceType = (item.VoiceType.FormKey != null);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static TalkingActivator_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1771,18 +1687,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(PNAMitem);
             }
-            if (item.LoopingSound.TryGet(out var LoopingSounditem))
-            {
-                hash.Add(LoopingSounditem);
-            }
+            hash.Add(item.LoopingSound);
             if (item.FNAM.TryGet(out var FNAMitem))
             {
                 hash.Add(FNAMitem);
             }
-            if (item.VoiceType.TryGet(out var VoiceTypeitem))
-            {
-                hash.Add(VoiceTypeitem);
-            }
+            hash.Add(item.VoiceType);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1812,7 +1722,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainer VirtualMachineAdapterlinkCont)
+            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainerGetter VirtualMachineAdapterlinkCont)
             {
                 foreach (var item in VirtualMachineAdapterlinkCont.LinkFormKeys)
                 {
@@ -2032,7 +1942,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)TalkingActivator_FieldIndex.LoopingSound) ?? true))
             {
-                item.LoopingSound = rhs.LoopingSound.FormKey;
+                item.LoopingSound = new FormLinkNullable<SoundMarker>(rhs.LoopingSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)TalkingActivator_FieldIndex.FNAM) ?? true))
             {
@@ -2040,7 +1950,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)TalkingActivator_FieldIndex.VoiceType) ?? true))
             {
-                item.VoiceType = rhs.VoiceType.FormKey;
+                item.VoiceType = new FormLinkNullable<VoiceType>(rhs.VoiceType.FormKey);
             }
         }
         
@@ -2443,15 +2353,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITalkingActivatorGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => TalkingActivatorCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => TalkingActivatorCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TalkingActivatorCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TalkingActivatorCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => TalkingActivatorCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => TalkingActivatorBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2468,7 +2374,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
         public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
-        public bool VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
         #endregion
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
@@ -2488,8 +2393,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region LoopingSound
         private int? _LoopingSoundLocation;
-        public bool LoopingSound_IsSet => _LoopingSoundLocation.HasValue;
-        public IFormLinkNullable<ISoundMarkerGetter> LoopingSound => _LoopingSoundLocation.HasValue ? new FormLinkNullable<ISoundMarkerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LoopingSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundMarkerGetter>.Null;
+        public FormLinkNullable<ISoundMarkerGetter> LoopingSound => _LoopingSoundLocation.HasValue ? new FormLinkNullable<ISoundMarkerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LoopingSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundMarkerGetter>.Null;
         #endregion
         #region FNAM
         private int? _FNAMLocation;
@@ -2497,8 +2401,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region VoiceType
         private int? _VoiceTypeLocation;
-        public bool VoiceType_IsSet => _VoiceTypeLocation.HasValue;
-        public IFormLinkNullable<IVoiceTypeGetter> VoiceType => _VoiceTypeLocation.HasValue ? new FormLinkNullable<IVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _VoiceTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IVoiceTypeGetter>.Null;
+        public FormLinkNullable<IVoiceTypeGetter> VoiceType => _VoiceTypeLocation.HasValue ? new FormLinkNullable<IVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _VoiceTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IVoiceTypeGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

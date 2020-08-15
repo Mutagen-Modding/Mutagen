@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IFurnitureInternal,
         ILoquiObjectSetter<Furniture>,
-        IEquatable<Furniture>,
-        IEqualsMask
+        IEquatable<Furniture>
     {
         #region Ctor
         protected Furniture()
@@ -119,7 +118,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region InteractionKeyword
         public FormLinkNullable<Keyword> InteractionKeyword { get; set; } = new FormLinkNullable<Keyword>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IKeywordGetter> IFurnitureGetter.InteractionKeyword => this.InteractionKeyword;
+        FormLinkNullable<IKeywordGetter> IFurnitureGetter.InteractionKeyword => this.InteractionKeyword.ToGetter<Keyword, IKeywordGetter>();
         #endregion
         #region WorkbenchData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -135,7 +134,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region AssociatedSpell
         public FormLinkNullable<Spell> AssociatedSpell { get; set; } = new FormLinkNullable<Spell>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ISpellGetter> IFurnitureGetter.AssociatedSpell => this.AssociatedSpell;
+        FormLinkNullable<ISpellGetter> IFurnitureGetter.AssociatedSpell => this.AssociatedSpell.ToGetter<Spell, ISpellGetter>();
         #endregion
         #region Markers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -987,7 +986,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => FurnitureCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => FurnitureCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => FurnitureCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FurnitureCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FurnitureCommon.Instance.RemapLinks(this, mapping);
         public Furniture(FormKey formKey)
@@ -1027,14 +1026,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new Furniture CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static Furniture CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1061,8 +1052,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFurnitureGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1085,7 +1074,8 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamed,
         IModeled,
         IObjectBounded,
-        ILoquiObjectSetter<IFurnitureInternal>
+        ILoquiObjectSetter<IFurnitureInternal>,
+        ILinkedFormKeyContainer
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
@@ -1120,7 +1110,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeledGetter,
         IObjectBoundedGetter,
         ILoquiObject<IFurnitureGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Furniture_Registration.Instance;
@@ -1132,9 +1122,9 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; }
         ReadOnlyMemorySlice<Byte>? PNAM { get; }
         Furniture.Flag? Flags { get; }
-        IFormLinkNullable<IKeywordGetter> InteractionKeyword { get; }
+        FormLinkNullable<IKeywordGetter> InteractionKeyword { get; }
         IWorkbenchDataGetter? WorkbenchData { get; }
-        IFormLinkNullable<ISpellGetter> AssociatedSpell { get; }
+        FormLinkNullable<ISpellGetter> AssociatedSpell { get; }
         IReadOnlyList<IFurnitureMarkerGetter>? Markers { get; }
         String? ModelFilename { get; }
 
@@ -1187,24 +1177,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IFurnitureGetter item,
-            Furniture.Mask<bool?> checkMask)
-        {
-            return ((FurnitureCommon)((IFurnitureGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Furniture.Mask<bool> GetHasBeenSetMask(this IFurnitureGetter item)
-        {
-            var ret = new Furniture.Mask<bool>(false);
-            ((FurnitureCommon)((IFurnitureGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -1276,17 +1248,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IFurnitureInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IFurnitureInternal item,
             MutagenFrame frame,
@@ -1858,7 +1819,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendItem(subItem);
+                            fg.AppendItem(subItem.FormKey);
                         }
                         fg.AppendLine("]");
                     }
@@ -1875,20 +1836,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
-            if ((printMask?.InteractionKeyword ?? true)
-                && item.InteractionKeyword.TryGet(out var InteractionKeywordItem))
+            if (printMask?.InteractionKeyword ?? true)
             {
-                fg.AppendItem(InteractionKeywordItem, "InteractionKeyword");
+                fg.AppendItem(item.InteractionKeyword.FormKey, "InteractionKeyword");
             }
             if ((printMask?.WorkbenchData?.Overall ?? true)
                 && item.WorkbenchData.TryGet(out var WorkbenchDataItem))
             {
                 WorkbenchDataItem?.ToString(fg, "WorkbenchData");
             }
-            if ((printMask?.AssociatedSpell ?? true)
-                && item.AssociatedSpell.TryGet(out var AssociatedSpellItem))
+            if (printMask?.AssociatedSpell ?? true)
             {
-                fg.AppendItem(AssociatedSpellItem, "AssociatedSpell");
+                fg.AppendItem(item.AssociatedSpell.FormKey, "AssociatedSpell");
             }
             if ((printMask?.Markers?.Overall ?? true)
                 && item.Markers.TryGet(out var MarkersItem))
@@ -1914,60 +1873,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(ModelFilenameItem, "ModelFilename");
             }
-        }
-        
-        public bool HasBeenSet(
-            IFurnitureGetter item,
-            Furniture.Mask<bool?> checkMask)
-        {
-            if (checkMask.VirtualMachineAdapter?.Overall.HasValue ?? false && checkMask.VirtualMachineAdapter.Overall.Value != (item.VirtualMachineAdapter != null)) return false;
-            if (checkMask.VirtualMachineAdapter?.Specific != null && (item.VirtualMachineAdapter == null || !item.VirtualMachineAdapter.HasBeenSet(checkMask.VirtualMachineAdapter.Specific))) return false;
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
-            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.Destructible?.Overall.HasValue ?? false && checkMask.Destructible.Overall.Value != (item.Destructible != null)) return false;
-            if (checkMask.Destructible?.Specific != null && (item.Destructible == null || !item.Destructible.HasBeenSet(checkMask.Destructible.Specific))) return false;
-            if (checkMask.Keywords?.Overall.HasValue ?? false && checkMask.Keywords!.Overall.Value != (item.Keywords != null)) return false;
-            if (checkMask.PNAM.HasValue && checkMask.PNAM.Value != (item.PNAM != null)) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
-            if (checkMask.InteractionKeyword.HasValue && checkMask.InteractionKeyword.Value != (item.InteractionKeyword.FormKey != null)) return false;
-            if (checkMask.WorkbenchData?.Overall.HasValue ?? false && checkMask.WorkbenchData.Overall.Value != (item.WorkbenchData != null)) return false;
-            if (checkMask.WorkbenchData?.Specific != null && (item.WorkbenchData == null || !item.WorkbenchData.HasBeenSet(checkMask.WorkbenchData.Specific))) return false;
-            if (checkMask.AssociatedSpell.HasValue && checkMask.AssociatedSpell.Value != (item.AssociatedSpell.FormKey != null)) return false;
-            if (checkMask.Markers?.Overall.HasValue ?? false && checkMask.Markers!.Overall.Value != (item.Markers != null)) return false;
-            if (checkMask.ModelFilename.HasValue && checkMask.ModelFilename.Value != (item.ModelFilename != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IFurnitureGetter item,
-            Furniture.Mask<bool> mask)
-        {
-            var itemVirtualMachineAdapter = item.VirtualMachineAdapter;
-            mask.VirtualMachineAdapter = new MaskItem<bool, VirtualMachineAdapter.Mask<bool>?>(itemVirtualMachineAdapter != null, itemVirtualMachineAdapter?.GetHasBeenSetMask());
-            mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
-            mask.Name = (item.Name != null);
-            var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            var itemDestructible = item.Destructible;
-            mask.Destructible = new MaskItem<bool, Destructible.Mask<bool>?>(itemDestructible != null, itemDestructible?.GetHasBeenSetMask());
-            mask.Keywords = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Keywords != null), default);
-            mask.PNAM = (item.PNAM != null);
-            mask.Flags = (item.Flags != null);
-            mask.InteractionKeyword = (item.InteractionKeyword.FormKey != null);
-            var itemWorkbenchData = item.WorkbenchData;
-            mask.WorkbenchData = new MaskItem<bool, WorkbenchData.Mask<bool>?>(itemWorkbenchData != null, itemWorkbenchData?.GetHasBeenSetMask());
-            mask.AssociatedSpell = (item.AssociatedSpell.FormKey != null);
-            if (item.Markers.TryGet(out var MarkersItem))
-            {
-                mask.Markers = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, FurnitureMarker.Mask<bool>?>>?>(true, MarkersItem.WithIndex().Select((i) => new MaskItemIndexed<bool, FurnitureMarker.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            mask.ModelFilename = (item.ModelFilename != null);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static Furniture_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -2079,18 +1984,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Flagsitem);
             }
-            if (item.InteractionKeyword.TryGet(out var InteractionKeyworditem))
-            {
-                hash.Add(InteractionKeyworditem);
-            }
+            hash.Add(item.InteractionKeyword);
             if (item.WorkbenchData.TryGet(out var WorkbenchDataitem))
             {
                 hash.Add(WorkbenchDataitem);
             }
-            if (item.AssociatedSpell.TryGet(out var AssociatedSpellitem))
-            {
-                hash.Add(AssociatedSpellitem);
-            }
+            hash.Add(item.AssociatedSpell);
             hash.Add(item.Markers);
             if (item.ModelFilename.TryGet(out var ModelFilenameitem))
             {
@@ -2125,7 +2024,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainer VirtualMachineAdapterlinkCont)
+            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainerGetter VirtualMachineAdapterlinkCont)
             {
                 foreach (var item in VirtualMachineAdapterlinkCont.LinkFormKeys)
                 {
@@ -2363,7 +2262,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.InteractionKeyword) ?? true))
             {
-                item.InteractionKeyword = rhs.InteractionKeyword.FormKey;
+                item.InteractionKeyword = new FormLinkNullable<Keyword>(rhs.InteractionKeyword.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.WorkbenchData) ?? true))
             {
@@ -2393,7 +2292,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.AssociatedSpell) ?? true))
             {
-                item.AssociatedSpell = rhs.AssociatedSpell.FormKey;
+                item.AssociatedSpell = new FormLinkNullable<Spell>(rhs.AssociatedSpell.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.Markers) ?? true))
             {
@@ -2955,15 +2854,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFurnitureGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => FurnitureCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => FurnitureCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FurnitureCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FurnitureCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => FurnitureCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => FurnitureBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2980,7 +2875,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
         public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
-        public bool VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
         #endregion
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
@@ -3007,8 +2901,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region InteractionKeyword
         private int? _InteractionKeywordLocation;
-        public bool InteractionKeyword_IsSet => _InteractionKeywordLocation.HasValue;
-        public IFormLinkNullable<IKeywordGetter> InteractionKeyword => _InteractionKeywordLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _InteractionKeywordLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public FormLinkNullable<IKeywordGetter> InteractionKeyword => _InteractionKeywordLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _InteractionKeywordLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
         #endregion
         #region Flags2
         partial void Flags2CustomParse(
@@ -3018,12 +2911,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region WorkbenchData
         private RangeInt32? _WorkbenchDataLocation;
         public IWorkbenchDataGetter? WorkbenchData => _WorkbenchDataLocation.HasValue ? WorkbenchDataBinaryOverlay.WorkbenchDataFactory(new OverlayStream(_data.Slice(_WorkbenchDataLocation!.Value.Min), _package), _package) : default;
-        public bool WorkbenchData_IsSet => _WorkbenchDataLocation.HasValue;
         #endregion
         #region AssociatedSpell
         private int? _AssociatedSpellLocation;
-        public bool AssociatedSpell_IsSet => _AssociatedSpellLocation.HasValue;
-        public IFormLinkNullable<ISpellGetter> AssociatedSpell => _AssociatedSpellLocation.HasValue ? new FormLinkNullable<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AssociatedSpellLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISpellGetter>.Null;
+        public FormLinkNullable<ISpellGetter> AssociatedSpell => _AssociatedSpellLocation.HasValue ? new FormLinkNullable<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AssociatedSpellLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISpellGetter>.Null;
         #endregion
         #region DisabledMarkers
         partial void DisabledMarkersCustomParse(

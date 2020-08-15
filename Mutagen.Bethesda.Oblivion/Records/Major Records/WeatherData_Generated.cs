@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class WeatherData :
         IWeatherData,
         ILoquiObjectSetter<WeatherData>,
-        IEquatable<WeatherData>,
-        IEqualsMask
+        IEquatable<WeatherData>
     {
         #region Ctor
         public WeatherData()
@@ -732,14 +731,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static WeatherData CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static WeatherData CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -766,8 +757,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherDataGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -875,24 +864,6 @@ namespace Mutagen.Bethesda.Oblivion
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IWeatherDataGetter item,
-            WeatherData.Mask<bool?> checkMask)
-        {
-            return ((WeatherDataCommon)((IWeatherDataGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static WeatherData.Mask<bool> GetHasBeenSetMask(this IWeatherDataGetter item)
-        {
-            var ret = new WeatherData.Mask<bool>(false);
-            ((WeatherDataCommon)((IWeatherDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IWeatherDataGetter item,
             IWeatherDataGetter rhs)
@@ -985,17 +956,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IWeatherData item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IWeatherData item,
             MutagenFrame frame,
@@ -1519,32 +1479,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IWeatherDataGetter item,
-            WeatherData.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IWeatherDataGetter item,
-            WeatherData.Mask<bool> mask)
-        {
-            mask.WindSpeed = true;
-            mask.CloudSpeedLower = true;
-            mask.CloudSpeedUpper = true;
-            mask.TransDelta = true;
-            mask.SunGlare = true;
-            mask.SunDamage = true;
-            mask.PrecipitationBeginFadeIn = true;
-            mask.PrecipitationEndFadeOut = true;
-            mask.ThunderLightningBeginFadeIn = true;
-            mask.ThunderLightningEndFadeOut = true;
-            mask.ThunderLightningFrequency = true;
-            mask.Classification = true;
-            mask.LightningColor = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IWeatherDataGetter? lhs,
@@ -1838,12 +1772,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this IWeatherDataGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((WeatherDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1875,8 +1810,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherDataGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WeatherDataBinaryWriteTranslation.Instance;

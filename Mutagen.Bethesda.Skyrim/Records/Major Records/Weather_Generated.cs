@@ -33,8 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IWeatherInternal,
         ILoquiObjectSetter<Weather>,
-        IEquatable<Weather>,
-        IEqualsMask
+        IEquatable<Weather>
     {
         #region Ctor
         protected Weather()
@@ -116,12 +115,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Precipitation
         public FormLinkNullable<ShaderParticleGeometry> Precipitation { get; set; } = new FormLinkNullable<ShaderParticleGeometry>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IShaderParticleGeometryGetter> IWeatherGetter.Precipitation => this.Precipitation;
+        FormLinkNullable<IShaderParticleGeometryGetter> IWeatherGetter.Precipitation => this.Precipitation.ToGetter<ShaderParticleGeometry, IShaderParticleGeometryGetter>();
         #endregion
         #region VisualEffect
         public FormLink<VisualEffect> VisualEffect { get; set; } = new FormLink<VisualEffect>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IVisualEffectGetter> IWeatherGetter.VisualEffect => this.VisualEffect;
+        FormLink<IVisualEffectGetter> IWeatherGetter.VisualEffect => this.VisualEffect.ToGetter<VisualEffect, IVisualEffectGetter>();
         #endregion
         #region ONAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -405,7 +404,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region SunGlareLensFlare
         public FormLinkNullable<LensFlare> SunGlareLensFlare { get; set; } = new FormLinkNullable<LensFlare>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ILensFlareGetter> IWeatherGetter.SunGlareLensFlare => this.SunGlareLensFlare;
+        FormLinkNullable<ILensFlareGetter> IWeatherGetter.SunGlareLensFlare => this.SunGlareLensFlare.ToGetter<LensFlare, ILensFlareGetter>();
         #endregion
         #region NAM0DataTypeState
         public Weather.NAM0DataType NAM0DataTypeState { get; set; } = default;
@@ -2924,7 +2923,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => WeatherCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => WeatherCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => WeatherCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherCommon.Instance.RemapLinks(this, mapping);
         public Weather(FormKey formKey)
@@ -2973,14 +2972,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new Weather CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static Weather CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -3007,8 +2998,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -3027,7 +3016,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWeather :
         IWeatherGetter,
         ISkyrimMajorRecord,
-        ILoquiObjectSetter<IWeatherInternal>
+        ILoquiObjectSetter<IWeatherInternal>,
+        ILinkedFormKeyContainer
     {
         new String?[] CloudTextures { get; }
         new MemorySlice<Byte>? DNAM { get; set; }
@@ -3104,7 +3094,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWeatherGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IWeatherGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Weather_Registration.Instance;
@@ -3114,8 +3104,8 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? ANAM { get; }
         ReadOnlyMemorySlice<Byte>? BNAM { get; }
         ReadOnlyMemorySlice<Byte>? LNAM { get; }
-        IFormLinkNullable<IShaderParticleGeometryGetter> Precipitation { get; }
-        IFormLink<IVisualEffectGetter> VisualEffect { get; }
+        FormLinkNullable<IShaderParticleGeometryGetter> Precipitation { get; }
+        FormLink<IVisualEffectGetter> VisualEffect { get; }
         ReadOnlyMemorySlice<Byte>? ONAM { get; }
         ReadOnlyMemorySlice<ICloudLayerGetter> Clouds { get; }
         IWeatherColorGetter SkyUpperColor { get; }
@@ -3167,7 +3157,7 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? NAM2 { get; }
         ReadOnlyMemorySlice<Byte>? NAM3 { get; }
         IModelGetter? Aurora { get; }
-        IFormLinkNullable<ILensFlareGetter> SunGlareLensFlare { get; }
+        FormLinkNullable<ILensFlareGetter> SunGlareLensFlare { get; }
         Weather.NAM0DataType NAM0DataTypeState { get; }
         Weather.FNAMDataType FNAMDataTypeState { get; }
         Weather.DATADataType DATADataTypeState { get; }
@@ -3217,24 +3207,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IWeatherGetter item,
-            Weather.Mask<bool?> checkMask)
-        {
-            return ((WeatherCommon)((IWeatherGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Weather.Mask<bool> GetHasBeenSetMask(this IWeatherGetter item)
-        {
-            var ret = new Weather.Mask<bool>(false);
-            ((WeatherCommon)((IWeatherGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -3306,17 +3278,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IWeatherInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IWeatherInternal item,
             MutagenFrame frame,
@@ -4601,14 +4562,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendLine($"LNAM => {SpanExt.ToHexString(LNAMItem)}");
             }
-            if ((printMask?.Precipitation ?? true)
-                && item.Precipitation.TryGet(out var PrecipitationItem))
+            if (printMask?.Precipitation ?? true)
             {
-                fg.AppendItem(PrecipitationItem, "Precipitation");
+                fg.AppendItem(item.Precipitation.FormKey, "Precipitation");
             }
             if (printMask?.VisualEffect ?? true)
             {
-                fg.AppendItem(item.VisualEffect, "VisualEffect");
+                fg.AppendItem(item.VisualEffect.FormKey, "VisualEffect");
             }
             if ((printMask?.ONAM ?? true)
                 && item.ONAM.TryGet(out var ONAMItem))
@@ -4826,7 +4786,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendItem(subItem);
+                            fg.AppendItem(subItem.FormKey);
                         }
                         fg.AppendLine("]");
                     }
@@ -4863,10 +4823,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 AuroraItem?.ToString(fg, "Aurora");
             }
-            if ((printMask?.SunGlareLensFlare ?? true)
-                && item.SunGlareLensFlare.TryGet(out var SunGlareLensFlareItem))
+            if (printMask?.SunGlareLensFlare ?? true)
             {
-                fg.AppendItem(SunGlareLensFlareItem, "SunGlareLensFlare");
+                fg.AppendItem(item.SunGlareLensFlare.FormKey, "SunGlareLensFlare");
             }
             if (printMask?.NAM0DataTypeState ?? true)
             {
@@ -4880,111 +4839,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
-        }
-        
-        public bool HasBeenSet(
-            IWeatherGetter item,
-            Weather.Mask<bool?> checkMask)
-        {
-            if (checkMask.DNAM.HasValue && checkMask.DNAM.Value != (item.DNAM != null)) return false;
-            if (checkMask.CNAM.HasValue && checkMask.CNAM.Value != (item.CNAM != null)) return false;
-            if (checkMask.ANAM.HasValue && checkMask.ANAM.Value != (item.ANAM != null)) return false;
-            if (checkMask.BNAM.HasValue && checkMask.BNAM.Value != (item.BNAM != null)) return false;
-            if (checkMask.LNAM.HasValue && checkMask.LNAM.Value != (item.LNAM != null)) return false;
-            if (checkMask.Precipitation.HasValue && checkMask.Precipitation.Value != (item.Precipitation.FormKey != null)) return false;
-            if (checkMask.ONAM.HasValue && checkMask.ONAM.Value != (item.ONAM != null)) return false;
-            if (checkMask.ImageSpaces?.Overall.HasValue ?? false && checkMask.ImageSpaces.Overall.Value != (item.ImageSpaces != null)) return false;
-            if (checkMask.ImageSpaces?.Specific != null && (item.ImageSpaces == null || !item.ImageSpaces.HasBeenSet(checkMask.ImageSpaces.Specific))) return false;
-            if (checkMask.VolumetricLighting?.Overall.HasValue ?? false && checkMask.VolumetricLighting.Overall.Value != (item.VolumetricLighting != null)) return false;
-            if (checkMask.VolumetricLighting?.Specific != null && (item.VolumetricLighting == null || !item.VolumetricLighting.HasBeenSet(checkMask.VolumetricLighting.Specific))) return false;
-            if (checkMask.DirectionalAmbientLightingColors?.Overall.HasValue ?? false && checkMask.DirectionalAmbientLightingColors.Overall.Value != (item.DirectionalAmbientLightingColors != null)) return false;
-            if (checkMask.DirectionalAmbientLightingColors?.Specific != null && (item.DirectionalAmbientLightingColors == null || !item.DirectionalAmbientLightingColors.HasBeenSet(checkMask.DirectionalAmbientLightingColors.Specific))) return false;
-            if (checkMask.NAM2.HasValue && checkMask.NAM2.Value != (item.NAM2 != null)) return false;
-            if (checkMask.NAM3.HasValue && checkMask.NAM3.Value != (item.NAM3 != null)) return false;
-            if (checkMask.Aurora?.Overall.HasValue ?? false && checkMask.Aurora.Overall.Value != (item.Aurora != null)) return false;
-            if (checkMask.Aurora?.Specific != null && (item.Aurora == null || !item.Aurora.HasBeenSet(checkMask.Aurora.Specific))) return false;
-            if (checkMask.SunGlareLensFlare.HasValue && checkMask.SunGlareLensFlare.Value != (item.SunGlareLensFlare.FormKey != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IWeatherGetter item,
-            Weather.Mask<bool> mask)
-        {
-            mask.CloudTextures = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
-            mask.DNAM = (item.DNAM != null);
-            mask.CNAM = (item.CNAM != null);
-            mask.ANAM = (item.ANAM != null);
-            mask.BNAM = (item.BNAM != null);
-            mask.LNAM = (item.LNAM != null);
-            mask.Precipitation = (item.Precipitation.FormKey != null);
-            mask.VisualEffect = true;
-            mask.ONAM = (item.ONAM != null);
-            var CloudsItem = item.Clouds;
-            mask.Clouds = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, CloudLayer.Mask<bool>?>>?>(true, CloudsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, CloudLayer.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.SkyUpperColor = new MaskItem<bool, WeatherColor.Mask<bool>?>(true, item.SkyUpperColor?.GetHasBeenSetMask());
-            mask.FogNearColor = new MaskItem<bool, WeatherColor.Mask<bool>?>(true, item.FogNearColor?.GetHasBeenSetMask());
-            mask.UnknownColor = new MaskItem<bool, WeatherColor.Mask<bool>?>(true, item.UnknownColor?.GetHasBeenSetMask());
-            mask.AmbientColor = new MaskItem<bool, WeatherColor.Mask<bool>?>(true, item.AmbientColor?.GetHasBeenSetMask());
-            mask.SunlightColor = new MaskItem<bool, WeatherColor.Mask<bool>?>(true, item.SunlightColor?.GetHasBeenSetMask());
-            mask.SunColor = new MaskItem<bool, WeatherColor.Mask<bool>?>(true, item.SunColor?.GetHasBeenSetMask());
-            mask.StarsColor = new MaskItem<bool, WeatherColor.Mask<bool>?>(true, item.StarsColor?.GetHasBeenSetMask());
-            mask.SkyLowerColor = new MaskItem<bool, WeatherColor.Mask<bool>?>(true, item.SkyLowerColor?.GetHasBeenSetMask());
-            mask.HorizonColor = new MaskItem<bool, WeatherColor.Mask<bool>?>(true, item.HorizonColor?.GetHasBeenSetMask());
-            mask.EffectLightingColor = new MaskItem<bool, WeatherColor.Mask<bool>?>(true, item.EffectLightingColor?.GetHasBeenSetMask());
-            mask.CloudLodDiffuseColor = new MaskItem<bool, WeatherColor.Mask<bool>?>(true, item.CloudLodDiffuseColor?.GetHasBeenSetMask());
-            mask.CloudLodAmbientColor = new MaskItem<bool, WeatherColor.Mask<bool>?>(true, item.CloudLodAmbientColor?.GetHasBeenSetMask());
-            mask.FogFarColor = new MaskItem<bool, WeatherColor.Mask<bool>?>(true, item.FogFarColor?.GetHasBeenSetMask());
-            mask.SkyStaticsColor = new MaskItem<bool, WeatherColor.Mask<bool>?>(true, item.SkyStaticsColor?.GetHasBeenSetMask());
-            mask.WaterMultiplierColor = new MaskItem<bool, WeatherColor.Mask<bool>?>(true, item.WaterMultiplierColor?.GetHasBeenSetMask());
-            mask.SunGlareColor = new MaskItem<bool, WeatherColor.Mask<bool>?>(true, item.SunGlareColor?.GetHasBeenSetMask());
-            mask.MoonGlareColor = new MaskItem<bool, WeatherColor.Mask<bool>?>(true, item.MoonGlareColor?.GetHasBeenSetMask());
-            mask.FogDistanceDayNear = true;
-            mask.FogDistanceDayFar = true;
-            mask.FogDistanceNightNear = true;
-            mask.FogDistanceNightFar = true;
-            mask.FogDistanceDayPower = true;
-            mask.FogDistanceNightPower = true;
-            mask.FogDistanceDayMax = true;
-            mask.FogDistanceNightMax = true;
-            mask.WindSpeed = true;
-            mask.Unknown = true;
-            mask.TransDelta = true;
-            mask.SunGlare = true;
-            mask.SunDamage = true;
-            mask.PrecipitationBeginFadeIn = true;
-            mask.PrecipitationEndFadeOut = true;
-            mask.ThunderLightningBeginFadeIn = true;
-            mask.ThunderLightningEndFadeOut = true;
-            mask.ThunderLightningFrequency = true;
-            mask.Flags = true;
-            mask.LightningColor = true;
-            mask.VisualEffectBegin = true;
-            mask.VisualEffectEnd = true;
-            mask.WindDirection = true;
-            mask.WindDirectionRange = true;
-            var SoundsItem = item.Sounds;
-            mask.Sounds = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WeatherSound.Mask<bool>?>>?>(true, SoundsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, WeatherSound.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.SkyStatics = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
-            var itemImageSpaces = item.ImageSpaces;
-            mask.ImageSpaces = new MaskItem<bool, WeatherImageSpaces.Mask<bool>?>(itemImageSpaces != null, itemImageSpaces?.GetHasBeenSetMask());
-            var itemVolumetricLighting = item.VolumetricLighting;
-            mask.VolumetricLighting = new MaskItem<bool, WeatherVolumetricLighting.Mask<bool>?>(itemVolumetricLighting != null, itemVolumetricLighting?.GetHasBeenSetMask());
-            var itemDirectionalAmbientLightingColors = item.DirectionalAmbientLightingColors;
-            mask.DirectionalAmbientLightingColors = new MaskItem<bool, WeatherAmbientColorSet.Mask<bool>?>(itemDirectionalAmbientLightingColors != null, itemDirectionalAmbientLightingColors?.GetHasBeenSetMask());
-            mask.NAM2 = (item.NAM2 != null);
-            mask.NAM3 = (item.NAM3 != null);
-            var itemAurora = item.Aurora;
-            mask.Aurora = new MaskItem<bool, Model.Mask<bool>?>(itemAurora != null, itemAurora?.GetHasBeenSetMask());
-            mask.SunGlareLensFlare = (item.SunGlareLensFlare.FormKey != null);
-            mask.NAM0DataTypeState = true;
-            mask.FNAMDataTypeState = true;
-            mask.DATADataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static Weather_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -5141,10 +4995,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(LNAMItem);
             }
-            if (item.Precipitation.TryGet(out var Precipitationitem))
-            {
-                hash.Add(Precipitationitem);
-            }
+            hash.Add(item.Precipitation);
             hash.Add(item.VisualEffect);
             if (item.ONAM.TryGet(out var ONAMItem))
             {
@@ -5218,10 +5069,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Auroraitem);
             }
-            if (item.SunGlareLensFlare.TryGet(out var SunGlareLensFlareitem))
-            {
-                hash.Add(SunGlareLensFlareitem);
-            }
+            hash.Add(item.SunGlareLensFlare);
             hash.Add(item.NAM0DataTypeState);
             hash.Add(item.FNAMDataTypeState);
             hash.Add(item.DATADataTypeState);
@@ -5400,11 +5248,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.Precipitation) ?? true))
             {
-                item.Precipitation = rhs.Precipitation.FormKey;
+                item.Precipitation = new FormLinkNullable<ShaderParticleGeometry>(rhs.Precipitation.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.VisualEffect) ?? true))
             {
-                item.VisualEffect = rhs.VisualEffect.FormKey;
+                item.VisualEffect = new FormLink<VisualEffect>(rhs.VisualEffect.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.ONAM) ?? true))
             {
@@ -6069,7 +5917,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.SunGlareLensFlare) ?? true))
             {
-                item.SunGlareLensFlare = rhs.SunGlareLensFlare.FormKey;
+                item.SunGlareLensFlare = new FormLinkNullable<LensFlare>(rhs.SunGlareLensFlare.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.NAM0DataTypeState) ?? true))
             {
@@ -7032,15 +6880,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => WeatherCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => WeatherCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => WeatherCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => WeatherBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -7081,13 +6925,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Precipitation
         private int? _PrecipitationLocation;
-        public bool Precipitation_IsSet => _PrecipitationLocation.HasValue;
-        public IFormLinkNullable<IShaderParticleGeometryGetter> Precipitation => _PrecipitationLocation.HasValue ? new FormLinkNullable<IShaderParticleGeometryGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PrecipitationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IShaderParticleGeometryGetter>.Null;
+        public FormLinkNullable<IShaderParticleGeometryGetter> Precipitation => _PrecipitationLocation.HasValue ? new FormLinkNullable<IShaderParticleGeometryGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PrecipitationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IShaderParticleGeometryGetter>.Null;
         #endregion
         #region VisualEffect
         private int? _VisualEffectLocation;
-        public bool VisualEffect_IsSet => _VisualEffectLocation.HasValue;
-        public IFormLink<IVisualEffectGetter> VisualEffect => _VisualEffectLocation.HasValue ? new FormLink<IVisualEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _VisualEffectLocation.Value, _package.MetaData.Constants)))) : FormLink<IVisualEffectGetter>.Null;
+        public FormLink<IVisualEffectGetter> VisualEffect => _VisualEffectLocation.HasValue ? new FormLink<IVisualEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _VisualEffectLocation.Value, _package.MetaData.Constants)))) : FormLink<IVisualEffectGetter>.Null;
         #endregion
         #region ONAM
         private int? _ONAMLocation;
@@ -7354,12 +7196,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region ImageSpaces
         private RangeInt32? _ImageSpacesLocation;
         public IWeatherImageSpacesGetter? ImageSpaces => _ImageSpacesLocation.HasValue ? WeatherImageSpacesBinaryOverlay.WeatherImageSpacesFactory(new OverlayStream(_data.Slice(_ImageSpacesLocation!.Value.Min), _package), _package) : default;
-        public bool ImageSpaces_IsSet => _ImageSpacesLocation.HasValue;
         #endregion
         #region VolumetricLighting
         private RangeInt32? _VolumetricLightingLocation;
         public IWeatherVolumetricLightingGetter? VolumetricLighting => _VolumetricLightingLocation.HasValue ? WeatherVolumetricLightingBinaryOverlay.WeatherVolumetricLightingFactory(new OverlayStream(_data.Slice(_VolumetricLightingLocation!.Value.Min), _package), _package) : default;
-        public bool VolumetricLighting_IsSet => _VolumetricLightingLocation.HasValue;
         #endregion
         #region DirectionalAmbientLightingColors
         partial void DirectionalAmbientLightingColorsCustomParse(
@@ -7379,8 +7219,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IModelGetter? Aurora { get; private set; }
         #region SunGlareLensFlare
         private int? _SunGlareLensFlareLocation;
-        public bool SunGlareLensFlare_IsSet => _SunGlareLensFlareLocation.HasValue;
-        public IFormLinkNullable<ILensFlareGetter> SunGlareLensFlare => _SunGlareLensFlareLocation.HasValue ? new FormLinkNullable<ILensFlareGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SunGlareLensFlareLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILensFlareGetter>.Null;
+        public FormLinkNullable<ILensFlareGetter> SunGlareLensFlare => _SunGlareLensFlareLocation.HasValue ? new FormLinkNullable<ILensFlareGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SunGlareLensFlareLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILensFlareGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Persistance
             {
                 return new FormKey(
                     this.Mod.ModKey,
-                    checked(this.Mod.NextObjectID++));
+                    checked(this.Mod.NextFormID++));
             }
         }
 

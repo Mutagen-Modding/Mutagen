@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IAIPackageInternal,
         ILoquiObjectSetter<AIPackage>,
-        IEquatable<AIPackage>,
-        IEqualsMask
+        IEquatable<AIPackage>
     {
         #region Ctor
         protected AIPackage()
@@ -625,7 +624,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => AIPackageCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => AIPackageCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => AIPackageCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AIPackageCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AIPackageCommon.Instance.RemapLinks(this, mapping);
         public AIPackage(FormKey formKey)
@@ -660,14 +659,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new AIPackage CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static AIPackage CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -694,8 +685,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAIPackageGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -714,7 +703,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IAIPackage :
         IAIPackageGetter,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<IAIPackageInternal>
+        ILoquiObjectSetter<IAIPackageInternal>,
+        ILinkedFormKeyContainer
     {
         new AIPackageData? Data { get; set; }
         new AIPackageLocation? Location { get; set; }
@@ -733,7 +723,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IAIPackageGetter :
         IOblivionMajorRecordGetter,
         ILoquiObject<IAIPackageGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => AIPackage_Registration.Instance;
@@ -788,24 +778,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IAIPackageGetter item,
-            AIPackage.Mask<bool?> checkMask)
-        {
-            return ((AIPackageCommon)((IAIPackageGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static AIPackage.Mask<bool> GetHasBeenSetMask(this IAIPackageGetter item)
-        {
-            var ret = new AIPackage.Mask<bool>(false);
-            ((AIPackageCommon)((IAIPackageGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -877,17 +849,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IAIPackageInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IAIPackageInternal item,
             MutagenFrame frame,
@@ -1344,42 +1305,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 fg.AppendLine("]");
             }
-        }
-        
-        public bool HasBeenSet(
-            IAIPackageGetter item,
-            AIPackage.Mask<bool?> checkMask)
-        {
-            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
-            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
-            if (checkMask.Location?.Overall.HasValue ?? false && checkMask.Location.Overall.Value != (item.Location != null)) return false;
-            if (checkMask.Location?.Specific != null && (item.Location == null || !item.Location.HasBeenSet(checkMask.Location.Specific))) return false;
-            if (checkMask.Schedule?.Overall.HasValue ?? false && checkMask.Schedule.Overall.Value != (item.Schedule != null)) return false;
-            if (checkMask.Schedule?.Specific != null && (item.Schedule == null || !item.Schedule.HasBeenSet(checkMask.Schedule.Specific))) return false;
-            if (checkMask.Target?.Overall.HasValue ?? false && checkMask.Target.Overall.Value != (item.Target != null)) return false;
-            if (checkMask.Target?.Specific != null && (item.Target == null || !item.Target.HasBeenSet(checkMask.Target.Specific))) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IAIPackageGetter item,
-            AIPackage.Mask<bool> mask)
-        {
-            var itemData = item.Data;
-            mask.Data = new MaskItem<bool, AIPackageData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
-            var itemLocation = item.Location;
-            mask.Location = new MaskItem<bool, AIPackageLocation.Mask<bool>?>(itemLocation != null, itemLocation?.GetHasBeenSetMask());
-            var itemSchedule = item.Schedule;
-            mask.Schedule = new MaskItem<bool, AIPackageSchedule.Mask<bool>?>(itemSchedule != null, itemSchedule?.GetHasBeenSetMask());
-            var itemTarget = item.Target;
-            mask.Target = new MaskItem<bool, AIPackageTarget.Mask<bool>?>(itemTarget != null, itemTarget?.GetHasBeenSetMask());
-            var ConditionsItem = item.Conditions;
-            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static AIPackage_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
@@ -2018,15 +1943,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAIPackageGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => AIPackageCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => AIPackageCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AIPackageCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AIPackageCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => AIPackageCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => AIPackageBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2042,22 +1963,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Data
         private RangeInt32? _DataLocation;
         public IAIPackageDataGetter? Data => _DataLocation.HasValue ? AIPackageDataBinaryOverlay.AIPackageDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
-        public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region Location
         private RangeInt32? _LocationLocation;
         public IAIPackageLocationGetter? Location => _LocationLocation.HasValue ? AIPackageLocationBinaryOverlay.AIPackageLocationFactory(new OverlayStream(_data.Slice(_LocationLocation!.Value.Min), _package), _package) : default;
-        public bool Location_IsSet => _LocationLocation.HasValue;
         #endregion
         #region Schedule
         private RangeInt32? _ScheduleLocation;
         public IAIPackageScheduleGetter? Schedule => _ScheduleLocation.HasValue ? AIPackageScheduleBinaryOverlay.AIPackageScheduleFactory(new OverlayStream(_data.Slice(_ScheduleLocation!.Value.Min), _package), _package) : default;
-        public bool Schedule_IsSet => _ScheduleLocation.HasValue;
         #endregion
         #region Target
         private RangeInt32? _TargetLocation;
         public IAIPackageTargetGetter? Target => _TargetLocation.HasValue ? AIPackageTargetBinaryOverlay.AIPackageTargetFactory(new OverlayStream(_data.Slice(_TargetLocation!.Value.Min), _package), _package) : default;
-        public bool Target_IsSet => _TargetLocation.HasValue;
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = ListExt.Empty<ConditionBinaryOverlay>();
         partial void CustomFactoryEnd(

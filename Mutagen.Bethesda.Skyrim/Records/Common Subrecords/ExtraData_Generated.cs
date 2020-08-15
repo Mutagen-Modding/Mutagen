@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ExtraData :
         IExtraData,
         ILoquiObjectSetter<ExtraData>,
-        IEquatable<ExtraData>,
-        IEqualsMask
+        IEquatable<ExtraData>
     {
         #region Ctor
         public ExtraData()
@@ -382,7 +381,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => ExtraDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ExtraDataCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ExtraDataCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ExtraDataCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ExtraDataCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -402,14 +401,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static ExtraData CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static ExtraData CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -436,8 +427,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IExtraDataGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -455,7 +444,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IExtraData :
         IExtraDataGetter,
-        ILoquiObjectSetter<IExtraData>
+        ILoquiObjectSetter<IExtraData>,
+        ILinkedFormKeyContainer
     {
         new OwnerTarget Owner { get; set; }
         new Single ItemCondition { get; set; }
@@ -464,7 +454,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IExtraDataGetter :
         ILoquiObject,
         ILoquiObject<IExtraDataGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -522,24 +512,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IExtraDataGetter item,
-            ExtraData.Mask<bool?> checkMask)
-        {
-            return ((ExtraDataCommon)((IExtraDataGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static ExtraData.Mask<bool> GetHasBeenSetMask(this IExtraDataGetter item)
-        {
-            var ret = new ExtraData.Mask<bool>(false);
-            ((ExtraDataCommon)((IExtraDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -634,17 +606,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IExtraData item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IExtraData item,
             MutagenFrame frame,
@@ -971,21 +932,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IExtraDataGetter item,
-            ExtraData.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IExtraDataGetter item,
-            ExtraData.Mask<bool> mask)
-        {
-            mask.Owner = new MaskItem<bool, OwnerTarget.Mask<bool>?>(true, item.Owner?.GetHasBeenSetMask());
-            mask.ItemCondition = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IExtraDataGetter? lhs,
@@ -1017,7 +963,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<FormKey> GetLinkFormKeys(IExtraDataGetter obj)
         {
-            if (obj.Owner is ILinkedFormKeyContainer OwnerlinkCont)
+            if (obj.Owner is ILinkedFormKeyContainerGetter OwnerlinkCont)
             {
                 foreach (var item in OwnerlinkCont.LinkFormKeys)
                 {
@@ -1233,12 +1179,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IExtraDataGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((ExtraDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1270,15 +1217,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IExtraDataGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => ExtraDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ExtraDataCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ExtraDataCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ExtraDataCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ExtraDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ExtraDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

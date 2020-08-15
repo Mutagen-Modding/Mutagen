@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class CombatStyleData :
         ICombatStyleData,
         ILoquiObjectSetter<CombatStyleData>,
-        IEquatable<CombatStyleData>,
-        IEqualsMask
+        IEquatable<CombatStyleData>
     {
         #region Ctor
         public CombatStyleData()
@@ -1496,14 +1495,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static CombatStyleData CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static CombatStyleData CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1530,8 +1521,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICombatStyleDataGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1687,24 +1676,6 @@ namespace Mutagen.Bethesda.Oblivion
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this ICombatStyleDataGetter item,
-            CombatStyleData.Mask<bool?> checkMask)
-        {
-            return ((CombatStyleDataCommon)((ICombatStyleDataGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static CombatStyleData.Mask<bool> GetHasBeenSetMask(this ICombatStyleDataGetter item)
-        {
-            var ret = new CombatStyleData.Mask<bool>(false);
-            ((CombatStyleDataCommon)((ICombatStyleDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this ICombatStyleDataGetter item,
             ICombatStyleDataGetter rhs)
@@ -1797,17 +1768,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ICombatStyleData item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ICombatStyleData item,
             MutagenFrame frame,
@@ -2763,56 +2723,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            ICombatStyleDataGetter item,
-            CombatStyleData.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            ICombatStyleDataGetter item,
-            CombatStyleData.Mask<bool> mask)
-        {
-            mask.Versioning = true;
-            mask.DodgePercentChance = true;
-            mask.LeftRightPercentChance = true;
-            mask.DodgeLeftRightTimerMin = true;
-            mask.DodgeLeftRightTimerMax = true;
-            mask.DodgeForwardTimerMin = true;
-            mask.DodgeForwardTimerMax = true;
-            mask.DodgeBackTimerMin = true;
-            mask.DodgeBackTimerMax = true;
-            mask.IdleTimerMin = true;
-            mask.IdleTimerMax = true;
-            mask.BlockPercentChance = true;
-            mask.AttackPercentChance = true;
-            mask.RecoilStaggerBonusToAttack = true;
-            mask.UnconsciousBonusToAttack = true;
-            mask.HandToHandBonusToAttack = true;
-            mask.PowerAttackPercentChance = true;
-            mask.RecoilStaggerBonusToPowerAttack = true;
-            mask.UnconsciousBonusToPowerAttack = true;
-            mask.PowerAttackNormal = true;
-            mask.PowerAttackForward = true;
-            mask.PowerAttackBack = true;
-            mask.PowerAttackLeft = true;
-            mask.PowerAttackRight = true;
-            mask.HoldTimerMin = true;
-            mask.HoldTimerMax = true;
-            mask.Flags = true;
-            mask.AcrobaticDodgePercentChance = true;
-            mask.RangeMultOptimal = true;
-            mask.RangeMultMax = true;
-            mask.SwitchDistanceMelee = true;
-            mask.SwitchDistanceRanged = true;
-            mask.BuffStandoffDistance = true;
-            mask.RangedStandoffDistance = true;
-            mask.GroupStandoffDistance = true;
-            mask.RushingAttackPercentChance = true;
-            mask.RushingAttackDistanceMult = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             ICombatStyleDataGetter? lhs,
@@ -3419,12 +3329,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this ICombatStyleDataGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((CombatStyleDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -3456,8 +3367,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICombatStyleDataGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CombatStyleDataBinaryWriteTranslation.Instance;

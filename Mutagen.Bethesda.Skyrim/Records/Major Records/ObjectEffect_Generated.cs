@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IObjectEffectInternal,
         ILoquiObjectSetter<ObjectEffect>,
-        IEquatable<ObjectEffect>,
-        IEqualsMask
+        IEquatable<ObjectEffect>
     {
         #region Ctor
         protected ObjectEffect()
@@ -77,12 +76,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region BaseEnchantment
         public FormLink<ObjectEffect> BaseEnchantment { get; set; } = new FormLink<ObjectEffect>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IObjectEffectGetter> IObjectEffectGetter.BaseEnchantment => this.BaseEnchantment;
+        FormLink<IObjectEffectGetter> IObjectEffectGetter.BaseEnchantment => this.BaseEnchantment.ToGetter<ObjectEffect, IObjectEffectGetter>();
         #endregion
         #region WornRestrictions
         public FormLink<FormList> WornRestrictions { get; set; } = new FormLink<FormList>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IFormListGetter> IObjectEffectGetter.WornRestrictions => this.WornRestrictions;
+        FormLink<IFormListGetter> IObjectEffectGetter.WornRestrictions => this.WornRestrictions.ToGetter<FormList, IFormListGetter>();
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -827,7 +826,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => ObjectEffectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ObjectEffectCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ObjectEffectCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ObjectEffectCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ObjectEffectCommon.Instance.RemapLinks(this, mapping);
         public ObjectEffect(FormKey formKey)
@@ -867,14 +866,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new ObjectEffect CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static ObjectEffect CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -901,8 +892,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IObjectEffectGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -924,7 +913,8 @@ namespace Mutagen.Bethesda.Skyrim
         IEffectRecord,
         ITranslatedNamed,
         IObjectBounded,
-        ILoquiObjectSetter<IObjectEffectInternal>
+        ILoquiObjectSetter<IObjectEffectInternal>,
+        ILinkedFormKeyContainer
     {
         new ObjectBounds ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
@@ -954,7 +944,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         IObjectBoundedGetter,
         ILoquiObject<IObjectEffectGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => ObjectEffect_Registration.Instance;
@@ -967,8 +957,8 @@ namespace Mutagen.Bethesda.Skyrim
         TargetType TargetType { get; }
         ObjectEffect.EnchantTypeEnum EnchantType { get; }
         Single ChargeTime { get; }
-        IFormLink<IObjectEffectGetter> BaseEnchantment { get; }
-        IFormLink<IFormListGetter> WornRestrictions { get; }
+        FormLink<IObjectEffectGetter> BaseEnchantment { get; }
+        FormLink<IFormListGetter> WornRestrictions { get; }
         IReadOnlyList<IEffectGetter> Effects { get; }
         ObjectEffect.ENITDataType ENITDataTypeState { get; }
 
@@ -1017,24 +1007,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IObjectEffectGetter item,
-            ObjectEffect.Mask<bool?> checkMask)
-        {
-            return ((ObjectEffectCommon)((IObjectEffectGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static ObjectEffect.Mask<bool> GetHasBeenSetMask(this IObjectEffectGetter item)
-        {
-            var ret = new ObjectEffect.Mask<bool>(false);
-            ((ObjectEffectCommon)((IObjectEffectGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -1106,17 +1078,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IObjectEffectInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IObjectEffectInternal item,
             MutagenFrame frame,
@@ -1672,11 +1633,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.BaseEnchantment ?? true)
             {
-                fg.AppendItem(item.BaseEnchantment, "BaseEnchantment");
+                fg.AppendItem(item.BaseEnchantment.FormKey, "BaseEnchantment");
             }
             if (printMask?.WornRestrictions ?? true)
             {
-                fg.AppendItem(item.WornRestrictions, "WornRestrictions");
+                fg.AppendItem(item.WornRestrictions.FormKey, "WornRestrictions");
             }
             if (printMask?.Effects?.Overall ?? true)
             {
@@ -1700,39 +1661,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.ENITDataTypeState, "ENITDataTypeState");
             }
-        }
-        
-        public bool HasBeenSet(
-            IObjectEffectGetter item,
-            ObjectEffect.Mask<bool?> checkMask)
-        {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IObjectEffectGetter item,
-            ObjectEffect.Mask<bool> mask)
-        {
-            mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
-            mask.Name = (item.Name != null);
-            mask.EnchantmentCost = true;
-            mask.Flags = true;
-            mask.CastType = true;
-            mask.EnchantmentAmount = true;
-            mask.TargetType = true;
-            mask.EnchantType = true;
-            mask.ChargeTime = true;
-            mask.BaseEnchantment = true;
-            mask.WornRestrictions = true;
-            var EffectsItem = item.Effects;
-            mask.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect.Mask<bool>?>>?>(true, EffectsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.ENITDataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static ObjectEffect_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1972,11 +1900,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.BaseEnchantment) ?? true))
             {
-                item.BaseEnchantment = rhs.BaseEnchantment.FormKey;
+                item.BaseEnchantment = new FormLink<ObjectEffect>(rhs.BaseEnchantment.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.WornRestrictions) ?? true))
             {
-                item.WornRestrictions = rhs.WornRestrictions.FormKey;
+                item.WornRestrictions = new FormLink<FormList>(rhs.WornRestrictions.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.Effects) ?? true))
             {
@@ -2385,15 +2313,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IObjectEffectGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => ObjectEffectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ObjectEffectCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ObjectEffectCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ObjectEffectCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ObjectEffectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ObjectEffectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2455,12 +2379,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region BaseEnchantment
         private int _BaseEnchantmentLocation => _ENITLocation!.Value + 0x1C;
         private bool _BaseEnchantment_IsSet => _ENITLocation.HasValue;
-        public IFormLink<IObjectEffectGetter> BaseEnchantment => _BaseEnchantment_IsSet ? new FormLink<IObjectEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_BaseEnchantmentLocation, 0x4)))) : FormLink<IObjectEffectGetter>.Null;
+        public FormLink<IObjectEffectGetter> BaseEnchantment => _BaseEnchantment_IsSet ? new FormLink<IObjectEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_BaseEnchantmentLocation, 0x4)))) : FormLink<IObjectEffectGetter>.Null;
         #endregion
         #region WornRestrictions
         private int _WornRestrictionsLocation => _ENITLocation!.Value + 0x20;
         private bool _WornRestrictions_IsSet => _ENITLocation.HasValue && !ENITDataTypeState.HasFlag(ObjectEffect.ENITDataType.Break0);
-        public IFormLink<IFormListGetter> WornRestrictions => _WornRestrictions_IsSet ? new FormLink<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_WornRestrictionsLocation, 0x4)))) : FormLink<IFormListGetter>.Null;
+        public FormLink<IFormListGetter> WornRestrictions => _WornRestrictions_IsSet ? new FormLink<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_WornRestrictionsLocation, 0x4)))) : FormLink<IFormListGetter>.Null;
         #endregion
         public IReadOnlyList<IEffectGetter> Effects { get; private set; } = ListExt.Empty<EffectBinaryOverlay>();
         partial void CustomFactoryEnd(

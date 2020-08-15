@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class RaceRelation :
         IRaceRelation,
         ILoquiObjectSetter<RaceRelation>,
-        IEquatable<RaceRelation>,
-        IEqualsMask
+        IEquatable<RaceRelation>
     {
         #region Ctor
         public RaceRelation()
@@ -43,7 +42,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Race
         public FormLink<Race> Race { get; set; } = new FormLink<Race>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IRaceGetter> IRaceRelationGetter.Race => this.Race;
+        FormLink<IRaceGetter> IRaceRelationGetter.Race => this.Race.ToGetter<Race, IRaceGetter>();
         #endregion
         #region Modifier
         public Int32 Modifier { get; set; } = default;
@@ -378,7 +377,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => RaceRelationCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => RaceRelationCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => RaceRelationCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RaceRelationCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RaceRelationCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -398,14 +397,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static RaceRelation CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static RaceRelation CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -432,8 +423,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceRelationGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -451,7 +440,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IRaceRelation :
         IRaceRelationGetter,
-        ILoquiObjectSetter<IRaceRelation>
+        ILoquiObjectSetter<IRaceRelation>,
+        ILinkedFormKeyContainer
     {
         new FormLink<Race> Race { get; set; }
         new Int32 Modifier { get; set; }
@@ -460,7 +450,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRaceRelationGetter :
         ILoquiObject,
         ILoquiObject<IRaceRelationGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -470,7 +460,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => RaceRelation_Registration.Instance;
-        IFormLink<IRaceGetter> Race { get; }
+        FormLink<IRaceGetter> Race { get; }
         Int32 Modifier { get; }
 
     }
@@ -518,24 +508,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IRaceRelationGetter item,
-            RaceRelation.Mask<bool?> checkMask)
-        {
-            return ((RaceRelationCommon)((IRaceRelationGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static RaceRelation.Mask<bool> GetHasBeenSetMask(this IRaceRelationGetter item)
-        {
-            var ret = new RaceRelation.Mask<bool>(false);
-            ((RaceRelationCommon)((IRaceRelationGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -630,17 +602,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IRaceRelation item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IRaceRelation item,
             MutagenFrame frame,
@@ -958,27 +919,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Race ?? true)
             {
-                fg.AppendItem(item.Race, "Race");
+                fg.AppendItem(item.Race.FormKey, "Race");
             }
             if (printMask?.Modifier ?? true)
             {
                 fg.AppendItem(item.Modifier, "Modifier");
             }
-        }
-        
-        public bool HasBeenSet(
-            IRaceRelationGetter item,
-            RaceRelation.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IRaceRelationGetter item,
-            RaceRelation.Mask<bool> mask)
-        {
-            mask.Race = true;
-            mask.Modifier = true;
         }
         
         #region Equals and Hash
@@ -1033,7 +979,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RaceRelation_FieldIndex.Race) ?? true))
             {
-                item.Race = rhs.Race.FormKey;
+                item.Race = new FormLink<Race>(rhs.Race.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)RaceRelation_FieldIndex.Modifier) ?? true))
             {
@@ -1185,12 +1131,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this IRaceRelationGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((RaceRelationBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1222,15 +1169,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceRelationGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => RaceRelationCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => RaceRelationCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RaceRelationCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RaceRelationCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => RaceRelationCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => RaceRelationBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1245,7 +1188,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<IRaceGetter> Race => new FormLink<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<IRaceGetter> Race => new FormLink<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Int32 Modifier => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

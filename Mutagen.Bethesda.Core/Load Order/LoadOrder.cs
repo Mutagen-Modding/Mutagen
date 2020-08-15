@@ -1,4 +1,5 @@
 using Loqui;
+using Mutagen.Bethesda.Internals;
 using Noggog;
 using System;
 using System.Collections;
@@ -39,36 +40,96 @@ namespace Mutagen.Bethesda
         }
 
         /// <summary>
+        /// Returns whether given game needs timestamp alignment for its load order
+        /// </summary>
+        /// <param name="game">Game to check</param>
+        /// <returns>True if file located</returns>
+        public static bool NeedsTimestampAlignment(GameCategory game)
+        {
+            switch (game)
+            {
+                case GameCategory.Oblivion:
+                    return true;
+                case GameCategory.Skyrim:
+                    return false;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        /// <summary>
         /// Constructs a load order from a list of mods and a data folder.
         /// Load Order is sorted to the order the game will load the mod files: by file's date modified timestamp.
         /// </summary>
-        /// <param name="modsToInclude">Mods to include</param>
+        /// <param name="incomingLoadOrder">Mods to include</param>
         /// <param name="dataPath">Path to data folder</param>
         /// <param name="throwOnMissingMods">Whether to throw and exception if mods are missing</param>
-        /// <returns>List of modkeys in load order, excluding missing mods</returns>
-        /// <exception cref="FileNotFoundException">If throwOnMissingMods true and file is missing</exception>
-        public static IExtendedList<ModKey> AlignLoadOrder(
-            IEnumerable<ModKey> modsToInclude,
+        /// <returns>Enumerable of modkeys in load order, excluding missing mods</returns>
+        /// <exception cref="MissingModException">If throwOnMissingMods true and file is missing</exception>
+        public static IEnumerable<ModKey> AlignToTimestamps(
+            IEnumerable<ModKey> incomingLoadOrder,
             DirectoryPath dataPath,
-            bool throwOnMissingMods = false)
+            bool throwOnMissingMods = true)
         {
-            List<(ModKey ModKey, DateTime Write)> list = new List<(ModKey ModKey, DateTime Write)>();
-            var loadOrder = new ExtendedList<ModKey>();
-            foreach (var key in modsToInclude)
+            var list = new List<(ModKey ModKey, DateTime Write)>();
+            foreach (var key in incomingLoadOrder)
             {
-                FilePath file = new FilePath(
-                    Path.Combine(dataPath.Path, key.ToString()));
-                if (!file.Exists)
+                ModPath modPath = new ModPath(key, Path.Combine(dataPath.Path, key.ToString()));
+                if (!File.Exists(modPath.Path))
                 {
-                    if (throwOnMissingMods) throw new FileNotFoundException($"Expected mod was missing: {file}");
+                    if (throwOnMissingMods) throw new MissingModException(modPath);
                     continue;
                 }
-                list.Add((key, file.Info.LastWriteTime));
+                list.Add((key, File.GetLastWriteTime(modPath.Path)));
             }
-            loadOrder.AddRange(list
-                .OrderBy(i => i.Write)
-                .Select(i => i.ModKey));
-            return loadOrder;
+            return list
+                .OrderBy(i => i, new LoadOrderTimestampComparer(incomingLoadOrder.ToList()))
+                .Select(i => i.ModKey);
+        }
+
+        /// <summary>
+        /// Constructs a load order from a list of mods and a data folder.
+        /// Load Order is sorted to the order the game will load the mod files: by file's date modified timestamp.
+        /// </summary>
+        /// <param name="incomingLoadOrder">Mods and their write timestamps</param>
+        /// <returns>Enumerable of modkeys in load order, excluding missing mods</returns>
+        /// <exception cref="MissingModException">If throwOnMissingMods true and file is missing</exception>
+        public static IEnumerable<ModKey> AlignToTimestamps(IEnumerable<(ModKey ModKey, DateTime Write)> incomingLoadOrder)
+        {
+            return incomingLoadOrder
+                .OrderBy(i => i, new LoadOrderTimestampComparer(incomingLoadOrder.Select(i => i.ModKey).ToList()))
+                .Select(i => i.ModKey);
+        }
+
+        /// <summary>
+        /// Modifies time stamps of files to match the given ordering
+        /// <param name="loadOrder">Order to conform files to</param>
+        /// <param name="dataPath">Path to data folder</param>
+        /// <param name="throwOnMissingMods">Whether to throw and exception if mods are missing</param>
+        /// <param name="startDate">Date to give the first file</param>
+        /// <param name="interval">Time interval to space between each file's date</param>
+        /// <exception cref="MissingModException">If throwOnMissingMods true and file is missing</exception>
+        /// </summary>
+        public static void AlignTimestamps(
+            IEnumerable<ModKey> loadOrder,
+            DirectoryPath dataPath,
+            bool throwOnMissingMods = true,
+            DateTime? startDate = null,
+            TimeSpan? interval = null)
+        {
+            startDate ??= DateTime.Today.AddDays(-1);
+            interval ??= TimeSpan.FromMinutes(1);
+            foreach (var mod in loadOrder)
+            {
+                ModPath modPath = new ModPath(mod, Path.Combine(dataPath.Path, mod.FileName));
+                if (!File.Exists(modPath.Path))
+                {
+                    if (throwOnMissingMods) throw new MissingModException(modPath);
+                    continue;
+                }
+                File.SetLastWriteTime(modPath.Path, startDate.Value);
+                startDate = startDate.Value.Add(interval.Value);
+            }
         }
 
         /// <summary>
@@ -77,9 +138,8 @@ namespace Mutagen.Bethesda
         /// <param name="stream">Stream to read from</param>
         /// <returns>List of modkeys representing a load order</returns>
         /// <exception cref="ArgumentException">Line in plugin stream is unexpected</exception>
-        public static IExtendedList<ModKey> ProcessLoadOrder(Stream stream)
+        public static IEnumerable<ModKey> FromStream(Stream stream)
         {
-            var ret = new ExtendedList<ModKey>();
             using var streamReader = new StreamReader(stream);
             while (!streamReader.EndOfStream)
             {
@@ -95,21 +155,20 @@ namespace Mutagen.Bethesda
                 {
                     throw new ArgumentException($"Load order file had malformed line: {str}");   
                 }
-                ret.Add(key);
+                yield return key;
             }
-            return ret;
         }
-        
+
         /// <summary>
         /// Parses a file to retrieve all ModKeys in expected plugin file format
         /// </summary>
         /// <param name="path">Path of plugin list</param>
-        /// <returns>List of modkeys representing a load order</returns>
+        /// <returns>Enumerable of modkeys representing a load order</returns>
         /// <exception cref="ArgumentException">Line in plugin file is unexpected</exception>
-        public static IExtendedList<ModKey> ProcessLoadOrder(FilePath path)
+        public static IList<ModKey> FromPath(FilePath path)
         {
-            var stream = new FileStream(path.Path, FileMode.Open, FileAccess.Read);
-            return ProcessLoadOrder(stream);
+            using var stream = new FileStream(path.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
+            return FromStream(stream).ToList();
         }
 
         /// <summary>
@@ -117,259 +176,316 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="game">Game type</param>
         /// <param name="dataPath">Path to game's data folder</param>
-        /// <param name="allowMissingMods">Whether to skip missing mods</param>
-        /// <returns>List of modkeys representing a load order</returns>
+        /// <param name="throwOnMissingMods">Whether to throw and exception if mods are missing</param>
+        /// <returns>Enumerable of modkeys representing a load order</returns>
         /// <exception cref="ArgumentException">Line in plugin file is unexpected</exception>
-        /// <exception cref="FileNotFoundException">If plugin file not located, or if allowMissingMods false and file is missing</exception>
-        public static IExtendedList<ModKey> GetUsualLoadOrder(GameRelease game, DirectoryPath dataPath, bool allowMissingMods)
+        /// <exception cref="FileNotFoundException">If plugin file not located</exception>
+        /// <exception cref="MissingModException">If throwOnMissingMods true and file is missing</exception>
+        public static IEnumerable<ModKey> GetUsualLoadOrder(
+            GameRelease game,
+            DirectoryPath dataPath,
+            bool throwOnMissingMods = true)
         {
             if (!TryGetPluginsFile(game, out var path))
             {
                 throw new FileNotFoundException("Could not locate plugins file");
             }
             
-            IExtendedList<ModKey> mods = ProcessLoadOrder(path);
-            return AlignLoadOrder(mods, dataPath, throwOnMissingMods: !allowMissingMods);
+            var mods = FromPath(path);
+            if (NeedsTimestampAlignment(game.ToCategory()))
+            {
+                return AlignToTimestamps(mods, dataPath, throwOnMissingMods: throwOnMissingMods);
+            }
+            else
+            {
+                return mods;
+            }
+        }
+
+        /// <summary>
+        /// Constructs a load order filled with mods constructed
+        /// </summary>
+        /// <param name="dataFolder">Path data folder containing mods</param>
+        /// <param name="loadOrder">Unique list of mod keys to import</param>
+        /// <param name="gameRelease">GameRelease associated with the mods to create<br/>
+        /// This may be unapplicable to some games with only one release, but should still be passed in.
+        /// </param>
+        public static LoadOrder<IModListing<TMod>> Import<TMod>(
+            DirectoryPath dataFolder,
+            IReadOnlyList<ModKey> loadOrder,
+            GameRelease gameRelease)
+            where TMod : class, IModGetter
+        {
+            return Import(
+                dataFolder,
+                loadOrder,
+                (modPath) => ModInstantiator<TMod>.Importer(modPath, gameRelease));
+        }
+
+        /// <summary>
+        /// Constructs a load order filled with mods constructed by given importer func
+        /// </summary>
+        /// <param name="dataFolder">Path data folder containing mods</param>
+        /// <param name="loadOrder">Unique list of mod keys to import</param>
+        /// <param name="factory">Func to use to create a new mod from a path</param>
+        public static LoadOrder<IModListing<TMod>> Import<TMod>(
+            DirectoryPath dataFolder,
+            IReadOnlyList<ModKey> loadOrder,
+            Func<ModPath, TMod> factory)
+            where TMod : class, IModGetter
+        {
+            var results = new (ModKey ModKey, int ModIndex, TryGet<TMod> Mod)[loadOrder.Count];
+            Parallel.ForEach(loadOrder, (modKey, state, modIndex) =>
+            {
+                var modPath = new ModPath(modKey, dataFolder.GetFile(modKey.FileName).Path);
+                if (!File.Exists(modPath.Path))
+                {
+                    results[modIndex] = (modKey, (int)modIndex, TryGet<TMod>.Failure);
+                    return;
+                }
+                var mod = factory(modPath);
+                results[modIndex] = (modKey, (int)modIndex, TryGet<TMod>.Succeed(mod));
+            });
+            return new LoadOrder<IModListing<TMod>>(results
+                .OrderBy(i => i.ModIndex)
+                .Select(item =>
+                {
+                    if (item.Mod.Succeeded)
+                    {
+                        return new ModListing<TMod>(item.Mod.Value);
+                    }
+                    else
+                    {
+                        return ModListing<TMod>.UnloadedModListing(item.ModKey);
+                    }
+                }));
         }
     }
 
     /// <summary>
-    /// A container for Mod objects in an order that can optionally exist.
-    /// For a load order of just ModKeys in an order with no optionality, it is usually preferable to just use a normal List of ModKeys.
-    /// LoadOrder does not need to be disposed for proper use, but rather can optionally be disposed of which will dispose any contained mods that implement IDisposable
+    /// A container for objects with in a specific load order, that are associated with ModKeys.
+    /// LoadOrder does not need to be disposed for proper use, but rather can optionally be disposed of which will dispose any contained items that implement IDisposable
     /// </summary>
-    public class LoadOrder<TMod> : IReadOnlyList<ModListing<TMod>>, IDisposable
-        where TMod : class, IModGetter
+    public class LoadOrder<TItem> : IReadOnlyList<KeyValuePair<ModKey, TItem>>, IReadOnlyDictionary<ModKey, TItem>, IDisposable
+        where TItem : IModKeyed
     {
-        private readonly List<ModListing<TMod>> _modsByLoadOrder = new List<ModListing<TMod>>();
+        private readonly List<ItemContainer> _byLoadOrder = new List<ItemContainer>();
+        private readonly Dictionary<ModKey, ItemContainer> _byModKey = new Dictionary<ModKey, ItemContainer>();
 
-        /// <summary>
-        /// Number of mods
-        /// </summary>
-        public int Count => _modsByLoadOrder.Count;
+        /// <inheritdoc />
+        public int Count => _byLoadOrder.Count;
 
-        /// <summary>
-        /// Access a mod at a given index
-        /// </summary>
-        public ModListing<TMod> this[int index] => _modsByLoadOrder[index];
+        /// <inheritdoc />
+        public TItem this[int index] => _byLoadOrder[index].Item;
 
-        /// <summary>
-        /// Attempts to retrive a mod listing given a ModKey
-        /// </summary>
-        /// <param name="key">ModKey to query for</param>
-        /// <param name="result">Result containing located index, and a reference to the listing</param>
-        /// <returns>True if matching mod located</returns>
-        public bool TryGetListing(ModKey key, out (int Index, ModListing<TMod> Listing) result)
+        /// <inheritdoc />
+        public IEnumerable<ModKey> Keys => _byModKey.Keys;
+
+        IEnumerable<TItem> IReadOnlyDictionary<ModKey, TItem>.Values => _byLoadOrder.Select(i => i.Item);
+
+        public IEnumerable<TItem> ListedOrder => _byLoadOrder.Select(i => i.Item);
+
+        public IEnumerable<TItem> PriorityOrder => ((IEnumerable<ItemContainer>)_byLoadOrder).Reverse().Select(i => i.Item);
+
+        KeyValuePair<ModKey, TItem> IReadOnlyList<KeyValuePair<ModKey, TItem>>.this[int index]
         {
-            for (int i = 0; i < _modsByLoadOrder.Count; i++)
+            get
             {
-                var item = _modsByLoadOrder[i];
-                if (item.Key.Equals(key))
+                var cont = _byLoadOrder[index];
+                return new KeyValuePair<ModKey, TItem>(cont.Item.ModKey, cont.Item);
+            }
+        }
+
+        /// <inheritdoc />
+        public TItem this[ModKey key] => _byModKey[key].Item;
+
+        public LoadOrder()
+        {
+        }
+
+        public LoadOrder(IEnumerable<TItem> items)
+        {
+            int index = 0;
+            _byLoadOrder.AddRange(items.Select(i => new ItemContainer(i, index++)));
+            foreach (var item in _byLoadOrder)
+            {
+                try
                 {
-                    result = (i, _modsByLoadOrder[i]);
-                    return true;
+                    _byModKey.Add(item.Item.ModKey, item);
+                }
+                catch (ArgumentException)
+                {
+                    throw new ArgumentException($"ModKey was already present: {item.Item.ModKey}");
                 }
             }
-            result = default(ValueTuple<int, ModListing<TMod>>);
+        }
+
+        /// <summary>
+        /// Attempts to retrive an item given a ModKey
+        /// </summary>
+        /// <param name="key">ModKey to query for</param>
+        /// <param name="value">Result containing located index, and a reference to the item</param>
+        /// <returns>True if matching key located</returns>
+        public bool TryGetValue(ModKey key, [MaybeNullWhen(false)] out (int Index, TItem Item) value)
+        {
+            if (_byModKey.TryGetValue(key, out var container))
+            {
+                value = (container.Index, container.Item);
+                return true;
+            }
+            value = default;
             return false;
         }
 
         /// <summary>
-        /// Attempts to retrive a mod object given a ModKey
+        /// Attempts to retrive an item given a ModKey
         /// </summary>
         /// <param name="key">ModKey to query for</param>
-        /// <param name="result">Result containing located index, and a reference to the mod object</param>
-        /// <returns>True if matching mod located</returns>
-        public bool TryGetMod(ModKey key, out (int Index, TMod Mod) result)
+        /// <param name="value">Result reference to the item</param>
+        /// <returns>True if matching key located</returns>
+        public bool TryGetValue(ModKey key, [MaybeNullWhen(false)] out TItem value)
         {
-            if (!this.TryGetListing(key, out var listing)
-                || listing.Listing.Mod == null)
+            if (_byModKey.TryGetValue(key, out var container))
             {
-                result = default((int, TMod));
-                return false;
+                value = container.Item;
+                return true;
             }
-            result = (listing.Index, listing.Listing.Mod);
-            return true;
+            value = default;
+            return false;
+        }
+
+        bool IReadOnlyDictionary<ModKey, TItem>.TryGetValue(ModKey key, out TItem value)
+        {
+            return this.TryGetValue(key, out value!);
         }
 
         /// <summary>
-        /// Attempts to retrive a mod listing given an index
+        /// Attempts to retrive an item given an index
         /// </summary>
         /// <param name="index">Index to retrieve</param>
-        /// <param name="result">Reference to the mod listing</param>
+        /// <param name="result">Reference to the item</param>
         /// <returns>True if index in range</returns>
-        public bool TryGetListing(int index, [MaybeNullWhen(false)] out ModListing<TMod> result)
+        public bool TryGetIndex(int index, [MaybeNullWhen(false)] out TItem result)
         {
-            if (!_modsByLoadOrder.InRange(index))
+            if (!_byLoadOrder.InRange(index))
             {
                 result = default!;
                 return false;
             }
-            result = _modsByLoadOrder[index];
-            return result != null;
+            result = _byLoadOrder[index].Item;
+            return true;
         }
 
         /// <summary>
-        /// Adds a mod to the end of the load order
+        /// Adds an item to the end of the load order
         /// </summary>
-        /// <param name="mod">Mod to add</param>
-        /// <exception cref="ArgumentException">If mod with same key exists already</exception>
-        public void Add(TMod mod)
+        /// <param name="item">Item to put at end of load order</param>
+        /// <exception cref="ArgumentException">If an item with same ModKey exists already</exception>
+        public void Add(TItem item)
         {
-            if (this.Contains(mod.ModKey))
+            var index = _byLoadOrder.Count;
+            var container = new ItemContainer(item, index);
+            try
             {
-                throw new ArgumentException("Mod was already present on the mod list.");
+                _byModKey.Add(item.ModKey, container);
             }
-            _modsByLoadOrder.Add(new ModListing<TMod>(mod));
+            catch (ArgumentException)
+            {
+                throw new ArgumentException($"ModKey was already present: {item.ModKey}");
+            }
+            _byLoadOrder.Add(container);
         }
 
         /// <summary>
-        /// Adds a mod at the given index
+        /// Adds an item at the given index in load order, with the given ModKey
         /// </summary>
-        /// <param name="mod">Mod to add</param>
+        /// <param name="item">Item to put at end of load order</param>
         /// <param name="index">Index to insert at</param>
-        /// <exception cref="ArgumentException">If mod with same key exists already</exception>
-        public void Add(TMod mod, int index)
+        /// <exception cref="ArgumentException">If an item with same ModKey exists already</exception>
+        public void Add(TItem item, int index)
         {
-            if (this.Contains(mod.ModKey))
+            if (!_byLoadOrder.InRange(index))
             {
-                throw new ArgumentException("Mod was already present on the mod list.");
+                throw new ArgumentException("Tried to insert at an out of range index.");
             }
-            _modsByLoadOrder.Insert(index, new ModListing<TMod>(mod));
+            var container = new ItemContainer(item, index);
+            try
+            {
+                _byModKey.Add(item.ModKey, container);
+            }
+            catch (ArgumentException)
+            {
+                throw new ArgumentException($"ModKey was already present: {item.ModKey}");
+            }
+            _byLoadOrder.Add(container);
+            for (int i = index + 1; i < _byLoadOrder.Count; i++)
+            {
+                _byLoadOrder[i].Index += 1;
+            }
         }
 
-        /// <summary>
-        /// Checks if a mod exists with given key
-        /// </summary>
-        /// <param name="key">Key to query</param>
-        /// <returns>True if mod on list with key</returns>
-        public bool Contains(ModKey key)
+        /// <inheritdoc />
+        public bool ContainsKey(ModKey key)
         {
             return IndexOf(key) != -1;
         }
 
         /// <summary>
-        /// Locates index of a mod with given key
+        /// Locates index of an item with given key
         /// </summary>
         /// <param name="key">Key to query</param>
-        /// <returns>Index of mod on list with key. -1 if not located</returns>
+        /// <returns>Index of item on list with key. -1 if not located</returns>
         public int IndexOf(ModKey key)
         {
-            for (int i = 0; i < _modsByLoadOrder.Count; i++)
+            if (!_byModKey.TryGetValue(key, out var container))
             {
-                if (_modsByLoadOrder[i].Key.Equals(key))
-                {
-                    return i;
-                }
+                return -1;
             }
-            return -1;
+            return container.Index;
         }
 
         /// <summary>
-        /// Clears load order of all mods
+        /// Clears load order of all items
         /// </summary>
         public void Clear()
         {
-            this._modsByLoadOrder.Clear();
+            this._byLoadOrder.Clear();
+            this._byModKey.Clear();
         }
 
-        /// <summary>
-        /// Delegate used for importing mods
-        /// </summary>
-        /// <param name="path">Path to mod file</param>
-        /// <param name="modKey">ModKey associated with listing</param>
-        /// <param name="mod">Out parameter containing mod object if successful</param>
-        /// <returns>True if import successful</returns>
-        public delegate bool Importer(FilePath path, ModKey modKey, [MaybeNullWhen(false)] out TMod mod);
+        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
 
         /// <summary>
-        /// Clears load order and fills it with mods constructed by given importer
+        /// Disposes all contained items that implement IDisposable
         /// </summary>
-        /// <param name="dataFolder">Path data folder containing mods</param>
-        /// <param name="loadOrder">Unique list of mod keys to import</param>
-        /// <param name="importer">Function used to construct a mod</param>
-        public void Import(
-            DirectoryPath dataFolder,
-            IReadOnlyList<ModKey> loadOrder,
-            Importer importer)
+        public void Dispose()
         {
-            this.Clear();
-            var results = new (ModKey ModKey, int ModIndex, TryGet<TMod> Mod)[loadOrder.Count];
-            Parallel.ForEach(loadOrder, (modKey, state, modIndex) =>
+            foreach (var item in _byLoadOrder)
             {
-                FilePath modPath = dataFolder.GetFile(modKey.FileName);
-                if (!modPath.Exists)
+                if (item.Item is IDisposable disp)
                 {
-                    results[modIndex] = (modKey, (int)modIndex, TryGet<TMod>.Failure);
-                    return;
-                }
-                if (!importer(modPath, modKey, out var mod))
-                {
-                    results[modIndex] = (modKey, (int)modIndex, TryGet<TMod>.Failure);
-                    return;
-                }
-                results[modIndex] = (modKey, (int)modIndex, TryGet<TMod>.Succeed(mod));
-            });
-            foreach (var item in results
-                .OrderBy(i => i.ModIndex))
-            {
-                if (item.Mod.Succeeded)
-                {
-                    this._modsByLoadOrder.Add(
-                        new ModListing<TMod>(
-                            item.Mod.Value));
-                }
-                else
-                {
-                    this._modsByLoadOrder.Add(
-                        ModListing<TMod>.UnloadedModListing(item.ModKey));
+                    disp.Dispose();
                 }
             }
         }
 
-        /// <summary>
-        /// Creates a load order and fills it with mods constructed by given importer
-        /// </summary>
-        /// <param name="dataFolder">Path data folder containing mods</param>
-        /// <param name="loadOrder">Unique list of mod keys to import</param>
-        /// <param name="importer">Function used to construct a mod</param>
-        public static LoadOrder<TMod> ImportFactory(
-            DirectoryPath dataFolder,
-            IReadOnlyList<ModKey> loadOrder,
-            Importer importer)
+        public IEnumerator<KeyValuePair<ModKey, TItem>> GetEnumerator()
         {
-            var ret = new LoadOrder<TMod>();
-            ret.Import(
-                dataFolder,
-                loadOrder,
-                importer);
-            return ret;
-        }
-
-        /// <summary>
-        /// Iterates through all mod listings in load order
-        /// </summary>
-        public IEnumerator<ModListing<TMod>> GetEnumerator()
-        {
-            return _modsByLoadOrder.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this.GetEnumerator();
-        }
-
-        /// <summary>
-        /// Disposes all contained mods that implement IDisposable
-        /// </summary>
-        public void Dispose()
-        {
-            foreach (var mod in _modsByLoadOrder)
+            foreach (var item in _byLoadOrder)
             {
-                if (mod.Mod is IDisposable disp)
-                {
-                    disp.Dispose();
-                }
+                yield return new KeyValuePair<ModKey, TItem>(item.Item.ModKey, item.Item);
+            }
+        }
+
+        private class ItemContainer
+        {
+            public readonly TItem Item;
+            public int Index;
+
+            public ItemContainer(TItem item, int index)
+            {
+                Item = item;
+                Index = index;
             }
         }
     }

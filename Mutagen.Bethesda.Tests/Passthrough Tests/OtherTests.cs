@@ -20,8 +20,9 @@ namespace Mutagen.Bethesda.Tests
         public static async Task OblivionESM_GroupMask_Import(TestingSettings settings, Target target)
         {
             var mod = OblivionMod.CreateFromBinary(
-                Path.Combine(settings.DataFolderLocations.Oblivion, target.Path),
-                modKeyOverride: Mutagen.Bethesda.Oblivion.Constants.Oblivion,
+                new ModPath(
+                    Mutagen.Bethesda.Oblivion.Constants.Oblivion,
+                    Path.Combine(settings.DataFolderLocations.Oblivion, target.Path)),
                 importMask: new Mutagen.Bethesda.Oblivion.GroupMask()
                 {
                     Npcs = true
@@ -46,8 +47,9 @@ namespace Mutagen.Bethesda.Tests
         public static async Task OblivionESM_GroupMask_Export(TestingSettings settings, Target target)
         {
             var mod = OblivionMod.CreateFromBinary(
-                Path.Combine(settings.DataFolderLocations.Oblivion, target.Path),
-                modKeyOverride: Mutagen.Bethesda.Oblivion.Constants.Oblivion);
+                new ModPath(
+                    Mutagen.Bethesda.Oblivion.Constants.Oblivion,
+                    Path.Combine(settings.DataFolderLocations.Oblivion, target.Path)));
 
             using var tmp = new TempFolder("Mutagen_Oblivion_Binary_GroupMask_Export");
             var oblivionOutputPath = Path.Combine(tmp.Dir.Path, TestingConstants.OBLIVION_ESM);

@@ -5,7 +5,7 @@
     <Fields>
       <String name="Name" recordType="FULL" translated="Normal" />
       <RefList name="Relations" refName="Relation" />
-      <Enum name="Flags" recordType="DATA" enumName="Faction.FactionFlag" byteLength="4" hasBeenSet="False" />
+      <Enum name="Flags" recordType="DATA" enumName="Faction.FactionFlag" byteLength="4" nullable="False" />
       <FormLink name="ExteriorJailMarker" recordType="JAIL" refName="PlacedObject" />
       <FormLink name="FollowerWaitMarker" recordType="WAIT" refName="PlacedObject" />
       <FormLink name="StolenGoodsContainer" recordType="STOL" refName="PlacedObject" />

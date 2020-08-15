@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class Phoneme :
         IPhoneme,
         ILoquiObjectSetter<Phoneme>,
-        IEquatable<Phoneme>,
-        IEqualsMask
+        IEquatable<Phoneme>
     {
         #region Ctor
         public Phoneme()
@@ -1688,14 +1687,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static Phoneme CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static Phoneme CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1722,8 +1713,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPhonemeGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1893,24 +1882,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IPhonemeGetter item,
-            Phoneme.Mask<bool?> checkMask)
-        {
-            return ((PhonemeCommon)((IPhonemeGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Phoneme.Mask<bool> GetHasBeenSetMask(this IPhonemeGetter item)
-        {
-            var ret = new Phoneme.Mask<bool>(false);
-            ((PhonemeCommon)((IPhonemeGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IPhonemeGetter item,
             IPhonemeGetter rhs)
@@ -2003,17 +1974,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IPhoneme item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IPhoneme item,
             MutagenFrame frame,
@@ -3091,63 +3051,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IPhonemeGetter item,
-            Phoneme.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IPhonemeGetter item,
-            Phoneme.Mask<bool> mask)
-        {
-            mask.Name = true;
-            mask.IY = true;
-            mask.IH = true;
-            mask.EH = true;
-            mask.EY = true;
-            mask.AE = true;
-            mask.AA = true;
-            mask.AW = true;
-            mask.AY = true;
-            mask.AH = true;
-            mask.AO = true;
-            mask.OY = true;
-            mask.OW = true;
-            mask.UH = true;
-            mask.UW = true;
-            mask.ER = true;
-            mask.AX = true;
-            mask.S = true;
-            mask.SH = true;
-            mask.Z = true;
-            mask.ZH = true;
-            mask.F = true;
-            mask.TH = true;
-            mask.V = true;
-            mask.DH = true;
-            mask.M = true;
-            mask.N = true;
-            mask.NG = true;
-            mask.L = true;
-            mask.R = true;
-            mask.W = true;
-            mask.Y = true;
-            mask.HH = true;
-            mask.B = true;
-            mask.D = true;
-            mask.JH = true;
-            mask.G = true;
-            mask.P = true;
-            mask.T = true;
-            mask.K = true;
-            mask.CH = true;
-            mask.SIL = true;
-            mask.SHOTSIL = true;
-            mask.FLAP = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IPhonemeGetter? lhs,
@@ -3589,12 +3492,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IPhonemeGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((PhonemeBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -3626,8 +3530,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPhonemeGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PhonemeBinaryWriteTranslation.Instance;

@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class HDRData :
         IHDRData,
         ILoquiObjectSetter<HDRData>,
-        IEquatable<HDRData>,
-        IEqualsMask
+        IEquatable<HDRData>
     {
         #region Ctor
         public HDRData()
@@ -762,14 +761,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static HDRData CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static HDRData CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -796,8 +787,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IHDRDataGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -907,24 +896,6 @@ namespace Mutagen.Bethesda.Oblivion
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IHDRDataGetter item,
-            HDRData.Mask<bool?> checkMask)
-        {
-            return ((HDRDataCommon)((IHDRDataGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static HDRData.Mask<bool> GetHasBeenSetMask(this IHDRDataGetter item)
-        {
-            var ret = new HDRData.Mask<bool>(false);
-            ((HDRDataCommon)((IHDRDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IHDRDataGetter item,
             IHDRDataGetter rhs)
@@ -1017,17 +988,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IHDRData item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IHDRData item,
             MutagenFrame frame,
@@ -1569,33 +1529,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IHDRDataGetter item,
-            HDRData.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IHDRDataGetter item,
-            HDRData.Mask<bool> mask)
-        {
-            mask.EyeAdaptSpeed = true;
-            mask.BlurRadius = true;
-            mask.BlurPasses = true;
-            mask.EmissiveMult = true;
-            mask.TargetLum = true;
-            mask.UpperLumClamp = true;
-            mask.BrightScale = true;
-            mask.BrightClamp = true;
-            mask.LumRampNoTex = true;
-            mask.LumRampMin = true;
-            mask.LumRampMax = true;
-            mask.SunlightDimmer = true;
-            mask.GrassDimmer = true;
-            mask.TreeDimmer = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IHDRDataGetter? lhs,
@@ -1919,12 +1852,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this IHDRDataGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((HDRDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1956,8 +1890,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IHDRDataGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => HDRDataBinaryWriteTranslation.Instance;

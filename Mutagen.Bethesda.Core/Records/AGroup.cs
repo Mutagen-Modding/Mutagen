@@ -2,6 +2,7 @@ using Ionic.Zlib;
 using Loqui;
 using Loqui.Xml;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Internals;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -16,19 +17,19 @@ namespace Mutagen.Bethesda
     /// <summary>
     /// An abstract base class for Groups to inherit from for some common functionality
     /// </summary>
-    public abstract class AGroup<T> : IEnumerable<T>, IGroupCommon<T>
-        where T : IMajorRecordInternal, IBinaryItem
+    public abstract class AGroup<TMajor> : IEnumerable<TMajor>, IGroupCommon<TMajor>
+        where TMajor : class, IMajorRecordInternal, IBinaryItem
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected abstract ICache<T, FormKey> ProtectedCache { get; }
+        protected abstract ICache<TMajor, FormKey> ProtectedCache { get; }
         
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        internal ICache<T, FormKey> InternalCache => this.ProtectedCache;
+        internal ICache<TMajor, FormKey> InternalCache => this.ProtectedCache;
         
         /// <summary>
         /// An enumerable of all the records contained by the group.
         /// </summary>
-        public IEnumerable<T> Records => ProtectedCache.Items;
+        public IEnumerable<TMajor> Records => ProtectedCache.Items;
         
         /// <summary>
         /// Number of records contained in the group.
@@ -40,6 +41,17 @@ namespace Mutagen.Bethesda
         /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IMod SourceMod { get; private set; }
+
+        IReadOnlyCache<TMajor, FormKey> IGroupCommonGetter<TMajor>.RecordCache => InternalCache;
+
+        /// <inheritdoc />
+        public ICache<TMajor, FormKey> RecordCache => InternalCache;
+
+        /// <inheritdoc />
+        public IEnumerable<FormKey> FormKeys => InternalCache.Keys;
+
+        /// <inheritdoc />
+        public TMajor this[FormKey key] => InternalCache[key];
 
         protected AGroup()
         {
@@ -65,18 +77,58 @@ namespace Mutagen.Bethesda
         /// <returns>String in format: "Group(_record_count_)"</returns>
         public override string ToString()
         {
-            return $"Group<{typeof(T).Name}>({this.InternalCache.Count})";
+            return $"Group<{typeof(TMajor).Name}>({this.InternalCache.Count})";
         }
 
-        public IEnumerator<T> GetEnumerator()
+        /// <inheritdoc />
+        public TMajor AddNew()
+        {
+            var ret = MajorRecordInstantiator<TMajor>.Activator(SourceMod.GetNextFormKey());
+            InternalCache.Set(ret);
+            return ret;
+        }
+
+        /// <inheritdoc />
+        public TMajor AddNew(string editorID)
+        {
+            var ret = MajorRecordInstantiator<TMajor>.Activator(SourceMod.GetNextFormKey(editorID));
+            ret.EditorID = editorID;
+            InternalCache.Set(ret);
+            return ret;
+        }
+
+        /// <inheritdoc />
+        public IEnumerator<TMajor> GetEnumerator()
         {
             return InternalCache.Items.GetEnumerator();
         }
 
+        /// <inheritdoc />
         IEnumerator IEnumerable.GetEnumerator()
         {
             return InternalCache.GetEnumerator();
         }
+
+        /// <inheritdoc />
+        public void Add(TMajor item) => InternalCache.Add(item);
+
+        /// <inheritdoc />
+        public void Set(TMajor item) => InternalCache.Set(item);
+
+        /// <inheritdoc />
+        public void Set(IEnumerable<TMajor> items) => InternalCache.Set(items);
+
+        /// <inheritdoc />
+        public bool Remove(FormKey key) => InternalCache.Remove(key);
+
+        /// <inheritdoc />
+        public void Remove(IEnumerable<FormKey> keys) => InternalCache.Remove(keys);
+
+        /// <inheritdoc />
+        public void Clear() => InternalCache.Clear();
+
+        /// <inheritdoc />
+        public bool ContainsKey(FormKey key) => InternalCache.ContainsKey(key);
     }
 
     namespace Internals
@@ -200,6 +252,42 @@ namespace Mutagen.Bethesda
                     locationDict, 
                     data,
                     package);
+            }
+        }
+
+        public class AGroupBinaryOverlay<TMajor> : BinaryOverlay, IGroupCommonGetter<TMajor>
+            where TMajor : IMajorRecordCommonGetter, IBinaryItem
+        {
+            protected GroupMajorRecordCacheWrapper<TMajor>? _RecordCache;
+
+            public TMajor this[FormKey key] => _RecordCache![key];
+            public IReadOnlyCache<TMajor, FormKey> RecordCache => _RecordCache!;
+            public IMod SourceMod => throw new NotImplementedException();
+            public IEnumerable<TMajor> Records => RecordCache.Items;
+            public int Count => this.RecordCache.Count;
+            public IEnumerable<FormKey> FormKeys => _RecordCache!.Keys;
+            public IEnumerable<TMajor> Items => _RecordCache!.Items;
+
+            public bool ContainsKey(FormKey key)
+            {
+                return _RecordCache!.ContainsKey(key);
+            }
+
+            public IEnumerator<TMajor> GetEnumerator()
+            {
+                return _RecordCache!.Items.GetEnumerator();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return _RecordCache!.GetEnumerator();
+            }
+
+            protected AGroupBinaryOverlay(
+                ReadOnlyMemorySlice<byte> bytes,
+                BinaryOverlayFactoryPackage package)
+                : base(bytes, package)
+            {
             }
         }
     }

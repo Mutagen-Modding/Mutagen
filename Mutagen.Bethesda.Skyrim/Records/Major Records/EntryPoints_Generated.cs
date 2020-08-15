@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class EntryPoints :
         IEntryPoints,
         ILoquiObjectSetter<EntryPoints>,
-        IEquatable<EntryPoints>,
-        IEqualsMask
+        IEquatable<EntryPoints>
     {
         #region Ctor
         public EntryPoints()
@@ -386,14 +385,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static EntryPoints CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static EntryPoints CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -420,8 +411,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEntryPointsGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -505,24 +494,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IEntryPointsGetter item,
-            EntryPoints.Mask<bool?> checkMask)
-        {
-            return ((EntryPointsCommon)((IEntryPointsGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static EntryPoints.Mask<bool> GetHasBeenSetMask(this IEntryPointsGetter item)
-        {
-            var ret = new EntryPoints.Mask<bool>(false);
-            ((EntryPointsCommon)((IEntryPointsGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -617,17 +588,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IEntryPoints item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IEntryPoints item,
             MutagenFrame frame,
@@ -949,21 +909,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IEntryPointsGetter item,
-            EntryPoints.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IEntryPointsGetter item,
-            EntryPoints.Mask<bool> mask)
-        {
-            mask.Type = true;
-            mask.Points = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IEntryPointsGetter? lhs,
@@ -1163,12 +1108,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IEntryPointsGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((EntryPointsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1200,8 +1146,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEntryPointsGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => EntryPointsBinaryWriteTranslation.Instance;

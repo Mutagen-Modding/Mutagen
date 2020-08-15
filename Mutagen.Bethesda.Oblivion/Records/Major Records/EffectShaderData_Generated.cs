@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class EffectShaderData :
         IEffectShaderData,
         ILoquiObjectSetter<EffectShaderData>,
-        IEquatable<EffectShaderData>,
-        IEqualsMask
+        IEquatable<EffectShaderData>
     {
         #region Ctor
         public EffectShaderData()
@@ -2101,14 +2100,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static EffectShaderData CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static EffectShaderData CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -2135,8 +2126,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEffectShaderDataGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -2332,24 +2321,6 @@ namespace Mutagen.Bethesda.Oblivion
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IEffectShaderDataGetter item,
-            EffectShaderData.Mask<bool?> checkMask)
-        {
-            return ((EffectShaderDataCommon)((IEffectShaderDataGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static EffectShaderData.Mask<bool> GetHasBeenSetMask(this IEffectShaderDataGetter item)
-        {
-            var ret = new EffectShaderData.Mask<bool>(false);
-            ((EffectShaderDataCommon)((IEffectShaderDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IEffectShaderDataGetter item,
             IEffectShaderDataGetter rhs)
@@ -2442,17 +2413,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IEffectShaderData item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IEffectShaderData item,
             MutagenFrame frame,
@@ -3768,76 +3728,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IEffectShaderDataGetter item,
-            EffectShaderData.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IEffectShaderDataGetter item,
-            EffectShaderData.Mask<bool> mask)
-        {
-            mask.Versioning = true;
-            mask.Flags = true;
-            mask.MembraneShaderSourceBlendMode = true;
-            mask.MembraneShaderBlendOperation = true;
-            mask.MembraneShaderZTestFunction = true;
-            mask.FillTextureEffectColor = true;
-            mask.FillTextureEffectAlphaFadeInTime = true;
-            mask.FillTextureEffectFullAlphaTime = true;
-            mask.FillTextureEffectAlphaFadeOutTime = true;
-            mask.FillTextureEffectPersistentAlphaRatio = true;
-            mask.FillTextureEffectAlphaPulseAmplitude = true;
-            mask.FillTextureEffectAlphaPulseFrequency = true;
-            mask.FillTextureEffectTextureAnimationSpeedU = true;
-            mask.FillTextureEffectTextureAnimationSpeedV = true;
-            mask.EdgeEffectFallOff = true;
-            mask.EdgeEffectColor = true;
-            mask.EdgeEffectAlphaFadeInTime = true;
-            mask.EdgeEffectFullAlphaTime = true;
-            mask.EdgeEffectAlphaFadeOutTime = true;
-            mask.EdgeEffectPersistentAlphaRatio = true;
-            mask.EdgeEffectAlphaPulseAmplitude = true;
-            mask.EdgeEffectAlphaPulseFrequency = true;
-            mask.FillTextureEffectFullAlphaRatio = true;
-            mask.EdgeEffectFullAlphaRatio = true;
-            mask.MembraneShaderDestBlendMode = true;
-            mask.ParticleShaderSourceBlendMode = true;
-            mask.ParticleShaderBlendOperation = true;
-            mask.ParticleShaderZTestFunction = true;
-            mask.ParticleShaderDestBlendMode = true;
-            mask.ParticleShaderParticleBirthRampUpTime = true;
-            mask.ParticleShaderFullParticleBirthTime = true;
-            mask.ParticleShaderParticleBirthRampDownTime = true;
-            mask.ParticleShaderFullParticleBirthRatio = true;
-            mask.ParticleShaderPersistentParticleBirthRatio = true;
-            mask.ParticleShaderParticleLifetime = true;
-            mask.ParticleShaderParticleLifetimePlusMinus = true;
-            mask.ParticleShaderInitialSpeedAlongNormal = true;
-            mask.ParticleShaderAccelerationAlongNormal = true;
-            mask.ParticleShaderInitialVelocity1 = true;
-            mask.ParticleShaderInitialVelocity2 = true;
-            mask.ParticleShaderInitialVelocity3 = true;
-            mask.ParticleShaderAcceleration1 = true;
-            mask.ParticleShaderAcceleration2 = true;
-            mask.ParticleShaderAcceleration3 = true;
-            mask.ParticleShaderScaleKey1 = true;
-            mask.ParticleShaderScaleKey2 = true;
-            mask.ParticleShaderScaleKey1Time = true;
-            mask.ParticleShaderScaleKey2Time = true;
-            mask.ColorKey1Color = true;
-            mask.ColorKey2Color = true;
-            mask.ColorKey3Color = true;
-            mask.ColorKey1ColorAlpha = true;
-            mask.ColorKey2ColorAlpha = true;
-            mask.ColorKey3ColorAlpha = true;
-            mask.ColorKey1ColorKeyTime = true;
-            mask.ColorKey2ColorKeyTime = true;
-            mask.ColorKey3ColorKeyTime = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IEffectShaderDataGetter? lhs,
@@ -4605,12 +4495,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this IEffectShaderDataGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((EffectShaderDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -4642,8 +4533,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEffectShaderDataGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => EffectShaderDataBinaryWriteTranslation.Instance;

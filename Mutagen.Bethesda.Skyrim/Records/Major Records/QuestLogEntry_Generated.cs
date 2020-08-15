@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class QuestLogEntry :
         IQuestLogEntry,
         ILoquiObjectSetter<QuestLogEntry>,
-        IEquatable<QuestLogEntry>,
-        IEqualsMask
+        IEquatable<QuestLogEntry>
     {
         #region Ctor
         public QuestLogEntry()
@@ -68,7 +67,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region NextQuest
         public FormLinkNullable<Quest> NextQuest { get; set; } = new FormLinkNullable<Quest>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IQuestGetter> IQuestLogEntryGetter.NextQuest => this.NextQuest;
+        FormLinkNullable<IQuestGetter> IQuestLogEntryGetter.NextQuest => this.NextQuest.ToGetter<Quest, IQuestGetter>();
         #endregion
         #region SCHR
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -648,7 +647,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => QuestLogEntryCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => QuestLogEntryCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => QuestLogEntryCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestLogEntryCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestLogEntryCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -668,14 +667,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static QuestLogEntry CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static QuestLogEntry CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -702,8 +693,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IQuestLogEntryGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -721,7 +710,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IQuestLogEntry :
         IQuestLogEntryGetter,
-        ILoquiObjectSetter<IQuestLogEntry>
+        ILoquiObjectSetter<IQuestLogEntry>,
+        ILinkedFormKeyContainer
     {
         new QuestLogEntry.Flag? Flags { get; set; }
         new IExtendedList<Condition> Conditions { get; }
@@ -735,7 +725,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IQuestLogEntryGetter :
         ILoquiObject,
         ILoquiObject<IQuestLogEntryGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -748,7 +738,7 @@ namespace Mutagen.Bethesda.Skyrim
         QuestLogEntry.Flag? Flags { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
         TranslatedString? Entry { get; }
-        IFormLinkNullable<IQuestGetter> NextQuest { get; }
+        FormLinkNullable<IQuestGetter> NextQuest { get; }
         ReadOnlyMemorySlice<Byte>? SCHR { get; }
         ReadOnlyMemorySlice<Byte>? SCTX { get; }
         ReadOnlyMemorySlice<Byte>? QNAM { get; }
@@ -798,24 +788,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IQuestLogEntryGetter item,
-            QuestLogEntry.Mask<bool?> checkMask)
-        {
-            return ((QuestLogEntryCommon)((IQuestLogEntryGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static QuestLogEntry.Mask<bool> GetHasBeenSetMask(this IQuestLogEntryGetter item)
-        {
-            var ret = new QuestLogEntry.Mask<bool>(false);
-            ((QuestLogEntryCommon)((IQuestLogEntryGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -910,17 +882,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IQuestLogEntry item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IQuestLogEntry item,
             MutagenFrame frame,
@@ -1353,10 +1314,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(EntryItem, "Entry");
             }
-            if ((printMask?.NextQuest ?? true)
-                && item.NextQuest.TryGet(out var NextQuestItem))
+            if (printMask?.NextQuest ?? true)
             {
-                fg.AppendItem(NextQuestItem, "NextQuest");
+                fg.AppendItem(item.NextQuest.FormKey, "NextQuest");
             }
             if ((printMask?.SCHR ?? true)
                 && item.SCHR.TryGet(out var SCHRItem))
@@ -1373,33 +1333,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendLine($"QNAM => {SpanExt.ToHexString(QNAMItem)}");
             }
-        }
-        
-        public bool HasBeenSet(
-            IQuestLogEntryGetter item,
-            QuestLogEntry.Mask<bool?> checkMask)
-        {
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
-            if (checkMask.Entry.HasValue && checkMask.Entry.Value != (item.Entry != null)) return false;
-            if (checkMask.NextQuest.HasValue && checkMask.NextQuest.Value != (item.NextQuest.FormKey != null)) return false;
-            if (checkMask.SCHR.HasValue && checkMask.SCHR.Value != (item.SCHR != null)) return false;
-            if (checkMask.SCTX.HasValue && checkMask.SCTX.Value != (item.SCTX != null)) return false;
-            if (checkMask.QNAM.HasValue && checkMask.QNAM.Value != (item.QNAM != null)) return false;
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IQuestLogEntryGetter item,
-            QuestLogEntry.Mask<bool> mask)
-        {
-            mask.Flags = (item.Flags != null);
-            var ConditionsItem = item.Conditions;
-            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.Entry = (item.Entry != null);
-            mask.NextQuest = (item.NextQuest.FormKey != null);
-            mask.SCHR = (item.SCHR != null);
-            mask.SCTX = (item.SCTX != null);
-            mask.QNAM = (item.QNAM != null);
         }
         
         #region Equals and Hash
@@ -1431,10 +1364,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Entryitem);
             }
-            if (item.NextQuest.TryGet(out var NextQuestitem))
-            {
-                hash.Add(NextQuestitem);
-            }
+            hash.Add(item.NextQuest);
             if (item.SCHR.TryGet(out var SCHRItem))
             {
                 hash.Add(SCHRItem);
@@ -1461,7 +1391,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<FormKey> GetLinkFormKeys(IQuestLogEntryGetter obj)
         {
-            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainer> ()
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter> ()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
@@ -1522,7 +1452,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.NextQuest) ?? true))
             {
-                item.NextQuest = rhs.NextQuest.FormKey;
+                item.NextQuest = new FormLinkNullable<Quest>(rhs.NextQuest.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.SCHR) ?? true))
             {
@@ -1810,12 +1740,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IQuestLogEntryGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((QuestLogEntryBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1847,15 +1778,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IQuestLogEntryGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => QuestLogEntryCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => QuestLogEntryCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestLogEntryCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestLogEntryCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => QuestLogEntryCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => QuestLogEntryBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1888,8 +1815,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region NextQuest
         private int? _NextQuestLocation;
-        public bool NextQuest_IsSet => _NextQuestLocation.HasValue;
-        public IFormLinkNullable<IQuestGetter> NextQuest => _NextQuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _NextQuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        public FormLinkNullable<IQuestGetter> NextQuest => _NextQuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _NextQuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
         #endregion
         #region SCHR
         private int? _SCHRLocation;

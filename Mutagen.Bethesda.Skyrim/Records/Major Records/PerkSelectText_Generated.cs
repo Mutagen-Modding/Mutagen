@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         APerkEntryPointEffect,
         IPerkSelectText,
         ILoquiObjectSetter<PerkSelectText>,
-        IEquatable<PerkSelectText>,
-        IEqualsMask
+        IEquatable<PerkSelectText>
     {
         #region Ctor
         public PerkSelectText()
@@ -363,14 +362,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new PerkSelectText CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static PerkSelectText CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -397,8 +388,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPerkSelectTextGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -477,24 +466,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IPerkSelectTextGetter item,
-            PerkSelectText.Mask<bool?> checkMask)
-        {
-            return ((PerkSelectTextCommon)((IPerkSelectTextGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static PerkSelectText.Mask<bool> GetHasBeenSetMask(this IPerkSelectTextGetter item)
-        {
-            var ret = new PerkSelectText.Mask<bool>(false);
-            ((PerkSelectTextCommon)((IPerkSelectTextGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IPerkSelectTextGetter item,
             IPerkSelectTextGetter rhs)
@@ -564,17 +535,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IPerkSelectText item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IPerkSelectText item,
             MutagenFrame frame,
@@ -924,25 +884,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IPerkSelectTextGetter item,
-            PerkSelectText.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IPerkSelectTextGetter item,
-            PerkSelectText.Mask<bool> mask)
-        {
-            mask.Text = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static PerkSelectText_FieldIndex ConvertFieldIndex(APerkEntryPointEffect_FieldIndex index)
         {
             switch (index)
@@ -1288,8 +1229,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPerkSelectTextGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PerkSelectTextBinaryWriteTranslation.Instance;

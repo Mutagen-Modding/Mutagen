@@ -6,7 +6,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class MagicEffectArchetype
     {
-        public readonly static ActorValueExtended _ActorValue_Default = ActorValueExtended.None;
+        public readonly static ActorValue _ActorValue_Default = ActorValue.None;
 
         public enum TypeEnum
         {
@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public virtual FormKey AssociationKey { get; set; } = FormKey.Null;
-        public virtual ActorValueExtended ActorValue { get; set; }
+        public virtual ActorValue ActorValue { get; set; }
 
         public MagicEffectArchetype(TypeEnum type = TypeEnum.ValueModifier)
         {
@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public FormKey AssociationKey => throw new NotImplementedException();
 
-            public ActorValueExtended ActorValue => throw new NotImplementedException();
+            public ActorValue ActorValue => throw new NotImplementedException();
         }
     }
 }

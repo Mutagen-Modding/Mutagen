@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         APerkEntryPointEffect,
         IPerkSelectSpell,
         ILoquiObjectSetter<PerkSelectSpell>,
-        IEquatable<PerkSelectSpell>,
-        IEqualsMask
+        IEquatable<PerkSelectSpell>
     {
         #region Ctor
         public PerkSelectSpell()
@@ -45,7 +44,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Spell
         public FormLink<Spell> Spell { get; set; } = new FormLink<Spell>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ISpellGetter> IPerkSelectSpellGetter.Spell => this.Spell;
+        FormLink<ISpellGetter> IPerkSelectSpellGetter.Spell => this.Spell.ToGetter<Spell, ISpellGetter>();
         #endregion
 
         #region To String
@@ -353,7 +352,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PerkSelectSpellCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PerkSelectSpellCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PerkSelectSpellCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkSelectSpellCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkSelectSpellCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -371,14 +370,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new PerkSelectSpell CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static PerkSelectSpell CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -405,8 +396,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPerkSelectSpellGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -425,7 +414,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPerkSelectSpell :
         IPerkSelectSpellGetter,
         IAPerkEntryPointEffect,
-        ILoquiObjectSetter<IPerkSelectSpell>
+        ILoquiObjectSetter<IPerkSelectSpell>,
+        ILinkedFormKeyContainer
     {
         new FormLink<Spell> Spell { get; set; }
     }
@@ -433,11 +423,11 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPerkSelectSpellGetter :
         IAPerkEntryPointEffectGetter,
         ILoquiObject<IPerkSelectSpellGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => PerkSelectSpell_Registration.Instance;
-        IFormLink<ISpellGetter> Spell { get; }
+        FormLink<ISpellGetter> Spell { get; }
 
     }
 
@@ -484,24 +474,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IPerkSelectSpellGetter item,
-            PerkSelectSpell.Mask<bool?> checkMask)
-        {
-            return ((PerkSelectSpellCommon)((IPerkSelectSpellGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static PerkSelectSpell.Mask<bool> GetHasBeenSetMask(this IPerkSelectSpellGetter item)
-        {
-            var ret = new PerkSelectSpell.Mask<bool>(false);
-            ((PerkSelectSpellCommon)((IPerkSelectSpellGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -573,17 +545,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IPerkSelectSpell item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IPerkSelectSpell item,
             MutagenFrame frame,
@@ -929,27 +890,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.Spell ?? true)
             {
-                fg.AppendItem(item.Spell, "Spell");
+                fg.AppendItem(item.Spell.FormKey, "Spell");
             }
-        }
-        
-        public bool HasBeenSet(
-            IPerkSelectSpellGetter item,
-            PerkSelectSpell.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IPerkSelectSpellGetter item,
-            PerkSelectSpell.Mask<bool> mask)
-        {
-            mask.Spell = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static PerkSelectSpell_FieldIndex ConvertFieldIndex(APerkEntryPointEffect_FieldIndex index)
@@ -1079,7 +1021,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)PerkSelectSpell_FieldIndex.Spell) ?? true))
             {
-                item.Spell = rhs.Spell.FormKey;
+                item.Spell = new FormLink<Spell>(rhs.Spell.FormKey);
             }
         }
         
@@ -1296,15 +1238,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPerkSelectSpellGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PerkSelectSpellCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PerkSelectSpellCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkSelectSpellCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkSelectSpellCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PerkSelectSpellCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PerkSelectSpellBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1317,7 +1255,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<ISpellGetter> Spell => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x2, 0x4))));
+        public FormLink<ISpellGetter> Spell => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x2, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

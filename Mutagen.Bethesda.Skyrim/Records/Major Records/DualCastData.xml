@@ -3,7 +3,7 @@
   <Object name="DualCastData" recordType="DUAL" objType="Record" baseClass="SkyrimMajorRecord" GUID="636155e6-228a-40cb-a05b-32afabd5966e" ID="112">
     <Interface>IObjectBounded</Interface>
     <Fields>
-      <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <Data>
         <Fields>
           <FormLink name="Projectile" refName="Projectile" />

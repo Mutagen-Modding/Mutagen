@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda.Generation
 
         protected virtual string GetWriteAccessor(Accessor itemAccessor)
         {
-            return itemAccessor.PropertyOrDirectAccess;
+            return itemAccessor.Access;
         }
 
         public override void GenerateWrite(
@@ -533,9 +533,9 @@ namespace Mutagen.Bethesda.Generation
 
         public void WrapSet(FileGeneration fg, Accessor accessor, ListType list, Action<FileGeneration> a)
         {
-            if (list.HasBeenSet)
+            if (list.Nullable)
             {
-                fg.AppendLine($"{accessor.PropertyOrDirectAccess} = ");
+                fg.AppendLine($"{accessor} = ");
                 using (new DepthWrapper(fg))
                 {
                     a(fg);
@@ -554,7 +554,7 @@ namespace Mutagen.Bethesda.Generation
             else
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"{accessor.PropertyOrDirectAccess}.SetTo"))
+                    $"{accessor}.SetTo"))
                 {
                     args.Add(subFg => a(subFg));
                 }
@@ -625,11 +625,11 @@ namespace Mutagen.Bethesda.Generation
                     when !data.HasTrigger:
                         if (expLen.HasValue)
                         {
-                            fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => BinaryOverlayList.FactoryByCountLength<{typeName}>({dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, _package, {expLen}, countLength: {(byte)list.CustomData[CounterByteLength]}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
+                            fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => BinaryOverlayList.FactoryByCountLength<{typeName}>({dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, _package, {expLen}, countLength: {(byte)list.CustomData[CounterByteLength]}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
                         }
                         else if (objGen.Fields.Last() == typeGen)
                         {
-                            fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => BinaryOverlayList.FactoryByLazyParse<{typeName}>({dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, _package, countLength: {(byte)list.CustomData[CounterByteLength]}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
+                            fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => BinaryOverlayList.FactoryByLazyParse<{typeName}>({dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, _package, countLength: {(byte)list.CustomData[CounterByteLength]}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
                         }
                         else
                         {
@@ -639,18 +639,18 @@ namespace Mutagen.Bethesda.Generation
                     default:
                         if (data.HasTrigger)
                         {
-                            fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} {{ get; private set; }}{(typeGen.HasBeenSet ? null : $" = ListExt.Empty<{typeName}>();")}");
+                            fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} {{ get; private set; }}{(typeGen.Nullable ? null : $" = ListExt.Empty<{typeName}>();")}");
                         }
                         else
                         {
-                            fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => BinaryOverlayList.FactoryByLazyParse<{typeName}>({dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, _package, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
+                            fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => BinaryOverlayList.FactoryByLazyParse<{typeName}>({dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, _package, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
                         }
                         break;
                 }
             }
             else if (data.HasTrigger)
             {
-                fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} {{ get; private set; }}{(typeGen.HasBeenSet ? null : $" = ListExt.Empty<{list.SubTypeGeneration.TypeName(getter: true)}>();")}");
+                fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} {{ get; private set; }}{(typeGen.Nullable ? null : $" = ListExt.Empty<{list.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>();")}");
             }
             else
             {
@@ -662,17 +662,17 @@ namespace Mutagen.Bethesda.Generation
                     case ListBinaryType.PrependCount:
                         if (expLen.HasValue)
                         {
-                            fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => BinaryOverlayList.FactoryByCountLength<{typeName}>({dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, _package, {expLen}, countLength: {(byte)list.CustomData[CounterByteLength]}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
+                            fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => BinaryOverlayList.FactoryByCountLength<{typeName}>({dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, _package, {expLen}, countLength: {(byte)list.CustomData[CounterByteLength]}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
                         }
                         else if (list.SubTypeGeneration is StringType str
                             && (str.BinaryType == StringBinaryType.PrependLength
                             || str.BinaryType == StringBinaryType.PrependLengthUShort))
                         {
-                            fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => BinaryOverlayList.FactoryByCountLength<{typeName}>({dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, _package, countLength: {(byte)list.CustomData[CounterByteLength]}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
+                            fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => BinaryOverlayList.FactoryByCountLength<{typeName}>({dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, _package, countLength: {(byte)list.CustomData[CounterByteLength]}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
                         }
                         break;
                     default:
-                        fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => BinaryOverlayList.FactoryByStartIndex<{list.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>({dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, _package, {expLen}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
+                        fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => BinaryOverlayList.FactoryByStartIndex<{list.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>({dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, _package, {expLen}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
                         break;
                 }
             }

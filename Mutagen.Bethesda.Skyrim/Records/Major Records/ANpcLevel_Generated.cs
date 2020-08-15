@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public abstract partial class ANpcLevel :
         IANpcLevel,
         ILoquiObjectSetter<ANpcLevel>,
-        IEquatable<ANpcLevel>,
-        IEqualsMask
+        IEquatable<ANpcLevel>
     {
         #region Ctor
         public ANpcLevel()
@@ -320,8 +319,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IANpcLevelGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -401,24 +398,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IANpcLevelGetter item,
-            ANpcLevel.Mask<bool?> checkMask)
-        {
-            return ((ANpcLevelCommon)((IANpcLevelGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static ANpcLevel.Mask<bool> GetHasBeenSetMask(this IANpcLevelGetter item)
-        {
-            var ret = new ANpcLevel.Mask<bool>(false);
-            ((ANpcLevelCommon)((IANpcLevelGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -513,17 +492,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IANpcLevel item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IANpcLevel item,
             MutagenFrame frame,
@@ -799,19 +767,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
         
-        public bool HasBeenSet(
-            IANpcLevelGetter item,
-            ANpcLevel.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IANpcLevelGetter item,
-            ANpcLevel.Mask<bool> mask)
-        {
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IANpcLevelGetter? lhs,
@@ -974,12 +929,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IANpcLevelGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((ANpcLevelBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1011,8 +967,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IANpcLevelGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => ANpcLevelBinaryWriteTranslation.Instance;

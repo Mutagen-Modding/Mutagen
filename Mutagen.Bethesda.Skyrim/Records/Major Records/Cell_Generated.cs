@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ICellInternal,
         ILoquiObjectSetter<Cell>,
-        IEquatable<Cell>,
-        IEqualsMask
+        IEquatable<Cell>
     {
         #region Ctor
         protected Cell()
@@ -98,7 +97,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region LightingTemplate
         public FormLink<LightingTemplate> LightingTemplate { get; set; } = new FormLink<LightingTemplate>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ILightingTemplateGetter> ICellGetter.LightingTemplate => this.LightingTemplate;
+        FormLink<ILightingTemplateGetter> ICellGetter.LightingTemplate => this.LightingTemplate.ToGetter<LightingTemplate, ILightingTemplateGetter>();
         #endregion
         #region LNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -138,7 +137,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Location
         public FormLinkNullable<Location> Location { get; set; } = new FormLinkNullable<Location>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ILocationGetter> ICellGetter.Location => this.Location;
+        FormLinkNullable<ILocationGetter> ICellGetter.Location => this.Location.ToGetter<Location, ILocationGetter>();
         #endregion
         #region XWCN
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -176,7 +175,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Water
         public FormLinkNullable<Water> Water { get; set; } = new FormLinkNullable<Water>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IWaterGetter> ICellGetter.Water => this.Water;
+        FormLinkNullable<IWaterGetter> ICellGetter.Water => this.Water.ToGetter<Water, IWaterGetter>();
         #endregion
         #region Ownership
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -192,7 +191,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region LockList
         public FormLinkNullable<ILockList> LockList { get; set; } = new FormLinkNullable<ILockList>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ILockListGetter> ICellGetter.LockList => this.LockList;
+        FormLinkNullable<ILockListGetter> ICellGetter.LockList => this.LockList.ToGetter<ILockList, ILockListGetter>();
         #endregion
         #region WaterEnvironmentMap
         public String? WaterEnvironmentMap { get; set; }
@@ -202,27 +201,27 @@ namespace Mutagen.Bethesda.Skyrim
         #region SkyAndWeatherFromRegion
         public FormLinkNullable<Region> SkyAndWeatherFromRegion { get; set; } = new FormLinkNullable<Region>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IRegionGetter> ICellGetter.SkyAndWeatherFromRegion => this.SkyAndWeatherFromRegion;
+        FormLinkNullable<IRegionGetter> ICellGetter.SkyAndWeatherFromRegion => this.SkyAndWeatherFromRegion.ToGetter<Region, IRegionGetter>();
         #endregion
         #region AcousticSpace
         public FormLinkNullable<AcousticSpace> AcousticSpace { get; set; } = new FormLinkNullable<AcousticSpace>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IAcousticSpaceGetter> ICellGetter.AcousticSpace => this.AcousticSpace;
+        FormLinkNullable<IAcousticSpaceGetter> ICellGetter.AcousticSpace => this.AcousticSpace.ToGetter<AcousticSpace, IAcousticSpaceGetter>();
         #endregion
         #region EncounterZone
         public FormLinkNullable<EncounterZone> EncounterZone { get; set; } = new FormLinkNullable<EncounterZone>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IEncounterZoneGetter> ICellGetter.EncounterZone => this.EncounterZone;
+        FormLinkNullable<IEncounterZoneGetter> ICellGetter.EncounterZone => this.EncounterZone.ToGetter<EncounterZone, IEncounterZoneGetter>();
         #endregion
         #region Music
         public FormLinkNullable<MusicType> Music { get; set; } = new FormLinkNullable<MusicType>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IMusicTypeGetter> ICellGetter.Music => this.Music;
+        FormLinkNullable<IMusicTypeGetter> ICellGetter.Music => this.Music.ToGetter<MusicType, IMusicTypeGetter>();
         #endregion
         #region ImageSpace
         public FormLinkNullable<ImageSpaceAdapter> ImageSpace { get; set; } = new FormLinkNullable<ImageSpaceAdapter>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IImageSpaceAdapterGetter> ICellGetter.ImageSpace => this.ImageSpace;
+        FormLinkNullable<IImageSpaceAdapterGetter> ICellGetter.ImageSpace => this.ImageSpace.ToGetter<ImageSpaceAdapter, IImageSpaceAdapterGetter>();
         #endregion
         #region Landscape
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1868,7 +1867,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => CellCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => CellCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => CellCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellCommon.Instance.RemapLinks(this, mapping);
         public Cell(FormKey formKey)
@@ -1920,14 +1919,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new Cell CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static Cell CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1954,8 +1945,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICellGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1977,7 +1966,8 @@ namespace Mutagen.Bethesda.Skyrim
         IComplexLocation,
         ITranslatedNamed,
         IMajorRecordEnumerable,
-        ILoquiObjectSetter<ICellInternal>
+        ILoquiObjectSetter<ICellInternal>,
+        ILinkedFormKeyContainer
     {
         new TranslatedString? Name { get; set; }
         new Cell.Flag Flags { get; set; }
@@ -2032,7 +2022,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         IMajorRecordGetterEnumerable,
         ILoquiObject<ICellGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Cell_Registration.Instance;
@@ -2042,24 +2032,24 @@ namespace Mutagen.Bethesda.Skyrim
         ICellLightingGetter? Lighting { get; }
         ReadOnlyMemorySlice<Byte>? OcclusionData { get; }
         ReadOnlyMemorySlice<Byte>? MaxHeightData { get; }
-        IFormLink<ILightingTemplateGetter> LightingTemplate { get; }
+        FormLink<ILightingTemplateGetter> LightingTemplate { get; }
         ReadOnlyMemorySlice<Byte>? LNAM { get; }
         Single? WaterHeight { get; }
         String? WaterNoiseTexture { get; }
         IReadOnlyList<IFormLink<IRegionGetter>>? Regions { get; }
-        IFormLinkNullable<ILocationGetter> Location { get; }
+        FormLinkNullable<ILocationGetter> Location { get; }
         ReadOnlyMemorySlice<Byte>? XWCN { get; }
         ReadOnlyMemorySlice<Byte>? XWCS { get; }
         ICellWaterVelocityGetter? WaterVelocity { get; }
-        IFormLinkNullable<IWaterGetter> Water { get; }
+        FormLinkNullable<IWaterGetter> Water { get; }
         IOwnershipGetter? Ownership { get; }
-        IFormLinkNullable<ILockListGetter> LockList { get; }
+        FormLinkNullable<ILockListGetter> LockList { get; }
         String? WaterEnvironmentMap { get; }
-        IFormLinkNullable<IRegionGetter> SkyAndWeatherFromRegion { get; }
-        IFormLinkNullable<IAcousticSpaceGetter> AcousticSpace { get; }
-        IFormLinkNullable<IEncounterZoneGetter> EncounterZone { get; }
-        IFormLinkNullable<IMusicTypeGetter> Music { get; }
-        IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace { get; }
+        FormLinkNullable<IRegionGetter> SkyAndWeatherFromRegion { get; }
+        FormLinkNullable<IAcousticSpaceGetter> AcousticSpace { get; }
+        FormLinkNullable<IEncounterZoneGetter> EncounterZone { get; }
+        FormLinkNullable<IMusicTypeGetter> Music { get; }
+        FormLinkNullable<IImageSpaceAdapterGetter> ImageSpace { get; }
         ILandscapeGetter? Landscape { get; }
         IReadOnlyList<IANavigationMeshGetter> NavigationMeshes { get; }
         Int32 Timestamp { get; }
@@ -2120,24 +2110,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ICellGetter item,
-            Cell.Mask<bool?> checkMask)
-        {
-            return ((CellCommon)((ICellGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Cell.Mask<bool> GetHasBeenSetMask(this ICellGetter item)
-        {
-            var ret = new Cell.Mask<bool>(false);
-            ((CellCommon)((ICellGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -2272,17 +2244,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ICellInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ICellInternal item,
             MutagenFrame frame,
@@ -3088,13 +3049,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.PersistentUnknownGroupData = item.PersistentUnknownGroupData == rhs.PersistentUnknownGroupData;
             ret.Persistent = item.Persistent.CollectionEqualsHelper(
                 rhs.Persistent,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsIMask(loqRhs, include),
+                (loqLhs, loqRhs) => (IMask<bool>)loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.TemporaryTimestamp = item.TemporaryTimestamp == rhs.TemporaryTimestamp;
             ret.TemporaryUnknownGroupData = item.TemporaryUnknownGroupData == rhs.TemporaryUnknownGroupData;
             ret.Temporary = item.Temporary.CollectionEqualsHelper(
                 rhs.Temporary,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsIMask(loqRhs, include),
+                (loqLhs, loqRhs) => (IMask<bool>)loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -3178,7 +3139,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.LightingTemplate ?? true)
             {
-                fg.AppendItem(item.LightingTemplate, "LightingTemplate");
+                fg.AppendItem(item.LightingTemplate.FormKey, "LightingTemplate");
             }
             if ((printMask?.LNAM ?? true)
                 && item.LNAM.TryGet(out var LNAMItem))
@@ -3207,17 +3168,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendItem(subItem);
+                            fg.AppendItem(subItem.FormKey);
                         }
                         fg.AppendLine("]");
                     }
                 }
                 fg.AppendLine("]");
             }
-            if ((printMask?.Location ?? true)
-                && item.Location.TryGet(out var LocationItem))
+            if (printMask?.Location ?? true)
             {
-                fg.AppendItem(LocationItem, "Location");
+                fg.AppendItem(item.Location.FormKey, "Location");
             }
             if ((printMask?.XWCN ?? true)
                 && item.XWCN.TryGet(out var XWCNItem))
@@ -3234,50 +3194,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 WaterVelocityItem?.ToString(fg, "WaterVelocity");
             }
-            if ((printMask?.Water ?? true)
-                && item.Water.TryGet(out var WaterItem))
+            if (printMask?.Water ?? true)
             {
-                fg.AppendItem(WaterItem, "Water");
+                fg.AppendItem(item.Water.FormKey, "Water");
             }
             if ((printMask?.Ownership?.Overall ?? true)
                 && item.Ownership.TryGet(out var OwnershipItem))
             {
                 OwnershipItem?.ToString(fg, "Ownership");
             }
-            if ((printMask?.LockList ?? true)
-                && item.LockList.TryGet(out var LockListItem))
+            if (printMask?.LockList ?? true)
             {
-                fg.AppendItem(LockListItem, "LockList");
+                fg.AppendItem(item.LockList.FormKey, "LockList");
             }
             if ((printMask?.WaterEnvironmentMap ?? true)
                 && item.WaterEnvironmentMap.TryGet(out var WaterEnvironmentMapItem))
             {
                 fg.AppendItem(WaterEnvironmentMapItem, "WaterEnvironmentMap");
             }
-            if ((printMask?.SkyAndWeatherFromRegion ?? true)
-                && item.SkyAndWeatherFromRegion.TryGet(out var SkyAndWeatherFromRegionItem))
+            if (printMask?.SkyAndWeatherFromRegion ?? true)
             {
-                fg.AppendItem(SkyAndWeatherFromRegionItem, "SkyAndWeatherFromRegion");
+                fg.AppendItem(item.SkyAndWeatherFromRegion.FormKey, "SkyAndWeatherFromRegion");
             }
-            if ((printMask?.AcousticSpace ?? true)
-                && item.AcousticSpace.TryGet(out var AcousticSpaceItem))
+            if (printMask?.AcousticSpace ?? true)
             {
-                fg.AppendItem(AcousticSpaceItem, "AcousticSpace");
+                fg.AppendItem(item.AcousticSpace.FormKey, "AcousticSpace");
             }
-            if ((printMask?.EncounterZone ?? true)
-                && item.EncounterZone.TryGet(out var EncounterZoneItem))
+            if (printMask?.EncounterZone ?? true)
             {
-                fg.AppendItem(EncounterZoneItem, "EncounterZone");
+                fg.AppendItem(item.EncounterZone.FormKey, "EncounterZone");
             }
-            if ((printMask?.Music ?? true)
-                && item.Music.TryGet(out var MusicItem))
+            if (printMask?.Music ?? true)
             {
-                fg.AppendItem(MusicItem, "Music");
+                fg.AppendItem(item.Music.FormKey, "Music");
             }
-            if ((printMask?.ImageSpace ?? true)
-                && item.ImageSpace.TryGet(out var ImageSpaceItem))
+            if (printMask?.ImageSpace ?? true)
             {
-                fg.AppendItem(ImageSpaceItem, "ImageSpace");
+                fg.AppendItem(item.ImageSpace.FormKey, "ImageSpace");
             }
             if ((printMask?.Landscape?.Overall ?? true)
                 && item.Landscape.TryGet(out var LandscapeItem))
@@ -3362,94 +3315,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-        }
-        
-        public bool HasBeenSet(
-            ICellGetter item,
-            Cell.Mask<bool?> checkMask)
-        {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            if (checkMask.Grid?.Overall.HasValue ?? false && checkMask.Grid.Overall.Value != (item.Grid != null)) return false;
-            if (checkMask.Grid?.Specific != null && (item.Grid == null || !item.Grid.HasBeenSet(checkMask.Grid.Specific))) return false;
-            if (checkMask.Lighting?.Overall.HasValue ?? false && checkMask.Lighting.Overall.Value != (item.Lighting != null)) return false;
-            if (checkMask.Lighting?.Specific != null && (item.Lighting == null || !item.Lighting.HasBeenSet(checkMask.Lighting.Specific))) return false;
-            if (checkMask.OcclusionData.HasValue && checkMask.OcclusionData.Value != (item.OcclusionData != null)) return false;
-            if (checkMask.MaxHeightData.HasValue && checkMask.MaxHeightData.Value != (item.MaxHeightData != null)) return false;
-            if (checkMask.LNAM.HasValue && checkMask.LNAM.Value != (item.LNAM != null)) return false;
-            if (checkMask.WaterHeight.HasValue && checkMask.WaterHeight.Value != (item.WaterHeight != null)) return false;
-            if (checkMask.WaterNoiseTexture.HasValue && checkMask.WaterNoiseTexture.Value != (item.WaterNoiseTexture != null)) return false;
-            if (checkMask.Regions?.Overall.HasValue ?? false && checkMask.Regions!.Overall.Value != (item.Regions != null)) return false;
-            if (checkMask.Location.HasValue && checkMask.Location.Value != (item.Location.FormKey != null)) return false;
-            if (checkMask.XWCN.HasValue && checkMask.XWCN.Value != (item.XWCN != null)) return false;
-            if (checkMask.XWCS.HasValue && checkMask.XWCS.Value != (item.XWCS != null)) return false;
-            if (checkMask.WaterVelocity?.Overall.HasValue ?? false && checkMask.WaterVelocity.Overall.Value != (item.WaterVelocity != null)) return false;
-            if (checkMask.WaterVelocity?.Specific != null && (item.WaterVelocity == null || !item.WaterVelocity.HasBeenSet(checkMask.WaterVelocity.Specific))) return false;
-            if (checkMask.Water.HasValue && checkMask.Water.Value != (item.Water.FormKey != null)) return false;
-            if (checkMask.Ownership?.Overall.HasValue ?? false && checkMask.Ownership.Overall.Value != (item.Ownership != null)) return false;
-            if (checkMask.Ownership?.Specific != null && (item.Ownership == null || !item.Ownership.HasBeenSet(checkMask.Ownership.Specific))) return false;
-            if (checkMask.LockList.HasValue && checkMask.LockList.Value != (item.LockList.FormKey != null)) return false;
-            if (checkMask.WaterEnvironmentMap.HasValue && checkMask.WaterEnvironmentMap.Value != (item.WaterEnvironmentMap != null)) return false;
-            if (checkMask.SkyAndWeatherFromRegion.HasValue && checkMask.SkyAndWeatherFromRegion.Value != (item.SkyAndWeatherFromRegion.FormKey != null)) return false;
-            if (checkMask.AcousticSpace.HasValue && checkMask.AcousticSpace.Value != (item.AcousticSpace.FormKey != null)) return false;
-            if (checkMask.EncounterZone.HasValue && checkMask.EncounterZone.Value != (item.EncounterZone.FormKey != null)) return false;
-            if (checkMask.Music.HasValue && checkMask.Music.Value != (item.Music.FormKey != null)) return false;
-            if (checkMask.ImageSpace.HasValue && checkMask.ImageSpace.Value != (item.ImageSpace.FormKey != null)) return false;
-            if (checkMask.Landscape?.Overall.HasValue ?? false && checkMask.Landscape.Overall.Value != (item.Landscape != null)) return false;
-            if (checkMask.Landscape?.Specific != null && (item.Landscape == null || !item.Landscape.HasBeenSet(checkMask.Landscape.Specific))) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            ICellGetter item,
-            Cell.Mask<bool> mask)
-        {
-            mask.Name = (item.Name != null);
-            mask.Flags = true;
-            var itemGrid = item.Grid;
-            mask.Grid = new MaskItem<bool, CellGrid.Mask<bool>?>(itemGrid != null, itemGrid?.GetHasBeenSetMask());
-            var itemLighting = item.Lighting;
-            mask.Lighting = new MaskItem<bool, CellLighting.Mask<bool>?>(itemLighting != null, itemLighting?.GetHasBeenSetMask());
-            mask.OcclusionData = (item.OcclusionData != null);
-            mask.MaxHeightData = (item.MaxHeightData != null);
-            mask.LightingTemplate = true;
-            mask.LNAM = (item.LNAM != null);
-            mask.WaterHeight = (item.WaterHeight != null);
-            mask.WaterNoiseTexture = (item.WaterNoiseTexture != null);
-            mask.Regions = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Regions != null), default);
-            mask.Location = (item.Location.FormKey != null);
-            mask.XWCN = (item.XWCN != null);
-            mask.XWCS = (item.XWCS != null);
-            var itemWaterVelocity = item.WaterVelocity;
-            mask.WaterVelocity = new MaskItem<bool, CellWaterVelocity.Mask<bool>?>(itemWaterVelocity != null, itemWaterVelocity?.GetHasBeenSetMask());
-            mask.Water = (item.Water.FormKey != null);
-            var itemOwnership = item.Ownership;
-            mask.Ownership = new MaskItem<bool, Ownership.Mask<bool>?>(itemOwnership != null, itemOwnership?.GetHasBeenSetMask());
-            mask.LockList = (item.LockList.FormKey != null);
-            mask.WaterEnvironmentMap = (item.WaterEnvironmentMap != null);
-            mask.SkyAndWeatherFromRegion = (item.SkyAndWeatherFromRegion.FormKey != null);
-            mask.AcousticSpace = (item.AcousticSpace.FormKey != null);
-            mask.EncounterZone = (item.EncounterZone.FormKey != null);
-            mask.Music = (item.Music.FormKey != null);
-            mask.ImageSpace = (item.ImageSpace.FormKey != null);
-            var itemLandscape = item.Landscape;
-            mask.Landscape = new MaskItem<bool, Landscape.Mask<bool>?>(itemLandscape != null, itemLandscape?.GetHasBeenSetMask());
-            var NavigationMeshesItem = item.NavigationMeshes;
-            mask.NavigationMeshes = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ANavigationMesh.Mask<bool>?>>?>(true, NavigationMeshesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, ANavigationMesh.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.Timestamp = true;
-            mask.UnknownGroupData = true;
-            mask.PersistentTimestamp = true;
-            mask.PersistentUnknownGroupData = true;
-            var PersistentItem = item.Persistent;
-            mask.Persistent = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, IMask<bool>?>>?>(true, PersistentItem.WithIndex().Select((i) => new MaskItemIndexed<bool, IMask<bool>?>(i.Index, true, i.Item.GetHasBeenSetIMask())));
-            mask.TemporaryTimestamp = true;
-            mask.TemporaryUnknownGroupData = true;
-            var TemporaryItem = item.Temporary;
-            mask.Temporary = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, IMask<bool>?>>?>(true, TemporaryItem.WithIndex().Select((i) => new MaskItemIndexed<bool, IMask<bool>?>(i.Index, true, i.Item.GetHasBeenSetIMask())));
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static Cell_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -3591,10 +3456,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 hash.Add(WaterNoiseTextureitem);
             }
             hash.Add(item.Regions);
-            if (item.Location.TryGet(out var Locationitem))
-            {
-                hash.Add(Locationitem);
-            }
+            hash.Add(item.Location);
             if (item.XWCN.TryGet(out var XWCNItem))
             {
                 hash.Add(XWCNItem);
@@ -3607,42 +3469,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(WaterVelocityitem);
             }
-            if (item.Water.TryGet(out var Wateritem))
-            {
-                hash.Add(Wateritem);
-            }
+            hash.Add(item.Water);
             if (item.Ownership.TryGet(out var Ownershipitem))
             {
                 hash.Add(Ownershipitem);
             }
-            if (item.LockList.TryGet(out var LockListitem))
-            {
-                hash.Add(LockListitem);
-            }
+            hash.Add(item.LockList);
             if (item.WaterEnvironmentMap.TryGet(out var WaterEnvironmentMapitem))
             {
                 hash.Add(WaterEnvironmentMapitem);
             }
-            if (item.SkyAndWeatherFromRegion.TryGet(out var SkyAndWeatherFromRegionitem))
-            {
-                hash.Add(SkyAndWeatherFromRegionitem);
-            }
-            if (item.AcousticSpace.TryGet(out var AcousticSpaceitem))
-            {
-                hash.Add(AcousticSpaceitem);
-            }
-            if (item.EncounterZone.TryGet(out var EncounterZoneitem))
-            {
-                hash.Add(EncounterZoneitem);
-            }
-            if (item.Music.TryGet(out var Musicitem))
-            {
-                hash.Add(Musicitem);
-            }
-            if (item.ImageSpace.TryGet(out var ImageSpaceitem))
-            {
-                hash.Add(ImageSpaceitem);
-            }
+            hash.Add(item.SkyAndWeatherFromRegion);
+            hash.Add(item.AcousticSpace);
+            hash.Add(item.EncounterZone);
+            hash.Add(item.Music);
+            hash.Add(item.ImageSpace);
             if (item.Landscape.TryGet(out var Landscapeitem))
             {
                 hash.Add(Landscapeitem);
@@ -3739,17 +3580,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            foreach (var item in obj.NavigationMeshes.WhereCastable<IANavigationMeshGetter, ILinkedFormKeyContainer> ()
+            foreach (var item in obj.NavigationMeshes.WhereCastable<IANavigationMeshGetter, ILinkedFormKeyContainerGetter> ()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
             }
-            foreach (var item in obj.Persistent.WhereCastable<IPlacedGetter, ILinkedFormKeyContainer> ()
+            foreach (var item in obj.Persistent.WhereCastable<IPlacedGetter, ILinkedFormKeyContainerGetter> ()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
             }
-            foreach (var item in obj.Temporary.WhereCastable<IPlacedGetter, ILinkedFormKeyContainer> ()
+            foreach (var item in obj.Temporary.WhereCastable<IPlacedGetter, ILinkedFormKeyContainerGetter> ()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
@@ -3808,11 +3649,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (type.Name)
             {
                 case "IMajorRecordCommon":
-                case "IMajorRecordCommonGetter":
+                case "IMajorRecord":
                 case "MajorRecord":
                 case "ISkyrimMajorRecord":
-                case "ISkyrimMajorRecordGetter":
                 case "SkyrimMajorRecord":
+                    if (!Cell_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IMajorRecordGetter":
+                case "IMajorRecordCommonGetter":
+                case "ISkyrimMajorRecordGetter":
                     foreach (var item in this.EnumerateMajorRecords(obj))
                     {
                         yield return item;
@@ -3822,12 +3671,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILandscapeGetter":
                 case "ILandscape":
                 case "ILandscapeInternal":
-                    if (obj.Landscape.TryGet(out var Landscapeitem))
                     {
-                        yield return Landscapeitem;
-                        foreach (var item in Landscapeitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        if (obj.Landscape.TryGet(out var Landscapeitem))
                         {
-                            yield return item;
+                            yield return Landscapeitem;
+                            foreach (var item in Landscapeitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
                         }
                     }
                     yield break;
@@ -3921,6 +3772,191 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         }
                     }
                     yield break;
+                case "ILocationTargetable":
+                {
+                    if (!Cell_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    yield break;
+                }
+                case "ILocationTargetableGetter":
+                {
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    yield break;
+                }
+                case "IOwner":
+                {
+                    if (!Cell_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    yield break;
+                }
+                case "IOwnerGetter":
+                {
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    yield break;
+                }
+                case "ILinkedReference":
+                {
+                    if (!Cell_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    yield break;
+                }
+                case "ILinkedReferenceGetter":
+                {
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    yield break;
+                }
+                case "IPlacedSimple":
+                {
+                    if (!Cell_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    yield break;
+                }
+                case "IPlacedSimpleGetter":
+                {
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    yield break;
+                }
+                case "IPlacedThing":
+                {
+                    if (!Cell_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    yield break;
+                }
+                case "IPlacedThingGetter":
+                {
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    yield break;
+                }
                 default:
                     if (throwIfUnknown)
                     {
@@ -4049,7 +4085,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.LightingTemplate) ?? true))
             {
-                item.LightingTemplate = rhs.LightingTemplate.FormKey;
+                item.LightingTemplate = new FormLink<LightingTemplate>(rhs.LightingTemplate.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.LNAM) ?? true))
             {
@@ -4099,7 +4135,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Location) ?? true))
             {
-                item.Location = rhs.Location.FormKey;
+                item.Location = new FormLinkNullable<Location>(rhs.Location.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.XWCN) ?? true))
             {
@@ -4151,7 +4187,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Water) ?? true))
             {
-                item.Water = rhs.Water.FormKey;
+                item.Water = new FormLinkNullable<Water>(rhs.Water.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Ownership) ?? true))
             {
@@ -4181,7 +4217,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.LockList) ?? true))
             {
-                item.LockList = rhs.LockList.FormKey;
+                item.LockList = new FormLinkNullable<ILockList>(rhs.LockList.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.WaterEnvironmentMap) ?? true))
             {
@@ -4189,23 +4225,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.SkyAndWeatherFromRegion) ?? true))
             {
-                item.SkyAndWeatherFromRegion = rhs.SkyAndWeatherFromRegion.FormKey;
+                item.SkyAndWeatherFromRegion = new FormLinkNullable<Region>(rhs.SkyAndWeatherFromRegion.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.AcousticSpace) ?? true))
             {
-                item.AcousticSpace = rhs.AcousticSpace.FormKey;
+                item.AcousticSpace = new FormLinkNullable<AcousticSpace>(rhs.AcousticSpace.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.EncounterZone) ?? true))
             {
-                item.EncounterZone = rhs.EncounterZone.FormKey;
+                item.EncounterZone = new FormLinkNullable<EncounterZone>(rhs.EncounterZone.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Music) ?? true))
             {
-                item.Music = rhs.Music.FormKey;
+                item.Music = new FormLinkNullable<MusicType>(rhs.Music.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.ImageSpace) ?? true))
             {
-                item.ImageSpace = rhs.ImageSpace.FormKey;
+                item.ImageSpace = new FormLinkNullable<ImageSpaceAdapter>(rhs.ImageSpace.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Landscape) ?? true))
             {
@@ -4915,15 +4951,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICellGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => CellCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => CellCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => CellCommon.Instance.GetLinkFormKeys(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -4957,12 +4989,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Grid
         private RangeInt32? _GridLocation;
         public ICellGridGetter? Grid => _GridLocation.HasValue ? CellGridBinaryOverlay.CellGridFactory(new OverlayStream(_data.Slice(_GridLocation!.Value.Min), _package), _package) : default;
-        public bool Grid_IsSet => _GridLocation.HasValue;
         #endregion
         #region Lighting
         private RangeInt32? _LightingLocation;
         public ICellLightingGetter? Lighting => _LightingLocation.HasValue ? CellLightingBinaryOverlay.CellLightingFactory(new OverlayStream(_data.Slice(_LightingLocation!.Value.Min), _package), _package) : default;
-        public bool Lighting_IsSet => _LightingLocation.HasValue;
         #endregion
         #region OcclusionData
         private int? _OcclusionDataLocation;
@@ -4974,8 +5004,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region LightingTemplate
         private int? _LightingTemplateLocation;
-        public bool LightingTemplate_IsSet => _LightingTemplateLocation.HasValue;
-        public IFormLink<ILightingTemplateGetter> LightingTemplate => _LightingTemplateLocation.HasValue ? new FormLink<ILightingTemplateGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LightingTemplateLocation.Value, _package.MetaData.Constants)))) : FormLink<ILightingTemplateGetter>.Null;
+        public FormLink<ILightingTemplateGetter> LightingTemplate => _LightingTemplateLocation.HasValue ? new FormLink<ILightingTemplateGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LightingTemplateLocation.Value, _package.MetaData.Constants)))) : FormLink<ILightingTemplateGetter>.Null;
         #endregion
         #region LNAM
         private int? _LNAMLocation;
@@ -4992,8 +5021,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IFormLink<IRegionGetter>>? Regions { get; private set; }
         #region Location
         private int? _LocationLocation;
-        public bool Location_IsSet => _LocationLocation.HasValue;
-        public IFormLinkNullable<ILocationGetter> Location => _LocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
+        public FormLinkNullable<ILocationGetter> Location => _LocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
         #endregion
         #region XWCN
         private int? _XWCNLocation;
@@ -5006,18 +5034,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region WaterVelocity
         private RangeInt32? _WaterVelocityLocation;
         public ICellWaterVelocityGetter? WaterVelocity => _WaterVelocityLocation.HasValue ? CellWaterVelocityBinaryOverlay.CellWaterVelocityFactory(new OverlayStream(_data.Slice(_WaterVelocityLocation!.Value.Min), _package), _package) : default;
-        public bool WaterVelocity_IsSet => _WaterVelocityLocation.HasValue;
         #endregion
         #region Water
         private int? _WaterLocation;
-        public bool Water_IsSet => _WaterLocation.HasValue;
-        public IFormLinkNullable<IWaterGetter> Water => _WaterLocation.HasValue ? new FormLinkNullable<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WaterLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWaterGetter>.Null;
+        public FormLinkNullable<IWaterGetter> Water => _WaterLocation.HasValue ? new FormLinkNullable<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WaterLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWaterGetter>.Null;
         #endregion
         public IOwnershipGetter? Ownership { get; private set; }
         #region LockList
         private int? _LockListLocation;
-        public bool LockList_IsSet => _LockListLocation.HasValue;
-        public IFormLinkNullable<ILockListGetter> LockList => _LockListLocation.HasValue ? new FormLinkNullable<ILockListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LockListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILockListGetter>.Null;
+        public FormLinkNullable<ILockListGetter> LockList => _LockListLocation.HasValue ? new FormLinkNullable<ILockListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LockListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILockListGetter>.Null;
         #endregion
         #region WaterEnvironmentMap
         private int? _WaterEnvironmentMapLocation;
@@ -5025,28 +5050,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region SkyAndWeatherFromRegion
         private int? _SkyAndWeatherFromRegionLocation;
-        public bool SkyAndWeatherFromRegion_IsSet => _SkyAndWeatherFromRegionLocation.HasValue;
-        public IFormLinkNullable<IRegionGetter> SkyAndWeatherFromRegion => _SkyAndWeatherFromRegionLocation.HasValue ? new FormLinkNullable<IRegionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SkyAndWeatherFromRegionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRegionGetter>.Null;
+        public FormLinkNullable<IRegionGetter> SkyAndWeatherFromRegion => _SkyAndWeatherFromRegionLocation.HasValue ? new FormLinkNullable<IRegionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SkyAndWeatherFromRegionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRegionGetter>.Null;
         #endregion
         #region AcousticSpace
         private int? _AcousticSpaceLocation;
-        public bool AcousticSpace_IsSet => _AcousticSpaceLocation.HasValue;
-        public IFormLinkNullable<IAcousticSpaceGetter> AcousticSpace => _AcousticSpaceLocation.HasValue ? new FormLinkNullable<IAcousticSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AcousticSpaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAcousticSpaceGetter>.Null;
+        public FormLinkNullable<IAcousticSpaceGetter> AcousticSpace => _AcousticSpaceLocation.HasValue ? new FormLinkNullable<IAcousticSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AcousticSpaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAcousticSpaceGetter>.Null;
         #endregion
         #region EncounterZone
         private int? _EncounterZoneLocation;
-        public bool EncounterZone_IsSet => _EncounterZoneLocation.HasValue;
-        public IFormLinkNullable<IEncounterZoneGetter> EncounterZone => _EncounterZoneLocation.HasValue ? new FormLinkNullable<IEncounterZoneGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EncounterZoneLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEncounterZoneGetter>.Null;
+        public FormLinkNullable<IEncounterZoneGetter> EncounterZone => _EncounterZoneLocation.HasValue ? new FormLinkNullable<IEncounterZoneGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EncounterZoneLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEncounterZoneGetter>.Null;
         #endregion
         #region Music
         private int? _MusicLocation;
-        public bool Music_IsSet => _MusicLocation.HasValue;
-        public IFormLinkNullable<IMusicTypeGetter> Music => _MusicLocation.HasValue ? new FormLinkNullable<IMusicTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MusicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMusicTypeGetter>.Null;
+        public FormLinkNullable<IMusicTypeGetter> Music => _MusicLocation.HasValue ? new FormLinkNullable<IMusicTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MusicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMusicTypeGetter>.Null;
         #endregion
         #region ImageSpace
         private int? _ImageSpaceLocation;
-        public bool ImageSpace_IsSet => _ImageSpaceLocation.HasValue;
-        public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace => _ImageSpaceLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImageSpaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
+        public FormLinkNullable<IImageSpaceAdapterGetter> ImageSpace => _ImageSpaceLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImageSpaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

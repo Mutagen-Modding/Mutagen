@@ -347,10 +347,10 @@ namespace Mutagen.Bethesda.Generation
         }
 
         private async Task LoquiTypeHandler(
-            FileGeneration fg, 
-            Accessor loquiAccessor, 
+            FileGeneration fg,
+            Accessor loquiAccessor,
             LoquiType loquiType,
-            string generic, 
+            string generic,
             bool checkType)
         {
             // ToDo  
@@ -451,11 +451,11 @@ namespace Mutagen.Bethesda.Generation
                                 || await HasMajorRecords(loqui, includeBaseClass: true) != Case.No)
                             {
                                 var subFg = new FileGeneration();
-                                var fieldAccessor = loqui.HasBeenSet ? $"{loqui.Name}item" : $"{accessor}.{loqui.Name}";
+                                var fieldAccessor = loqui.Nullable ? $"{loqui.Name}item" : $"{accessor}.{loqui.Name}";
                                 await LoquiTypeHandler(subFg, fieldAccessor, loqui, generic: null, checkType: false);
                                 if (subFg.Count == 0) continue;
                                 if (loqui.Singleton
-                                    || !loqui.HasBeenSet)
+                                    || !loqui.Nullable)
                                 {
                                     fieldFg.AppendLines(subFg);
                                 }
@@ -479,14 +479,14 @@ namespace Mutagen.Bethesda.Generation
                                 switch (await HasMajorRecords(contLoqui, includeBaseClass: true))
                                 {
                                     case Case.Yes:
-                                        fieldFg.AppendLine($"foreach (var subItem in {accessor}.{field.Name}{(field.HasBeenSet ? ".TryIterate()" : null)})");
+                                        fieldFg.AppendLine($"foreach (var subItem in {accessor}.{field.Name}{(field.Nullable ? ".TryIterate()" : null)})");
                                         using (new BraceWrapper(fieldFg))
                                         {
                                             await LoquiTypeHandler(fieldFg, $"subItem", contLoqui, generic: null, checkType: false);
                                         }
                                         break;
                                     case Case.Maybe:
-                                        fieldFg.AppendLine($"foreach (var subItem in {accessor}.{field.Name}{(field.HasBeenSet ? ".TryIterate()" : null)}.WhereCastable<{contLoqui.TypeName(getter: false)}, {(getter ? nameof(IMajorRecordGetterEnumerable) : nameof(IMajorRecordEnumerable))}>())");
+                                        fieldFg.AppendLine($"foreach (var subItem in {accessor}.{field.Name}{(field.Nullable ? ".TryIterate()" : null)}.WhereCastable<{contLoqui.TypeName(getter: false)}, {(getter ? nameof(IMajorRecordGetterEnumerable) : nameof(IMajorRecordEnumerable))}>())");
                                         using (new BraceWrapper(fieldFg))
                                         {
                                             await LoquiTypeHandler(fieldFg, $"subItem", contLoqui, generic: null, checkType: false);
@@ -531,11 +531,11 @@ namespace Mutagen.Bethesda.Generation
 
                         if (fieldFg.Count > 0)
                         {
-                            if (field.HasBeenSet)
+                            if (field.Nullable)
                             {
-                                fg.AppendLine($"if ({field.HasBeenSetAccessor(getter: true, Accessor.FromType(field, accessor.ToString()))})");
+                                fg.AppendLine($"if ({field.NullableAccessor(getter: true, Accessor.FromType(field, accessor.ToString()))})");
                             }
-                            using (new BraceWrapper(fg, doIt: field.HasBeenSet))
+                            using (new BraceWrapper(fg, doIt: field.Nullable))
                             {
                                 fg.AppendLines(fieldFg);
                             }
@@ -608,15 +608,30 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine("switch (type.Name)");
                     using (new BraceWrapper(fg))
                     {
-                        fg.AppendLine($"case \"{nameof(IMajorRecordCommon)}\":");
-                        fg.AppendLine($"case \"{nameof(IMajorRecordCommonGetter)}\":");
-                        fg.AppendLine($"case \"{nameof(MajorRecord)}\":");
                         var gameCategory = obj.GetObjectData().GameCategory;
+                        fg.AppendLine($"case \"{nameof(IMajorRecordCommon)}\":");
+                        fg.AppendLine($"case \"{nameof(IMajorRecord)}\":");
+                        fg.AppendLine($"case \"{nameof(MajorRecord)}\":");
                         if (gameCategory != null)
                         {
                             fg.AppendLine($"case \"I{gameCategory}MajorRecord\":");
-                            fg.AppendLine($"case \"I{gameCategory}MajorRecordGetter\":");
                             fg.AppendLine($"case \"{gameCategory}MajorRecord\":");
+                        }
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"if (!{obj.RegistrationName}.SetterType.IsAssignableFrom(obj.GetType())) yield break;");
+                            fg.AppendLine("foreach (var item in this.EnumerateMajorRecords(obj))");
+                            using (new BraceWrapper(fg))
+                            {
+                                fg.AppendLine("yield return item;");
+                            }
+                            fg.AppendLine("yield break;");
+                        }
+                        fg.AppendLine($"case \"{nameof(IMajorRecordGetter)}\":");
+                        fg.AppendLine($"case \"{nameof(IMajorRecordCommonGetter)}\":");
+                        if (gameCategory != null)
+                        {
+                            fg.AppendLine($"case \"I{gameCategory}MajorRecordGetter\":");
                         }
                         using (new DepthWrapper(fg))
                         {
@@ -643,11 +658,11 @@ namespace Mutagen.Bethesda.Generation
 
                                 if (loqui.TargetObjectGeneration.GetObjectType() == ObjectType.Group)
                                 {
-                                    fieldGen = generationDict.TryCreateValue(loqui.GetGroupTarget());
+                                    fieldGen = generationDict.GetOrAdd(loqui.GetGroupTarget());
                                 }
                                 else
                                 {
-                                    fieldGen = generationDict.TryCreateValue(((object)loqui?.TargetObjectGeneration) ?? loqui);
+                                    fieldGen = generationDict.GetOrAdd(((object)loqui?.TargetObjectGeneration) ?? loqui);
                                 }
                             }
                             else if (field is ContainerType cont)
@@ -655,11 +670,11 @@ namespace Mutagen.Bethesda.Generation
                                 if (!(cont.SubTypeGeneration is LoquiType contLoqui)) continue;
                                 if (contLoqui.RefType == LoquiType.LoquiRefType.Generic)
                                 {
-                                    fieldGen = generationDict.TryCreateValue("default:");
+                                    fieldGen = generationDict.GetOrAdd("default:");
                                 }
                                 else
                                 {
-                                    fieldGen = generationDict.TryCreateValue(((object)contLoqui?.TargetObjectGeneration) ?? contLoqui);
+                                    fieldGen = generationDict.GetOrAdd(((object)contLoqui?.TargetObjectGeneration) ?? contLoqui);
                                 }
                             }
                             else if (field is DictType dict)
@@ -668,11 +683,11 @@ namespace Mutagen.Bethesda.Generation
                                 if (!(dict.ValueTypeGen is LoquiType dictLoqui)) continue;
                                 if (dictLoqui.RefType == LoquiType.LoquiRefType.Generic)
                                 {
-                                    fieldGen = generationDict.TryCreateValue("default:");
+                                    fieldGen = generationDict.GetOrAdd("default:");
                                 }
                                 else
                                 {
-                                    fieldGen = generationDict.TryCreateValue(((object)dictLoqui?.TargetObjectGeneration) ?? dictLoqui);
+                                    fieldGen = generationDict.GetOrAdd(((object)dictLoqui?.TargetObjectGeneration) ?? dictLoqui);
                                 }
                             }
                             else
@@ -682,124 +697,157 @@ namespace Mutagen.Bethesda.Generation
                             await ApplyIterationLines(field, fieldGen, accessor, getter);
                         }
 
-                        // Find and add "Deep" records 
-                        var deepRecordMapping = new Dictionary<ObjectGeneration, HashSet<TypeGeneration>>();
-                        foreach (var field in obj.IterateFields())
-                        {
-                            if (field is LoquiType loqui)
-                            {
-                                var groupType = field as GroupType;
-                                await foreach (var deepObj in IterateMajorRecords(loqui, includeBaseClass: true))
-                                {
-                                    if (groupType != null
-                                        && groupType.GetGroupTarget() == deepObj)
-                                    {
-                                        continue;
-                                    }
-                                    if (loqui.TargetObjectGeneration == deepObj) continue;
-                                    deepRecordMapping.TryCreateValue(deepObj).Add(field);
-                                }
-                            }
-                            else if (field is ContainerType cont)
-                            {
-                                if (!(cont.SubTypeGeneration is LoquiType subLoqui)) continue;
-                                await foreach (var deepObj in IterateMajorRecords(subLoqui, includeBaseClass: true))
-                                {
-                                    if (subLoqui.TargetObjectGeneration == deepObj) continue;
-                                    deepRecordMapping.TryCreateValue(deepObj).Add(field);
-                                }
-                            }
-                        }
-                        foreach (var deepRec in deepRecordMapping)
-                        {
-                            FileGeneration deepFg = generationDict.TryCreateValue(deepRec.Key);
-                            foreach (var field in deepRec.Value)
-                            {
-                                await ApplyIterationLines(field, deepFg, accessor, getter, nickname: deepRec.Key.ObjectName);
-                            }
-                        }
+                        bool doAdditionlDeepLogic = obj.Name != "ListGroup";
 
-                        foreach (var kv in generationDict)
+                        if (doAdditionlDeepLogic)
                         {
-                            switch (kv.Key)
+                            // Find and add "Deep" records 
+                            var deepRecordMapping = new Dictionary<ObjectGeneration, HashSet<TypeGeneration>>();
+                            foreach (var field in obj.IterateFields())
                             {
-                                case LoquiType loqui:
-                                    if (loqui.RefType == LoquiType.LoquiRefType.Generic)
+                                if (field is LoquiType loqui)
+                                {
+                                    var groupType = field as GroupType;
+                                    await foreach (var deepObj in IterateMajorRecords(loqui, includeBaseClass: true))
                                     {
-                                        // Handled in default case  
+                                        if (groupType != null
+                                            && groupType.GetGroupTarget() == deepObj)
+                                        {
+                                            continue;
+                                        }
+                                        if (loqui.TargetObjectGeneration == deepObj) continue;
+                                        deepRecordMapping.GetOrAdd(deepObj).Add(field);
+                                    }
+                                }
+                                else if (field is ContainerType cont)
+                                {
+                                    if (!(cont.SubTypeGeneration is LoquiType subLoqui)) continue;
+                                    await foreach (var deepObj in IterateMajorRecords(subLoqui, includeBaseClass: true))
+                                    {
+                                        if (subLoqui.TargetObjectGeneration == deepObj) continue;
+                                        deepRecordMapping.GetOrAdd(deepObj).Add(field);
+                                    }
+                                }
+                            }
+                            foreach (var deepRec in deepRecordMapping)
+                            {
+                                FileGeneration deepFg = generationDict.GetOrAdd(deepRec.Key);
+                                foreach (var field in deepRec.Value)
+                                {
+                                    await ApplyIterationLines(field, deepFg, accessor, getter, nickname: deepRec.Key.ObjectName);
+                                }
+                            }
+
+                            HashSet<string> blackList = new HashSet<string>();
+                            foreach (var kv in generationDict)
+                            {
+                                switch (kv.Key)
+                                {
+                                    case LoquiType loqui:
+                                        if (loqui.RefType == LoquiType.LoquiRefType.Generic)
+                                        {
+                                            // Handled in default case  
+                                            continue;
+                                        }
+                                        else
+                                        {
+                                            fg.AppendLine($"case \"{loqui.Interface(getter: true)}\":");
+                                            fg.AppendLine($"case \"{loqui.Interface(getter: false)}\":");
+                                            if (loqui.HasInternalGetInterface)
+                                            {
+                                                fg.AppendLine($"case \"{loqui.Interface(getter: true, internalInterface: true)}\":");
+                                            }
+                                            if (loqui.HasInternalSetInterface)
+                                            {
+                                                fg.AppendLine($"case \"{loqui.Interface(getter: false, internalInterface: true)}\":");
+                                            }
+                                            if (loqui.RefType == LoquiType.LoquiRefType.Interface)
+                                            {
+                                                blackList.Add(loqui.SetterInterface);
+                                            }
+                                        }
+                                        break;
+                                    case ObjectGeneration targetObj:
+                                        fg.AppendLine($"case \"{targetObj.ObjectName}\":");
+                                        fg.AppendLine($"case \"{targetObj.Interface(getter: true)}\":");
+                                        fg.AppendLine($"case \"{targetObj.Interface(getter: false)}\":");
+                                        if (targetObj.HasInternalGetInterface)
+                                        {
+                                            fg.AppendLine($"case \"{targetObj.Interface(getter: true, internalInterface: true)}\":");
+                                        }
+                                        if (targetObj.HasInternalSetInterface)
+                                        {
+                                            fg.AppendLine($"case \"{targetObj.Interface(getter: false, internalInterface: true)}\":");
+                                        }
+                                        break;
+                                    case string str:
+                                        if (str != "default:")
+                                        {
+                                            throw new NotImplementedException();
+                                        }
                                         continue;
-                                    }
-                                    else
-                                    {
-                                        fg.AppendLine($"case \"{loqui.Interface(getter: true)}\":");
-                                        fg.AppendLine($"case \"{loqui.Interface(getter: false)}\":");
-                                        if (loqui.HasInternalGetInterface)
-                                        {
-                                            fg.AppendLine($"case \"{loqui.Interface(getter: true, internalInterface: true)}\":");
-                                        }
-                                        if (loqui.HasInternalSetInterface)
-                                        {
-                                            fg.AppendLine($"case \"{loqui.Interface(getter: false, internalInterface: true)}\":");
-                                        }
-                                    }
-                                    break;
-                                case ObjectGeneration targetObj:
-                                    fg.AppendLine($"case \"{targetObj.ObjectName}\":");
-                                    fg.AppendLine($"case \"{targetObj.Interface(getter: true)}\":");
-                                    fg.AppendLine($"case \"{targetObj.Interface(getter: false)}\":");
-                                    if (targetObj.HasInternalGetInterface)
-                                    {
-                                        fg.AppendLine($"case \"{targetObj.Interface(getter: true, internalInterface: true)}\":");
-                                    }
-                                    if (targetObj.HasInternalSetInterface)
-                                    {
-                                        fg.AppendLine($"case \"{targetObj.Interface(getter: false, internalInterface: true)}\":");
-                                    }
-                                    break;
-                                case string str:
-                                    if (str != "default:")
-                                    {
+                                    default:
                                         throw new NotImplementedException();
-                                    }
-                                    continue;
-                                default:
-                                    throw new NotImplementedException();
+                                }
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLines(kv.Value);
+                                    fg.AppendLine("yield break;");
+                                }
                             }
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLines(kv.Value);
-                                fg.AppendLine("yield break;");
-                            }
-                        }
 
-                        if (obj.GetObjectType() == ObjectType.Mod)
-                        {
                             // Generate for major record marker interfaces 
                             if (LinkInterfaceModule.ObjectMappings.TryGetValue(obj.ProtoGen.Protocol, out var interfs))
                             {
                                 foreach (var interf in interfs)
                                 {
-                                    fg.AppendLine($"case \"{interf.Key}\":");
-                                    fg.AppendLine($"case \"{interf.Key}Getter\":");
-                                    using (new DepthWrapper(fg))
+                                    if (blackList.Contains(interf.Key)) continue;
+                                    FileGeneration subFg = new FileGeneration();
+                                    HashSet<ObjectGeneration> passedObjects = new HashSet<ObjectGeneration>();
+                                    HashSet<TypeGeneration> deepObjects = new HashSet<TypeGeneration>();
+                                    foreach (var subObj in interf.Value)
                                     {
-                                        foreach (var subObj in interf.Value)
+                                        var grup = obj.Fields
+                                            .WhereCastable<TypeGeneration, GroupType>()
+                                            .Where(g => g.GetGroupTarget() == subObj)
+                                            .FirstOrDefault();
+
+                                        if (grup != null)
                                         {
-                                            var grup = obj.Fields
-                                                .WhereCastable<TypeGeneration, GroupType>()
-                                                .Where(g => g.GetGroupTarget() == subObj)
-                                                .FirstOrDefault();
-
-                                            // Should only happen in unparsed records not listed on the mod yet 
-                                            if (grup == null) continue;
-
-                                            fg.AppendLine($"foreach (var item in EnumerateMajorRecords({accessor}, typeof({grup.GetGroupTarget().ObjectName}), throwIfUnknown))");
-                                            using (new BraceWrapper(fg))
+                                            subFg.AppendLine($"foreach (var item in EnumerateMajorRecords({accessor}, typeof({grup.GetGroupTarget().Interface(getter: true)}), throwIfUnknown: throwIfUnknown))");
+                                            using (new BraceWrapper(subFg))
                                             {
-                                                fg.AppendLine("yield return item;");
+                                                subFg.AppendLine("yield return item;");
+                                            }
+                                            passedObjects.Add(grup.GetGroupTarget());
+                                        }
+                                        else if (deepRecordMapping.TryGetValue(subObj, out var deepRec))
+                                        {
+                                            foreach (var field in deepRec)
+                                            {
+                                                deepObjects.Add(field);
                                             }
                                         }
-                                        fg.AppendLine("yield break;");
+                                    }
+                                    foreach (var deepObj in deepObjects)
+                                    {
+                                        await ApplyIterationLines(deepObj, subFg, accessor, getter, blackList: passedObjects);
+                                    }
+                                    if (!subFg.Empty)
+                                    {
+                                        fg.AppendLine($"case \"{interf.Key}\":");
+                                        using (new BraceWrapper(fg))
+                                        {
+                                            fg.AppendLine($"if (!{obj.RegistrationName}.SetterType.IsAssignableFrom(obj.GetType())) yield break;");
+                                            fg.AppendLines(subFg);
+                                            fg.AppendLine("yield break;");
+                                        }
+                                        fg.AppendLine($"case \"{interf.Key}Getter\":");
+                                        using (new BraceWrapper(fg))
+                                        {
+                                            fg.AppendLines(subFg);
+                                            fg.AppendLine("yield break;");
+                                        }
                                     }
                                 }
                             }
@@ -856,14 +904,30 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        async Task ApplyIterationLines(TypeGeneration field, FileGeneration fieldGen, Accessor accessor, bool getter, string nickname = null)
+        async Task ApplyIterationLines(
+            TypeGeneration field,
+            FileGeneration fieldGen,
+            Accessor accessor,
+            bool getter,
+            string nickname = null,
+            HashSet<ObjectGeneration> blackList = null)
         {
-            if (field is LoquiType loqui)
+            if (field is GroupType group)
             {
-                var fieldAccessor = loqui.HasBeenSet ? $"{nickname}{loqui.Name}item" : $"{accessor}.{loqui.Name}";
-                if (loqui.TargetObjectGeneration.GetObjectType() == ObjectType.Group)
+                if (blackList?.Contains(group.GetGroupTarget()) ?? false) return;
+                fieldGen.AppendLine($"foreach (var item in obj.{field.Name}.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))");
+                using (new BraceWrapper(fieldGen))
                 {
-                    fieldGen.AppendLine($"foreach (var item in obj.{field.Name}.EnumerateMajorRecords(type))");
+                    fieldGen.AppendLine("yield return item;");
+                }
+            }
+            else if (field is LoquiType loqui)
+            {
+                if (blackList?.Contains(loqui.TargetObjectGeneration) ?? false) return;
+                var fieldAccessor = loqui.Nullable ? $"{nickname}{loqui.Name}item" : $"{accessor}.{loqui.Name}";
+                if (loqui.TargetObjectGeneration.GetObjectType() == ObjectType.Group)
+                { // List groups 
+                    fieldGen.AppendLine($"foreach (var item in obj.{field.Name}.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))");
                     using (new BraceWrapper(fieldGen))
                     {
                         fieldGen.AppendLine("yield return item;");
@@ -874,16 +938,19 @@ namespace Mutagen.Bethesda.Generation
                 await LoquiTypeHandler(subFg, fieldAccessor, loqui, generic: "TMajor", checkType: false);
                 if (subFg.Count == 0) return;
                 if (loqui.Singleton
-                    || !loqui.HasBeenSet)
+                    || !loqui.Nullable)
                 {
                     fieldGen.AppendLines(subFg);
                 }
                 else
                 {
-                    fieldGen.AppendLine($"if ({accessor}.{loqui.Name}.TryGet(out var {fieldAccessor}))");
                     using (new BraceWrapper(fieldGen))
                     {
-                        fieldGen.AppendLines(subFg);
+                        fieldGen.AppendLine($"if ({accessor}.{loqui.Name}.TryGet(out var {fieldAccessor}))");
+                        using (new BraceWrapper(fieldGen))
+                        {
+                            fieldGen.AppendLines(subFg);
+                        }
                     }
                 }
             }
@@ -903,7 +970,7 @@ namespace Mutagen.Bethesda.Generation
                                 fieldGen.AppendLine($"yield return ({nameof(IMajorRecordCommonGetter)})item;");
                             }
                         }
-                        fieldGen.AppendLine($"foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: false))");
+                        fieldGen.AppendLine($"foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))");
                         using (new BraceWrapper(fieldGen))
                         {
                             fieldGen.AppendLine($"yield return subItem;");
@@ -919,14 +986,14 @@ namespace Mutagen.Bethesda.Generation
                         switch (await HasMajorRecords(contLoqui, includeBaseClass: true))
                         {
                             case Case.Yes:
-                                fieldGen.AppendLine($"foreach (var subItem in {accessor}.{field.Name}{(field.HasBeenSet ? ".TryIterate()" : null)})");
+                                fieldGen.AppendLine($"foreach (var subItem in {accessor}.{field.Name}{(field.Nullable ? ".TryIterate()" : null)})");
                                 using (new BraceWrapper(fieldGen))
                                 {
                                     await LoquiTypeHandler(fieldGen, $"subItem", contLoqui, generic: "TMajor", checkType: true);
                                 }
                                 break;
                             case Case.Maybe:
-                                fieldGen.AppendLine($"foreach (var subItem in {accessor}.{field.Name}{(field.HasBeenSet ? ".TryIterate()" : null)}.Where(i => i.GetType() == type))");
+                                fieldGen.AppendLine($"foreach (var subItem in {accessor}.{field.Name}{(field.Nullable ? ".TryIterate()" : null)}.Where(i => i.GetType() == type))");
                                 using (new BraceWrapper(fieldGen))
                                 {
                                     await LoquiTypeHandler(fieldGen, $"subItem", contLoqui, generic: "TMajor", checkType: true);

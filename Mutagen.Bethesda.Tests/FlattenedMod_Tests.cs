@@ -14,22 +14,17 @@ namespace Mutagen.Bethesda.Tests
         {
             List<ModKey> loadOrderListing = new List<ModKey>()
             {
-                new ModKey("Oblivion", master: true),
-                new ModKey("Knights", master: false)
+                new ModKey("Oblivion", ModType.Master),
+                new ModKey("Knights", ModType.Plugin)
             };
-            LoadOrder<OblivionMod> loadOrder = new LoadOrder<OblivionMod>();
-            loadOrder.Import(
+            var loadOrder = LoadOrder.Import<OblivionMod>(
                 dataFolder: testingSettings.DataFolderLocations.Oblivion,
                 loadOrder: loadOrderListing,
-                importer: (FilePath filePath, ModKey modKey, out OblivionMod mod) =>
-                {
-                    mod = OblivionMod.CreateFromBinary(filePath.Path, modKey);
-                    return true;
-                });
-            OblivionMod ret = new OblivionMod(new ModKey("Test", master: false));
-            foreach (var mod in loadOrder)
+                gameRelease: GameRelease.Oblivion);
+            OblivionMod ret = new OblivionMod(new ModKey("Test", ModType.Plugin));
+            foreach (var listing in loadOrder.ListedOrder)
             {
-                ret.Npcs.RecordCache.Set(mod.Mod.Npcs.Records);
+                ret.Npcs.RecordCache.Set(listing.Mod.Npcs.Records);
             }
         }
     }

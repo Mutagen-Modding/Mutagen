@@ -1,9 +1,9 @@
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
-using Wabbajack;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests
@@ -254,7 +254,7 @@ namespace Mutagen.Bethesda.UnitTests
                 _source = source;
                 foreach (var kv in strs)
                 {
-                    _dict.TryCreate(kv.Language, () => new Dictionary<uint, string>())[kv.Key] = kv.Str;
+                    _dict.GetOrAdd(kv.Language, () => new Dictionary<uint, string>())[kv.Key] = kv.Str;
                 }
                 _dict.Add(UnusedLanguage, new Dictionary<uint, string>());
             }

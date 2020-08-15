@@ -7,6 +7,8 @@ using Loqui;
 using Mutagen.Bethesda.Binary;
 using Noggog;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Core;
+using System.IO;
 
 namespace Mutagen.Bethesda.Generation
 {
@@ -125,14 +127,6 @@ namespace Mutagen.Bethesda.Generation
                     if (dir == TranslationDirection.Reader) return false;
                     return obj.GetObjectType() == ObjectType.Mod;
                 });
-            var modKeyOptional = new APILine(
-                nicknameKey: "ModKeyOptional",
-                resolutionString: "ModKey? modKeyOverride = null",
-                when: (obj, dir) =>
-                {
-                    if (dir == TranslationDirection.Writer) return false;
-                    return obj.GetObjectType() == ObjectType.Mod;
-                });
             var writeParamOptional = new APILine(
                 nicknameKey: "WriteParamOptional",
                 resolutionString: $"{nameof(BinaryWriteParameters)}? param = null",
@@ -177,7 +171,11 @@ namespace Mutagen.Bethesda.Generation
                 });
             var recTypeConverter = new APILine(
                 "RecordTypeConverter",
-                $"{nameof(RecordTypeConverter)}? recordTypeConverter = null");
+                $"{nameof(RecordTypeConverter)}? recordTypeConverter = null",
+                when: (obj, dir) =>
+                {
+                    return obj.GetObjectType() != ObjectType.Mod;
+                });
             this.MainAPI = new TranslationModuleAPI(
                 writerAPI: new MethodAPI(
                     majorAPI: new APILine[] { new APILine("MutagenWriter", "MutagenWriter writer") },
@@ -186,7 +184,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         CustomMethodAPI.FactoryPublic(modKey),
                         CustomMethodAPI.FactoryPrivate(modKeyWriter, "modKey"),
-                        CustomMethodAPI.FactoryPrivate(recTypeConverter, "null"),
+                        CustomMethodAPI.FactoryPublic(recTypeConverter),
                         CustomMethodAPI.FactoryPublic(writeParamOptional),
                     }),
                 readerAPI: new MethodAPI(
@@ -197,19 +195,19 @@ namespace Mutagen.Bethesda.Generation
                         CustomMethodAPI.FactoryPublic(gameRelease),
                         CustomMethodAPI.FactoryPublic(modKey),
                         CustomMethodAPI.FactoryPrivate(modKeyWriter, "modKey"),
-                        CustomMethodAPI.FactoryPrivate(recTypeConverter, "null"),
+                        CustomMethodAPI.FactoryPublic(recTypeConverter),
                         CustomMethodAPI.FactoryPublic(writeParamOptional),
                     }));
             this.MinorAPIs.Add(
                 new TranslationModuleAPI(
                     new MethodAPI(
-                        majorAPI: new APILine[] { new APILine("Path", "string path") },
+                        majorAPI: new APILine[] { new APILine("Path", $"{nameof(ModPath)} path") },
                         customAPI: new CustomMethodAPI[]
                         {
                             CustomMethodAPI.FactoryPublic(gameRelease)
                         },
-                        optionalAPI: modKeyOptional
-                            .AndSingle(writeParamOptional)
+                        optionalAPI: writeParamOptional
+                            .AsEnumerable()
                             .And(modAPILines)
                             .And(stringsReadParamOptional)
                             .And(parallel)
@@ -219,7 +217,28 @@ namespace Mutagen.Bethesda.Generation
                         this.MainAPI,
                         ConvertFromPathOut,
                         ConvertFromPathIn),
-                    When = (o) => o.GetObjectType() == ObjectType.Mod
+                    When = (o, d) => d == TranslationDirection.Reader && o.GetObjectType() == ObjectType.Mod
+                });
+            this.MinorAPIs.Add(
+                new TranslationModuleAPI(
+                    new MethodAPI(
+                        majorAPI: new APILine[] { new APILine("Path", $"string path") },
+                        customAPI: new CustomMethodAPI[]
+                        {
+                            CustomMethodAPI.FactoryPublic(gameRelease)
+                        },
+                        optionalAPI: writeParamOptional
+                            .AsEnumerable()
+                            .And(modAPILines)
+                            .And(stringsReadParamOptional)
+                            .And(parallel)
+                            .ToArray()))
+                {
+                    Funnel = new TranslationFunnel(
+                        this.MainAPI,
+                        ConvertFromPathOut,
+                        ConvertFromPathIn),
+                    When = (o, d) => d == TranslationDirection.Writer && o.GetObjectType() == ObjectType.Mod
                 });
             this.MinorAPIs.Add(
                 new TranslationModuleAPI(
@@ -240,7 +259,7 @@ namespace Mutagen.Bethesda.Generation
                         this.MainAPI,
                         ConvertFromStreamOut,
                         ConvertFromStreamIn),
-                    When = (o) => o.GetObjectType() == ObjectType.Mod
+                    When = (o, _) => o.GetObjectType() == ObjectType.Mod
                 });
             this.CustomLogic = new CustomLogicTranslationGeneration() { Module = this };
         }
@@ -523,7 +542,7 @@ namespace Mutagen.Bethesda.Generation
                             if (!field.IntegrateField) continue;
                             throw new ArgumentException("Unsupported type generator: " + field);
                         }
-                        if (field.HasBeenSet)
+                        if (field.Nullable)
                         {
                             fg.AppendLine($"if (frame.Complete) return;");
                         }
@@ -602,7 +621,7 @@ namespace Mutagen.Bethesda.Generation
                                 if (gen.Key.Count() > 1) continue;
                                 LoquiType loqui = gen.Value as LoquiType;
                                 if (loqui?.TargetObjectGeneration?.Abstract ?? false) continue;
-                                doubleUsages.TryCreateValue(gen.Key.First()).Add(field);
+                                doubleUsages.GetOrAdd(gen.Key.First()).Add(field);
                             }
                         }
                         foreach (var item in doubleUsages.ToList())
@@ -672,7 +691,7 @@ namespace Mutagen.Bethesda.Generation
                                     }
                                     else
                                     {
-                                        fg.AppendLine($"switch (recordParseCount?.TryCreateValue(nextRecordType) ?? 0)");
+                                        fg.AppendLine($"switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)");
                                         using (new BraceWrapper(fg))
                                         {
                                             int count = 0;
@@ -927,12 +946,11 @@ namespace Mutagen.Bethesda.Generation
             using (var args = new FunctionWrapper(fg,
                 $"public{obj.NewOverride()}static I{obj.Name}DisposableGetter {CreateFromPrefix}{ModuleNickname}Overlay"))
             {
-                args.Add($"string path");
+                args.Add($"{nameof(ModPath)} path");
                 if (objData.GameReleaseOptions != null)
                 {
                     args.Add($"{ModModule.ReleaseEnumName(obj)} release");
                 }
-                args.Add($"ModKey? modKeyOverride = null");
                 if (objData.UsesStringFiles)
                 {
                     args.Add($"{nameof(StringsReadParameters)}? stringsParam = null");
@@ -944,7 +962,6 @@ namespace Mutagen.Bethesda.Generation
                     $"return {BinaryOverlayClass(obj)}.{obj.Name}Factory"))
                 {
                     args.AddPassArg("path");
-                    args.Add("modKeyOverride ?? ModKey.Factory(Path.GetFileName(path))");
                     if (objData.UsesStringFiles)
                     {
                         args.AddPassArg("stringsParam");
@@ -960,7 +977,7 @@ namespace Mutagen.Bethesda.Generation
             using (var args = new FunctionWrapper(fg,
                 $"public{obj.NewOverride()}static I{obj.Name}DisposableGetter {CreateFromPrefix}{ModuleNickname}Overlay"))
             {
-                args.Add($"{nameof(IMutagenReadStream)} stream");
+                args.Add($"{nameof(Stream)} stream");
                 if (objData.GameReleaseOptions != null)
                 {
                     args.Add($"{ModModule.ReleaseEnumName(obj)} release");
@@ -972,7 +989,16 @@ namespace Mutagen.Bethesda.Generation
                 using (var args = new ArgsWrapper(fg,
                     $"return {BinaryOverlayClass(obj)}.{obj.Name}Factory"))
                 {
-                    args.AddPassArg($"stream");
+                    string gameReleaseStr;
+                    if (obj.GetObjectData().GameReleaseOptions == null)
+                    {
+                        gameReleaseStr = $"{nameof(GameRelease)}.{obj.GetObjectData().GameCategory}";
+                    }
+                    else
+                    {
+                        gameReleaseStr = $"release.ToGameRelease()";
+                    }
+                    args.Add($"stream: new {nameof(MutagenBinaryReadStream)}(stream, {gameReleaseStr})");
                     args.AddPassArg("modKey");
                     if (objData.GameReleaseOptions != null)
                     {
@@ -1118,13 +1144,13 @@ namespace Mutagen.Bethesda.Generation
 
         private void GenerateStructStateSubscriptions(ObjectGeneration obj, FileGeneration fg)
         {
-            if (!obj.StructHasBeenSet()) return;
+            if (!obj.StructNullable()) return;
             List<TypeGeneration> affectedFields = new List<TypeGeneration>();
             foreach (var field in obj.IterateFields())
             {
                 var data = field.GetFieldData();
                 if (data.HasTrigger) break;
-                if (field.HasBeenSet)
+                if (field.Nullable)
                 {
                     affectedFields.Add(field);
                     continue;
@@ -1138,7 +1164,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 fg.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
                 fg.AppendLine($"var dataFrame = {frameAccessor}.SpawnWithLength(contentLength);");
-                if (set.HasBeenSet)
+                if (set.Nullable)
                 {
                     fg.AppendLine($"if (!dataFrame.Complete)");
                     using (new BraceWrapper(fg))
@@ -1296,7 +1322,7 @@ namespace Mutagen.Bethesda.Generation
             if (objData.UsesStringFiles)
             {
                 fg.AppendLine("bool disposeStrings = param.StringsWriter == null;");
-                fg.AppendLine("var stringsWriter = param.StringsWriter ?? (EnumExt.HasFlag((int)item.ModHeader.Flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag) ? new StringsWriter(modKey, Path.Combine(Path.GetDirectoryName(path), \"Strings\")) : null);");
+                fg.AppendLine($"var stringsWriter = param.StringsWriter ?? (EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(modKey, Path.Combine(Path.GetDirectoryName(path), \"Strings\")) : null);");
             }
             string gameReleaseStr;
             if (objData.GameReleaseOptions == null)
@@ -1331,7 +1357,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 internalToDo(this.MainAPI.PublicMembers(obj, TranslationDirection.Writer).ToArray());
             }
-            fg.AppendLine("using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))");
+            fg.AppendLine($"using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))");
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine($"memStream.Position = 0;");
@@ -1359,10 +1385,10 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine($"var gameRelease = release.ToGameRelease();");
                 gameReleaseStr = $"gameRelease";
             }
-            fg.AppendLine($"using (var reader = new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}))");
+            fg.AppendLine($"using (var reader = new {nameof(MutagenBinaryReadStream)}(path.Path, {gameReleaseStr}))");
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine("var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));");
+                fg.AppendLine("var modKey = path.ModKey;");
                 fg.AppendLine("var frame = new MutagenFrame(reader);");
                 fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordInfoCache)}(() => new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}));");
                 fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Parallel)} = parallel;");
@@ -1374,10 +1400,10 @@ namespace Mutagen.Bethesda.Generation
                         fg.AppendLine($"throw new ArgumentException(\"File stream was too short to parse flags\");");
                     }
                     fg.AppendLine($"var flags = reader.GetInt32(offset: 8);");
-                    fg.AppendLine($"if (EnumExt.HasFlag(flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag))");
+                    fg.AppendLine($"if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))");
                     using (new BraceWrapper(fg))
                     {
-                        fg.AppendLine($"frame.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.StringsLookup)} = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path), stringsParam, modKey);");
+                        fg.AppendLine($"frame.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.StringsLookup)} = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path.{nameof(ModPath.Path)}), stringsParam, path.{nameof(ModPath.ModKey)});");
                     }
                 }
                 internalToDo(this.MainAPI.PublicMembers(obj, TranslationDirection.Reader).ToArray());
@@ -1597,7 +1623,6 @@ namespace Mutagen.Bethesda.Generation
                             args.Add($"record: {accessor}");
                             args.Add("frame: frame");
                             args.Add("importMask: importMask");
-                            args.Add("recordTypeConverter: recordTypeConverter");
                             args.Add($"fillStructs: {TranslationCreateClass(obj)}.Fill{ModuleNickname}Structs");
                             if (HasRecordTypeFields(obj))
                             {
@@ -1641,8 +1666,15 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (obj.GetObjectType() == ObjectType.Mod)
                 {
-                    fg.AppendLine("param ??= BinaryWriteParameters.Default;");
-                    fg.AppendLine($"writer.{nameof(MutagenWriter.MetaData)}.{nameof(WritingBundle.MasterReferences)} = {nameof(UtilityTranslation)}.{nameof(UtilityTranslation.ConstructWriteMasters)}(item, param);");
+                    using (var args = new ArgsWrapper(fg,
+                        $"{nameof(ModHeaderWriteLogic)}.{nameof(ModHeaderWriteLogic.WriteHeader)}"))
+                    {
+                        args.AddPassArg("param");
+                        args.AddPassArg("writer");
+                        args.Add("mod: item");
+                        args.Add("modHeader: item.ModHeader.DeepCopy()");
+                        args.AddPassArg("modKey");
+                    }
                 }
                 if (HasEmbeddedFields(obj))
                 {
@@ -1680,10 +1712,11 @@ namespace Mutagen.Bethesda.Generation
                         if (obj.GetObjectType() == ObjectType.Mod)
                         {
                             args.AddPassArg($"importMask");
-                            args.AddPassArg($"modKey");
-                            args.AddPassArg($"param");
                         }
-                        args.AddPassArg($"recordTypeConverter");
+                        else
+                        {
+                            args.AddPassArg($"recordTypeConverter");
+                        }
                     }
                     if (await obj.IsMajorRecord())
                     {
@@ -1823,10 +1856,8 @@ namespace Mutagen.Bethesda.Generation
                     if (obj.GetObjectType() == ObjectType.Mod)
                     {
                         args.Add($"GroupMask? importMask");
-                        args.Add($"ModKey modKey");
-                        args.Add($"{nameof(BinaryWriteParameters)} param");
                     }
-                    args.Add("RecordTypeConverter? recordTypeConverter");
+                    args.Add($"RecordTypeConverter? recordTypeConverter{(obj.GetObjectType() == ObjectType.Mod ? " = null" : null)}");
                 }
                 using (new BraceWrapper(fg))
                 {
@@ -1892,11 +1923,11 @@ namespace Mutagen.Bethesda.Generation
                             var accessor = Accessor.FromType(field, "item");
                             if (field is DataType dataType)
                             {
-                                if (dataType.HasBeenSet)
+                                if (dataType.Nullable)
                                 {
                                     fg.AppendLine($"if (item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Has))");
                                 }
-                                using (new BraceWrapper(fg, doIt: dataType.HasBeenSet))
+                                using (new BraceWrapper(fg, doIt: dataType.Nullable))
                                 {
                                     fg.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Subrecord)}(writer, recordTypeConverter.ConvertToCustom({obj.RecordTypeHeaderName(fieldData.RecordType.Value)})))");
                                     using (new BraceWrapper(fg))
@@ -1979,17 +2010,10 @@ namespace Mutagen.Bethesda.Generation
 
                                 var loqui = field as LoquiType;
 
-                                // Custom Modheader insert 
+                                // Skip modheader
                                 if (loqui != null
                                     && loqui.Name == "ModHeader")
                                 {
-                                    using (var args = new ArgsWrapper(fg,
-                                        $"WriteModHeader"))
-                                    {
-                                        args.Add("mod: item");
-                                        args.AddPassArg("writer");
-                                        args.AddPassArg("modKey");
-                                    }
                                     return;
                                 }
 
@@ -2087,10 +2111,16 @@ namespace Mutagen.Bethesda.Generation
             var needsMasters = await obj.GetNeedsMasters();
             var anyHasRecordTypes = (await obj.EntireClassTree()).Any(c => HasRecordTypeFields(c));
 
+            if (obj.GetObjectType() == ObjectType.Mod)
+            {
+                fg.AppendLine("[DebuggerDisplay(\"{GameRelease} {ModKey.ToString()}\")]");
+            }
             using (var args = new ClassWrapper(fg, $"{BinaryOverlayClass(obj)}"))
             {
                 args.Partial = true;
-                args.BaseClass = obj.HasLoquiBaseObject ? BinaryOverlayClass(obj.BaseClass) : (obj.GetObjectType() == ObjectType.Mod ? null : nameof(BinaryOverlay));
+                var block = obj.GetObjectType() == ObjectType.Mod 
+                    || (obj.GetObjectType() == ObjectType.Group && obj.Generics.Count > 0);
+                args.BaseClass = obj.HasLoquiBaseObject ? BinaryOverlayClass(obj.BaseClass) : (block ? null : nameof(BinaryOverlay));
                 if (obj.GetObjectType() == ObjectType.Mod)
                 {
                     args.Interfaces.Add($"I{obj.Name}DisposableGetter");
@@ -2116,7 +2146,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         fg.AppendLine($"public {nameof(GameRelease)} GameRelease => {nameof(GameRelease)}.{obj.GetObjectData().GameCategory};");
                     }
-                    fg.AppendLine($"IReadOnlyCache<T, FormKey> {nameof(IModGetter)}.GetGroupGetter<T>() => this.GetGroupGetter<T>();");
+                    fg.AppendLine($"IReadOnlyCache<T, FormKey> {nameof(IModGetter)}.{nameof(IModGetter.GetTopLevelGroupGetter)}<T>() => this.{nameof(IModGetter.GetTopLevelGroupGetter)}<T>();");
                     fg.AppendLine($"void IModGetter.WriteToBinary(string path, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinary(path, importMask: null, param: param);");
                     fg.AppendLine($"void IModGetter.WriteToBinaryParallel(string path, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinaryParallel(path, param: param);");
                     fg.AppendLine($"IReadOnlyList<{nameof(IMasterReferenceGetter)}> {nameof(IModGetter)}.MasterReferences => this.ModHeader.MasterReferences;");
@@ -2126,7 +2156,7 @@ namespace Mutagen.Bethesda.Generation
                 if (obj.GetObjectType() == ObjectType.Mod
                     || (await LinkModule.HasLinks(obj, includeBaseClass: false) != LinkModule.LinkCase.No))
                 {
-                    await LinkModule.GenerateInterfaceImplementation(obj, fg);
+                    await LinkModule.GenerateInterfaceImplementation(obj, fg, getter: true);
                 }
 
                 if (await MajorRecordEnumerationModule.HasMajorRecordsInTree(obj, includeBaseClass: false) != MajorRecordEnumerationModule.Case.No)
@@ -2211,7 +2241,7 @@ namespace Mutagen.Bethesda.Generation
                             lengths.PassedLength,
                             lengths.PassedAccessor);
                         if (data.HasVersioning
-                            && !lengths.Field.HasBeenSet)
+                            && !lengths.Field.Nullable)
                         {
                             VersioningModule.AddVersionOffset(fg, lengths.Field, lengths.FieldLength.Value, lastVersionedField, $"_package.FormVersion!.FormVersion!.Value");
                             lastVersionedField = lengths.Field;
@@ -2385,8 +2415,7 @@ namespace Mutagen.Bethesda.Generation
                         using (var args = new FunctionWrapper(fg,
                             $"public static {this.BinaryOverlayClass(obj)} {obj.Name}Factory"))
                         {
-                            args.Add($"string path");
-                            args.Add("ModKey modKey");
+                            args.Add($"{nameof(ModPath)} path");
                             if (objData.GameReleaseOptions != null)
                             {
                                 args.Add($"{ModModule.ReleaseEnumName(obj)} release");
@@ -2401,12 +2430,12 @@ namespace Mutagen.Bethesda.Generation
                             fg.AppendLine($"var meta = new {nameof(ParsingBundle)}({gameReleaseStr})");
                             using (new BraceWrapper(fg) { AppendSemicolon = true })
                             {
-                                fg.AppendLine($"{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordInfoCache)}(() => new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}))");
+                                fg.AppendLine($"{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordInfoCache)}(() => new {nameof(MutagenBinaryReadStream)}(path.{nameof(ModPath.Path)}, {gameReleaseStr}))");
                             }
                             using (var args = new ArgsWrapper(fg,
                                 $"var stream = new {nameof(MutagenBinaryReadStream)}"))
                             {
-                                args.AddPassArg("path");
+                                args.Add($"path: path.{nameof(ModPath.Path)}");
                                 args.Add($"metaData: meta");
                             }
                             if (objData.UsesStringFiles)
@@ -2417,10 +2446,10 @@ namespace Mutagen.Bethesda.Generation
                                     fg.AppendLine($"throw new ArgumentException(\"File stream was too short to parse flags\");");
                                 }
                                 fg.AppendLine($"var flags = stream.GetInt32(offset: 8);");
-                                fg.AppendLine($"if (EnumExt.HasFlag(flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag))");
+                                fg.AppendLine($"if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))");
                                 using (new BraceWrapper(fg))
                                 {
-                                    fg.AppendLine($"meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path), stringsParam, modKey);");
+                                    fg.AppendLine($"meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path.{nameof(ModPath.Path)}), stringsParam, path.{nameof(ModPath.ModKey)});");
                                 }
                             }
 
@@ -2428,7 +2457,7 @@ namespace Mutagen.Bethesda.Generation
                                 $"return {obj.Name}Factory"))
                             {
                                 args.AddPassArg("stream");
-                                args.AddPassArg("modKey");
+                                args.Add($"path.{nameof(ModPath.ModKey)}");
                                 if (objData.GameReleaseOptions != null)
                                 {
                                     args.AddPassArg("release");
@@ -2945,7 +2974,7 @@ namespace Mutagen.Bethesda.Generation
                                     if (gen.Key.Count() > 1) continue;
                                     LoquiType loqui = gen.Value as LoquiType;
                                     if (loqui?.TargetObjectGeneration?.Abstract ?? false) continue;
-                                    doubleUsages.TryCreateValue(gen.Key.First()).Add(field);
+                                    doubleUsages.GetOrAdd(gen.Key.First()).Add(field);
                                 }
                             }
                             foreach (var item in doubleUsages.ToList())
@@ -3032,7 +3061,7 @@ namespace Mutagen.Bethesda.Generation
                                         }
                                         else
                                         {
-                                            fg.AppendLine($"switch (recordParseCount?.TryCreateValue(type) ?? 0)");
+                                            fg.AppendLine($"switch (recordParseCount?.GetOrAdd(type) ?? 0)");
                                             using (new BraceWrapper(fg))
                                             {
                                                 int count = 0;

@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IHeadPartInternal,
         ILoquiObjectSetter<HeadPart>,
-        IEquatable<HeadPart>,
-        IEqualsMask
+        IEquatable<HeadPart>
     {
         #region Ctor
         protected HeadPart()
@@ -98,17 +97,17 @@ namespace Mutagen.Bethesda.Skyrim
         #region TextureSet
         public FormLinkNullable<TextureSet> TextureSet { get; set; } = new FormLinkNullable<TextureSet>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ITextureSetGetter> IHeadPartGetter.TextureSet => this.TextureSet;
+        FormLinkNullable<ITextureSetGetter> IHeadPartGetter.TextureSet => this.TextureSet.ToGetter<TextureSet, ITextureSetGetter>();
         #endregion
         #region Color
         public FormLinkNullable<ColorRecord> Color { get; set; } = new FormLinkNullable<ColorRecord>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IColorRecordGetter> IHeadPartGetter.Color => this.Color;
+        FormLinkNullable<IColorRecordGetter> IHeadPartGetter.Color => this.Color.ToGetter<ColorRecord, IColorRecordGetter>();
         #endregion
         #region ValidRaces
         public FormLinkNullable<FormList> ValidRaces { get; set; } = new FormLinkNullable<FormList>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IFormListGetter> IHeadPartGetter.ValidRaces => this.ValidRaces;
+        FormLinkNullable<IFormListGetter> IHeadPartGetter.ValidRaces => this.ValidRaces.ToGetter<FormList, IFormListGetter>();
         #endregion
 
         #region To String
@@ -797,7 +796,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => HeadPartCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => HeadPartCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => HeadPartCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadPartCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadPartCommon.Instance.RemapLinks(this, mapping);
         public HeadPart(FormKey formKey)
@@ -837,14 +836,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new HeadPart CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static HeadPart CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -871,8 +862,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IHeadPartGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -893,7 +882,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ITranslatedNamed,
         IModeled,
-        ILoquiObjectSetter<IHeadPartInternal>
+        ILoquiObjectSetter<IHeadPartInternal>,
+        ILinkedFormKeyContainer
     {
         new TranslatedString? Name { get; set; }
         new Model? Model { get; set; }
@@ -922,7 +912,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         IModeledGetter,
         ILoquiObject<IHeadPartGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => HeadPart_Registration.Instance;
@@ -932,9 +922,9 @@ namespace Mutagen.Bethesda.Skyrim
         HeadPart.TypeEnum? Type { get; }
         IReadOnlyList<IFormLink<IHeadPartGetter>> ExtraParts { get; }
         IReadOnlyList<IPartGetter> Parts { get; }
-        IFormLinkNullable<ITextureSetGetter> TextureSet { get; }
-        IFormLinkNullable<IColorRecordGetter> Color { get; }
-        IFormLinkNullable<IFormListGetter> ValidRaces { get; }
+        FormLinkNullable<ITextureSetGetter> TextureSet { get; }
+        FormLinkNullable<IColorRecordGetter> Color { get; }
+        FormLinkNullable<IFormListGetter> ValidRaces { get; }
 
         #region Mutagen
         HeadPart.MajorFlag MajorFlags { get; }
@@ -985,24 +975,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IHeadPartGetter item,
-            HeadPart.Mask<bool?> checkMask)
-        {
-            return ((HeadPartCommon)((IHeadPartGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static HeadPart.Mask<bool> GetHasBeenSetMask(this IHeadPartGetter item)
-        {
-            var ret = new HeadPart.Mask<bool>(false);
-            ((HeadPartCommon)((IHeadPartGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -1074,17 +1046,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IHeadPartInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IHeadPartInternal item,
             MutagenFrame frame,
@@ -1582,7 +1543,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendItem(subItem);
+                            fg.AppendItem(subItem.FormKey);
                         }
                         fg.AppendLine("]");
                     }
@@ -1607,57 +1568,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-            if ((printMask?.TextureSet ?? true)
-                && item.TextureSet.TryGet(out var TextureSetItem))
+            if (printMask?.TextureSet ?? true)
             {
-                fg.AppendItem(TextureSetItem, "TextureSet");
+                fg.AppendItem(item.TextureSet.FormKey, "TextureSet");
             }
-            if ((printMask?.Color ?? true)
-                && item.Color.TryGet(out var ColorItem))
+            if (printMask?.Color ?? true)
             {
-                fg.AppendItem(ColorItem, "Color");
+                fg.AppendItem(item.Color.FormKey, "Color");
             }
-            if ((printMask?.ValidRaces ?? true)
-                && item.ValidRaces.TryGet(out var ValidRacesItem))
+            if (printMask?.ValidRaces ?? true)
             {
-                fg.AppendItem(ValidRacesItem, "ValidRaces");
+                fg.AppendItem(item.ValidRaces.FormKey, "ValidRaces");
             }
-        }
-        
-        public bool HasBeenSet(
-            IHeadPartGetter item,
-            HeadPart.Mask<bool?> checkMask)
-        {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
-            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.Type.HasValue && checkMask.Type.Value != (item.Type != null)) return false;
-            if (checkMask.TextureSet.HasValue && checkMask.TextureSet.Value != (item.TextureSet.FormKey != null)) return false;
-            if (checkMask.Color.HasValue && checkMask.Color.Value != (item.Color.FormKey != null)) return false;
-            if (checkMask.ValidRaces.HasValue && checkMask.ValidRaces.Value != (item.ValidRaces.FormKey != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IHeadPartGetter item,
-            HeadPart.Mask<bool> mask)
-        {
-            mask.Name = (item.Name != null);
-            var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            mask.Flags = true;
-            mask.Type = (item.Type != null);
-            mask.ExtraParts = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
-            var PartsItem = item.Parts;
-            mask.Parts = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Part.Mask<bool>?>>?>(true, PartsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Part.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.TextureSet = (item.TextureSet.FormKey != null);
-            mask.Color = (item.Color.FormKey != null);
-            mask.ValidRaces = (item.ValidRaces.FormKey != null);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static HeadPart_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1754,18 +1676,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             hash.Add(item.ExtraParts);
             hash.Add(item.Parts);
-            if (item.TextureSet.TryGet(out var TextureSetitem))
-            {
-                hash.Add(TextureSetitem);
-            }
-            if (item.Color.TryGet(out var Coloritem))
-            {
-                hash.Add(Coloritem);
-            }
-            if (item.ValidRaces.TryGet(out var ValidRacesitem))
-            {
-                hash.Add(ValidRacesitem);
-            }
+            hash.Add(item.TextureSet);
+            hash.Add(item.Color);
+            hash.Add(item.ValidRaces);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1948,15 +1861,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)HeadPart_FieldIndex.TextureSet) ?? true))
             {
-                item.TextureSet = rhs.TextureSet.FormKey;
+                item.TextureSet = new FormLinkNullable<TextureSet>(rhs.TextureSet.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)HeadPart_FieldIndex.Color) ?? true))
             {
-                item.Color = rhs.Color.FormKey;
+                item.Color = new FormLinkNullable<ColorRecord>(rhs.Color.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)HeadPart_FieldIndex.ValidRaces) ?? true))
             {
-                item.ValidRaces = rhs.ValidRaces.FormKey;
+                item.ValidRaces = new FormLinkNullable<FormList>(rhs.ValidRaces.FormKey);
             }
         }
         
@@ -2351,15 +2264,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IHeadPartGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => HeadPartCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => HeadPartCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadPartCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadPartCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => HeadPartCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => HeadPartBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2390,18 +2299,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IPartGetter> Parts { get; private set; } = ListExt.Empty<PartBinaryOverlay>();
         #region TextureSet
         private int? _TextureSetLocation;
-        public bool TextureSet_IsSet => _TextureSetLocation.HasValue;
-        public IFormLinkNullable<ITextureSetGetter> TextureSet => _TextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
+        public FormLinkNullable<ITextureSetGetter> TextureSet => _TextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
         #endregion
         #region Color
         private int? _ColorLocation;
-        public bool Color_IsSet => _ColorLocation.HasValue;
-        public IFormLinkNullable<IColorRecordGetter> Color => _ColorLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ColorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
+        public FormLinkNullable<IColorRecordGetter> Color => _ColorLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ColorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
         #endregion
         #region ValidRaces
         private int? _ValidRacesLocation;
-        public bool ValidRaces_IsSet => _ValidRacesLocation.HasValue;
-        public IFormLinkNullable<IFormListGetter> ValidRaces => _ValidRacesLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ValidRacesLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public FormLinkNullable<IFormListGetter> ValidRaces => _ValidRacesLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ValidRacesLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class AIData :
         IAIData,
         ILoquiObjectSetter<AIData>,
-        IEquatable<AIData>,
-        IEqualsMask
+        IEquatable<AIData>
     {
         #region Ctor
         public AIData()
@@ -576,14 +575,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static AIData CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static AIData CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -610,8 +601,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAIDataGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -709,24 +698,6 @@ namespace Mutagen.Bethesda.Oblivion
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IAIDataGetter item,
-            AIData.Mask<bool?> checkMask)
-        {
-            return ((AIDataCommon)((IAIDataGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static AIData.Mask<bool> GetHasBeenSetMask(this IAIDataGetter item)
-        {
-            var ret = new AIData.Mask<bool>(false);
-            ((AIDataCommon)((IAIDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IAIDataGetter item,
             IAIDataGetter rhs)
@@ -819,17 +790,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IAIData item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IAIData item,
             MutagenFrame frame,
@@ -1263,27 +1223,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IAIDataGetter item,
-            AIData.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IAIDataGetter item,
-            AIData.Mask<bool> mask)
-        {
-            mask.Aggression = true;
-            mask.Confidence = true;
-            mask.EnergyLevel = true;
-            mask.Responsibility = true;
-            mask.BuySellServices = true;
-            mask.Teaches = true;
-            mask.MaximumTrainingLevel = true;
-            mask.Unused = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IAIDataGetter? lhs,
@@ -1537,12 +1476,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this IAIDataGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((AIDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1574,8 +1514,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAIDataGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => AIDataBinaryWriteTranslation.Instance;

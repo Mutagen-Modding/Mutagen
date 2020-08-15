@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Oblivion
         RegionData,
         IRegionMap,
         ILoquiObjectSetter<RegionMap>,
-        IEquatable<RegionMap>,
-        IEqualsMask
+        IEquatable<RegionMap>
     {
         #region Ctor
         public RegionMap()
@@ -354,14 +353,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new RegionMap CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static RegionMap CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -388,8 +379,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionMapGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -468,24 +457,6 @@ namespace Mutagen.Bethesda.Oblivion
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IRegionMapGetter item,
-            RegionMap.Mask<bool?> checkMask)
-        {
-            return ((RegionMapCommon)((IRegionMapGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static RegionMap.Mask<bool> GetHasBeenSetMask(this IRegionMapGetter item)
-        {
-            var ret = new RegionMap.Mask<bool>(false);
-            ((RegionMapCommon)((IRegionMapGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IRegionMapGetter item,
             IRegionMapGetter rhs)
@@ -555,17 +526,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IRegionMap item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IRegionMap item,
             MutagenFrame frame,
@@ -895,26 +855,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IRegionMapGetter item,
-            RegionMap.Mask<bool?> checkMask)
-        {
-            if (checkMask.Map.HasValue && checkMask.Map.Value != (item.Map != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IRegionMapGetter item,
-            RegionMap.Mask<bool> mask)
-        {
-            mask.Map = (item.Map != null);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static RegionMap_FieldIndex ConvertFieldIndex(RegionData_FieldIndex index)
         {
             switch (index)
@@ -1221,8 +1161,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionMapGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RegionMapBinaryWriteTranslation.Instance;

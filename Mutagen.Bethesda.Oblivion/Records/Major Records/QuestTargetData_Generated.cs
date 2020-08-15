@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class QuestTargetData :
         IQuestTargetData,
         ILoquiObjectSetter<QuestTargetData>,
-        IEquatable<QuestTargetData>,
-        IEqualsMask
+        IEquatable<QuestTargetData>
     {
         #region Ctor
         public QuestTargetData()
@@ -43,7 +42,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Target
         public FormLink<IPlaced> Target { get; set; } = new FormLink<IPlaced>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IPlacedGetter> IQuestTargetDataGetter.Target => this.Target;
+        FormLink<IPlacedGetter> IQuestTargetDataGetter.Target => this.Target.ToGetter<IPlaced, IPlacedGetter>();
         #endregion
         #region Flags
         public QuestTarget.Flag Flags { get; set; } = default;
@@ -378,7 +377,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => QuestTargetDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => QuestTargetDataCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => QuestTargetDataCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestTargetDataCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestTargetDataCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -398,14 +397,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static QuestTargetData CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static QuestTargetData CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -432,8 +423,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IQuestTargetDataGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -451,7 +440,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IQuestTargetData :
         IQuestTargetDataGetter,
-        ILoquiObjectSetter<IQuestTargetData>
+        ILoquiObjectSetter<IQuestTargetData>,
+        ILinkedFormKeyContainer
     {
         new FormLink<IPlaced> Target { get; set; }
         new QuestTarget.Flag Flags { get; set; }
@@ -460,7 +450,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IQuestTargetDataGetter :
         ILoquiObject,
         ILoquiObject<IQuestTargetDataGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -470,7 +460,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => QuestTargetData_Registration.Instance;
-        IFormLink<IPlacedGetter> Target { get; }
+        FormLink<IPlacedGetter> Target { get; }
         QuestTarget.Flag Flags { get; }
 
     }
@@ -518,24 +508,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IQuestTargetDataGetter item,
-            QuestTargetData.Mask<bool?> checkMask)
-        {
-            return ((QuestTargetDataCommon)((IQuestTargetDataGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static QuestTargetData.Mask<bool> GetHasBeenSetMask(this IQuestTargetDataGetter item)
-        {
-            var ret = new QuestTargetData.Mask<bool>(false);
-            ((QuestTargetDataCommon)((IQuestTargetDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -630,17 +602,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IQuestTargetData item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IQuestTargetData item,
             MutagenFrame frame,
@@ -958,27 +919,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Target ?? true)
             {
-                fg.AppendItem(item.Target, "Target");
+                fg.AppendItem(item.Target.FormKey, "Target");
             }
             if (printMask?.Flags ?? true)
             {
                 fg.AppendItem(item.Flags, "Flags");
             }
-        }
-        
-        public bool HasBeenSet(
-            IQuestTargetDataGetter item,
-            QuestTargetData.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IQuestTargetDataGetter item,
-            QuestTargetData.Mask<bool> mask)
-        {
-            mask.Target = true;
-            mask.Flags = true;
         }
         
         #region Equals and Hash
@@ -1033,7 +979,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)QuestTargetData_FieldIndex.Target) ?? true))
             {
-                item.Target = rhs.Target.FormKey;
+                item.Target = new FormLink<IPlaced>(rhs.Target.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)QuestTargetData_FieldIndex.Flags) ?? true))
             {
@@ -1188,12 +1134,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this IQuestTargetDataGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((QuestTargetDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1225,15 +1172,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IQuestTargetDataGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => QuestTargetDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => QuestTargetDataCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestTargetDataCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestTargetDataCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => QuestTargetDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => QuestTargetDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1248,7 +1191,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<IPlacedGetter> Target => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<IPlacedGetter> Target => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public QuestTarget.Flag Flags => (QuestTarget.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IMovementTypeInternal,
         ILoquiObjectSetter<MovementType>,
-        IEquatable<MovementType>,
-        IEqualsMask
+        IEquatable<MovementType>
     {
         #region Ctor
         protected MovementType()
@@ -817,14 +816,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new MovementType CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static MovementType CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -851,8 +842,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMovementTypeGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -964,24 +953,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IMovementTypeGetter item,
-            MovementType.Mask<bool?> checkMask)
-        {
-            return ((MovementTypeCommon)((IMovementTypeGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static MovementType.Mask<bool> GetHasBeenSetMask(this IMovementTypeGetter item)
-        {
-            var ret = new MovementType.Mask<bool>(false);
-            ((MovementTypeCommon)((IMovementTypeGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IMovementTypeGetter item,
             IMovementTypeGetter rhs)
@@ -1051,17 +1022,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IMovementTypeInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IMovementTypeInternal item,
             MutagenFrame frame,
@@ -1650,42 +1610,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.SPEDDataTypeState, "SPEDDataTypeState");
             }
-        }
-        
-        public bool HasBeenSet(
-            IMovementTypeGetter item,
-            MovementType.Mask<bool?> checkMask)
-        {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            if (checkMask.AnimationChangeThresholds?.Overall.HasValue ?? false && checkMask.AnimationChangeThresholds.Overall.Value != (item.AnimationChangeThresholds != null)) return false;
-            if (checkMask.AnimationChangeThresholds?.Specific != null && (item.AnimationChangeThresholds == null || !item.AnimationChangeThresholds.HasBeenSet(checkMask.AnimationChangeThresholds.Specific))) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IMovementTypeGetter item,
-            MovementType.Mask<bool> mask)
-        {
-            mask.Name = (item.Name != null);
-            mask.LeftWalk = true;
-            mask.LeftRun = true;
-            mask.RightWalk = true;
-            mask.RightRun = true;
-            mask.ForwardWalk = true;
-            mask.ForwardRun = true;
-            mask.BackWalk = true;
-            mask.BackRun = true;
-            mask.RotateInPlaceWalk = true;
-            mask.RotateInPlaceRun = true;
-            mask.RotateWhileMovingRun = true;
-            var itemAnimationChangeThresholds = item.AnimationChangeThresholds;
-            mask.AnimationChangeThresholds = new MaskItem<bool, AnimationChangeThresholds.Mask<bool>?>(itemAnimationChangeThresholds != null, itemAnimationChangeThresholds?.GetHasBeenSetMask());
-            mask.SPEDDataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static MovementType_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -2306,8 +2230,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMovementTypeGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MovementTypeBinaryWriteTranslation.Instance;
@@ -2385,7 +2307,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region AnimationChangeThresholds
         private RangeInt32? _AnimationChangeThresholdsLocation;
         public IAnimationChangeThresholdsGetter? AnimationChangeThresholds => _AnimationChangeThresholdsLocation.HasValue ? AnimationChangeThresholdsBinaryOverlay.AnimationChangeThresholdsFactory(new OverlayStream(_data.Slice(_AnimationChangeThresholdsLocation!.Value.Min), _package), _package) : default;
-        public bool AnimationChangeThresholds_IsSet => _AnimationChangeThresholdsLocation.HasValue;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

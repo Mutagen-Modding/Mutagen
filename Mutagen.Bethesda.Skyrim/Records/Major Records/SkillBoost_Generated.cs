@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class SkillBoost :
         ISkillBoost,
         ILoquiObjectSetter<SkillBoost>,
-        IEquatable<SkillBoost>,
-        IEqualsMask
+        IEquatable<SkillBoost>
     {
         #region Ctor
         public SkillBoost()
@@ -41,8 +40,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Skill
-        public readonly static ActorValueExtended _Skill_Default = ActorValueExtended.None;
-        public ActorValueExtended Skill { get; set; } = default;
+        public readonly static ActorValue _Skill_Default = ActorValue.None;
+        public ActorValue Skill { get; set; } = default;
         #endregion
         #region Boost
         public SByte Boost { get; set; } = default;
@@ -387,14 +386,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static SkillBoost CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static SkillBoost CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -421,8 +412,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkillBoostGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -442,7 +431,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkillBoostGetter,
         ILoquiObjectSetter<ISkillBoost>
     {
-        new ActorValueExtended Skill { get; set; }
+        new ActorValue Skill { get; set; }
         new SByte Boost { get; set; }
     }
 
@@ -458,7 +447,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => SkillBoost_Registration.Instance;
-        ActorValueExtended Skill { get; }
+        ActorValue Skill { get; }
         SByte Boost { get; }
 
     }
@@ -506,24 +495,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ISkillBoostGetter item,
-            SkillBoost.Mask<bool?> checkMask)
-        {
-            return ((SkillBoostCommon)((ISkillBoostGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static SkillBoost.Mask<bool> GetHasBeenSetMask(this ISkillBoostGetter item)
-        {
-            var ret = new SkillBoost.Mask<bool>(false);
-            ((SkillBoostCommon)((ISkillBoostGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -618,17 +589,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ISkillBoost item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ISkillBoost item,
             MutagenFrame frame,
@@ -797,7 +757,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case SkillBoost_FieldIndex.Skill:
-                    return typeof(ActorValueExtended);
+                    return typeof(ActorValue);
                 case SkillBoost_FieldIndex.Boost:
                     return typeof(SByte);
                 default:
@@ -950,21 +910,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            ISkillBoostGetter item,
-            SkillBoost.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            ISkillBoostGetter item,
-            SkillBoost.Mask<bool> mask)
-        {
-            mask.Skill = true;
-            mask.Boost = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             ISkillBoostGetter? lhs,
@@ -1109,7 +1054,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISkillBoostGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValueExtended>.Instance.Write(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
                 writer,
                 item.Skill,
                 length: 1);
@@ -1147,7 +1092,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISkillBoost item,
             MutagenFrame frame)
         {
-            item.Skill = EnumBinaryTranslation<ActorValueExtended>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.Skill = EnumBinaryTranslation<ActorValue>.Instance.Parse(frame: frame.SpawnWithLength(1));
             item.Boost = frame.ReadInt8();
         }
 
@@ -1161,12 +1106,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this ISkillBoostGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((SkillBoostBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1198,8 +1144,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkillBoostGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => SkillBoostBinaryWriteTranslation.Instance;
@@ -1215,7 +1159,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public ActorValueExtended Skill => (ActorValueExtended)_data.Span.Slice(0x0, 0x1)[0];
+        public ActorValue Skill => (ActorValue)_data.Span.Slice(0x0, 0x1)[0];
         public SByte Boost => (sbyte)_data.Slice(0x1, 0x1)[0];
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="MusicType" recordType="MUSC" objType="Record" baseClass="SkyrimMajorRecord" GUID="9c2b9533-f2e9-4711-ba07-d85a2b23280f" ID="258">
     <Fields>
-      <Enum name="Flags" enumName="MusicType.Flag" byteLength="4" recordType="FNAM" hasBeenSet="False" />
+      <Enum name="Flags" enumName="MusicType.Flag" byteLength="4" recordType="FNAM" nullable="False" />
       <RefDirect name="Data" refName="MusicTypeData" />
       <Float name="FadeDuration" recordType="WNAM" />
       <List name="Tracks" recordType="TNAM">

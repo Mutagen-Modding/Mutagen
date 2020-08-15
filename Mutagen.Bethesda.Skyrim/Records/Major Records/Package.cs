@@ -162,7 +162,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         case 0x4D414E55: // UNAM
                             var index = (sbyte)subRecord.Content[0];
-                            lastPackage = data.TryCreateValue<sbyte, APackageData>(
+                            lastPackage = data.GetOrAdd<sbyte, APackageData>(
                                 index,
                                 () =>
                                 {
@@ -342,7 +342,7 @@ namespace Mutagen.Bethesda.Skyrim
                     switch (subRecord.RecordTypeInt)
                     {
                         case 0x4D414E55: // UNAM
-                            lastPackage = dict.TryCreateValue((sbyte)subRecord.Content[0]);
+                            lastPackage = dict.GetOrAdd((sbyte)subRecord.Content[0]);
                             break;
                         case 0x4D414E42: // BNAM
                             lastPackage!.Name = BinaryStringUtility.ProcessWholeToZString(subRecord.Content);
@@ -535,7 +535,7 @@ namespace Mutagen.Bethesda.Skyrim
             public ReadOnlyMemorySlice<Byte> GetXnamMarkerCustom() => _xnam;
 
             FormLink<IPackageGetter> _packageTemplate;
-            public IFormLink<IPackageGetter> GetPackageTemplateCustom() => _packageTemplate;
+            public FormLink<IPackageGetter> GetPackageTemplateCustom() => _packageTemplate;
 
             private void PackageTemplateCustomParse(
                 OverlayStream stream,

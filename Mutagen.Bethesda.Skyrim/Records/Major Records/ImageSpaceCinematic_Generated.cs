@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ImageSpaceCinematic :
         IImageSpaceCinematic,
         ILoquiObjectSetter<ImageSpaceCinematic>,
-        IEquatable<ImageSpaceCinematic>,
-        IEqualsMask
+        IEquatable<ImageSpaceCinematic>
     {
         #region Ctor
         public ImageSpaceCinematic()
@@ -421,14 +420,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static ImageSpaceCinematic CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static ImageSpaceCinematic CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -455,8 +446,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IImageSpaceCinematicGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -542,24 +531,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IImageSpaceCinematicGetter item,
-            ImageSpaceCinematic.Mask<bool?> checkMask)
-        {
-            return ((ImageSpaceCinematicCommon)((IImageSpaceCinematicGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static ImageSpaceCinematic.Mask<bool> GetHasBeenSetMask(this IImageSpaceCinematicGetter item)
-        {
-            var ret = new ImageSpaceCinematic.Mask<bool>(false);
-            ((ImageSpaceCinematicCommon)((IImageSpaceCinematicGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -654,17 +625,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IImageSpaceCinematic item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IImageSpaceCinematic item,
             MutagenFrame frame,
@@ -1008,22 +968,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IImageSpaceCinematicGetter item,
-            ImageSpaceCinematic.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IImageSpaceCinematicGetter item,
-            ImageSpaceCinematic.Mask<bool> mask)
-        {
-            mask.Saturation = true;
-            mask.Brightness = true;
-            mask.Contrast = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IImageSpaceCinematicGetter? lhs,
@@ -1237,12 +1181,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IImageSpaceCinematicGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((ImageSpaceCinematicBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1274,8 +1219,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IImageSpaceCinematicGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ImageSpaceCinematicBinaryWriteTranslation.Instance;

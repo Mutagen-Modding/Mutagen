@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Generation
             using (var args = new ArgsWrapper(fg,
                 $"{retAccessor}{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse"))
             {
-                args.Add(nodeAccessor.DirectAccess);
+                args.Add(nodeAccessor.Access);
                 if (this.DoErrorMasks)
                 {
                     args.Add($"errorMask: {errorMaskAccessor}");

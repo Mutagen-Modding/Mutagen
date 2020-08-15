@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class WeatherType :
         IWeatherType,
         ILoquiObjectSetter<WeatherType>,
-        IEquatable<WeatherType>,
-        IEqualsMask
+        IEquatable<WeatherType>
     {
         #region Ctor
         public WeatherType()
@@ -43,7 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Weather
         public FormLink<Weather> Weather { get; set; } = new FormLink<Weather>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IWeatherGetter> IWeatherTypeGetter.Weather => this.Weather;
+        FormLink<IWeatherGetter> IWeatherTypeGetter.Weather => this.Weather.ToGetter<Weather, IWeatherGetter>();
         #endregion
         #region Chance
         public Int32 Chance { get; set; } = default;
@@ -51,7 +50,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Global
         public FormLink<Global> Global { get; set; } = new FormLink<Global>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IGlobalGetter> IWeatherTypeGetter.Global => this.Global;
+        FormLink<IGlobalGetter> IWeatherTypeGetter.Global => this.Global.ToGetter<Global, IGlobalGetter>();
         #endregion
 
         #region To String
@@ -410,7 +409,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => WeatherTypeCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => WeatherTypeCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => WeatherTypeCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherTypeCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherTypeCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -430,14 +429,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static WeatherType CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static WeatherType CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -464,8 +455,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherTypeGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -483,7 +472,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IWeatherType :
         IWeatherTypeGetter,
-        ILoquiObjectSetter<IWeatherType>
+        ILoquiObjectSetter<IWeatherType>,
+        ILinkedFormKeyContainer
     {
         new FormLink<Weather> Weather { get; set; }
         new Int32 Chance { get; set; }
@@ -493,7 +483,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWeatherTypeGetter :
         ILoquiObject,
         ILoquiObject<IWeatherTypeGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -503,9 +493,9 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => WeatherType_Registration.Instance;
-        IFormLink<IWeatherGetter> Weather { get; }
+        FormLink<IWeatherGetter> Weather { get; }
         Int32 Chance { get; }
-        IFormLink<IGlobalGetter> Global { get; }
+        FormLink<IGlobalGetter> Global { get; }
 
     }
 
@@ -552,24 +542,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IWeatherTypeGetter item,
-            WeatherType.Mask<bool?> checkMask)
-        {
-            return ((WeatherTypeCommon)((IWeatherTypeGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static WeatherType.Mask<bool> GetHasBeenSetMask(this IWeatherTypeGetter item)
-        {
-            var ret = new WeatherType.Mask<bool>(false);
-            ((WeatherTypeCommon)((IWeatherTypeGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -664,17 +636,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IWeatherType item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IWeatherType item,
             MutagenFrame frame,
@@ -1002,7 +963,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.Weather ?? true)
             {
-                fg.AppendItem(item.Weather, "Weather");
+                fg.AppendItem(item.Weather.FormKey, "Weather");
             }
             if (printMask?.Chance ?? true)
             {
@@ -1010,24 +971,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Global ?? true)
             {
-                fg.AppendItem(item.Global, "Global");
+                fg.AppendItem(item.Global.FormKey, "Global");
             }
-        }
-        
-        public bool HasBeenSet(
-            IWeatherTypeGetter item,
-            WeatherType.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IWeatherTypeGetter item,
-            WeatherType.Mask<bool> mask)
-        {
-            mask.Weather = true;
-            mask.Chance = true;
-            mask.Global = true;
         }
         
         #region Equals and Hash
@@ -1085,7 +1030,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)WeatherType_FieldIndex.Weather) ?? true))
             {
-                item.Weather = rhs.Weather.FormKey;
+                item.Weather = new FormLink<Weather>(rhs.Weather.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)WeatherType_FieldIndex.Chance) ?? true))
             {
@@ -1093,7 +1038,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)WeatherType_FieldIndex.Global) ?? true))
             {
-                item.Global = rhs.Global.FormKey;
+                item.Global = new FormLink<Global>(rhs.Global.FormKey);
             }
         }
         
@@ -1241,12 +1186,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IWeatherTypeGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((WeatherTypeBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1278,15 +1224,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherTypeGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => WeatherTypeCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => WeatherTypeCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherTypeCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherTypeCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => WeatherTypeCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WeatherTypeBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1301,9 +1243,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<IWeatherGetter> Weather => new FormLink<IWeatherGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<IWeatherGetter> Weather => new FormLink<IWeatherGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Int32 Chance => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
-        public IFormLink<IGlobalGetter> Global => new FormLink<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
+        public FormLink<IGlobalGetter> Global => new FormLink<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

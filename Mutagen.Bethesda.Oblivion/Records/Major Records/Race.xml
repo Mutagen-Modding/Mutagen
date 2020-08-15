@@ -4,7 +4,7 @@
     <Interface>INamed</Interface>
     <Fields>
       <String name="Name" recordType="FULL" />
-      <String name="Description" recordType="DESC" hasBeenSet="True" />
+      <String name="Description" recordType="DESC" nullable="True" />
       <List name="Spells">
         <FormLink recordType="SPLO" refName="Spell" />
       </List>
@@ -21,8 +21,8 @@
         </Fields>
       </Gendered>
       <UInt8 name="DefaultHairColor" recordType="CNAM" />
-      <Int32 name="FaceGenMainClamp" recordType="PNAM" hasBeenSet="True" />
-      <Int32 name="FaceGenFaceClamp" recordType="UNAM" hasBeenSet="True" />
+      <Int32 name="FaceGenMainClamp" recordType="PNAM" nullable="True" />
+      <Int32 name="FaceGenFaceClamp" recordType="UNAM" nullable="True" />
       <Gendered name="RaceStats" recordType="ATTR">
         <Fields>
           <RefDirect refName="RaceStats" />

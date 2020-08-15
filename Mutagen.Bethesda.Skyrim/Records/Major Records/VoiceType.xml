@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="VoiceType" recordType="VTYP" objType="Record" baseClass="SkyrimMajorRecord" GUID="bc39d919-43d0-4349-99f1-1f9b0e7a5cec" ID="55">
     <Fields>
-      <Enum name="Flags" enumName="VoiceType.Flag" recordType="DNAM" hasBeenSet="False" byteLength="1" />
+      <Enum name="Flags" enumName="VoiceType.Flag" recordType="DNAM" nullable="False" byteLength="1" />
     </Fields>
   </Object>
 </Loqui>

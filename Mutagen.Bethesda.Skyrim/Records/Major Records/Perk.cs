@@ -210,7 +210,7 @@ namespace Mutagen.Bethesda.Skyrim
                                     }
                                     entryPointEffect = new PerkModifyActorValue()
                                     {
-                                        ActorValue = (ActorValueExtended)BinaryPrimitives.ReadInt32LittleEndian(epfd.Value),
+                                        ActorValue = (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(epfd.Value),
                                         Value = epfd.Value.Slice(4).Float(),
                                         Modification = func switch
                                         {

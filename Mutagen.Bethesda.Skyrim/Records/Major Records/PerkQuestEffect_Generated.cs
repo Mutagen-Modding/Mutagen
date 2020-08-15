@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         APerkEffect,
         IPerkQuestEffect,
         ILoquiObjectSetter<PerkQuestEffect>,
-        IEquatable<PerkQuestEffect>,
-        IEqualsMask
+        IEquatable<PerkQuestEffect>
     {
         #region Ctor
         public PerkQuestEffect()
@@ -45,7 +44,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Quest
         public FormLink<Quest> Quest { get; set; } = new FormLink<Quest>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IQuestGetter> IPerkQuestEffectGetter.Quest => this.Quest;
+        FormLink<IQuestGetter> IPerkQuestEffectGetter.Quest => this.Quest.ToGetter<Quest, IQuestGetter>();
         #endregion
         #region Stage
         public Byte Stage { get; set; } = default;
@@ -419,7 +418,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PerkQuestEffectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PerkQuestEffectCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PerkQuestEffectCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkQuestEffectCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkQuestEffectCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -437,14 +436,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new PerkQuestEffect CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static PerkQuestEffect CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -471,8 +462,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPerkQuestEffectGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -491,7 +480,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPerkQuestEffect :
         IPerkQuestEffectGetter,
         IAPerkEffect,
-        ILoquiObjectSetter<IPerkQuestEffect>
+        ILoquiObjectSetter<IPerkQuestEffect>,
+        ILinkedFormKeyContainer
     {
         new FormLink<Quest> Quest { get; set; }
         new Byte Stage { get; set; }
@@ -501,11 +491,11 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPerkQuestEffectGetter :
         IAPerkEffectGetter,
         ILoquiObject<IPerkQuestEffectGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => PerkQuestEffect_Registration.Instance;
-        IFormLink<IQuestGetter> Quest { get; }
+        FormLink<IQuestGetter> Quest { get; }
         Byte Stage { get; }
         ReadOnlyMemorySlice<Byte> Unknown { get; }
 
@@ -554,24 +544,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IPerkQuestEffectGetter item,
-            PerkQuestEffect.Mask<bool?> checkMask)
-        {
-            return ((PerkQuestEffectCommon)((IPerkQuestEffectGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static PerkQuestEffect.Mask<bool> GetHasBeenSetMask(this IPerkQuestEffectGetter item)
-        {
-            var ret = new PerkQuestEffect.Mask<bool>(false);
-            ((PerkQuestEffectCommon)((IPerkQuestEffectGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -643,17 +615,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IPerkQuestEffect item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IPerkQuestEffect item,
             MutagenFrame frame,
@@ -1009,7 +970,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.Quest ?? true)
             {
-                fg.AppendItem(item.Quest, "Quest");
+                fg.AppendItem(item.Quest.FormKey, "Quest");
             }
             if (printMask?.Stage ?? true)
             {
@@ -1019,27 +980,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
             }
-        }
-        
-        public bool HasBeenSet(
-            IPerkQuestEffectGetter item,
-            PerkQuestEffect.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IPerkQuestEffectGetter item,
-            PerkQuestEffect.Mask<bool> mask)
-        {
-            mask.Quest = true;
-            mask.Stage = true;
-            mask.Unknown = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static PerkQuestEffect_FieldIndex ConvertFieldIndex(APerkEffect_FieldIndex index)
@@ -1138,7 +1078,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)PerkQuestEffect_FieldIndex.Quest) ?? true))
             {
-                item.Quest = rhs.Quest.FormKey;
+                item.Quest = new FormLink<Quest>(rhs.Quest.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PerkQuestEffect_FieldIndex.Stage) ?? true))
             {
@@ -1344,15 +1284,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPerkQuestEffectGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PerkQuestEffectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PerkQuestEffectCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkQuestEffectCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkQuestEffectCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PerkQuestEffectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PerkQuestEffectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1365,7 +1301,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<IQuestGetter> Quest => new FormLink<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<IQuestGetter> Quest => new FormLink<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Byte Stage => _data.Span[0x4];
         public ReadOnlyMemorySlice<Byte> Unknown => _data.Span.Slice(0x5, 0x3).ToArray();
         partial void CustomFactoryEnd(

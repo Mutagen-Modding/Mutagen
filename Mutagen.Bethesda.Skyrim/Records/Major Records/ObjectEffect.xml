@@ -4,7 +4,7 @@
     <Interface>ITranslatedNamed</Interface>
     <Interface>IObjectBounded</Interface>
     <Fields>
-      <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <Data recordType="ENIT" >
         <Fields>
@@ -20,7 +20,7 @@
           <FormLink name="WornRestrictions" refName="FormList" />
         </Fields>
       </Data>
-      <RefList name="Effects" refName="Effect" hasBeenSet="False" />
+      <RefList name="Effects" refName="Effect" nullable="False" />
     </Fields>
     <LinkInterface>IEffectRecord</LinkInterface>
   </Object>

@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class FaceGenData :
         IFaceGenData,
         ILoquiObjectSetter<FaceGenData>,
-        IEquatable<FaceGenData>,
-        IEqualsMask
+        IEquatable<FaceGenData>
     {
         #region Ctor
         public FaceGenData()
@@ -441,14 +440,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static FaceGenData CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static FaceGenData CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -475,8 +466,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFaceGenDataGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -562,24 +551,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IFaceGenDataGetter item,
-            FaceGenData.Mask<bool?> checkMask)
-        {
-            return ((FaceGenDataCommon)((IFaceGenDataGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static FaceGenData.Mask<bool> GetHasBeenSetMask(this IFaceGenDataGetter item)
-        {
-            var ret = new FaceGenData.Mask<bool>(false);
-            ((FaceGenDataCommon)((IFaceGenDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -674,17 +645,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IFaceGenData item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IFaceGenData item,
             MutagenFrame frame,
@@ -1041,25 +1001,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IFaceGenDataGetter item,
-            FaceGenData.Mask<bool?> checkMask)
-        {
-            if (checkMask.SymmetricGeometry.HasValue && checkMask.SymmetricGeometry.Value != (item.SymmetricGeometry != null)) return false;
-            if (checkMask.AsymmetricGeometry.HasValue && checkMask.AsymmetricGeometry.Value != (item.AsymmetricGeometry != null)) return false;
-            if (checkMask.SymmetricTexture.HasValue && checkMask.SymmetricTexture.Value != (item.SymmetricTexture != null)) return false;
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IFaceGenDataGetter item,
-            FaceGenData.Mask<bool> mask)
-        {
-            mask.SymmetricGeometry = (item.SymmetricGeometry != null);
-            mask.AsymmetricGeometry = (item.AsymmetricGeometry != null);
-            mask.SymmetricTexture = (item.SymmetricTexture != null);
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IFaceGenDataGetter? lhs,
@@ -1337,12 +1278,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this IFaceGenDataGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((FaceGenDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1374,8 +1316,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFaceGenDataGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => FaceGenDataBinaryWriteTranslation.Instance;

@@ -19,14 +19,12 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         public static TestingSettings Settings;
         public static OblivionMod Mod;
         public static TempFolder TempFolder;
-        public static ModKey ModKey;
-        public static string DataPath;
+        public static ModPath DataPath;
         public static string BinaryPath;
         public static MemoryStream DataOutput;
         public static BinaryWriteParameters WriteParametersNoCheck = new BinaryWriteParameters()
         {
-            ModKeySync = BinaryWriteParameters.ModKeySyncOption.NoCheck,
-            MastersListSync = BinaryWriteParameters.MastersListSyncOption.NoCheck,
+            MastersListContent = BinaryWriteParameters.MastersListContentOption.NoCheck,
         };
 
         [GlobalSetup]
@@ -40,17 +38,16 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             System.Console.WriteLine("Target settings: " + Settings.ToString());
 
             // Setup folders and paths
-            ModKey = new ModKey("Oblivion", true);
+            DataPath = new ModPath(
+                new ModKey("Oblivion", ModType.Master),
+                Path.Combine(Settings.DataFolderLocations.Oblivion, "Oblivion.esm"));
             TempFolder = new TempFolder(deleteAfter: true);
-            DataPath = Path.Combine(Settings.DataFolderLocations.Oblivion, "Oblivion.esm");
             BinaryPath = Path.Combine(TempFolder.Dir.Path, "Oblivion.esm");
 
             // Setup
-            Mod = OblivionMod.CreateFromBinary(
-                DataPath,
-                ModKey);
+            Mod = OblivionMod.CreateFromBinary(DataPath);
 
-            DataOutput = new MemoryStream(new byte[new FileInfo(DataPath).Length]);
+            DataOutput = new MemoryStream(new byte[new FileInfo(DataPath.Path).Length]);
         }
 
         [GlobalCleanup]
@@ -62,28 +59,26 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         [Benchmark]
         public async Task CreateBinary()
         {
-            OblivionMod.CreateFromBinary(
-                DataPath,
-                ModKey);
+            OblivionMod.CreateFromBinary(DataPath);
         }
 
         [Benchmark]
         public void CreateAndWriteBinaryOverlayToDisk()
         {
-            var bytes = File.ReadAllBytes(DataPath);
+            var bytes = File.ReadAllBytes(DataPath.Path);
             var mod = OblivionModBinaryOverlay.OblivionModFactory(
                 new MemorySlice<byte>(bytes),
-                ModKey);
+                DataPath.ModKey);
             mod.WriteToBinary(BinaryPath, WriteParametersNoCheck);
         }
 
         [Benchmark]
         public void CreateAndWriteBinaryOverlayToMemory()
         {
-            var bytes = File.ReadAllBytes(DataPath);
+            var bytes = File.ReadAllBytes(DataPath.Path);
             var mod = OblivionModBinaryOverlay.OblivionModFactory(
                 new MemorySlice<byte>(bytes),
-                ModKey);
+                DataPath.ModKey);
             DataOutput.Position = 0;
             mod.WriteToBinary(DataOutput, WriteParametersNoCheck);
         }
@@ -91,20 +86,20 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         [Benchmark]
         public void CreateAndWriteBinaryOverlayParallelToDisk()
         {
-            var bytes = File.ReadAllBytes(DataPath);
+            var bytes = File.ReadAllBytes(DataPath.Path);
             var mod = OblivionModBinaryOverlay.OblivionModFactory(
                 new MemorySlice<byte>(bytes),
-                ModKey);
+                DataPath.ModKey);
             mod.WriteToBinaryParallel(BinaryPath, WriteParametersNoCheck);
         }
 
         [Benchmark]
         public void CreateAndWriteBinaryOverlayParallelToMemory()
         {
-            var bytes = File.ReadAllBytes(DataPath);
+            var bytes = File.ReadAllBytes(DataPath.Path);
             var mod = OblivionModBinaryOverlay.OblivionModFactory(
                 new MemorySlice<byte>(bytes),
-                ModKey);
+                DataPath.ModKey);
             DataOutput.Position = 0;
             mod.WriteToBinaryParallel(DataOutput, WriteParametersNoCheck);
         }

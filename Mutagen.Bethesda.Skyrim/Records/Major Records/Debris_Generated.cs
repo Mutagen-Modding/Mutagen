@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IDebrisInternal,
         ILoquiObjectSetter<Debris>,
-        IEquatable<Debris>,
-        IEqualsMask
+        IEquatable<Debris>
     {
         #region Ctor
         protected Debris()
@@ -468,14 +467,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new Debris CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static Debris CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -502,8 +493,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDebrisGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -589,24 +578,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IDebrisGetter item,
-            Debris.Mask<bool?> checkMask)
-        {
-            return ((DebrisCommon)((IDebrisGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Debris.Mask<bool> GetHasBeenSetMask(this IDebrisGetter item)
-        {
-            var ret = new Debris.Mask<bool>(false);
-            ((DebrisCommon)((IDebrisGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IDebrisGetter item,
             IDebrisGetter rhs)
@@ -676,17 +647,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IDebrisInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IDebrisInternal item,
             MutagenFrame frame,
@@ -1051,26 +1011,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-        }
-        
-        public bool HasBeenSet(
-            IDebrisGetter item,
-            Debris.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IDebrisGetter item,
-            Debris.Mask<bool> mask)
-        {
-            var ModelsItem = item.Models;
-            mask.Models = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, DebrisModel.Mask<bool>?>>?>(true, ModelsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, DebrisModel.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static Debris_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1531,8 +1471,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDebrisGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => DebrisBinaryWriteTranslation.Instance;

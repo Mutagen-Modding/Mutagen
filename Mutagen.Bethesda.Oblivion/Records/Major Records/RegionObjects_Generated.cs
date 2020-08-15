@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Oblivion
         RegionData,
         IRegionObjects,
         ILoquiObjectSetter<RegionObjects>,
-        IEquatable<RegionObjects>,
-        IEqualsMask
+        IEquatable<RegionObjects>
     {
         #region Ctor
         public RegionObjects()
@@ -427,7 +426,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => RegionObjectsCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => RegionObjectsCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => RegionObjectsCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionObjectsCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionObjectsCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -445,14 +444,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new RegionObjects CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static RegionObjects CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -479,8 +470,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionObjectsGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -499,7 +488,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRegionObjects :
         IRegionObjectsGetter,
         IRegionData,
-        ILoquiObjectSetter<IRegionObjects>
+        ILoquiObjectSetter<IRegionObjects>,
+        ILinkedFormKeyContainer
     {
         new IExtendedList<RegionObject>? Objects { get; set; }
     }
@@ -507,7 +497,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRegionObjectsGetter :
         IRegionDataGetter,
         ILoquiObject<IRegionObjectsGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => RegionObjects_Registration.Instance;
@@ -558,24 +548,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IRegionObjectsGetter item,
-            RegionObjects.Mask<bool?> checkMask)
-        {
-            return ((RegionObjectsCommon)((IRegionObjectsGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static RegionObjects.Mask<bool> GetHasBeenSetMask(this IRegionObjectsGetter item)
-        {
-            var ret = new RegionObjects.Mask<bool>(false);
-            ((RegionObjectsCommon)((IRegionObjectsGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -647,17 +619,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IRegionObjects item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IRegionObjects item,
             MutagenFrame frame,
@@ -1002,29 +963,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 fg.AppendLine("]");
             }
-        }
-        
-        public bool HasBeenSet(
-            IRegionObjectsGetter item,
-            RegionObjects.Mask<bool?> checkMask)
-        {
-            if (checkMask.Objects?.Overall.HasValue ?? false && checkMask.Objects!.Overall.Value != (item.Objects != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IRegionObjectsGetter item,
-            RegionObjects.Mask<bool> mask)
-        {
-            if (item.Objects.TryGet(out var ObjectsItem))
-            {
-                mask.Objects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RegionObject.Mask<bool>?>>?>(true, ObjectsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, RegionObject.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static RegionObjects_FieldIndex ConvertFieldIndex(RegionData_FieldIndex index)
@@ -1374,15 +1312,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionObjectsGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => RegionObjectsCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => RegionObjectsCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionObjectsCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionObjectsCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => RegionObjectsCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RegionObjectsBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

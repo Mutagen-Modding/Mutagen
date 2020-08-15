@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IFootstepSetInternal,
         ILoquiObjectSetter<FootstepSet>,
-        IEquatable<FootstepSet>,
-        IEqualsMask
+        IEquatable<FootstepSet>
     {
         #region Ctor
         protected FootstepSet()
@@ -896,7 +895,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => FootstepSetCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => FootstepSetCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => FootstepSetCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FootstepSetCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FootstepSetCommon.Instance.RemapLinks(this, mapping);
         public FootstepSet(FormKey formKey)
@@ -931,14 +930,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new FootstepSet CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static FootstepSet CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -965,8 +956,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFootstepSetGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -985,7 +974,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IFootstepSet :
         IFootstepSetGetter,
         ISkyrimMajorRecord,
-        ILoquiObjectSetter<IFootstepSetInternal>
+        ILoquiObjectSetter<IFootstepSetInternal>,
+        ILinkedFormKeyContainer
     {
         new IExtendedList<IFormLink<Footstep>> WalkForwardFootsteps { get; }
         new IExtendedList<IFormLink<Footstep>> RunForwardFootsteps { get; }
@@ -1004,7 +994,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IFootstepSetGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IFootstepSetGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => FootstepSet_Registration.Instance;
@@ -1059,24 +1049,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IFootstepSetGetter item,
-            FootstepSet.Mask<bool?> checkMask)
-        {
-            return ((FootstepSetCommon)((IFootstepSetGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static FootstepSet.Mask<bool> GetHasBeenSetMask(this IFootstepSetGetter item)
-        {
-            var ret = new FootstepSet.Mask<bool>(false);
-            ((FootstepSetCommon)((IFootstepSetGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -1148,17 +1120,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IFootstepSetInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IFootstepSetInternal item,
             MutagenFrame frame,
@@ -1584,7 +1545,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendItem(subItem);
+                            fg.AppendItem(subItem.FormKey);
                         }
                         fg.AppendLine("]");
                     }
@@ -1602,7 +1563,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendItem(subItem);
+                            fg.AppendItem(subItem.FormKey);
                         }
                         fg.AppendLine("]");
                     }
@@ -1620,7 +1581,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendItem(subItem);
+                            fg.AppendItem(subItem.FormKey);
                         }
                         fg.AppendLine("]");
                     }
@@ -1638,7 +1599,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendItem(subItem);
+                            fg.AppendItem(subItem.FormKey);
                         }
                         fg.AppendLine("]");
                     }
@@ -1656,36 +1617,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendItem(subItem);
+                            fg.AppendItem(subItem.FormKey);
                         }
                         fg.AppendLine("]");
                     }
                 }
                 fg.AppendLine("]");
             }
-        }
-        
-        public bool HasBeenSet(
-            IFootstepSetGetter item,
-            FootstepSet.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IFootstepSetGetter item,
-            FootstepSet.Mask<bool> mask)
-        {
-            mask.WalkForwardFootsteps = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
-            mask.RunForwardFootsteps = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
-            mask.WalkForwardAlternateFootsteps = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
-            mask.RunForwardAlternateFootsteps = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
-            mask.WalkForwardAlternateFootsteps2 = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static FootstepSet_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -2260,15 +2198,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFootstepSetGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => FootstepSetCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => FootstepSetCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FootstepSetCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FootstepSetCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => FootstepSetCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => FootstepSetBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

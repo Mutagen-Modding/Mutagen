@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="OblivionMod" objType="Mod" ctorPermission="protected" usesStringFiles="false" GUID="b6f626df-b164-466b-960a-1639d88f66bc" ID="3">
     <Fields>
-      <RefDirect name="ModHeader" refName="ModHeader" singleton="true" />
+      <RefDirect name="ModHeader" refName="OblivionModHeader" singleton="true" />
       <Group name="GameSettings" refName="GameSetting" />
       <Group name="Globals" refName="Global" />
       <Group name="Classes" refName="Class" />

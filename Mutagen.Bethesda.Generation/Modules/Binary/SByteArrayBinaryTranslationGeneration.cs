@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.Generation
         {
             CustomRead = (fg, o, t, reader, item) =>
             {
-                fg.AppendLine($"{item.DirectAccess} = {reader.DirectAccess}.ReadInt8();");
+                fg.AppendLine($"{item} = {reader}.ReadInt8();");
                 return true;
             };
         }

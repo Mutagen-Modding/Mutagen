@@ -10,8 +10,8 @@
       <FormLink name="Reference" >
         <Generic>T</Generic>
       </FormLink>
-      <Int16 name="Count" hasBeenSet="True" />
-      <Int16 name="Unknown2" hasBeenSet="True" />
+      <Int16 name="Count" nullable="True" />
+      <Int16 name="Unknown2" nullable="True" />
     </Fields>
   </Object>
 </Loqui>

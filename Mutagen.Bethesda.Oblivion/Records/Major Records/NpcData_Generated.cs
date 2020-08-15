@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class NpcData :
         INpcData,
         ILoquiObjectSetter<NpcData>,
-        IEquatable<NpcData>,
-        IEqualsMask
+        IEquatable<NpcData>
     {
         #region Ctor
         public NpcData()
@@ -1258,14 +1257,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static NpcData CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static NpcData CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1292,8 +1283,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((INpcDataGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1435,24 +1424,6 @@ namespace Mutagen.Bethesda.Oblivion
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this INpcDataGetter item,
-            NpcData.Mask<bool?> checkMask)
-        {
-            return ((NpcDataCommon)((INpcDataGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static NpcData.Mask<bool> GetHasBeenSetMask(this INpcDataGetter item)
-        {
-            var ret = new NpcData.Mask<bool>(false);
-            ((NpcDataCommon)((INpcDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this INpcDataGetter item,
             INpcDataGetter rhs)
@@ -1545,17 +1516,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this INpcData item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this INpcData item,
             MutagenFrame frame,
@@ -2385,49 +2345,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            INpcDataGetter item,
-            NpcData.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            INpcDataGetter item,
-            NpcData.Mask<bool> mask)
-        {
-            mask.Armorer = true;
-            mask.Athletics = true;
-            mask.Blade = true;
-            mask.Block = true;
-            mask.Blunt = true;
-            mask.HandToHand = true;
-            mask.HeavyArmor = true;
-            mask.Alchemy = true;
-            mask.Alteration = true;
-            mask.Conjuration = true;
-            mask.Destruction = true;
-            mask.Illusion = true;
-            mask.Mysticism = true;
-            mask.Restoration = true;
-            mask.Acrobatics = true;
-            mask.LightArmor = true;
-            mask.Marksman = true;
-            mask.Mercantile = true;
-            mask.Security = true;
-            mask.Sneak = true;
-            mask.Speechcraft = true;
-            mask.Health = true;
-            mask.Strength = true;
-            mask.Intelligence = true;
-            mask.Willpower = true;
-            mask.Agility = true;
-            mask.Speed = true;
-            mask.Endurance = true;
-            mask.Personality = true;
-            mask.Luck = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             INpcDataGetter? lhs,
@@ -2851,12 +2768,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this INpcDataGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((NpcDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -2888,8 +2806,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((INpcDataGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NpcDataBinaryWriteTranslation.Instance;

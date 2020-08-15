@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override ICache<T, FormKey> ProtectedCache => this.RecordCache;
     }
 
-    public partial interface IGroupGetter<out T> : IGroupCommon<T>
+    public partial interface IGroupGetter<out T> : IGroupCommonGetter<T>
         where T : class, ISkyrimMajorRecordGetter, IBinaryItem
     {
     }
@@ -49,20 +49,14 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
 
-        public partial class GroupBinaryOverlay<T>
+        public partial class GroupBinaryOverlay<T> : AGroupBinaryOverlay<T>
         {
-            private GroupMajorRecordCacheWrapper<T>? _Cache;
-            public IReadOnlyCache<T, FormKey> RecordCache => _Cache!;
-            public IMod SourceMod => throw new NotImplementedException();
-            public IEnumerable<T> Records => RecordCache.Items;
-            public int Count => this.RecordCache.Count;
-
             partial void CustomFactoryEnd(
                 OverlayStream stream,
                 int finalPos,
                 int offset)
             {
-                _Cache = GroupMajorRecordCacheWrapper<T>.Factory(
+                _RecordCache = GroupMajorRecordCacheWrapper<T>.Factory(
                     stream,
                     _data,
                     _package,

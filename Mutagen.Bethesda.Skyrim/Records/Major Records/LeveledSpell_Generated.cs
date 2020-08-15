@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         ASpell,
         ILeveledSpellInternal,
         ILoquiObjectSetter<LeveledSpell>,
-        IEquatable<LeveledSpell>,
-        IEqualsMask
+        IEquatable<LeveledSpell>
     {
         #region Ctor
         protected LeveledSpell()
@@ -544,7 +543,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => LeveledSpellCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LeveledSpellCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LeveledSpellCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledSpellCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledSpellCommon.Instance.RemapLinks(this, mapping);
         public LeveledSpell(FormKey formKey)
@@ -579,14 +578,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new LeveledSpell CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static LeveledSpell CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -613,8 +604,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILeveledSpellGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -635,7 +624,8 @@ namespace Mutagen.Bethesda.Skyrim
         IASpell,
         ISpellSpawn,
         IObjectBounded,
-        ILoquiObjectSetter<ILeveledSpellInternal>
+        ILoquiObjectSetter<ILeveledSpellInternal>,
+        ILinkedFormKeyContainer
     {
         new ObjectBounds ObjectBounds { get; set; }
         new Byte? ChanceNone { get; set; }
@@ -655,7 +645,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISpellSpawnGetter,
         IObjectBoundedGetter,
         ILoquiObject<ILeveledSpellGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => LeveledSpell_Registration.Instance;
@@ -709,24 +699,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ILeveledSpellGetter item,
-            LeveledSpell.Mask<bool?> checkMask)
-        {
-            return ((LeveledSpellCommon)((ILeveledSpellGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static LeveledSpell.Mask<bool> GetHasBeenSetMask(this ILeveledSpellGetter item)
-        {
-            var ret = new LeveledSpell.Mask<bool>(false);
-            ((LeveledSpellCommon)((ILeveledSpellGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -798,17 +770,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ILeveledSpellInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ILeveledSpellInternal item,
             MutagenFrame frame,
@@ -1249,33 +1210,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            ILeveledSpellGetter item,
-            LeveledSpell.Mask<bool?> checkMask)
-        {
-            if (checkMask.ChanceNone.HasValue && checkMask.ChanceNone.Value != (item.ChanceNone != null)) return false;
-            if (checkMask.Entries?.Overall.HasValue ?? false && checkMask.Entries!.Overall.Value != (item.Entries != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            ILeveledSpellGetter item,
-            LeveledSpell.Mask<bool> mask)
-        {
-            mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
-            mask.ChanceNone = (item.ChanceNone != null);
-            mask.Flags = true;
-            if (item.Entries.TryGet(out var EntriesItem))
-            {
-                mask.Entries = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LeveledSpellEntry.Mask<bool>?>>?>(true, EntriesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, LeveledSpellEntry.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static LeveledSpell_FieldIndex ConvertFieldIndex(ASpell_FieldIndex index)
         {
             switch (index)
@@ -1423,7 +1357,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (obj.Entries.TryGet(out var EntriesItem))
             {
-                foreach (var item in EntriesItem.WhereCastable<ILeveledSpellEntryGetter, ILinkedFormKeyContainer> ()
+                foreach (var item in EntriesItem.WhereCastable<ILeveledSpellEntryGetter, ILinkedFormKeyContainerGetter> ()
                     .SelectMany((f) => f.LinkFormKeys))
                 {
                     yield return item;
@@ -1899,15 +1833,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILeveledSpellGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => LeveledSpellCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LeveledSpellCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledSpellCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledSpellCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LeveledSpellCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LeveledSpellBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

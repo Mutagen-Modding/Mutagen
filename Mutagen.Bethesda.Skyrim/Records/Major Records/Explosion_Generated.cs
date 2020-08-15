@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IExplosionInternal,
         ILoquiObjectSetter<Explosion>,
-        IEquatable<Explosion>,
-        IEqualsMask
+        IEquatable<Explosion>
     {
         #region Ctor
         protected Explosion()
@@ -78,42 +77,42 @@ namespace Mutagen.Bethesda.Skyrim
         #region ObjectEffect
         public FormLinkNullable<IEffectRecord> ObjectEffect { get; set; } = new FormLinkNullable<IEffectRecord>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IEffectRecordGetter> IExplosionGetter.ObjectEffect => this.ObjectEffect;
+        FormLinkNullable<IEffectRecordGetter> IExplosionGetter.ObjectEffect => this.ObjectEffect.ToGetter<IEffectRecord, IEffectRecordGetter>();
         #endregion
         #region ImageSpaceModifier
         public FormLinkNullable<ImageSpaceAdapter> ImageSpaceModifier { get; set; } = new FormLinkNullable<ImageSpaceAdapter>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IImageSpaceAdapterGetter> IExplosionGetter.ImageSpaceModifier => this.ImageSpaceModifier;
+        FormLinkNullable<IImageSpaceAdapterGetter> IExplosionGetter.ImageSpaceModifier => this.ImageSpaceModifier.ToGetter<ImageSpaceAdapter, IImageSpaceAdapterGetter>();
         #endregion
         #region Light
         public FormLink<Light> Light { get; set; } = new FormLink<Light>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ILightGetter> IExplosionGetter.Light => this.Light;
+        FormLink<ILightGetter> IExplosionGetter.Light => this.Light.ToGetter<Light, ILightGetter>();
         #endregion
         #region Sound1
         public FormLink<SoundDescriptor> Sound1 { get; set; } = new FormLink<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ISoundDescriptorGetter> IExplosionGetter.Sound1 => this.Sound1;
+        FormLink<ISoundDescriptorGetter> IExplosionGetter.Sound1 => this.Sound1.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
         #endregion
         #region Sound2
         public FormLink<SoundDescriptor> Sound2 { get; set; } = new FormLink<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ISoundDescriptorGetter> IExplosionGetter.Sound2 => this.Sound2;
+        FormLink<ISoundDescriptorGetter> IExplosionGetter.Sound2 => this.Sound2.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
         #endregion
         #region ImpactDataSet
         public FormLink<ImpactDataSet> ImpactDataSet { get; set; } = new FormLink<ImpactDataSet>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IImpactDataSetGetter> IExplosionGetter.ImpactDataSet => this.ImpactDataSet;
+        FormLink<IImpactDataSetGetter> IExplosionGetter.ImpactDataSet => this.ImpactDataSet.ToGetter<ImpactDataSet, IImpactDataSetGetter>();
         #endregion
         #region PlacedObject
         public FormLink<SkyrimMajorRecord> PlacedObject { get; set; } = new FormLink<SkyrimMajorRecord>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ISkyrimMajorRecordGetter> IExplosionGetter.PlacedObject => this.PlacedObject;
+        FormLink<ISkyrimMajorRecordGetter> IExplosionGetter.PlacedObject => this.PlacedObject.ToGetter<SkyrimMajorRecord, ISkyrimMajorRecordGetter>();
         #endregion
         #region SpawnProjectile
         public FormLink<Projectile> SpawnProjectile { get; set; } = new FormLink<Projectile>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IProjectileGetter> IExplosionGetter.SpawnProjectile => this.SpawnProjectile;
+        FormLink<IProjectileGetter> IExplosionGetter.SpawnProjectile => this.SpawnProjectile.ToGetter<Projectile, IProjectileGetter>();
         #endregion
         #region Force
         public Single Force { get; set; } = default;
@@ -1034,7 +1033,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => ExplosionCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ExplosionCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ExplosionCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ExplosionCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ExplosionCommon.Instance.RemapLinks(this, mapping);
         public Explosion(FormKey formKey)
@@ -1076,14 +1075,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new Explosion CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static Explosion CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1110,8 +1101,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IExplosionGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1132,7 +1121,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ITranslatedNamed,
         IObjectBounded,
-        ILoquiObjectSetter<IExplosionInternal>
+        ILoquiObjectSetter<IExplosionInternal>,
+        ILinkedFormKeyContainer
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
@@ -1168,7 +1158,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         IObjectBoundedGetter,
         ILoquiObject<IExplosionGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Explosion_Registration.Instance;
@@ -1176,14 +1166,14 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundsGetter ObjectBounds { get; }
         TranslatedString? Name { get; }
         IModelGetter? Model { get; }
-        IFormLinkNullable<IEffectRecordGetter> ObjectEffect { get; }
-        IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; }
-        IFormLink<ILightGetter> Light { get; }
-        IFormLink<ISoundDescriptorGetter> Sound1 { get; }
-        IFormLink<ISoundDescriptorGetter> Sound2 { get; }
-        IFormLink<IImpactDataSetGetter> ImpactDataSet { get; }
-        IFormLink<ISkyrimMajorRecordGetter> PlacedObject { get; }
-        IFormLink<IProjectileGetter> SpawnProjectile { get; }
+        FormLinkNullable<IEffectRecordGetter> ObjectEffect { get; }
+        FormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; }
+        FormLink<ILightGetter> Light { get; }
+        FormLink<ISoundDescriptorGetter> Sound1 { get; }
+        FormLink<ISoundDescriptorGetter> Sound2 { get; }
+        FormLink<IImpactDataSetGetter> ImpactDataSet { get; }
+        FormLink<ISkyrimMajorRecordGetter> PlacedObject { get; }
+        FormLink<IProjectileGetter> SpawnProjectile { get; }
         Single Force { get; }
         Single Damage { get; }
         Single Radius { get; }
@@ -1238,24 +1228,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IExplosionGetter item,
-            Explosion.Mask<bool?> checkMask)
-        {
-            return ((ExplosionCommon)((IExplosionGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Explosion.Mask<bool> GetHasBeenSetMask(this IExplosionGetter item)
-        {
-            var ret = new Explosion.Mask<bool>(false);
-            ((ExplosionCommon)((IExplosionGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -1327,17 +1299,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IExplosionInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IExplosionInternal item,
             MutagenFrame frame,
@@ -1975,39 +1936,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 ModelItem?.ToString(fg, "Model");
             }
-            if ((printMask?.ObjectEffect ?? true)
-                && item.ObjectEffect.TryGet(out var ObjectEffectItem))
+            if (printMask?.ObjectEffect ?? true)
             {
-                fg.AppendItem(ObjectEffectItem, "ObjectEffect");
+                fg.AppendItem(item.ObjectEffect.FormKey, "ObjectEffect");
             }
-            if ((printMask?.ImageSpaceModifier ?? true)
-                && item.ImageSpaceModifier.TryGet(out var ImageSpaceModifierItem))
+            if (printMask?.ImageSpaceModifier ?? true)
             {
-                fg.AppendItem(ImageSpaceModifierItem, "ImageSpaceModifier");
+                fg.AppendItem(item.ImageSpaceModifier.FormKey, "ImageSpaceModifier");
             }
             if (printMask?.Light ?? true)
             {
-                fg.AppendItem(item.Light, "Light");
+                fg.AppendItem(item.Light.FormKey, "Light");
             }
             if (printMask?.Sound1 ?? true)
             {
-                fg.AppendItem(item.Sound1, "Sound1");
+                fg.AppendItem(item.Sound1.FormKey, "Sound1");
             }
             if (printMask?.Sound2 ?? true)
             {
-                fg.AppendItem(item.Sound2, "Sound2");
+                fg.AppendItem(item.Sound2.FormKey, "Sound2");
             }
             if (printMask?.ImpactDataSet ?? true)
             {
-                fg.AppendItem(item.ImpactDataSet, "ImpactDataSet");
+                fg.AppendItem(item.ImpactDataSet.FormKey, "ImpactDataSet");
             }
             if (printMask?.PlacedObject ?? true)
             {
-                fg.AppendItem(item.PlacedObject, "PlacedObject");
+                fg.AppendItem(item.PlacedObject.FormKey, "PlacedObject");
             }
             if (printMask?.SpawnProjectile ?? true)
             {
-                fg.AppendItem(item.SpawnProjectile, "SpawnProjectile");
+                fg.AppendItem(item.SpawnProjectile.FormKey, "SpawnProjectile");
             }
             if (printMask?.Force ?? true)
             {
@@ -2041,53 +2000,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
-        }
-        
-        public bool HasBeenSet(
-            IExplosionGetter item,
-            Explosion.Mask<bool?> checkMask)
-        {
-            if (checkMask.VirtualMachineAdapter?.Overall.HasValue ?? false && checkMask.VirtualMachineAdapter.Overall.Value != (item.VirtualMachineAdapter != null)) return false;
-            if (checkMask.VirtualMachineAdapter?.Specific != null && (item.VirtualMachineAdapter == null || !item.VirtualMachineAdapter.HasBeenSet(checkMask.VirtualMachineAdapter.Specific))) return false;
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
-            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.ObjectEffect.HasValue && checkMask.ObjectEffect.Value != (item.ObjectEffect.FormKey != null)) return false;
-            if (checkMask.ImageSpaceModifier.HasValue && checkMask.ImageSpaceModifier.Value != (item.ImageSpaceModifier.FormKey != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IExplosionGetter item,
-            Explosion.Mask<bool> mask)
-        {
-            var itemVirtualMachineAdapter = item.VirtualMachineAdapter;
-            mask.VirtualMachineAdapter = new MaskItem<bool, VirtualMachineAdapter.Mask<bool>?>(itemVirtualMachineAdapter != null, itemVirtualMachineAdapter?.GetHasBeenSetMask());
-            mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
-            mask.Name = (item.Name != null);
-            var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            mask.ObjectEffect = (item.ObjectEffect.FormKey != null);
-            mask.ImageSpaceModifier = (item.ImageSpaceModifier.FormKey != null);
-            mask.Light = true;
-            mask.Sound1 = true;
-            mask.Sound2 = true;
-            mask.ImpactDataSet = true;
-            mask.PlacedObject = true;
-            mask.SpawnProjectile = true;
-            mask.Force = true;
-            mask.Damage = true;
-            mask.Radius = true;
-            mask.ISRadius = true;
-            mask.VerticalOffsetMult = true;
-            mask.Flags = true;
-            mask.SoundLevel = true;
-            mask.DATADataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static Explosion_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -2193,14 +2105,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Modelitem);
             }
-            if (item.ObjectEffect.TryGet(out var ObjectEffectitem))
-            {
-                hash.Add(ObjectEffectitem);
-            }
-            if (item.ImageSpaceModifier.TryGet(out var ImageSpaceModifieritem))
-            {
-                hash.Add(ImageSpaceModifieritem);
-            }
+            hash.Add(item.ObjectEffect);
+            hash.Add(item.ImageSpaceModifier);
             hash.Add(item.Light);
             hash.Add(item.Sound1);
             hash.Add(item.Sound2);
@@ -2244,7 +2150,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainer VirtualMachineAdapterlinkCont)
+            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainerGetter VirtualMachineAdapterlinkCont)
             {
                 foreach (var item in VirtualMachineAdapterlinkCont.LinkFormKeys)
                 {
@@ -2399,35 +2305,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.ObjectEffect) ?? true))
             {
-                item.ObjectEffect = rhs.ObjectEffect.FormKey;
+                item.ObjectEffect = new FormLinkNullable<IEffectRecord>(rhs.ObjectEffect.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.ImageSpaceModifier) ?? true))
             {
-                item.ImageSpaceModifier = rhs.ImageSpaceModifier.FormKey;
+                item.ImageSpaceModifier = new FormLinkNullable<ImageSpaceAdapter>(rhs.ImageSpaceModifier.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.Light) ?? true))
             {
-                item.Light = rhs.Light.FormKey;
+                item.Light = new FormLink<Light>(rhs.Light.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.Sound1) ?? true))
             {
-                item.Sound1 = rhs.Sound1.FormKey;
+                item.Sound1 = new FormLink<SoundDescriptor>(rhs.Sound1.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.Sound2) ?? true))
             {
-                item.Sound2 = rhs.Sound2.FormKey;
+                item.Sound2 = new FormLink<SoundDescriptor>(rhs.Sound2.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.ImpactDataSet) ?? true))
             {
-                item.ImpactDataSet = rhs.ImpactDataSet.FormKey;
+                item.ImpactDataSet = new FormLink<ImpactDataSet>(rhs.ImpactDataSet.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.PlacedObject) ?? true))
             {
-                item.PlacedObject = rhs.PlacedObject.FormKey;
+                item.PlacedObject = new FormLink<SkyrimMajorRecord>(rhs.PlacedObject.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.SpawnProjectile) ?? true))
             {
-                item.SpawnProjectile = rhs.SpawnProjectile.FormKey;
+                item.SpawnProjectile = new FormLink<Projectile>(rhs.SpawnProjectile.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.Force) ?? true))
             {
@@ -2909,15 +2815,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IExplosionGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => ExplosionCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ExplosionCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ExplosionCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ExplosionCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ExplosionCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ExplosionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2933,7 +2835,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
         public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
-        public bool VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
         #endregion
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
@@ -2947,45 +2848,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IModelGetter? Model { get; private set; }
         #region ObjectEffect
         private int? _ObjectEffectLocation;
-        public bool ObjectEffect_IsSet => _ObjectEffectLocation.HasValue;
-        public IFormLinkNullable<IEffectRecordGetter> ObjectEffect => _ObjectEffectLocation.HasValue ? new FormLinkNullable<IEffectRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ObjectEffectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEffectRecordGetter>.Null;
+        public FormLinkNullable<IEffectRecordGetter> ObjectEffect => _ObjectEffectLocation.HasValue ? new FormLinkNullable<IEffectRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ObjectEffectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEffectRecordGetter>.Null;
         #endregion
         #region ImageSpaceModifier
         private int? _ImageSpaceModifierLocation;
-        public bool ImageSpaceModifier_IsSet => _ImageSpaceModifierLocation.HasValue;
-        public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier => _ImageSpaceModifierLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImageSpaceModifierLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
+        public FormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier => _ImageSpaceModifierLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImageSpaceModifierLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
         #endregion
         private int? _DATALocation;
         public Explosion.DATADataType DATADataTypeState { get; private set; }
         #region Light
         private int _LightLocation => _DATALocation!.Value;
         private bool _Light_IsSet => _DATALocation.HasValue;
-        public IFormLink<ILightGetter> Light => _Light_IsSet ? new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_LightLocation, 0x4)))) : FormLink<ILightGetter>.Null;
+        public FormLink<ILightGetter> Light => _Light_IsSet ? new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_LightLocation, 0x4)))) : FormLink<ILightGetter>.Null;
         #endregion
         #region Sound1
         private int _Sound1Location => _DATALocation!.Value + 0x4;
         private bool _Sound1_IsSet => _DATALocation.HasValue;
-        public IFormLink<ISoundDescriptorGetter> Sound1 => _Sound1_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_Sound1Location, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
+        public FormLink<ISoundDescriptorGetter> Sound1 => _Sound1_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_Sound1Location, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         #region Sound2
         private int _Sound2Location => _DATALocation!.Value + 0x8;
         private bool _Sound2_IsSet => _DATALocation.HasValue;
-        public IFormLink<ISoundDescriptorGetter> Sound2 => _Sound2_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_Sound2Location, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
+        public FormLink<ISoundDescriptorGetter> Sound2 => _Sound2_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_Sound2Location, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         #region ImpactDataSet
         private int _ImpactDataSetLocation => _DATALocation!.Value + 0xC;
         private bool _ImpactDataSet_IsSet => _DATALocation.HasValue;
-        public IFormLink<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
+        public FormLink<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
         #endregion
         #region PlacedObject
         private int _PlacedObjectLocation => _DATALocation!.Value + 0x10;
         private bool _PlacedObject_IsSet => _DATALocation.HasValue;
-        public IFormLink<ISkyrimMajorRecordGetter> PlacedObject => _PlacedObject_IsSet ? new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_PlacedObjectLocation, 0x4)))) : FormLink<ISkyrimMajorRecordGetter>.Null;
+        public FormLink<ISkyrimMajorRecordGetter> PlacedObject => _PlacedObject_IsSet ? new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_PlacedObjectLocation, 0x4)))) : FormLink<ISkyrimMajorRecordGetter>.Null;
         #endregion
         #region SpawnProjectile
         private int _SpawnProjectileLocation => _DATALocation!.Value + 0x14;
         private bool _SpawnProjectile_IsSet => _DATALocation.HasValue;
-        public IFormLink<IProjectileGetter> SpawnProjectile => _SpawnProjectile_IsSet ? new FormLink<IProjectileGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SpawnProjectileLocation, 0x4)))) : FormLink<IProjectileGetter>.Null;
+        public FormLink<IProjectileGetter> SpawnProjectile => _SpawnProjectile_IsSet ? new FormLink<IProjectileGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SpawnProjectileLocation, 0x4)))) : FormLink<IProjectileGetter>.Null;
         #endregion
         #region Force
         private int _ForceLocation => _DATALocation!.Value + 0x18;

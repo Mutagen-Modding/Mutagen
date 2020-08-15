@@ -218,17 +218,15 @@ namespace Mutagen.Bethesda.Tests
         protected override async Task<IModDisposeGetter> ImportBinaryOverlay(FilePath path)
         {
             return SkyrimModBinaryOverlay.SkyrimModFactory(
-                this.FilePath.Path,
-                this.ModKey,
+                new ModPath(this.ModKey, this.FilePath.Path),
                 GameRelease.ToSkyrimRelease());
         }
 
         protected override async Task<IMod> ImportBinary(FilePath path)
         {
             return SkyrimMod.CreateFromBinary(
-                path.Path,
+                new ModPath(this.ModKey, path.Path),
                 GameRelease.ToSkyrimRelease(),
-                this.ModKey,
                 parallel: this.Settings.Parallel);
         }
 

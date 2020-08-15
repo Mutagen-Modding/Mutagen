@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda
     /// <summary>
     /// An interface that Major Record objects implement to hook into the common getter systems
     /// </summary>
-    public interface IMajorRecordCommonGetter : IDuplicatable, IFormVersionGetter
+    public interface IMajorRecordCommonGetter : IDuplicatable, IFormVersionGetter, ILinkedFormKeyContainerGetter
     {
         /// <summary>
         /// The usually unique string identifier assigned to the Major Record
@@ -48,6 +48,6 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// Form Version of the record
         /// </summary>
-        ushort? FormVersion { get; }
+        new ushort? FormVersion { get; }
     }
 }

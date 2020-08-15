@@ -81,7 +81,7 @@
       <Float name="SinkVariance" />
       <Float name="SizeVariance" />
       <P3UInt16 name="AngleVariance" />
-      <ByteArray name="Unknown2" hasBeenSet="False" byteLength="6" />
+      <ByteArray name="Unknown2" nullable="False" byteLength="6" />
     </Fields>
   </Object>
   <Object name="RegionWeather" objType="Subrecord" baseClass="RegionData" GUID="4ee120f4-9a14-49e9-b9d4-50254a1aabec" ID="267">

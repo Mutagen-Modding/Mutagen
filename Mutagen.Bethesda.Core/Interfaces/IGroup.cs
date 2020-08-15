@@ -2,6 +2,7 @@ using Loqui;
 using Loqui.Xml;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,7 +12,7 @@ namespace Mutagen.Bethesda
     /// <summary>
     /// An interface that Group Record objects implement to hook into the common systems
     /// </summary>
-    public interface IGroupCommon<out TMajor>
+    public interface IGroupCommonGetter<out TMajor> : IEnumerable<TMajor>
         where TMajor : IMajorRecordCommonGetter, IBinaryItem
     {
         /// <summary>
@@ -20,42 +21,92 @@ namespace Mutagen.Bethesda
         IMod SourceMod { get; }
 
         /// <summary>
-        /// A convenience accessor to iterate over all records in a group
+        /// Access to records in an IReadOnlyCache interface
         /// </summary>
-        IEnumerable<TMajor> Records { get; }
+        IReadOnlyCache<TMajor, FormKey> RecordCache { get; }
 
         /// <summary>
         /// Number of contained records
         /// </summary>
         int Count { get; }
+
+        /// <summary>
+        /// Gets the record associated with the specified key
+        /// </summary>
+        /// <param name="key">FormKey to retrieve</param>
+        /// <exception cref="KeyNotFoundException">A record with the given FormKey does not exist</exception>
+        /// <returns>Record associated with the specified key</returns>
+        TMajor this[FormKey key] { get; }
+
+        /// <summary>
+        /// Enumerable containing all the FormKeys present in the group
+        /// </summary>
+        IEnumerable<FormKey> FormKeys { get; }
+
+        /// <summary>
+        /// Checks if a record with the specified key exists in the group
+        /// </summary>
+        /// <param name="key">Key to search for</param>
+        /// <returns>True if record found with given key</returns>
+        bool ContainsKey(FormKey key);
     }
 
-    /// <summary>
-    /// Class containing extension methods for groups
-    /// </summary>
-    public static class IGroupCommonExt
+    public interface IGroupCommon<TMajor> : IGroupCommonGetter<TMajor>
+        where TMajor : IMajorRecordCommonGetter, IBinaryItem
     {
         /// <summary>
-        /// Convenience function to instantiate a new Major Record and add it to the Group.
+        /// Access to records in an ICache interface
+        /// </summary>
+        new ICache<TMajor, FormKey> RecordCache { get; }
+
+        /// <summary>
+        /// Adds an item using the specified key
+        /// </summary>
+        /// <param name="item">The item.</param>
+        void Add(TMajor item);
+
+        /// <summary>
+        /// Adds or replaces the major record
+        /// </summary>
+        /// <param name="record">The record</param>
+        void Set(TMajor record);
+
+        /// <summary>
+        /// Adds or updates the major records given
+        /// </summary>
+        /// <param name="records">The records</param>
+        void Set(IEnumerable<TMajor> records);
+
+        /// <summary>
+        /// Removes the item matching the specified key.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        bool Remove(FormKey key);
+
+        /// <summary>
+        /// Removes all items matching the specified keys
+        /// </summary>
+        /// <param name="keys">The keys.</param>
+        void Remove(IEnumerable<FormKey> keys);
+
+        /// <summary>
+        /// Clears all items
+        /// </summary>
+        void Clear();
+
+        /// <summary>
+        /// Convenience function to instantiate a new Major Record and add it to the Group.<br />
         /// FormKey will be automatically assigned.
         /// </summary>
-        /// <param name="group">Group to add record to</param>
         /// <returns>New record already added to the Group</returns>
-        public static TMajor AddNew<TMajor>(this AGroup<TMajor> group)
-            where TMajor : IMajorRecordInternal, IBinaryItem, IEquatable<TMajor>
-        {
-            var ret = MajorRecordInstantiator<TMajor>.Activator(group.SourceMod.GetNextFormKey());
-            group.InternalCache.Set(ret);
-            return ret;
-        }
+        TMajor AddNew();
 
-        public static TMajor AddNew<TMajor>(this AGroup<TMajor> group, string editorID)
-            where TMajor : IMajorRecordInternal, IBinaryItem, IEquatable<TMajor>
-        {
-            var ret = MajorRecordInstantiator<TMajor>.Activator(group.SourceMod.GetNextFormKey(editorID));
-            ret.EditorID = editorID;
-            group.InternalCache.Set(ret);
-            return ret;
-        }
+        /// <summary>
+        /// Convenience function to instantiate a new Major Record and add it to the Group.<br />
+        /// FormKey will be automatically assigned based on the editorID given
+        /// </summary>
+        /// <param name="editorID">Editor ID to assign the new record.</param>
+        /// <returns>New record already added to the Group</returns>
+        TMajor AddNew(string editorID);
     }
 }

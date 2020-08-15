@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class CellWaterVelocity :
         ICellWaterVelocity,
         ILoquiObjectSetter<CellWaterVelocity>,
-        IEquatable<CellWaterVelocity>,
-        IEqualsMask
+        IEquatable<CellWaterVelocity>
     {
         #region Ctor
         public CellWaterVelocity()
@@ -460,14 +459,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static CellWaterVelocity CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static CellWaterVelocity CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -494,8 +485,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICellWaterVelocityGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -583,24 +572,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ICellWaterVelocityGetter item,
-            CellWaterVelocity.Mask<bool?> checkMask)
-        {
-            return ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static CellWaterVelocity.Mask<bool> GetHasBeenSetMask(this ICellWaterVelocityGetter item)
-        {
-            var ret = new CellWaterVelocity.Mask<bool>(false);
-            ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -695,17 +666,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ICellWaterVelocity item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ICellWaterVelocity item,
             MutagenFrame frame,
@@ -1067,23 +1027,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            ICellWaterVelocityGetter item,
-            CellWaterVelocity.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            ICellWaterVelocityGetter item,
-            CellWaterVelocity.Mask<bool> mask)
-        {
-            mask.Offset = true;
-            mask.Unknown = true;
-            mask.Angle = true;
-            mask.Unknown2 = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             ICellWaterVelocityGetter? lhs,
@@ -1305,12 +1248,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this ICellWaterVelocityGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((CellWaterVelocityBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1342,8 +1286,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICellWaterVelocityGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CellWaterVelocityBinaryWriteTranslation.Instance;

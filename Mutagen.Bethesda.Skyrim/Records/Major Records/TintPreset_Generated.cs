@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class TintPreset :
         ITintPreset,
         ILoquiObjectSetter<TintPreset>,
-        IEquatable<TintPreset>,
-        IEqualsMask
+        IEquatable<TintPreset>
     {
         #region Ctor
         public TintPreset()
@@ -43,7 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Color
         public FormLinkNullable<ColorRecord> Color { get; set; } = new FormLinkNullable<ColorRecord>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IColorRecordGetter> ITintPresetGetter.Color => this.Color;
+        FormLinkNullable<IColorRecordGetter> ITintPresetGetter.Color => this.Color.ToGetter<ColorRecord, IColorRecordGetter>();
         #endregion
         #region DefaultValue
         public Single? DefaultValue { get; set; }
@@ -412,7 +411,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => TintPresetCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => TintPresetCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => TintPresetCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TintPresetCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TintPresetCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -432,14 +431,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static TintPreset CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static TintPreset CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -466,8 +457,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITintPresetGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -485,7 +474,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface ITintPreset :
         ITintPresetGetter,
-        ILoquiObjectSetter<ITintPreset>
+        ILoquiObjectSetter<ITintPreset>,
+        ILinkedFormKeyContainer
     {
         new FormLinkNullable<ColorRecord> Color { get; set; }
         new Single? DefaultValue { get; set; }
@@ -495,7 +485,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ITintPresetGetter :
         ILoquiObject,
         ILoquiObject<ITintPresetGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -505,7 +495,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => TintPreset_Registration.Instance;
-        IFormLinkNullable<IColorRecordGetter> Color { get; }
+        FormLinkNullable<IColorRecordGetter> Color { get; }
         Single? DefaultValue { get; }
         UInt16? Index { get; }
 
@@ -554,24 +544,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ITintPresetGetter item,
-            TintPreset.Mask<bool?> checkMask)
-        {
-            return ((TintPresetCommon)((ITintPresetGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static TintPreset.Mask<bool> GetHasBeenSetMask(this ITintPresetGetter item)
-        {
-            var ret = new TintPreset.Mask<bool>(false);
-            ((TintPresetCommon)((ITintPresetGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -666,17 +638,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ITintPreset item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ITintPreset item,
             MutagenFrame frame,
@@ -1016,10 +977,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             TintPreset.Mask<bool>? printMask = null)
         {
-            if ((printMask?.Color ?? true)
-                && item.Color.TryGet(out var ColorItem))
+            if (printMask?.Color ?? true)
             {
-                fg.AppendItem(ColorItem, "Color");
+                fg.AppendItem(item.Color.FormKey, "Color");
             }
             if ((printMask?.DefaultValue ?? true)
                 && item.DefaultValue.TryGet(out var DefaultValueItem))
@@ -1031,25 +991,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(IndexItem, "Index");
             }
-        }
-        
-        public bool HasBeenSet(
-            ITintPresetGetter item,
-            TintPreset.Mask<bool?> checkMask)
-        {
-            if (checkMask.Color.HasValue && checkMask.Color.Value != (item.Color.FormKey != null)) return false;
-            if (checkMask.DefaultValue.HasValue && checkMask.DefaultValue.Value != (item.DefaultValue != null)) return false;
-            if (checkMask.Index.HasValue && checkMask.Index.Value != (item.Index != null)) return false;
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            ITintPresetGetter item,
-            TintPreset.Mask<bool> mask)
-        {
-            mask.Color = (item.Color.FormKey != null);
-            mask.DefaultValue = (item.DefaultValue != null);
-            mask.Index = (item.Index != null);
         }
         
         #region Equals and Hash
@@ -1068,10 +1009,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(ITintPresetGetter item)
         {
             var hash = new HashCode();
-            if (item.Color.TryGet(out var Coloritem))
-            {
-                hash.Add(Coloritem);
-            }
+            hash.Add(item.Color);
             if (item.DefaultValue.TryGet(out var DefaultValueitem))
             {
                 hash.Add(DefaultValueitem);
@@ -1118,7 +1056,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)TintPreset_FieldIndex.Color) ?? true))
             {
-                item.Color = rhs.Color.FormKey;
+                item.Color = new FormLinkNullable<ColorRecord>(rhs.Color.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)TintPreset_FieldIndex.DefaultValue) ?? true))
             {
@@ -1314,12 +1252,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this ITintPresetGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((TintPresetBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1351,15 +1290,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITintPresetGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => TintPresetCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => TintPresetCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TintPresetCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TintPresetCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => TintPresetCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => TintPresetBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1376,8 +1311,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Color
         private int? _ColorLocation;
-        public bool Color_IsSet => _ColorLocation.HasValue;
-        public IFormLinkNullable<IColorRecordGetter> Color => _ColorLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ColorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
+        public FormLinkNullable<IColorRecordGetter> Color => _ColorLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ColorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
         #endregion
         #region DefaultValue
         private int? _DefaultValueLocation;

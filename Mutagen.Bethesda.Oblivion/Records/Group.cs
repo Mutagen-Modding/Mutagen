@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override ICache<T, FormKey> ProtectedCache => this.RecordCache;
     }
 
-    public partial interface IGroupGetter<out T> : IGroupCommon<T>
+    public partial interface IGroupGetter<out T> : IGroupCommonGetter<T>
         where T : class, IOblivionMajorRecordGetter, IBinaryItem
     {
     }
@@ -61,14 +61,8 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public partial class GroupBinaryOverlay<T>
+        public partial class GroupBinaryOverlay<T> : AGroupBinaryOverlay<T>
         {
-            private GroupMajorRecordCacheWrapper<T>? _RecordCache;
-            public IReadOnlyCache<T, FormKey> RecordCache => _RecordCache!;
-            public IMod SourceMod => throw new NotImplementedException();
-            public IEnumerable<T> Records => RecordCache.Items;
-            public int Count => this.RecordCache.Count;
-
             partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
             {
                 _RecordCache = GroupMajorRecordCacheWrapper<T>.Factory(

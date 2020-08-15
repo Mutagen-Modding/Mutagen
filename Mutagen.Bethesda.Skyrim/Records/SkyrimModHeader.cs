@@ -1,26 +1,56 @@
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Core;
 using Mutagen.Bethesda.Internals;
 using Noggog;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
-namespace Mutagen.Bethesda.Oblivion
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ModHeader
+    public partial class SkyrimModHeader
     {
         [Flags]
         public enum HeaderFlag
         {
             Master = 0x01
         }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        int IModHeaderCommon.RawFlags
+        {
+            get => (int)this.Flags;
+            set => this.Flags = (HeaderFlag)value;
+        }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        uint IModHeaderCommon.NumRecords
+        {
+            get => this.Stats.NumRecords;
+            set => this.Stats.NumRecords = value;
+        }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        uint IModHeaderCommon.NextFormID
+        {
+            get => this.Stats.NextFormID;
+            set => this.Stats.NextFormID = value;
+        }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        uint IModHeaderCommon.MinimumCustomFormID => SkyrimMod.DefaultInitialNextFormID;
+    }
+
+    public partial interface ISkyrimModHeader : IModHeaderCommon
+    {
     }
 
     namespace Internals
     {
-        public partial class ModHeaderBinaryCreateTranslation
+        public partial class SkyrimModHeaderBinaryCreateTranslation
         {
-            static partial void FillBinaryMasterReferencesCustom(MutagenFrame frame, IModHeader item)
+            static partial void FillBinaryMasterReferencesCustom(MutagenFrame frame, ISkyrimModHeader item)
             {
                 item.MasterReferences.SetTo(
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<MasterReference>.Instance.Parse(
@@ -31,9 +61,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public partial class ModHeaderBinaryWriteTranslation
+        public partial class SkyrimModHeaderBinaryWriteTranslation
         {
-            static partial void WriteBinaryMasterReferencesCustom(MutagenWriter writer, IModHeaderGetter item)
+            static partial void WriteBinaryMasterReferencesCustom(MutagenWriter writer, ISkyrimModHeaderGetter item)
             {
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<IMasterReferenceGetter>.Instance.Write(
                     writer: writer,

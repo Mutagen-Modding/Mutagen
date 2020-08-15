@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Tests
         public string AlignedFileName(TempFolder tmp) => Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Aligned");
         public string OrderedFileName(TempFolder tmp) => Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Ordered");
         public string ProcessedPath(TempFolder tmp) => Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Processed");
-        public ModKey ModKey => ModKey.Factory(this.FilePath.Name);
+        public ModKey ModKey => ModKey.FromNameAndExtension(this.FilePath.Name);
         public abstract GameRelease GameRelease { get; }
         public readonly GameConstants Meta;
         protected abstract Processor ProcessorFactory();
@@ -139,8 +139,11 @@ namespace Mutagen.Bethesda.Tests
 
             var writeParams = new BinaryWriteParameters()
             {
-                ModKeySync = BinaryWriteParameters.ModKeySyncOption.NoCheck,
-                MastersListSync = BinaryWriteParameters.MastersListSyncOption.NoCheck,
+                ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
+                MastersListContent = BinaryWriteParameters.MastersListContentOption.NoCheck,
+                RecordCount = BinaryWriteParameters.RecordCountOption.NoCheck,
+                NextFormID = BinaryWriteParameters.NextFormIDOption.NoCheck,
+                FormIDUniqueness = BinaryWriteParameters.FormIDUniquenessOption.NoCheck,
             };
 
             // Do normal
@@ -179,7 +182,7 @@ namespace Mutagen.Bethesda.Tests
                 processedTest.AddAsChild(passthrough);
                 if (doStrings)
                 {
-                    foreach(var item in AssertStringsEqual(
+                    foreach (var item in AssertStringsEqual(
                         "Binary Normal",
                         strsProcessedPath,
                         strsWriteDir))
@@ -333,7 +336,7 @@ namespace Mutagen.Bethesda.Tests
 
         public IEnumerable<Test> AssertStringsEqual(
             string nickname,
-            DirectoryPath processedDir, 
+            DirectoryPath processedDir,
             DirectoryPath writeDir)
         {
             foreach (var source in EnumExt.GetValues<StringsSource>())

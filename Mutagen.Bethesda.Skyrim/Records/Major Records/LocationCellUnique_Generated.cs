@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class LocationCellUnique :
         ILocationCellUnique,
         ILoquiObjectSetter<LocationCellUnique>,
-        IEquatable<LocationCellUnique>,
-        IEqualsMask
+        IEquatable<LocationCellUnique>
     {
         #region Ctor
         public LocationCellUnique()
@@ -43,17 +42,17 @@ namespace Mutagen.Bethesda.Skyrim
         #region Actor
         public FormLink<Npc> Actor { get; set; } = new FormLink<Npc>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<INpcGetter> ILocationCellUniqueGetter.Actor => this.Actor;
+        FormLink<INpcGetter> ILocationCellUniqueGetter.Actor => this.Actor.ToGetter<Npc, INpcGetter>();
         #endregion
         #region Ref
         public FormLink<PlacedNpc> Ref { get; set; } = new FormLink<PlacedNpc>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IPlacedNpcGetter> ILocationCellUniqueGetter.Ref => this.Ref;
+        FormLink<IPlacedNpcGetter> ILocationCellUniqueGetter.Ref => this.Ref.ToGetter<PlacedNpc, IPlacedNpcGetter>();
         #endregion
         #region Location
         public FormLink<Location> Location { get; set; } = new FormLink<Location>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ILocationGetter> ILocationCellUniqueGetter.Location => this.Location;
+        FormLink<ILocationGetter> ILocationCellUniqueGetter.Location => this.Location.ToGetter<Location, ILocationGetter>();
         #endregion
 
         #region To String
@@ -412,7 +411,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => LocationCellUniqueCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LocationCellUniqueCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LocationCellUniqueCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCellUniqueCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCellUniqueCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -432,14 +431,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static LocationCellUnique CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static LocationCellUnique CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -466,8 +457,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILocationCellUniqueGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -485,7 +474,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface ILocationCellUnique :
         ILocationCellUniqueGetter,
-        ILoquiObjectSetter<ILocationCellUnique>
+        ILoquiObjectSetter<ILocationCellUnique>,
+        ILinkedFormKeyContainer
     {
         new FormLink<Npc> Actor { get; set; }
         new FormLink<PlacedNpc> Ref { get; set; }
@@ -495,7 +485,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILocationCellUniqueGetter :
         ILoquiObject,
         ILoquiObject<ILocationCellUniqueGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -505,9 +495,9 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => LocationCellUnique_Registration.Instance;
-        IFormLink<INpcGetter> Actor { get; }
-        IFormLink<IPlacedNpcGetter> Ref { get; }
-        IFormLink<ILocationGetter> Location { get; }
+        FormLink<INpcGetter> Actor { get; }
+        FormLink<IPlacedNpcGetter> Ref { get; }
+        FormLink<ILocationGetter> Location { get; }
 
     }
 
@@ -554,24 +544,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ILocationCellUniqueGetter item,
-            LocationCellUnique.Mask<bool?> checkMask)
-        {
-            return ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static LocationCellUnique.Mask<bool> GetHasBeenSetMask(this ILocationCellUniqueGetter item)
-        {
-            var ret = new LocationCellUnique.Mask<bool>(false);
-            ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -666,17 +638,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ILocationCellUnique item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ILocationCellUnique item,
             MutagenFrame frame,
@@ -1004,32 +965,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.Actor ?? true)
             {
-                fg.AppendItem(item.Actor, "Actor");
+                fg.AppendItem(item.Actor.FormKey, "Actor");
             }
             if (printMask?.Ref ?? true)
             {
-                fg.AppendItem(item.Ref, "Ref");
+                fg.AppendItem(item.Ref.FormKey, "Ref");
             }
             if (printMask?.Location ?? true)
             {
-                fg.AppendItem(item.Location, "Location");
+                fg.AppendItem(item.Location.FormKey, "Location");
             }
-        }
-        
-        public bool HasBeenSet(
-            ILocationCellUniqueGetter item,
-            LocationCellUnique.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            ILocationCellUniqueGetter item,
-            LocationCellUnique.Mask<bool> mask)
-        {
-            mask.Actor = true;
-            mask.Ref = true;
-            mask.Location = true;
         }
         
         #region Equals and Hash
@@ -1088,15 +1033,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)LocationCellUnique_FieldIndex.Actor) ?? true))
             {
-                item.Actor = rhs.Actor.FormKey;
+                item.Actor = new FormLink<Npc>(rhs.Actor.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LocationCellUnique_FieldIndex.Ref) ?? true))
             {
-                item.Ref = rhs.Ref.FormKey;
+                item.Ref = new FormLink<PlacedNpc>(rhs.Ref.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LocationCellUnique_FieldIndex.Location) ?? true))
             {
-                item.Location = rhs.Location.FormKey;
+                item.Location = new FormLink<Location>(rhs.Location.FormKey);
             }
         }
         
@@ -1248,12 +1193,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this ILocationCellUniqueGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((LocationCellUniqueBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1285,15 +1231,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILocationCellUniqueGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => LocationCellUniqueCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LocationCellUniqueCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCellUniqueCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCellUniqueCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LocationCellUniqueCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LocationCellUniqueBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1308,9 +1250,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<INpcGetter> Actor => new FormLink<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public IFormLink<IPlacedNpcGetter> Ref => new FormLink<IPlacedNpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
-        public IFormLink<ILocationGetter> Location => new FormLink<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
+        public FormLink<INpcGetter> Actor => new FormLink<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<IPlacedNpcGetter> Ref => new FormLink<IPlacedNpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public FormLink<ILocationGetter> Location => new FormLink<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

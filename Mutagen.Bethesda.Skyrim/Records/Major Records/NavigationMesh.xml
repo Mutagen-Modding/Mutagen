@@ -11,12 +11,12 @@
   </Object>
   <Object name="WorldspaceNavigationMesh" baseClass="ANavigationMesh" recordType="NAVM" objType="Record" GUID="61ff6fb6-5bd3-413b-b27c-b9e48cc8a8de" ID="318">
     <Fields>
-      <RefDirect name="Data" refName="WorldspaceNavigationMeshData" binary="NoGeneration" hasBeenSet="True" />
+      <RefDirect name="Data" refName="WorldspaceNavigationMeshData" binary="NoGeneration" nullable="True" />
     </Fields>
   </Object>
   <Object name="CellNavigationMesh" baseClass="ANavigationMesh" recordType="NAVM" objType="Record" GUID="c097a44b-e830-4762-8234-5cd4d9e89ae1" ID="319">
     <Fields>
-      <RefDirect name="Data" refName="CellNavigationMeshData" binary="NoGeneration" hasBeenSet="True" />
+      <RefDirect name="Data" refName="CellNavigationMeshData" binary="NoGeneration" nullable="True" />
     </Fields>
   </Object>
   <Object name="ANavigationMeshData" objType="Subrecord" abstract="true" GUID="0f14b502-0797-43b9-810a-e958643a5d68" ID="324">

@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class PackageScriptFragments :
         IPackageScriptFragments,
         ILoquiObjectSetter<PackageScriptFragments>,
-        IEquatable<PackageScriptFragments>,
-        IEqualsMask
+        IEquatable<PackageScriptFragments>
     {
         #region Ctor
         public PackageScriptFragments()
@@ -528,14 +527,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static PackageScriptFragments CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static PackageScriptFragments CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -562,8 +553,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPackageScriptFragmentsGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -653,24 +642,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IPackageScriptFragmentsGetter item,
-            PackageScriptFragments.Mask<bool?> checkMask)
-        {
-            return ((PackageScriptFragmentsCommon)((IPackageScriptFragmentsGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static PackageScriptFragments.Mask<bool> GetHasBeenSetMask(this IPackageScriptFragmentsGetter item)
-        {
-            var ret = new PackageScriptFragments.Mask<bool>(false);
-            ((PackageScriptFragmentsCommon)((IPackageScriptFragmentsGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -765,17 +736,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IPackageScriptFragments item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IPackageScriptFragments item,
             MutagenFrame frame,
@@ -1167,33 +1127,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IPackageScriptFragmentsGetter item,
-            PackageScriptFragments.Mask<bool?> checkMask)
-        {
-            if (checkMask.OnBegin?.Overall.HasValue ?? false && checkMask.OnBegin.Overall.Value != (item.OnBegin != null)) return false;
-            if (checkMask.OnBegin?.Specific != null && (item.OnBegin == null || !item.OnBegin.HasBeenSet(checkMask.OnBegin.Specific))) return false;
-            if (checkMask.OnEnd?.Overall.HasValue ?? false && checkMask.OnEnd.Overall.Value != (item.OnEnd != null)) return false;
-            if (checkMask.OnEnd?.Specific != null && (item.OnEnd == null || !item.OnEnd.HasBeenSet(checkMask.OnEnd.Specific))) return false;
-            if (checkMask.OnChange?.Overall.HasValue ?? false && checkMask.OnChange.Overall.Value != (item.OnChange != null)) return false;
-            if (checkMask.OnChange?.Specific != null && (item.OnChange == null || !item.OnChange.HasBeenSet(checkMask.OnChange.Specific))) return false;
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IPackageScriptFragmentsGetter item,
-            PackageScriptFragments.Mask<bool> mask)
-        {
-            mask.Unknown = true;
-            mask.FileName = true;
-            var itemOnBegin = item.OnBegin;
-            mask.OnBegin = new MaskItem<bool, ScriptFragment.Mask<bool>?>(itemOnBegin != null, itemOnBegin?.GetHasBeenSetMask());
-            var itemOnEnd = item.OnEnd;
-            mask.OnEnd = new MaskItem<bool, ScriptFragment.Mask<bool>?>(itemOnEnd != null, itemOnEnd?.GetHasBeenSetMask());
-            var itemOnChange = item.OnChange;
-            mask.OnChange = new MaskItem<bool, ScriptFragment.Mask<bool>?>(itemOnChange != null, itemOnChange?.GetHasBeenSetMask());
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IPackageScriptFragmentsGetter? lhs,
@@ -1501,12 +1434,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IPackageScriptFragmentsGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((PackageScriptFragmentsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1538,8 +1472,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPackageScriptFragmentsGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PackageScriptFragmentsBinaryWriteTranslation.Instance;

@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ModHeader" recordType="TES4" objType="Record" GUID="d26d9f2a-53af-4c45-9490-dfdb377b6655" ID="2">
+  <Object name="OblivionModHeader" recordType="TES4" objType="Record" GUID="d26d9f2a-53af-4c45-9490-dfdb377b6655" ID="2">
     <Fields>
-      <Enum name="Flags" enumName="ModHeader.HeaderFlag" byteLength="4" />
+      <Enum name="Flags" enumName="OblivionModHeader.HeaderFlag" byteLength="4" />
       <UInt32 name="FormID" />
       <Int32 name="Version" />
-      <RefDirect name="Stats" refName="ModStats" hasBeenSet="False" />
+      <RefDirect name="Stats" refName="ModStats" nullable="False" />
       <ByteArray name="TypeOffsets" recordType="OFST" />
       <ByteArray name="Deleted" recordType="DELE" />
       <String name="Author" recordType="CNAM" maxLength="512" />
       <String name="Description" recordType="SNAM" maxLength="512" />
-      <RefList name="MasterReferences" refName="Bethesda.MasterReference" hasBeenSet="False" binary="Custom" binaryOverlay="Normal" />
+      <RefList name="MasterReferences" refName="Bethesda.MasterReference" nullable="False" binary="Custom" binaryOverlay="Normal" />
     </Fields>
   </Object>
   <Object name="ModStats" recordType="HEDR" objType="Subrecord" GUID="88a14b36-530f-42a1-aa1f-b8ee1852e625" ID="1">
     <Fields>
       <Float name="Version" />
-      <Int32 name="NumRecords" />
-      <UInt32 name="NextObjectID" />
+      <UInt32 name="NumRecords" />
+      <UInt32 name="NextFormID" />
     </Fields>
   </Object>
 </Loqui>

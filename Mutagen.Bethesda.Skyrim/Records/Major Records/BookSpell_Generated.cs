@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         BookTeachTarget,
         IBookSpell,
         ILoquiObjectSetter<BookSpell>,
-        IEquatable<BookSpell>,
-        IEqualsMask
+        IEquatable<BookSpell>
     {
         #region Ctor
         public BookSpell()
@@ -45,7 +44,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Spell
         public FormLink<Spell> Spell { get; set; } = new FormLink<Spell>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ISpellGetter> IBookSpellGetter.Spell => this.Spell;
+        FormLink<ISpellGetter> IBookSpellGetter.Spell => this.Spell.ToGetter<Spell, ISpellGetter>();
         #endregion
 
         #region To String
@@ -333,7 +332,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => BookSpellCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => BookSpellCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => BookSpellCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BookSpellCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BookSpellCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -351,14 +350,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new BookSpell CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static BookSpell CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -385,8 +376,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBookSpellGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -405,7 +394,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IBookSpell :
         IBookSpellGetter,
         IBookTeachTarget,
-        ILoquiObjectSetter<IBookSpell>
+        ILoquiObjectSetter<IBookSpell>,
+        ILinkedFormKeyContainer
     {
         new FormLink<Spell> Spell { get; set; }
     }
@@ -413,11 +403,11 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IBookSpellGetter :
         IBookTeachTargetGetter,
         ILoquiObject<IBookSpellGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => BookSpell_Registration.Instance;
-        IFormLink<ISpellGetter> Spell { get; }
+        FormLink<ISpellGetter> Spell { get; }
 
     }
 
@@ -464,24 +454,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IBookSpellGetter item,
-            BookSpell.Mask<bool?> checkMask)
-        {
-            return ((BookSpellCommon)((IBookSpellGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static BookSpell.Mask<bool> GetHasBeenSetMask(this IBookSpellGetter item)
-        {
-            var ret = new BookSpell.Mask<bool>(false);
-            ((BookSpellCommon)((IBookSpellGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -553,17 +525,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IBookSpell item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IBookSpell item,
             MutagenFrame frame,
@@ -885,27 +846,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.Spell ?? true)
             {
-                fg.AppendItem(item.Spell, "Spell");
+                fg.AppendItem(item.Spell.FormKey, "Spell");
             }
-        }
-        
-        public bool HasBeenSet(
-            IBookSpellGetter item,
-            BookSpell.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IBookSpellGetter item,
-            BookSpell.Mask<bool> mask)
-        {
-            mask.Spell = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static BookSpell_FieldIndex ConvertFieldIndex(BookTeachTarget_FieldIndex index)
@@ -992,7 +934,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)BookSpell_FieldIndex.Spell) ?? true))
             {
-                item.Spell = rhs.Spell.FormKey;
+                item.Spell = new FormLink<Spell>(rhs.Spell.FormKey);
             }
         }
         
@@ -1174,15 +1116,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBookSpellGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => BookSpellCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => BookSpellCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BookSpellCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BookSpellCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => BookSpellCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => BookSpellBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1195,7 +1133,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<ISpellGetter> Spell => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<ISpellGetter> Spell => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

@@ -2,9 +2,9 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="LandTexture" objType="Record" baseClass="OblivionMajorRecord" recordType="LTEX" GUID="528c071e-b61d-4149-b96a-a28f0d96e87e" ID="51">
     <Fields>
-      <String name="Icon" recordType="ICON" hasBeenSet="True" />
+      <String name="Icon" recordType="ICON" nullable="True" />
       <RefDirect name="Havok" refName="HavokData" />
-      <UInt8 name="TextureSpecularExponent" recordType="SNAM" hasBeenSet="True" />
+      <UInt8 name="TextureSpecularExponent" recordType="SNAM" nullable="True" />
       <List name="PotentialGrass">
         <FormLink recordType="GNAM" refName="Grass" />
       </List>

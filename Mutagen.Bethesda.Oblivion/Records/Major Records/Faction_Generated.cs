@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IFactionInternal,
         ILoquiObjectSetter<Faction>,
-        IEquatable<Faction>,
-        IEqualsMask
+        IEquatable<Faction>
     {
         #region Ctor
         protected Faction()
@@ -654,7 +653,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => FactionCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => FactionCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => FactionCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionCommon.Instance.RemapLinks(this, mapping);
         public Faction(FormKey formKey)
@@ -689,14 +688,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new Faction CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static Faction CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -723,8 +714,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFactionGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -745,7 +734,8 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecord,
         IOwner,
         INamed,
-        ILoquiObjectSetter<IFactionInternal>
+        ILoquiObjectSetter<IFactionInternal>,
+        ILinkedFormKeyContainer
     {
         new String? Name { get; set; }
         new IExtendedList<Relation> Relations { get; }
@@ -766,7 +756,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOwnerGetter,
         INamedGetter,
         ILoquiObject<IFactionGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Faction_Registration.Instance;
@@ -821,24 +811,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IFactionGetter item,
-            Faction.Mask<bool?> checkMask)
-        {
-            return ((FactionCommon)((IFactionGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Faction.Mask<bool> GetHasBeenSetMask(this IFactionGetter item)
-        {
-            var ret = new Faction.Mask<bool>(false);
-            ((FactionCommon)((IFactionGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -910,17 +882,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IFactionInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IFactionInternal item,
             MutagenFrame frame,
@@ -1378,34 +1339,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 fg.AppendLine("]");
             }
-        }
-        
-        public bool HasBeenSet(
-            IFactionGetter item,
-            Faction.Mask<bool?> checkMask)
-        {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
-            if (checkMask.CrimeGoldMultiplier.HasValue && checkMask.CrimeGoldMultiplier.Value != (item.CrimeGoldMultiplier != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IFactionGetter item,
-            Faction.Mask<bool> mask)
-        {
-            mask.Name = (item.Name != null);
-            var RelationsItem = item.Relations;
-            mask.Relations = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Relation.Mask<bool>?>>?>(true, RelationsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Relation.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.Flags = (item.Flags != null);
-            mask.CrimeGoldMultiplier = (item.CrimeGoldMultiplier != null);
-            var RanksItem = item.Ranks;
-            mask.Ranks = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Rank.Mask<bool>?>>?>(true, RanksItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Rank.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static Faction_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
@@ -1979,15 +1912,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFactionGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => FactionCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => FactionCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => FactionCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => FactionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

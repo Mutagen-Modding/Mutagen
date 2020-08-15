@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class DialogResponsesUnknownData :
         IDialogResponsesUnknownData,
         ILoquiObjectSetter<DialogResponsesUnknownData>,
-        IEquatable<DialogResponsesUnknownData>,
-        IEqualsMask
+        IEquatable<DialogResponsesUnknownData>
     {
         #region Ctor
         public DialogResponsesUnknownData()
@@ -54,7 +53,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region QNAM
         public FormLinkNullable<SkyrimMajorRecord> QNAM { get; set; } = new FormLinkNullable<SkyrimMajorRecord>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ISkyrimMajorRecordGetter> IDialogResponsesUnknownDataGetter.QNAM => this.QNAM;
+        FormLinkNullable<ISkyrimMajorRecordGetter> IDialogResponsesUnknownDataGetter.QNAM => this.QNAM.ToGetter<SkyrimMajorRecord, ISkyrimMajorRecordGetter>();
         #endregion
         #region NEXT
         public Boolean NEXT { get; set; } = default;
@@ -416,7 +415,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => DialogResponsesUnknownDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => DialogResponsesUnknownDataCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => DialogResponsesUnknownDataCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogResponsesUnknownDataCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogResponsesUnknownDataCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -436,14 +435,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static DialogResponsesUnknownData CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static DialogResponsesUnknownData CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -470,8 +461,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDialogResponsesUnknownDataGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -489,7 +478,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IDialogResponsesUnknownData :
         IDialogResponsesUnknownDataGetter,
-        ILoquiObjectSetter<IDialogResponsesUnknownData>
+        ILoquiObjectSetter<IDialogResponsesUnknownData>,
+        ILinkedFormKeyContainer
     {
         new MemorySlice<Byte>? SCHR { get; set; }
         new FormLinkNullable<SkyrimMajorRecord> QNAM { get; set; }
@@ -499,7 +489,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IDialogResponsesUnknownDataGetter :
         ILoquiObject,
         ILoquiObject<IDialogResponsesUnknownDataGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -510,7 +500,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => DialogResponsesUnknownData_Registration.Instance;
         ReadOnlyMemorySlice<Byte>? SCHR { get; }
-        IFormLinkNullable<ISkyrimMajorRecordGetter> QNAM { get; }
+        FormLinkNullable<ISkyrimMajorRecordGetter> QNAM { get; }
         Boolean NEXT { get; }
 
     }
@@ -558,24 +548,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IDialogResponsesUnknownDataGetter item,
-            DialogResponsesUnknownData.Mask<bool?> checkMask)
-        {
-            return ((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static DialogResponsesUnknownData.Mask<bool> GetHasBeenSetMask(this IDialogResponsesUnknownDataGetter item)
-        {
-            var ret = new DialogResponsesUnknownData.Mask<bool>(false);
-            ((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -670,17 +642,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IDialogResponsesUnknownData item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IDialogResponsesUnknownData item,
             MutagenFrame frame,
@@ -1025,33 +986,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendLine($"SCHR => {SpanExt.ToHexString(SCHRItem)}");
             }
-            if ((printMask?.QNAM ?? true)
-                && item.QNAM.TryGet(out var QNAMItem))
+            if (printMask?.QNAM ?? true)
             {
-                fg.AppendItem(QNAMItem, "QNAM");
+                fg.AppendItem(item.QNAM.FormKey, "QNAM");
             }
             if (printMask?.NEXT ?? true)
             {
                 fg.AppendItem(item.NEXT, "NEXT");
             }
-        }
-        
-        public bool HasBeenSet(
-            IDialogResponsesUnknownDataGetter item,
-            DialogResponsesUnknownData.Mask<bool?> checkMask)
-        {
-            if (checkMask.SCHR.HasValue && checkMask.SCHR.Value != (item.SCHR != null)) return false;
-            if (checkMask.QNAM.HasValue && checkMask.QNAM.Value != (item.QNAM.FormKey != null)) return false;
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IDialogResponsesUnknownDataGetter item,
-            DialogResponsesUnknownData.Mask<bool> mask)
-        {
-            mask.SCHR = (item.SCHR != null);
-            mask.QNAM = (item.QNAM.FormKey != null);
-            mask.NEXT = true;
         }
         
         #region Equals and Hash
@@ -1074,10 +1016,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(SCHRItem);
             }
-            if (item.QNAM.TryGet(out var QNAMitem))
-            {
-                hash.Add(QNAMitem);
-            }
+            hash.Add(item.QNAM);
             hash.Add(item.NEXT);
             return hash.ToHashCode();
         }
@@ -1128,7 +1067,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.QNAM) ?? true))
             {
-                item.QNAM = rhs.QNAM.FormKey;
+                item.QNAM = new FormLinkNullable<SkyrimMajorRecord>(rhs.QNAM.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.NEXT) ?? true))
             {
@@ -1319,12 +1258,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IDialogResponsesUnknownDataGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((DialogResponsesUnknownDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1356,15 +1296,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDialogResponsesUnknownDataGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => DialogResponsesUnknownDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => DialogResponsesUnknownDataCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogResponsesUnknownDataCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogResponsesUnknownDataCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => DialogResponsesUnknownDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DialogResponsesUnknownDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1385,8 +1321,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region QNAM
         private int? _QNAMLocation;
-        public bool QNAM_IsSet => _QNAMLocation.HasValue;
-        public IFormLinkNullable<ISkyrimMajorRecordGetter> QNAM => _QNAMLocation.HasValue ? new FormLinkNullable<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QNAMLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISkyrimMajorRecordGetter>.Null;
+        public FormLinkNullable<ISkyrimMajorRecordGetter> QNAM => _QNAMLocation.HasValue ? new FormLinkNullable<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QNAMLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISkyrimMajorRecordGetter>.Null;
         #endregion
         #region NEXT
         private int? _NEXTLocation;

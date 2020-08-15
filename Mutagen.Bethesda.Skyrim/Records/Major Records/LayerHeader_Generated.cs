@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class LayerHeader :
         ILayerHeader,
         ILoquiObjectSetter<LayerHeader>,
-        IEquatable<LayerHeader>,
-        IEqualsMask
+        IEquatable<LayerHeader>
     {
         #region Ctor
         public LayerHeader()
@@ -43,7 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Texture
         public FormLink<LandscapeTexture> Texture { get; set; } = new FormLink<LandscapeTexture>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ILandscapeTextureGetter> ILayerHeaderGetter.Texture => this.Texture;
+        FormLink<ILandscapeTextureGetter> ILayerHeaderGetter.Texture => this.Texture.ToGetter<LandscapeTexture, ILandscapeTextureGetter>();
         #endregion
         #region Quadrant
         public Quadrant Quadrant { get; set; } = default;
@@ -409,7 +408,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => LayerHeaderCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LayerHeaderCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LayerHeaderCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LayerHeaderCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LayerHeaderCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -429,14 +428,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static LayerHeader CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static LayerHeader CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -463,8 +454,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILayerHeaderGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -482,7 +471,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface ILayerHeader :
         ILayerHeaderGetter,
-        ILoquiObjectSetter<ILayerHeader>
+        ILoquiObjectSetter<ILayerHeader>,
+        ILinkedFormKeyContainer
     {
         new FormLink<LandscapeTexture> Texture { get; set; }
         new Quadrant Quadrant { get; set; }
@@ -492,7 +482,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILayerHeaderGetter :
         ILoquiObject,
         ILoquiObject<ILayerHeaderGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -502,7 +492,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => LayerHeader_Registration.Instance;
-        IFormLink<ILandscapeTextureGetter> Texture { get; }
+        FormLink<ILandscapeTextureGetter> Texture { get; }
         Quadrant Quadrant { get; }
         UInt16 LayerNumber { get; }
 
@@ -551,24 +541,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ILayerHeaderGetter item,
-            LayerHeader.Mask<bool?> checkMask)
-        {
-            return ((LayerHeaderCommon)((ILayerHeaderGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static LayerHeader.Mask<bool> GetHasBeenSetMask(this ILayerHeaderGetter item)
-        {
-            var ret = new LayerHeader.Mask<bool>(false);
-            ((LayerHeaderCommon)((ILayerHeaderGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -663,17 +635,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ILayerHeader item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ILayerHeader item,
             MutagenFrame frame,
@@ -1005,7 +966,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.Texture ?? true)
             {
-                fg.AppendItem(item.Texture, "Texture");
+                fg.AppendItem(item.Texture.FormKey, "Texture");
             }
             if (printMask?.Quadrant ?? true)
             {
@@ -1015,22 +976,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.LayerNumber, "LayerNumber");
             }
-        }
-        
-        public bool HasBeenSet(
-            ILayerHeaderGetter item,
-            LayerHeader.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            ILayerHeaderGetter item,
-            LayerHeader.Mask<bool> mask)
-        {
-            mask.Texture = true;
-            mask.Quadrant = true;
-            mask.LayerNumber = true;
         }
         
         #region Equals and Hash
@@ -1087,7 +1032,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)LayerHeader_FieldIndex.Texture) ?? true))
             {
-                item.Texture = rhs.Texture.FormKey;
+                item.Texture = new FormLink<LandscapeTexture>(rhs.Texture.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LayerHeader_FieldIndex.Quadrant) ?? true))
             {
@@ -1248,12 +1193,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this ILayerHeaderGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((LayerHeaderBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1285,15 +1231,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILayerHeaderGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => LayerHeaderCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LayerHeaderCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LayerHeaderCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LayerHeaderCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LayerHeaderCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LayerHeaderBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1308,7 +1250,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<ILandscapeTextureGetter> Texture => new FormLink<ILandscapeTextureGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<ILandscapeTextureGetter> Texture => new FormLink<ILandscapeTextureGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Quadrant Quadrant => (Quadrant)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x4, 0x2));
         public UInt16 LayerNumber => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x6, 0x2));
         partial void CustomFactoryEnd(

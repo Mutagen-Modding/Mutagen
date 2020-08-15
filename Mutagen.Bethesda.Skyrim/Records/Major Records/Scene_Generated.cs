@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ISceneInternal,
         ILoquiObjectSetter<Scene>,
-        IEquatable<Scene>,
-        IEqualsMask
+        IEquatable<Scene>
     {
         #region Ctor
         protected Scene()
@@ -126,7 +125,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Quest
         public FormLinkNullable<Quest> Quest { get; set; } = new FormLinkNullable<Quest>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IQuestGetter> ISceneGetter.Quest => this.Quest;
+        FormLinkNullable<IQuestGetter> ISceneGetter.Quest => this.Quest.ToGetter<Quest, IQuestGetter>();
         #endregion
         #region LastActionIndex
         public UInt32? LastActionIndex { get; set; }
@@ -1072,7 +1071,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => SceneCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => SceneCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => SceneCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SceneCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SceneCommon.Instance.RemapLinks(this, mapping);
         public Scene(FormKey formKey)
@@ -1107,14 +1106,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new Scene CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static Scene CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1141,8 +1132,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISceneGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1161,7 +1150,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IScene :
         ISceneGetter,
         ISkyrimMajorRecord,
-        ILoquiObjectSetter<ISceneInternal>
+        ILoquiObjectSetter<ISceneInternal>,
+        ILinkedFormKeyContainer
     {
         new SceneAdapter? VirtualMachineAdapter { get; set; }
         new Scene.Flag? Flags { get; set; }
@@ -1186,7 +1176,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ISceneGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<ISceneGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Scene_Registration.Instance;
@@ -1197,7 +1187,7 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<ISceneActionGetter> Actions { get; }
         IScenePhaseUnusedDataGetter? Unused { get; }
         IScenePhaseUnusedDataGetter? Unused2 { get; }
-        IFormLinkNullable<IQuestGetter> Quest { get; }
+        FormLinkNullable<IQuestGetter> Quest { get; }
         UInt32? LastActionIndex { get; }
         ReadOnlyMemorySlice<Byte>? VNAM { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
@@ -1247,24 +1237,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ISceneGetter item,
-            Scene.Mask<bool?> checkMask)
-        {
-            return ((SceneCommon)((ISceneGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Scene.Mask<bool> GetHasBeenSetMask(this ISceneGetter item)
-        {
-            var ret = new Scene.Mask<bool>(false);
-            ((SceneCommon)((ISceneGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -1336,17 +1308,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ISceneInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ISceneInternal item,
             MutagenFrame frame,
@@ -1930,10 +1891,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 Unused2Item?.ToString(fg, "Unused2");
             }
-            if ((printMask?.Quest ?? true)
-                && item.Quest.TryGet(out var QuestItem))
+            if (printMask?.Quest ?? true)
             {
-                fg.AppendItem(QuestItem, "Quest");
+                fg.AppendItem(item.Quest.FormKey, "Quest");
             }
             if ((printMask?.LastActionIndex ?? true)
                 && item.LastActionIndex.TryGet(out var LastActionIndexItem))
@@ -1963,52 +1923,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-        }
-        
-        public bool HasBeenSet(
-            ISceneGetter item,
-            Scene.Mask<bool?> checkMask)
-        {
-            if (checkMask.VirtualMachineAdapter?.Overall.HasValue ?? false && checkMask.VirtualMachineAdapter.Overall.Value != (item.VirtualMachineAdapter != null)) return false;
-            if (checkMask.VirtualMachineAdapter?.Specific != null && (item.VirtualMachineAdapter == null || !item.VirtualMachineAdapter.HasBeenSet(checkMask.VirtualMachineAdapter.Specific))) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
-            if (checkMask.Unused?.Overall.HasValue ?? false && checkMask.Unused.Overall.Value != (item.Unused != null)) return false;
-            if (checkMask.Unused?.Specific != null && (item.Unused == null || !item.Unused.HasBeenSet(checkMask.Unused.Specific))) return false;
-            if (checkMask.Unused2?.Overall.HasValue ?? false && checkMask.Unused2.Overall.Value != (item.Unused2 != null)) return false;
-            if (checkMask.Unused2?.Specific != null && (item.Unused2 == null || !item.Unused2.HasBeenSet(checkMask.Unused2.Specific))) return false;
-            if (checkMask.Quest.HasValue && checkMask.Quest.Value != (item.Quest.FormKey != null)) return false;
-            if (checkMask.LastActionIndex.HasValue && checkMask.LastActionIndex.Value != (item.LastActionIndex != null)) return false;
-            if (checkMask.VNAM.HasValue && checkMask.VNAM.Value != (item.VNAM != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            ISceneGetter item,
-            Scene.Mask<bool> mask)
-        {
-            var itemVirtualMachineAdapter = item.VirtualMachineAdapter;
-            mask.VirtualMachineAdapter = new MaskItem<bool, SceneAdapter.Mask<bool>?>(itemVirtualMachineAdapter != null, itemVirtualMachineAdapter?.GetHasBeenSetMask());
-            mask.Flags = (item.Flags != null);
-            var PhasesItem = item.Phases;
-            mask.Phases = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ScenePhase.Mask<bool>?>>?>(true, PhasesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, ScenePhase.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            var ActorsItem = item.Actors;
-            mask.Actors = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, SceneActor.Mask<bool>?>>?>(true, ActorsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, SceneActor.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            var ActionsItem = item.Actions;
-            mask.Actions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, SceneAction.Mask<bool>?>>?>(true, ActionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, SceneAction.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            var itemUnused = item.Unused;
-            mask.Unused = new MaskItem<bool, ScenePhaseUnusedData.Mask<bool>?>(itemUnused != null, itemUnused?.GetHasBeenSetMask());
-            var itemUnused2 = item.Unused2;
-            mask.Unused2 = new MaskItem<bool, ScenePhaseUnusedData.Mask<bool>?>(itemUnused2 != null, itemUnused2?.GetHasBeenSetMask());
-            mask.Quest = (item.Quest.FormKey != null);
-            mask.LastActionIndex = (item.LastActionIndex != null);
-            mask.VNAM = (item.VNAM != null);
-            var ConditionsItem = item.Conditions;
-            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static Scene_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -2111,10 +2025,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Unused2item);
             }
-            if (item.Quest.TryGet(out var Questitem))
-            {
-                hash.Add(Questitem);
-            }
+            hash.Add(item.Quest);
             if (item.LastActionIndex.TryGet(out var LastActionIndexitem))
             {
                 hash.Add(LastActionIndexitem);
@@ -2153,14 +2064,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainer VirtualMachineAdapterlinkCont)
+            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainerGetter VirtualMachineAdapterlinkCont)
             {
                 foreach (var item in VirtualMachineAdapterlinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.Phases.WhereCastable<IScenePhaseGetter, ILinkedFormKeyContainer> ()
+            foreach (var item in obj.Phases.WhereCastable<IScenePhaseGetter, ILinkedFormKeyContainerGetter> ()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
@@ -2173,7 +2084,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return QuestKey;
             }
-            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainer> ()
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter> ()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
@@ -2381,7 +2292,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Scene_FieldIndex.Quest) ?? true))
             {
-                item.Quest = rhs.Quest.FormKey;
+                item.Quest = new FormLinkNullable<Quest>(rhs.Quest.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Scene_FieldIndex.LastActionIndex) ?? true))
             {
@@ -2866,15 +2777,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISceneGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => SceneCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => SceneCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SceneCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SceneCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => SceneCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SceneBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2890,7 +2797,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
         public ISceneAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? SceneAdapterBinaryOverlay.SceneAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
-        public bool VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
         #endregion
         #region Flags
         private int? _FlagsLocation;
@@ -2903,8 +2809,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IScenePhaseUnusedDataGetter? Unused2 { get; private set; }
         #region Quest
         private int? _QuestLocation;
-        public bool Quest_IsSet => _QuestLocation.HasValue;
-        public IFormLinkNullable<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        public FormLinkNullable<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
         #endregion
         #region LastActionIndex
         private int? _LastActionIndexLocation;

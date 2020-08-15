@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class Condition :
         ICondition,
         ILoquiObjectSetter<Condition>,
-        IEquatable<Condition>,
-        IEqualsMask
+        IEquatable<Condition>
     {
         #region Ctor
         public Condition()
@@ -580,14 +579,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static Condition CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static Condition CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -628,8 +619,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IConditionGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -727,24 +716,6 @@ namespace Mutagen.Bethesda.Oblivion
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IConditionGetter item,
-            Condition.Mask<bool?> checkMask)
-        {
-            return ((ConditionCommon)((IConditionGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Condition.Mask<bool> GetHasBeenSetMask(this IConditionGetter item)
-        {
-            var ret = new Condition.Mask<bool>(false);
-            ((ConditionCommon)((IConditionGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IConditionGetter item,
             IConditionGetter rhs)
@@ -837,17 +808,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ICondition item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ICondition item,
             MutagenFrame frame,
@@ -1292,27 +1252,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IConditionGetter item,
-            Condition.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IConditionGetter item,
-            Condition.Mask<bool> mask)
-        {
-            mask.CompareOperator = true;
-            mask.Flags = true;
-            mask.Fluff = true;
-            mask.ComparisonValue = true;
-            mask.Function = true;
-            mask.FirstParameter = true;
-            mask.SecondParameter = true;
-            mask.ThirdParameter = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IConditionGetter? lhs,
@@ -1586,12 +1525,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this IConditionGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((ConditionBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1623,8 +1563,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IConditionGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ConditionBinaryWriteTranslation.Instance;

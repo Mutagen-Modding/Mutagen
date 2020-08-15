@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         MajorRecord,
         ISkyrimMajorRecordInternal,
         ILoquiObjectSetter<SkyrimMajorRecord>,
-        IEquatable<SkyrimMajorRecord>,
-        IEqualsMask
+        IEquatable<SkyrimMajorRecord>
     {
         #region Ctor
         protected SkyrimMajorRecord()
@@ -377,7 +376,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => SkyrimMajorRecordCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => SkyrimMajorRecordCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => SkyrimMajorRecordCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimMajorRecordCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimMajorRecordCommon.Instance.RemapLinks(this, mapping);
         public SkyrimMajorRecord(FormKey formKey)
@@ -426,8 +425,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkyrimMajorRecordGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -447,7 +444,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IMajorRecord,
         IMajorRecordEnumerable,
-        ILoquiObjectSetter<ISkyrimMajorRecordInternal>
+        ILoquiObjectSetter<ISkyrimMajorRecordInternal>,
+        ILinkedFormKeyContainer
     {
         new UInt16 FormVersion { get; set; }
         new UInt16 Version2 { get; set; }
@@ -464,7 +462,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMajorRecordGetter,
         IMajorRecordGetterEnumerable,
         ILoquiObject<ISkyrimMajorRecordGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => SkyrimMajorRecord_Registration.Instance;
@@ -516,24 +514,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ISkyrimMajorRecordGetter item,
-            SkyrimMajorRecord.Mask<bool?> checkMask)
-        {
-            return ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static SkyrimMajorRecord.Mask<bool> GetHasBeenSetMask(this ISkyrimMajorRecordGetter item)
-        {
-            var ret = new SkyrimMajorRecord.Mask<bool>(false);
-            ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -668,17 +648,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ISkyrimMajorRecordInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
@@ -1043,26 +1012,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            ISkyrimMajorRecordGetter item,
-            SkyrimMajorRecord.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            ISkyrimMajorRecordGetter item,
-            SkyrimMajorRecord.Mask<bool> mask)
-        {
-            mask.FormVersion = true;
-            mask.Version2 = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static SkyrimMajorRecord_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
@@ -1155,11 +1104,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (type.Name)
             {
                 case "IMajorRecordCommon":
-                case "IMajorRecordCommonGetter":
+                case "IMajorRecord":
                 case "MajorRecord":
                 case "ISkyrimMajorRecord":
-                case "ISkyrimMajorRecordGetter":
                 case "SkyrimMajorRecord":
+                    if (!SkyrimMajorRecord_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IMajorRecordGetter":
+                case "IMajorRecordCommonGetter":
+                case "ISkyrimMajorRecordGetter":
                     foreach (var item in this.EnumerateMajorRecords(obj))
                     {
                         yield return item;
@@ -1418,15 +1375,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkyrimMajorRecordGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => SkyrimMajorRecordCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => SkyrimMajorRecordCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimMajorRecordCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimMajorRecordCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => SkyrimMajorRecordCommon.Instance.GetLinkFormKeys(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

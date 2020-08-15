@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Tests.GUI
         {
             Group = group;
             Settings = p;
-            _Name = this.WhenAny(x => x.Settings.Path.TargetPath)
+            _Name = this.WhenAnyValue(x => x.Settings.Path.TargetPath)
                 .Select(path =>
                 {
                     try
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Tests.GUI
             {
                 Group.Parent.SelectedPassthrough = this;
             });
-            _IsSelected = Group.Parent.WhenAny(x => x.SelectedPassthrough)
+            _IsSelected = Group.Parent.WhenAnyValue(x => x.SelectedPassthrough)
                 .Select(x => x == this)
                 .ToGuiProperty(this, nameof(IsSelected));
             _State = Tests.Connect()

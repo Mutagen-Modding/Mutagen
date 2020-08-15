@@ -10,14 +10,18 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
   </PropertyGroup>
   <ItemGroup>
+    <EmbeddedResource Remove="Translations\Binary\WriteParameters\**" />
+    <None Remove="Translations\Binary\WriteParameters\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Compression.BSA" Version="2.2.1.1" />
     <PackageReference Include="DotNetZip" Version="1.13.8" />
-    <PackageReference Include="Loqui" Version="1.1.18" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.0.31" />
-    <PackageReference Include="Wabbajack.Compression.BSA" Version="2.1.0" />
+    <PackageReference Include="Loqui" Version="1.2.0" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.1.0" />
   </ItemGroup>
   <PropertyGroup>
     <PackageId>Mutagen.Bethesda.Core</PackageId>
-    <Version>0.12</Version>
+    <Version>0.13</Version>
     <Authors>Noggog</Authors>
     <Company>Mutagen</Company>
     <Product>Mutagen</Product>
@@ -37,12 +41,15 @@
   <ItemGroup>
     <Compile Include="Enums\ColorBinaryType.cs" />
     <Compile Include="Enums\FloatIntegerType.cs" />
-    <Compile Include="Enums\GameCategory.cs" />
     <Compile Include="Enums\Language.cs" />
+    <Compile Include="Enums\ModHeaderCommonFlag.cs" />
     <Compile Include="Enums\Quadrant.cs" />
     <Compile Include="Enums\StringsFileFormat.cs" />
     <Compile Include="Enums\StringsSource.cs" />
+    <Compile Include="Exceptions\MissingModException.cs" />
     <Compile Include="Extensions\EnumerableExt.cs" />
+    <Compile Include="Extensions\FormLinkExt.cs" />
+    <Compile Include="Extensions\MutagenEnumExt.cs" />
     <Compile Include="Interfaces\IDuplicatable.cs" />
     <Compile Include="Interfaces\IGameSettingCommon.cs" />
     <Compile Include="Interfaces\IGroup.cs" />
@@ -50,16 +57,23 @@
     <Compile Include="Interfaces\IMajorRecordCommon.cs" />
     <Compile Include="Interfaces\IMajorRecordEnumerable.cs" />
     <Compile Include="Interfaces\IMod.cs" />
+    <Compile Include="Interfaces\IModHeaderCommon.cs" />
+    <Compile Include="Interfaces\IModKeyed.cs" />
     <Compile Include="Interfaces\INamed.cs" />
     <Compile Include="Interfaces\INamedRequired.cs" />
     <Compile Include="Interfaces\ITranslatedNamed.cs" />
     <Compile Include="Interfaces\ITranslatedNamedRequired.cs" />
     <Compile Include="Interfaces\LinkInterfaceMapping.cs" />
-    <Compile Include="Links\DirectModLinkCache.cs" />
+    <Compile Include="Links\ImmutableModLinkCache.cs" />
     <Compile Include="Links\FormLinkNullable.cs" />
+    <Compile Include="Links\IFormLink.cs" />
     <Compile Include="Links\ILinkCache.cs" />
-    <Compile Include="Links\LoadOrderLinkCache.cs" />
+    <Compile Include="Links\ImmutableLoadOrderLinkCache.cs" />
+    <Compile Include="Links\MutableModLinkCache.cs" />
+    <Compile Include="Links\MutableLoadOrderLinkCache.cs" />
     <Compile Include="Load Order\LoadOrder.cs" />
+    <Compile Include="Extensions\OverrideMixIns.cs" />
+    <Compile Include="Load Order\LoadOrderTimestampComparer.cs" />
     <Compile Include="Records\RecordTypeInts.cs" />
     <Compile Include="Records\RecordTypes.cs" />
     <Compile Include="Streams\WritingBundle.cs" />
@@ -72,6 +86,10 @@
     <Compile Include="String Lookup\StringsUtility.cs" />
     <Compile Include="String Lookup\StringsWriter.cs" />
     <Compile Include="String Lookup\TranslatedString.cs" />
+    <Compile Include="Structs\FormID.cs" />
+    <Compile Include="Structs\FormKey.cs" />
+    <Compile Include="Structs\ModIndex.cs" />
+    <Compile Include="Structs\RecordType.cs" />
     <Compile Include="TestingPermissions.cs" />
     <Compile Include="Interfaces\IFormVersionGetter.cs" />
     <Compile Include="Translations\Binary\Binary Overlay\FormVersionGetter.cs" />
@@ -81,8 +99,10 @@
     <Compile Include="Translations\Binary\Fields\PercentBinaryTranslation.cs" />
     <Compile Include="Translations\Binary\Headers\HeaderExt.cs" />
     <Compile Include="Translations\Binary\Headers\StreamHeaderMixIn.cs" />
+    <Compile Include="Translations\Binary\ModHeaderWriteLogic.cs" />
     <Compile Include="Translations\Binary\ParseResult.cs" />
     <Compile Include="Translations\XML\TranslatedStringXmlTranslation.cs" />
+    <Compile Include="Utility\ModInstantiator.cs" />
     <Compile Include="Utility\RecordInfoCache.cs" />
     <Compile Include="Persistance\TextFileFormKeyAllocator.cs" />
     <Compile Include="Records\AMod.cs" />
@@ -119,32 +139,24 @@
     <Compile Include="Preprocessing\ModRecordAligner.cs" />
     <Compile Include="Translations\Binary\BinaryStringUtility.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="Enums\GameRelease.cs" />
     <Compile Include="Enums\GroupTypeEnum.cs" />
     <Compile Include="Extensions\IBinaryStreamExt.cs" />
-    <Compile Include="Structs\FormID.cs" />
-    <Compile Include="Structs\FormKey.cs" />
     <Compile Include="Streams\IMutagenReadStream.cs" />
     <Compile Include="Links\EDIDLink.cs" />
     <Compile Include="Links\FormLink.cs" />
     <Compile Include="Links\IEDIDLink.cs" />
-    <Compile Include="Links\IFormLink.cs" />
     <Compile Include="Links\ILink.cs" />
-    <Compile Include="Links\ILinkedFormKeyContainer.cs" />
+    <Compile Include="Links\ILinkedFormKeyContainerGetter.cs" />
     <Compile Include="Utility\MasterReferenceReader.cs" />
     <Compile Include="Preprocessing\ModDecompressor.cs" />
-    <Compile Include="Structs\ModIndex.cs" />
-    <Compile Include="Structs\ModKey.cs" />
     <Compile Include="Load Order\ModListing.cs" />
     <Compile Include="Preprocessing\ModRecordSorter.cs" />
     <Compile Include="Enums\ObjectType.cs" />
-    <Compile Include="Patching\Pipeline.cs" />
     <Compile Include="Utility\RecordInterest.cs" />
     <Compile Include="Utility\RecordLocator.cs" />
     <Compile Include="Records\MajorRecord.cs">
       <DependentUpon>MajorRecord.xml</DependentUpon>
     </Compile>
-    <Compile Include="Structs\RecordType.cs" />
     <Compile Include="Translations\Binary\RecordTypeConverter.cs" />
     <Compile Include="Streams\MutagenBinaryReadStream.cs" />
     <Compile Include="Streams\MutagenMemoryReadStream.cs" />
@@ -201,4 +213,10 @@
       <DependentUpon>MasterReference.xml</DependentUpon>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Mutagen.Bethesda.Kernel\Mutagen.Bethesda.Kernel.csproj" />
+  </ItemGroup>
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\mutagen.bethesda.core&quot;" />
+  </Target>
 </Project>

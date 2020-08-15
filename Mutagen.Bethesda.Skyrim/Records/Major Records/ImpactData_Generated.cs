@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ImpactData :
         IImpactData,
         ILoquiObjectSetter<ImpactData>,
-        IEquatable<ImpactData>,
-        IEqualsMask
+        IEquatable<ImpactData>
     {
         #region Ctor
         public ImpactData()
@@ -43,12 +42,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Material
         public FormLink<MaterialType> Material { get; set; } = new FormLink<MaterialType>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IMaterialTypeGetter> IImpactDataGetter.Material => this.Material;
+        FormLink<IMaterialTypeGetter> IImpactDataGetter.Material => this.Material.ToGetter<MaterialType, IMaterialTypeGetter>();
         #endregion
         #region Impact
         public FormLink<Impact> Impact { get; set; } = new FormLink<Impact>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IImpactGetter> IImpactDataGetter.Impact => this.Impact;
+        FormLink<IImpactGetter> IImpactDataGetter.Impact => this.Impact.ToGetter<Impact, IImpactGetter>();
         #endregion
 
         #region To String
@@ -380,7 +379,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => ImpactDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ImpactDataCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ImpactDataCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ImpactDataCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ImpactDataCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -400,14 +399,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static ImpactData CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static ImpactData CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -434,8 +425,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IImpactDataGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -453,7 +442,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IImpactData :
         IImpactDataGetter,
-        ILoquiObjectSetter<IImpactData>
+        ILoquiObjectSetter<IImpactData>,
+        ILinkedFormKeyContainer
     {
         new FormLink<MaterialType> Material { get; set; }
         new FormLink<Impact> Impact { get; set; }
@@ -462,7 +452,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IImpactDataGetter :
         ILoquiObject,
         ILoquiObject<IImpactDataGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -472,8 +462,8 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => ImpactData_Registration.Instance;
-        IFormLink<IMaterialTypeGetter> Material { get; }
-        IFormLink<IImpactGetter> Impact { get; }
+        FormLink<IMaterialTypeGetter> Material { get; }
+        FormLink<IImpactGetter> Impact { get; }
 
     }
 
@@ -520,24 +510,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IImpactDataGetter item,
-            ImpactData.Mask<bool?> checkMask)
-        {
-            return ((ImpactDataCommon)((IImpactDataGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static ImpactData.Mask<bool> GetHasBeenSetMask(this IImpactDataGetter item)
-        {
-            var ret = new ImpactData.Mask<bool>(false);
-            ((ImpactDataCommon)((IImpactDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -632,17 +604,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IImpactData item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IImpactData item,
             MutagenFrame frame,
@@ -960,27 +921,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.Material ?? true)
             {
-                fg.AppendItem(item.Material, "Material");
+                fg.AppendItem(item.Material.FormKey, "Material");
             }
             if (printMask?.Impact ?? true)
             {
-                fg.AppendItem(item.Impact, "Impact");
+                fg.AppendItem(item.Impact.FormKey, "Impact");
             }
-        }
-        
-        public bool HasBeenSet(
-            IImpactDataGetter item,
-            ImpactData.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IImpactDataGetter item,
-            ImpactData.Mask<bool> mask)
-        {
-            mask.Material = true;
-            mask.Impact = true;
         }
         
         #region Equals and Hash
@@ -1036,11 +982,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)ImpactData_FieldIndex.Material) ?? true))
             {
-                item.Material = rhs.Material.FormKey;
+                item.Material = new FormLink<MaterialType>(rhs.Material.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ImpactData_FieldIndex.Impact) ?? true))
             {
-                item.Impact = rhs.Impact.FormKey;
+                item.Impact = new FormLink<Impact>(rhs.Impact.FormKey);
             }
         }
         
@@ -1192,12 +1138,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IImpactDataGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((ImpactDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1229,15 +1176,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IImpactDataGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => ImpactDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ImpactDataCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ImpactDataCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ImpactDataCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ImpactDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ImpactDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1252,8 +1195,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<IMaterialTypeGetter> Material => new FormLink<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public IFormLink<IImpactGetter> Impact => new FormLink<IImpactGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public FormLink<IMaterialTypeGetter> Material => new FormLink<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<IImpactGetter> Impact => new FormLink<IImpactGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         APlacedTrap,
         IPlacedHazardInternal,
         ILoquiObjectSetter<PlacedHazard>,
-        IEquatable<PlacedHazard>,
-        IEqualsMask
+        IEquatable<PlacedHazard>
     {
         #region Ctor
         protected PlacedHazard()
@@ -46,7 +45,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Hazard
         public FormLink<Hazard> Hazard { get; set; } = new FormLink<Hazard>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IHazardGetter> IPlacedHazardGetter.Hazard => this.Hazard;
+        FormLink<IHazardGetter> IPlacedHazardGetter.Hazard => this.Hazard.ToGetter<Hazard, IHazardGetter>();
         #endregion
 
         #region To String
@@ -388,7 +387,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PlacedHazardCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PlacedHazardCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PlacedHazardCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedHazardCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedHazardCommon.Instance.RemapLinks(this, mapping);
         public PlacedHazard(FormKey formKey)
@@ -423,14 +422,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new PlacedHazard CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static PlacedHazard CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -457,8 +448,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPlacedHazardGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -477,7 +466,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPlacedHazard :
         IPlacedHazardGetter,
         IAPlacedTrap,
-        ILoquiObjectSetter<IPlacedHazardInternal>
+        ILoquiObjectSetter<IPlacedHazardInternal>,
+        ILinkedFormKeyContainer
     {
         new FormLink<Hazard> Hazard { get; set; }
     }
@@ -492,11 +482,11 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPlacedHazardGetter :
         IAPlacedTrapGetter,
         ILoquiObject<IPlacedHazardGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => PlacedHazard_Registration.Instance;
-        IFormLink<IHazardGetter> Hazard { get; }
+        FormLink<IHazardGetter> Hazard { get; }
 
     }
 
@@ -543,24 +533,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IPlacedHazardGetter item,
-            PlacedHazard.Mask<bool?> checkMask)
-        {
-            return ((PlacedHazardCommon)((IPlacedHazardGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static PlacedHazard.Mask<bool> GetHasBeenSetMask(this IPlacedHazardGetter item)
-        {
-            var ret = new PlacedHazard.Mask<bool>(false);
-            ((PlacedHazardCommon)((IPlacedHazardGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -632,17 +604,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IPlacedHazardInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IPlacedHazardInternal item,
             MutagenFrame frame,
@@ -1021,27 +982,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.Hazard ?? true)
             {
-                fg.AppendItem(item.Hazard, "Hazard");
+                fg.AppendItem(item.Hazard.FormKey, "Hazard");
             }
-        }
-        
-        public bool HasBeenSet(
-            IPlacedHazardGetter item,
-            PlacedHazard.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IPlacedHazardGetter item,
-            PlacedHazard.Mask<bool> mask)
-        {
-            mask.Hazard = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static PlacedHazard_FieldIndex ConvertFieldIndex(APlacedTrap_FieldIndex index)
@@ -1264,7 +1206,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)PlacedHazard_FieldIndex.Hazard) ?? true))
             {
-                item.Hazard = rhs.Hazard.FormKey;
+                item.Hazard = new FormLink<Hazard>(rhs.Hazard.FormKey);
             }
         }
         
@@ -1543,15 +1485,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPlacedHazardGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PlacedHazardCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PlacedHazardCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedHazardCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedHazardCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PlacedHazardCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PlacedHazardBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

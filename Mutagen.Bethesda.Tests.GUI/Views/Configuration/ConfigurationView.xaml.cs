@@ -24,25 +24,25 @@ namespace Mutagen.Bethesda.Tests.GUI.Views
             {
                 this.SettingsView.ViewModel = this.ViewModel;
 
-                this.WhenAny(x => x.ViewModel.SelectedConfigPath)
+                this.WhenAnyValue(x => x.ViewModel.SelectedConfigPath)
                     .BindToStrict(this, x => x.SettingsPicker.PickerVM)
                     .DisposeWith(disposable);
 
                 // Set up passthrough group pane
-                this.WhenAny(x => x.ViewModel.Groups)
+                this.WhenAnyValue(x => x.ViewModel.Groups)
                     .BindToStrict(this, x => x.PassthroughGroupsList.ItemsSource)
                     .DisposeWith(disposable);
-                this.WhenAny(x => x.ViewModel.AddPassthroughGroupCommand)
+                this.WhenAnyValue(x => x.ViewModel.AddPassthroughGroupCommand)
                     .BindToStrict(this, x => x.AddPassthroughButton.Command)
                     .DisposeWith(disposable);
 
                 // Setup run button
-                this.WhenAny(x => x.ViewModel.RunAllCommand)
+                this.WhenAnyValue(x => x.ViewModel.RunAllCommand)
                     .BindToStrict(this, x => x.RunButton.Command)
                     .DisposeWith(disposable);
 
                 // Set up valid enabled states
-                var enabledObs = this.WhenAny(x => x.ViewModel.SelectedSettings)
+                var enabledObs = this.WhenAnyValue(x => x.ViewModel.SelectedSettings)
                     .Select(x => x != null)
                     .Replay(1)
                     .RefCount();

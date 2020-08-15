@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         APackageData,
         IPackageDataFloat,
         ILoquiObjectSetter<PackageDataFloat>,
-        IEquatable<PackageDataFloat>,
-        IEqualsMask
+        IEquatable<PackageDataFloat>
     {
         #region Ctor
         public PackageDataFloat()
@@ -351,14 +350,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new PackageDataFloat CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static PackageDataFloat CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -385,8 +376,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPackageDataFloatGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -465,24 +454,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IPackageDataFloatGetter item,
-            PackageDataFloat.Mask<bool?> checkMask)
-        {
-            return ((PackageDataFloatCommon)((IPackageDataFloatGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static PackageDataFloat.Mask<bool> GetHasBeenSetMask(this IPackageDataFloatGetter item)
-        {
-            var ret = new PackageDataFloat.Mask<bool>(false);
-            ((PackageDataFloatCommon)((IPackageDataFloatGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IPackageDataFloatGetter item,
             IPackageDataFloatGetter rhs)
@@ -552,17 +523,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IPackageDataFloat item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IPackageDataFloat item,
             MutagenFrame frame,
@@ -903,25 +863,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IPackageDataFloatGetter item,
-            PackageDataFloat.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IPackageDataFloatGetter item,
-            PackageDataFloat.Mask<bool> mask)
-        {
-            mask.Data = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static PackageDataFloat_FieldIndex ConvertFieldIndex(APackageData_FieldIndex index)
         {
             switch (index)
@@ -1189,8 +1130,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPackageDataFloatGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PackageDataFloatBinaryWriteTranslation.Instance;

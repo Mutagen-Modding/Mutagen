@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         APlacedTrap,
         IPlacedMissileInternal,
         ILoquiObjectSetter<PlacedMissile>,
-        IEquatable<PlacedMissile>,
-        IEqualsMask
+        IEquatable<PlacedMissile>
     {
         #region Ctor
         protected PlacedMissile()
@@ -46,7 +45,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Projectile
         public FormLink<Projectile> Projectile { get; set; } = new FormLink<Projectile>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IProjectileGetter> IPlacedMissileGetter.Projectile => this.Projectile;
+        FormLink<IProjectileGetter> IPlacedMissileGetter.Projectile => this.Projectile.ToGetter<Projectile, IProjectileGetter>();
         #endregion
 
         #region To String
@@ -388,7 +387,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PlacedMissileCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PlacedMissileCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PlacedMissileCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedMissileCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedMissileCommon.Instance.RemapLinks(this, mapping);
         public PlacedMissile(FormKey formKey)
@@ -423,14 +422,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new PlacedMissile CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static PlacedMissile CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -457,8 +448,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPlacedMissileGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -477,7 +466,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPlacedMissile :
         IPlacedMissileGetter,
         IAPlacedTrap,
-        ILoquiObjectSetter<IPlacedMissileInternal>
+        ILoquiObjectSetter<IPlacedMissileInternal>,
+        ILinkedFormKeyContainer
     {
         new FormLink<Projectile> Projectile { get; set; }
     }
@@ -492,11 +482,11 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPlacedMissileGetter :
         IAPlacedTrapGetter,
         ILoquiObject<IPlacedMissileGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => PlacedMissile_Registration.Instance;
-        IFormLink<IProjectileGetter> Projectile { get; }
+        FormLink<IProjectileGetter> Projectile { get; }
 
     }
 
@@ -543,24 +533,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IPlacedMissileGetter item,
-            PlacedMissile.Mask<bool?> checkMask)
-        {
-            return ((PlacedMissileCommon)((IPlacedMissileGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static PlacedMissile.Mask<bool> GetHasBeenSetMask(this IPlacedMissileGetter item)
-        {
-            var ret = new PlacedMissile.Mask<bool>(false);
-            ((PlacedMissileCommon)((IPlacedMissileGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -632,17 +604,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IPlacedMissileInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IPlacedMissileInternal item,
             MutagenFrame frame,
@@ -1021,27 +982,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.Projectile ?? true)
             {
-                fg.AppendItem(item.Projectile, "Projectile");
+                fg.AppendItem(item.Projectile.FormKey, "Projectile");
             }
-        }
-        
-        public bool HasBeenSet(
-            IPlacedMissileGetter item,
-            PlacedMissile.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IPlacedMissileGetter item,
-            PlacedMissile.Mask<bool> mask)
-        {
-            mask.Projectile = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static PlacedMissile_FieldIndex ConvertFieldIndex(APlacedTrap_FieldIndex index)
@@ -1264,7 +1206,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.Projectile) ?? true))
             {
-                item.Projectile = rhs.Projectile.FormKey;
+                item.Projectile = new FormLink<Projectile>(rhs.Projectile.FormKey);
             }
         }
         
@@ -1543,15 +1485,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPlacedMissileGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PlacedMissileCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PlacedMissileCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedMissileCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedMissileCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PlacedMissileCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PlacedMissileBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

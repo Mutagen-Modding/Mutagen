@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Generation
                 }
                 else
                 {
-                    args.Add($"item: {itemAccessor.PropertyOrDirectAccess}");
+                    args.Add($"item: {itemAccessor}");
                 }
             }
         }

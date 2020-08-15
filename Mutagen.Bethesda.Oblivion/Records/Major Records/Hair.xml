@@ -5,7 +5,7 @@
     <Fields>
       <String name="Name" recordType="FULL" />
       <RefDirect name="Model" refName="Model" />
-      <String name="Icon" recordType="ICON" hasBeenSet="True" />
+      <String name="Icon" recordType="ICON" nullable="True" />
       <Enum name="Flags" recordType="DATA" enumName="Hair.HairFlag" byteLength="1" />
     </Fields>
   </Object>

@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Oblivion
         AScriptReference,
         IScriptObjectReference,
         ILoquiObjectSetter<ScriptObjectReference>,
-        IEquatable<ScriptObjectReference>,
-        IEqualsMask
+        IEquatable<ScriptObjectReference>
     {
         #region Ctor
         public ScriptObjectReference()
@@ -45,7 +44,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Reference
         public FormLink<OblivionMajorRecord> Reference { get; set; } = new FormLink<OblivionMajorRecord>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IOblivionMajorRecordGetter> IScriptObjectReferenceGetter.Reference => this.Reference;
+        FormLink<IOblivionMajorRecordGetter> IScriptObjectReferenceGetter.Reference => this.Reference.ToGetter<OblivionMajorRecord, IOblivionMajorRecordGetter>();
         #endregion
 
         #region To String
@@ -334,7 +333,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => ScriptObjectReferenceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ScriptObjectReferenceCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ScriptObjectReferenceCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptObjectReferenceCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptObjectReferenceCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -352,14 +351,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new ScriptObjectReference CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static ScriptObjectReference CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -386,8 +377,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptObjectReferenceGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -406,7 +395,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IScriptObjectReference :
         IScriptObjectReferenceGetter,
         IAScriptReference,
-        ILoquiObjectSetter<IScriptObjectReference>
+        ILoquiObjectSetter<IScriptObjectReference>,
+        ILinkedFormKeyContainer
     {
         new FormLink<OblivionMajorRecord> Reference { get; set; }
     }
@@ -414,11 +404,11 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IScriptObjectReferenceGetter :
         IAScriptReferenceGetter,
         ILoquiObject<IScriptObjectReferenceGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => ScriptObjectReference_Registration.Instance;
-        IFormLink<IOblivionMajorRecordGetter> Reference { get; }
+        FormLink<IOblivionMajorRecordGetter> Reference { get; }
 
     }
 
@@ -465,24 +455,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IScriptObjectReferenceGetter item,
-            ScriptObjectReference.Mask<bool?> checkMask)
-        {
-            return ((ScriptObjectReferenceCommon)((IScriptObjectReferenceGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static ScriptObjectReference.Mask<bool> GetHasBeenSetMask(this IScriptObjectReferenceGetter item)
-        {
-            var ret = new ScriptObjectReference.Mask<bool>(false);
-            ((ScriptObjectReferenceCommon)((IScriptObjectReferenceGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -554,17 +526,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IScriptObjectReference item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IScriptObjectReference item,
             MutagenFrame frame,
@@ -888,27 +849,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 printMask: printMask);
             if (printMask?.Reference ?? true)
             {
-                fg.AppendItem(item.Reference, "Reference");
+                fg.AppendItem(item.Reference.FormKey, "Reference");
             }
-        }
-        
-        public bool HasBeenSet(
-            IScriptObjectReferenceGetter item,
-            ScriptObjectReference.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IScriptObjectReferenceGetter item,
-            ScriptObjectReference.Mask<bool> mask)
-        {
-            mask.Reference = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static ScriptObjectReference_FieldIndex ConvertFieldIndex(AScriptReference_FieldIndex index)
@@ -995,7 +937,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)ScriptObjectReference_FieldIndex.Reference) ?? true))
             {
-                item.Reference = rhs.Reference.FormKey;
+                item.Reference = new FormLink<OblivionMajorRecord>(rhs.Reference.FormKey);
             }
         }
         
@@ -1203,15 +1145,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptObjectReferenceGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => ScriptObjectReferenceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ScriptObjectReferenceCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptObjectReferenceCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptObjectReferenceCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ScriptObjectReferenceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ScriptObjectReferenceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1226,8 +1164,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Reference
         private int? _ReferenceLocation;
-        public bool Reference_IsSet => _ReferenceLocation.HasValue;
-        public IFormLink<IOblivionMajorRecordGetter> Reference => _ReferenceLocation.HasValue ? new FormLink<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ReferenceLocation.Value, _package.MetaData.Constants)))) : FormLink<IOblivionMajorRecordGetter>.Null;
+        public FormLink<IOblivionMajorRecordGetter> Reference => _ReferenceLocation.HasValue ? new FormLink<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ReferenceLocation.Value, _package.MetaData.Constants)))) : FormLink<IOblivionMajorRecordGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

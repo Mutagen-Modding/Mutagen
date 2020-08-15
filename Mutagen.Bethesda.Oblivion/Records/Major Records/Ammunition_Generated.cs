@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         AItem,
         IAmmunitionInternal,
         ILoquiObjectSetter<Ammunition>,
-        IEquatable<Ammunition>,
-        IEqualsMask
+        IEquatable<Ammunition>
     {
         #region Ctor
         protected Ammunition()
@@ -67,7 +66,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Enchantment
         public FormLinkNullable<Enchantment> Enchantment { get; set; } = new FormLinkNullable<Enchantment>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IEnchantmentGetter> IAmmunitionGetter.Enchantment => this.Enchantment;
+        FormLinkNullable<IEnchantmentGetter> IAmmunitionGetter.Enchantment => this.Enchantment.ToGetter<Enchantment, IEnchantmentGetter>();
         #endregion
         #region EnchantmentPoints
         public UInt16? EnchantmentPoints { get; set; }
@@ -545,7 +544,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => AmmunitionCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => AmmunitionCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => AmmunitionCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AmmunitionCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AmmunitionCommon.Instance.RemapLinks(this, mapping);
         public Ammunition(FormKey formKey)
@@ -580,14 +579,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new Ammunition CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static Ammunition CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -614,8 +605,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAmmunitionGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -635,7 +624,8 @@ namespace Mutagen.Bethesda.Oblivion
         IAmmunitionGetter,
         IAItem,
         INamed,
-        ILoquiObjectSetter<IAmmunitionInternal>
+        ILoquiObjectSetter<IAmmunitionInternal>,
+        ILinkedFormKeyContainer
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
@@ -656,14 +646,14 @@ namespace Mutagen.Bethesda.Oblivion
         IAItemGetter,
         INamedGetter,
         ILoquiObject<IAmmunitionGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Ammunition_Registration.Instance;
         String? Name { get; }
         IModelGetter? Model { get; }
         String? Icon { get; }
-        IFormLinkNullable<IEnchantmentGetter> Enchantment { get; }
+        FormLinkNullable<IEnchantmentGetter> Enchantment { get; }
         UInt16? EnchantmentPoints { get; }
         IAmmunitionDataGetter? Data { get; }
 
@@ -712,24 +702,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IAmmunitionGetter item,
-            Ammunition.Mask<bool?> checkMask)
-        {
-            return ((AmmunitionCommon)((IAmmunitionGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Ammunition.Mask<bool> GetHasBeenSetMask(this IAmmunitionGetter item)
-        {
-            var ret = new Ammunition.Mask<bool>(false);
-            ((AmmunitionCommon)((IAmmunitionGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -801,17 +773,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IAmmunitionInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IAmmunitionInternal item,
             MutagenFrame frame,
@@ -1264,10 +1225,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(IconItem, "Icon");
             }
-            if ((printMask?.Enchantment ?? true)
-                && item.Enchantment.TryGet(out var EnchantmentItem))
+            if (printMask?.Enchantment ?? true)
             {
-                fg.AppendItem(EnchantmentItem, "Enchantment");
+                fg.AppendItem(item.Enchantment.FormKey, "Enchantment");
             }
             if ((printMask?.EnchantmentPoints ?? true)
                 && item.EnchantmentPoints.TryGet(out var EnchantmentPointsItem))
@@ -1279,40 +1239,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 DataItem?.ToString(fg, "Data");
             }
-        }
-        
-        public bool HasBeenSet(
-            IAmmunitionGetter item,
-            Ammunition.Mask<bool?> checkMask)
-        {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
-            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.Icon.HasValue && checkMask.Icon.Value != (item.Icon != null)) return false;
-            if (checkMask.Enchantment.HasValue && checkMask.Enchantment.Value != (item.Enchantment.FormKey != null)) return false;
-            if (checkMask.EnchantmentPoints.HasValue && checkMask.EnchantmentPoints.Value != (item.EnchantmentPoints != null)) return false;
-            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
-            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IAmmunitionGetter item,
-            Ammunition.Mask<bool> mask)
-        {
-            mask.Name = (item.Name != null);
-            var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            mask.Icon = (item.Icon != null);
-            mask.Enchantment = (item.Enchantment.FormKey != null);
-            mask.EnchantmentPoints = (item.EnchantmentPoints != null);
-            var itemData = item.Data;
-            mask.Data = new MaskItem<bool, AmmunitionData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static Ammunition_FieldIndex ConvertFieldIndex(AItem_FieldIndex index)
@@ -1429,10 +1355,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 hash.Add(Iconitem);
             }
-            if (item.Enchantment.TryGet(out var Enchantmentitem))
-            {
-                hash.Add(Enchantmentitem);
-            }
+            hash.Add(item.Enchantment);
             if (item.EnchantmentPoints.TryGet(out var EnchantmentPointsitem))
             {
                 hash.Add(EnchantmentPointsitem);
@@ -1562,7 +1485,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Enchantment) ?? true))
             {
-                item.Enchantment = rhs.Enchantment.FormKey;
+                item.Enchantment = new FormLinkNullable<Enchantment>(rhs.Enchantment.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.EnchantmentPoints) ?? true))
             {
@@ -1970,15 +1893,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAmmunitionGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => AmmunitionCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => AmmunitionCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AmmunitionCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AmmunitionCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => AmmunitionCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => AmmunitionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2002,8 +1921,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Enchantment
         private int? _EnchantmentLocation;
-        public bool Enchantment_IsSet => _EnchantmentLocation.HasValue;
-        public IFormLinkNullable<IEnchantmentGetter> Enchantment => _EnchantmentLocation.HasValue ? new FormLinkNullable<IEnchantmentGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EnchantmentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEnchantmentGetter>.Null;
+        public FormLinkNullable<IEnchantmentGetter> Enchantment => _EnchantmentLocation.HasValue ? new FormLinkNullable<IEnchantmentGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EnchantmentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEnchantmentGetter>.Null;
         #endregion
         #region EnchantmentPoints
         private int? _EnchantmentPointsLocation;
@@ -2012,7 +1930,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Data
         private RangeInt32? _DataLocation;
         public IAmmunitionDataGetter? Data => _DataLocation.HasValue ? AmmunitionDataBinaryOverlay.AmmunitionDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
-        public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

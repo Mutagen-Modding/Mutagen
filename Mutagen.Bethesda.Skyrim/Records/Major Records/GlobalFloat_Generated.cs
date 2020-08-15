@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         Global,
         IGlobalFloatInternal,
         ILoquiObjectSetter<GlobalFloat>,
-        IEquatable<GlobalFloat>,
-        IEqualsMask
+        IEquatable<GlobalFloat>
     {
         #region Ctor
         protected GlobalFloat()
@@ -383,14 +382,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new GlobalFloat CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static GlobalFloat CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -417,8 +408,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGlobalFloatGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -504,24 +493,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IGlobalFloatGetter item,
-            GlobalFloat.Mask<bool?> checkMask)
-        {
-            return ((GlobalFloatCommon)((IGlobalFloatGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static GlobalFloat.Mask<bool> GetHasBeenSetMask(this IGlobalFloatGetter item)
-        {
-            var ret = new GlobalFloat.Mask<bool>(false);
-            ((GlobalFloatCommon)((IGlobalFloatGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IGlobalFloatGetter item,
             IGlobalFloatGetter rhs)
@@ -591,17 +562,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IGlobalFloatInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IGlobalFloatInternal item,
             MutagenFrame frame,
@@ -966,26 +926,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(DataItem, "Data");
             }
-        }
-        
-        public bool HasBeenSet(
-            IGlobalFloatGetter item,
-            GlobalFloat.Mask<bool?> checkMask)
-        {
-            if (checkMask.Data.HasValue && checkMask.Data.Value != (item.Data != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IGlobalFloatGetter item,
-            GlobalFloat.Mask<bool> mask)
-        {
-            mask.Data = (item.Data != null);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static GlobalFloat_FieldIndex ConvertFieldIndex(Global_FieldIndex index)
@@ -1490,8 +1430,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGlobalFloatGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => GlobalFloatBinaryWriteTranslation.Instance;

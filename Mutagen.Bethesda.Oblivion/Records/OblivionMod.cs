@@ -18,12 +18,12 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class OblivionMod : AMod
     {
-        public const uint DefaultInitialNextObjectID = 0xD62;
-        private uint GetDefaultInitialNextObjectID() => DefaultInitialNextObjectID;
+        public const uint DefaultInitialNextFormID = 0xD62;
+        private uint GetDefaultInitialNextFormID() => DefaultInitialNextFormID;
 
-        partial void GetCustomRecordCount(Action<int> setter)
+        partial void GetCustomRecordCount(Action<uint> setter)
         {
-            int count = 0;
+            uint count = 0;
             // Tally Cell Group counts
             int cellSubGroupCount(Cell cell)
             {
@@ -48,47 +48,33 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 return cellGroupCount;
             }
-            count += this.Cells.Records.Count; // Block Count
-            count += this.Cells.Records.Sum(block => block.SubBlocks?.Count ?? 0); // Sub Block Count
-            count += this.Cells.Records
+            count += (uint)this.Cells.Records.Count; // Block Count
+            count += (uint)this.Cells.Records.Sum(block => block.SubBlocks?.Count ?? 0); // Sub Block Count
+            count += (uint)this.Cells.Records
                 .SelectMany(block => block.SubBlocks)
                 .SelectMany(subBlock => subBlock.Cells)
                 .Select(cellSubGroupCount)
                 .Sum();
 
             // Tally Worldspace Group Counts
-            count += this.Worldspaces.Sum(wrld => wrld.SubCells?.Count ?? 0); // Cell Blocks
-            count += this.Worldspaces
+            count += (uint)this.Worldspaces.Sum(wrld => wrld.SubCells?.Count ?? 0); // Cell Blocks
+            count += (uint)this.Worldspaces
                 .SelectMany(wrld => wrld.SubCells)
                 .Sum(block => block.Items?.Count ?? 0); // Cell Sub Blocks
-            count += this.Worldspaces
+            count += (uint)this.Worldspaces
                 .SelectMany(wrld => wrld.SubCells)
                 .SelectMany(block => block.Items)
                 .SelectMany(subBlock => subBlock.Items)
                 .Sum(cellSubGroupCount); // Cell sub groups
 
             // Tally Dialog Group Counts
-            count += this.DialogTopics.RecordCache.Count;
+            count += (uint)this.DialogTopics.RecordCache.Count;
             setter(count);
         }
     }
 
     namespace Internals
     {
-        public partial class OblivionModBinaryWriteTranslation
-        {
-            public static void WriteModHeader(
-                IOblivionModGetter mod,
-                MutagenWriter writer,
-                ModKey modKey)
-            {
-                var modHeader = mod.ModHeader.DeepCopy() as ModHeader;
-                modHeader.Flags = modHeader.Flags.SetFlag(ModHeader.HeaderFlag.Master, modKey.Master);
-                modHeader.MasterReferences.SetTo(writer.MetaData.MasterReferences!.Masters.Select(m => m.DeepCopy()));
-                modHeader.WriteToBinary(writer);
-            }
-        }
-
         public partial class OblivionModCommon
         {
             public static void WriteCellsParallel(
@@ -208,7 +194,7 @@ namespace Mutagen.Bethesda.Oblivion
                     GroupBinaryWriteTranslation.WriteEmbedded<IWorldspaceGetter>(group, stream);
                 }
                 streams[0] = groupByteStream;
-                Parallel.ForEach(group.Records, (worldspace, worldspaceState, worldspaceCounter) =>
+                Parallel.ForEach(group, (worldspace, worldspaceState, worldspaceCounter) =>
                 {
                     var worldTrib = new MemoryTributary();
                     using (var writer = new MutagenWriter(worldTrib, bundle, dispose: false))
@@ -267,7 +253,7 @@ namespace Mutagen.Bethesda.Oblivion
 
                     worldGroupWriter.Position = 4;
                     worldGroupWriter.Write((uint)(subStreams.NotNull().Select(s => s.Length).Sum()));
-                    streams[worldspaceCounter + 1] = new CompositeReadStream(worldTrib.And(subStreams), resetPositions: true);
+                    streams[worldspaceCounter + 1] = new CompositeReadStream(worldTrib.AsEnumerable().And(subStreams), resetPositions: true);
                 });
                 UtilityTranslation.CompileSetGroupLength(streams, groupBytes);
                 streamDepositArray[targetIndex] = new CompositeReadStream(streams, resetPositions: true);

@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor dataAccessor,
             Accessor packageAccessor)
         {
-            return $"ModKey.Factory({nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ProcessWholeToZString)}({dataAccessor}))";
+            return $"{nameof(ModKey)}.{nameof(ModKey.FromNameAndExtension)}({nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ProcessWholeToZString)}({dataAccessor}))";
         }
     }
 }

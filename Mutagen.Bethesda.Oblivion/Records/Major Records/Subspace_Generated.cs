@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         ISubspaceInternal,
         ILoquiObjectSetter<Subspace>,
-        IEquatable<Subspace>,
-        IEqualsMask
+        IEquatable<Subspace>
     {
         #region Ctor
         protected Subspace()
@@ -381,14 +380,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new Subspace CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static Subspace CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -415,8 +406,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISubspaceGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -502,24 +491,6 @@ namespace Mutagen.Bethesda.Oblivion
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this ISubspaceGetter item,
-            Subspace.Mask<bool?> checkMask)
-        {
-            return ((SubspaceCommon)((ISubspaceGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Subspace.Mask<bool> GetHasBeenSetMask(this ISubspaceGetter item)
-        {
-            var ret = new Subspace.Mask<bool>(false);
-            ((SubspaceCommon)((ISubspaceGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this ISubspaceGetter item,
             ISubspaceGetter rhs)
@@ -589,17 +560,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ISubspaceInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ISubspaceInternal item,
             MutagenFrame frame,
@@ -947,26 +907,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(PointItem, "Point");
             }
-        }
-        
-        public bool HasBeenSet(
-            ISubspaceGetter item,
-            Subspace.Mask<bool?> checkMask)
-        {
-            if (checkMask.Point.HasValue && checkMask.Point.Value != (item.Point != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            ISubspaceGetter item,
-            Subspace.Mask<bool> mask)
-        {
-            mask.Point = (item.Point != null);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static Subspace_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
@@ -1397,8 +1337,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISubspaceGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SubspaceBinaryWriteTranslation.Instance;

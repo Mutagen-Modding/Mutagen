@@ -38,15 +38,15 @@
           <UInt32 name="EmotionValue" />
           <Int32 name="Unknown" />
           <UInt8 name="ResponseNumber" />
-          <ByteArray name="Unknown2" byteLength="3" hasBeenSet="False" />
+          <ByteArray name="Unknown2" byteLength="3" nullable="False" />
           <FormLink name="Sound" refName="SoundDescriptor" />
           <Enum name="Flags" enumName="DialogResponse.Flag" byteLength="1" />
-          <ByteArray name="Unknown3" byteLength="3" hasBeenSet="False" />
+          <ByteArray name="Unknown3" byteLength="3" nullable="False" />
         </Fields>
       </Data>
-      <String name="Text" recordType="NAM1" translated="IL" hasBeenSet="False" />
-      <String name="ScriptNotes" recordType="NAM2" hasBeenSet="False" />
-      <String name="Edits" recordType="NAM3" hasBeenSet="False" />
+      <String name="Text" recordType="NAM1" translated="IL" nullable="False" />
+      <String name="ScriptNotes" recordType="NAM2" nullable="False" />
+      <String name="Edits" recordType="NAM3" nullable="False" />
       <FormLink name="SpeakerIdleAnimation" refName="IdleAnimation" recordType="SNAM" />
       <FormLink name="ListenerIdleAnimation" refName="IdleAnimation" recordType="LNAM" />
     </Fields>
@@ -60,7 +60,7 @@
   </Object>
   <Object name="DialogResponsesAdapter" baseClass="AVirtualMachineAdapter" recordType="VMAD" objType="Subrecord" GUID="c3525bcf-a5cc-4d2e-8f6f-1a38cbf3545b" ID="427">
     <Fields>
-      <RefDirect name="ScriptFragments" refName="ScriptFragments" binary="Custom" hasBeenSet="True" />
+      <RefDirect name="ScriptFragments" refName="ScriptFragments" binary="Custom" nullable="True" />
     </Fields>
   </Object>
 </Loqui>

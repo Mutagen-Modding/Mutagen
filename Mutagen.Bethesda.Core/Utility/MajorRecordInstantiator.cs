@@ -14,19 +14,12 @@ namespace Mutagen.Bethesda.Internals
     /// Type of Major Record to instantiate.  Can be the direct class, or one of its interfaces.
     /// </typeparam>
     public static class MajorRecordInstantiator<TMajor>
-        where TMajor : IMajorRecordCommon
+        where TMajor : IMajorRecordCommonGetter
     {
         /// <summary>
         /// Function to call to retrieve a new Major Record of type T
         /// </summary>
-        public static readonly MajorRecordActivator Activator;
-
-        /// <summary>
-        /// Constructs a new Major Record of type T with the given FormKey
-        /// </summary>
-        /// <param name="formKey">FormKey to give the new Major Record</param>
-        /// <returns>New Major Record of type T with given FormKey</returns>
-        public delegate TMajor MajorRecordActivator(FormKey formKey);
+        public static readonly Func<FormKey, TMajor> Activator;
 
         static MajorRecordInstantiator()
         {
@@ -42,8 +35,8 @@ namespace Mutagen.Bethesda.Internals
             var paramInfo = ctorInfo.GetParameters();
             ParameterExpression param = Expression.Parameter(typeof(FormKey), "formKey");
             NewExpression newExp = Expression.New(ctorInfo, param);
-            LambdaExpression lambda = Expression.Lambda(typeof(MajorRecordActivator), newExp, param);
-            Activator = (MajorRecordActivator)lambda.Compile();
+            LambdaExpression lambda = Expression.Lambda(typeof(Func<FormKey, TMajor>), newExp, param);
+            Activator = (Func<FormKey, TMajor>)lambda.Compile();
         }
     }
 }

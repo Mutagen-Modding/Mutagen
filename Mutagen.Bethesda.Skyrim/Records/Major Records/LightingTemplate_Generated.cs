@@ -33,8 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ILightingTemplateInternal,
         ILoquiObjectSetter<LightingTemplate>,
-        IEquatable<LightingTemplate>,
-        IEqualsMask
+        IEquatable<LightingTemplate>
     {
         #region Ctor
         protected LightingTemplate()
@@ -1223,14 +1222,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new LightingTemplate CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static LightingTemplate CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1257,8 +1248,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILightingTemplateGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1394,24 +1383,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this ILightingTemplateGetter item,
-            LightingTemplate.Mask<bool?> checkMask)
-        {
-            return ((LightingTemplateCommon)((ILightingTemplateGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static LightingTemplate.Mask<bool> GetHasBeenSetMask(this ILightingTemplateGetter item)
-        {
-            var ret = new LightingTemplate.Mask<bool>(false);
-            ((LightingTemplateCommon)((ILightingTemplateGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this ILightingTemplateGetter item,
             ILightingTemplateGetter rhs)
@@ -1481,17 +1452,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ILightingTemplateInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ILightingTemplateInternal item,
             MutagenFrame frame,
@@ -2279,52 +2239,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            ILightingTemplateGetter item,
-            LightingTemplate.Mask<bool?> checkMask)
-        {
-            if (checkMask.DirectionalAmbientColors?.Overall.HasValue ?? false && checkMask.DirectionalAmbientColors.Overall.Value != (item.DirectionalAmbientColors != null)) return false;
-            if (checkMask.DirectionalAmbientColors?.Specific != null && (item.DirectionalAmbientColors == null || !item.DirectionalAmbientColors.HasBeenSet(checkMask.DirectionalAmbientColors.Specific))) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            ILightingTemplateGetter item,
-            LightingTemplate.Mask<bool> mask)
-        {
-            mask.AmbientColor = true;
-            mask.DirectionalColor = true;
-            mask.FogNearColor = true;
-            mask.FogNear = true;
-            mask.FogFar = true;
-            mask.DirectionalRotationXY = true;
-            mask.DirectionalRotationZ = true;
-            mask.DirectionalFade = true;
-            mask.FogClipDistance = true;
-            mask.FogPower = true;
-            mask.AmbientDirectionalXPlus = true;
-            mask.AmbientDirectionalXMinus = true;
-            mask.AmbientDirectionalYPlus = true;
-            mask.AmbientDirectionalYMinus = true;
-            mask.AmbientDirectionalZPlus = true;
-            mask.AmbientDirectionalZMinus = true;
-            mask.AmbientSpecular = true;
-            mask.AmbientScale = true;
-            mask.FogFarColor = true;
-            mask.FogMax = true;
-            mask.LightFadeStartDistance = true;
-            mask.LightFadeEndDistance = true;
-            mask.Unknown = true;
-            var itemDirectionalAmbientColors = item.DirectionalAmbientColors;
-            mask.DirectionalAmbientColors = new MaskItem<bool, AmbientColors.Mask<bool>?>(itemDirectionalAmbientColors != null, itemDirectionalAmbientColors?.GetHasBeenSetMask());
-            mask.DATADataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static LightingTemplate_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -3047,8 +2961,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILightingTemplateGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LightingTemplateBinaryWriteTranslation.Instance;

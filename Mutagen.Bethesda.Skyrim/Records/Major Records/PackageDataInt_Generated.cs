@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         APackageData,
         IPackageDataInt,
         ILoquiObjectSetter<PackageDataInt>,
-        IEquatable<PackageDataInt>,
-        IEqualsMask
+        IEquatable<PackageDataInt>
     {
         #region Ctor
         public PackageDataInt()
@@ -351,14 +350,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new PackageDataInt CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static PackageDataInt CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -385,8 +376,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPackageDataIntGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -465,24 +454,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IPackageDataIntGetter item,
-            PackageDataInt.Mask<bool?> checkMask)
-        {
-            return ((PackageDataIntCommon)((IPackageDataIntGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static PackageDataInt.Mask<bool> GetHasBeenSetMask(this IPackageDataIntGetter item)
-        {
-            var ret = new PackageDataInt.Mask<bool>(false);
-            ((PackageDataIntCommon)((IPackageDataIntGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IPackageDataIntGetter item,
             IPackageDataIntGetter rhs)
@@ -552,17 +523,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IPackageDataInt item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IPackageDataInt item,
             MutagenFrame frame,
@@ -903,25 +863,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IPackageDataIntGetter item,
-            PackageDataInt.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IPackageDataIntGetter item,
-            PackageDataInt.Mask<bool> mask)
-        {
-            mask.Data = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static PackageDataInt_FieldIndex ConvertFieldIndex(APackageData_FieldIndex index)
         {
             switch (index)
@@ -1189,8 +1130,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPackageDataIntGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PackageDataIntBinaryWriteTranslation.Instance;

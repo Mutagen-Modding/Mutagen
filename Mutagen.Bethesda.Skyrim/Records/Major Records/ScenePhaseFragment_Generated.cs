@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ScenePhaseFragment :
         IScenePhaseFragment,
         ILoquiObjectSetter<ScenePhaseFragment>,
-        IEquatable<ScenePhaseFragment>,
-        IEqualsMask
+        IEquatable<ScenePhaseFragment>
     {
         #region Ctor
         public ScenePhaseFragment()
@@ -479,14 +478,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static ScenePhaseFragment CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static ScenePhaseFragment CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -513,8 +504,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScenePhaseFragmentGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -604,24 +593,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IScenePhaseFragmentGetter item,
-            ScenePhaseFragment.Mask<bool?> checkMask)
-        {
-            return ((ScenePhaseFragmentCommon)((IScenePhaseFragmentGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static ScenePhaseFragment.Mask<bool> GetHasBeenSetMask(this IScenePhaseFragmentGetter item)
-        {
-            var ret = new ScenePhaseFragment.Mask<bool>(false);
-            ((ScenePhaseFragmentCommon)((IScenePhaseFragmentGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -716,17 +687,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IScenePhaseFragment item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IScenePhaseFragment item,
             MutagenFrame frame,
@@ -1102,24 +1062,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IScenePhaseFragmentGetter item,
-            ScenePhaseFragment.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IScenePhaseFragmentGetter item,
-            ScenePhaseFragment.Mask<bool> mask)
-        {
-            mask.Flags = true;
-            mask.Index = true;
-            mask.Unknown = true;
-            mask.ScriptName = true;
-            mask.FragmentName = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IScenePhaseFragmentGetter? lhs,
@@ -1350,12 +1292,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IScenePhaseFragmentGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((ScenePhaseFragmentBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1387,8 +1330,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScenePhaseFragmentGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ScenePhaseFragmentBinaryWriteTranslation.Instance;

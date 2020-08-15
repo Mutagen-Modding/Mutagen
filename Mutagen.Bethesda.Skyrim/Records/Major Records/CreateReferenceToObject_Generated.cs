@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class CreateReferenceToObject :
         ICreateReferenceToObject,
         ILoquiObjectSetter<CreateReferenceToObject>,
-        IEquatable<CreateReferenceToObject>,
-        IEqualsMask
+        IEquatable<CreateReferenceToObject>
     {
         #region Ctor
         public CreateReferenceToObject()
@@ -43,7 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Object
         public FormLink<SkyrimMajorRecord> Object { get; set; } = new FormLink<SkyrimMajorRecord>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ISkyrimMajorRecordGetter> ICreateReferenceToObjectGetter.Object => this.Object;
+        FormLink<ISkyrimMajorRecordGetter> ICreateReferenceToObjectGetter.Object => this.Object.ToGetter<SkyrimMajorRecord, ISkyrimMajorRecordGetter>();
         #endregion
         #region AliasIndex
         public Int16 AliasIndex { get; set; } = default;
@@ -471,7 +470,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => CreateReferenceToObjectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => CreateReferenceToObjectCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => CreateReferenceToObjectCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreateReferenceToObjectCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreateReferenceToObjectCommon.Instance.RemapLinks(this, mapping);
         [Flags]
@@ -495,14 +494,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static CreateReferenceToObject CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static CreateReferenceToObject CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -529,8 +520,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICreateReferenceToObjectGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -548,7 +537,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface ICreateReferenceToObject :
         ICreateReferenceToObjectGetter,
-        ILoquiObjectSetter<ICreateReferenceToObject>
+        ILoquiObjectSetter<ICreateReferenceToObject>,
+        ILinkedFormKeyContainer
     {
         new FormLink<SkyrimMajorRecord> Object { get; set; }
         new Int16 AliasIndex { get; set; }
@@ -560,7 +550,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ICreateReferenceToObjectGetter :
         ILoquiObject,
         ILoquiObject<ICreateReferenceToObjectGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -570,7 +560,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => CreateReferenceToObject_Registration.Instance;
-        IFormLink<ISkyrimMajorRecordGetter> Object { get; }
+        FormLink<ISkyrimMajorRecordGetter> Object { get; }
         Int16 AliasIndex { get; }
         CreateReferenceToObject.CreateEnum Create { get; }
         Level Level { get; }
@@ -621,24 +611,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ICreateReferenceToObjectGetter item,
-            CreateReferenceToObject.Mask<bool?> checkMask)
-        {
-            return ((CreateReferenceToObjectCommon)((ICreateReferenceToObjectGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static CreateReferenceToObject.Mask<bool> GetHasBeenSetMask(this ICreateReferenceToObjectGetter item)
-        {
-            var ret = new CreateReferenceToObject.Mask<bool>(false);
-            ((CreateReferenceToObjectCommon)((ICreateReferenceToObjectGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -733,17 +705,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ICreateReferenceToObject item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ICreateReferenceToObject item,
             MutagenFrame frame,
@@ -1101,7 +1062,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.Object ?? true)
             {
-                fg.AppendItem(item.Object, "Object");
+                fg.AppendItem(item.Object.FormKey, "Object");
             }
             if (printMask?.AliasIndex ?? true)
             {
@@ -1119,24 +1080,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.ALCADataTypeState, "ALCADataTypeState");
             }
-        }
-        
-        public bool HasBeenSet(
-            ICreateReferenceToObjectGetter item,
-            CreateReferenceToObject.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            ICreateReferenceToObjectGetter item,
-            CreateReferenceToObject.Mask<bool> mask)
-        {
-            mask.Object = true;
-            mask.AliasIndex = true;
-            mask.Create = true;
-            mask.Level = true;
-            mask.ALCADataTypeState = true;
         }
         
         #region Equals and Hash
@@ -1197,7 +1140,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)CreateReferenceToObject_FieldIndex.Object) ?? true))
             {
-                item.Object = rhs.Object.FormKey;
+                item.Object = new FormLink<SkyrimMajorRecord>(rhs.Object.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)CreateReferenceToObject_FieldIndex.AliasIndex) ?? true))
             {
@@ -1415,12 +1358,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this ICreateReferenceToObjectGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((CreateReferenceToObjectBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1452,15 +1396,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICreateReferenceToObjectGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => CreateReferenceToObjectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => CreateReferenceToObjectCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreateReferenceToObjectCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreateReferenceToObjectCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => CreateReferenceToObjectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CreateReferenceToObjectBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1477,8 +1417,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Object
         private int? _ObjectLocation;
-        public bool Object_IsSet => _ObjectLocation.HasValue;
-        public IFormLink<ISkyrimMajorRecordGetter> Object => _ObjectLocation.HasValue ? new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ObjectLocation.Value, _package.MetaData.Constants)))) : FormLink<ISkyrimMajorRecordGetter>.Null;
+        public FormLink<ISkyrimMajorRecordGetter> Object => _ObjectLocation.HasValue ? new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ObjectLocation.Value, _package.MetaData.Constants)))) : FormLink<ISkyrimMajorRecordGetter>.Null;
         #endregion
         private int? _ALCALocation;
         public CreateReferenceToObject.ALCADataType ALCADataTypeState { get; private set; }

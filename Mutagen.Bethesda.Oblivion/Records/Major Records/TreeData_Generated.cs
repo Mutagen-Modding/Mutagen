@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class TreeData :
         ITreeData,
         ILoquiObjectSetter<TreeData>,
-        IEquatable<TreeData>,
-        IEqualsMask
+        IEquatable<TreeData>
     {
         #region Ctor
         public TreeData()
@@ -576,14 +575,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static TreeData CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static TreeData CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -610,8 +601,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITreeDataGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -709,24 +698,6 @@ namespace Mutagen.Bethesda.Oblivion
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this ITreeDataGetter item,
-            TreeData.Mask<bool?> checkMask)
-        {
-            return ((TreeDataCommon)((ITreeDataGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static TreeData.Mask<bool> GetHasBeenSetMask(this ITreeDataGetter item)
-        {
-            var ret = new TreeData.Mask<bool>(false);
-            ((TreeDataCommon)((ITreeDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this ITreeDataGetter item,
             ITreeDataGetter rhs)
@@ -819,17 +790,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ITreeData item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ITreeData item,
             MutagenFrame frame,
@@ -1263,27 +1223,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            ITreeDataGetter item,
-            TreeData.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            ITreeDataGetter item,
-            TreeData.Mask<bool> mask)
-        {
-            mask.LeafCurvature = true;
-            mask.MinimumLeafAngle = true;
-            mask.MaximumLeafAngle = true;
-            mask.BranchDimmingValue = true;
-            mask.LeafDimmingValue = true;
-            mask.ShadowRadius = true;
-            mask.RockingSpeed = true;
-            mask.RustleSpeed = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             ITreeDataGetter? lhs,
@@ -1545,12 +1484,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this ITreeDataGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((TreeDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1582,8 +1522,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITreeDataGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => TreeDataBinaryWriteTranslation.Instance;

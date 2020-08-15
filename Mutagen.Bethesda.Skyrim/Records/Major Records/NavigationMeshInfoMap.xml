@@ -21,7 +21,7 @@
         <FormLink refName="ANavigationMesh" />
       </List>
       <RefList name="LinkedDoors" refName="LinkedDoor" counterLength="4" />
-      <RefDirect name="Island" refName="IslandData" hasBeenSet="True" binary="Custom" />
+      <RefDirect name="Island" refName="IslandData" nullable="True" binary="Custom" />
       <Int32 name="Unknown2" />
       <FormLink name="ParentWorldspace" refName="Worldspace" />
       <CustomLogic name="ParentParseLogic" />

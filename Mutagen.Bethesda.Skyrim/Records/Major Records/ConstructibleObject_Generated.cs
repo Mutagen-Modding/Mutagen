@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IConstructibleObjectInternal,
         ILoquiObjectSetter<ConstructibleObject>,
-        IEquatable<ConstructibleObject>,
-        IEqualsMask
+        IEquatable<ConstructibleObject>
     {
         #region Ctor
         protected ConstructibleObject()
@@ -74,12 +73,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region CreatedObject
         public FormLinkNullable<SkyrimMajorRecord> CreatedObject { get; set; } = new FormLinkNullable<SkyrimMajorRecord>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ISkyrimMajorRecordGetter> IConstructibleObjectGetter.CreatedObject => this.CreatedObject;
+        FormLinkNullable<ISkyrimMajorRecordGetter> IConstructibleObjectGetter.CreatedObject => this.CreatedObject.ToGetter<SkyrimMajorRecord, ISkyrimMajorRecordGetter>();
         #endregion
         #region WorkbenchKeyword
         public FormLinkNullable<Keyword> WorkbenchKeyword { get; set; } = new FormLinkNullable<Keyword>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IKeywordGetter> IConstructibleObjectGetter.WorkbenchKeyword => this.WorkbenchKeyword;
+        FormLinkNullable<IKeywordGetter> IConstructibleObjectGetter.WorkbenchKeyword => this.WorkbenchKeyword.ToGetter<Keyword, IKeywordGetter>();
         #endregion
         #region CreatedObjectCount
         public UInt16? CreatedObjectCount { get; set; }
@@ -656,7 +655,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => ConstructibleObjectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ConstructibleObjectCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ConstructibleObjectCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ConstructibleObjectCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ConstructibleObjectCommon.Instance.RemapLinks(this, mapping);
         public ConstructibleObject(FormKey formKey)
@@ -691,14 +690,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new ConstructibleObject CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static ConstructibleObject CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -725,8 +716,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IConstructibleObjectGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -745,7 +734,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IConstructibleObject :
         IConstructibleObjectGetter,
         ISkyrimMajorRecord,
-        ILoquiObjectSetter<IConstructibleObjectInternal>
+        ILoquiObjectSetter<IConstructibleObjectInternal>,
+        ILinkedFormKeyContainer
     {
         new IExtendedList<ContainerEntry>? Items { get; set; }
         new IExtendedList<Condition> Conditions { get; }
@@ -764,14 +754,14 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IConstructibleObjectGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IConstructibleObjectGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => ConstructibleObject_Registration.Instance;
         IReadOnlyList<IContainerEntryGetter>? Items { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
-        IFormLinkNullable<ISkyrimMajorRecordGetter> CreatedObject { get; }
-        IFormLinkNullable<IKeywordGetter> WorkbenchKeyword { get; }
+        FormLinkNullable<ISkyrimMajorRecordGetter> CreatedObject { get; }
+        FormLinkNullable<IKeywordGetter> WorkbenchKeyword { get; }
         UInt16? CreatedObjectCount { get; }
 
     }
@@ -819,24 +809,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IConstructibleObjectGetter item,
-            ConstructibleObject.Mask<bool?> checkMask)
-        {
-            return ((ConstructibleObjectCommon)((IConstructibleObjectGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static ConstructibleObject.Mask<bool> GetHasBeenSetMask(this IConstructibleObjectGetter item)
-        {
-            var ret = new ConstructibleObject.Mask<bool>(false);
-            ((ConstructibleObjectCommon)((IConstructibleObjectGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -908,17 +880,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IConstructibleObjectInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IConstructibleObjectInternal item,
             MutagenFrame frame,
@@ -1363,52 +1324,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-            if ((printMask?.CreatedObject ?? true)
-                && item.CreatedObject.TryGet(out var CreatedObjectItem))
+            if (printMask?.CreatedObject ?? true)
             {
-                fg.AppendItem(CreatedObjectItem, "CreatedObject");
+                fg.AppendItem(item.CreatedObject.FormKey, "CreatedObject");
             }
-            if ((printMask?.WorkbenchKeyword ?? true)
-                && item.WorkbenchKeyword.TryGet(out var WorkbenchKeywordItem))
+            if (printMask?.WorkbenchKeyword ?? true)
             {
-                fg.AppendItem(WorkbenchKeywordItem, "WorkbenchKeyword");
+                fg.AppendItem(item.WorkbenchKeyword.FormKey, "WorkbenchKeyword");
             }
             if ((printMask?.CreatedObjectCount ?? true)
                 && item.CreatedObjectCount.TryGet(out var CreatedObjectCountItem))
             {
                 fg.AppendItem(CreatedObjectCountItem, "CreatedObjectCount");
             }
-        }
-        
-        public bool HasBeenSet(
-            IConstructibleObjectGetter item,
-            ConstructibleObject.Mask<bool?> checkMask)
-        {
-            if (checkMask.Items?.Overall.HasValue ?? false && checkMask.Items!.Overall.Value != (item.Items != null)) return false;
-            if (checkMask.CreatedObject.HasValue && checkMask.CreatedObject.Value != (item.CreatedObject.FormKey != null)) return false;
-            if (checkMask.WorkbenchKeyword.HasValue && checkMask.WorkbenchKeyword.Value != (item.WorkbenchKeyword.FormKey != null)) return false;
-            if (checkMask.CreatedObjectCount.HasValue && checkMask.CreatedObjectCount.Value != (item.CreatedObjectCount != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IConstructibleObjectGetter item,
-            ConstructibleObject.Mask<bool> mask)
-        {
-            if (item.Items.TryGet(out var ItemsItem))
-            {
-                mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ContainerEntry.Mask<bool>?>>?>(true, ItemsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, ContainerEntry.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            var ConditionsItem = item.Conditions;
-            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.CreatedObject = (item.CreatedObject.FormKey != null);
-            mask.WorkbenchKeyword = (item.WorkbenchKeyword.FormKey != null);
-            mask.CreatedObjectCount = (item.CreatedObjectCount != null);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static ConstructibleObject_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1488,14 +1416,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var hash = new HashCode();
             hash.Add(item.Items);
             hash.Add(item.Conditions);
-            if (item.CreatedObject.TryGet(out var CreatedObjectitem))
-            {
-                hash.Add(CreatedObjectitem);
-            }
-            if (item.WorkbenchKeyword.TryGet(out var WorkbenchKeyworditem))
-            {
-                hash.Add(WorkbenchKeyworditem);
-            }
+            hash.Add(item.CreatedObject);
+            hash.Add(item.WorkbenchKeyword);
             if (item.CreatedObjectCount.TryGet(out var CreatedObjectCountitem))
             {
                 hash.Add(CreatedObjectCountitem);
@@ -1531,13 +1453,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (obj.Items.TryGet(out var ItemsItem))
             {
-                foreach (var item in ItemsItem.WhereCastable<IContainerEntryGetter, ILinkedFormKeyContainer> ()
+                foreach (var item in ItemsItem.WhereCastable<IContainerEntryGetter, ILinkedFormKeyContainerGetter> ()
                     .SelectMany((f) => f.LinkFormKeys))
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainer> ()
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter> ()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
@@ -1655,11 +1577,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.CreatedObject) ?? true))
             {
-                item.CreatedObject = rhs.CreatedObject.FormKey;
+                item.CreatedObject = new FormLinkNullable<SkyrimMajorRecord>(rhs.CreatedObject.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.WorkbenchKeyword) ?? true))
             {
-                item.WorkbenchKeyword = rhs.WorkbenchKeyword.FormKey;
+                item.WorkbenchKeyword = new FormLinkNullable<Keyword>(rhs.WorkbenchKeyword.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.CreatedObjectCount) ?? true))
             {
@@ -2018,15 +1940,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IConstructibleObjectGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => ConstructibleObjectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ConstructibleObjectCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ConstructibleObjectCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ConstructibleObjectCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ConstructibleObjectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ConstructibleObjectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2050,13 +1968,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region CreatedObject
         private int? _CreatedObjectLocation;
-        public bool CreatedObject_IsSet => _CreatedObjectLocation.HasValue;
-        public IFormLinkNullable<ISkyrimMajorRecordGetter> CreatedObject => _CreatedObjectLocation.HasValue ? new FormLinkNullable<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CreatedObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISkyrimMajorRecordGetter>.Null;
+        public FormLinkNullable<ISkyrimMajorRecordGetter> CreatedObject => _CreatedObjectLocation.HasValue ? new FormLinkNullable<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CreatedObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISkyrimMajorRecordGetter>.Null;
         #endregion
         #region WorkbenchKeyword
         private int? _WorkbenchKeywordLocation;
-        public bool WorkbenchKeyword_IsSet => _WorkbenchKeywordLocation.HasValue;
-        public IFormLinkNullable<IKeywordGetter> WorkbenchKeyword => _WorkbenchKeywordLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WorkbenchKeywordLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public FormLinkNullable<IKeywordGetter> WorkbenchKeyword => _WorkbenchKeywordLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WorkbenchKeywordLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
         #endregion
         #region CreatedObjectCount
         private int? _CreatedObjectCountLocation;

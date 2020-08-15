@@ -33,8 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IMaterialTypeInternal,
         ILoquiObjectSetter<MaterialType>,
-        IEquatable<MaterialType>,
-        IEqualsMask
+        IEquatable<MaterialType>
     {
         #region Ctor
         protected MaterialType()
@@ -47,7 +46,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Parent
         public FormLinkNullable<MaterialType> Parent { get; set; } = new FormLinkNullable<MaterialType>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IMaterialTypeGetter> IMaterialTypeGetter.Parent => this.Parent;
+        FormLinkNullable<IMaterialTypeGetter> IMaterialTypeGetter.Parent => this.Parent.ToGetter<MaterialType, IMaterialTypeGetter>();
         #endregion
         #region Name
         public String? Name { get; set; }
@@ -72,7 +71,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region HavokImpactDataSet
         public FormLinkNullable<ImpactDataSet> HavokImpactDataSet { get; set; } = new FormLinkNullable<ImpactDataSet>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IImpactDataSetGetter> IMaterialTypeGetter.HavokImpactDataSet => this.HavokImpactDataSet;
+        FormLinkNullable<IImpactDataSetGetter> IMaterialTypeGetter.HavokImpactDataSet => this.HavokImpactDataSet.ToGetter<ImpactDataSet, IImpactDataSetGetter>();
         #endregion
 
         #region To String
@@ -520,7 +519,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => MaterialTypeCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => MaterialTypeCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => MaterialTypeCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MaterialTypeCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MaterialTypeCommon.Instance.RemapLinks(this, mapping);
         public MaterialType(FormKey formKey)
@@ -555,14 +554,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new MaterialType CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static MaterialType CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -589,8 +580,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMaterialTypeGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -609,7 +598,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IMaterialType :
         IMaterialTypeGetter,
         ISkyrimMajorRecord,
-        ILoquiObjectSetter<IMaterialTypeInternal>
+        ILoquiObjectSetter<IMaterialTypeInternal>,
+        ILinkedFormKeyContainer
     {
         new FormLinkNullable<MaterialType> Parent { get; set; }
         new String? Name { get; set; }
@@ -629,16 +619,16 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IMaterialTypeGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IMaterialTypeGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => MaterialType_Registration.Instance;
-        IFormLinkNullable<IMaterialTypeGetter> Parent { get; }
+        FormLinkNullable<IMaterialTypeGetter> Parent { get; }
         String? Name { get; }
         Color? HavokDisplayColor { get; }
         Single? Buoyancy { get; }
         MaterialType.Flag? Flags { get; }
-        IFormLinkNullable<IImpactDataSetGetter> HavokImpactDataSet { get; }
+        FormLinkNullable<IImpactDataSetGetter> HavokImpactDataSet { get; }
 
     }
 
@@ -685,24 +675,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IMaterialTypeGetter item,
-            MaterialType.Mask<bool?> checkMask)
-        {
-            return ((MaterialTypeCommon)((IMaterialTypeGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static MaterialType.Mask<bool> GetHasBeenSetMask(this IMaterialTypeGetter item)
-        {
-            var ret = new MaterialType.Mask<bool>(false);
-            ((MaterialTypeCommon)((IMaterialTypeGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -774,17 +746,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IMaterialTypeInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IMaterialTypeInternal item,
             MutagenFrame frame,
@@ -1198,10 +1159,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if ((printMask?.Parent ?? true)
-                && item.Parent.TryGet(out var ParentItem))
+            if (printMask?.Parent ?? true)
             {
-                fg.AppendItem(ParentItem, "Parent");
+                fg.AppendItem(item.Parent.FormKey, "Parent");
             }
             if ((printMask?.Name ?? true)
                 && item.Name.TryGet(out var NameItem))
@@ -1223,41 +1183,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
-            if ((printMask?.HavokImpactDataSet ?? true)
-                && item.HavokImpactDataSet.TryGet(out var HavokImpactDataSetItem))
+            if (printMask?.HavokImpactDataSet ?? true)
             {
-                fg.AppendItem(HavokImpactDataSetItem, "HavokImpactDataSet");
+                fg.AppendItem(item.HavokImpactDataSet.FormKey, "HavokImpactDataSet");
             }
-        }
-        
-        public bool HasBeenSet(
-            IMaterialTypeGetter item,
-            MaterialType.Mask<bool?> checkMask)
-        {
-            if (checkMask.Parent.HasValue && checkMask.Parent.Value != (item.Parent.FormKey != null)) return false;
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            if (checkMask.HavokDisplayColor.HasValue && checkMask.HavokDisplayColor.Value != (item.HavokDisplayColor != null)) return false;
-            if (checkMask.Buoyancy.HasValue && checkMask.Buoyancy.Value != (item.Buoyancy != null)) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
-            if (checkMask.HavokImpactDataSet.HasValue && checkMask.HavokImpactDataSet.Value != (item.HavokImpactDataSet.FormKey != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IMaterialTypeGetter item,
-            MaterialType.Mask<bool> mask)
-        {
-            mask.Parent = (item.Parent.FormKey != null);
-            mask.Name = (item.Name != null);
-            mask.HavokDisplayColor = (item.HavokDisplayColor != null);
-            mask.Buoyancy = (item.Buoyancy != null);
-            mask.Flags = (item.Flags != null);
-            mask.HavokImpactDataSet = (item.HavokImpactDataSet.FormKey != null);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static MaterialType_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1336,10 +1265,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IMaterialTypeGetter item)
         {
             var hash = new HashCode();
-            if (item.Parent.TryGet(out var Parentitem))
-            {
-                hash.Add(Parentitem);
-            }
+            hash.Add(item.Parent);
             if (item.Name.TryGet(out var Nameitem))
             {
                 hash.Add(Nameitem);
@@ -1356,10 +1282,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Flagsitem);
             }
-            if (item.HavokImpactDataSet.TryGet(out var HavokImpactDataSetitem))
-            {
-                hash.Add(HavokImpactDataSetitem);
-            }
+            hash.Add(item.HavokImpactDataSet);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1446,7 +1369,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)MaterialType_FieldIndex.Parent) ?? true))
             {
-                item.Parent = rhs.Parent.FormKey;
+                item.Parent = new FormLinkNullable<MaterialType>(rhs.Parent.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MaterialType_FieldIndex.Name) ?? true))
             {
@@ -1466,7 +1389,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MaterialType_FieldIndex.HavokImpactDataSet) ?? true))
             {
-                item.HavokImpactDataSet = rhs.HavokImpactDataSet.FormKey;
+                item.HavokImpactDataSet = new FormLinkNullable<ImpactDataSet>(rhs.HavokImpactDataSet.FormKey);
             }
         }
         
@@ -1802,15 +1725,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMaterialTypeGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => MaterialTypeCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => MaterialTypeCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MaterialTypeCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MaterialTypeCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => MaterialTypeCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MaterialTypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1825,8 +1744,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Parent
         private int? _ParentLocation;
-        public bool Parent_IsSet => _ParentLocation.HasValue;
-        public IFormLinkNullable<IMaterialTypeGetter> Parent => _ParentLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ParentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialTypeGetter>.Null;
+        public FormLinkNullable<IMaterialTypeGetter> Parent => _ParentLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ParentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialTypeGetter>.Null;
         #endregion
         #region Name
         private int? _NameLocation;
@@ -1846,8 +1764,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region HavokImpactDataSet
         private int? _HavokImpactDataSetLocation;
-        public bool HavokImpactDataSet_IsSet => _HavokImpactDataSetLocation.HasValue;
-        public IFormLinkNullable<IImpactDataSetGetter> HavokImpactDataSet => _HavokImpactDataSetLocation.HasValue ? new FormLinkNullable<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HavokImpactDataSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImpactDataSetGetter>.Null;
+        public FormLinkNullable<IImpactDataSetGetter> HavokImpactDataSet => _HavokImpactDataSetLocation.HasValue ? new FormLinkNullable<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HavokImpactDataSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImpactDataSetGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

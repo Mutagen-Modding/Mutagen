@@ -15,13 +15,13 @@ namespace Mutagen.Bethesda.Binary
             UtilityTranslation.BinarySubParseDelegate<TValue> transl)
             where TEnum : struct, Enum, IConvertible
         {
-            for (int i = 0; i < EnumBinaryTranslation<TEnum>.EnumSize; i++)
+            foreach (var e in EnumBinaryTranslation<TEnum>.Values)
             {
                 if (!transl(frame, out var parse))
                 {
                     throw new ArgumentException();
                 }
-                item[EnumExt.GetNth<TEnum>(i)] = parse;
+                item[e] = parse;
             }
             return (IReadOnlyDictionary<TEnum, TValue>)item;
         }
@@ -32,9 +32,9 @@ namespace Mutagen.Bethesda.Binary
             UtilityTranslation.BinarySubWriteDelegate<TValue> transl)
             where TEnum : struct, Enum, IConvertible
         {
-            for (int i = 0; i < EnumBinaryTranslation<TEnum>.EnumSize; i++)
+            foreach (var e in EnumBinaryTranslation<TEnum>.Values)
             {
-                if (items.TryGetValue(EnumExt.GetNth<TEnum>(i), out var val))
+                if (items.TryGetValue(e, out var val))
                 {
                     transl(writer, val);
                 }

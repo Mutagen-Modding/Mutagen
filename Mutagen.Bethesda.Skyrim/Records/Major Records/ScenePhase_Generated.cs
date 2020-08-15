@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ScenePhase :
         IScenePhase,
         ILoquiObjectSetter<ScenePhase>,
-        IEquatable<ScenePhase>,
-        IEqualsMask
+        IEquatable<ScenePhase>
     {
         #region Ctor
         public ScenePhase()
@@ -711,7 +710,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => ScenePhaseCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ScenePhaseCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ScenePhaseCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScenePhaseCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScenePhaseCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -731,14 +730,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static ScenePhase CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static ScenePhase CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -765,8 +756,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScenePhaseGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -784,7 +773,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IScenePhase :
         IScenePhaseGetter,
-        ILoquiObjectSetter<IScenePhase>
+        ILoquiObjectSetter<IScenePhase>,
+        ILinkedFormKeyContainer
     {
         new String? Name { get; set; }
         new IExtendedList<Condition> StartConditions { get; }
@@ -797,7 +787,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IScenePhaseGetter :
         ILoquiObject,
         ILoquiObject<IScenePhaseGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -859,24 +849,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IScenePhaseGetter item,
-            ScenePhase.Mask<bool?> checkMask)
-        {
-            return ((ScenePhaseCommon)((IScenePhaseGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static ScenePhase.Mask<bool> GetHasBeenSetMask(this IScenePhaseGetter item)
-        {
-            var ret = new ScenePhase.Mask<bool>(false);
-            ((ScenePhaseCommon)((IScenePhaseGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -971,17 +943,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IScenePhase item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IScenePhase item,
             MutagenFrame frame,
@@ -1425,35 +1386,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IScenePhaseGetter item,
-            ScenePhase.Mask<bool?> checkMask)
-        {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            if (checkMask.Unused?.Overall.HasValue ?? false && checkMask.Unused.Overall.Value != (item.Unused != null)) return false;
-            if (checkMask.Unused?.Specific != null && (item.Unused == null || !item.Unused.HasBeenSet(checkMask.Unused.Specific))) return false;
-            if (checkMask.Unused2?.Overall.HasValue ?? false && checkMask.Unused2.Overall.Value != (item.Unused2 != null)) return false;
-            if (checkMask.Unused2?.Specific != null && (item.Unused2 == null || !item.Unused2.HasBeenSet(checkMask.Unused2.Specific))) return false;
-            if (checkMask.EditorWidth.HasValue && checkMask.EditorWidth.Value != (item.EditorWidth != null)) return false;
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IScenePhaseGetter item,
-            ScenePhase.Mask<bool> mask)
-        {
-            mask.Name = (item.Name != null);
-            var StartConditionsItem = item.StartConditions;
-            mask.StartConditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, StartConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            var CompletionConditionsItem = item.CompletionConditions;
-            mask.CompletionConditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, CompletionConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            var itemUnused = item.Unused;
-            mask.Unused = new MaskItem<bool, ScenePhaseUnusedData.Mask<bool>?>(itemUnused != null, itemUnused?.GetHasBeenSetMask());
-            var itemUnused2 = item.Unused2;
-            mask.Unused2 = new MaskItem<bool, ScenePhaseUnusedData.Mask<bool>?>(itemUnused2 != null, itemUnused2?.GetHasBeenSetMask());
-            mask.EditorWidth = (item.EditorWidth != null);
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IScenePhaseGetter? lhs,
@@ -1505,12 +1437,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<FormKey> GetLinkFormKeys(IScenePhaseGetter obj)
         {
-            foreach (var item in obj.StartConditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainer> ()
+            foreach (var item in obj.StartConditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter> ()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
             }
-            foreach (var item in obj.CompletionConditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainer> ()
+            foreach (var item in obj.CompletionConditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter> ()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
@@ -1837,7 +1769,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.HNAM:
                 {
-                    switch (recordParseCount?.TryCreateValue(nextRecordType) ?? 0)
+                    switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
                     {
                         case 0:
                             frame.ReadSubrecordFrame();
@@ -1866,7 +1798,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.NEXT:
                 {
-                    switch (recordParseCount?.TryCreateValue(nextRecordType) ?? 0)
+                    switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
                     {
                         case 0:
                             ScenePhaseBinaryCreateTranslation.FillBinaryCompletionConditionsCustom(
@@ -1923,12 +1855,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IScenePhaseGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((ScenePhaseBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1960,15 +1893,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScenePhaseGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => ScenePhaseCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ScenePhaseCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScenePhaseCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScenePhaseCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ScenePhaseCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ScenePhaseBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2068,7 +1997,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.HNAM:
                 {
-                    switch (recordParseCount?.TryCreateValue(type) ?? 0)
+                    switch (recordParseCount?.GetOrAdd(type) ?? 0)
                     {
                         case 0:
                             stream.ReadSubrecordFrame();
@@ -2097,7 +2026,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.NEXT:
                 {
-                    switch (recordParseCount?.TryCreateValue(type) ?? 0)
+                    switch (recordParseCount?.GetOrAdd(type) ?? 0)
                     {
                         case 0:
                             CompletionConditionsCustomParse(

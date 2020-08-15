@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Tests.GUI.Views
             InitializeComponent();
             this.WhenActivated(disposable =>
             {
-                this.WhenAny(x => x.ViewModel.GameRelease)
+                this.WhenAnyValue(x => x.ViewModel.GameRelease)
                     .Select(x => x.ToString())
                     .BindToStrict(this, x => x.Name.Text)
                     .DisposeWith(disposable);

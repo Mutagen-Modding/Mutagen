@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Weapon" recordType="WEAP" baseClass="SkyrimMajorRecord" objType="Record" majorFlag="true" GUID="93888344-5257-4e1e-a99c-450b6e0d06bf" ID="169">
     <Interface>ITranslatedNamed</Interface>
@@ -7,7 +7,7 @@
     <Interface>IObjectBounded</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
-      <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <RefDirect name="Model" refName="Model" />
       <RefDirect name="Icons" refName="Icons" />
@@ -62,7 +62,7 @@
   <Object name="WeaponData" objType="Subrecord" recordType="DNAM" GUID="e4fd60a3-168d-4947-be5a-75a762ff8b1f" ID="197">
     <Fields>
       <Enum name="AnimationType" enumName="WeaponAnimationType" byteLength="1" />
-      <ByteArray name="Unused" hasBeenSet="False" byteLength="3" />
+      <ByteArray name="Unused" nullable="False" byteLength="3" />
       <Float name="Speed" />
       <Float name="Reach" />
       <Enum name="Flags" enumName="WeaponData.Flag" byteLength="2" binary="Custom" />
@@ -82,10 +82,10 @@
       <Float name="RumbleLeftMotorStrength" />
       <Float name="RumbleRightMotorStrength" />
       <Float name="RumbleDuration" />
-      <ByteArray name="Unknown3" hasBeenSet="False" byteLength="12" />
-      <Enum name="Skill" enumName="Skill" byteLength="4" hasBeenSet="True" hasBeenSetBinaryFallback="-1" />
+      <ByteArray name="Unknown3" nullable="False" byteLength="12" />
+      <Enum name="Skill" enumName="Skill" byteLength="4" nullable="True" nullableBinaryFallback="-1" />
       <Int64 name="Unknown4" />
-      <Enum name="Resist" enumName="ActorValueExtended" byteLength="4" default="ActorValueExtended.None" />
+      <Enum name="Resist" enumName="ActorValue" byteLength="4" default="ActorValue.None" />
       <Int32 name="Unknown5" />
       <Float name="Stagger" />
     </Fields>
@@ -96,7 +96,7 @@
       <Int16 name="Unused" />
       <Float name="PercentMult" />
       <Enum name="Flags" enumName="CriticalData.Flag" byteLength="1" />
-      <ByteArray name="Unused2" hasBeenSet="False" byteLength="3" />
+      <ByteArray name="Unused2" nullable="False" byteLength="3" />
       <Int32 name="Unused3" >
         <Versioning formVersion="44" />
       </Int32>

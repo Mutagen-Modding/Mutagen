@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class Decal :
         IDecal,
         ILoquiObjectSetter<Decal>,
-        IEquatable<Decal>,
-        IEqualsMask
+        IEquatable<Decal>
     {
         #region Ctor
         public Decal()
@@ -670,14 +669,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static Decal CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static Decal CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -704,8 +695,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDecalGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -809,24 +798,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IDecalGetter item,
-            Decal.Mask<bool?> checkMask)
-        {
-            return ((DecalCommon)((IDecalGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Decal.Mask<bool> GetHasBeenSetMask(this IDecalGetter item)
-        {
-            var ret = new Decal.Mask<bool>(false);
-            ((DecalCommon)((IDecalGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IDecalGetter item,
             IDecalGetter rhs)
@@ -919,17 +890,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IDecal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IDecal item,
             MutagenFrame frame,
@@ -1417,30 +1377,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IDecalGetter item,
-            Decal.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IDecalGetter item,
-            Decal.Mask<bool> mask)
-        {
-            mask.MinWidth = true;
-            mask.MaxWidth = true;
-            mask.MinHeight = true;
-            mask.MaxHeight = true;
-            mask.Depth = true;
-            mask.Shininess = true;
-            mask.ParallaxScale = true;
-            mask.ParallaxPasses = true;
-            mask.Flags = true;
-            mask.Unknown = true;
-            mask.Color = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IDecalGetter? lhs,
@@ -1731,12 +1667,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IDecalGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((DecalBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1768,8 +1705,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDecalGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DecalBinaryWriteTranslation.Instance;

@@ -1,20 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Mutagen.Bethesda
 {
-    /// <summary>
-    /// Specific game releases
-    /// </summary>
-    public enum GameRelease
-    {
-        Oblivion,
-        SkyrimLE,
-        SkyrimSE
-    }
-
-    public static class GameReleaseExt
+    public static class MutagenEnumExt
     {
         public static GameCategory ToCategory(this GameRelease release)
         {

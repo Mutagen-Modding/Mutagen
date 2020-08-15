@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class FindMatchingRefFromEvent :
         IFindMatchingRefFromEvent,
         ILoquiObjectSetter<FindMatchingRefFromEvent>,
-        IEquatable<FindMatchingRefFromEvent>,
-        IEqualsMask
+        IEquatable<FindMatchingRefFromEvent>
     {
         #region Ctor
         public FindMatchingRefFromEvent()
@@ -396,14 +395,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static FindMatchingRefFromEvent CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static FindMatchingRefFromEvent CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -430,8 +421,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFindMatchingRefFromEventGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -515,24 +504,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IFindMatchingRefFromEventGetter item,
-            FindMatchingRefFromEvent.Mask<bool?> checkMask)
-        {
-            return ((FindMatchingRefFromEventCommon)((IFindMatchingRefFromEventGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static FindMatchingRefFromEvent.Mask<bool> GetHasBeenSetMask(this IFindMatchingRefFromEventGetter item)
-        {
-            var ret = new FindMatchingRefFromEvent.Mask<bool>(false);
-            ((FindMatchingRefFromEventCommon)((IFindMatchingRefFromEventGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -627,17 +598,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IFindMatchingRefFromEvent item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IFindMatchingRefFromEvent item,
             MutagenFrame frame,
@@ -974,23 +934,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IFindMatchingRefFromEventGetter item,
-            FindMatchingRefFromEvent.Mask<bool?> checkMask)
-        {
-            if (checkMask.FromEvent.HasValue && checkMask.FromEvent.Value != (item.FromEvent != null)) return false;
-            if (checkMask.EventData.HasValue && checkMask.EventData.Value != (item.EventData != null)) return false;
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IFindMatchingRefFromEventGetter item,
-            FindMatchingRefFromEvent.Mask<bool> mask)
-        {
-            mask.FromEvent = (item.FromEvent != null);
-            mask.EventData = (item.EventData != null);
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IFindMatchingRefFromEventGetter? lhs,
@@ -1234,12 +1177,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IFindMatchingRefFromEventGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((FindMatchingRefFromEventBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1271,8 +1215,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFindMatchingRefFromEventGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => FindMatchingRefFromEventBinaryWriteTranslation.Instance;

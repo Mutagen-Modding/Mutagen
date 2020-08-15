@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         APackageTarget,
         IPackageTargetSelf,
         ILoquiObjectSetter<PackageTargetSelf>,
-        IEquatable<PackageTargetSelf>,
-        IEqualsMask
+        IEquatable<PackageTargetSelf>
     {
         #region Ctor
         public PackageTargetSelf()
@@ -348,14 +347,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new PackageTargetSelf CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static PackageTargetSelf CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -382,8 +373,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPackageTargetSelfGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -462,24 +451,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IPackageTargetSelfGetter item,
-            PackageTargetSelf.Mask<bool?> checkMask)
-        {
-            return ((PackageTargetSelfCommon)((IPackageTargetSelfGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static PackageTargetSelf.Mask<bool> GetHasBeenSetMask(this IPackageTargetSelfGetter item)
-        {
-            var ret = new PackageTargetSelf.Mask<bool>(false);
-            ((PackageTargetSelfCommon)((IPackageTargetSelfGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IPackageTargetSelfGetter item,
             IPackageTargetSelfGetter rhs)
@@ -549,17 +520,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IPackageTargetSelf item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IPackageTargetSelf item,
             MutagenFrame frame,
@@ -886,25 +846,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IPackageTargetSelfGetter item,
-            PackageTargetSelf.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IPackageTargetSelfGetter item,
-            PackageTargetSelf.Mask<bool> mask)
-        {
-            mask.Data = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static PackageTargetSelf_FieldIndex ConvertFieldIndex(APackageTarget_FieldIndex index)
         {
             switch (index)
@@ -1174,8 +1115,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPackageTargetSelfGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PackageTargetSelfBinaryWriteTranslation.Instance;

@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IReverbParametersInternal,
         ILoquiObjectSetter<ReverbParameters>,
-        IEquatable<ReverbParameters>,
-        IEqualsMask
+        IEquatable<ReverbParameters>
     {
         #region Ctor
         protected ReverbParameters()
@@ -757,14 +756,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new ReverbParameters CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static ReverbParameters CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -791,8 +782,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IReverbParametersGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -902,24 +891,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IReverbParametersGetter item,
-            ReverbParameters.Mask<bool?> checkMask)
-        {
-            return ((ReverbParametersCommon)((IReverbParametersGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static ReverbParameters.Mask<bool> GetHasBeenSetMask(this IReverbParametersGetter item)
-        {
-            var ret = new ReverbParameters.Mask<bool>(false);
-            ((ReverbParametersCommon)((IReverbParametersGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IReverbParametersGetter item,
             IReverbParametersGetter rhs)
@@ -989,17 +960,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IReverbParametersInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IReverbParametersInternal item,
             MutagenFrame frame,
@@ -1565,37 +1525,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IReverbParametersGetter item,
-            ReverbParameters.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IReverbParametersGetter item,
-            ReverbParameters.Mask<bool> mask)
-        {
-            mask.DecayMilliseconds = true;
-            mask.HfReferenceHertz = true;
-            mask.RoomFilter = true;
-            mask.RoomHfFilter = true;
-            mask.Reflections = true;
-            mask.ReverbAmp = true;
-            mask.DecayHfRatio = true;
-            mask.ReflectDelayMS = true;
-            mask.ReverbDelayMS = true;
-            mask.DiffusionPercent = true;
-            mask.DensityPercent = true;
-            mask.Unknown = true;
-            mask.DATADataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static ReverbParameters_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -2134,8 +2063,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IReverbParametersGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ReverbParametersBinaryWriteTranslation.Instance;

@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class PlacedPrimitive :
         IPlacedPrimitive,
         ILoquiObjectSetter<PlacedPrimitive>,
-        IEquatable<PlacedPrimitive>,
-        IEqualsMask
+        IEquatable<PlacedPrimitive>
     {
         #region Ctor
         public PlacedPrimitive()
@@ -453,14 +452,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static PlacedPrimitive CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static PlacedPrimitive CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -487,8 +478,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPlacedPrimitiveGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -576,24 +565,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IPlacedPrimitiveGetter item,
-            PlacedPrimitive.Mask<bool?> checkMask)
-        {
-            return ((PlacedPrimitiveCommon)((IPlacedPrimitiveGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static PlacedPrimitive.Mask<bool> GetHasBeenSetMask(this IPlacedPrimitiveGetter item)
-        {
-            var ret = new PlacedPrimitive.Mask<bool>(false);
-            ((PlacedPrimitiveCommon)((IPlacedPrimitiveGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -688,17 +659,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IPlacedPrimitive item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IPlacedPrimitive item,
             MutagenFrame frame,
@@ -1060,23 +1020,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IPlacedPrimitiveGetter item,
-            PlacedPrimitive.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IPlacedPrimitiveGetter item,
-            PlacedPrimitive.Mask<bool> mask)
-        {
-            mask.Bounds = true;
-            mask.Color = true;
-            mask.Unknown = true;
-            mask.Type = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IPlacedPrimitiveGetter? lhs,
@@ -1321,12 +1264,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IPlacedPrimitiveGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((PlacedPrimitiveBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1358,8 +1302,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPlacedPrimitiveGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PlacedPrimitiveBinaryWriteTranslation.Instance;

@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class EnableParent :
         IEnableParent,
         ILoquiObjectSetter<EnableParent>,
-        IEquatable<EnableParent>,
-        IEqualsMask
+        IEquatable<EnableParent>
     {
         #region Ctor
         public EnableParent()
@@ -46,7 +45,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Reference
         public FormLink<ILinkedReference> Reference { get; set; } = new FormLink<ILinkedReference>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ILinkedReferenceGetter> IEnableParentGetter.Reference => this.Reference;
+        FormLink<ILinkedReferenceGetter> IEnableParentGetter.Reference => this.Reference.ToGetter<ILinkedReference, ILinkedReferenceGetter>();
         #endregion
         #region Flags
         public EnableParent.Flag Flags { get; set; } = default;
@@ -453,7 +452,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => EnableParentCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => EnableParentCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => EnableParentCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EnableParentCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EnableParentCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -473,14 +472,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static EnableParent CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static EnableParent CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -507,8 +498,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEnableParentGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -526,7 +515,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IEnableParent :
         IEnableParentGetter,
-        ILoquiObjectSetter<IEnableParent>
+        ILoquiObjectSetter<IEnableParent>,
+        ILinkedFormKeyContainer
     {
         new EnableParent.VersioningBreaks Versioning { get; set; }
         new FormLink<ILinkedReference> Reference { get; set; }
@@ -537,7 +527,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IEnableParentGetter :
         ILoquiObject,
         ILoquiObject<IEnableParentGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -548,7 +538,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => EnableParent_Registration.Instance;
         EnableParent.VersioningBreaks Versioning { get; }
-        IFormLink<ILinkedReferenceGetter> Reference { get; }
+        FormLink<ILinkedReferenceGetter> Reference { get; }
         EnableParent.Flag Flags { get; }
         ReadOnlyMemorySlice<Byte> Unknown { get; }
 
@@ -597,24 +587,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IEnableParentGetter item,
-            EnableParent.Mask<bool?> checkMask)
-        {
-            return ((EnableParentCommon)((IEnableParentGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static EnableParent.Mask<bool> GetHasBeenSetMask(this IEnableParentGetter item)
-        {
-            var ret = new EnableParent.Mask<bool>(false);
-            ((EnableParentCommon)((IEnableParentGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -709,17 +681,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IEnableParent item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IEnableParent item,
             MutagenFrame frame,
@@ -1069,7 +1030,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Reference ?? true)
             {
-                fg.AppendItem(item.Reference, "Reference");
+                fg.AppendItem(item.Reference.FormKey, "Reference");
             }
             if (printMask?.Flags ?? true)
             {
@@ -1079,23 +1040,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
             }
-        }
-        
-        public bool HasBeenSet(
-            IEnableParentGetter item,
-            EnableParent.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IEnableParentGetter item,
-            EnableParent.Mask<bool> mask)
-        {
-            mask.Versioning = true;
-            mask.Reference = true;
-            mask.Flags = true;
-            mask.Unknown = true;
         }
         
         #region Equals and Hash
@@ -1158,7 +1102,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)EnableParent_FieldIndex.Reference) ?? true))
             {
-                item.Reference = rhs.Reference.FormKey;
+                item.Reference = new FormLink<ILinkedReference>(rhs.Reference.FormKey);
             }
             if (rhs.Versioning.HasFlag(EnableParent.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)EnableParent_FieldIndex.Flags) ?? true))
@@ -1330,12 +1274,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IEnableParentGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((EnableParentBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1367,15 +1312,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEnableParentGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => EnableParentCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => EnableParentCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EnableParentCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EnableParentCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => EnableParentCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => EnableParentBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1391,7 +1332,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public EnableParent.VersioningBreaks Versioning { get; private set; }
-        public IFormLink<ILinkedReferenceGetter> Reference => new FormLink<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<ILinkedReferenceGetter> Reference => new FormLink<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public EnableParent.Flag Flags => (EnableParent.Flag)_data.Span.Slice(0x4, 0x1)[0];
         public ReadOnlyMemorySlice<Byte> Unknown => _data.Span.Slice(0x5, 0x3).ToArray();
         partial void CustomFactoryEnd(

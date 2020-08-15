@@ -3,12 +3,14 @@ using System;
 using Noggog;
 using System.Collections.Generic;
 using System.Text;
+using System.Diagnostics;
 
 namespace Mutagen.Bethesda
 {
     /// <summary> 
     /// An abstract base class for Mods to inherit from for some common functionality 
     /// </summary> 
+    [DebuggerDisplay("{GameRelease} {ModKey.ToString()}")]
     public abstract class AMod : IMod
     {
         /// <summary> 
@@ -41,15 +43,15 @@ namespace Mutagen.Bethesda
         }
 
         #region NonImplemented IMod 
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => throw new NotImplementedException();
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => throw new NotImplementedException();
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => throw new NotImplementedException();
         IList<MasterReference> IMod.MasterReferences => throw new NotImplementedException();
-        uint IMod.NextObjectID { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        uint IMod.NextFormID { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public abstract bool CanUseLocalization { get; }
         ICache<T, FormKey> IMod.GetGroup<T>() => throw new NotImplementedException();
         public abstract void SyncRecordCount();
-        IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => throw new NotImplementedException();
+        IReadOnlyCache<T, FormKey> IModGetter.GetTopLevelGroupGetter<T>() => throw new NotImplementedException();
         void IModGetter.WriteToBinary(string path, BinaryWriteParameters? param) => throw new NotImplementedException();
         void IModGetter.WriteToBinaryParallel(string path, BinaryWriteParameters? param) => throw new NotImplementedException();
         IEnumerable<T> IMajorRecordEnumerable.EnumerateMajorRecords<T>() => throw new NotImplementedException();

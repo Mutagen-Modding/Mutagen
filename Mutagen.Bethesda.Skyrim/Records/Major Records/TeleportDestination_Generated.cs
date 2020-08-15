@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class TeleportDestination :
         ITeleportDestination,
         ILoquiObjectSetter<TeleportDestination>,
-        IEquatable<TeleportDestination>,
-        IEqualsMask
+        IEquatable<TeleportDestination>
     {
         #region Ctor
         public TeleportDestination()
@@ -43,7 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Door
         public FormLink<PlacedObject> Door { get; set; } = new FormLink<PlacedObject>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IPlacedObjectGetter> ITeleportDestinationGetter.Door => this.Door;
+        FormLink<IPlacedObjectGetter> ITeleportDestinationGetter.Door => this.Door.ToGetter<PlacedObject, IPlacedObjectGetter>();
         #endregion
         #region Position
         public P3Float Position { get; set; } = default;
@@ -440,7 +439,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => TeleportDestinationCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => TeleportDestinationCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => TeleportDestinationCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TeleportDestinationCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TeleportDestinationCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -460,14 +459,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static TeleportDestination CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static TeleportDestination CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -494,8 +485,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITeleportDestinationGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -514,7 +503,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ITeleportDestination :
         ITeleportDestinationGetter,
         IPositionRotation,
-        ILoquiObjectSetter<ITeleportDestination>
+        ILoquiObjectSetter<ITeleportDestination>,
+        ILinkedFormKeyContainer
     {
         new FormLink<PlacedObject> Door { get; set; }
         new P3Float Position { get; set; }
@@ -526,7 +516,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject,
         IPositionRotationGetter,
         ILoquiObject<ITeleportDestinationGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -536,7 +526,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => TeleportDestination_Registration.Instance;
-        IFormLink<IPlacedObjectGetter> Door { get; }
+        FormLink<IPlacedObjectGetter> Door { get; }
         P3Float Position { get; }
         P3Float Rotation { get; }
         TeleportDestination.Flag Flags { get; }
@@ -586,24 +576,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ITeleportDestinationGetter item,
-            TeleportDestination.Mask<bool?> checkMask)
-        {
-            return ((TeleportDestinationCommon)((ITeleportDestinationGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static TeleportDestination.Mask<bool> GetHasBeenSetMask(this ITeleportDestinationGetter item)
-        {
-            var ret = new TeleportDestination.Mask<bool>(false);
-            ((TeleportDestinationCommon)((ITeleportDestinationGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -698,17 +670,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ITeleportDestination item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ITeleportDestination item,
             MutagenFrame frame,
@@ -1054,7 +1015,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.Door ?? true)
             {
-                fg.AppendItem(item.Door, "Door");
+                fg.AppendItem(item.Door.FormKey, "Door");
             }
             if (printMask?.Position ?? true)
             {
@@ -1068,23 +1029,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.Flags, "Flags");
             }
-        }
-        
-        public bool HasBeenSet(
-            ITeleportDestinationGetter item,
-            TeleportDestination.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            ITeleportDestinationGetter item,
-            TeleportDestination.Mask<bool> mask)
-        {
-            mask.Door = true;
-            mask.Position = true;
-            mask.Rotation = true;
-            mask.Flags = true;
         }
         
         #region Equals and Hash
@@ -1143,7 +1087,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Door) ?? true))
             {
-                item.Door = rhs.Door.FormKey;
+                item.Door = new FormLink<PlacedObject>(rhs.Door.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Position) ?? true))
             {
@@ -1314,12 +1258,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this ITeleportDestinationGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((TeleportDestinationBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1351,15 +1296,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITeleportDestinationGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => TeleportDestinationCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => TeleportDestinationCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TeleportDestinationCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TeleportDestinationCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => TeleportDestinationCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => TeleportDestinationBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1374,7 +1315,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<IPlacedObjectGetter> Door => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<IPlacedObjectGetter> Door => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public P3Float Position => P3FloatBinaryTranslation.Read(_data.Slice(0x4, 0xC));
         public P3Float Rotation => P3FloatBinaryTranslation.Read(_data.Slice(0x10, 0xC));
         public TeleportDestination.Flag Flags => (TeleportDestination.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x1C, 0x4));

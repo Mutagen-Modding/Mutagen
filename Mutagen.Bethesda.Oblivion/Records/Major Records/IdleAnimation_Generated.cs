@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IIdleAnimationInternal,
         ILoquiObjectSetter<IdleAnimation>,
-        IEquatable<IdleAnimation>,
-        IEqualsMask
+        IEquatable<IdleAnimation>
     {
         #region Ctor
         protected IdleAnimation()
@@ -632,7 +631,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => IdleAnimationCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => IdleAnimationCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => IdleAnimationCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleAnimationCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleAnimationCommon.Instance.RemapLinks(this, mapping);
         public IdleAnimation(FormKey formKey)
@@ -667,14 +666,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new IdleAnimation CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static IdleAnimation CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -701,8 +692,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IIdleAnimationGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -721,7 +710,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IIdleAnimation :
         IIdleAnimationGetter,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<IIdleAnimationInternal>
+        ILoquiObjectSetter<IIdleAnimationInternal>,
+        ILinkedFormKeyContainer
     {
         new Model? Model { get; set; }
         new IExtendedList<Condition> Conditions { get; }
@@ -739,7 +729,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IIdleAnimationGetter :
         IOblivionMajorRecordGetter,
         ILoquiObject<IIdleAnimationGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => IdleAnimation_Registration.Instance;
@@ -793,24 +783,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IIdleAnimationGetter item,
-            IdleAnimation.Mask<bool?> checkMask)
-        {
-            return ((IdleAnimationCommon)((IIdleAnimationGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static IdleAnimation.Mask<bool> GetHasBeenSetMask(this IIdleAnimationGetter item)
-        {
-            var ret = new IdleAnimation.Mask<bool>(false);
-            ((IdleAnimationCommon)((IIdleAnimationGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -882,17 +854,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IIdleAnimationInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IIdleAnimationInternal item,
             MutagenFrame frame,
@@ -1329,41 +1290,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendItem(subItem);
+                            fg.AppendItem(subItem.FormKey);
                         }
                         fg.AppendLine("]");
                     }
                 }
                 fg.AppendLine("]");
             }
-        }
-        
-        public bool HasBeenSet(
-            IIdleAnimationGetter item,
-            IdleAnimation.Mask<bool?> checkMask)
-        {
-            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
-            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.AnimationGroupSection.HasValue && checkMask.AnimationGroupSection.Value != (item.AnimationGroupSection != null)) return false;
-            if (checkMask.RelatedIdleAnimations?.Overall.HasValue ?? false && checkMask.RelatedIdleAnimations!.Overall.Value != (item.RelatedIdleAnimations != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IIdleAnimationGetter item,
-            IdleAnimation.Mask<bool> mask)
-        {
-            var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            var ConditionsItem = item.Conditions;
-            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.AnimationGroupSection = (item.AnimationGroupSection != null);
-            mask.RelatedIdleAnimations = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.RelatedIdleAnimations != null), default);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static IdleAnimation_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
@@ -1944,15 +1877,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IIdleAnimationGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => IdleAnimationCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => IdleAnimationCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleAnimationCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleAnimationCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => IdleAnimationCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => IdleAnimationBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

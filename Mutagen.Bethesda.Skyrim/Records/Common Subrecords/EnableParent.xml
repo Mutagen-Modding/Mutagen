@@ -7,7 +7,7 @@
       </FormLink>
       <Break />
       <Enum name="Flags" enumName="EnableParent.Flag" byteLength="1" />
-      <ByteArray name="Unknown" byteLength="3" hasBeenSet="False" />
+      <ByteArray name="Unknown" byteLength="3" nullable="False" />
     </Fields>
   </Object>
 </Loqui>

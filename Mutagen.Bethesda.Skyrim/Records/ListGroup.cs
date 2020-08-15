@@ -33,17 +33,14 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
 
-        public partial class ListGroupBinaryOverlay<T>
+        public partial class ListGroupBinaryOverlay<T> : AListGroupBinaryOverlay<T>
         {
-            private AListGroup.GroupListOverlay<T>? _Records;
-            public IReadOnlyList<T> Records => _Records!;
-
             partial void CustomFactoryEnd(
                 OverlayStream stream,
                 int finalPos,
                 int offset)
             {
-                _Records = AListGroup.GroupListOverlay<T>.Factory(
+                _Records = GroupListOverlay<T>.Factory(
                     stream,
                     _data,
                     _package,

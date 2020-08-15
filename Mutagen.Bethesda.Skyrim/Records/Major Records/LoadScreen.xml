@@ -4,9 +4,9 @@
     <Interface>IHasIcons</Interface>
     <Fields>
       <RefDirect name="Icons" refName="Icons" />
-      <String name="Description" recordType="DESC" translated="Normal" hasBeenSet="False" />
+      <String name="Description" recordType="DESC" translated="Normal" nullable="False" />
       <RefList name="Conditions" refName="Condition" binary="Custom" />
-      <FormLink name="LoadingScreenNif" recordType="NNAM" refName="Static" hasBeenSet="False" />
+      <FormLink name="LoadingScreenNif" recordType="NNAM" refName="Static" nullable="False" />
       <Float name="InitialScale" recordType="SNAM" />
       <P3Int16 name="InitialRotation" recordType="RNAM" />
       <RefDirect name="RotationOffsetConstraints" refName="Int16MinMax" recordType="ONAM" />

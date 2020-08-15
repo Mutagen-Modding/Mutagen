@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ImageSpaceHdr :
         IImageSpaceHdr,
         ILoquiObjectSetter<ImageSpaceHdr>,
-        IEquatable<ImageSpaceHdr>,
-        IEqualsMask
+        IEquatable<ImageSpaceHdr>
     {
         #region Ctor
         public ImageSpaceHdr()
@@ -607,14 +606,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static ImageSpaceHdr CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static ImageSpaceHdr CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -641,8 +632,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IImageSpaceHdrGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -742,24 +731,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IImageSpaceHdrGetter item,
-            ImageSpaceHdr.Mask<bool?> checkMask)
-        {
-            return ((ImageSpaceHdrCommon)((IImageSpaceHdrGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static ImageSpaceHdr.Mask<bool> GetHasBeenSetMask(this IImageSpaceHdrGetter item)
-        {
-            var ret = new ImageSpaceHdr.Mask<bool>(false);
-            ((ImageSpaceHdrCommon)((IImageSpaceHdrGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IImageSpaceHdrGetter item,
             IImageSpaceHdrGetter rhs)
@@ -852,17 +823,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IImageSpaceHdr item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IImageSpaceHdr item,
             MutagenFrame frame,
@@ -1314,28 +1274,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IImageSpaceHdrGetter item,
-            ImageSpaceHdr.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IImageSpaceHdrGetter item,
-            ImageSpaceHdr.Mask<bool> mask)
-        {
-            mask.EyeAdaptSpeed = true;
-            mask.BloomBlurRadius = true;
-            mask.BloomThreshold = true;
-            mask.BloomScale = true;
-            mask.ReceiveBloomThreshold = true;
-            mask.White = true;
-            mask.SunlightScale = true;
-            mask.SkyScale = true;
-            mask.EyeAdaptStrength = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IImageSpaceHdrGetter? lhs,
@@ -1609,12 +1547,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IImageSpaceHdrGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((ImageSpaceHdrBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1646,8 +1585,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IImageSpaceHdrGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ImageSpaceHdrBinaryWriteTranslation.Instance;

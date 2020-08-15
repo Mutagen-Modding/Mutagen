@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         ANpcLevel,
         IPcLevelMult,
         ILoquiObjectSetter<PcLevelMult>,
-        IEquatable<PcLevelMult>,
-        IEqualsMask
+        IEquatable<PcLevelMult>
     {
         #region Ctor
         public PcLevelMult()
@@ -340,14 +339,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new PcLevelMult CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static PcLevelMult CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -374,8 +365,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPcLevelMultGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -454,24 +443,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IPcLevelMultGetter item,
-            PcLevelMult.Mask<bool?> checkMask)
-        {
-            return ((PcLevelMultCommon)((IPcLevelMultGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static PcLevelMult.Mask<bool> GetHasBeenSetMask(this IPcLevelMultGetter item)
-        {
-            var ret = new PcLevelMult.Mask<bool>(false);
-            ((PcLevelMultCommon)((IPcLevelMultGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IPcLevelMultGetter item,
             IPcLevelMultGetter rhs)
@@ -541,17 +512,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IPcLevelMult item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IPcLevelMult item,
             MutagenFrame frame,
@@ -877,25 +837,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IPcLevelMultGetter item,
-            PcLevelMult.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IPcLevelMultGetter item,
-            PcLevelMult.Mask<bool> mask)
-        {
-            mask.LevelMult = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static PcLevelMult_FieldIndex ConvertFieldIndex(ANpcLevel_FieldIndex index)
         {
             switch (index)
@@ -1174,8 +1115,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPcLevelMultGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PcLevelMultBinaryWriteTranslation.Instance;

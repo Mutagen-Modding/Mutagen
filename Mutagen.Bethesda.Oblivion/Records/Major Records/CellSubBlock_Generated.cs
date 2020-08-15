@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class CellSubBlock :
         ICellSubBlock,
         ILoquiObjectSetter<CellSubBlock>,
-        IEquatable<CellSubBlock>,
-        IEqualsMask
+        IEquatable<CellSubBlock>
     {
         #region Ctor
         public CellSubBlock()
@@ -526,7 +525,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => CellSubBlockCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => CellSubBlockCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => CellSubBlockCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellSubBlockCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellSubBlockCommon.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
@@ -558,14 +557,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static CellSubBlock CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static CellSubBlock CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -592,8 +583,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICellSubBlockGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -612,7 +601,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ICellSubBlock :
         ICellSubBlockGetter,
         IMajorRecordEnumerable,
-        ILoquiObjectSetter<ICellSubBlock>
+        ILoquiObjectSetter<ICellSubBlock>,
+        ILinkedFormKeyContainer
     {
         new Int32 BlockNumber { get; set; }
         new GroupTypeEnum GroupType { get; set; }
@@ -624,7 +614,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject,
         IMajorRecordGetterEnumerable,
         ILoquiObject<ICellSubBlockGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -684,24 +674,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ICellSubBlockGetter item,
-            CellSubBlock.Mask<bool?> checkMask)
-        {
-            return ((CellSubBlockCommon)((ICellSubBlockGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static CellSubBlock.Mask<bool> GetHasBeenSetMask(this ICellSubBlockGetter item)
-        {
-            var ret = new CellSubBlock.Mask<bool>(false);
-            ((CellSubBlockCommon)((ICellSubBlockGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -859,17 +831,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ICellSubBlock item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ICellSubBlock item,
             MutagenFrame frame,
@@ -1270,24 +1231,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            ICellSubBlockGetter item,
-            CellSubBlock.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            ICellSubBlockGetter item,
-            CellSubBlock.Mask<bool> mask)
-        {
-            mask.BlockNumber = true;
-            mask.GroupType = true;
-            mask.LastModified = true;
-            var CellsItem = item.Cells;
-            mask.Cells = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Cell.Mask<bool>?>>?>(true, CellsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Cell.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             ICellSubBlockGetter? lhs,
@@ -1351,11 +1294,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (type.Name)
             {
                 case "IMajorRecordCommon":
-                case "IMajorRecordCommonGetter":
+                case "IMajorRecord":
                 case "MajorRecord":
                 case "IOblivionMajorRecord":
-                case "IOblivionMajorRecordGetter":
                 case "OblivionMajorRecord":
+                    if (!CellSubBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IMajorRecordGetter":
+                case "IMajorRecordCommonGetter":
+                case "IOblivionMajorRecordGetter":
                     foreach (var item in this.EnumerateMajorRecords(obj))
                     {
                         yield return item;
@@ -1457,6 +1408,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         }
                     }
                     yield break;
+                case "IPlaced":
+                {
+                    if (!CellSubBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var subItem in obj.Cells)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                }
+                case "IPlacedGetter":
+                {
+                    foreach (var subItem in obj.Cells)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                }
                 default:
                     if (throwIfUnknown)
                     {
@@ -1715,12 +1697,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this ICellSubBlockGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((CellSubBlockBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1752,15 +1735,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICellSubBlockGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => CellSubBlockCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => CellSubBlockCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellSubBlockCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellSubBlockCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => CellSubBlockCommon.Instance.GetLinkFormKeys(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IEncounterZoneInternal,
         ILoquiObjectSetter<EncounterZone>,
-        IEquatable<EncounterZone>,
-        IEqualsMask
+        IEquatable<EncounterZone>
     {
         #region Ctor
         protected EncounterZone()
@@ -46,12 +45,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Owner
         public FormLink<IOwner> Owner { get; set; } = new FormLink<IOwner>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IOwnerGetter> IEncounterZoneGetter.Owner => this.Owner;
+        FormLink<IOwnerGetter> IEncounterZoneGetter.Owner => this.Owner.ToGetter<IOwner, IOwnerGetter>();
         #endregion
         #region Location
         public FormLink<Location> Location { get; set; } = new FormLink<Location>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ILocationGetter> IEncounterZoneGetter.Location => this.Location;
+        FormLink<ILocationGetter> IEncounterZoneGetter.Location => this.Location.ToGetter<Location, ILocationGetter>();
         #endregion
         #region Rank
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -582,7 +581,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => EncounterZoneCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => EncounterZoneCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => EncounterZoneCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EncounterZoneCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EncounterZoneCommon.Instance.RemapLinks(this, mapping);
         public EncounterZone(FormKey formKey)
@@ -622,14 +621,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new EncounterZone CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static EncounterZone CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -656,8 +647,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEncounterZoneGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -676,7 +665,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IEncounterZone :
         IEncounterZoneGetter,
         ISkyrimMajorRecord,
-        ILoquiObjectSetter<IEncounterZoneInternal>
+        ILoquiObjectSetter<IEncounterZoneInternal>,
+        ILinkedFormKeyContainer
     {
         new FormLink<IOwner> Owner { get; set; }
         new FormLink<Location> Location { get; set; }
@@ -697,12 +687,12 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IEncounterZoneGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IEncounterZoneGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => EncounterZone_Registration.Instance;
-        IFormLink<IOwnerGetter> Owner { get; }
-        IFormLink<ILocationGetter> Location { get; }
+        FormLink<IOwnerGetter> Owner { get; }
+        FormLink<ILocationGetter> Location { get; }
         SByte Rank { get; }
         SByte MinLevel { get; }
         EncounterZone.Flag Flags { get; }
@@ -754,24 +744,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IEncounterZoneGetter item,
-            EncounterZone.Mask<bool?> checkMask)
-        {
-            return ((EncounterZoneCommon)((IEncounterZoneGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static EncounterZone.Mask<bool> GetHasBeenSetMask(this IEncounterZoneGetter item)
-        {
-            var ret = new EncounterZone.Mask<bool>(false);
-            ((EncounterZoneCommon)((IEncounterZoneGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -843,17 +815,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IEncounterZoneInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IEncounterZoneInternal item,
             MutagenFrame frame,
@@ -1283,11 +1244,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.Owner ?? true)
             {
-                fg.AppendItem(item.Owner, "Owner");
+                fg.AppendItem(item.Owner.FormKey, "Owner");
             }
             if (printMask?.Location ?? true)
             {
-                fg.AppendItem(item.Location, "Location");
+                fg.AppendItem(item.Location.FormKey, "Location");
             }
             if (printMask?.Rank ?? true)
             {
@@ -1309,31 +1270,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
-        }
-        
-        public bool HasBeenSet(
-            IEncounterZoneGetter item,
-            EncounterZone.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IEncounterZoneGetter item,
-            EncounterZone.Mask<bool> mask)
-        {
-            mask.Owner = true;
-            mask.Location = true;
-            mask.Rank = true;
-            mask.MinLevel = true;
-            mask.Flags = true;
-            mask.MaxLevel = true;
-            mask.DATADataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static EncounterZone_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1500,11 +1436,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.Owner) ?? true))
             {
-                item.Owner = rhs.Owner.FormKey;
+                item.Owner = new FormLink<IOwner>(rhs.Owner.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.Location) ?? true))
             {
-                item.Location = rhs.Location.FormKey;
+                item.Location = new FormLink<Location>(rhs.Location.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.Rank) ?? true))
             {
@@ -1840,15 +1776,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEncounterZoneGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => EncounterZoneCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => EncounterZoneCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EncounterZoneCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EncounterZoneCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => EncounterZoneCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => EncounterZoneBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1866,12 +1798,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Owner
         private int _OwnerLocation => _DATALocation!.Value;
         private bool _Owner_IsSet => _DATALocation.HasValue;
-        public IFormLink<IOwnerGetter> Owner => _Owner_IsSet ? new FormLink<IOwnerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_OwnerLocation, 0x4)))) : FormLink<IOwnerGetter>.Null;
+        public FormLink<IOwnerGetter> Owner => _Owner_IsSet ? new FormLink<IOwnerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_OwnerLocation, 0x4)))) : FormLink<IOwnerGetter>.Null;
         #endregion
         #region Location
         private int _LocationLocation => _DATALocation!.Value + 0x4;
         private bool _Location_IsSet => _DATALocation.HasValue;
-        public IFormLink<ILocationGetter> Location => _Location_IsSet ? new FormLink<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_LocationLocation, 0x4)))) : FormLink<ILocationGetter>.Null;
+        public FormLink<ILocationGetter> Location => _Location_IsSet ? new FormLink<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_LocationLocation, 0x4)))) : FormLink<ILocationGetter>.Null;
         #endregion
         #region Rank
         private int _RankLocation => _DATALocation!.Value + 0x8;

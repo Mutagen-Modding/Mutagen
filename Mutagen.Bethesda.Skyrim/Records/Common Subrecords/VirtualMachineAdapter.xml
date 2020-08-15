@@ -102,8 +102,8 @@
       <Int8 name="Unknown" />
       <CustomLogic name="Flags" />
       <String name="FileName" binaryType="PrependLengthUShort" binary="NoGeneration" />
-      <RefDirect name="OnBegin" hasBeenSet="True" binary="NoGeneration" refName="ScriptFragment" />
-      <RefDirect name="OnEnd" hasBeenSet="True" binary="NoGeneration" refName="ScriptFragment" />
+      <RefDirect name="OnBegin" nullable="True" binary="NoGeneration" refName="ScriptFragment" />
+      <RefDirect name="OnEnd" nullable="True" binary="NoGeneration" refName="ScriptFragment" />
     </Fields>
   </Object>
 </Loqui>

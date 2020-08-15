@@ -21,7 +21,7 @@
   </Object>
   <Object name="ActorValuePerkNode" objType="Subrecord" GUID="a537929f-fd15-415b-8cc7-8a3047e4c986" ID="436">
     <Fields>
-      <FormLink name="Perk" recordType="PNAM" refName="Perk" hasBeenSet="False" />
+      <FormLink name="Perk" recordType="PNAM" refName="Perk" nullable="False" />
       <ByteArray name="FNAM" recordType="FNAM" />
       <UInt32 name="PerkGridX" recordType="XNAM" />
       <UInt32 name="PerkGridY" recordType="YNAM" />

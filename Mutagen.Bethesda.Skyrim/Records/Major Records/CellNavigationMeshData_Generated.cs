@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         ANavigationMeshData,
         ICellNavigationMeshData,
         ILoquiObjectSetter<CellNavigationMeshData>,
-        IEquatable<CellNavigationMeshData>,
-        IEqualsMask
+        IEquatable<CellNavigationMeshData>
     {
         #region Ctor
         public CellNavigationMeshData()
@@ -45,12 +44,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region UnusedWorldspaceParent
         public FormLink<Worldspace> UnusedWorldspaceParent { get; set; } = new FormLink<Worldspace>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IWorldspaceGetter> ICellNavigationMeshDataGetter.UnusedWorldspaceParent => this.UnusedWorldspaceParent;
+        FormLink<IWorldspaceGetter> ICellNavigationMeshDataGetter.UnusedWorldspaceParent => this.UnusedWorldspaceParent.ToGetter<Worldspace, IWorldspaceGetter>();
         #endregion
         #region Parent
         public FormLink<Cell> Parent { get; set; } = new FormLink<Cell>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ICellGetter> ICellNavigationMeshDataGetter.Parent => this.Parent;
+        FormLink<ICellGetter> ICellNavigationMeshDataGetter.Parent => this.Parent.ToGetter<Cell, ICellGetter>();
         #endregion
 
         #region To String
@@ -397,7 +396,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => CellNavigationMeshDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => CellNavigationMeshDataCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => CellNavigationMeshDataCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellNavigationMeshDataCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellNavigationMeshDataCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -415,14 +414,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new CellNavigationMeshData CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static CellNavigationMeshData CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -449,8 +440,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICellNavigationMeshDataGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -469,7 +458,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ICellNavigationMeshData :
         ICellNavigationMeshDataGetter,
         IANavigationMeshData,
-        ILoquiObjectSetter<ICellNavigationMeshData>
+        ILoquiObjectSetter<ICellNavigationMeshData>,
+        ILinkedFormKeyContainer
     {
         new FormLink<Worldspace> UnusedWorldspaceParent { get; set; }
         new FormLink<Cell> Parent { get; set; }
@@ -478,12 +468,12 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ICellNavigationMeshDataGetter :
         IANavigationMeshDataGetter,
         ILoquiObject<ICellNavigationMeshDataGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => CellNavigationMeshData_Registration.Instance;
-        IFormLink<IWorldspaceGetter> UnusedWorldspaceParent { get; }
-        IFormLink<ICellGetter> Parent { get; }
+        FormLink<IWorldspaceGetter> UnusedWorldspaceParent { get; }
+        FormLink<ICellGetter> Parent { get; }
 
     }
 
@@ -530,24 +520,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ICellNavigationMeshDataGetter item,
-            CellNavigationMeshData.Mask<bool?> checkMask)
-        {
-            return ((CellNavigationMeshDataCommon)((ICellNavigationMeshDataGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static CellNavigationMeshData.Mask<bool> GetHasBeenSetMask(this ICellNavigationMeshDataGetter item)
-        {
-            var ret = new CellNavigationMeshData.Mask<bool>(false);
-            ((CellNavigationMeshDataCommon)((ICellNavigationMeshDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -619,17 +591,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ICellNavigationMeshData item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ICellNavigationMeshData item,
             MutagenFrame frame,
@@ -977,32 +938,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.UnusedWorldspaceParent ?? true)
             {
-                fg.AppendItem(item.UnusedWorldspaceParent, "UnusedWorldspaceParent");
+                fg.AppendItem(item.UnusedWorldspaceParent.FormKey, "UnusedWorldspaceParent");
             }
             if (printMask?.Parent ?? true)
             {
-                fg.AppendItem(item.Parent, "Parent");
+                fg.AppendItem(item.Parent.FormKey, "Parent");
             }
-        }
-        
-        public bool HasBeenSet(
-            ICellNavigationMeshDataGetter item,
-            CellNavigationMeshData.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            ICellNavigationMeshDataGetter item,
-            CellNavigationMeshData.Mask<bool> mask)
-        {
-            mask.UnusedWorldspaceParent = true;
-            mask.Parent = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static CellNavigationMeshData_FieldIndex ConvertFieldIndex(ANavigationMeshData_FieldIndex index)
@@ -1116,11 +1057,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)CellNavigationMeshData_FieldIndex.UnusedWorldspaceParent) ?? true))
             {
-                item.UnusedWorldspaceParent = rhs.UnusedWorldspaceParent.FormKey;
+                item.UnusedWorldspaceParent = new FormLink<Worldspace>(rhs.UnusedWorldspaceParent.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)CellNavigationMeshData_FieldIndex.Parent) ?? true))
             {
-                item.Parent = rhs.Parent.FormKey;
+                item.Parent = new FormLink<Cell>(rhs.Parent.FormKey);
             }
         }
         
@@ -1302,15 +1243,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICellNavigationMeshDataGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => CellNavigationMeshDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => CellNavigationMeshDataCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellNavigationMeshDataCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellNavigationMeshDataCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => CellNavigationMeshDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => CellNavigationMeshDataBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

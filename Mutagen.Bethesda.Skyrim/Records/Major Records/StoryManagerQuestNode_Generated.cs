@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         AStoryManagerNode,
         IStoryManagerQuestNodeInternal,
         ILoquiObjectSetter<StoryManagerQuestNode>,
-        IEquatable<StoryManagerQuestNode>,
-        IEqualsMask
+        IEquatable<StoryManagerQuestNode>
     {
         #region Ctor
         protected StoryManagerQuestNode()
@@ -544,7 +543,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => StoryManagerQuestNodeCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => StoryManagerQuestNodeCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => StoryManagerQuestNodeCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => StoryManagerQuestNodeCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => StoryManagerQuestNodeCommon.Instance.RemapLinks(this, mapping);
         public StoryManagerQuestNode(FormKey formKey)
@@ -579,14 +578,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new StoryManagerQuestNode CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static StoryManagerQuestNode CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -613,8 +604,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IStoryManagerQuestNodeGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -633,7 +622,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IStoryManagerQuestNode :
         IStoryManagerQuestNodeGetter,
         IAStoryManagerNode,
-        ILoquiObjectSetter<IStoryManagerQuestNodeInternal>
+        ILoquiObjectSetter<IStoryManagerQuestNodeInternal>,
+        ILinkedFormKeyContainer
     {
         new StoryManagerQuestNode.QuestFlag? Flags { get; set; }
         new UInt32? MaxConcurrentQuests { get; set; }
@@ -651,7 +641,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IStoryManagerQuestNodeGetter :
         IAStoryManagerNodeGetter,
         ILoquiObject<IStoryManagerQuestNodeGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => StoryManagerQuestNode_Registration.Instance;
@@ -705,24 +695,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IStoryManagerQuestNodeGetter item,
-            StoryManagerQuestNode.Mask<bool?> checkMask)
-        {
-            return ((StoryManagerQuestNodeCommon)((IStoryManagerQuestNodeGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static StoryManagerQuestNode.Mask<bool> GetHasBeenSetMask(this IStoryManagerQuestNodeGetter item)
-        {
-            var ret = new StoryManagerQuestNode.Mask<bool>(false);
-            ((StoryManagerQuestNodeCommon)((IStoryManagerQuestNodeGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -794,17 +766,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IStoryManagerQuestNodeInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IStoryManagerQuestNodeInternal item,
             MutagenFrame frame,
@@ -1247,32 +1208,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-        }
-        
-        public bool HasBeenSet(
-            IStoryManagerQuestNodeGetter item,
-            StoryManagerQuestNode.Mask<bool?> checkMask)
-        {
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
-            if (checkMask.MaxConcurrentQuests.HasValue && checkMask.MaxConcurrentQuests.Value != (item.MaxConcurrentQuests != null)) return false;
-            if (checkMask.MaxNumQuestsToRun.HasValue && checkMask.MaxNumQuestsToRun.Value != (item.MaxNumQuestsToRun != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IStoryManagerQuestNodeGetter item,
-            StoryManagerQuestNode.Mask<bool> mask)
-        {
-            mask.Flags = (item.Flags != null);
-            mask.MaxConcurrentQuests = (item.MaxConcurrentQuests != null);
-            mask.MaxNumQuestsToRun = (item.MaxNumQuestsToRun != null);
-            var QuestsItem = item.Quests;
-            mask.Quests = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, StoryManagerQuest.Mask<bool>?>>?>(true, QuestsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, StoryManagerQuest.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static StoryManagerQuestNode_FieldIndex ConvertFieldIndex(AStoryManagerNode_FieldIndex index)
@@ -1880,15 +1815,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IStoryManagerQuestNodeGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => StoryManagerQuestNodeCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => StoryManagerQuestNodeCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => StoryManagerQuestNodeCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => StoryManagerQuestNodeCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => StoryManagerQuestNodeCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => StoryManagerQuestNodeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

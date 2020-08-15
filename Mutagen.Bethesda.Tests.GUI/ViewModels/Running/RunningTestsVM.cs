@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda.Tests.GUI
 
         public RunningTestsVM()
         {
-            _SelectedTest = this.WhenAny(x => x.SelectedPassthrough!.SelectedTest)
+            _SelectedTest = this.WhenAnyValue(x => x.SelectedPassthrough!.SelectedTest)
                 .ToGuiProperty(this, nameof(SelectedTest));
         }
 

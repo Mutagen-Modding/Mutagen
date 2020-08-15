@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IFootstepInternal,
         ILoquiObjectSetter<Footstep>,
-        IEquatable<Footstep>,
-        IEqualsMask
+        IEquatable<Footstep>
     {
         #region Ctor
         protected Footstep()
@@ -46,7 +45,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region ImpactDataSet
         public FormLink<ImpactDataSet> ImpactDataSet { get; set; } = new FormLink<ImpactDataSet>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IImpactDataSetGetter> IFootstepGetter.ImpactDataSet => this.ImpactDataSet;
+        FormLink<IImpactDataSetGetter> IFootstepGetter.ImpactDataSet => this.ImpactDataSet.ToGetter<ImpactDataSet, IImpactDataSetGetter>();
         #endregion
         #region Tag
         public String Tag { get; set; } = string.Empty;
@@ -385,7 +384,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => FootstepCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => FootstepCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => FootstepCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FootstepCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FootstepCommon.Instance.RemapLinks(this, mapping);
         public Footstep(FormKey formKey)
@@ -420,14 +419,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new Footstep CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static Footstep CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -454,8 +445,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFootstepGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -474,7 +463,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IFootstep :
         IFootstepGetter,
         ISkyrimMajorRecord,
-        ILoquiObjectSetter<IFootstepInternal>
+        ILoquiObjectSetter<IFootstepInternal>,
+        ILinkedFormKeyContainer
     {
         new FormLink<ImpactDataSet> ImpactDataSet { get; set; }
         new String Tag { get; set; }
@@ -490,11 +480,11 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IFootstepGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IFootstepGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Footstep_Registration.Instance;
-        IFormLink<IImpactDataSetGetter> ImpactDataSet { get; }
+        FormLink<IImpactDataSetGetter> ImpactDataSet { get; }
         String Tag { get; }
 
     }
@@ -542,24 +532,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IFootstepGetter item,
-            Footstep.Mask<bool?> checkMask)
-        {
-            return ((FootstepCommon)((IFootstepGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Footstep.Mask<bool> GetHasBeenSetMask(this IFootstepGetter item)
-        {
-            var ret = new Footstep.Mask<bool>(false);
-            ((FootstepCommon)((IFootstepGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -631,17 +603,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IFootstepInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IFootstepInternal item,
             MutagenFrame frame,
@@ -1001,32 +962,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.ImpactDataSet ?? true)
             {
-                fg.AppendItem(item.ImpactDataSet, "ImpactDataSet");
+                fg.AppendItem(item.ImpactDataSet.FormKey, "ImpactDataSet");
             }
             if (printMask?.Tag ?? true)
             {
                 fg.AppendItem(item.Tag, "Tag");
             }
-        }
-        
-        public bool HasBeenSet(
-            IFootstepGetter item,
-            Footstep.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IFootstepGetter item,
-            Footstep.Mask<bool> mask)
-        {
-            mask.ImpactDataSet = true;
-            mask.Tag = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static Footstep_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1182,7 +1123,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)Footstep_FieldIndex.ImpactDataSet) ?? true))
             {
-                item.ImpactDataSet = rhs.ImpactDataSet.FormKey;
+                item.ImpactDataSet = new FormLink<ImpactDataSet>(rhs.ImpactDataSet.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Footstep_FieldIndex.Tag) ?? true))
             {
@@ -1478,15 +1419,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFootstepGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => FootstepCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => FootstepCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FootstepCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FootstepCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => FootstepCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => FootstepBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1501,8 +1438,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region ImpactDataSet
         private int? _ImpactDataSetLocation;
-        public bool ImpactDataSet_IsSet => _ImpactDataSetLocation.HasValue;
-        public IFormLink<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSetLocation.HasValue ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImpactDataSetLocation.Value, _package.MetaData.Constants)))) : FormLink<IImpactDataSetGetter>.Null;
+        public FormLink<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSetLocation.HasValue ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImpactDataSetLocation.Value, _package.MetaData.Constants)))) : FormLink<IImpactDataSetGetter>.Null;
         #endregion
         #region Tag
         private int? _TagLocation;

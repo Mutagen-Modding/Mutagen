@@ -20,8 +20,8 @@
           <Float name="Weight" />
         </Fields>
       </Data>
-      <Enum name="ContainedSoul" enumName="SoulGem.Level" hasBeenSet="False" recordType="SOUL" byteLength="1" />
-      <Enum name="MaximumCapacity" enumName="SoulGem.Level" hasBeenSet="False" recordType="SLCP" byteLength="1" />
+      <Enum name="ContainedSoul" enumName="SoulGem.Level" nullable="False" recordType="SOUL" byteLength="1" />
+      <Enum name="MaximumCapacity" enumName="SoulGem.Level" nullable="False" recordType="SLCP" byteLength="1" />
       <FormLink name="LinkedTo" refName="SoulGem" recordType="NAM0" />
     </Fields>
     <LinkInterface>IItem</LinkInterface>

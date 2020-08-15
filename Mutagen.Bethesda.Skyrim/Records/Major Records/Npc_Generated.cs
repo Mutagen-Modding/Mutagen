@@ -33,8 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         INpcInternal,
         ILoquiObjectSetter<Npc>,
-        IEquatable<Npc>,
-        IEqualsMask
+        IEquatable<Npc>
     {
         #region Ctor
         protected Npc()
@@ -82,22 +81,22 @@ namespace Mutagen.Bethesda.Skyrim
         #region DeathItem
         public FormLinkNullable<LeveledItem> DeathItem { get; set; } = new FormLinkNullable<LeveledItem>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ILeveledItemGetter> INpcGetter.DeathItem => this.DeathItem;
+        FormLinkNullable<ILeveledItemGetter> INpcGetter.DeathItem => this.DeathItem.ToGetter<LeveledItem, ILeveledItemGetter>();
         #endregion
         #region Voice
         public FormLinkNullable<VoiceType> Voice { get; set; } = new FormLinkNullable<VoiceType>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IVoiceTypeGetter> INpcGetter.Voice => this.Voice;
+        FormLinkNullable<IVoiceTypeGetter> INpcGetter.Voice => this.Voice.ToGetter<VoiceType, IVoiceTypeGetter>();
         #endregion
         #region Template
         public FormLinkNullable<INpcSpawn> Template { get; set; } = new FormLinkNullable<INpcSpawn>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<INpcSpawnGetter> INpcGetter.Template => this.Template;
+        FormLinkNullable<INpcSpawnGetter> INpcGetter.Template => this.Template.ToGetter<INpcSpawn, INpcSpawnGetter>();
         #endregion
         #region Race
         public FormLink<Race> Race { get; set; } = new FormLink<Race>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IRaceGetter> INpcGetter.Race => this.Race;
+        FormLink<IRaceGetter> INpcGetter.Race => this.Race.ToGetter<Race, IRaceGetter>();
         #endregion
         #region ActorEffect
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -127,17 +126,17 @@ namespace Mutagen.Bethesda.Skyrim
         #region WornArmor
         public FormLinkNullable<Armor> WornArmor { get; set; } = new FormLinkNullable<Armor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IArmorGetter> INpcGetter.WornArmor => this.WornArmor;
+        FormLinkNullable<IArmorGetter> INpcGetter.WornArmor => this.WornArmor.ToGetter<Armor, IArmorGetter>();
         #endregion
         #region FarAwayModel
         public FormLinkNullable<Armor> FarAwayModel { get; set; } = new FormLinkNullable<Armor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IArmorGetter> INpcGetter.FarAwayModel => this.FarAwayModel;
+        FormLinkNullable<IArmorGetter> INpcGetter.FarAwayModel => this.FarAwayModel.ToGetter<Armor, IArmorGetter>();
         #endregion
         #region AttackRace
         public FormLinkNullable<Race> AttackRace { get; set; } = new FormLinkNullable<Race>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IRaceGetter> INpcGetter.AttackRace => this.AttackRace;
+        FormLinkNullable<IRaceGetter> INpcGetter.AttackRace => this.AttackRace.ToGetter<Race, IRaceGetter>();
         #endregion
         #region Attacks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -156,22 +155,22 @@ namespace Mutagen.Bethesda.Skyrim
         #region SpectatorOverridePackageList
         public FormLinkNullable<FormList> SpectatorOverridePackageList { get; set; } = new FormLinkNullable<FormList>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IFormListGetter> INpcGetter.SpectatorOverridePackageList => this.SpectatorOverridePackageList;
+        FormLinkNullable<IFormListGetter> INpcGetter.SpectatorOverridePackageList => this.SpectatorOverridePackageList.ToGetter<FormList, IFormListGetter>();
         #endregion
         #region ObserveDeadBodyOverridePackageList
         public FormLinkNullable<FormList> ObserveDeadBodyOverridePackageList { get; set; } = new FormLinkNullable<FormList>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IFormListGetter> INpcGetter.ObserveDeadBodyOverridePackageList => this.ObserveDeadBodyOverridePackageList;
+        FormLinkNullable<IFormListGetter> INpcGetter.ObserveDeadBodyOverridePackageList => this.ObserveDeadBodyOverridePackageList.ToGetter<FormList, IFormListGetter>();
         #endregion
         #region GuardWarnOverridePackageList
         public FormLinkNullable<FormList> GuardWarnOverridePackageList { get; set; } = new FormLinkNullable<FormList>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IFormListGetter> INpcGetter.GuardWarnOverridePackageList => this.GuardWarnOverridePackageList;
+        FormLinkNullable<IFormListGetter> INpcGetter.GuardWarnOverridePackageList => this.GuardWarnOverridePackageList.ToGetter<FormList, IFormListGetter>();
         #endregion
         #region CombatOverridePackageList
         public FormLinkNullable<FormList> CombatOverridePackageList { get; set; } = new FormLinkNullable<FormList>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IFormListGetter> INpcGetter.CombatOverridePackageList => this.CombatOverridePackageList;
+        FormLinkNullable<IFormListGetter> INpcGetter.CombatOverridePackageList => this.CombatOverridePackageList.ToGetter<FormList, IFormListGetter>();
         #endregion
         #region Perks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -237,7 +236,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Class
         public FormLink<Class> Class { get; set; } = new FormLink<Class>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IClassGetter> INpcGetter.Class => this.Class;
+        FormLink<IClassGetter> INpcGetter.Class => this.Class.ToGetter<Class, IClassGetter>();
         #endregion
         #region Name
         public TranslatedString? Name { get; set; }
@@ -277,17 +276,17 @@ namespace Mutagen.Bethesda.Skyrim
         #region HairColor
         public FormLinkNullable<ColorRecord> HairColor { get; set; } = new FormLinkNullable<ColorRecord>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IColorRecordGetter> INpcGetter.HairColor => this.HairColor;
+        FormLinkNullable<IColorRecordGetter> INpcGetter.HairColor => this.HairColor.ToGetter<ColorRecord, IColorRecordGetter>();
         #endregion
         #region CombatStyle
         public FormLinkNullable<CombatStyle> CombatStyle { get; set; } = new FormLinkNullable<CombatStyle>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ICombatStyleGetter> INpcGetter.CombatStyle => this.CombatStyle;
+        FormLinkNullable<ICombatStyleGetter> INpcGetter.CombatStyle => this.CombatStyle.ToGetter<CombatStyle, ICombatStyleGetter>();
         #endregion
         #region GiftFilter
         public FormLinkNullable<FormList> GiftFilter { get; set; } = new FormLinkNullable<FormList>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IFormListGetter> INpcGetter.GiftFilter => this.GiftFilter;
+        FormLinkNullable<IFormListGetter> INpcGetter.GiftFilter => this.GiftFilter.ToGetter<FormList, IFormListGetter>();
         #endregion
         #region NAM5
         public readonly static UInt16 _NAM5_Default = 0xFF00;
@@ -316,27 +315,27 @@ namespace Mutagen.Bethesda.Skyrim
         #region DefaultOutfit
         public FormLinkNullable<Outfit> DefaultOutfit { get; set; } = new FormLinkNullable<Outfit>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IOutfitGetter> INpcGetter.DefaultOutfit => this.DefaultOutfit;
+        FormLinkNullable<IOutfitGetter> INpcGetter.DefaultOutfit => this.DefaultOutfit.ToGetter<Outfit, IOutfitGetter>();
         #endregion
         #region SleepingOutfit
         public FormLinkNullable<Outfit> SleepingOutfit { get; set; } = new FormLinkNullable<Outfit>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IOutfitGetter> INpcGetter.SleepingOutfit => this.SleepingOutfit;
+        FormLinkNullable<IOutfitGetter> INpcGetter.SleepingOutfit => this.SleepingOutfit.ToGetter<Outfit, IOutfitGetter>();
         #endregion
         #region DefaultPackageList
         public FormLinkNullable<FormList> DefaultPackageList { get; set; } = new FormLinkNullable<FormList>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IFormListGetter> INpcGetter.DefaultPackageList => this.DefaultPackageList;
+        FormLinkNullable<IFormListGetter> INpcGetter.DefaultPackageList => this.DefaultPackageList.ToGetter<FormList, IFormListGetter>();
         #endregion
         #region CrimeFaction
         public FormLinkNullable<Faction> CrimeFaction { get; set; } = new FormLinkNullable<Faction>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IFactionGetter> INpcGetter.CrimeFaction => this.CrimeFaction;
+        FormLinkNullable<IFactionGetter> INpcGetter.CrimeFaction => this.CrimeFaction.ToGetter<Faction, IFactionGetter>();
         #endregion
         #region HeadTexture
         public FormLinkNullable<TextureSet> HeadTexture { get; set; } = new FormLinkNullable<TextureSet>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ITextureSetGetter> INpcGetter.HeadTexture => this.HeadTexture;
+        FormLinkNullable<ITextureSetGetter> INpcGetter.HeadTexture => this.HeadTexture.ToGetter<TextureSet, ITextureSetGetter>();
         #endregion
         #region TextureLighting
         public Color? TextureLighting { get; set; }
@@ -2661,7 +2660,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcCommon.Instance.RemapLinks(this, mapping);
         public Npc(FormKey formKey)
@@ -2701,14 +2700,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new Npc CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static Npc CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -2735,8 +2726,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((INpcGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -2761,7 +2750,8 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectId,
         IObjectBounded,
         ITranslatedNamed,
-        ILoquiObjectSetter<INpcInternal>
+        ILoquiObjectSetter<INpcInternal>,
+        ILinkedFormKeyContainer
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
@@ -2830,7 +2820,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedGetter,
         ITranslatedNamedGetter,
         ILoquiObject<INpcGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Npc_Registration.Instance;
@@ -2838,43 +2828,43 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundsGetter ObjectBounds { get; }
         INpcConfigurationGetter Configuration { get; }
         IReadOnlyList<IRankPlacementGetter> Factions { get; }
-        IFormLinkNullable<ILeveledItemGetter> DeathItem { get; }
-        IFormLinkNullable<IVoiceTypeGetter> Voice { get; }
-        IFormLinkNullable<INpcSpawnGetter> Template { get; }
-        IFormLink<IRaceGetter> Race { get; }
+        FormLinkNullable<ILeveledItemGetter> DeathItem { get; }
+        FormLinkNullable<IVoiceTypeGetter> Voice { get; }
+        FormLinkNullable<INpcSpawnGetter> Template { get; }
+        FormLink<IRaceGetter> Race { get; }
         IReadOnlyList<IFormLink<IASpellGetter>>? ActorEffect { get; }
         IDestructibleGetter? Destructible { get; }
-        IFormLinkNullable<IArmorGetter> WornArmor { get; }
-        IFormLinkNullable<IArmorGetter> FarAwayModel { get; }
-        IFormLinkNullable<IRaceGetter> AttackRace { get; }
+        FormLinkNullable<IArmorGetter> WornArmor { get; }
+        FormLinkNullable<IArmorGetter> FarAwayModel { get; }
+        FormLinkNullable<IRaceGetter> AttackRace { get; }
         IReadOnlyList<IAttackGetter> Attacks { get; }
-        IFormLinkNullable<IFormListGetter> SpectatorOverridePackageList { get; }
-        IFormLinkNullable<IFormListGetter> ObserveDeadBodyOverridePackageList { get; }
-        IFormLinkNullable<IFormListGetter> GuardWarnOverridePackageList { get; }
-        IFormLinkNullable<IFormListGetter> CombatOverridePackageList { get; }
+        FormLinkNullable<IFormListGetter> SpectatorOverridePackageList { get; }
+        FormLinkNullable<IFormListGetter> ObserveDeadBodyOverridePackageList { get; }
+        FormLinkNullable<IFormListGetter> GuardWarnOverridePackageList { get; }
+        FormLinkNullable<IFormListGetter> CombatOverridePackageList { get; }
         IReadOnlyList<IPerkPlacementGetter>? Perks { get; }
         IReadOnlyList<IContainerEntryGetter>? Items { get; }
         IAIDataGetter AIData { get; }
         IReadOnlyList<IFormLink<IPackageGetter>> Packages { get; }
         IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; }
-        IFormLink<IClassGetter> Class { get; }
+        FormLink<IClassGetter> Class { get; }
         TranslatedString? Name { get; }
         TranslatedString? ShortName { get; }
         IPlayerSkillsGetter? PlayerSkills { get; }
         IReadOnlyList<IFormLink<IHeadPartGetter>> HeadParts { get; }
-        IFormLinkNullable<IColorRecordGetter> HairColor { get; }
-        IFormLinkNullable<ICombatStyleGetter> CombatStyle { get; }
-        IFormLinkNullable<IFormListGetter> GiftFilter { get; }
+        FormLinkNullable<IColorRecordGetter> HairColor { get; }
+        FormLinkNullable<ICombatStyleGetter> CombatStyle { get; }
+        FormLinkNullable<IFormListGetter> GiftFilter { get; }
         UInt16 NAM5 { get; }
         Single Height { get; }
         Single Weight { get; }
         SoundLevel SoundLevel { get; }
         IANpcSoundDefinitionGetter? Sound { get; }
-        IFormLinkNullable<IOutfitGetter> DefaultOutfit { get; }
-        IFormLinkNullable<IOutfitGetter> SleepingOutfit { get; }
-        IFormLinkNullable<IFormListGetter> DefaultPackageList { get; }
-        IFormLinkNullable<IFactionGetter> CrimeFaction { get; }
-        IFormLinkNullable<ITextureSetGetter> HeadTexture { get; }
+        FormLinkNullable<IOutfitGetter> DefaultOutfit { get; }
+        FormLinkNullable<IOutfitGetter> SleepingOutfit { get; }
+        FormLinkNullable<IFormListGetter> DefaultPackageList { get; }
+        FormLinkNullable<IFactionGetter> CrimeFaction { get; }
+        FormLinkNullable<ITextureSetGetter> HeadTexture { get; }
         Color? TextureLighting { get; }
         INpcFaceMorphGetter? FaceMorph { get; }
         INpcFacePartsGetter? FaceParts { get; }
@@ -2929,24 +2919,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this INpcGetter item,
-            Npc.Mask<bool?> checkMask)
-        {
-            return ((NpcCommon)((INpcGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Npc.Mask<bool> GetHasBeenSetMask(this INpcGetter item)
-        {
-            var ret = new Npc.Mask<bool>(false);
-            ((NpcCommon)((INpcGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -3018,17 +2990,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this INpcInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this INpcInternal item,
             MutagenFrame frame,
@@ -4072,24 +4033,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-            if ((printMask?.DeathItem ?? true)
-                && item.DeathItem.TryGet(out var DeathItemItem))
+            if (printMask?.DeathItem ?? true)
             {
-                fg.AppendItem(DeathItemItem, "DeathItem");
+                fg.AppendItem(item.DeathItem.FormKey, "DeathItem");
             }
-            if ((printMask?.Voice ?? true)
-                && item.Voice.TryGet(out var VoiceItem))
+            if (printMask?.Voice ?? true)
             {
-                fg.AppendItem(VoiceItem, "Voice");
+                fg.AppendItem(item.Voice.FormKey, "Voice");
             }
-            if ((printMask?.Template ?? true)
-                && item.Template.TryGet(out var TemplateItem))
+            if (printMask?.Template ?? true)
             {
-                fg.AppendItem(TemplateItem, "Template");
+                fg.AppendItem(item.Template.FormKey, "Template");
             }
             if (printMask?.Race ?? true)
             {
-                fg.AppendItem(item.Race, "Race");
+                fg.AppendItem(item.Race.FormKey, "Race");
             }
             if ((printMask?.ActorEffect?.Overall ?? true)
                 && item.ActorEffect.TryGet(out var ActorEffectItem))
@@ -4103,7 +4061,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendItem(subItem);
+                            fg.AppendItem(subItem.FormKey);
                         }
                         fg.AppendLine("]");
                     }
@@ -4115,20 +4073,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 DestructibleItem?.ToString(fg, "Destructible");
             }
-            if ((printMask?.WornArmor ?? true)
-                && item.WornArmor.TryGet(out var WornArmorItem))
+            if (printMask?.WornArmor ?? true)
             {
-                fg.AppendItem(WornArmorItem, "WornArmor");
+                fg.AppendItem(item.WornArmor.FormKey, "WornArmor");
             }
-            if ((printMask?.FarAwayModel ?? true)
-                && item.FarAwayModel.TryGet(out var FarAwayModelItem))
+            if (printMask?.FarAwayModel ?? true)
             {
-                fg.AppendItem(FarAwayModelItem, "FarAwayModel");
+                fg.AppendItem(item.FarAwayModel.FormKey, "FarAwayModel");
             }
-            if ((printMask?.AttackRace ?? true)
-                && item.AttackRace.TryGet(out var AttackRaceItem))
+            if (printMask?.AttackRace ?? true)
             {
-                fg.AppendItem(AttackRaceItem, "AttackRace");
+                fg.AppendItem(item.AttackRace.FormKey, "AttackRace");
             }
             if (printMask?.Attacks?.Overall ?? true)
             {
@@ -4148,25 +4103,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-            if ((printMask?.SpectatorOverridePackageList ?? true)
-                && item.SpectatorOverridePackageList.TryGet(out var SpectatorOverridePackageListItem))
+            if (printMask?.SpectatorOverridePackageList ?? true)
             {
-                fg.AppendItem(SpectatorOverridePackageListItem, "SpectatorOverridePackageList");
+                fg.AppendItem(item.SpectatorOverridePackageList.FormKey, "SpectatorOverridePackageList");
             }
-            if ((printMask?.ObserveDeadBodyOverridePackageList ?? true)
-                && item.ObserveDeadBodyOverridePackageList.TryGet(out var ObserveDeadBodyOverridePackageListItem))
+            if (printMask?.ObserveDeadBodyOverridePackageList ?? true)
             {
-                fg.AppendItem(ObserveDeadBodyOverridePackageListItem, "ObserveDeadBodyOverridePackageList");
+                fg.AppendItem(item.ObserveDeadBodyOverridePackageList.FormKey, "ObserveDeadBodyOverridePackageList");
             }
-            if ((printMask?.GuardWarnOverridePackageList ?? true)
-                && item.GuardWarnOverridePackageList.TryGet(out var GuardWarnOverridePackageListItem))
+            if (printMask?.GuardWarnOverridePackageList ?? true)
             {
-                fg.AppendItem(GuardWarnOverridePackageListItem, "GuardWarnOverridePackageList");
+                fg.AppendItem(item.GuardWarnOverridePackageList.FormKey, "GuardWarnOverridePackageList");
             }
-            if ((printMask?.CombatOverridePackageList ?? true)
-                && item.CombatOverridePackageList.TryGet(out var CombatOverridePackageListItem))
+            if (printMask?.CombatOverridePackageList ?? true)
             {
-                fg.AppendItem(CombatOverridePackageListItem, "CombatOverridePackageList");
+                fg.AppendItem(item.CombatOverridePackageList.FormKey, "CombatOverridePackageList");
             }
             if ((printMask?.Perks?.Overall ?? true)
                 && item.Perks.TryGet(out var PerksItem))
@@ -4221,7 +4172,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendItem(subItem);
+                            fg.AppendItem(subItem.FormKey);
                         }
                         fg.AppendLine("]");
                     }
@@ -4240,7 +4191,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendItem(subItem);
+                            fg.AppendItem(subItem.FormKey);
                         }
                         fg.AppendLine("]");
                     }
@@ -4249,7 +4200,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Class ?? true)
             {
-                fg.AppendItem(item.Class, "Class");
+                fg.AppendItem(item.Class.FormKey, "Class");
             }
             if ((printMask?.Name ?? true)
                 && item.Name.TryGet(out var NameItem))
@@ -4277,27 +4228,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendItem(subItem);
+                            fg.AppendItem(subItem.FormKey);
                         }
                         fg.AppendLine("]");
                     }
                 }
                 fg.AppendLine("]");
             }
-            if ((printMask?.HairColor ?? true)
-                && item.HairColor.TryGet(out var HairColorItem))
+            if (printMask?.HairColor ?? true)
             {
-                fg.AppendItem(HairColorItem, "HairColor");
+                fg.AppendItem(item.HairColor.FormKey, "HairColor");
             }
-            if ((printMask?.CombatStyle ?? true)
-                && item.CombatStyle.TryGet(out var CombatStyleItem))
+            if (printMask?.CombatStyle ?? true)
             {
-                fg.AppendItem(CombatStyleItem, "CombatStyle");
+                fg.AppendItem(item.CombatStyle.FormKey, "CombatStyle");
             }
-            if ((printMask?.GiftFilter ?? true)
-                && item.GiftFilter.TryGet(out var GiftFilterItem))
+            if (printMask?.GiftFilter ?? true)
             {
-                fg.AppendItem(GiftFilterItem, "GiftFilter");
+                fg.AppendItem(item.GiftFilter.FormKey, "GiftFilter");
             }
             if (printMask?.NAM5 ?? true)
             {
@@ -4320,30 +4268,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 SoundItem?.ToString(fg, "Sound");
             }
-            if ((printMask?.DefaultOutfit ?? true)
-                && item.DefaultOutfit.TryGet(out var DefaultOutfitItem))
+            if (printMask?.DefaultOutfit ?? true)
             {
-                fg.AppendItem(DefaultOutfitItem, "DefaultOutfit");
+                fg.AppendItem(item.DefaultOutfit.FormKey, "DefaultOutfit");
             }
-            if ((printMask?.SleepingOutfit ?? true)
-                && item.SleepingOutfit.TryGet(out var SleepingOutfitItem))
+            if (printMask?.SleepingOutfit ?? true)
             {
-                fg.AppendItem(SleepingOutfitItem, "SleepingOutfit");
+                fg.AppendItem(item.SleepingOutfit.FormKey, "SleepingOutfit");
             }
-            if ((printMask?.DefaultPackageList ?? true)
-                && item.DefaultPackageList.TryGet(out var DefaultPackageListItem))
+            if (printMask?.DefaultPackageList ?? true)
             {
-                fg.AppendItem(DefaultPackageListItem, "DefaultPackageList");
+                fg.AppendItem(item.DefaultPackageList.FormKey, "DefaultPackageList");
             }
-            if ((printMask?.CrimeFaction ?? true)
-                && item.CrimeFaction.TryGet(out var CrimeFactionItem))
+            if (printMask?.CrimeFaction ?? true)
             {
-                fg.AppendItem(CrimeFactionItem, "CrimeFaction");
+                fg.AppendItem(item.CrimeFaction.FormKey, "CrimeFaction");
             }
-            if ((printMask?.HeadTexture ?? true)
-                && item.HeadTexture.TryGet(out var HeadTextureItem))
+            if (printMask?.HeadTexture ?? true)
             {
-                fg.AppendItem(HeadTextureItem, "HeadTexture");
+                fg.AppendItem(item.HeadTexture.FormKey, "HeadTexture");
             }
             if ((printMask?.TextureLighting ?? true)
                 && item.TextureLighting.TryGet(out var TextureLightingItem))
@@ -4378,121 +4321,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-        }
-        
-        public bool HasBeenSet(
-            INpcGetter item,
-            Npc.Mask<bool?> checkMask)
-        {
-            if (checkMask.VirtualMachineAdapter?.Overall.HasValue ?? false && checkMask.VirtualMachineAdapter.Overall.Value != (item.VirtualMachineAdapter != null)) return false;
-            if (checkMask.VirtualMachineAdapter?.Specific != null && (item.VirtualMachineAdapter == null || !item.VirtualMachineAdapter.HasBeenSet(checkMask.VirtualMachineAdapter.Specific))) return false;
-            if (checkMask.DeathItem.HasValue && checkMask.DeathItem.Value != (item.DeathItem.FormKey != null)) return false;
-            if (checkMask.Voice.HasValue && checkMask.Voice.Value != (item.Voice.FormKey != null)) return false;
-            if (checkMask.Template.HasValue && checkMask.Template.Value != (item.Template.FormKey != null)) return false;
-            if (checkMask.ActorEffect?.Overall.HasValue ?? false && checkMask.ActorEffect!.Overall.Value != (item.ActorEffect != null)) return false;
-            if (checkMask.Destructible?.Overall.HasValue ?? false && checkMask.Destructible.Overall.Value != (item.Destructible != null)) return false;
-            if (checkMask.Destructible?.Specific != null && (item.Destructible == null || !item.Destructible.HasBeenSet(checkMask.Destructible.Specific))) return false;
-            if (checkMask.WornArmor.HasValue && checkMask.WornArmor.Value != (item.WornArmor.FormKey != null)) return false;
-            if (checkMask.FarAwayModel.HasValue && checkMask.FarAwayModel.Value != (item.FarAwayModel.FormKey != null)) return false;
-            if (checkMask.AttackRace.HasValue && checkMask.AttackRace.Value != (item.AttackRace.FormKey != null)) return false;
-            if (checkMask.SpectatorOverridePackageList.HasValue && checkMask.SpectatorOverridePackageList.Value != (item.SpectatorOverridePackageList.FormKey != null)) return false;
-            if (checkMask.ObserveDeadBodyOverridePackageList.HasValue && checkMask.ObserveDeadBodyOverridePackageList.Value != (item.ObserveDeadBodyOverridePackageList.FormKey != null)) return false;
-            if (checkMask.GuardWarnOverridePackageList.HasValue && checkMask.GuardWarnOverridePackageList.Value != (item.GuardWarnOverridePackageList.FormKey != null)) return false;
-            if (checkMask.CombatOverridePackageList.HasValue && checkMask.CombatOverridePackageList.Value != (item.CombatOverridePackageList.FormKey != null)) return false;
-            if (checkMask.Perks?.Overall.HasValue ?? false && checkMask.Perks!.Overall.Value != (item.Perks != null)) return false;
-            if (checkMask.Items?.Overall.HasValue ?? false && checkMask.Items!.Overall.Value != (item.Items != null)) return false;
-            if (checkMask.Keywords?.Overall.HasValue ?? false && checkMask.Keywords!.Overall.Value != (item.Keywords != null)) return false;
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            if (checkMask.ShortName.HasValue && checkMask.ShortName.Value != (item.ShortName != null)) return false;
-            if (checkMask.PlayerSkills?.Overall.HasValue ?? false && checkMask.PlayerSkills.Overall.Value != (item.PlayerSkills != null)) return false;
-            if (checkMask.PlayerSkills?.Specific != null && (item.PlayerSkills == null || !item.PlayerSkills.HasBeenSet(checkMask.PlayerSkills.Specific))) return false;
-            if (checkMask.HairColor.HasValue && checkMask.HairColor.Value != (item.HairColor.FormKey != null)) return false;
-            if (checkMask.CombatStyle.HasValue && checkMask.CombatStyle.Value != (item.CombatStyle.FormKey != null)) return false;
-            if (checkMask.GiftFilter.HasValue && checkMask.GiftFilter.Value != (item.GiftFilter.FormKey != null)) return false;
-            if (checkMask.Sound?.Overall.HasValue ?? false && checkMask.Sound.Overall.Value != (item.Sound != null)) return false;
-            if (checkMask.Sound?.Specific != null && (item.Sound == null || !item.Sound.HasBeenSet(checkMask.Sound.Specific))) return false;
-            if (checkMask.DefaultOutfit.HasValue && checkMask.DefaultOutfit.Value != (item.DefaultOutfit.FormKey != null)) return false;
-            if (checkMask.SleepingOutfit.HasValue && checkMask.SleepingOutfit.Value != (item.SleepingOutfit.FormKey != null)) return false;
-            if (checkMask.DefaultPackageList.HasValue && checkMask.DefaultPackageList.Value != (item.DefaultPackageList.FormKey != null)) return false;
-            if (checkMask.CrimeFaction.HasValue && checkMask.CrimeFaction.Value != (item.CrimeFaction.FormKey != null)) return false;
-            if (checkMask.HeadTexture.HasValue && checkMask.HeadTexture.Value != (item.HeadTexture.FormKey != null)) return false;
-            if (checkMask.TextureLighting.HasValue && checkMask.TextureLighting.Value != (item.TextureLighting != null)) return false;
-            if (checkMask.FaceMorph?.Overall.HasValue ?? false && checkMask.FaceMorph.Overall.Value != (item.FaceMorph != null)) return false;
-            if (checkMask.FaceMorph?.Specific != null && (item.FaceMorph == null || !item.FaceMorph.HasBeenSet(checkMask.FaceMorph.Specific))) return false;
-            if (checkMask.FaceParts?.Overall.HasValue ?? false && checkMask.FaceParts.Overall.Value != (item.FaceParts != null)) return false;
-            if (checkMask.FaceParts?.Specific != null && (item.FaceParts == null || !item.FaceParts.HasBeenSet(checkMask.FaceParts.Specific))) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            INpcGetter item,
-            Npc.Mask<bool> mask)
-        {
-            var itemVirtualMachineAdapter = item.VirtualMachineAdapter;
-            mask.VirtualMachineAdapter = new MaskItem<bool, VirtualMachineAdapter.Mask<bool>?>(itemVirtualMachineAdapter != null, itemVirtualMachineAdapter?.GetHasBeenSetMask());
-            mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
-            mask.Configuration = new MaskItem<bool, NpcConfiguration.Mask<bool>?>(true, item.Configuration?.GetHasBeenSetMask());
-            var FactionsItem = item.Factions;
-            mask.Factions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RankPlacement.Mask<bool>?>>?>(true, FactionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, RankPlacement.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.DeathItem = (item.DeathItem.FormKey != null);
-            mask.Voice = (item.Voice.FormKey != null);
-            mask.Template = (item.Template.FormKey != null);
-            mask.Race = true;
-            mask.ActorEffect = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.ActorEffect != null), default);
-            var itemDestructible = item.Destructible;
-            mask.Destructible = new MaskItem<bool, Destructible.Mask<bool>?>(itemDestructible != null, itemDestructible?.GetHasBeenSetMask());
-            mask.WornArmor = (item.WornArmor.FormKey != null);
-            mask.FarAwayModel = (item.FarAwayModel.FormKey != null);
-            mask.AttackRace = (item.AttackRace.FormKey != null);
-            var AttacksItem = item.Attacks;
-            mask.Attacks = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Attack.Mask<bool>?>>?>(true, AttacksItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Attack.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.SpectatorOverridePackageList = (item.SpectatorOverridePackageList.FormKey != null);
-            mask.ObserveDeadBodyOverridePackageList = (item.ObserveDeadBodyOverridePackageList.FormKey != null);
-            mask.GuardWarnOverridePackageList = (item.GuardWarnOverridePackageList.FormKey != null);
-            mask.CombatOverridePackageList = (item.CombatOverridePackageList.FormKey != null);
-            if (item.Perks.TryGet(out var PerksItem))
-            {
-                mask.Perks = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, PerkPlacement.Mask<bool>?>>?>(true, PerksItem.WithIndex().Select((i) => new MaskItemIndexed<bool, PerkPlacement.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.Items.TryGet(out var ItemsItem))
-            {
-                mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ContainerEntry.Mask<bool>?>>?>(true, ItemsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, ContainerEntry.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            mask.AIData = new MaskItem<bool, AIData.Mask<bool>?>(true, item.AIData?.GetHasBeenSetMask());
-            mask.Packages = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
-            mask.Keywords = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Keywords != null), default);
-            mask.Class = true;
-            mask.Name = (item.Name != null);
-            mask.ShortName = (item.ShortName != null);
-            var itemPlayerSkills = item.PlayerSkills;
-            mask.PlayerSkills = new MaskItem<bool, PlayerSkills.Mask<bool>?>(itemPlayerSkills != null, itemPlayerSkills?.GetHasBeenSetMask());
-            mask.HeadParts = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
-            mask.HairColor = (item.HairColor.FormKey != null);
-            mask.CombatStyle = (item.CombatStyle.FormKey != null);
-            mask.GiftFilter = (item.GiftFilter.FormKey != null);
-            mask.NAM5 = true;
-            mask.Height = true;
-            mask.Weight = true;
-            mask.SoundLevel = true;
-            var itemSound = item.Sound;
-            mask.Sound = new MaskItem<bool, ANpcSoundDefinition.Mask<bool>?>(itemSound != null, itemSound?.GetHasBeenSetMask());
-            mask.DefaultOutfit = (item.DefaultOutfit.FormKey != null);
-            mask.SleepingOutfit = (item.SleepingOutfit.FormKey != null);
-            mask.DefaultPackageList = (item.DefaultPackageList.FormKey != null);
-            mask.CrimeFaction = (item.CrimeFaction.FormKey != null);
-            mask.HeadTexture = (item.HeadTexture.FormKey != null);
-            mask.TextureLighting = (item.TextureLighting != null);
-            var itemFaceMorph = item.FaceMorph;
-            mask.FaceMorph = new MaskItem<bool, NpcFaceMorph.Mask<bool>?>(itemFaceMorph != null, itemFaceMorph?.GetHasBeenSetMask());
-            var itemFaceParts = item.FaceParts;
-            mask.FaceParts = new MaskItem<bool, NpcFaceParts.Mask<bool>?>(itemFaceParts != null, itemFaceParts?.GetHasBeenSetMask());
-            var TintLayersItem = item.TintLayers;
-            mask.TintLayers = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, TintLayer.Mask<bool>?>>?>(true, TintLayersItem.WithIndex().Select((i) => new MaskItemIndexed<bool, TintLayer.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static Npc_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -4617,53 +4445,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.ObjectBounds);
             hash.Add(item.Configuration);
             hash.Add(item.Factions);
-            if (item.DeathItem.TryGet(out var DeathItemitem))
-            {
-                hash.Add(DeathItemitem);
-            }
-            if (item.Voice.TryGet(out var Voiceitem))
-            {
-                hash.Add(Voiceitem);
-            }
-            if (item.Template.TryGet(out var Templateitem))
-            {
-                hash.Add(Templateitem);
-            }
+            hash.Add(item.DeathItem);
+            hash.Add(item.Voice);
+            hash.Add(item.Template);
             hash.Add(item.Race);
             hash.Add(item.ActorEffect);
             if (item.Destructible.TryGet(out var Destructibleitem))
             {
                 hash.Add(Destructibleitem);
             }
-            if (item.WornArmor.TryGet(out var WornArmoritem))
-            {
-                hash.Add(WornArmoritem);
-            }
-            if (item.FarAwayModel.TryGet(out var FarAwayModelitem))
-            {
-                hash.Add(FarAwayModelitem);
-            }
-            if (item.AttackRace.TryGet(out var AttackRaceitem))
-            {
-                hash.Add(AttackRaceitem);
-            }
+            hash.Add(item.WornArmor);
+            hash.Add(item.FarAwayModel);
+            hash.Add(item.AttackRace);
             hash.Add(item.Attacks);
-            if (item.SpectatorOverridePackageList.TryGet(out var SpectatorOverridePackageListitem))
-            {
-                hash.Add(SpectatorOverridePackageListitem);
-            }
-            if (item.ObserveDeadBodyOverridePackageList.TryGet(out var ObserveDeadBodyOverridePackageListitem))
-            {
-                hash.Add(ObserveDeadBodyOverridePackageListitem);
-            }
-            if (item.GuardWarnOverridePackageList.TryGet(out var GuardWarnOverridePackageListitem))
-            {
-                hash.Add(GuardWarnOverridePackageListitem);
-            }
-            if (item.CombatOverridePackageList.TryGet(out var CombatOverridePackageListitem))
-            {
-                hash.Add(CombatOverridePackageListitem);
-            }
+            hash.Add(item.SpectatorOverridePackageList);
+            hash.Add(item.ObserveDeadBodyOverridePackageList);
+            hash.Add(item.GuardWarnOverridePackageList);
+            hash.Add(item.CombatOverridePackageList);
             hash.Add(item.Perks);
             hash.Add(item.Items);
             hash.Add(item.AIData);
@@ -4683,18 +4481,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 hash.Add(PlayerSkillsitem);
             }
             hash.Add(item.HeadParts);
-            if (item.HairColor.TryGet(out var HairColoritem))
-            {
-                hash.Add(HairColoritem);
-            }
-            if (item.CombatStyle.TryGet(out var CombatStyleitem))
-            {
-                hash.Add(CombatStyleitem);
-            }
-            if (item.GiftFilter.TryGet(out var GiftFilteritem))
-            {
-                hash.Add(GiftFilteritem);
-            }
+            hash.Add(item.HairColor);
+            hash.Add(item.CombatStyle);
+            hash.Add(item.GiftFilter);
             hash.Add(item.NAM5);
             hash.Add(item.Height);
             hash.Add(item.Weight);
@@ -4703,26 +4492,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Sounditem);
             }
-            if (item.DefaultOutfit.TryGet(out var DefaultOutfititem))
-            {
-                hash.Add(DefaultOutfititem);
-            }
-            if (item.SleepingOutfit.TryGet(out var SleepingOutfititem))
-            {
-                hash.Add(SleepingOutfititem);
-            }
-            if (item.DefaultPackageList.TryGet(out var DefaultPackageListitem))
-            {
-                hash.Add(DefaultPackageListitem);
-            }
-            if (item.CrimeFaction.TryGet(out var CrimeFactionitem))
-            {
-                hash.Add(CrimeFactionitem);
-            }
-            if (item.HeadTexture.TryGet(out var HeadTextureitem))
-            {
-                hash.Add(HeadTextureitem);
-            }
+            hash.Add(item.DefaultOutfit);
+            hash.Add(item.SleepingOutfit);
+            hash.Add(item.DefaultPackageList);
+            hash.Add(item.CrimeFaction);
+            hash.Add(item.HeadTexture);
             if (item.TextureLighting.TryGet(out var TextureLightingitem))
             {
                 hash.Add(TextureLightingitem);
@@ -4765,7 +4539,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainer VirtualMachineAdapterlinkCont)
+            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainerGetter VirtualMachineAdapterlinkCont)
             {
                 foreach (var item in VirtualMachineAdapterlinkCont.LinkFormKeys)
                 {
@@ -4844,7 +4618,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (obj.Items.TryGet(out var ItemsItem))
             {
-                foreach (var item in ItemsItem.WhereCastable<IContainerEntryGetter, ILinkedFormKeyContainer> ()
+                foreach (var item in ItemsItem.WhereCastable<IContainerEntryGetter, ILinkedFormKeyContainerGetter> ()
                     .SelectMany((f) => f.LinkFormKeys))
                 {
                     yield return item;
@@ -4878,7 +4652,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return GiftFilterKey;
             }
-            if (obj.Sound is ILinkedFormKeyContainer SoundlinkCont)
+            if (obj.Sound is ILinkedFormKeyContainerGetter SoundlinkCont)
             {
                 foreach (var item in SoundlinkCont.LinkFormKeys)
                 {
@@ -5048,19 +4822,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.DeathItem) ?? true))
             {
-                item.DeathItem = rhs.DeathItem.FormKey;
+                item.DeathItem = new FormLinkNullable<LeveledItem>(rhs.DeathItem.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Voice) ?? true))
             {
-                item.Voice = rhs.Voice.FormKey;
+                item.Voice = new FormLinkNullable<VoiceType>(rhs.Voice.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Template) ?? true))
             {
-                item.Template = rhs.Template.FormKey;
+                item.Template = new FormLinkNullable<INpcSpawn>(rhs.Template.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Race) ?? true))
             {
-                item.Race = rhs.Race.FormKey;
+                item.Race = new FormLink<Race>(rhs.Race.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.ActorEffect) ?? true))
             {
@@ -5117,15 +4891,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.WornArmor) ?? true))
             {
-                item.WornArmor = rhs.WornArmor.FormKey;
+                item.WornArmor = new FormLinkNullable<Armor>(rhs.WornArmor.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.FarAwayModel) ?? true))
             {
-                item.FarAwayModel = rhs.FarAwayModel.FormKey;
+                item.FarAwayModel = new FormLinkNullable<Armor>(rhs.FarAwayModel.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.AttackRace) ?? true))
             {
-                item.AttackRace = rhs.AttackRace.FormKey;
+                item.AttackRace = new FormLinkNullable<Race>(rhs.AttackRace.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Attacks) ?? true))
             {
@@ -5153,19 +4927,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.SpectatorOverridePackageList) ?? true))
             {
-                item.SpectatorOverridePackageList = rhs.SpectatorOverridePackageList.FormKey;
+                item.SpectatorOverridePackageList = new FormLinkNullable<FormList>(rhs.SpectatorOverridePackageList.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.ObserveDeadBodyOverridePackageList) ?? true))
             {
-                item.ObserveDeadBodyOverridePackageList = rhs.ObserveDeadBodyOverridePackageList.FormKey;
+                item.ObserveDeadBodyOverridePackageList = new FormLinkNullable<FormList>(rhs.ObserveDeadBodyOverridePackageList.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.GuardWarnOverridePackageList) ?? true))
             {
-                item.GuardWarnOverridePackageList = rhs.GuardWarnOverridePackageList.FormKey;
+                item.GuardWarnOverridePackageList = new FormLinkNullable<FormList>(rhs.GuardWarnOverridePackageList.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.CombatOverridePackageList) ?? true))
             {
-                item.CombatOverridePackageList = rhs.CombatOverridePackageList.FormKey;
+                item.CombatOverridePackageList = new FormLinkNullable<FormList>(rhs.CombatOverridePackageList.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Perks) ?? true))
             {
@@ -5301,7 +5075,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Class) ?? true))
             {
-                item.Class = rhs.Class.FormKey;
+                item.Class = new FormLink<Class>(rhs.Class.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Name) ?? true))
             {
@@ -5358,15 +5132,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.HairColor) ?? true))
             {
-                item.HairColor = rhs.HairColor.FormKey;
+                item.HairColor = new FormLinkNullable<ColorRecord>(rhs.HairColor.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.CombatStyle) ?? true))
             {
-                item.CombatStyle = rhs.CombatStyle.FormKey;
+                item.CombatStyle = new FormLinkNullable<CombatStyle>(rhs.CombatStyle.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.GiftFilter) ?? true))
             {
-                item.GiftFilter = rhs.GiftFilter.FormKey;
+                item.GiftFilter = new FormLinkNullable<FormList>(rhs.GiftFilter.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.NAM5) ?? true))
             {
@@ -5412,23 +5186,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.DefaultOutfit) ?? true))
             {
-                item.DefaultOutfit = rhs.DefaultOutfit.FormKey;
+                item.DefaultOutfit = new FormLinkNullable<Outfit>(rhs.DefaultOutfit.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.SleepingOutfit) ?? true))
             {
-                item.SleepingOutfit = rhs.SleepingOutfit.FormKey;
+                item.SleepingOutfit = new FormLinkNullable<Outfit>(rhs.SleepingOutfit.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.DefaultPackageList) ?? true))
             {
-                item.DefaultPackageList = rhs.DefaultPackageList.FormKey;
+                item.DefaultPackageList = new FormLinkNullable<FormList>(rhs.DefaultPackageList.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.CrimeFaction) ?? true))
             {
-                item.CrimeFaction = rhs.CrimeFaction.FormKey;
+                item.CrimeFaction = new FormLinkNullable<Faction>(rhs.CrimeFaction.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.HeadTexture) ?? true))
             {
-                item.HeadTexture = rhs.HeadTexture.FormKey;
+                item.HeadTexture = new FormLinkNullable<TextureSet>(rhs.HeadTexture.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.TextureLighting) ?? true))
             {
@@ -6451,15 +6225,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((INpcGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => NpcBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -6476,7 +6246,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
         public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
-        public bool VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
         #endregion
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
@@ -6491,61 +6260,50 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = ListExt.Empty<RankPlacementBinaryOverlay>();
         #region DeathItem
         private int? _DeathItemLocation;
-        public bool DeathItem_IsSet => _DeathItemLocation.HasValue;
-        public IFormLinkNullable<ILeveledItemGetter> DeathItem => _DeathItemLocation.HasValue ? new FormLinkNullable<ILeveledItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DeathItemLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILeveledItemGetter>.Null;
+        public FormLinkNullable<ILeveledItemGetter> DeathItem => _DeathItemLocation.HasValue ? new FormLinkNullable<ILeveledItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DeathItemLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILeveledItemGetter>.Null;
         #endregion
         #region Voice
         private int? _VoiceLocation;
-        public bool Voice_IsSet => _VoiceLocation.HasValue;
-        public IFormLinkNullable<IVoiceTypeGetter> Voice => _VoiceLocation.HasValue ? new FormLinkNullable<IVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _VoiceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IVoiceTypeGetter>.Null;
+        public FormLinkNullable<IVoiceTypeGetter> Voice => _VoiceLocation.HasValue ? new FormLinkNullable<IVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _VoiceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IVoiceTypeGetter>.Null;
         #endregion
         #region Template
         private int? _TemplateLocation;
-        public bool Template_IsSet => _TemplateLocation.HasValue;
-        public IFormLinkNullable<INpcSpawnGetter> Template => _TemplateLocation.HasValue ? new FormLinkNullable<INpcSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TemplateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcSpawnGetter>.Null;
+        public FormLinkNullable<INpcSpawnGetter> Template => _TemplateLocation.HasValue ? new FormLinkNullable<INpcSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TemplateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcSpawnGetter>.Null;
         #endregion
         #region Race
         private int? _RaceLocation;
-        public bool Race_IsSet => _RaceLocation.HasValue;
-        public IFormLink<IRaceGetter> Race => _RaceLocation.HasValue ? new FormLink<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _RaceLocation.Value, _package.MetaData.Constants)))) : FormLink<IRaceGetter>.Null;
+        public FormLink<IRaceGetter> Race => _RaceLocation.HasValue ? new FormLink<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _RaceLocation.Value, _package.MetaData.Constants)))) : FormLink<IRaceGetter>.Null;
         #endregion
         public IReadOnlyList<IFormLink<IASpellGetter>>? ActorEffect { get; private set; }
         public IDestructibleGetter? Destructible { get; private set; }
         #region WornArmor
         private int? _WornArmorLocation;
-        public bool WornArmor_IsSet => _WornArmorLocation.HasValue;
-        public IFormLinkNullable<IArmorGetter> WornArmor => _WornArmorLocation.HasValue ? new FormLinkNullable<IArmorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WornArmorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArmorGetter>.Null;
+        public FormLinkNullable<IArmorGetter> WornArmor => _WornArmorLocation.HasValue ? new FormLinkNullable<IArmorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WornArmorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArmorGetter>.Null;
         #endregion
         #region FarAwayModel
         private int? _FarAwayModelLocation;
-        public bool FarAwayModel_IsSet => _FarAwayModelLocation.HasValue;
-        public IFormLinkNullable<IArmorGetter> FarAwayModel => _FarAwayModelLocation.HasValue ? new FormLinkNullable<IArmorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FarAwayModelLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArmorGetter>.Null;
+        public FormLinkNullable<IArmorGetter> FarAwayModel => _FarAwayModelLocation.HasValue ? new FormLinkNullable<IArmorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FarAwayModelLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArmorGetter>.Null;
         #endregion
         #region AttackRace
         private int? _AttackRaceLocation;
-        public bool AttackRace_IsSet => _AttackRaceLocation.HasValue;
-        public IFormLinkNullable<IRaceGetter> AttackRace => _AttackRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AttackRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        public FormLinkNullable<IRaceGetter> AttackRace => _AttackRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AttackRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
         #endregion
         public IReadOnlyList<IAttackGetter> Attacks { get; private set; } = ListExt.Empty<AttackBinaryOverlay>();
         #region SpectatorOverridePackageList
         private int? _SpectatorOverridePackageListLocation;
-        public bool SpectatorOverridePackageList_IsSet => _SpectatorOverridePackageListLocation.HasValue;
-        public IFormLinkNullable<IFormListGetter> SpectatorOverridePackageList => _SpectatorOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SpectatorOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public FormLinkNullable<IFormListGetter> SpectatorOverridePackageList => _SpectatorOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SpectatorOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         #region ObserveDeadBodyOverridePackageList
         private int? _ObserveDeadBodyOverridePackageListLocation;
-        public bool ObserveDeadBodyOverridePackageList_IsSet => _ObserveDeadBodyOverridePackageListLocation.HasValue;
-        public IFormLinkNullable<IFormListGetter> ObserveDeadBodyOverridePackageList => _ObserveDeadBodyOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ObserveDeadBodyOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public FormLinkNullable<IFormListGetter> ObserveDeadBodyOverridePackageList => _ObserveDeadBodyOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ObserveDeadBodyOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         #region GuardWarnOverridePackageList
         private int? _GuardWarnOverridePackageListLocation;
-        public bool GuardWarnOverridePackageList_IsSet => _GuardWarnOverridePackageListLocation.HasValue;
-        public IFormLinkNullable<IFormListGetter> GuardWarnOverridePackageList => _GuardWarnOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _GuardWarnOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public FormLinkNullable<IFormListGetter> GuardWarnOverridePackageList => _GuardWarnOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _GuardWarnOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         #region CombatOverridePackageList
         private int? _CombatOverridePackageListLocation;
-        public bool CombatOverridePackageList_IsSet => _CombatOverridePackageListLocation.HasValue;
-        public IFormLinkNullable<IFormListGetter> CombatOverridePackageList => _CombatOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CombatOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public FormLinkNullable<IFormListGetter> CombatOverridePackageList => _CombatOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CombatOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         public IReadOnlyList<IPerkPlacementGetter>? Perks { get; private set; }
         public IReadOnlyList<IContainerEntryGetter>? Items { get; private set; }
@@ -6558,8 +6316,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
         #region Class
         private int? _ClassLocation;
-        public bool Class_IsSet => _ClassLocation.HasValue;
-        public IFormLink<IClassGetter> Class => _ClassLocation.HasValue ? new FormLink<IClassGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ClassLocation.Value, _package.MetaData.Constants)))) : FormLink<IClassGetter>.Null;
+        public FormLink<IClassGetter> Class => _ClassLocation.HasValue ? new FormLink<IClassGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ClassLocation.Value, _package.MetaData.Constants)))) : FormLink<IClassGetter>.Null;
         #endregion
         #region Name
         private int? _NameLocation;
@@ -6577,23 +6334,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region PlayerSkills
         private RangeInt32? _PlayerSkillsLocation;
         public IPlayerSkillsGetter? PlayerSkills => _PlayerSkillsLocation.HasValue ? PlayerSkillsBinaryOverlay.PlayerSkillsFactory(new OverlayStream(_data.Slice(_PlayerSkillsLocation!.Value.Min), _package), _package) : default;
-        public bool PlayerSkills_IsSet => _PlayerSkillsLocation.HasValue;
         #endregion
         public IReadOnlyList<IFormLink<IHeadPartGetter>> HeadParts { get; private set; } = ListExt.Empty<IFormLink<IHeadPartGetter>>();
         #region HairColor
         private int? _HairColorLocation;
-        public bool HairColor_IsSet => _HairColorLocation.HasValue;
-        public IFormLinkNullable<IColorRecordGetter> HairColor => _HairColorLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HairColorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
+        public FormLinkNullable<IColorRecordGetter> HairColor => _HairColorLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HairColorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
         #endregion
         #region CombatStyle
         private int? _CombatStyleLocation;
-        public bool CombatStyle_IsSet => _CombatStyleLocation.HasValue;
-        public IFormLinkNullable<ICombatStyleGetter> CombatStyle => _CombatStyleLocation.HasValue ? new FormLinkNullable<ICombatStyleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CombatStyleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICombatStyleGetter>.Null;
+        public FormLinkNullable<ICombatStyleGetter> CombatStyle => _CombatStyleLocation.HasValue ? new FormLinkNullable<ICombatStyleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CombatStyleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICombatStyleGetter>.Null;
         #endregion
         #region GiftFilter
         private int? _GiftFilterLocation;
-        public bool GiftFilter_IsSet => _GiftFilterLocation.HasValue;
-        public IFormLinkNullable<IFormListGetter> GiftFilter => _GiftFilterLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _GiftFilterLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public FormLinkNullable<IFormListGetter> GiftFilter => _GiftFilterLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _GiftFilterLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         #region NAM5
         private int? _NAM5Location;
@@ -6614,28 +6367,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IANpcSoundDefinitionGetter? Sound { get; private set; }
         #region DefaultOutfit
         private int? _DefaultOutfitLocation;
-        public bool DefaultOutfit_IsSet => _DefaultOutfitLocation.HasValue;
-        public IFormLinkNullable<IOutfitGetter> DefaultOutfit => _DefaultOutfitLocation.HasValue ? new FormLinkNullable<IOutfitGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DefaultOutfitLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOutfitGetter>.Null;
+        public FormLinkNullable<IOutfitGetter> DefaultOutfit => _DefaultOutfitLocation.HasValue ? new FormLinkNullable<IOutfitGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DefaultOutfitLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOutfitGetter>.Null;
         #endregion
         #region SleepingOutfit
         private int? _SleepingOutfitLocation;
-        public bool SleepingOutfit_IsSet => _SleepingOutfitLocation.HasValue;
-        public IFormLinkNullable<IOutfitGetter> SleepingOutfit => _SleepingOutfitLocation.HasValue ? new FormLinkNullable<IOutfitGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SleepingOutfitLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOutfitGetter>.Null;
+        public FormLinkNullable<IOutfitGetter> SleepingOutfit => _SleepingOutfitLocation.HasValue ? new FormLinkNullable<IOutfitGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SleepingOutfitLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOutfitGetter>.Null;
         #endregion
         #region DefaultPackageList
         private int? _DefaultPackageListLocation;
-        public bool DefaultPackageList_IsSet => _DefaultPackageListLocation.HasValue;
-        public IFormLinkNullable<IFormListGetter> DefaultPackageList => _DefaultPackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DefaultPackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public FormLinkNullable<IFormListGetter> DefaultPackageList => _DefaultPackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DefaultPackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         #region CrimeFaction
         private int? _CrimeFactionLocation;
-        public bool CrimeFaction_IsSet => _CrimeFactionLocation.HasValue;
-        public IFormLinkNullable<IFactionGetter> CrimeFaction => _CrimeFactionLocation.HasValue ? new FormLinkNullable<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CrimeFactionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFactionGetter>.Null;
+        public FormLinkNullable<IFactionGetter> CrimeFaction => _CrimeFactionLocation.HasValue ? new FormLinkNullable<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CrimeFactionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFactionGetter>.Null;
         #endregion
         #region HeadTexture
         private int? _HeadTextureLocation;
-        public bool HeadTexture_IsSet => _HeadTextureLocation.HasValue;
-        public IFormLinkNullable<ITextureSetGetter> HeadTexture => _HeadTextureLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HeadTextureLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
+        public FormLinkNullable<ITextureSetGetter> HeadTexture => _HeadTextureLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HeadTextureLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
         #endregion
         #region TextureLighting
         private int? _TextureLightingLocation;
@@ -6644,12 +6392,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region FaceMorph
         private RangeInt32? _FaceMorphLocation;
         public INpcFaceMorphGetter? FaceMorph => _FaceMorphLocation.HasValue ? NpcFaceMorphBinaryOverlay.NpcFaceMorphFactory(new OverlayStream(_data.Slice(_FaceMorphLocation!.Value.Min), _package), _package) : default;
-        public bool FaceMorph_IsSet => _FaceMorphLocation.HasValue;
         #endregion
         #region FaceParts
         private RangeInt32? _FacePartsLocation;
         public INpcFacePartsGetter? FaceParts => _FacePartsLocation.HasValue ? NpcFacePartsBinaryOverlay.NpcFacePartsFactory(new OverlayStream(_data.Slice(_FacePartsLocation!.Value.Min), _package), _package) : default;
-        public bool FaceParts_IsSet => _FacePartsLocation.HasValue;
         #endregion
         public IReadOnlyList<ITintLayerGetter> TintLayers { get; private set; } = ListExt.Empty<TintLayerBinaryOverlay>();
         partial void CustomFactoryEnd(

@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ICameraShotInternal,
         ILoquiObjectSetter<CameraShot>,
-        IEquatable<CameraShot>,
-        IEqualsMask
+        IEquatable<CameraShot>
     {
         #region Ctor
         protected CameraShot()
@@ -100,7 +99,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region ImageSpaceModifier
         public FormLinkNullable<ImageSpaceAdapter> ImageSpaceModifier { get; set; } = new FormLinkNullable<ImageSpaceAdapter>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IImageSpaceAdapterGetter> ICameraShotGetter.ImageSpaceModifier => this.ImageSpaceModifier;
+        FormLinkNullable<IImageSpaceAdapterGetter> ICameraShotGetter.ImageSpaceModifier => this.ImageSpaceModifier.ToGetter<ImageSpaceAdapter, IImageSpaceAdapterGetter>();
         #endregion
         #region DATADataTypeState
         public CameraShot.DATADataType DATADataTypeState { get; set; } = default;
@@ -783,7 +782,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => CameraShotCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => CameraShotCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => CameraShotCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CameraShotCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CameraShotCommon.Instance.RemapLinks(this, mapping);
         public CameraShot(FormKey formKey)
@@ -823,14 +822,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new CameraShot CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static CameraShot CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -857,8 +848,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICameraShotGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -878,7 +867,8 @@ namespace Mutagen.Bethesda.Skyrim
         ICameraShotGetter,
         ISkyrimMajorRecord,
         IModeled,
-        ILoquiObjectSetter<ICameraShotInternal>
+        ILoquiObjectSetter<ICameraShotInternal>,
+        ILinkedFormKeyContainer
     {
         new Model? Model { get; set; }
         new CameraShot.ActionType Action { get; set; }
@@ -907,7 +897,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IModeledGetter,
         ILoquiObject<ICameraShotGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => CameraShot_Registration.Instance;
@@ -923,7 +913,7 @@ namespace Mutagen.Bethesda.Skyrim
         Single MinTime { get; }
         Single TargetPercentBetweenActors { get; }
         Single NearTargetDistance { get; }
-        IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; }
+        FormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; }
         CameraShot.DATADataType DATADataTypeState { get; }
 
     }
@@ -971,24 +961,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ICameraShotGetter item,
-            CameraShot.Mask<bool?> checkMask)
-        {
-            return ((CameraShotCommon)((ICameraShotGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static CameraShot.Mask<bool> GetHasBeenSetMask(this ICameraShotGetter item)
-        {
-            var ret = new CameraShot.Mask<bool>(false);
-            ((CameraShotCommon)((ICameraShotGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -1060,17 +1032,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ICameraShotInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ICameraShotInternal item,
             MutagenFrame frame,
@@ -1650,51 +1611,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.NearTargetDistance, "NearTargetDistance");
             }
-            if ((printMask?.ImageSpaceModifier ?? true)
-                && item.ImageSpaceModifier.TryGet(out var ImageSpaceModifierItem))
+            if (printMask?.ImageSpaceModifier ?? true)
             {
-                fg.AppendItem(ImageSpaceModifierItem, "ImageSpaceModifier");
+                fg.AppendItem(item.ImageSpaceModifier.FormKey, "ImageSpaceModifier");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
                 fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
-        }
-        
-        public bool HasBeenSet(
-            ICameraShotGetter item,
-            CameraShot.Mask<bool?> checkMask)
-        {
-            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
-            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.ImageSpaceModifier.HasValue && checkMask.ImageSpaceModifier.Value != (item.ImageSpaceModifier.FormKey != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            ICameraShotGetter item,
-            CameraShot.Mask<bool> mask)
-        {
-            var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            mask.Action = true;
-            mask.Location = true;
-            mask.Target = true;
-            mask.Flags = true;
-            mask.TimeMultiplierPlayer = true;
-            mask.TimeMultiplierTarget = true;
-            mask.TimeMultiplierGlobal = true;
-            mask.MaxTime = true;
-            mask.MinTime = true;
-            mask.TargetPercentBetweenActors = true;
-            mask.NearTargetDistance = true;
-            mask.ImageSpaceModifier = (item.ImageSpaceModifier.FormKey != null);
-            mask.DATADataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static CameraShot_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1796,10 +1720,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.MinTime);
             hash.Add(item.TargetPercentBetweenActors);
             hash.Add(item.NearTargetDistance);
-            if (item.ImageSpaceModifier.TryGet(out var ImageSpaceModifieritem))
-            {
-                hash.Add(ImageSpaceModifieritem);
-            }
+            hash.Add(item.ImageSpaceModifier);
             hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1960,7 +1881,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.ImageSpaceModifier) ?? true))
             {
-                item.ImageSpaceModifier = rhs.ImageSpaceModifier.FormKey;
+                item.ImageSpaceModifier = new FormLinkNullable<ImageSpaceAdapter>(rhs.ImageSpaceModifier.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.DATADataTypeState) ?? true))
             {
@@ -2331,15 +2252,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICameraShotGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => CameraShotCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => CameraShotCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CameraShotCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CameraShotCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => CameraShotCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => CameraShotBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2412,8 +2329,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region ImageSpaceModifier
         private int? _ImageSpaceModifierLocation;
-        public bool ImageSpaceModifier_IsSet => _ImageSpaceModifierLocation.HasValue;
-        public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier => _ImageSpaceModifierLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImageSpaceModifierLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
+        public FormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier => _ImageSpaceModifierLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImageSpaceModifierLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

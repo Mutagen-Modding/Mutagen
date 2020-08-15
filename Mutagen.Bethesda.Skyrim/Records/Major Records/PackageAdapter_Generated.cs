@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         AVirtualMachineAdapter,
         IPackageAdapter,
         ILoquiObjectSetter<PackageAdapter>,
-        IEquatable<PackageAdapter>,
-        IEqualsMask
+        IEquatable<PackageAdapter>
     {
         #region Ctor
         public PackageAdapter()
@@ -373,14 +372,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new PackageAdapter CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static PackageAdapter CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -407,8 +398,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPackageAdapterGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -487,24 +476,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IPackageAdapterGetter item,
-            PackageAdapter.Mask<bool?> checkMask)
-        {
-            return ((PackageAdapterCommon)((IPackageAdapterGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static PackageAdapter.Mask<bool> GetHasBeenSetMask(this IPackageAdapterGetter item)
-        {
-            var ret = new PackageAdapter.Mask<bool>(false);
-            ((PackageAdapterCommon)((IPackageAdapterGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IPackageAdapterGetter item,
             IPackageAdapterGetter rhs)
@@ -574,17 +545,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IPackageAdapter item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IPackageAdapter item,
             MutagenFrame frame,
@@ -922,28 +882,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IPackageAdapterGetter item,
-            PackageAdapter.Mask<bool?> checkMask)
-        {
-            if (checkMask.ScriptFragments?.Overall.HasValue ?? false && checkMask.ScriptFragments.Overall.Value != (item.ScriptFragments != null)) return false;
-            if (checkMask.ScriptFragments?.Specific != null && (item.ScriptFragments == null || !item.ScriptFragments.HasBeenSet(checkMask.ScriptFragments.Specific))) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IPackageAdapterGetter item,
-            PackageAdapter.Mask<bool> mask)
-        {
-            var itemScriptFragments = item.ScriptFragments;
-            mask.ScriptFragments = new MaskItem<bool, PackageScriptFragments.Mask<bool>?>(itemScriptFragments != null, itemScriptFragments?.GetHasBeenSetMask());
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static PackageAdapter_FieldIndex ConvertFieldIndex(AVirtualMachineAdapter_FieldIndex index)
         {
             switch (index)
@@ -1270,8 +1208,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPackageAdapterGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PackageAdapterBinaryWriteTranslation.Instance;

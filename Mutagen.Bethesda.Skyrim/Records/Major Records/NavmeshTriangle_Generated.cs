@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class NavmeshTriangle :
         INavmeshTriangle,
         ILoquiObjectSetter<NavmeshTriangle>,
-        IEquatable<NavmeshTriangle>,
-        IEqualsMask
+        IEquatable<NavmeshTriangle>
     {
         #region Ctor
         public NavmeshTriangle()
@@ -541,14 +540,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static NavmeshTriangle CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static NavmeshTriangle CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -575,8 +566,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((INavmeshTriangleGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -672,24 +661,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this INavmeshTriangleGetter item,
-            NavmeshTriangle.Mask<bool?> checkMask)
-        {
-            return ((NavmeshTriangleCommon)((INavmeshTriangleGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static NavmeshTriangle.Mask<bool> GetHasBeenSetMask(this INavmeshTriangleGetter item)
-        {
-            var ret = new NavmeshTriangle.Mask<bool>(false);
-            ((NavmeshTriangleCommon)((INavmeshTriangleGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this INavmeshTriangleGetter item,
             INavmeshTriangleGetter rhs)
@@ -782,17 +753,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this INavmeshTriangle item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this INavmeshTriangle item,
             MutagenFrame frame,
@@ -1204,26 +1164,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            INavmeshTriangleGetter item,
-            NavmeshTriangle.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            INavmeshTriangleGetter item,
-            NavmeshTriangle.Mask<bool> mask)
-        {
-            mask.Vertices = true;
-            mask.EdgeLink_0_1 = true;
-            mask.EdgeLink_1_2 = true;
-            mask.EdgeLink_2_0 = true;
-            mask.Flags = true;
-            mask.CoverFlags = true;
-            mask.IsCover = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             INavmeshTriangleGetter? lhs,
@@ -1460,12 +1400,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this INavmeshTriangleGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((NavmeshTriangleBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1497,8 +1438,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((INavmeshTriangleGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NavmeshTriangleBinaryWriteTranslation.Instance;

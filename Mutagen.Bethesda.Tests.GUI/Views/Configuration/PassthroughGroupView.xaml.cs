@@ -21,10 +21,10 @@ namespace Mutagen.Bethesda.Tests.GUI.Views
             {
                 this.BindStrict(this.ViewModel, vm => vm.NicknameSuffix, view => view.NicknameSuffix.Text)
                     .DisposeWith(disposable);
-                this.WhenAny(x => x.ViewModel.AddPassthroughCommand)
+                this.WhenAnyValue(x => x.ViewModel.AddPassthroughCommand)
                     .BindToStrict(this, x => x.AddButton.Command)
                     .DisposeWith(disposable);
-                this.WhenAny(x => x.ViewModel.Passthroughs)
+                this.WhenAnyValue(x => x.ViewModel.Passthroughs)
                     .BindToStrict(this, x => x.PassthroughsControl.ItemsSource)
                     .DisposeWith(disposable);
                 this.BindStrict(this.ViewModel, vm => vm.Do, view => view.DoCheckbox.IsChecked)
@@ -36,10 +36,10 @@ namespace Mutagen.Bethesda.Tests.GUI.Views
                     .DisposeWith(disposable);
 
                 // Wire Delete Button
-                this.WhenAny(x => x.ViewModel.DeleteCommand)
+                this.WhenAnyValue(x => x.ViewModel.DeleteCommand)
                     .BindToStrict(this, v => v.DeleteGroupButton.Command)
                     .DisposeWith(disposable);
-                this.WhenAny(x => x.TopGrid.IsMouseOver)
+                this.WhenAnyValue(x => x.TopGrid.IsMouseOver)
                     .Select(b => b ? Visibility.Visible : Visibility.Hidden)
                     .BindToStrict(this, v => v.DeleteGroupButton.Visibility)
                     .DisposeWith(disposable);

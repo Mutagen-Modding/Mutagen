@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IPathGridInternal,
         ILoquiObjectSetter<PathGrid>,
-        IEquatable<PathGrid>,
-        IEqualsMask
+        IEquatable<PathGrid>
     {
         #region Ctor
         protected PathGrid()
@@ -712,7 +711,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PathGridCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PathGridCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PathGridCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PathGridCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PathGridCommon.Instance.RemapLinks(this, mapping);
         public PathGrid(FormKey formKey)
@@ -747,14 +746,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new PathGrid CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static PathGrid CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -781,8 +772,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPathGridGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -801,7 +790,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IPathGrid :
         IPathGridGetter,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<IPathGridInternal>
+        ILoquiObjectSetter<IPathGridInternal>,
+        ILinkedFormKeyContainer
     {
         new IExtendedList<PathGridPoint>? PointToPointConnections { get; set; }
         new MemorySlice<Byte>? PGAG { get; set; }
@@ -819,7 +809,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IPathGridGetter :
         IOblivionMajorRecordGetter,
         ILoquiObject<IPathGridGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => PathGrid_Registration.Instance;
@@ -873,24 +863,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IPathGridGetter item,
-            PathGrid.Mask<bool?> checkMask)
-        {
-            return ((PathGridCommon)((IPathGridGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static PathGrid.Mask<bool> GetHasBeenSetMask(this IPathGridGetter item)
-        {
-            var ret = new PathGrid.Mask<bool>(false);
-            ((PathGridCommon)((IPathGridGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -962,17 +934,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IPathGridInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IPathGridInternal item,
             MutagenFrame frame,
@@ -1429,38 +1390,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 fg.AppendLine("]");
             }
-        }
-        
-        public bool HasBeenSet(
-            IPathGridGetter item,
-            PathGrid.Mask<bool?> checkMask)
-        {
-            if (checkMask.PointToPointConnections?.Overall.HasValue ?? false && checkMask.PointToPointConnections!.Overall.Value != (item.PointToPointConnections != null)) return false;
-            if (checkMask.PGAG.HasValue && checkMask.PGAG.Value != (item.PGAG != null)) return false;
-            if (checkMask.InterCellConnections?.Overall.HasValue ?? false && checkMask.InterCellConnections!.Overall.Value != (item.InterCellConnections != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IPathGridGetter item,
-            PathGrid.Mask<bool> mask)
-        {
-            if (item.PointToPointConnections.TryGet(out var PointToPointConnectionsItem))
-            {
-                mask.PointToPointConnections = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, PathGridPoint.Mask<bool>?>>?>(true, PointToPointConnectionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, PathGridPoint.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            mask.PGAG = (item.PGAG != null);
-            if (item.InterCellConnections.TryGet(out var InterCellConnectionsItem))
-            {
-                mask.InterCellConnections = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, InterCellPoint.Mask<bool>?>>?>(true, InterCellConnectionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, InterCellPoint.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            var PointToReferenceMappingsItem = item.PointToReferenceMappings;
-            mask.PointToReferenceMappings = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, PointToReferenceMapping.Mask<bool>?>>?>(true, PointToReferenceMappingsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, PointToReferenceMapping.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static PathGrid_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
@@ -2056,15 +1985,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPathGridGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PathGridCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PathGridCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PathGridCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PathGridCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PathGridCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PathGridBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

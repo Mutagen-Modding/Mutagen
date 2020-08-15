@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class LockInformation :
         ILockInformation,
         ILoquiObjectSetter<LockInformation>,
-        IEquatable<LockInformation>,
-        IEqualsMask
+        IEquatable<LockInformation>
     {
         #region Ctor
         public LockInformation()
@@ -57,7 +56,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Key
         public FormLink<Key> Key { get; set; } = new FormLink<Key>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IKeyGetter> ILockInformationGetter.Key => this.Key;
+        FormLink<IKeyGetter> ILockInformationGetter.Key => this.Key.ToGetter<Key, IKeyGetter>();
         #endregion
         #region Flags
         public LockInformation.Flag Flags { get; set; } = default;
@@ -448,7 +447,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => LockInformationCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LockInformationCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LockInformationCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LockInformationCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LockInformationCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -468,14 +467,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static LockInformation CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static LockInformation CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -502,8 +493,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILockInformationGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -521,7 +510,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ILockInformation :
         ILockInformationGetter,
-        ILoquiObjectSetter<ILockInformation>
+        ILoquiObjectSetter<ILockInformation>,
+        ILinkedFormKeyContainer
     {
         new Byte LockLevel { get; set; }
         new MemorySlice<Byte> Unused { get; set; }
@@ -532,7 +522,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILockInformationGetter :
         ILoquiObject,
         ILoquiObject<ILockInformationGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -544,7 +534,7 @@ namespace Mutagen.Bethesda.Oblivion
         static ILoquiRegistration Registration => LockInformation_Registration.Instance;
         Byte LockLevel { get; }
         ReadOnlyMemorySlice<Byte> Unused { get; }
-        IFormLink<IKeyGetter> Key { get; }
+        FormLink<IKeyGetter> Key { get; }
         LockInformation.Flag Flags { get; }
 
     }
@@ -592,24 +582,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ILockInformationGetter item,
-            LockInformation.Mask<bool?> checkMask)
-        {
-            return ((LockInformationCommon)((ILockInformationGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static LockInformation.Mask<bool> GetHasBeenSetMask(this ILockInformationGetter item)
-        {
-            var ret = new LockInformation.Mask<bool>(false);
-            ((LockInformationCommon)((ILockInformationGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -704,17 +676,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ILockInformation item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ILockInformation item,
             MutagenFrame frame,
@@ -1068,29 +1029,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Key ?? true)
             {
-                fg.AppendItem(item.Key, "Key");
+                fg.AppendItem(item.Key.FormKey, "Key");
             }
             if (printMask?.Flags ?? true)
             {
                 fg.AppendItem(item.Flags, "Flags");
             }
-        }
-        
-        public bool HasBeenSet(
-            ILockInformationGetter item,
-            LockInformation.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            ILockInformationGetter item,
-            LockInformation.Mask<bool> mask)
-        {
-            mask.LockLevel = true;
-            mask.Unused = true;
-            mask.Key = true;
-            mask.Flags = true;
         }
         
         #region Equals and Hash
@@ -1157,7 +1101,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LockInformation_FieldIndex.Key) ?? true))
             {
-                item.Key = rhs.Key.FormKey;
+                item.Key = new FormLink<Key>(rhs.Key.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LockInformation_FieldIndex.Flags) ?? true))
             {
@@ -1318,12 +1262,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this ILockInformationGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((LockInformationBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1355,15 +1300,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILockInformationGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => LockInformationCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LockInformationCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LockInformationCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LockInformationCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LockInformationCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LockInformationBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1380,7 +1321,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public Byte LockLevel => _data.Span[0x0];
         public ReadOnlyMemorySlice<Byte> Unused => _data.Span.Slice(0x1, 0x3).ToArray();
-        public IFormLink<IKeyGetter> Key => new FormLink<IKeyGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public FormLink<IKeyGetter> Key => new FormLink<IKeyGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         public LockInformation.Flag Flags => (LockInformation.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class RaceStats :
         IRaceStats,
         ILoquiObjectSetter<RaceStats>,
-        IEquatable<RaceStats>,
-        IEqualsMask
+        IEquatable<RaceStats>
     {
         #region Ctor
         public RaceStats()
@@ -572,14 +571,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static RaceStats CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static RaceStats CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -606,8 +597,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceStatsGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -705,24 +694,6 @@ namespace Mutagen.Bethesda.Oblivion
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IRaceStatsGetter item,
-            RaceStats.Mask<bool?> checkMask)
-        {
-            return ((RaceStatsCommon)((IRaceStatsGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static RaceStats.Mask<bool> GetHasBeenSetMask(this IRaceStatsGetter item)
-        {
-            var ret = new RaceStats.Mask<bool>(false);
-            ((RaceStatsCommon)((IRaceStatsGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IRaceStatsGetter item,
             IRaceStatsGetter rhs)
@@ -815,17 +786,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IRaceStats item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IRaceStats item,
             MutagenFrame frame,
@@ -1255,27 +1215,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IRaceStatsGetter item,
-            RaceStats.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IRaceStatsGetter item,
-            RaceStats.Mask<bool> mask)
-        {
-            mask.Strength = true;
-            mask.Intelligence = true;
-            mask.Willpower = true;
-            mask.Agility = true;
-            mask.Speed = true;
-            mask.Endurance = true;
-            mask.Personality = true;
-            mask.Luck = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IRaceStatsGetter? lhs,
@@ -1517,12 +1456,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this IRaceStatsGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((RaceStatsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1554,8 +1494,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceStatsGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => RaceStatsBinaryWriteTranslation.Instance;

@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class WeaponData :
         IWeaponData,
         ILoquiObjectSetter<WeaponData>,
-        IEquatable<WeaponData>,
-        IEqualsMask
+        IEquatable<WeaponData>
     {
         #region Ctor
         public WeaponData()
@@ -576,14 +575,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static WeaponData CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static WeaponData CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -610,8 +601,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeaponDataGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -709,24 +698,6 @@ namespace Mutagen.Bethesda.Oblivion
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IWeaponDataGetter item,
-            WeaponData.Mask<bool?> checkMask)
-        {
-            return ((WeaponDataCommon)((IWeaponDataGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static WeaponData.Mask<bool> GetHasBeenSetMask(this IWeaponDataGetter item)
-        {
-            var ret = new WeaponData.Mask<bool>(false);
-            ((WeaponDataCommon)((IWeaponDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IWeaponDataGetter item,
             IWeaponDataGetter rhs)
@@ -819,17 +790,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IWeaponData item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IWeaponData item,
             MutagenFrame frame,
@@ -1263,27 +1223,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IWeaponDataGetter item,
-            WeaponData.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IWeaponDataGetter item,
-            WeaponData.Mask<bool> mask)
-        {
-            mask.Type = true;
-            mask.Speed = true;
-            mask.Reach = true;
-            mask.Flags = true;
-            mask.Value = true;
-            mask.Health = true;
-            mask.Weight = true;
-            mask.Damage = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IWeaponDataGetter? lhs,
@@ -1543,12 +1482,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this IWeaponDataGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((WeaponDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1580,8 +1520,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeaponDataGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WeaponDataBinaryWriteTranslation.Instance;

@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Mutagen.Bethesda
 {
-    public abstract class AListGroup
+    namespace Internals
     {
         public class GroupListOverlay<T> : IReadOnlyList<T>
         {
@@ -96,6 +96,19 @@ namespace Mutagen.Bethesda
             IEnumerator IEnumerable.GetEnumerator()
             {
                 return this.GetEnumerator();
+            }
+        }
+
+        public class AListGroupBinaryOverlay<T> : BinaryOverlay
+        {
+            protected GroupListOverlay<T>? _Records;
+            public IReadOnlyList<T> Records => _Records!;
+
+            protected AListGroupBinaryOverlay(
+                ReadOnlyMemorySlice<byte> bytes,
+                BinaryOverlayFactoryPackage package)
+                : base(bytes, package)
+            {
             }
         }
     }

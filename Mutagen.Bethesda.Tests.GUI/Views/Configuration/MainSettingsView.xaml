@@ -46,7 +46,7 @@
             Text="Caches" />
         <WrapPanel Grid.Row="3">
             <CheckBox x:Name="CacheDecompression" Content="Decompression" />
-            <CheckBox x:Name="CacheAlignment" Content="Overlay" />
+            <CheckBox x:Name="CacheAlignment" Content="Alignment" />
             <CheckBox x:Name="CacheProcessing" Content="Processing" />
         </WrapPanel>
         <TextBlock Grid.Row="4"

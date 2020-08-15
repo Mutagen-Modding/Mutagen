@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class ScriptMetaSummary :
         IScriptMetaSummary,
         ILoquiObjectSetter<ScriptMetaSummary>,
-        IEquatable<ScriptMetaSummary>,
-        IEqualsMask
+        IEquatable<ScriptMetaSummary>
     {
         #region Ctor
         public ScriptMetaSummary()
@@ -483,14 +482,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static ScriptMetaSummary CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static ScriptMetaSummary CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -517,8 +508,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptMetaSummaryGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -607,24 +596,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IScriptMetaSummaryGetter item,
-            ScriptMetaSummary.Mask<bool?> checkMask)
-        {
-            return ((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static ScriptMetaSummary.Mask<bool> GetHasBeenSetMask(this IScriptMetaSummaryGetter item)
-        {
-            var ret = new ScriptMetaSummary.Mask<bool>(false);
-            ((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -719,17 +690,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IScriptMetaSummary item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IScriptMetaSummary item,
             MutagenFrame frame,
@@ -1110,24 +1070,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IScriptMetaSummaryGetter item,
-            ScriptMetaSummary.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IScriptMetaSummaryGetter item,
-            ScriptMetaSummary.Mask<bool> mask)
-        {
-            mask.Unknown = true;
-            mask.RefCount = true;
-            mask.CompiledSize = true;
-            mask.VariableCount = true;
-            mask.Type = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IScriptMetaSummaryGetter? lhs,
@@ -1371,12 +1313,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this IScriptMetaSummaryGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((ScriptMetaSummaryBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1408,8 +1351,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptMetaSummaryGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ScriptMetaSummaryBinaryWriteTranslation.Instance;

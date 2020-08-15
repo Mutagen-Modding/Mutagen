@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class LocationAliasReference :
         ILocationAliasReference,
         ILoquiObjectSetter<LocationAliasReference>,
-        IEquatable<LocationAliasReference>,
-        IEqualsMask
+        IEquatable<LocationAliasReference>
     {
         #region Ctor
         public LocationAliasReference()
@@ -48,12 +47,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Keyword
         public FormLinkNullable<Keyword> Keyword { get; set; } = new FormLinkNullable<Keyword>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IKeywordGetter> ILocationAliasReferenceGetter.Keyword => this.Keyword;
+        FormLinkNullable<IKeywordGetter> ILocationAliasReferenceGetter.Keyword => this.Keyword.ToGetter<Keyword, IKeywordGetter>();
         #endregion
         #region RefType
         public FormLinkNullable<LocationReferenceType> RefType { get; set; } = new FormLinkNullable<LocationReferenceType>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ILocationReferenceTypeGetter> ILocationAliasReferenceGetter.RefType => this.RefType;
+        FormLinkNullable<ILocationReferenceTypeGetter> ILocationAliasReferenceGetter.RefType => this.RefType.ToGetter<LocationReferenceType, ILocationReferenceTypeGetter>();
         #endregion
 
         #region To String
@@ -412,7 +411,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => LocationAliasReferenceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LocationAliasReferenceCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LocationAliasReferenceCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationAliasReferenceCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationAliasReferenceCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -432,14 +431,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static LocationAliasReference CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static LocationAliasReference CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -466,8 +457,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILocationAliasReferenceGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -485,7 +474,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface ILocationAliasReference :
         ILocationAliasReferenceGetter,
-        ILoquiObjectSetter<ILocationAliasReference>
+        ILoquiObjectSetter<ILocationAliasReference>,
+        ILinkedFormKeyContainer
     {
         new Int32? AliasIndex { get; set; }
         new FormLinkNullable<Keyword> Keyword { get; set; }
@@ -495,7 +485,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILocationAliasReferenceGetter :
         ILoquiObject,
         ILoquiObject<ILocationAliasReferenceGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -506,8 +496,8 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => LocationAliasReference_Registration.Instance;
         Int32? AliasIndex { get; }
-        IFormLinkNullable<IKeywordGetter> Keyword { get; }
-        IFormLinkNullable<ILocationReferenceTypeGetter> RefType { get; }
+        FormLinkNullable<IKeywordGetter> Keyword { get; }
+        FormLinkNullable<ILocationReferenceTypeGetter> RefType { get; }
 
     }
 
@@ -554,24 +544,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ILocationAliasReferenceGetter item,
-            LocationAliasReference.Mask<bool?> checkMask)
-        {
-            return ((LocationAliasReferenceCommon)((ILocationAliasReferenceGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static LocationAliasReference.Mask<bool> GetHasBeenSetMask(this ILocationAliasReferenceGetter item)
-        {
-            var ret = new LocationAliasReference.Mask<bool>(false);
-            ((LocationAliasReferenceCommon)((ILocationAliasReferenceGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -666,17 +638,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ILocationAliasReference item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ILocationAliasReference item,
             MutagenFrame frame,
@@ -1021,35 +982,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(AliasIndexItem, "AliasIndex");
             }
-            if ((printMask?.Keyword ?? true)
-                && item.Keyword.TryGet(out var KeywordItem))
+            if (printMask?.Keyword ?? true)
             {
-                fg.AppendItem(KeywordItem, "Keyword");
+                fg.AppendItem(item.Keyword.FormKey, "Keyword");
             }
-            if ((printMask?.RefType ?? true)
-                && item.RefType.TryGet(out var RefTypeItem))
+            if (printMask?.RefType ?? true)
             {
-                fg.AppendItem(RefTypeItem, "RefType");
+                fg.AppendItem(item.RefType.FormKey, "RefType");
             }
-        }
-        
-        public bool HasBeenSet(
-            ILocationAliasReferenceGetter item,
-            LocationAliasReference.Mask<bool?> checkMask)
-        {
-            if (checkMask.AliasIndex.HasValue && checkMask.AliasIndex.Value != (item.AliasIndex != null)) return false;
-            if (checkMask.Keyword.HasValue && checkMask.Keyword.Value != (item.Keyword.FormKey != null)) return false;
-            if (checkMask.RefType.HasValue && checkMask.RefType.Value != (item.RefType.FormKey != null)) return false;
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            ILocationAliasReferenceGetter item,
-            LocationAliasReference.Mask<bool> mask)
-        {
-            mask.AliasIndex = (item.AliasIndex != null);
-            mask.Keyword = (item.Keyword.FormKey != null);
-            mask.RefType = (item.RefType.FormKey != null);
         }
         
         #region Equals and Hash
@@ -1072,14 +1012,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(AliasIndexitem);
             }
-            if (item.Keyword.TryGet(out var Keyworditem))
-            {
-                hash.Add(Keyworditem);
-            }
-            if (item.RefType.TryGet(out var RefTypeitem))
-            {
-                hash.Add(RefTypeitem);
-            }
+            hash.Add(item.Keyword);
+            hash.Add(item.RefType);
             return hash.ToHashCode();
         }
         
@@ -1126,11 +1060,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LocationAliasReference_FieldIndex.Keyword) ?? true))
             {
-                item.Keyword = rhs.Keyword.FormKey;
+                item.Keyword = new FormLinkNullable<Keyword>(rhs.Keyword.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LocationAliasReference_FieldIndex.RefType) ?? true))
             {
-                item.RefType = rhs.RefType.FormKey;
+                item.RefType = new FormLinkNullable<LocationReferenceType>(rhs.RefType.FormKey);
             }
         }
         
@@ -1320,12 +1254,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this ILocationAliasReferenceGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((LocationAliasReferenceBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1357,15 +1292,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILocationAliasReferenceGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => LocationAliasReferenceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LocationAliasReferenceCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationAliasReferenceCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationAliasReferenceCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LocationAliasReferenceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LocationAliasReferenceBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1386,13 +1317,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Keyword
         private int? _KeywordLocation;
-        public bool Keyword_IsSet => _KeywordLocation.HasValue;
-        public IFormLinkNullable<IKeywordGetter> Keyword => _KeywordLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _KeywordLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public FormLinkNullable<IKeywordGetter> Keyword => _KeywordLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _KeywordLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
         #endregion
         #region RefType
         private int? _RefTypeLocation;
-        public bool RefType_IsSet => _RefTypeLocation.HasValue;
-        public IFormLinkNullable<ILocationReferenceTypeGetter> RefType => _RefTypeLocation.HasValue ? new FormLinkNullable<ILocationReferenceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _RefTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationReferenceTypeGetter>.Null;
+        public FormLinkNullable<ILocationReferenceTypeGetter> RefType => _RefTypeLocation.HasValue ? new FormLinkNullable<ILocationReferenceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _RefTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationReferenceTypeGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

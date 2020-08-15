@@ -9,7 +9,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Wabbajack.Common;
 
 namespace Mutagen.Bethesda.Generation
 {
@@ -51,7 +50,7 @@ namespace Mutagen.Bethesda.Generation
             }
 
             // Interfaces
-            fg.AppendLine($"IReadOnlyCache<T, {nameof(FormKey)}> {nameof(IModGetter)}.{nameof(IModGetter.GetGroupGetter)}<T>() => this.GetGroupGetter<T>();");
+            fg.AppendLine($"IReadOnlyCache<T, {nameof(FormKey)}> {nameof(IModGetter)}.{nameof(IModGetter.GetTopLevelGroupGetter)}<T>() => this.{nameof(IModGetter.GetTopLevelGroupGetter)}<T>();");
             fg.AppendLine($"ICache<T, {nameof(FormKey)}> {nameof(IMod)}.{nameof(IMod.GetGroup)}<T>() => this.GetGroup<T>();");
             fg.AppendLine($"void IModGetter.WriteToBinary(string path, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinary(path, importMask: null, param: param);");
             fg.AppendLine($"void IModGetter.WriteToBinaryParallel(string path, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinaryParallel(path, param);");
@@ -67,11 +66,11 @@ namespace Mutagen.Bethesda.Generation
 
             // NextObjectID member
             fg.AppendLine($"[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-            fg.AppendLine($"uint IMod.NextObjectID");
+            fg.AppendLine($"uint IMod.NextFormID");
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine($"get => this.ModHeader.Stats.NextObjectID;");
-                fg.AppendLine($"set => this.ModHeader.Stats.NextObjectID = value;");
+                fg.AppendLine($"get => this.ModHeader.Stats.NextFormID;");
+                fg.AppendLine($"set => this.ModHeader.Stats.NextFormID = value;");
             }
 
             using (var args = new FunctionWrapper(fg,
@@ -89,7 +88,7 @@ namespace Mutagen.Bethesda.Generation
             }
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine("this.ModHeader.Stats.NextObjectID = GetDefaultInitialNextObjectID();");
+                fg.AppendLine("this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID();");
                 if (objData.GameReleaseOptions != null)
                 {
                     fg.AppendLine($"this.{ReleaseEnumName(obj)} = release;");
@@ -161,7 +160,7 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine($"var router = new Dictionary<FormKey, {nameof(IMajorRecordCommon)}>();");
                 fg.AppendLine($"router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, {nameof(IMajorRecordCommon)}>(dup.OriginalFormKey, dup.Record)));");
                 fg.AppendLine($"var mapping = new Dictionary<FormKey, FormKey>();");
-                fg.AppendLine($"var package = this.CreateLinkCache();");
+                fg.AppendLine($"var package = this.{nameof(ILinkCacheExt.ToImmutableLinkCache)}();");
                 fg.AppendLine("foreach (var rec in router.Values)");
                 using (new BraceWrapper(fg))
                 {
@@ -182,23 +181,23 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine();
 
             using (var args = new FunctionWrapper(fg,
-                "public int GetRecordCount"))
+                "public uint GetRecordCount"))
             {
             }
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine("int count = this.EnumerateMajorRecords().Count();");
+                fg.AppendLine("uint count = (uint)this.EnumerateMajorRecords().Count();");
                 foreach (var field in obj.IterateFields())
                 {
                     if (!(field is LoquiType loqui)) continue;
                     if (loqui.TargetObjectGeneration.GetObjectType() != ObjectType.Group) continue;
                     if (loqui.TargetObjectGeneration.Name == "ListGroup")
                     {
-                        fg.AppendLine($"count += {field.Name}.Records.Count > 0 ? 1 : 0;");
+                        fg.AppendLine($"count += {field.Name}.Records.Count > 0 ? 1 : default(uint);");
                     }
                     else
                     {
-                        fg.AppendLine($"count += {field.Name}.RecordCache.Count > 0 ? 1 : 0;");
+                        fg.AppendLine($"count += {field.Name}.RecordCache.Count > 0 ? 1 : default(uint);");
                     }
                 }
                 fg.AppendLine("GetCustomRecordCount((customCount) => count += customCount);");
@@ -206,7 +205,7 @@ namespace Mutagen.Bethesda.Generation
             }
             fg.AppendLine();
 
-            fg.AppendLine("partial void GetCustomRecordCount(Action<int> setter);");
+            fg.AppendLine("partial void GetCustomRecordCount(Action<uint> setter);");
             fg.AppendLine();
 
             await base.GenerateInClass(obj, fg);
@@ -283,7 +282,7 @@ namespace Mutagen.Bethesda.Generation
                         {
                             foreach (var opt in objData.GameReleaseOptions)
                             {
-                                comma.Add(opt.ToString());
+                                comma.Add($"{opt} = {(int)opt}");
                             }
                         }
                     }
@@ -348,7 +347,7 @@ namespace Mutagen.Bethesda.Generation
 
             if (obj.GetObjectType() != ObjectType.Mod) return;
             using (var args = new FunctionWrapper(fg,
-                "public static IReadOnlyCache<T, FormKey> GetGroupGetter<T>"))
+                $"public static IReadOnlyCache<T, FormKey> {nameof(IModGetter.GetTopLevelGroupGetter)}<T>"))
             {
                 args.Wheres.Add($"where T : {nameof(IMajorRecordCommonGetter)}");
                 args.Add($"this {obj.Interface(getter: true)} obj");
@@ -418,7 +417,7 @@ namespace Mutagen.Bethesda.Generation
                 if (obj.GetObjectData().UsesStringFiles)
                 {
                     fg.AppendLine("bool disposeStrings = param.StringsWriter == null;");
-                    fg.AppendLine("param.StringsWriter ??= EnumExt.HasFlag((int)item.ModHeader.Flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag) ? new StringsWriter(modKey, Path.Combine(Path.GetDirectoryName(path), \"Strings\")) : null;");
+                    fg.AppendLine("param.StringsWriter ??= EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(modKey, Path.Combine(Path.GetDirectoryName(path), \"Strings\")) : null;");
                 }
                 fg.AppendLine("using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write))");
                 using (new BraceWrapper(fg))
@@ -524,7 +523,6 @@ namespace Mutagen.Bethesda.Generation
             }
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine($"var masterRefs = UtilityTranslation.ConstructWriteMasters(item, param);");
                 string gameConstantsStr;
                 if (objData.GameReleaseOptions == null)
                 {
@@ -536,13 +534,15 @@ namespace Mutagen.Bethesda.Generation
                     gameConstantsStr = $"gameConstants";
                 }
                 fg.AppendLine($"var bundle = new {nameof(WritingBundle)}({gameConstantsStr});");
-                fg.AppendLine($"bundle.{nameof(WritingBundle.MasterReferences)} = masterRefs;");
+                fg.AppendLine($"var writer = new MutagenWriter(stream, bundle);");
                 using (var args = new ArgsWrapper(fg,
-                    $"{obj.ObjectName}BinaryWriteTranslation.WriteModHeader"))
+                    $"{nameof(ModHeaderWriteLogic)}.{nameof(ModHeaderWriteLogic.WriteHeader)}"))
                 {
-                    args.Add("item");
-                    args.Add($"new MutagenWriter(stream, bundle)");
-                    args.Add("modKey");
+                    args.AddPassArg("param");
+                    args.AddPassArg("writer");
+                    args.Add("mod: item");
+                    args.Add("modHeader: item.ModHeader.DeepCopy()");
+                    args.AddPassArg("modKey");
                 }
 
                 int groupCount = obj.IterateFields()
@@ -569,11 +569,11 @@ namespace Mutagen.Bethesda.Generation
                     if (loqui.GetGroupTarget().GetObjectData().CustomBinaryEnd == CustomEnd.Off
                         && loqui.TargetObjectGeneration.Name != "ListGroup")
                     {
-                        fg.AppendLine($"toDo.Add(() => WriteGroupParallel(item.{field.Name}, masterRefs, {i}{(objData.GameReleaseOptions == null ? null : ", gameConstants")}, outputStreams{(objData.UsesStringFiles ? ", param.StringsWriter" : null)}));");
+                        fg.AppendLine($"toDo.Add(() => WriteGroupParallel(item.{field.Name}, writer.MetaData.MasterReferences!, {i}{(objData.GameReleaseOptions == null ? null : ", gameConstants")}, outputStreams{(objData.UsesStringFiles ? ", param.StringsWriter" : null)}));");
                     }
                     else
                     {
-                        fg.AppendLine($"toDo.Add(() => Write{field.Name}Parallel(item.{field.Name}, masterRefs, {i}{(objData.GameReleaseOptions == null ? null : ", gameConstants")}, outputStreams));");
+                        fg.AppendLine($"toDo.Add(() => Write{field.Name}Parallel(item.{field.Name}, writer.MetaData.MasterReferences!, {i}{(objData.GameReleaseOptions == null ? null : ", gameConstants")}, outputStreams));");
                     }
                     i++;
                 }
@@ -618,7 +618,7 @@ namespace Mutagen.Bethesda.Generation
                         gameConstantsStr = "gameConstants";
                     }
                     fg.AppendLine("if (group.RecordCache.Count == 0) return;");
-                    fg.AppendLine($"var cuts = group.Records.Cut(CutCount).ToArray();");
+                    fg.AppendLine($"var cuts = group.Cut(CutCount).ToArray();");
                     fg.AppendLine($"Stream[] subStreams = new Stream[cuts.Length + 1];");
                     fg.AppendLine($"byte[] groupBytes = new byte[{gameConstantsStr}.GroupConstants.HeaderLength];");
                     fg.AppendLine($"BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);");

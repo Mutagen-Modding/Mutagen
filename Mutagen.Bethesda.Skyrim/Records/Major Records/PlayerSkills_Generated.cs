@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class PlayerSkills :
         IPlayerSkills,
         ILoquiObjectSetter<PlayerSkills>,
-        IEquatable<PlayerSkills>,
-        IEqualsMask
+        IEquatable<PlayerSkills>
     {
         #region Ctor
         public PlayerSkills()
@@ -831,14 +830,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static PlayerSkills CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static PlayerSkills CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -865,8 +856,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPlayerSkillsGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -966,24 +955,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IPlayerSkillsGetter item,
-            PlayerSkills.Mask<bool?> checkMask)
-        {
-            return ((PlayerSkillsCommon)((IPlayerSkillsGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static PlayerSkills.Mask<bool> GetHasBeenSetMask(this IPlayerSkillsGetter item)
-        {
-            var ret = new PlayerSkills.Mask<bool>(false);
-            ((PlayerSkillsCommon)((IPlayerSkillsGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IPlayerSkillsGetter item,
             IPlayerSkillsGetter rhs)
@@ -1076,17 +1047,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IPlayerSkills item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IPlayerSkills item,
             MutagenFrame frame,
@@ -1574,30 +1534,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IPlayerSkillsGetter item,
-            PlayerSkills.Mask<bool?> checkMask)
-        {
-            if (checkMask.SkillValues?.Overall.HasValue ?? false) return false;
-            if (checkMask.SkillOffsets?.Overall.HasValue ?? false) return false;
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IPlayerSkillsGetter item,
-            PlayerSkills.Mask<bool> mask)
-        {
-            mask.SkillValues = new MaskItem<bool, IEnumerable<KeyValuePair<Skill, bool>>?>(item.SkillValues != null, null);
-            mask.SkillOffsets = new MaskItem<bool, IEnumerable<KeyValuePair<Skill, bool>>?>(item.SkillOffsets != null, null);
-            mask.Health = true;
-            mask.Magicka = true;
-            mask.Stamina = true;
-            mask.Unused = true;
-            mask.FarAwayModelDistance = true;
-            mask.GearedUpWeapons = true;
-            mask.Unused2 = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IPlayerSkillsGetter? lhs,
@@ -1869,12 +1805,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IPlayerSkillsGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((PlayerSkillsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1906,8 +1843,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPlayerSkillsGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PlayerSkillsBinaryWriteTranslation.Instance;

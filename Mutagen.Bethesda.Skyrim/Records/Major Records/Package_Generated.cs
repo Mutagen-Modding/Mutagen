@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IPackageInternal,
         ILoquiObjectSetter<Package>,
-        IEquatable<Package>,
-        IEqualsMask
+        IEquatable<Package>
     {
         #region Ctor
         protected Package()
@@ -137,17 +136,17 @@ namespace Mutagen.Bethesda.Skyrim
         #region CombatStyle
         public FormLinkNullable<CombatStyle> CombatStyle { get; set; } = new FormLinkNullable<CombatStyle>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ICombatStyleGetter> IPackageGetter.CombatStyle => this.CombatStyle;
+        FormLinkNullable<ICombatStyleGetter> IPackageGetter.CombatStyle => this.CombatStyle.ToGetter<CombatStyle, ICombatStyleGetter>();
         #endregion
         #region OwnerQuest
         public FormLinkNullable<Quest> OwnerQuest { get; set; } = new FormLinkNullable<Quest>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IQuestGetter> IPackageGetter.OwnerQuest => this.OwnerQuest;
+        FormLinkNullable<IQuestGetter> IPackageGetter.OwnerQuest => this.OwnerQuest.ToGetter<Quest, IQuestGetter>();
         #endregion
         #region PackageTemplate
         public FormLink<Package> PackageTemplate { get; set; } = new FormLink<Package>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IPackageGetter> IPackageGetter.PackageTemplate => this.PackageTemplate;
+        FormLink<IPackageGetter> IPackageGetter.PackageTemplate => this.PackageTemplate.ToGetter<Package, IPackageGetter>();
         #endregion
         #region DataInputVersion
         public Int32 DataInputVersion { get; set; } = default;
@@ -1645,7 +1644,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PackageCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PackageCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PackageCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageCommon.Instance.RemapLinks(this, mapping);
         public Package(FormKey formKey)
@@ -1688,14 +1687,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new Package CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static Package CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1722,8 +1713,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPackageGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1742,7 +1731,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPackage :
         IPackageGetter,
         ISkyrimMajorRecord,
-        ILoquiObjectSetter<IPackageInternal>
+        ILoquiObjectSetter<IPackageInternal>,
+        ILinkedFormKeyContainer
     {
         new PackageAdapter? VirtualMachineAdapter { get; set; }
         new Package.Flag Flags { get; set; }
@@ -1787,7 +1777,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPackageGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IPackageGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Package_Registration.Instance;
@@ -1809,9 +1799,9 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IConditionGetter> Conditions { get; }
         Int32? Unknown4 { get; }
         IPackageIdlesGetter? IdleAnimations { get; }
-        IFormLinkNullable<ICombatStyleGetter> CombatStyle { get; }
-        IFormLinkNullable<IQuestGetter> OwnerQuest { get; }
-        IFormLink<IPackageGetter> PackageTemplate { get; }
+        FormLinkNullable<ICombatStyleGetter> CombatStyle { get; }
+        FormLinkNullable<IQuestGetter> OwnerQuest { get; }
+        FormLink<IPackageGetter> PackageTemplate { get; }
         Int32 DataInputVersion { get; }
         IReadOnlyDictionary<SByte, IAPackageDataGetter> Data { get; }
         ReadOnlyMemorySlice<Byte> XnamMarker { get; }
@@ -1867,24 +1857,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IPackageGetter item,
-            Package.Mask<bool?> checkMask)
-        {
-            return ((PackageCommon)((IPackageGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Package.Mask<bool> GetHasBeenSetMask(this IPackageGetter item)
-        {
-            var ret = new Package.Mask<bool>(false);
-            ((PackageCommon)((IPackageGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -1956,17 +1928,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IPackageInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IPackageInternal item,
             MutagenFrame frame,
@@ -2837,19 +2798,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 IdleAnimationsItem?.ToString(fg, "IdleAnimations");
             }
-            if ((printMask?.CombatStyle ?? true)
-                && item.CombatStyle.TryGet(out var CombatStyleItem))
+            if (printMask?.CombatStyle ?? true)
             {
-                fg.AppendItem(CombatStyleItem, "CombatStyle");
+                fg.AppendItem(item.CombatStyle.FormKey, "CombatStyle");
             }
-            if ((printMask?.OwnerQuest ?? true)
-                && item.OwnerQuest.TryGet(out var OwnerQuestItem))
+            if (printMask?.OwnerQuest ?? true)
             {
-                fg.AppendItem(OwnerQuestItem, "OwnerQuest");
+                fg.AppendItem(item.OwnerQuest.FormKey, "OwnerQuest");
             }
             if (printMask?.PackageTemplate ?? true)
             {
-                fg.AppendItem(item.PackageTemplate, "PackageTemplate");
+                fg.AppendItem(item.PackageTemplate.FormKey, "PackageTemplate");
             }
             if (printMask?.DataInputVersion ?? true)
             {
@@ -2919,79 +2878,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.PSDTDataTypeState, "PSDTDataTypeState");
             }
-        }
-        
-        public bool HasBeenSet(
-            IPackageGetter item,
-            Package.Mask<bool?> checkMask)
-        {
-            if (checkMask.VirtualMachineAdapter?.Overall.HasValue ?? false && checkMask.VirtualMachineAdapter.Overall.Value != (item.VirtualMachineAdapter != null)) return false;
-            if (checkMask.VirtualMachineAdapter?.Specific != null && (item.VirtualMachineAdapter == null || !item.VirtualMachineAdapter.HasBeenSet(checkMask.VirtualMachineAdapter.Specific))) return false;
-            if (checkMask.Unknown4.HasValue && checkMask.Unknown4.Value != (item.Unknown4 != null)) return false;
-            if (checkMask.IdleAnimations?.Overall.HasValue ?? false && checkMask.IdleAnimations.Overall.Value != (item.IdleAnimations != null)) return false;
-            if (checkMask.IdleAnimations?.Specific != null && (item.IdleAnimations == null || !item.IdleAnimations.HasBeenSet(checkMask.IdleAnimations.Specific))) return false;
-            if (checkMask.CombatStyle.HasValue && checkMask.CombatStyle.Value != (item.CombatStyle.FormKey != null)) return false;
-            if (checkMask.OwnerQuest.HasValue && checkMask.OwnerQuest.Value != (item.OwnerQuest.FormKey != null)) return false;
-            if (checkMask.Data?.Overall.HasValue ?? false) return false;
-            if (checkMask.OnBegin?.Overall.HasValue ?? false && checkMask.OnBegin.Overall.Value != (item.OnBegin != null)) return false;
-            if (checkMask.OnBegin?.Specific != null && (item.OnBegin == null || !item.OnBegin.HasBeenSet(checkMask.OnBegin.Specific))) return false;
-            if (checkMask.OnEnd?.Overall.HasValue ?? false && checkMask.OnEnd.Overall.Value != (item.OnEnd != null)) return false;
-            if (checkMask.OnEnd?.Specific != null && (item.OnEnd == null || !item.OnEnd.HasBeenSet(checkMask.OnEnd.Specific))) return false;
-            if (checkMask.OnChange?.Overall.HasValue ?? false && checkMask.OnChange.Overall.Value != (item.OnChange != null)) return false;
-            if (checkMask.OnChange?.Specific != null && (item.OnChange == null || !item.OnChange.HasBeenSet(checkMask.OnChange.Specific))) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IPackageGetter item,
-            Package.Mask<bool> mask)
-        {
-            var itemVirtualMachineAdapter = item.VirtualMachineAdapter;
-            mask.VirtualMachineAdapter = new MaskItem<bool, PackageAdapter.Mask<bool>?>(itemVirtualMachineAdapter != null, itemVirtualMachineAdapter?.GetHasBeenSetMask());
-            mask.Flags = true;
-            mask.Type = true;
-            mask.InterruptOverride = true;
-            mask.PreferredSpeed = true;
-            mask.Unknown = true;
-            mask.InteruptFlags = true;
-            mask.Unknown2 = true;
-            mask.ScheduleMonth = true;
-            mask.ScheduleDayOfWeek = true;
-            mask.ScheduleDate = true;
-            mask.ScheduleHour = true;
-            mask.ScheduleMinute = true;
-            mask.Unknown3 = true;
-            mask.ScheduleDurationInMinutes = true;
-            var ConditionsItem = item.Conditions;
-            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.Unknown4 = (item.Unknown4 != null);
-            var itemIdleAnimations = item.IdleAnimations;
-            mask.IdleAnimations = new MaskItem<bool, PackageIdles.Mask<bool>?>(itemIdleAnimations != null, itemIdleAnimations?.GetHasBeenSetMask());
-            mask.CombatStyle = (item.CombatStyle.FormKey != null);
-            mask.OwnerQuest = (item.OwnerQuest.FormKey != null);
-            mask.PackageTemplate = true;
-            mask.DataInputVersion = true;
-            mask.Data = new MaskItem<bool, IEnumerable<MaskItemIndexed<SByte, bool, APackageData.Mask<bool>?>>?>(
-                (item.Data != null), item.Data.Select((i) => new MaskItemIndexed<SByte, bool, APackageData.Mask<bool>?>(
-                    i.Key,
-                    true,
-                    i.Value.GetHasBeenSetMask())));
-            mask.XnamMarker = true;
-            var ProcedureTreeItem = item.ProcedureTree;
-            mask.ProcedureTree = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, PackageBranch.Mask<bool>?>>?>(true, ProcedureTreeItem.WithIndex().Select((i) => new MaskItemIndexed<bool, PackageBranch.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            var itemOnBegin = item.OnBegin;
-            mask.OnBegin = new MaskItem<bool, PackageEvent.Mask<bool>?>(itemOnBegin != null, itemOnBegin?.GetHasBeenSetMask());
-            var itemOnEnd = item.OnEnd;
-            mask.OnEnd = new MaskItem<bool, PackageEvent.Mask<bool>?>(itemOnEnd != null, itemOnEnd?.GetHasBeenSetMask());
-            var itemOnChange = item.OnChange;
-            mask.OnChange = new MaskItem<bool, PackageEvent.Mask<bool>?>(itemOnChange != null, itemOnChange?.GetHasBeenSetMask());
-            mask.PKDTDataTypeState = true;
-            mask.PSDTDataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static Package_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -3121,14 +3007,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(IdleAnimationsitem);
             }
-            if (item.CombatStyle.TryGet(out var CombatStyleitem))
-            {
-                hash.Add(CombatStyleitem);
-            }
-            if (item.OwnerQuest.TryGet(out var OwnerQuestitem))
-            {
-                hash.Add(OwnerQuestitem);
-            }
+            hash.Add(item.CombatStyle);
+            hash.Add(item.OwnerQuest);
             hash.Add(item.PackageTemplate);
             hash.Add(item.DataInputVersion);
             hash.Add(item.Data);
@@ -3177,14 +3057,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainer VirtualMachineAdapterlinkCont)
+            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainerGetter VirtualMachineAdapterlinkCont)
             {
                 foreach (var item in VirtualMachineAdapterlinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainer> ()
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter> ()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
@@ -3205,7 +3085,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return OwnerQuestKey;
             }
             yield return obj.PackageTemplate.FormKey;
-            foreach (var item in obj.ProcedureTree.WhereCastable<IPackageBranchGetter, ILinkedFormKeyContainer> ()
+            foreach (var item in obj.ProcedureTree.WhereCastable<IPackageBranchGetter, ILinkedFormKeyContainerGetter> ()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
@@ -3416,15 +3296,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.CombatStyle) ?? true))
             {
-                item.CombatStyle = rhs.CombatStyle.FormKey;
+                item.CombatStyle = new FormLinkNullable<CombatStyle>(rhs.CombatStyle.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.OwnerQuest) ?? true))
             {
-                item.OwnerQuest = rhs.OwnerQuest.FormKey;
+                item.OwnerQuest = new FormLinkNullable<Quest>(rhs.OwnerQuest.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.PackageTemplate) ?? true))
             {
-                item.PackageTemplate = rhs.PackageTemplate.FormKey;
+                item.PackageTemplate = new FormLink<Package>(rhs.PackageTemplate.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.DataInputVersion) ?? true))
             {
@@ -4085,15 +3965,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPackageGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PackageCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PackageCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PackageCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PackageBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -4109,7 +3985,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
         public IPackageAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? PackageAdapterBinaryOverlay.PackageAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
-        public bool VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
         #endregion
         private int? _PKDTLocation;
         public Package.PKDTDataType PKDTDataTypeState { get; private set; }
@@ -4200,20 +4075,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IPackageIdlesGetter? IdleAnimations { get; private set; }
         #region CombatStyle
         private int? _CombatStyleLocation;
-        public bool CombatStyle_IsSet => _CombatStyleLocation.HasValue;
-        public IFormLinkNullable<ICombatStyleGetter> CombatStyle => _CombatStyleLocation.HasValue ? new FormLinkNullable<ICombatStyleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CombatStyleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICombatStyleGetter>.Null;
+        public FormLinkNullable<ICombatStyleGetter> CombatStyle => _CombatStyleLocation.HasValue ? new FormLinkNullable<ICombatStyleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CombatStyleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICombatStyleGetter>.Null;
         #endregion
         #region OwnerQuest
         private int? _OwnerQuestLocation;
-        public bool OwnerQuest_IsSet => _OwnerQuestLocation.HasValue;
-        public IFormLinkNullable<IQuestGetter> OwnerQuest => _OwnerQuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _OwnerQuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        public FormLinkNullable<IQuestGetter> OwnerQuest => _OwnerQuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _OwnerQuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
         #endregion
         #region PackageTemplate
         partial void PackageTemplateCustomParse(
             OverlayStream stream,
             long finalPos,
             int offset);
-        public IFormLink<IPackageGetter> PackageTemplate => GetPackageTemplateCustom();
+        public FormLink<IPackageGetter> PackageTemplate => GetPackageTemplateCustom();
         #endregion
         #region XnamMarker
         partial void XnamMarkerCustomParse(

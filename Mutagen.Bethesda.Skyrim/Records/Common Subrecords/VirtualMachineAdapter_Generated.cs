@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         AVirtualMachineAdapter,
         IVirtualMachineAdapter,
         ILoquiObjectSetter<VirtualMachineAdapter>,
-        IEquatable<VirtualMachineAdapter>,
-        IEqualsMask
+        IEquatable<VirtualMachineAdapter>
     {
         #region Ctor
         public VirtualMachineAdapter()
@@ -313,14 +312,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new VirtualMachineAdapter CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static VirtualMachineAdapter CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -347,8 +338,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IVirtualMachineAdapterGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -425,24 +414,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IVirtualMachineAdapterGetter item,
-            VirtualMachineAdapter.Mask<bool?> checkMask)
-        {
-            return ((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static VirtualMachineAdapter.Mask<bool> GetHasBeenSetMask(this IVirtualMachineAdapterGetter item)
-        {
-            var ret = new VirtualMachineAdapter.Mask<bool>(false);
-            ((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IVirtualMachineAdapterGetter item,
             IVirtualMachineAdapterGetter rhs)
@@ -512,17 +483,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IVirtualMachineAdapter item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IVirtualMachineAdapter item,
             MutagenFrame frame,
@@ -832,24 +792,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
         }
         
-        public bool HasBeenSet(
-            IVirtualMachineAdapterGetter item,
-            VirtualMachineAdapter.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IVirtualMachineAdapterGetter item,
-            VirtualMachineAdapter.Mask<bool> mask)
-        {
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static VirtualMachineAdapter_FieldIndex ConvertFieldIndex(AVirtualMachineAdapter_FieldIndex index)
         {
             switch (index)
@@ -1112,8 +1054,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IVirtualMachineAdapterGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => VirtualMachineAdapterBinaryWriteTranslation.Instance;

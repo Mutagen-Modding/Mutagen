@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ActivateParents :
         IActivateParents,
         ILoquiObjectSetter<ActivateParents>,
-        IEquatable<ActivateParents>,
-        IEqualsMask
+        IEquatable<ActivateParents>
     {
         #region Ctor
         public ActivateParents()
@@ -464,7 +463,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => ActivateParentsCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ActivateParentsCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ActivateParentsCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActivateParentsCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActivateParentsCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -484,14 +483,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static ActivateParents CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static ActivateParents CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -518,8 +509,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IActivateParentsGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -537,7 +526,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IActivateParents :
         IActivateParentsGetter,
-        ILoquiObjectSetter<IActivateParents>
+        ILoquiObjectSetter<IActivateParents>,
+        ILinkedFormKeyContainer
     {
         new ActivateParents.Flag Flags { get; set; }
         new IExtendedList<ActivateParent> Parents { get; }
@@ -546,7 +536,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IActivateParentsGetter :
         ILoquiObject,
         ILoquiObject<IActivateParentsGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -604,24 +594,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IActivateParentsGetter item,
-            ActivateParents.Mask<bool?> checkMask)
-        {
-            return ((ActivateParentsCommon)((IActivateParentsGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static ActivateParents.Mask<bool> GetHasBeenSetMask(this IActivateParentsGetter item)
-        {
-            var ret = new ActivateParents.Mask<bool>(false);
-            ((ActivateParentsCommon)((IActivateParentsGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -716,17 +688,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IActivateParents item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IActivateParents item,
             MutagenFrame frame,
@@ -1069,22 +1030,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IActivateParentsGetter item,
-            ActivateParents.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IActivateParentsGetter item,
-            ActivateParents.Mask<bool> mask)
-        {
-            mask.Flags = true;
-            var ParentsItem = item.Parents;
-            mask.Parents = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ActivateParent.Mask<bool>?>>?>(true, ParentsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, ActivateParent.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IActivateParentsGetter? lhs,
@@ -1350,12 +1295,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IActivateParentsGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((ActivateParentsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1387,15 +1333,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IActivateParentsGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => ActivateParentsCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ActivateParentsCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActivateParentsCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActivateParentsCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ActivateParentsCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ActivateParentsBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

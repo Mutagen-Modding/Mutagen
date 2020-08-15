@@ -5,7 +5,7 @@
       <RefList name="Conditions" refName="Condition" binary="Custom" />
       <String name="Filename" recordType="DNAM" />
       <String name="AnimationEvent" recordType="ENAM" />
-      <List name="RelatedIdles" recordType="ANAM" hasBeenSet="False" >
+      <List name="RelatedIdles" recordType="ANAM" nullable="False" >
         <FormLink >
           <Interface>IIdleRelation</Interface>
         </FormLink>

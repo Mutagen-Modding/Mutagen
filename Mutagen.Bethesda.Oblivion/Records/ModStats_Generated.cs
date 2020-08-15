@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class ModStats :
         IModStats,
         ILoquiObjectSetter<ModStats>,
-        IEquatable<ModStats>,
-        IEqualsMask
+        IEquatable<ModStats>
     {
         #region Ctor
         public ModStats()
@@ -44,10 +43,10 @@ namespace Mutagen.Bethesda.Oblivion
         public Single Version { get; set; } = default;
         #endregion
         #region NumRecords
-        public Int32 NumRecords { get; set; } = default;
+        public UInt32 NumRecords { get; set; } = default;
         #endregion
-        #region NextObjectID
-        public UInt32 NextObjectID { get; set; } = default;
+        #region NextFormID
+        public UInt32 NextFormID { get; set; } = default;
         #endregion
 
         #region To String
@@ -89,17 +88,17 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.Version = initialValue;
                 this.NumRecords = initialValue;
-                this.NextObjectID = initialValue;
+                this.NextFormID = initialValue;
             }
 
             public Mask(
                 TItem Version,
                 TItem NumRecords,
-                TItem NextObjectID)
+                TItem NextFormID)
             {
                 this.Version = Version;
                 this.NumRecords = NumRecords;
-                this.NextObjectID = NextObjectID;
+                this.NextFormID = NextFormID;
             }
 
             #pragma warning disable CS8618
@@ -113,7 +112,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Members
             public TItem Version;
             public TItem NumRecords;
-            public TItem NextObjectID;
+            public TItem NextFormID;
             #endregion
 
             #region Equals
@@ -128,7 +127,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (rhs == null) return false;
                 if (!object.Equals(this.Version, rhs.Version)) return false;
                 if (!object.Equals(this.NumRecords, rhs.NumRecords)) return false;
-                if (!object.Equals(this.NextObjectID, rhs.NextObjectID)) return false;
+                if (!object.Equals(this.NextFormID, rhs.NextFormID)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -136,7 +135,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var hash = new HashCode();
                 hash.Add(this.Version);
                 hash.Add(this.NumRecords);
-                hash.Add(this.NextObjectID);
+                hash.Add(this.NextFormID);
                 return hash.ToHashCode();
             }
 
@@ -147,7 +146,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!eval(this.Version)) return false;
                 if (!eval(this.NumRecords)) return false;
-                if (!eval(this.NextObjectID)) return false;
+                if (!eval(this.NextFormID)) return false;
                 return true;
             }
             #endregion
@@ -157,7 +156,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (eval(this.Version)) return true;
                 if (eval(this.NumRecords)) return true;
-                if (eval(this.NextObjectID)) return true;
+                if (eval(this.NextFormID)) return true;
                 return false;
             }
             #endregion
@@ -174,7 +173,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 obj.Version = eval(this.Version);
                 obj.NumRecords = eval(this.NumRecords);
-                obj.NextObjectID = eval(this.NextObjectID);
+                obj.NextFormID = eval(this.NextFormID);
             }
             #endregion
 
@@ -205,9 +204,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         fg.AppendItem(NumRecords, "NumRecords");
                     }
-                    if (printMask?.NextObjectID ?? true)
+                    if (printMask?.NextFormID ?? true)
                     {
-                        fg.AppendItem(NextObjectID, "NextObjectID");
+                        fg.AppendItem(NextFormID, "NextFormID");
                     }
                 }
                 fg.AppendLine("]");
@@ -236,7 +235,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public Exception? Version;
             public Exception? NumRecords;
-            public Exception? NextObjectID;
+            public Exception? NextFormID;
             #endregion
 
             #region IErrorMask
@@ -249,8 +248,8 @@ namespace Mutagen.Bethesda.Oblivion
                         return Version;
                     case ModStats_FieldIndex.NumRecords:
                         return NumRecords;
-                    case ModStats_FieldIndex.NextObjectID:
-                        return NextObjectID;
+                    case ModStats_FieldIndex.NextFormID:
+                        return NextFormID;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -267,8 +266,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case ModStats_FieldIndex.NumRecords:
                         this.NumRecords = ex;
                         break;
-                    case ModStats_FieldIndex.NextObjectID:
-                        this.NextObjectID = ex;
+                    case ModStats_FieldIndex.NextFormID:
+                        this.NextFormID = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -286,8 +285,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case ModStats_FieldIndex.NumRecords:
                         this.NumRecords = (Exception?)obj;
                         break;
-                    case ModStats_FieldIndex.NextObjectID:
-                        this.NextObjectID = (Exception?)obj;
+                    case ModStats_FieldIndex.NextFormID:
+                        this.NextFormID = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -299,7 +298,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (Overall != null) return true;
                 if (Version != null) return true;
                 if (NumRecords != null) return true;
-                if (NextObjectID != null) return true;
+                if (NextFormID != null) return true;
                 return false;
             }
             #endregion
@@ -336,7 +335,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 fg.AppendItem(Version, "Version");
                 fg.AppendItem(NumRecords, "NumRecords");
-                fg.AppendItem(NextObjectID, "NextObjectID");
+                fg.AppendItem(NextFormID, "NextFormID");
             }
             #endregion
 
@@ -347,7 +346,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var ret = new ErrorMask();
                 ret.Version = this.Version.Combine(rhs.Version);
                 ret.NumRecords = this.NumRecords.Combine(rhs.NumRecords);
-                ret.NextObjectID = this.NextObjectID.Combine(rhs.NextObjectID);
+                ret.NextFormID = this.NextFormID.Combine(rhs.NextFormID);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -371,7 +370,7 @@ namespace Mutagen.Bethesda.Oblivion
             private TranslationCrystal? _crystal;
             public bool Version;
             public bool NumRecords;
-            public bool NextObjectID;
+            public bool NextFormID;
             #endregion
 
             #region Ctors
@@ -379,7 +378,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.Version = defaultOn;
                 this.NumRecords = defaultOn;
-                this.NextObjectID = defaultOn;
+                this.NextFormID = defaultOn;
             }
 
             #endregion
@@ -397,7 +396,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret.Add((Version, null));
                 ret.Add((NumRecords, null));
-                ret.Add((NextObjectID, null));
+                ret.Add((NextFormID, null));
             }
         }
         #endregion
@@ -421,14 +420,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static ModStats CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static ModStats CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -455,8 +446,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IModStatsGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -477,8 +466,8 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IModStats>
     {
         new Single Version { get; set; }
-        new Int32 NumRecords { get; set; }
-        new UInt32 NextObjectID { get; set; }
+        new UInt32 NumRecords { get; set; }
+        new UInt32 NextFormID { get; set; }
     }
 
     public partial interface IModStatsGetter :
@@ -494,8 +483,8 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => ModStats_Registration.Instance;
         Single Version { get; }
-        Int32 NumRecords { get; }
-        UInt32 NextObjectID { get; }
+        UInt32 NumRecords { get; }
+        UInt32 NextFormID { get; }
 
     }
 
@@ -542,24 +531,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IModStatsGetter item,
-            ModStats.Mask<bool?> checkMask)
-        {
-            return ((ModStatsCommon)((IModStatsGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static ModStats.Mask<bool> GetHasBeenSetMask(this IModStatsGetter item)
-        {
-            var ret = new ModStats.Mask<bool>(false);
-            ((ModStatsCommon)((IModStatsGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -654,17 +625,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IModStats item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IModStats item,
             MutagenFrame frame,
@@ -690,7 +650,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         Version = 0,
         NumRecords = 1,
-        NextObjectID = 2,
+        NextFormID = 2,
     }
     #endregion
 
@@ -744,8 +704,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)ModStats_FieldIndex.Version;
                 case "NUMRECORDS":
                     return (ushort)ModStats_FieldIndex.NumRecords;
-                case "NEXTOBJECTID":
-                    return (ushort)ModStats_FieldIndex.NextObjectID;
+                case "NEXTFORMID":
+                    return (ushort)ModStats_FieldIndex.NextFormID;
                 default:
                     return null;
             }
@@ -758,7 +718,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case ModStats_FieldIndex.Version:
                 case ModStats_FieldIndex.NumRecords:
-                case ModStats_FieldIndex.NextObjectID:
+                case ModStats_FieldIndex.NextFormID:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -772,7 +732,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case ModStats_FieldIndex.Version:
                 case ModStats_FieldIndex.NumRecords:
-                case ModStats_FieldIndex.NextObjectID:
+                case ModStats_FieldIndex.NextFormID:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -786,7 +746,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case ModStats_FieldIndex.Version:
                 case ModStats_FieldIndex.NumRecords:
-                case ModStats_FieldIndex.NextObjectID:
+                case ModStats_FieldIndex.NextFormID:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -802,8 +762,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Version";
                 case ModStats_FieldIndex.NumRecords:
                     return "NumRecords";
-                case ModStats_FieldIndex.NextObjectID:
-                    return "NextObjectID";
+                case ModStats_FieldIndex.NextFormID:
+                    return "NextFormID";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -816,7 +776,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case ModStats_FieldIndex.Version:
                 case ModStats_FieldIndex.NumRecords:
-                case ModStats_FieldIndex.NextObjectID:
+                case ModStats_FieldIndex.NextFormID:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -830,7 +790,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case ModStats_FieldIndex.Version:
                 case ModStats_FieldIndex.NumRecords:
-                case ModStats_FieldIndex.NextObjectID:
+                case ModStats_FieldIndex.NextFormID:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -845,8 +805,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ModStats_FieldIndex.Version:
                     return typeof(Single);
                 case ModStats_FieldIndex.NumRecords:
-                    return typeof(Int32);
-                case ModStats_FieldIndex.NextObjectID:
+                    return typeof(UInt32);
+                case ModStats_FieldIndex.NextFormID:
                     return typeof(UInt32);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -898,7 +858,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.Version = default;
             item.NumRecords = default;
-            item.NextObjectID = default;
+            item.NextFormID = default;
         }
         
         #region Binary Translation
@@ -947,7 +907,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.Version = item.Version.EqualsWithin(rhs.Version);
             ret.NumRecords = item.NumRecords == rhs.NumRecords;
-            ret.NextObjectID = item.NextObjectID == rhs.NextObjectID;
+            ret.NextFormID = item.NextFormID == rhs.NextFormID;
         }
         
         public string ToString(
@@ -1002,26 +962,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(item.NumRecords, "NumRecords");
             }
-            if (printMask?.NextObjectID ?? true)
+            if (printMask?.NextFormID ?? true)
             {
-                fg.AppendItem(item.NextObjectID, "NextObjectID");
+                fg.AppendItem(item.NextFormID, "NextFormID");
             }
-        }
-        
-        public bool HasBeenSet(
-            IModStatsGetter item,
-            ModStats.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IModStatsGetter item,
-            ModStats.Mask<bool> mask)
-        {
-            mask.Version = true;
-            mask.NumRecords = true;
-            mask.NextObjectID = true;
         }
         
         #region Equals and Hash
@@ -1033,7 +977,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null || rhs == null) return false;
             if (!lhs.Version.EqualsWithin(rhs.Version)) return false;
             if (lhs.NumRecords != rhs.NumRecords) return false;
-            if (lhs.NextObjectID != rhs.NextObjectID) return false;
+            if (lhs.NextFormID != rhs.NextFormID) return false;
             return true;
         }
         
@@ -1042,7 +986,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var hash = new HashCode();
             hash.Add(item.Version);
             hash.Add(item.NumRecords);
-            hash.Add(item.NextObjectID);
+            hash.Add(item.NextFormID);
             return hash.ToHashCode();
         }
         
@@ -1083,9 +1027,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.NumRecords = rhs.NumRecords;
             }
-            if ((copyMask?.GetShouldTranslate((int)ModStats_FieldIndex.NextObjectID) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ModStats_FieldIndex.NextFormID) ?? true))
             {
-                item.NextObjectID = rhs.NextObjectID;
+                item.NextFormID = rhs.NextFormID;
             }
         }
         
@@ -1178,7 +1122,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.Version);
             writer.Write(item.NumRecords);
-            writer.Write(item.NextObjectID);
+            writer.Write(item.NextFormID);
         }
 
         public void Write(
@@ -1219,8 +1163,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame)
         {
             item.Version = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.NumRecords = frame.ReadInt32();
-            item.NextObjectID = frame.ReadUInt32();
+            item.NumRecords = frame.ReadUInt32();
+            item.NextFormID = frame.ReadUInt32();
         }
 
     }
@@ -1233,12 +1177,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this IModStatsGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((ModStatsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1270,8 +1215,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IModStatsGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ModStatsBinaryWriteTranslation.Instance;
@@ -1288,8 +1231,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public Single Version => _data.Slice(0x0, 0x4).Float();
-        public Int32 NumRecords => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
-        public UInt32 NextObjectID => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x8, 0x4));
+        public UInt32 NumRecords => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x4, 0x4));
+        public UInt32 NextFormID => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

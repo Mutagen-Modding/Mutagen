@@ -17,7 +17,7 @@
   </Object>
   <Object name="SceneAdapter" baseClass="AVirtualMachineAdapter" recordType="VMAD" objType="Subrecord" GUID="a0b825f4-0bce-4fbd-8655-db9ba9e77e0e" ID="465">
     <Fields>
-      <RefDirect name="ScriptFragments" refName="SceneScriptFragments" binary="Custom" hasBeenSet="True" />
+      <RefDirect name="ScriptFragments" refName="SceneScriptFragments" binary="Custom" nullable="True" />
     </Fields>
   </Object>
   <Object name="SceneScriptFragments" baseClass="ScriptFragments" objType="Subrecord" GUID="17cf35cc-e0fd-4a46-ae82-c3f779d2fdcd" ID="466">
@@ -36,7 +36,7 @@
   </Object>
   <Object name="ScenePhase" objType="Subrecord" GUID="0520e1b4-d605-4812-8177-c80e8d49733d" ID="468" >
     <Fields>
-      <Marker name="StartMarker" recordType="HNAM" hasBeenSet="False" />
+      <Marker name="StartMarker" recordType="HNAM" nullable="False" />
       <String name="Name" recordType="NAM0" />
       <RefList name="StartConditions" refName="Condition" binary="Custom" />
       <RefList name="CompletionConditions" refName="Condition" binary="Custom" markerType="NEXT" />
@@ -57,14 +57,14 @@
   </Object>
   <Object name="SceneActor" objType="Subrecord" GUID="5663098c-807a-46e0-ae5d-d4b95dba4ba8" ID="470">
     <Fields>
-      <UInt32 name="ID" recordType="ALID" hasBeenSet="False" />
+      <UInt32 name="ID" recordType="ALID" nullable="False" />
       <Enum name="Flags" enumName="SceneActor.Flag" recordType="LNAM" byteLength="4" />
       <Enum name="BehaviorFlags" enumName="SceneActor.BehaviorFlag" recordType="DNAM" byteLength="4" />
     </Fields>
   </Object>
   <Object name="SceneAction" objType="Subrecord" GUID="3f2b0ff3-2e6d-4fce-958e-40dffd9c696d" ID="471">
     <Fields>
-      <Enum name="Type" enumName="SceneAction.TypeEnum" byteLength="2" recordType="ANAM" hasBeenSet="False" />
+      <Enum name="Type" enumName="SceneAction.TypeEnum" byteLength="2" recordType="ANAM" nullable="False" />
       <String name="Name" recordType="NAM0" />
       <Int32 name="ActorID" recordType="ALID" />
       <ByteArray name="LNAM" recordType="LNAM" />

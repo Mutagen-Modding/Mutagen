@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public enum ActorValueExtended
+    public enum ActorValue
     {
         None = -1,
         Aggression = 0,

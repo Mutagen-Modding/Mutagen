@@ -50,7 +50,7 @@ namespace Mutagen.Bethesda.Generation
             ArrayType arr = typeGen as ArrayType;
             if (arr.FixedSize.HasValue)
             {
-                if (arr.HasBeenSet)
+                if (arr.Nullable)
                 {
                     throw new NotImplementedException();
                 }

@@ -1,6 +1,8 @@
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Mutagen.Bethesda
@@ -12,19 +14,22 @@ namespace Mutagen.Bethesda
     {
         public static BinaryWriteParameters Default = new BinaryWriteParameters();
 
+        #region Mod Key Sync
         /// <summary>
         /// Flag to specify what logic to use to keep a mod's ModKey in sync with its path
         /// </summary>
-        public enum ModKeySyncOption
+        public enum ModKeyOption
         {
             /// <summary>
             /// Do no check
             /// </summary>
             NoCheck,
+
             /// <summary>
             /// If a mod's master flag does not match the path being exported to, throw
             /// </summary>
             ThrowIfMisaligned,
+
             /// <summary>
             /// If a mod's master flag does not match the path being exported to, modify it to match the path
             /// </summary>
@@ -32,29 +37,223 @@ namespace Mutagen.Bethesda
         }
 
         /// <summary>
-        /// Flag to specify what logic to use to keep a mod's master list in sync
+        /// Flag to specify what logic to use to keep a mod's ModKey in sync with its path
         /// </summary>
-        public enum MastersListSyncOption
+        public ModKeyOption ModKey = ModKeyOption.ThrowIfMisaligned;
+        #endregion
+
+        #region Masters List Sync
+        /// <summary>
+        /// Flag to specify what logic to use to keep a mod's master list keys in sync<br/>
+        /// This setting is just used to sync the contents of the list, not the order
+        /// </summary>
+        public enum MastersListContentOption
+        {
+            /// <summary>
+            /// Do no check
+            /// </summary>
+            NoCheck,
+
+            /// <summary>
+            /// Iterate source mod
+            /// </summary>
+            Iterate,
+        }
+
+        /// <summary>
+        /// Logic to use to keep a mod's master list content in sync<br/>
+        /// This setting is just used to sync the contents of the list, not the order
+        /// </summary>
+        public MastersListContentOption MastersListContent = MastersListContentOption.Iterate;
+        #endregion
+
+        #region Record Count Sync
+        /// <summary>
+        /// Flag to specify what logic to use to keep a mod's record count in sync
+        /// </summary>
+        public enum RecordCountOption
+        {
+            /// <summary>
+            /// Do no check
+            /// </summary>
+            NoCheck,
+
+            /// <summary>
+            /// Iterate source mod
+            /// </summary>
+            Iterate,
+        }
+
+        /// <summary>
+        /// Logic to use to keep a mod's record count in sync
+        /// </summary>
+        public RecordCountOption RecordCount = RecordCountOption.Iterate;
+        #endregion
+
+        #region Masters List Ordering
+        /// <summary>
+        /// Flag to specify what logic to use to keep a mod's master list keys in order<br/>
+        /// This setting is just used to sync the order of the list, not the content
+        /// </summary>
+        public enum MastersListOrderingOption
+        {
+            /// <summary>
+            /// Do no check
+            /// </summary>
+            NoCheck,
+
+            /// <summary>
+            /// Simply confirms masters come before other mod types
+            /// </summary>
+            MastersFirst,
+        }
+
+        /// <summary>
+        /// Logic to use to keep a mod's master list ordering in sync<br/>
+        /// This setting is just used to sync the order of the list, not the content
+        /// </summary>
+        public AMastersListOrderingOption MastersListOrdering { get; set; } = new MastersListOrderingEnumOption();
+
+        /// <summary>
+        /// An abstract class representing a logic choice for ordering masters
+        /// </summary>
+        public abstract class AMastersListOrderingOption
+        {
+            public static implicit operator AMastersListOrderingOption(MastersListOrderingOption option)
+            {
+                return new MastersListOrderingEnumOption()
+                {
+                    Option = option
+                };
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public class MastersListOrderingByLoadOrder : AMastersListOrderingOption
+        {
+            private readonly List<ModKey> _modKeys;
+
+            public IReadOnlyList<ModKey> LoadOrder => _modKeys;
+
+            /// <summary>
+            /// Whether to throw an exception if an unknown mod during export that is not on the given load order
+            /// </summary>
+            public bool Strict { get; set; }
+
+            public MastersListOrderingByLoadOrder(IEnumerable<ModKey> modKeys)
+            {
+                _modKeys = modKeys.ToList();
+            }
+        }
+
+        public class MastersListOrderingEnumOption : AMastersListOrderingOption
+        {
+            public MastersListOrderingOption Option { get; set; } = MastersListOrderingOption.MastersFirst;
+        }
+        #endregion
+
+        #region Next Form ID
+        /// <summary>
+        /// Flag to specify what logic to use to keep a mod header's next formID field in sync
+        /// </summary>
+        public enum NextFormIDOption
+        {
+            /// <summary>
+            /// Do no check
+            /// </summary>
+            NoCheck,
+
+            /// <summary>
+            /// Iterate source mod
+            /// </summary>
+            Iterate,
+        }
+
+        /// <summary>
+        /// Logic to use to keep a mod header's next formID field in sync
+        /// </summary>
+        public NextFormIDOption NextFormID { get; set; } = NextFormIDOption.Iterate;
+        #endregion
+
+        #region Form ID Uniqueness
+        /// <summary>
+        /// Flag to specify what logic to use to ensure a mod's formIDs are unique
+        /// </summary>
+        public enum FormIDUniquenessOption
+        {
+            /// <summary>
+            /// Do no check
+            /// </summary>
+            NoCheck,
+
+            /// <summary>
+            /// Iterate source mod
+            /// </summary>
+            Iterate,
+        }
+
+        /// <summary>
+        /// Logic to use to ensure a mod's formIDs are unique.<br/>
+        /// If there is a collision, an ArgumentException will be thrown.
+        /// </summary>
+        public FormIDUniquenessOption FormIDUniqueness { get; set; } = FormIDUniquenessOption.Iterate;
+        #endregion
+
+        #region Master Flag
+        /// <summary>
+        /// Flag to specify what logic to use to ensure a mod's master flag matches the specified ModKey
+        /// </summary>
+        public enum MasterFlagOption
+        {
+            /// <summary>
+            /// Do no check
+            /// </summary>
+            NoCheck,
+
+            /// <summary>
+            /// Changes master flags to match the ModKey type<br/>
+            /// The master flag will be modified to be on if ModKey.Type is Master.<br/>
+            /// The light master flag will be modified unless ModKey.Type is Plugin, in which case the flag will be left alone.<br/>
+            /// </summary>
+            ChangeToMatchModKey,
+
+            /// <summary>
+            /// Changes master flags to match the ModKey type<br/>
+            /// The master flag will be modified to be on if ModKey.Type is Master.<br/>
+            /// The light master flag will be modified unless ModKey.Type is Plugin, in which case the flag will be left alone.<br/>
+            /// </summary>
+            ExceptionOnMismatch,
+        }
+
+        /// <summary>
+        /// Logic to use to ensure a mod's master flag matches the specified ModKey
+        /// </summary>
+        public MasterFlagOption MasterFlag { get; set; } = MasterFlagOption.ChangeToMatchModKey;
+        #endregion
+
+        #region ESL FormID Limit
+        /// <summary>
+        /// Flag to specify what logic to use to ensure a light master mod does not go over its FormID count
+        /// </summary>
+        public enum LightMasterLimitOption
         {
             /// <summary>
             /// Do no check
             /// </summary>
             NoCheck,
             /// <summary>
-            /// Iterate source mod before writing to compile the list of masters to use.
+            /// Will throw an exception if a light master 
             /// </summary>
-            Iterate,
+            ExceptionOnOverflow,
         }
 
         /// <summary>
-        /// Flag to specify what logic to use to keep a mod's ModKey in sync with its path
+        /// Logic to use to ensure a light master mod does not go over its FormID count
         /// </summary>
-        public ModKeySyncOption ModKeySync = ModKeySyncOption.ThrowIfMisaligned;
-
-        /// <summary>
-        /// Logic to use to keep a mod's master list in sync
-        /// </summary>
-        public MastersListSyncOption MastersListSync = MastersListSyncOption.Iterate;
+        public LightMasterLimitOption LightMasterLimit { get; set; } = LightMasterLimitOption.ExceptionOnOverflow;
+        #endregion
 
         /// <summary>
         /// Optional StringsWriter override, for mods that are able to localize.
@@ -73,20 +272,20 @@ namespace Mutagen.Bethesda
         /// <exception cref="ArgumentException">If misaligned and set to ThrowIfMisaligned</exception>
         public ModKey RunMasterMatch(IModGetter mod, string path)
         {
-            if (ModKeySync == ModKeySyncOption.NoCheck) return mod.ModKey;
-            if (!ModKey.TryFactory(Path.GetFileName(path), out var pathModKey))
+            if (ModKey == ModKeyOption.NoCheck) return mod.ModKey;
+            if (!Bethesda.ModKey.TryFactory(Path.GetFileName(path), out var pathModKey))
             {
                 throw new ArgumentException($"Could not convert path to a ModKey to compare against: {Path.GetFileName(path)}");
             }
-            switch (ModKeySync)
+            switch (ModKey)
             {
-                case ModKeySyncOption.ThrowIfMisaligned:
+                case ModKeyOption.ThrowIfMisaligned:
                     if (mod.ModKey != pathModKey)
                     {
                         throw new ArgumentException($"ModKeys were misaligned: {mod.ModKey} != {pathModKey}");
                     }
                     return mod.ModKey;
-                case ModKeySyncOption.CorrectToPath:
+                case ModKeyOption.CorrectToPath:
                     return pathModKey;
                 default:
                     throw new NotImplementedException();

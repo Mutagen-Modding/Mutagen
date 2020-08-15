@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         ANavigationMeshData,
         IWorldspaceNavigationMeshData,
         ILoquiObjectSetter<WorldspaceNavigationMeshData>,
-        IEquatable<WorldspaceNavigationMeshData>,
-        IEqualsMask
+        IEquatable<WorldspaceNavigationMeshData>
     {
         #region Ctor
         public WorldspaceNavigationMeshData()
@@ -45,7 +44,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Parent
         public FormLink<Worldspace> Parent { get; set; } = new FormLink<Worldspace>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IWorldspaceGetter> IWorldspaceNavigationMeshDataGetter.Parent => this.Parent;
+        FormLink<IWorldspaceGetter> IWorldspaceNavigationMeshDataGetter.Parent => this.Parent.ToGetter<Worldspace, IWorldspaceGetter>();
         #endregion
         #region Coordinates
         public P2Int16 Coordinates { get; set; } = default;
@@ -395,7 +394,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => WorldspaceNavigationMeshDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => WorldspaceNavigationMeshDataCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => WorldspaceNavigationMeshDataCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceNavigationMeshDataCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceNavigationMeshDataCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -413,14 +412,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new WorldspaceNavigationMeshData CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static WorldspaceNavigationMeshData CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -447,8 +438,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWorldspaceNavigationMeshDataGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -467,7 +456,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWorldspaceNavigationMeshData :
         IWorldspaceNavigationMeshDataGetter,
         IANavigationMeshData,
-        ILoquiObjectSetter<IWorldspaceNavigationMeshData>
+        ILoquiObjectSetter<IWorldspaceNavigationMeshData>,
+        ILinkedFormKeyContainer
     {
         new FormLink<Worldspace> Parent { get; set; }
         new P2Int16 Coordinates { get; set; }
@@ -476,11 +466,11 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWorldspaceNavigationMeshDataGetter :
         IANavigationMeshDataGetter,
         ILoquiObject<IWorldspaceNavigationMeshDataGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => WorldspaceNavigationMeshData_Registration.Instance;
-        IFormLink<IWorldspaceGetter> Parent { get; }
+        FormLink<IWorldspaceGetter> Parent { get; }
         P2Int16 Coordinates { get; }
 
     }
@@ -528,24 +518,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IWorldspaceNavigationMeshDataGetter item,
-            WorldspaceNavigationMeshData.Mask<bool?> checkMask)
-        {
-            return ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static WorldspaceNavigationMeshData.Mask<bool> GetHasBeenSetMask(this IWorldspaceNavigationMeshDataGetter item)
-        {
-            var ret = new WorldspaceNavigationMeshData.Mask<bool>(false);
-            ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -617,17 +589,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IWorldspaceNavigationMeshData item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IWorldspaceNavigationMeshData item,
             MutagenFrame frame,
@@ -975,32 +936,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.Parent ?? true)
             {
-                fg.AppendItem(item.Parent, "Parent");
+                fg.AppendItem(item.Parent.FormKey, "Parent");
             }
             if (printMask?.Coordinates ?? true)
             {
                 fg.AppendItem(item.Coordinates, "Coordinates");
             }
-        }
-        
-        public bool HasBeenSet(
-            IWorldspaceNavigationMeshDataGetter item,
-            WorldspaceNavigationMeshData.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IWorldspaceNavigationMeshDataGetter item,
-            WorldspaceNavigationMeshData.Mask<bool> mask)
-        {
-            mask.Parent = true;
-            mask.Coordinates = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static WorldspaceNavigationMeshData_FieldIndex ConvertFieldIndex(ANavigationMeshData_FieldIndex index)
@@ -1113,7 +1054,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)WorldspaceNavigationMeshData_FieldIndex.Parent) ?? true))
             {
-                item.Parent = rhs.Parent.FormKey;
+                item.Parent = new FormLink<Worldspace>(rhs.Parent.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)WorldspaceNavigationMeshData_FieldIndex.Coordinates) ?? true))
             {
@@ -1299,15 +1240,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWorldspaceNavigationMeshDataGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => WorldspaceNavigationMeshDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => WorldspaceNavigationMeshDataCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceNavigationMeshDataCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceNavigationMeshDataCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => WorldspaceNavigationMeshDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => WorldspaceNavigationMeshDataBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

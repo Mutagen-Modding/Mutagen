@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ModHeader" recordType="TES4" objType="Record" GUID="5c10abbb-9600-4bd1-ba4c-8a244a69f0be" ID="63">
+  <Object name="SkyrimModHeader" recordType="TES4" objType="Record" GUID="5c10abbb-9600-4bd1-ba4c-8a244a69f0be" ID="63">
     <Fields>
-      <Enum name="Flags" enumName="ModHeader.HeaderFlag" byteLength="4" />
+      <Enum name="Flags" enumName="SkyrimModHeader.HeaderFlag" byteLength="4" />
       <UInt32 name="FormID" />
       <Int32 name="Version" />
       <UInt16 name="FormVersion" />
       <UInt16 name="Version2" />
-      <RefDirect name="Stats" refName="ModStats" hasBeenSet="False" />
+      <RefDirect name="Stats" refName="ModStats" nullable="False" />
       <ByteArray name="TypeOffsets" recordType="OFST" />
       <ByteArray name="Deleted" recordType="DELE" />
       <String name="Author" recordType="CNAM" maxLength="512" />
       <String name="Description" recordType="SNAM" maxLength="512" />
-      <RefList name="MasterReferences" refName="Bethesda.MasterReference" hasBeenSet="False" binary="Custom" binaryOverlay="Normal" />
+      <RefList name="MasterReferences" refName="Bethesda.MasterReference" nullable="False" binary="Custom" binaryOverlay="Normal" />
       <List name="OverriddenForms" recordType="ONAM">
         <FormLink refName="SkyrimMajorRecord" />
       </List>
@@ -23,8 +23,8 @@
   <Object name="ModStats" recordType="HEDR" objType="Subrecord" GUID="14fe521a-e32e-433c-9915-71a5f7ca5c5b" ID="64">
     <Fields>
       <Float name="Version" />
-      <Int32 name="NumRecords" />
-      <UInt32 name="NextObjectID" />
+      <UInt32 name="NumRecords" />
+      <UInt32 name="NextFormID" />
     </Fields>
   </Object>
 </Loqui>

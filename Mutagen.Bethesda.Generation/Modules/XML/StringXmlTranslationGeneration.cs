@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Generation
 
         protected override string ItemWriteAccess(TypeGeneration typeGen, Accessor itemAccessor)
         {
-            return itemAccessor.DirectAccess;
+            return itemAccessor.Access;
         }
     }
 }

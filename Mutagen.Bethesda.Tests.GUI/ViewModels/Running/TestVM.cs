@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.Tests.GUI
             {
                 Passthrough.SelectedTest = this;
             });
-            _IsSelected = passthrough.WhenAny(x => x.SelectedTest)
+            _IsSelected = passthrough.WhenAnyValue(x => x.SelectedTest)
                 .Select(x => x == this)
                 .ToGuiProperty(this, nameof(IsSelected));
         }

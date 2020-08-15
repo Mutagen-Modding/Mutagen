@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 namespace Mutagen.Bethesda
@@ -9,7 +10,9 @@ namespace Mutagen.Bethesda
     /// </summary>
     public enum GameCategory
     {
+        [Description("Oblivion")]
         Oblivion,
+        [Description("Skyrim")]
         Skyrim,
     }
 }

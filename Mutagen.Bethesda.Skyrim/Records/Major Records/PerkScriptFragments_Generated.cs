@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class PerkScriptFragments :
         IPerkScriptFragments,
         ILoquiObjectSetter<PerkScriptFragments>,
-        IEquatable<PerkScriptFragments>,
-        IEqualsMask
+        IEquatable<PerkScriptFragments>
     {
         #region Ctor
         public PerkScriptFragments()
@@ -505,14 +504,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static PerkScriptFragments CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static PerkScriptFragments CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -539,8 +530,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPerkScriptFragmentsGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -626,24 +615,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IPerkScriptFragmentsGetter item,
-            PerkScriptFragments.Mask<bool?> checkMask)
-        {
-            return ((PerkScriptFragmentsCommon)((IPerkScriptFragmentsGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static PerkScriptFragments.Mask<bool> GetHasBeenSetMask(this IPerkScriptFragmentsGetter item)
-        {
-            var ret = new PerkScriptFragments.Mask<bool>(false);
-            ((PerkScriptFragmentsCommon)((IPerkScriptFragmentsGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -738,17 +709,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IPerkScriptFragments item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IPerkScriptFragments item,
             MutagenFrame frame,
@@ -1107,23 +1067,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IPerkScriptFragmentsGetter item,
-            PerkScriptFragments.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IPerkScriptFragmentsGetter item,
-            PerkScriptFragments.Mask<bool> mask)
-        {
-            mask.Unknown = true;
-            mask.FileName = true;
-            var FragmentsItem = item.Fragments;
-            mask.Fragments = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, IndexedScriptFragment.Mask<bool>?>>?>(true, FragmentsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, IndexedScriptFragment.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IPerkScriptFragmentsGetter? lhs,
@@ -1365,12 +1308,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IPerkScriptFragmentsGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((PerkScriptFragmentsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1402,8 +1346,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPerkScriptFragmentsGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PerkScriptFragmentsBinaryWriteTranslation.Instance;

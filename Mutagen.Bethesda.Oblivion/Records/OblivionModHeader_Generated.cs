@@ -28,14 +28,13 @@ using System.Buffers.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class ModHeader :
-        IModHeader,
-        ILoquiObjectSetter<ModHeader>,
-        IEquatable<ModHeader>,
-        IEqualsMask
+    public partial class OblivionModHeader :
+        IOblivionModHeader,
+        ILoquiObjectSetter<OblivionModHeader>,
+        IEquatable<OblivionModHeader>
     {
         #region Ctor
-        public ModHeader()
+        public OblivionModHeader()
         {
             CustomCtor();
         }
@@ -43,7 +42,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Flags
-        public ModHeader.HeaderFlag Flags { get; set; } = default;
+        public OblivionModHeader.HeaderFlag Flags { get; set; } = default;
         #endregion
         #region FormID
         public UInt32 FormID { get; set; } = default;
@@ -54,7 +53,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Stats
         public ModStats Stats { get; set; } = new ModStats();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IModStatsGetter IModHeaderGetter.Stats => Stats;
+        IModStatsGetter IOblivionModHeaderGetter.Stats => Stats;
         #endregion
         #region TypeOffsets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -65,7 +64,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._TypeOffsets = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IModHeaderGetter.TypeOffsets => this.TypeOffsets;
+        ReadOnlyMemorySlice<Byte>? IOblivionModHeaderGetter.TypeOffsets => this.TypeOffsets;
         #endregion
         #region Deleted
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -76,17 +75,17 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._Deleted = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IModHeaderGetter.Deleted => this.Deleted;
+        ReadOnlyMemorySlice<Byte>? IOblivionModHeaderGetter.Deleted => this.Deleted;
         #endregion
         #region Author
         public String? Author { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IModHeaderGetter.Author => this.Author;
+        String? IOblivionModHeaderGetter.Author => this.Author;
         #endregion
         #region Description
         public String? Description { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IModHeaderGetter.Description => this.Description;
+        String? IOblivionModHeaderGetter.Description => this.Description;
         #endregion
         #region MasterReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -98,7 +97,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IMasterReferenceGetter> IModHeaderGetter.MasterReferences => _MasterReferences;
+        IReadOnlyList<IMasterReferenceGetter> IOblivionModHeaderGetter.MasterReferences => _MasterReferences;
         #endregion
 
         #endregion
@@ -109,7 +108,7 @@ namespace Mutagen.Bethesda.Oblivion
             FileGeneration fg,
             string? name = null)
         {
-            ModHeaderMixIn.ToString(
+            OblivionModHeaderMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -119,16 +118,16 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IModHeaderGetter rhs)) return false;
-            return ((ModHeaderCommon)((IModHeaderGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is IOblivionModHeaderGetter rhs)) return false;
+            return ((OblivionModHeaderCommon)((IOblivionModHeaderGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ModHeader? obj)
+        public bool Equals(OblivionModHeader? obj)
         {
-            return ((ModHeaderCommon)((IModHeaderGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((OblivionModHeaderCommon)((IOblivionModHeaderGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ModHeaderCommon)((IModHeaderGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((OblivionModHeaderCommon)((IOblivionModHeaderGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -296,7 +295,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new ModHeader.Mask<R>();
+                var ret = new OblivionModHeader.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -335,16 +334,16 @@ namespace Mutagen.Bethesda.Oblivion
                 return ToString(printMask: null);
             }
 
-            public string ToString(ModHeader.Mask<bool>? printMask = null)
+            public string ToString(OblivionModHeader.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, ModHeader.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, OblivionModHeader.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(ModHeader.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(OblivionModHeader.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -442,26 +441,26 @@ namespace Mutagen.Bethesda.Oblivion
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
+                OblivionModHeader_FieldIndex enu = (OblivionModHeader_FieldIndex)index;
                 switch (enu)
                 {
-                    case ModHeader_FieldIndex.Flags:
+                    case OblivionModHeader_FieldIndex.Flags:
                         return Flags;
-                    case ModHeader_FieldIndex.FormID:
+                    case OblivionModHeader_FieldIndex.FormID:
                         return FormID;
-                    case ModHeader_FieldIndex.Version:
+                    case OblivionModHeader_FieldIndex.Version:
                         return Version;
-                    case ModHeader_FieldIndex.Stats:
+                    case OblivionModHeader_FieldIndex.Stats:
                         return Stats;
-                    case ModHeader_FieldIndex.TypeOffsets:
+                    case OblivionModHeader_FieldIndex.TypeOffsets:
                         return TypeOffsets;
-                    case ModHeader_FieldIndex.Deleted:
+                    case OblivionModHeader_FieldIndex.Deleted:
                         return Deleted;
-                    case ModHeader_FieldIndex.Author:
+                    case OblivionModHeader_FieldIndex.Author:
                         return Author;
-                    case ModHeader_FieldIndex.Description:
+                    case OblivionModHeader_FieldIndex.Description:
                         return Description;
-                    case ModHeader_FieldIndex.MasterReferences:
+                    case OblivionModHeader_FieldIndex.MasterReferences:
                         return MasterReferences;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -470,34 +469,34 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void SetNthException(int index, Exception ex)
             {
-                ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
+                OblivionModHeader_FieldIndex enu = (OblivionModHeader_FieldIndex)index;
                 switch (enu)
                 {
-                    case ModHeader_FieldIndex.Flags:
+                    case OblivionModHeader_FieldIndex.Flags:
                         this.Flags = ex;
                         break;
-                    case ModHeader_FieldIndex.FormID:
+                    case OblivionModHeader_FieldIndex.FormID:
                         this.FormID = ex;
                         break;
-                    case ModHeader_FieldIndex.Version:
+                    case OblivionModHeader_FieldIndex.Version:
                         this.Version = ex;
                         break;
-                    case ModHeader_FieldIndex.Stats:
+                    case OblivionModHeader_FieldIndex.Stats:
                         this.Stats = new MaskItem<Exception?, ModStats.ErrorMask?>(ex, null);
                         break;
-                    case ModHeader_FieldIndex.TypeOffsets:
+                    case OblivionModHeader_FieldIndex.TypeOffsets:
                         this.TypeOffsets = ex;
                         break;
-                    case ModHeader_FieldIndex.Deleted:
+                    case OblivionModHeader_FieldIndex.Deleted:
                         this.Deleted = ex;
                         break;
-                    case ModHeader_FieldIndex.Author:
+                    case OblivionModHeader_FieldIndex.Author:
                         this.Author = ex;
                         break;
-                    case ModHeader_FieldIndex.Description:
+                    case OblivionModHeader_FieldIndex.Description:
                         this.Description = ex;
                         break;
-                    case ModHeader_FieldIndex.MasterReferences:
+                    case OblivionModHeader_FieldIndex.MasterReferences:
                         this.MasterReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MasterReference.ErrorMask?>>?>(ex, null);
                         break;
                     default:
@@ -507,34 +506,34 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void SetNthMask(int index, object obj)
             {
-                ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
+                OblivionModHeader_FieldIndex enu = (OblivionModHeader_FieldIndex)index;
                 switch (enu)
                 {
-                    case ModHeader_FieldIndex.Flags:
+                    case OblivionModHeader_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
                         break;
-                    case ModHeader_FieldIndex.FormID:
+                    case OblivionModHeader_FieldIndex.FormID:
                         this.FormID = (Exception?)obj;
                         break;
-                    case ModHeader_FieldIndex.Version:
+                    case OblivionModHeader_FieldIndex.Version:
                         this.Version = (Exception?)obj;
                         break;
-                    case ModHeader_FieldIndex.Stats:
+                    case OblivionModHeader_FieldIndex.Stats:
                         this.Stats = (MaskItem<Exception?, ModStats.ErrorMask?>?)obj;
                         break;
-                    case ModHeader_FieldIndex.TypeOffsets:
+                    case OblivionModHeader_FieldIndex.TypeOffsets:
                         this.TypeOffsets = (Exception?)obj;
                         break;
-                    case ModHeader_FieldIndex.Deleted:
+                    case OblivionModHeader_FieldIndex.Deleted:
                         this.Deleted = (Exception?)obj;
                         break;
-                    case ModHeader_FieldIndex.Author:
+                    case OblivionModHeader_FieldIndex.Author:
                         this.Author = (Exception?)obj;
                         break;
-                    case ModHeader_FieldIndex.Description:
+                    case OblivionModHeader_FieldIndex.Description:
                         this.Description = (Exception?)obj;
                         break;
-                    case ModHeader_FieldIndex.MasterReferences:
+                    case OblivionModHeader_FieldIndex.MasterReferences:
                         this.MasterReferences = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MasterReference.ErrorMask?>>?>)obj;
                         break;
                     default:
@@ -708,38 +707,30 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = ModHeader_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = OblivionModHeader_Registration.TriggeringRecordType;
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => ModHeaderBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => OblivionModHeaderBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((ModHeaderBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((OblivionModHeaderBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static ModHeader CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
-        public static ModHeader CreateFromBinary(
+        public static OblivionModHeader CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new ModHeader();
-            ((ModHeaderSetterCommon)((IModHeaderGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new OblivionModHeader();
+            ((OblivionModHeaderSetterCommon)((IOblivionModHeaderGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -750,7 +741,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out ModHeader item,
+            out OblivionModHeader item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
@@ -760,28 +751,26 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IModHeaderGetter)rhs, include);
 
         void IClearable.Clear()
         {
-            ((ModHeaderSetterCommon)((IModHeaderGetter)this).CommonSetterInstance()!).Clear(this);
+            ((OblivionModHeaderSetterCommon)((IOblivionModHeaderGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static ModHeader GetNew()
+        internal static OblivionModHeader GetNew()
         {
-            return new ModHeader();
+            return new OblivionModHeader();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IModHeader :
-        IModHeaderGetter,
-        ILoquiObjectSetter<IModHeader>
+    public partial interface IOblivionModHeader :
+        IOblivionModHeaderGetter,
+        ILoquiObjectSetter<IOblivionModHeader>
     {
-        new ModHeader.HeaderFlag Flags { get; set; }
+        new OblivionModHeader.HeaderFlag Flags { get; set; }
         new UInt32 FormID { get; set; }
         new Int32 Version { get; set; }
         new ModStats Stats { get; set; }
@@ -792,9 +781,9 @@ namespace Mutagen.Bethesda.Oblivion
         new IExtendedList<MasterReference> MasterReferences { get; }
     }
 
-    public partial interface IModHeaderGetter :
+    public partial interface IOblivionModHeaderGetter :
         ILoquiObject,
-        ILoquiObject<IModHeaderGetter>,
+        ILoquiObject<IOblivionModHeaderGetter>,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -803,8 +792,8 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => ModHeader_Registration.Instance;
-        ModHeader.HeaderFlag Flags { get; }
+        static ILoquiRegistration Registration => OblivionModHeader_Registration.Instance;
+        OblivionModHeader.HeaderFlag Flags { get; }
         UInt32 FormID { get; }
         Int32 Version { get; }
         IModStatsGetter Stats { get; }
@@ -819,80 +808,62 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Common MixIn
-    public static partial class ModHeaderMixIn
+    public static partial class OblivionModHeaderMixIn
     {
-        public static void Clear(this IModHeader item)
+        public static void Clear(this IOblivionModHeader item)
         {
-            ((ModHeaderSetterCommon)((IModHeaderGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((OblivionModHeaderSetterCommon)((IOblivionModHeaderGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static ModHeader.Mask<bool> GetEqualsMask(
-            this IModHeaderGetter item,
-            IModHeaderGetter rhs,
+        public static OblivionModHeader.Mask<bool> GetEqualsMask(
+            this IOblivionModHeaderGetter item,
+            IOblivionModHeaderGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ModHeaderCommon)((IModHeaderGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((OblivionModHeaderCommon)((IOblivionModHeaderGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IModHeaderGetter item,
+            this IOblivionModHeaderGetter item,
             string? name = null,
-            ModHeader.Mask<bool>? printMask = null)
+            OblivionModHeader.Mask<bool>? printMask = null)
         {
-            return ((ModHeaderCommon)((IModHeaderGetter)item).CommonInstance()!).ToString(
+            return ((OblivionModHeaderCommon)((IOblivionModHeaderGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IModHeaderGetter item,
+            this IOblivionModHeaderGetter item,
             FileGeneration fg,
             string? name = null,
-            ModHeader.Mask<bool>? printMask = null)
+            OblivionModHeader.Mask<bool>? printMask = null)
         {
-            ((ModHeaderCommon)((IModHeaderGetter)item).CommonInstance()!).ToString(
+            ((OblivionModHeaderCommon)((IOblivionModHeaderGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IModHeaderGetter item,
-            ModHeader.Mask<bool?> checkMask)
-        {
-            return ((ModHeaderCommon)((IModHeaderGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static ModHeader.Mask<bool> GetHasBeenSetMask(this IModHeaderGetter item)
-        {
-            var ret = new ModHeader.Mask<bool>(false);
-            ((ModHeaderCommon)((IModHeaderGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
-            this IModHeaderGetter item,
-            IModHeaderGetter rhs)
+            this IOblivionModHeaderGetter item,
+            IOblivionModHeaderGetter rhs)
         {
-            return ((ModHeaderCommon)((IModHeaderGetter)item).CommonInstance()!).Equals(
+            return ((OblivionModHeaderCommon)((IOblivionModHeaderGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyIn(
-            this IModHeader lhs,
-            IModHeaderGetter rhs)
+            this IOblivionModHeader lhs,
+            IOblivionModHeaderGetter rhs)
         {
-            ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((OblivionModHeaderSetterTranslationCommon)((IOblivionModHeaderGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -900,11 +871,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void DeepCopyIn(
-            this IModHeader lhs,
-            IModHeaderGetter rhs,
-            ModHeader.TranslationMask? copyMask = null)
+            this IOblivionModHeader lhs,
+            IOblivionModHeaderGetter rhs,
+            OblivionModHeader.TranslationMask? copyMask = null)
         {
-            ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((OblivionModHeaderSetterTranslationCommon)((IOblivionModHeaderGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -912,82 +883,71 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void DeepCopyIn(
-            this IModHeader lhs,
-            IModHeaderGetter rhs,
-            out ModHeader.ErrorMask errorMask,
-            ModHeader.TranslationMask? copyMask = null)
+            this IOblivionModHeader lhs,
+            IOblivionModHeaderGetter rhs,
+            out OblivionModHeader.ErrorMask errorMask,
+            OblivionModHeader.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((OblivionModHeaderSetterTranslationCommon)((IOblivionModHeaderGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = ModHeader.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = OblivionModHeader.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IModHeader lhs,
-            IModHeaderGetter rhs,
+            this IOblivionModHeader lhs,
+            IOblivionModHeaderGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((OblivionModHeaderSetterTranslationCommon)((IOblivionModHeaderGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
-        public static ModHeader DeepCopy(
-            this IModHeaderGetter item,
-            ModHeader.TranslationMask? copyMask = null)
+        public static OblivionModHeader DeepCopy(
+            this IOblivionModHeaderGetter item,
+            OblivionModHeader.TranslationMask? copyMask = null)
         {
-            return ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((OblivionModHeaderSetterTranslationCommon)((IOblivionModHeaderGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static ModHeader DeepCopy(
-            this IModHeaderGetter item,
-            out ModHeader.ErrorMask errorMask,
-            ModHeader.TranslationMask? copyMask = null)
+        public static OblivionModHeader DeepCopy(
+            this IOblivionModHeaderGetter item,
+            out OblivionModHeader.ErrorMask errorMask,
+            OblivionModHeader.TranslationMask? copyMask = null)
         {
-            return ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((OblivionModHeaderSetterTranslationCommon)((IOblivionModHeaderGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static ModHeader DeepCopy(
-            this IModHeaderGetter item,
+        public static OblivionModHeader DeepCopy(
+            this IOblivionModHeaderGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((OblivionModHeaderSetterTranslationCommon)((IOblivionModHeaderGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this IModHeader item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
-        public static void CopyInFromBinary(
-            this IModHeader item,
+            this IOblivionModHeader item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((ModHeaderSetterCommon)((IModHeaderGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((OblivionModHeaderSetterCommon)((IOblivionModHeaderGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -1003,7 +963,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     #region Field Index
-    public enum ModHeader_FieldIndex
+    public enum OblivionModHeader_FieldIndex
     {
         Flags = 0,
         FormID = 1,
@@ -1018,9 +978,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class ModHeader_Registration : ILoquiRegistration
+    public partial class OblivionModHeader_Registration : ILoquiRegistration
     {
-        public static readonly ModHeader_Registration Instance = new ModHeader_Registration();
+        public static readonly OblivionModHeader_Registration Instance = new OblivionModHeader_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
@@ -1035,23 +995,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 9;
 
-        public static readonly Type MaskType = typeof(ModHeader.Mask<>);
+        public static readonly Type MaskType = typeof(OblivionModHeader.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(ModHeader.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(OblivionModHeader.ErrorMask);
 
-        public static readonly Type ClassType = typeof(ModHeader);
+        public static readonly Type ClassType = typeof(OblivionModHeader);
 
-        public static readonly Type GetterType = typeof(IModHeaderGetter);
+        public static readonly Type GetterType = typeof(IOblivionModHeaderGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IModHeader);
+        public static readonly Type SetterType = typeof(IOblivionModHeader);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Oblivion.ModHeader";
+        public const string FullName = "Mutagen.Bethesda.Oblivion.OblivionModHeader";
 
-        public const string Name = "ModHeader";
+        public const string Name = "OblivionModHeader";
 
         public const string Namespace = "Mutagen.Bethesda.Oblivion";
 
@@ -1064,23 +1024,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (str.Upper)
             {
                 case "FLAGS":
-                    return (ushort)ModHeader_FieldIndex.Flags;
+                    return (ushort)OblivionModHeader_FieldIndex.Flags;
                 case "FORMID":
-                    return (ushort)ModHeader_FieldIndex.FormID;
+                    return (ushort)OblivionModHeader_FieldIndex.FormID;
                 case "VERSION":
-                    return (ushort)ModHeader_FieldIndex.Version;
+                    return (ushort)OblivionModHeader_FieldIndex.Version;
                 case "STATS":
-                    return (ushort)ModHeader_FieldIndex.Stats;
+                    return (ushort)OblivionModHeader_FieldIndex.Stats;
                 case "TYPEOFFSETS":
-                    return (ushort)ModHeader_FieldIndex.TypeOffsets;
+                    return (ushort)OblivionModHeader_FieldIndex.TypeOffsets;
                 case "DELETED":
-                    return (ushort)ModHeader_FieldIndex.Deleted;
+                    return (ushort)OblivionModHeader_FieldIndex.Deleted;
                 case "AUTHOR":
-                    return (ushort)ModHeader_FieldIndex.Author;
+                    return (ushort)OblivionModHeader_FieldIndex.Author;
                 case "DESCRIPTION":
-                    return (ushort)ModHeader_FieldIndex.Description;
+                    return (ushort)OblivionModHeader_FieldIndex.Description;
                 case "MASTERREFERENCES":
-                    return (ushort)ModHeader_FieldIndex.MasterReferences;
+                    return (ushort)OblivionModHeader_FieldIndex.MasterReferences;
                 default:
                     return null;
             }
@@ -1088,19 +1048,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
+            OblivionModHeader_FieldIndex enu = (OblivionModHeader_FieldIndex)index;
             switch (enu)
             {
-                case ModHeader_FieldIndex.MasterReferences:
+                case OblivionModHeader_FieldIndex.MasterReferences:
                     return true;
-                case ModHeader_FieldIndex.Flags:
-                case ModHeader_FieldIndex.FormID:
-                case ModHeader_FieldIndex.Version:
-                case ModHeader_FieldIndex.Stats:
-                case ModHeader_FieldIndex.TypeOffsets:
-                case ModHeader_FieldIndex.Deleted:
-                case ModHeader_FieldIndex.Author:
-                case ModHeader_FieldIndex.Description:
+                case OblivionModHeader_FieldIndex.Flags:
+                case OblivionModHeader_FieldIndex.FormID:
+                case OblivionModHeader_FieldIndex.Version:
+                case OblivionModHeader_FieldIndex.Stats:
+                case OblivionModHeader_FieldIndex.TypeOffsets:
+                case OblivionModHeader_FieldIndex.Deleted:
+                case OblivionModHeader_FieldIndex.Author:
+                case OblivionModHeader_FieldIndex.Description:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1109,19 +1069,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
+            OblivionModHeader_FieldIndex enu = (OblivionModHeader_FieldIndex)index;
             switch (enu)
             {
-                case ModHeader_FieldIndex.Stats:
-                case ModHeader_FieldIndex.MasterReferences:
+                case OblivionModHeader_FieldIndex.Stats:
+                case OblivionModHeader_FieldIndex.MasterReferences:
                     return true;
-                case ModHeader_FieldIndex.Flags:
-                case ModHeader_FieldIndex.FormID:
-                case ModHeader_FieldIndex.Version:
-                case ModHeader_FieldIndex.TypeOffsets:
-                case ModHeader_FieldIndex.Deleted:
-                case ModHeader_FieldIndex.Author:
-                case ModHeader_FieldIndex.Description:
+                case OblivionModHeader_FieldIndex.Flags:
+                case OblivionModHeader_FieldIndex.FormID:
+                case OblivionModHeader_FieldIndex.Version:
+                case OblivionModHeader_FieldIndex.TypeOffsets:
+                case OblivionModHeader_FieldIndex.Deleted:
+                case OblivionModHeader_FieldIndex.Author:
+                case OblivionModHeader_FieldIndex.Description:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1130,18 +1090,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
+            OblivionModHeader_FieldIndex enu = (OblivionModHeader_FieldIndex)index;
             switch (enu)
             {
-                case ModHeader_FieldIndex.Flags:
-                case ModHeader_FieldIndex.FormID:
-                case ModHeader_FieldIndex.Version:
-                case ModHeader_FieldIndex.Stats:
-                case ModHeader_FieldIndex.TypeOffsets:
-                case ModHeader_FieldIndex.Deleted:
-                case ModHeader_FieldIndex.Author:
-                case ModHeader_FieldIndex.Description:
-                case ModHeader_FieldIndex.MasterReferences:
+                case OblivionModHeader_FieldIndex.Flags:
+                case OblivionModHeader_FieldIndex.FormID:
+                case OblivionModHeader_FieldIndex.Version:
+                case OblivionModHeader_FieldIndex.Stats:
+                case OblivionModHeader_FieldIndex.TypeOffsets:
+                case OblivionModHeader_FieldIndex.Deleted:
+                case OblivionModHeader_FieldIndex.Author:
+                case OblivionModHeader_FieldIndex.Description:
+                case OblivionModHeader_FieldIndex.MasterReferences:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1150,26 +1110,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static string GetNthName(ushort index)
         {
-            ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
+            OblivionModHeader_FieldIndex enu = (OblivionModHeader_FieldIndex)index;
             switch (enu)
             {
-                case ModHeader_FieldIndex.Flags:
+                case OblivionModHeader_FieldIndex.Flags:
                     return "Flags";
-                case ModHeader_FieldIndex.FormID:
+                case OblivionModHeader_FieldIndex.FormID:
                     return "FormID";
-                case ModHeader_FieldIndex.Version:
+                case OblivionModHeader_FieldIndex.Version:
                     return "Version";
-                case ModHeader_FieldIndex.Stats:
+                case OblivionModHeader_FieldIndex.Stats:
                     return "Stats";
-                case ModHeader_FieldIndex.TypeOffsets:
+                case OblivionModHeader_FieldIndex.TypeOffsets:
                     return "TypeOffsets";
-                case ModHeader_FieldIndex.Deleted:
+                case OblivionModHeader_FieldIndex.Deleted:
                     return "Deleted";
-                case ModHeader_FieldIndex.Author:
+                case OblivionModHeader_FieldIndex.Author:
                     return "Author";
-                case ModHeader_FieldIndex.Description:
+                case OblivionModHeader_FieldIndex.Description:
                     return "Description";
-                case ModHeader_FieldIndex.MasterReferences:
+                case OblivionModHeader_FieldIndex.MasterReferences:
                     return "MasterReferences";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1178,18 +1138,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
+            OblivionModHeader_FieldIndex enu = (OblivionModHeader_FieldIndex)index;
             switch (enu)
             {
-                case ModHeader_FieldIndex.Flags:
-                case ModHeader_FieldIndex.FormID:
-                case ModHeader_FieldIndex.Version:
-                case ModHeader_FieldIndex.Stats:
-                case ModHeader_FieldIndex.TypeOffsets:
-                case ModHeader_FieldIndex.Deleted:
-                case ModHeader_FieldIndex.Author:
-                case ModHeader_FieldIndex.Description:
-                case ModHeader_FieldIndex.MasterReferences:
+                case OblivionModHeader_FieldIndex.Flags:
+                case OblivionModHeader_FieldIndex.FormID:
+                case OblivionModHeader_FieldIndex.Version:
+                case OblivionModHeader_FieldIndex.Stats:
+                case OblivionModHeader_FieldIndex.TypeOffsets:
+                case OblivionModHeader_FieldIndex.Deleted:
+                case OblivionModHeader_FieldIndex.Author:
+                case OblivionModHeader_FieldIndex.Description:
+                case OblivionModHeader_FieldIndex.MasterReferences:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1198,18 +1158,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool IsProtected(ushort index)
         {
-            ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
+            OblivionModHeader_FieldIndex enu = (OblivionModHeader_FieldIndex)index;
             switch (enu)
             {
-                case ModHeader_FieldIndex.Flags:
-                case ModHeader_FieldIndex.FormID:
-                case ModHeader_FieldIndex.Version:
-                case ModHeader_FieldIndex.Stats:
-                case ModHeader_FieldIndex.TypeOffsets:
-                case ModHeader_FieldIndex.Deleted:
-                case ModHeader_FieldIndex.Author:
-                case ModHeader_FieldIndex.Description:
-                case ModHeader_FieldIndex.MasterReferences:
+                case OblivionModHeader_FieldIndex.Flags:
+                case OblivionModHeader_FieldIndex.FormID:
+                case OblivionModHeader_FieldIndex.Version:
+                case OblivionModHeader_FieldIndex.Stats:
+                case OblivionModHeader_FieldIndex.TypeOffsets:
+                case OblivionModHeader_FieldIndex.Deleted:
+                case OblivionModHeader_FieldIndex.Author:
+                case OblivionModHeader_FieldIndex.Description:
+                case OblivionModHeader_FieldIndex.MasterReferences:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1218,26 +1178,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Type GetNthType(ushort index)
         {
-            ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
+            OblivionModHeader_FieldIndex enu = (OblivionModHeader_FieldIndex)index;
             switch (enu)
             {
-                case ModHeader_FieldIndex.Flags:
-                    return typeof(ModHeader.HeaderFlag);
-                case ModHeader_FieldIndex.FormID:
+                case OblivionModHeader_FieldIndex.Flags:
+                    return typeof(OblivionModHeader.HeaderFlag);
+                case OblivionModHeader_FieldIndex.FormID:
                     return typeof(UInt32);
-                case ModHeader_FieldIndex.Version:
+                case OblivionModHeader_FieldIndex.Version:
                     return typeof(Int32);
-                case ModHeader_FieldIndex.Stats:
+                case OblivionModHeader_FieldIndex.Stats:
                     return typeof(ModStats);
-                case ModHeader_FieldIndex.TypeOffsets:
+                case OblivionModHeader_FieldIndex.TypeOffsets:
                     return typeof(MemorySlice<Byte>);
-                case ModHeader_FieldIndex.Deleted:
+                case OblivionModHeader_FieldIndex.Deleted:
                     return typeof(MemorySlice<Byte>);
-                case ModHeader_FieldIndex.Author:
+                case OblivionModHeader_FieldIndex.Author:
                     return typeof(String);
-                case ModHeader_FieldIndex.Description:
+                case OblivionModHeader_FieldIndex.Description:
                     return typeof(String);
-                case ModHeader_FieldIndex.MasterReferences:
+                case OblivionModHeader_FieldIndex.MasterReferences:
                     return typeof(IExtendedList<MasterReference>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1245,7 +1205,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.TES4;
-        public static readonly Type BinaryWriteTranslation = typeof(ModHeaderBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(OblivionModHeaderBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1278,13 +1238,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class ModHeaderSetterCommon
+    public partial class OblivionModHeaderSetterCommon
     {
-        public static readonly ModHeaderSetterCommon Instance = new ModHeaderSetterCommon();
+        public static readonly OblivionModHeaderSetterCommon Instance = new OblivionModHeaderSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IModHeader item)
+        public void Clear(IOblivionModHeader item)
         {
             ClearPartial();
             item.Flags = default;
@@ -1300,7 +1260,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IModHeader item,
+            IOblivionModHeader item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1311,24 +1271,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: ModHeaderBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: ModHeaderBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: OblivionModHeaderBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: OblivionModHeaderBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
         
     }
-    public partial class ModHeaderCommon
+    public partial class OblivionModHeaderCommon
     {
-        public static readonly ModHeaderCommon Instance = new ModHeaderCommon();
+        public static readonly OblivionModHeaderCommon Instance = new OblivionModHeaderCommon();
 
-        public ModHeader.Mask<bool> GetEqualsMask(
-            IModHeaderGetter item,
-            IModHeaderGetter rhs,
+        public OblivionModHeader.Mask<bool> GetEqualsMask(
+            IOblivionModHeaderGetter item,
+            IOblivionModHeaderGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ModHeader.Mask<bool>(false);
-            ((ModHeaderCommon)((IModHeaderGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new OblivionModHeader.Mask<bool>(false);
+            ((OblivionModHeaderCommon)((IOblivionModHeaderGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1337,9 +1297,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public void FillEqualsMask(
-            IModHeaderGetter item,
-            IModHeaderGetter rhs,
-            ModHeader.Mask<bool> ret,
+            IOblivionModHeaderGetter item,
+            IOblivionModHeaderGetter rhs,
+            OblivionModHeader.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1358,9 +1318,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public string ToString(
-            IModHeaderGetter item,
+            IOblivionModHeaderGetter item,
             string? name = null,
-            ModHeader.Mask<bool>? printMask = null)
+            OblivionModHeader.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1372,18 +1332,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public void ToString(
-            IModHeaderGetter item,
+            IOblivionModHeaderGetter item,
             FileGeneration fg,
             string? name = null,
-            ModHeader.Mask<bool>? printMask = null)
+            OblivionModHeader.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ModHeader =>");
+                fg.AppendLine($"OblivionModHeader =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ModHeader) =>");
+                fg.AppendLine($"{name} (OblivionModHeader) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1397,9 +1357,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         protected static void ToStringFields(
-            IModHeaderGetter item,
+            IOblivionModHeaderGetter item,
             FileGeneration fg,
-            ModHeader.Mask<bool>? printMask = null)
+            OblivionModHeader.Mask<bool>? printMask = null)
         {
             if (printMask?.Flags ?? true)
             {
@@ -1457,37 +1417,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IModHeaderGetter item,
-            ModHeader.Mask<bool?> checkMask)
-        {
-            if (checkMask.TypeOffsets.HasValue && checkMask.TypeOffsets.Value != (item.TypeOffsets != null)) return false;
-            if (checkMask.Deleted.HasValue && checkMask.Deleted.Value != (item.Deleted != null)) return false;
-            if (checkMask.Author.HasValue && checkMask.Author.Value != (item.Author != null)) return false;
-            if (checkMask.Description.HasValue && checkMask.Description.Value != (item.Description != null)) return false;
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IModHeaderGetter item,
-            ModHeader.Mask<bool> mask)
-        {
-            mask.Flags = true;
-            mask.FormID = true;
-            mask.Version = true;
-            mask.Stats = new MaskItem<bool, ModStats.Mask<bool>?>(true, item.Stats?.GetHasBeenSetMask());
-            mask.TypeOffsets = (item.TypeOffsets != null);
-            mask.Deleted = (item.Deleted != null);
-            mask.Author = (item.Author != null);
-            mask.Description = (item.Description != null);
-            var MasterReferencesItem = item.MasterReferences;
-            mask.MasterReferences = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, MasterReference.Mask<bool>?>>?>(true, MasterReferencesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, MasterReference.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
-            IModHeaderGetter? lhs,
-            IModHeaderGetter? rhs)
+            IOblivionModHeaderGetter? lhs,
+            IOblivionModHeaderGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -1503,7 +1436,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return true;
         }
         
-        public virtual int GetHashCode(IModHeaderGetter item)
+        public virtual int GetHashCode(IOblivionModHeaderGetter item)
         {
             var hash = new HashCode();
             hash.Add(item.Flags);
@@ -1535,51 +1468,51 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public object GetNew()
         {
-            return ModHeader.GetNew();
+            return OblivionModHeader.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IModHeaderGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IOblivionModHeaderGetter obj)
         {
             yield break;
         }
         
-        public void RemapLinks(IModHeaderGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
+        public void RemapLinks(IOblivionModHeaderGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
-    public partial class ModHeaderSetterTranslationCommon
+    public partial class OblivionModHeaderSetterTranslationCommon
     {
-        public static readonly ModHeaderSetterTranslationCommon Instance = new ModHeaderSetterTranslationCommon();
+        public static readonly OblivionModHeaderSetterTranslationCommon Instance = new OblivionModHeaderSetterTranslationCommon();
 
         #region Deep Copy Fields From
         public void DeepCopyIn(
-            IModHeader item,
-            IModHeaderGetter rhs,
+            IOblivionModHeader item,
+            IOblivionModHeaderGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Flags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)OblivionModHeader_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
             }
-            if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.FormID) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)OblivionModHeader_FieldIndex.FormID) ?? true))
             {
                 item.FormID = rhs.FormID;
             }
-            if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Version) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)OblivionModHeader_FieldIndex.Version) ?? true))
             {
                 item.Version = rhs.Version;
             }
-            if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Stats) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)OblivionModHeader_FieldIndex.Stats) ?? true))
             {
-                errorMask?.PushIndex((int)ModHeader_FieldIndex.Stats);
+                errorMask?.PushIndex((int)OblivionModHeader_FieldIndex.Stats);
                 try
                 {
-                    if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Stats) ?? true))
+                    if ((copyMask?.GetShouldTranslate((int)OblivionModHeader_FieldIndex.Stats) ?? true))
                     {
                         item.Stats = rhs.Stats.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)ModHeader_FieldIndex.Stats),
+                            copyMask: copyMask?.GetSubCrystal((int)OblivionModHeader_FieldIndex.Stats),
                             errorMask: errorMask);
                     }
                 }
@@ -1593,7 +1526,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.TypeOffsets) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)OblivionModHeader_FieldIndex.TypeOffsets) ?? true))
             {
                 if(rhs.TypeOffsets.TryGet(out var TypeOffsetsrhs))
                 {
@@ -1604,7 +1537,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.TypeOffsets = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Deleted) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)OblivionModHeader_FieldIndex.Deleted) ?? true))
             {
                 if(rhs.Deleted.TryGet(out var Deletedrhs))
                 {
@@ -1615,17 +1548,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Deleted = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Author) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)OblivionModHeader_FieldIndex.Author) ?? true))
             {
                 item.Author = rhs.Author;
             }
-            if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Description) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)OblivionModHeader_FieldIndex.Description) ?? true))
             {
                 item.Description = rhs.Description;
             }
-            if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.MasterReferences) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)OblivionModHeader_FieldIndex.MasterReferences) ?? true))
             {
-                errorMask?.PushIndex((int)ModHeader_FieldIndex.MasterReferences);
+                errorMask?.PushIndex((int)OblivionModHeader_FieldIndex.MasterReferences);
                 try
                 {
                     item.MasterReferences.SetTo(
@@ -1651,23 +1584,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        public ModHeader DeepCopy(
-            IModHeaderGetter item,
-            ModHeader.TranslationMask? copyMask = null)
+        public OblivionModHeader DeepCopy(
+            IOblivionModHeaderGetter item,
+            OblivionModHeader.TranslationMask? copyMask = null)
         {
-            ModHeader ret = (ModHeader)((ModHeaderCommon)((IModHeaderGetter)item).CommonInstance()!).GetNew();
+            OblivionModHeader ret = (OblivionModHeader)((OblivionModHeaderCommon)((IOblivionModHeaderGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
         }
         
-        public ModHeader DeepCopy(
-            IModHeaderGetter item,
-            out ModHeader.ErrorMask errorMask,
-            ModHeader.TranslationMask? copyMask = null)
+        public OblivionModHeader DeepCopy(
+            IOblivionModHeaderGetter item,
+            out OblivionModHeader.ErrorMask errorMask,
+            OblivionModHeader.TranslationMask? copyMask = null)
         {
-            ModHeader ret = (ModHeader)((ModHeaderCommon)((IModHeaderGetter)item).CommonInstance()!).GetNew();
+            OblivionModHeader ret = (OblivionModHeader)((OblivionModHeaderCommon)((IOblivionModHeaderGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
@@ -1675,12 +1608,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
         
-        public ModHeader DeepCopy(
-            IModHeaderGetter item,
+        public OblivionModHeader DeepCopy(
+            IOblivionModHeaderGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            ModHeader ret = (ModHeader)((ModHeaderCommon)((IModHeaderGetter)item).CommonInstance()!).GetNew();
+            OblivionModHeader ret = (OblivionModHeader)((OblivionModHeaderCommon)((IOblivionModHeaderGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
@@ -1695,27 +1628,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
 namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class ModHeader
+    public partial class OblivionModHeader
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ModHeader_Registration.Instance;
-        public static ModHeader_Registration Registration => ModHeader_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => OblivionModHeader_Registration.Instance;
+        public static OblivionModHeader_Registration Registration => OblivionModHeader_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => ModHeaderCommon.Instance;
+        protected object CommonInstance() => OblivionModHeaderCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return ModHeaderSetterCommon.Instance;
+            return OblivionModHeaderSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => ModHeaderSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => OblivionModHeaderSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IModHeaderGetter.CommonInstance() => this.CommonInstance();
+        object IOblivionModHeaderGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IModHeaderGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IOblivionModHeaderGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IModHeaderGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IOblivionModHeaderGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1726,17 +1659,17 @@ namespace Mutagen.Bethesda.Oblivion
 #region Binary Translation
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class ModHeaderBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class OblivionModHeaderBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ModHeaderBinaryWriteTranslation Instance = new ModHeaderBinaryWriteTranslation();
+        public readonly static OblivionModHeaderBinaryWriteTranslation Instance = new OblivionModHeaderBinaryWriteTranslation();
 
         static partial void WriteBinaryMasterReferencesCustom(
             MutagenWriter writer,
-            IModHeaderGetter item);
+            IOblivionModHeaderGetter item);
 
         public static void WriteBinaryMasterReferences(
             MutagenWriter writer,
-            IModHeaderGetter item)
+            IOblivionModHeaderGetter item)
         {
             WriteBinaryMasterReferencesCustom(
                 writer: writer,
@@ -1744,10 +1677,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteEmbedded(
-            IModHeaderGetter item,
+            IOblivionModHeaderGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<ModHeader.HeaderFlag>.Instance.Write(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<OblivionModHeader.HeaderFlag>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 4);
@@ -1756,7 +1689,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void WriteRecordTypes(
-            IModHeaderGetter item,
+            IOblivionModHeaderGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
@@ -1783,14 +1716,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Description,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM),
                 binaryType: StringBinaryType.NullTerminate);
-            ModHeaderBinaryWriteTranslation.WriteBinaryMasterReferences(
+            OblivionModHeaderBinaryWriteTranslation.WriteBinaryMasterReferences(
                 writer: writer,
                 item: item);
         }
 
         public void Write(
             MutagenWriter writer,
-            IModHeaderGetter item,
+            IOblivionModHeaderGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.Header(
@@ -1814,28 +1747,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IModHeaderGetter)item,
+                item: (IOblivionModHeaderGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
     }
 
-    public partial class ModHeaderBinaryCreateTranslation
+    public partial class OblivionModHeaderBinaryCreateTranslation
     {
-        public readonly static ModHeaderBinaryCreateTranslation Instance = new ModHeaderBinaryCreateTranslation();
+        public readonly static OblivionModHeaderBinaryCreateTranslation Instance = new OblivionModHeaderBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IModHeader item,
+            IOblivionModHeader item,
             MutagenFrame frame)
         {
-            item.Flags = EnumBinaryTranslation<ModHeader.HeaderFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Flags = EnumBinaryTranslation<OblivionModHeader.HeaderFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.FormID = frame.ReadUInt32();
             item.Version = frame.ReadInt32();
         }
 
         public static ParseResult FillBinaryRecordTypes(
-            IModHeader item,
+            IOblivionModHeader item,
             MutagenFrame frame,
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
@@ -1848,19 +1781,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.HEDR:
                 {
                     item.Stats = Mutagen.Bethesda.Oblivion.ModStats.CreateFromBinary(frame: frame);
-                    return (int)ModHeader_FieldIndex.Stats;
+                    return (int)OblivionModHeader_FieldIndex.Stats;
                 }
                 case RecordTypeInts.OFST:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.TypeOffsets = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return (int)ModHeader_FieldIndex.TypeOffsets;
+                    return (int)OblivionModHeader_FieldIndex.TypeOffsets;
                 }
                 case RecordTypeInts.DELE:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Deleted = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return (int)ModHeader_FieldIndex.Deleted;
+                    return (int)OblivionModHeader_FieldIndex.Deleted;
                 }
                 case RecordTypeInts.CNAM:
                 {
@@ -1868,7 +1801,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Author = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return (int)ModHeader_FieldIndex.Author;
+                    return (int)OblivionModHeader_FieldIndex.Author;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -1876,14 +1809,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return (int)ModHeader_FieldIndex.Description;
+                    return (int)OblivionModHeader_FieldIndex.Description;
                 }
                 case RecordTypeInts.MAST:
                 {
-                    ModHeaderBinaryCreateTranslation.FillBinaryMasterReferencesCustom(
+                    OblivionModHeaderBinaryCreateTranslation.FillBinaryMasterReferencesCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return (int)ModHeader_FieldIndex.MasterReferences;
+                    return (int)OblivionModHeader_FieldIndex.MasterReferences;
                 }
                 default:
                     frame.Position += contentLength + frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -1893,7 +1826,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         static partial void FillBinaryMasterReferencesCustom(
             MutagenFrame frame,
-            IModHeader item);
+            IOblivionModHeader item);
 
     }
 
@@ -1901,16 +1834,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Binary Write Mixins
-    public static class ModHeaderBinaryTranslationMixIn
+    public static class OblivionModHeaderBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IModHeaderGetter item,
-            MutagenWriter writer)
+            this IOblivionModHeaderGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
-            ((ModHeaderBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((OblivionModHeaderBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1920,46 +1854,44 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class ModHeaderBinaryOverlay :
+    public partial class OblivionModHeaderBinaryOverlay :
         BinaryOverlay,
-        IModHeaderGetter
+        IOblivionModHeaderGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ModHeader_Registration.Instance;
-        public static ModHeader_Registration Registration => ModHeader_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => OblivionModHeader_Registration.Instance;
+        public static OblivionModHeader_Registration Registration => OblivionModHeader_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => ModHeaderCommon.Instance;
+        protected object CommonInstance() => OblivionModHeaderCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => ModHeaderSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => OblivionModHeaderSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IModHeaderGetter.CommonInstance() => this.CommonInstance();
+        object IOblivionModHeaderGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IModHeaderGetter.CommonSetterInstance() => null;
+        object? IOblivionModHeaderGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IModHeaderGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IOblivionModHeaderGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IModHeaderGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => ModHeaderBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => OblivionModHeaderBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((ModHeaderBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((OblivionModHeaderBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public ModHeader.HeaderFlag Flags => (ModHeader.HeaderFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
+        public OblivionModHeader.HeaderFlag Flags => (OblivionModHeader.HeaderFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
         public UInt32 FormID => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x4, 0x4));
         public Int32 Version => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x8, 0x4));
         #region Stats
@@ -1990,7 +1922,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int offset);
 
         partial void CustomCtor();
-        protected ModHeaderBinaryOverlay(
+        protected OblivionModHeaderBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -2000,12 +1932,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.CustomCtor();
         }
 
-        public static ModHeaderBinaryOverlay ModHeaderFactory(
+        public static OblivionModHeaderBinaryOverlay OblivionModHeaderFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new ModHeaderBinaryOverlay(
+            var ret = new OblivionModHeaderBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
             var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
@@ -2024,12 +1956,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static ModHeaderBinaryOverlay ModHeaderFactory(
+        public static OblivionModHeaderBinaryOverlay OblivionModHeaderFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            return ModHeaderFactory(
+            return OblivionModHeaderFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
@@ -2050,27 +1982,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.HEDR:
                 {
                     _StatsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return (int)ModHeader_FieldIndex.Stats;
+                    return (int)OblivionModHeader_FieldIndex.Stats;
                 }
                 case RecordTypeInts.OFST:
                 {
                     _TypeOffsetsLocation = (stream.Position - offset);
-                    return (int)ModHeader_FieldIndex.TypeOffsets;
+                    return (int)OblivionModHeader_FieldIndex.TypeOffsets;
                 }
                 case RecordTypeInts.DELE:
                 {
                     _DeletedLocation = (stream.Position - offset);
-                    return (int)ModHeader_FieldIndex.Deleted;
+                    return (int)OblivionModHeader_FieldIndex.Deleted;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     _AuthorLocation = (stream.Position - offset);
-                    return (int)ModHeader_FieldIndex.Author;
+                    return (int)OblivionModHeader_FieldIndex.Author;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     _DescriptionLocation = (stream.Position - offset);
-                    return (int)ModHeader_FieldIndex.Description;
+                    return (int)OblivionModHeader_FieldIndex.Description;
                 }
                 case RecordTypeInts.MAST:
                 {
@@ -2079,7 +2011,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: recordTypeConverter,
                         trigger: RecordTypes.MAST,
                         factory:  MasterReferenceBinaryOverlay.MasterReferenceFactory);
-                    return (int)ModHeader_FieldIndex.MasterReferences;
+                    return (int)OblivionModHeader_FieldIndex.MasterReferences;
                 }
                 default:
                     return default(int?);
@@ -2091,7 +2023,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             string? name = null)
         {
-            ModHeaderMixIn.ToString(
+            OblivionModHeaderMixIn.ToString(
                 item: this,
                 name: name);
         }

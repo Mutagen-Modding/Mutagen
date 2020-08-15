@@ -37,7 +37,7 @@ namespace Mutagen.Bethesda.Tests.GUI.Views
                 this.BindStrict(this.ViewModel, x => x.CacheProcessing, x => x.CacheProcessing.IsChecked)
                     .DisposeWith(disposable);
 
-                this.WhenAny(x => x.ViewModel.DataFoldersDisplay)
+                this.WhenAnyValue(x => x.ViewModel.DataFoldersDisplay)
                     .BindToStrict(this, x => x.DataFolders.ItemsSource)
                     .DisposeWith(disposable);
             });

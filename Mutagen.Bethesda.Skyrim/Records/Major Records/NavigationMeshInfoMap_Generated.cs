@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         INavigationMeshInfoMapInternal,
         ILoquiObjectSetter<NavigationMeshInfoMap>,
-        IEquatable<NavigationMeshInfoMap>,
-        IEqualsMask
+        IEquatable<NavigationMeshInfoMap>
     {
         #region Ctor
         protected NavigationMeshInfoMap()
@@ -558,7 +557,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => NavigationMeshInfoMapCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => NavigationMeshInfoMapCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => NavigationMeshInfoMapCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationMeshInfoMapCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationMeshInfoMapCommon.Instance.RemapLinks(this, mapping);
         public NavigationMeshInfoMap(FormKey formKey)
@@ -593,14 +592,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new NavigationMeshInfoMap CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static NavigationMeshInfoMap CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -627,8 +618,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((INavigationMeshInfoMapGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -647,7 +636,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface INavigationMeshInfoMap :
         INavigationMeshInfoMapGetter,
         ISkyrimMajorRecord,
-        ILoquiObjectSetter<INavigationMeshInfoMapInternal>
+        ILoquiObjectSetter<INavigationMeshInfoMapInternal>,
+        ILinkedFormKeyContainer
     {
         new UInt32? NavMeshVersion { get; set; }
         new IExtendedList<NavigationMapInfo> MapInfos { get; }
@@ -665,7 +655,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface INavigationMeshInfoMapGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<INavigationMeshInfoMapGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => NavigationMeshInfoMap_Registration.Instance;
@@ -719,24 +709,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this INavigationMeshInfoMapGetter item,
-            NavigationMeshInfoMap.Mask<bool?> checkMask)
-        {
-            return ((NavigationMeshInfoMapCommon)((INavigationMeshInfoMapGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static NavigationMeshInfoMap.Mask<bool> GetHasBeenSetMask(this INavigationMeshInfoMapGetter item)
-        {
-            var ret = new NavigationMeshInfoMap.Mask<bool>(false);
-            ((NavigationMeshInfoMapCommon)((INavigationMeshInfoMapGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -808,17 +780,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this INavigationMeshInfoMapInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this INavigationMeshInfoMapInternal item,
             MutagenFrame frame,
@@ -1246,34 +1207,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendLine($"NVSI => {SpanExt.ToHexString(NVSIItem)}");
             }
-        }
-        
-        public bool HasBeenSet(
-            INavigationMeshInfoMapGetter item,
-            NavigationMeshInfoMap.Mask<bool?> checkMask)
-        {
-            if (checkMask.NavMeshVersion.HasValue && checkMask.NavMeshVersion.Value != (item.NavMeshVersion != null)) return false;
-            if (checkMask.PreferredPathing?.Overall.HasValue ?? false && checkMask.PreferredPathing.Overall.Value != (item.PreferredPathing != null)) return false;
-            if (checkMask.PreferredPathing?.Specific != null && (item.PreferredPathing == null || !item.PreferredPathing.HasBeenSet(checkMask.PreferredPathing.Specific))) return false;
-            if (checkMask.NVSI.HasValue && checkMask.NVSI.Value != (item.NVSI != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            INavigationMeshInfoMapGetter item,
-            NavigationMeshInfoMap.Mask<bool> mask)
-        {
-            mask.NavMeshVersion = (item.NavMeshVersion != null);
-            var MapInfosItem = item.MapInfos;
-            mask.MapInfos = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, NavigationMapInfo.Mask<bool>?>>?>(true, MapInfosItem.WithIndex().Select((i) => new MaskItemIndexed<bool, NavigationMapInfo.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            var itemPreferredPathing = item.PreferredPathing;
-            mask.PreferredPathing = new MaskItem<bool, PreferredPathing.Mask<bool>?>(itemPreferredPathing != null, itemPreferredPathing?.GetHasBeenSetMask());
-            mask.NVSI = (item.NVSI != null);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static NavigationMeshInfoMap_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1833,15 +1766,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((INavigationMeshInfoMapGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => NavigationMeshInfoMapCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => NavigationMeshInfoMapCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationMeshInfoMapCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationMeshInfoMapCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => NavigationMeshInfoMapCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => NavigationMeshInfoMapBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1862,7 +1791,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region PreferredPathing
         private RangeInt32? _PreferredPathingLocation;
         public IPreferredPathingGetter? PreferredPathing => _PreferredPathingLocation.HasValue ? PreferredPathingBinaryOverlay.PreferredPathingFactory(new OverlayStream(_data.Slice(_PreferredPathingLocation!.Value.Min), _package), _package) : default;
-        public bool PreferredPathing_IsSet => _PreferredPathingLocation.HasValue;
         #endregion
         #region NVSI
         private int? _NVSILocation;

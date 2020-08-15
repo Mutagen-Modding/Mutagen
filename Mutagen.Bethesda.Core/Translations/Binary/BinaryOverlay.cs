@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda.Binary
                     {
                         recordParseCount = new Dictionary<RecordType, int>();
                     }
-                    recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.TryCreateValue(parsed.DuplicateParseMarker!.Value) + 1;
+                    recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.GetOrAdd(parsed.DuplicateParseMarker!.Value) + 1;
                 }
                 if (minimumFinalPos > stream.Position)
                 {
@@ -153,7 +153,7 @@ namespace Mutagen.Bethesda.Binary
                     {
                         recordParseCount = new Dictionary<RecordType, int>();
                     }
-                    recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.TryCreateValue(parsed.DuplicateParseMarker!.Value) + 1;
+                    recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.GetOrAdd(parsed.DuplicateParseMarker!.Value) + 1;
                 }
                 lastParsed = parsed.ParsedIndex;
             }
@@ -191,7 +191,7 @@ namespace Mutagen.Bethesda.Binary
                     {
                         recordParseCount = new Dictionary<RecordType, int>();
                     }
-                    recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.TryCreateValue(parsed.DuplicateParseMarker!.Value) + 1;
+                    recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.GetOrAdd(parsed.DuplicateParseMarker!.Value) + 1;
                 }
                 lastParsed = parsed.ParsedIndex;
             }
@@ -229,7 +229,7 @@ namespace Mutagen.Bethesda.Binary
                     {
                         recordParseCount = new Dictionary<RecordType, int>();
                     }
-                    recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.TryCreateValue(parsed.DuplicateParseMarker!.Value) + 1;
+                    recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.GetOrAdd(parsed.DuplicateParseMarker!.Value) + 1;
                 }
                 lastParsed = parsed.ParsedIndex;
             }

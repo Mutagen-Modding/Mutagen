@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class AIPackageLocation :
         IAIPackageLocation,
         ILoquiObjectSetter<AIPackageLocation>,
-        IEquatable<AIPackageLocation>,
-        IEqualsMask
+        IEquatable<AIPackageLocation>
     {
         #region Ctor
         public AIPackageLocation()
@@ -46,7 +45,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region LocationReference
         public FormLink<IPlaced> LocationReference { get; set; } = new FormLink<IPlaced>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IPlacedGetter> IAIPackageLocationGetter.LocationReference => this.LocationReference;
+        FormLink<IPlacedGetter> IAIPackageLocationGetter.LocationReference => this.LocationReference.ToGetter<IPlaced, IPlacedGetter>();
         #endregion
         #region Radius
         public Single Radius { get; set; } = default;
@@ -409,7 +408,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => AIPackageLocationCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => AIPackageLocationCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => AIPackageLocationCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AIPackageLocationCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AIPackageLocationCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -429,14 +428,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static AIPackageLocation CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static AIPackageLocation CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -463,8 +454,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAIPackageLocationGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -482,7 +471,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IAIPackageLocation :
         IAIPackageLocationGetter,
-        ILoquiObjectSetter<IAIPackageLocation>
+        ILoquiObjectSetter<IAIPackageLocation>,
+        ILinkedFormKeyContainer
     {
         new AIPackageLocation.LocationType Type { get; set; }
         new FormLink<IPlaced> LocationReference { get; set; }
@@ -492,7 +482,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IAIPackageLocationGetter :
         ILoquiObject,
         ILoquiObject<IAIPackageLocationGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -503,7 +493,7 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => AIPackageLocation_Registration.Instance;
         AIPackageLocation.LocationType Type { get; }
-        IFormLink<IPlacedGetter> LocationReference { get; }
+        FormLink<IPlacedGetter> LocationReference { get; }
         Single Radius { get; }
 
     }
@@ -551,24 +541,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IAIPackageLocationGetter item,
-            AIPackageLocation.Mask<bool?> checkMask)
-        {
-            return ((AIPackageLocationCommon)((IAIPackageLocationGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static AIPackageLocation.Mask<bool> GetHasBeenSetMask(this IAIPackageLocationGetter item)
-        {
-            var ret = new AIPackageLocation.Mask<bool>(false);
-            ((AIPackageLocationCommon)((IAIPackageLocationGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -663,17 +635,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IAIPackageLocation item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IAIPackageLocation item,
             MutagenFrame frame,
@@ -1009,28 +970,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.LocationReference ?? true)
             {
-                fg.AppendItem(item.LocationReference, "LocationReference");
+                fg.AppendItem(item.LocationReference.FormKey, "LocationReference");
             }
             if (printMask?.Radius ?? true)
             {
                 fg.AppendItem(item.Radius, "Radius");
             }
-        }
-        
-        public bool HasBeenSet(
-            IAIPackageLocationGetter item,
-            AIPackageLocation.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IAIPackageLocationGetter item,
-            AIPackageLocation.Mask<bool> mask)
-        {
-            mask.Type = true;
-            mask.LocationReference = true;
-            mask.Radius = true;
         }
         
         #region Equals and Hash
@@ -1091,7 +1036,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AIPackageLocation_FieldIndex.LocationReference) ?? true))
             {
-                item.LocationReference = rhs.LocationReference.FormKey;
+                item.LocationReference = new FormLink<IPlaced>(rhs.LocationReference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)AIPackageLocation_FieldIndex.Radius) ?? true))
             {
@@ -1250,12 +1195,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this IAIPackageLocationGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((AIPackageLocationBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1287,15 +1233,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAIPackageLocationGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => AIPackageLocationCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => AIPackageLocationCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AIPackageLocationCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AIPackageLocationCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => AIPackageLocationCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => AIPackageLocationBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1311,7 +1253,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public AIPackageLocation.LocationType Type => (AIPackageLocation.LocationType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
-        public IFormLink<IPlacedGetter> LocationReference => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public FormLink<IPlacedGetter> LocationReference => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         public Single Radius => _data.Slice(0x8, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,

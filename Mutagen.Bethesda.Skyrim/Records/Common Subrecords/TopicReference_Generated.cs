@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         ATopicReference,
         ITopicReference,
         ILoquiObjectSetter<TopicReference>,
-        IEquatable<TopicReference>,
-        IEqualsMask
+        IEquatable<TopicReference>
     {
         #region Ctor
         public TopicReference()
@@ -45,7 +44,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Reference
         public FormLink<DialogTopic> Reference { get; set; } = new FormLink<DialogTopic>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IDialogTopicGetter> ITopicReferenceGetter.Reference => this.Reference;
+        FormLink<IDialogTopicGetter> ITopicReferenceGetter.Reference => this.Reference.ToGetter<DialogTopic, IDialogTopicGetter>();
         #endregion
 
         #region To String
@@ -334,7 +333,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => TopicReferenceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => TopicReferenceCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => TopicReferenceCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TopicReferenceCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TopicReferenceCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -352,14 +351,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new TopicReference CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static TopicReference CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -386,8 +377,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITopicReferenceGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -406,7 +395,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ITopicReference :
         ITopicReferenceGetter,
         IATopicReference,
-        ILoquiObjectSetter<ITopicReference>
+        ILoquiObjectSetter<ITopicReference>,
+        ILinkedFormKeyContainer
     {
         new FormLink<DialogTopic> Reference { get; set; }
     }
@@ -414,11 +404,11 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ITopicReferenceGetter :
         IATopicReferenceGetter,
         ILoquiObject<ITopicReferenceGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => TopicReference_Registration.Instance;
-        IFormLink<IDialogTopicGetter> Reference { get; }
+        FormLink<IDialogTopicGetter> Reference { get; }
 
     }
 
@@ -465,24 +455,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ITopicReferenceGetter item,
-            TopicReference.Mask<bool?> checkMask)
-        {
-            return ((TopicReferenceCommon)((ITopicReferenceGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static TopicReference.Mask<bool> GetHasBeenSetMask(this ITopicReferenceGetter item)
-        {
-            var ret = new TopicReference.Mask<bool>(false);
-            ((TopicReferenceCommon)((ITopicReferenceGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -554,17 +526,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ITopicReference item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ITopicReference item,
             MutagenFrame frame,
@@ -887,27 +848,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.Reference ?? true)
             {
-                fg.AppendItem(item.Reference, "Reference");
+                fg.AppendItem(item.Reference.FormKey, "Reference");
             }
-        }
-        
-        public bool HasBeenSet(
-            ITopicReferenceGetter item,
-            TopicReference.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            ITopicReferenceGetter item,
-            TopicReference.Mask<bool> mask)
-        {
-            mask.Reference = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static TopicReference_FieldIndex ConvertFieldIndex(ATopicReference_FieldIndex index)
@@ -994,7 +936,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)TopicReference_FieldIndex.Reference) ?? true))
             {
-                item.Reference = rhs.Reference.FormKey;
+                item.Reference = new FormLink<DialogTopic>(rhs.Reference.FormKey);
             }
         }
         
@@ -1176,15 +1118,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITopicReferenceGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => TopicReferenceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => TopicReferenceCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TopicReferenceCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TopicReferenceCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => TopicReferenceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => TopicReferenceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1197,7 +1135,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<IDialogTopicGetter> Reference => new FormLink<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<IDialogTopicGetter> Reference => new FormLink<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

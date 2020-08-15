@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda.Generation
             if (node.TryGetAttribute("boolAsMarker", out var boolAsMarker))
             {
                 BoolAsMarker = new RecordType(boolAsMarker.Value);
-                this.HasBeenSetProperty.OnNext((false, true));
+                this.NullableProperty.OnNext((false, true));
             }
             this.GetFieldData().RecordType = BoolAsMarker;
             ByteLength = node.GetAttribute<int>(Constants.ByteLength, 1);

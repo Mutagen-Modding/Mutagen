@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class CreatureData :
         ICreatureData,
         ILoquiObjectSetter<CreatureData>,
-        IEquatable<CreatureData>,
-        IEqualsMask
+        IEquatable<CreatureData>
     {
         #region Ctor
         public CreatureData()
@@ -793,14 +792,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static CreatureData CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static CreatureData CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -827,8 +818,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICreatureDataGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -940,24 +929,6 @@ namespace Mutagen.Bethesda.Oblivion
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this ICreatureDataGetter item,
-            CreatureData.Mask<bool?> checkMask)
-        {
-            return ((CreatureDataCommon)((ICreatureDataGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static CreatureData.Mask<bool> GetHasBeenSetMask(this ICreatureDataGetter item)
-        {
-            var ret = new CreatureData.Mask<bool>(false);
-            ((CreatureDataCommon)((ICreatureDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this ICreatureDataGetter item,
             ICreatureDataGetter rhs)
@@ -1050,17 +1021,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ICreatureData item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ICreatureData item,
             MutagenFrame frame,
@@ -1620,34 +1580,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            ICreatureDataGetter item,
-            CreatureData.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            ICreatureDataGetter item,
-            CreatureData.Mask<bool> mask)
-        {
-            mask.Type = true;
-            mask.CombatSkill = true;
-            mask.MagicSkill = true;
-            mask.StealthSkill = true;
-            mask.SoulLevel = true;
-            mask.Health = true;
-            mask.AttackDamage = true;
-            mask.Strength = true;
-            mask.Intelligence = true;
-            mask.Willpower = true;
-            mask.Agility = true;
-            mask.Speed = true;
-            mask.Endurance = true;
-            mask.Personality = true;
-            mask.Luck = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             ICreatureDataGetter? lhs,
@@ -1957,12 +1889,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this ICreatureDataGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((CreatureDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1994,8 +1927,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICreatureDataGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CreatureDataBinaryWriteTranslation.Instance;

@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class DialogResponse :
         IDialogResponse,
         ILoquiObjectSetter<DialogResponse>,
-        IEquatable<DialogResponse>,
-        IEqualsMask
+        IEquatable<DialogResponse>
     {
         #region Ctor
         public DialogResponse()
@@ -438,14 +437,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static DialogResponse CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static DialogResponse CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -472,8 +463,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDialogResponseGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -559,24 +548,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IDialogResponseGetter item,
-            DialogResponse.Mask<bool?> checkMask)
-        {
-            return ((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static DialogResponse.Mask<bool> GetHasBeenSetMask(this IDialogResponseGetter item)
-        {
-            var ret = new DialogResponse.Mask<bool>(false);
-            ((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -671,17 +642,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IDialogResponse item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IDialogResponse item,
             MutagenFrame frame,
@@ -1043,27 +1003,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IDialogResponseGetter item,
-            DialogResponse.Mask<bool?> checkMask)
-        {
-            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
-            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
-            if (checkMask.ResponseText.HasValue && checkMask.ResponseText.Value != (item.ResponseText != null)) return false;
-            if (checkMask.ActorNotes.HasValue && checkMask.ActorNotes.Value != (item.ActorNotes != null)) return false;
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IDialogResponseGetter item,
-            DialogResponse.Mask<bool> mask)
-        {
-            var itemData = item.Data;
-            mask.Data = new MaskItem<bool, DialogResponseData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
-            mask.ResponseText = (item.ResponseText != null);
-            mask.ActorNotes = (item.ActorNotes != null);
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IDialogResponseGetter? lhs,
@@ -1350,12 +1289,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this IDialogResponseGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((DialogResponseBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1387,8 +1327,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDialogResponseGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DialogResponseBinaryWriteTranslation.Instance;
@@ -1407,7 +1345,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Data
         private RangeInt32? _DataLocation;
         public IDialogResponseDataGetter? Data => _DataLocation.HasValue ? DialogResponseDataBinaryOverlay.DialogResponseDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
-        public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region ResponseText
         private int? _ResponseTextLocation;

@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class DistantLODData :
         IDistantLODData,
         ILoquiObjectSetter<DistantLODData>,
-        IEquatable<DistantLODData>,
-        IEqualsMask
+        IEquatable<DistantLODData>
     {
         #region Ctor
         public DistantLODData()
@@ -421,14 +420,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static DistantLODData CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static DistantLODData CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -455,8 +446,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDistantLODDataGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -542,24 +531,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IDistantLODDataGetter item,
-            DistantLODData.Mask<bool?> checkMask)
-        {
-            return ((DistantLODDataCommon)((IDistantLODDataGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static DistantLODData.Mask<bool> GetHasBeenSetMask(this IDistantLODDataGetter item)
-        {
-            var ret = new DistantLODData.Mask<bool>(false);
-            ((DistantLODDataCommon)((IDistantLODDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -654,17 +625,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IDistantLODData item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IDistantLODData item,
             MutagenFrame frame,
@@ -1008,22 +968,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IDistantLODDataGetter item,
-            DistantLODData.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IDistantLODDataGetter item,
-            DistantLODData.Mask<bool> mask)
-        {
-            mask.Unknown0 = true;
-            mask.Unknown1 = true;
-            mask.Unknown2 = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IDistantLODDataGetter? lhs,
@@ -1237,12 +1181,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this IDistantLODDataGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((DistantLODDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1274,8 +1219,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDistantLODDataGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DistantLODDataBinaryWriteTranslation.Instance;

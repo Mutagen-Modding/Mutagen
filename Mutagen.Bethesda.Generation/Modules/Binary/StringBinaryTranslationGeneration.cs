@@ -50,10 +50,10 @@ namespace Mutagen.Bethesda.Generation
             var stringType = typeGen as Mutagen.Bethesda.Generation.StringType;
             var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
-                $"{this.Namespace}StringBinaryTranslation.Instance.Write{(typeGen.HasBeenSet ? "Nullable" : null)}"))
+                $"{this.Namespace}StringBinaryTranslation.Instance.Write{(typeGen.Nullable ? "Nullable" : null)}"))
             {
                 args.Add($"writer: {writerAccessor}");
-                args.Add($"item: {itemAccessor.DirectAccess}");
+                args.Add($"item: {itemAccessor}");
                 if (this.DoErrorMasks)
                 {
                     if (typeGen.HasIndex)
@@ -153,12 +153,12 @@ namespace Mutagen.Bethesda.Generation
             using (var args = new ArgsWrapper(fg,
                 $"{retAccessor}{this.Namespace}StringBinaryTranslation.Instance.Parse"))
             {
-                args.Add(nodeAccessor.DirectAccess);
+                args.Add(nodeAccessor.Access);
                 if (this.DoErrorMasks)
                 {
                     args.Add($"errorMask: {errorMaskAccessor}");
                 }
-                args.Add($"item: out {outItemAccessor.DirectAccess}");
+                args.Add($"item: out {outItemAccessor}");
                 args.Add($"parseWhole: {(data.HasTrigger ? "true" : "false")}");
                 if (data.Length.HasValue)
                 {

@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IEquipTypeInternal,
         ILoquiObjectSetter<EquipType>,
-        IEquatable<EquipType>,
-        IEqualsMask
+        IEquatable<EquipType>
     {
         #region Ctor
         protected EquipType()
@@ -469,7 +468,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => EquipTypeCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => EquipTypeCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => EquipTypeCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EquipTypeCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EquipTypeCommon.Instance.RemapLinks(this, mapping);
         public EquipType(FormKey formKey)
@@ -504,14 +503,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new EquipType CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static EquipType CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -538,8 +529,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEquipTypeGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -558,7 +547,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IEquipType :
         IEquipTypeGetter,
         ISkyrimMajorRecord,
-        ILoquiObjectSetter<IEquipTypeInternal>
+        ILoquiObjectSetter<IEquipTypeInternal>,
+        ILinkedFormKeyContainer
     {
         new IExtendedList<IFormLink<EquipType>>? SlotParents { get; set; }
         new Boolean? UseAllParents { get; set; }
@@ -574,7 +564,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IEquipTypeGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IEquipTypeGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => EquipType_Registration.Instance;
@@ -626,24 +616,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IEquipTypeGetter item,
-            EquipType.Mask<bool?> checkMask)
-        {
-            return ((EquipTypeCommon)((IEquipTypeGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static EquipType.Mask<bool> GetHasBeenSetMask(this IEquipTypeGetter item)
-        {
-            var ret = new EquipType.Mask<bool>(false);
-            ((EquipTypeCommon)((IEquipTypeGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -715,17 +687,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IEquipTypeInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IEquipTypeInternal item,
             MutagenFrame frame,
@@ -1099,7 +1060,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendItem(subItem);
+                            fg.AppendItem(subItem.FormKey);
                         }
                         fg.AppendLine("]");
                     }
@@ -1111,28 +1072,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(UseAllParentsItem, "UseAllParents");
             }
-        }
-        
-        public bool HasBeenSet(
-            IEquipTypeGetter item,
-            EquipType.Mask<bool?> checkMask)
-        {
-            if (checkMask.SlotParents?.Overall.HasValue ?? false && checkMask.SlotParents!.Overall.Value != (item.SlotParents != null)) return false;
-            if (checkMask.UseAllParents.HasValue && checkMask.UseAllParents.Value != (item.UseAllParents != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IEquipTypeGetter item,
-            EquipType.Mask<bool> mask)
-        {
-            mask.SlotParents = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.SlotParents != null), default);
-            mask.UseAllParents = (item.UseAllParents != null);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static EquipType_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1624,15 +1563,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEquipTypeGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => EquipTypeCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => EquipTypeCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EquipTypeCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EquipTypeCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => EquipTypeCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => EquipTypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

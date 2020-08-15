@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IShaderParticleGeometryInternal,
         ILoquiObjectSetter<ShaderParticleGeometry>,
-        IEquatable<ShaderParticleGeometry>,
-        IEqualsMask
+        IEquatable<ShaderParticleGeometry>
     {
         #region Ctor
         protected ShaderParticleGeometry()
@@ -811,14 +810,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new ShaderParticleGeometry CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static ShaderParticleGeometry CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -845,8 +836,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IShaderParticleGeometryGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -958,24 +947,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IShaderParticleGeometryGetter item,
-            ShaderParticleGeometry.Mask<bool?> checkMask)
-        {
-            return ((ShaderParticleGeometryCommon)((IShaderParticleGeometryGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static ShaderParticleGeometry.Mask<bool> GetHasBeenSetMask(this IShaderParticleGeometryGetter item)
-        {
-            var ret = new ShaderParticleGeometry.Mask<bool>(false);
-            ((ShaderParticleGeometryCommon)((IShaderParticleGeometryGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IShaderParticleGeometryGetter item,
             IShaderParticleGeometryGetter rhs)
@@ -1045,17 +1016,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IShaderParticleGeometryInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IShaderParticleGeometryInternal item,
             MutagenFrame frame,
@@ -1640,39 +1600,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IShaderParticleGeometryGetter item,
-            ShaderParticleGeometry.Mask<bool?> checkMask)
-        {
-            if (checkMask.ParticleTexture.HasValue && checkMask.ParticleTexture.Value != (item.ParticleTexture != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IShaderParticleGeometryGetter item,
-            ShaderParticleGeometry.Mask<bool> mask)
-        {
-            mask.GravityVelocity = true;
-            mask.RotationVelocity = true;
-            mask.ParticleSizeX = true;
-            mask.ParticleSizeY = true;
-            mask.CenterOffsetMin = true;
-            mask.CenterOffsetMax = true;
-            mask.InitialRotationRange = true;
-            mask.NumSubtexturesX = true;
-            mask.NumSubtexturesY = true;
-            mask.Type = true;
-            mask.BoxSize = true;
-            mask.ParticleDensity = true;
-            mask.ParticleTexture = (item.ParticleTexture != null);
-            mask.DATADataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static ShaderParticleGeometry_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -2253,8 +2180,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IShaderParticleGeometryGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ShaderParticleGeometryBinaryWriteTranslation.Instance;

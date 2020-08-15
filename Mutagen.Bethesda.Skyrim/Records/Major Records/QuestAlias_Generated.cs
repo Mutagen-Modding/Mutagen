@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class QuestAlias :
         IQuestAlias,
         ILoquiObjectSetter<QuestAlias>,
-        IEquatable<QuestAlias>,
-        IEqualsMask
+        IEquatable<QuestAlias>
     {
         #region Ctor
         public QuestAlias()
@@ -65,17 +64,17 @@ namespace Mutagen.Bethesda.Skyrim
         #region SpecificLocation
         public FormLinkNullable<Location> SpecificLocation { get; set; } = new FormLinkNullable<Location>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ILocationGetter> IQuestAliasGetter.SpecificLocation => this.SpecificLocation;
+        FormLinkNullable<ILocationGetter> IQuestAliasGetter.SpecificLocation => this.SpecificLocation.ToGetter<Location, ILocationGetter>();
         #endregion
         #region ForcedReference
         public FormLinkNullable<IPlaced> ForcedReference { get; set; } = new FormLinkNullable<IPlaced>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IPlacedGetter> IQuestAliasGetter.ForcedReference => this.ForcedReference;
+        FormLinkNullable<IPlacedGetter> IQuestAliasGetter.ForcedReference => this.ForcedReference.ToGetter<IPlaced, IPlacedGetter>();
         #endregion
         #region UniqueActor
         public FormLinkNullable<Npc> UniqueActor { get; set; } = new FormLinkNullable<Npc>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<INpcGetter> IQuestAliasGetter.UniqueActor => this.UniqueActor;
+        FormLinkNullable<INpcGetter> IQuestAliasGetter.UniqueActor => this.UniqueActor.ToGetter<Npc, INpcGetter>();
         #endregion
         #region Location
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -177,27 +176,27 @@ namespace Mutagen.Bethesda.Skyrim
         #region SpectatorOverridePackageList
         public FormLinkNullable<FormList> SpectatorOverridePackageList { get; set; } = new FormLinkNullable<FormList>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IFormListGetter> IQuestAliasGetter.SpectatorOverridePackageList => this.SpectatorOverridePackageList;
+        FormLinkNullable<IFormListGetter> IQuestAliasGetter.SpectatorOverridePackageList => this.SpectatorOverridePackageList.ToGetter<FormList, IFormListGetter>();
         #endregion
         #region ObserveDeadBodyOverridePackageList
         public FormLinkNullable<FormList> ObserveDeadBodyOverridePackageList { get; set; } = new FormLinkNullable<FormList>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IFormListGetter> IQuestAliasGetter.ObserveDeadBodyOverridePackageList => this.ObserveDeadBodyOverridePackageList;
+        FormLinkNullable<IFormListGetter> IQuestAliasGetter.ObserveDeadBodyOverridePackageList => this.ObserveDeadBodyOverridePackageList.ToGetter<FormList, IFormListGetter>();
         #endregion
         #region GuardWarnOverridePackageList
         public FormLinkNullable<FormList> GuardWarnOverridePackageList { get; set; } = new FormLinkNullable<FormList>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IFormListGetter> IQuestAliasGetter.GuardWarnOverridePackageList => this.GuardWarnOverridePackageList;
+        FormLinkNullable<IFormListGetter> IQuestAliasGetter.GuardWarnOverridePackageList => this.GuardWarnOverridePackageList.ToGetter<FormList, IFormListGetter>();
         #endregion
         #region CombatOverridePackageList
         public FormLinkNullable<FormList> CombatOverridePackageList { get; set; } = new FormLinkNullable<FormList>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IFormListGetter> IQuestAliasGetter.CombatOverridePackageList => this.CombatOverridePackageList;
+        FormLinkNullable<IFormListGetter> IQuestAliasGetter.CombatOverridePackageList => this.CombatOverridePackageList.ToGetter<FormList, IFormListGetter>();
         #endregion
         #region DisplayName
         public FormLinkNullable<Message> DisplayName { get; set; } = new FormLinkNullable<Message>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IMessageGetter> IQuestAliasGetter.DisplayName => this.DisplayName;
+        FormLinkNullable<IMessageGetter> IQuestAliasGetter.DisplayName => this.DisplayName.ToGetter<Message, IMessageGetter>();
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -244,7 +243,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region VoiceTypes
         public FormLinkNullable<IAliasVoiceType> VoiceTypes { get; set; } = new FormLinkNullable<IAliasVoiceType>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IAliasVoiceTypeGetter> IQuestAliasGetter.VoiceTypes => this.VoiceTypes;
+        FormLinkNullable<IAliasVoiceTypeGetter> IQuestAliasGetter.VoiceTypes => this.VoiceTypes.ToGetter<IAliasVoiceType, IAliasVoiceTypeGetter>();
         #endregion
 
         #region To String
@@ -1703,7 +1702,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => QuestAliasCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => QuestAliasCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => QuestAliasCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestAliasCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestAliasCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -1723,14 +1722,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static QuestAlias CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static QuestAlias CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1757,8 +1748,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IQuestAliasGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1776,7 +1765,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IQuestAlias :
         IQuestAliasGetter,
-        ILoquiObjectSetter<IQuestAlias>
+        ILoquiObjectSetter<IQuestAlias>,
+        ILinkedFormKeyContainer
     {
         new UInt32 ID { get; set; }
         new QuestAlias.TypeEnum Type { get; set; }
@@ -1808,7 +1798,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IQuestAliasGetter :
         ILoquiObject,
         ILoquiObject<IQuestAliasGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -1823,9 +1813,9 @@ namespace Mutagen.Bethesda.Skyrim
         String? Name { get; }
         QuestAlias.Flag? Flags { get; }
         Int32? AliasIndexToForceIntoWhenFilled { get; }
-        IFormLinkNullable<ILocationGetter> SpecificLocation { get; }
-        IFormLinkNullable<IPlacedGetter> ForcedReference { get; }
-        IFormLinkNullable<INpcGetter> UniqueActor { get; }
+        FormLinkNullable<ILocationGetter> SpecificLocation { get; }
+        FormLinkNullable<IPlacedGetter> ForcedReference { get; }
+        FormLinkNullable<INpcGetter> UniqueActor { get; }
         ILocationAliasReferenceGetter? Location { get; }
         IExternalAliasReferenceGetter? External { get; }
         ICreateReferenceToObjectGetter? CreateReferenceToObject { get; }
@@ -1834,15 +1824,15 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IConditionGetter> Conditions { get; }
         IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; }
         IReadOnlyList<IContainerEntryGetter>? Items { get; }
-        IFormLinkNullable<IFormListGetter> SpectatorOverridePackageList { get; }
-        IFormLinkNullable<IFormListGetter> ObserveDeadBodyOverridePackageList { get; }
-        IFormLinkNullable<IFormListGetter> GuardWarnOverridePackageList { get; }
-        IFormLinkNullable<IFormListGetter> CombatOverridePackageList { get; }
-        IFormLinkNullable<IMessageGetter> DisplayName { get; }
+        FormLinkNullable<IFormListGetter> SpectatorOverridePackageList { get; }
+        FormLinkNullable<IFormListGetter> ObserveDeadBodyOverridePackageList { get; }
+        FormLinkNullable<IFormListGetter> GuardWarnOverridePackageList { get; }
+        FormLinkNullable<IFormListGetter> CombatOverridePackageList { get; }
+        FormLinkNullable<IMessageGetter> DisplayName { get; }
         IReadOnlyList<IFormLink<ISpellGetter>> Spells { get; }
         IReadOnlyList<IFormLink<IFactionGetter>> Factions { get; }
         IReadOnlyList<IFormLink<IPackageGetter>> PackageData { get; }
-        IFormLinkNullable<IAliasVoiceTypeGetter> VoiceTypes { get; }
+        FormLinkNullable<IAliasVoiceTypeGetter> VoiceTypes { get; }
 
     }
 
@@ -1889,24 +1879,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IQuestAliasGetter item,
-            QuestAlias.Mask<bool?> checkMask)
-        {
-            return ((QuestAliasCommon)((IQuestAliasGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static QuestAlias.Mask<bool> GetHasBeenSetMask(this IQuestAliasGetter item)
-        {
-            var ret = new QuestAlias.Mask<bool>(false);
-            ((QuestAliasCommon)((IQuestAliasGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -2001,17 +1973,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IQuestAlias item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IQuestAlias item,
             MutagenFrame frame,
@@ -2721,20 +2682,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(AliasIndexToForceIntoWhenFilledItem, "AliasIndexToForceIntoWhenFilled");
             }
-            if ((printMask?.SpecificLocation ?? true)
-                && item.SpecificLocation.TryGet(out var SpecificLocationItem))
+            if (printMask?.SpecificLocation ?? true)
             {
-                fg.AppendItem(SpecificLocationItem, "SpecificLocation");
+                fg.AppendItem(item.SpecificLocation.FormKey, "SpecificLocation");
             }
-            if ((printMask?.ForcedReference ?? true)
-                && item.ForcedReference.TryGet(out var ForcedReferenceItem))
+            if (printMask?.ForcedReference ?? true)
             {
-                fg.AppendItem(ForcedReferenceItem, "ForcedReference");
+                fg.AppendItem(item.ForcedReference.FormKey, "ForcedReference");
             }
-            if ((printMask?.UniqueActor ?? true)
-                && item.UniqueActor.TryGet(out var UniqueActorItem))
+            if (printMask?.UniqueActor ?? true)
             {
-                fg.AppendItem(UniqueActorItem, "UniqueActor");
+                fg.AppendItem(item.UniqueActor.FormKey, "UniqueActor");
             }
             if ((printMask?.Location?.Overall ?? true)
                 && item.Location.TryGet(out var LocationItem))
@@ -2791,7 +2749,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendItem(subItem);
+                            fg.AppendItem(subItem.FormKey);
                         }
                         fg.AppendLine("]");
                     }
@@ -2817,30 +2775,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-            if ((printMask?.SpectatorOverridePackageList ?? true)
-                && item.SpectatorOverridePackageList.TryGet(out var SpectatorOverridePackageListItem))
+            if (printMask?.SpectatorOverridePackageList ?? true)
             {
-                fg.AppendItem(SpectatorOverridePackageListItem, "SpectatorOverridePackageList");
+                fg.AppendItem(item.SpectatorOverridePackageList.FormKey, "SpectatorOverridePackageList");
             }
-            if ((printMask?.ObserveDeadBodyOverridePackageList ?? true)
-                && item.ObserveDeadBodyOverridePackageList.TryGet(out var ObserveDeadBodyOverridePackageListItem))
+            if (printMask?.ObserveDeadBodyOverridePackageList ?? true)
             {
-                fg.AppendItem(ObserveDeadBodyOverridePackageListItem, "ObserveDeadBodyOverridePackageList");
+                fg.AppendItem(item.ObserveDeadBodyOverridePackageList.FormKey, "ObserveDeadBodyOverridePackageList");
             }
-            if ((printMask?.GuardWarnOverridePackageList ?? true)
-                && item.GuardWarnOverridePackageList.TryGet(out var GuardWarnOverridePackageListItem))
+            if (printMask?.GuardWarnOverridePackageList ?? true)
             {
-                fg.AppendItem(GuardWarnOverridePackageListItem, "GuardWarnOverridePackageList");
+                fg.AppendItem(item.GuardWarnOverridePackageList.FormKey, "GuardWarnOverridePackageList");
             }
-            if ((printMask?.CombatOverridePackageList ?? true)
-                && item.CombatOverridePackageList.TryGet(out var CombatOverridePackageListItem))
+            if (printMask?.CombatOverridePackageList ?? true)
             {
-                fg.AppendItem(CombatOverridePackageListItem, "CombatOverridePackageList");
+                fg.AppendItem(item.CombatOverridePackageList.FormKey, "CombatOverridePackageList");
             }
-            if ((printMask?.DisplayName ?? true)
-                && item.DisplayName.TryGet(out var DisplayNameItem))
+            if (printMask?.DisplayName ?? true)
             {
-                fg.AppendItem(DisplayNameItem, "DisplayName");
+                fg.AppendItem(item.DisplayName.FormKey, "DisplayName");
             }
             if (printMask?.Spells?.Overall ?? true)
             {
@@ -2853,7 +2806,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendItem(subItem);
+                            fg.AppendItem(subItem.FormKey);
                         }
                         fg.AppendLine("]");
                     }
@@ -2871,7 +2824,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendItem(subItem);
+                            fg.AppendItem(subItem.FormKey);
                         }
                         fg.AppendLine("]");
                     }
@@ -2889,89 +2842,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendItem(subItem);
+                            fg.AppendItem(subItem.FormKey);
                         }
                         fg.AppendLine("]");
                     }
                 }
                 fg.AppendLine("]");
             }
-            if ((printMask?.VoiceTypes ?? true)
-                && item.VoiceTypes.TryGet(out var VoiceTypesItem))
+            if (printMask?.VoiceTypes ?? true)
             {
-                fg.AppendItem(VoiceTypesItem, "VoiceTypes");
+                fg.AppendItem(item.VoiceTypes.FormKey, "VoiceTypes");
             }
-        }
-        
-        public bool HasBeenSet(
-            IQuestAliasGetter item,
-            QuestAlias.Mask<bool?> checkMask)
-        {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
-            if (checkMask.AliasIndexToForceIntoWhenFilled.HasValue && checkMask.AliasIndexToForceIntoWhenFilled.Value != (item.AliasIndexToForceIntoWhenFilled != null)) return false;
-            if (checkMask.SpecificLocation.HasValue && checkMask.SpecificLocation.Value != (item.SpecificLocation.FormKey != null)) return false;
-            if (checkMask.ForcedReference.HasValue && checkMask.ForcedReference.Value != (item.ForcedReference.FormKey != null)) return false;
-            if (checkMask.UniqueActor.HasValue && checkMask.UniqueActor.Value != (item.UniqueActor.FormKey != null)) return false;
-            if (checkMask.Location?.Overall.HasValue ?? false && checkMask.Location.Overall.Value != (item.Location != null)) return false;
-            if (checkMask.Location?.Specific != null && (item.Location == null || !item.Location.HasBeenSet(checkMask.Location.Specific))) return false;
-            if (checkMask.External?.Overall.HasValue ?? false && checkMask.External.Overall.Value != (item.External != null)) return false;
-            if (checkMask.External?.Specific != null && (item.External == null || !item.External.HasBeenSet(checkMask.External.Specific))) return false;
-            if (checkMask.CreateReferenceToObject?.Overall.HasValue ?? false && checkMask.CreateReferenceToObject.Overall.Value != (item.CreateReferenceToObject != null)) return false;
-            if (checkMask.CreateReferenceToObject?.Specific != null && (item.CreateReferenceToObject == null || !item.CreateReferenceToObject.HasBeenSet(checkMask.CreateReferenceToObject.Specific))) return false;
-            if (checkMask.FindMatchingRefNearAlias?.Overall.HasValue ?? false && checkMask.FindMatchingRefNearAlias.Overall.Value != (item.FindMatchingRefNearAlias != null)) return false;
-            if (checkMask.FindMatchingRefNearAlias?.Specific != null && (item.FindMatchingRefNearAlias == null || !item.FindMatchingRefNearAlias.HasBeenSet(checkMask.FindMatchingRefNearAlias.Specific))) return false;
-            if (checkMask.FindMatchingRefFromEvent?.Overall.HasValue ?? false && checkMask.FindMatchingRefFromEvent.Overall.Value != (item.FindMatchingRefFromEvent != null)) return false;
-            if (checkMask.FindMatchingRefFromEvent?.Specific != null && (item.FindMatchingRefFromEvent == null || !item.FindMatchingRefFromEvent.HasBeenSet(checkMask.FindMatchingRefFromEvent.Specific))) return false;
-            if (checkMask.Keywords?.Overall.HasValue ?? false && checkMask.Keywords!.Overall.Value != (item.Keywords != null)) return false;
-            if (checkMask.Items?.Overall.HasValue ?? false && checkMask.Items!.Overall.Value != (item.Items != null)) return false;
-            if (checkMask.SpectatorOverridePackageList.HasValue && checkMask.SpectatorOverridePackageList.Value != (item.SpectatorOverridePackageList.FormKey != null)) return false;
-            if (checkMask.ObserveDeadBodyOverridePackageList.HasValue && checkMask.ObserveDeadBodyOverridePackageList.Value != (item.ObserveDeadBodyOverridePackageList.FormKey != null)) return false;
-            if (checkMask.GuardWarnOverridePackageList.HasValue && checkMask.GuardWarnOverridePackageList.Value != (item.GuardWarnOverridePackageList.FormKey != null)) return false;
-            if (checkMask.CombatOverridePackageList.HasValue && checkMask.CombatOverridePackageList.Value != (item.CombatOverridePackageList.FormKey != null)) return false;
-            if (checkMask.DisplayName.HasValue && checkMask.DisplayName.Value != (item.DisplayName.FormKey != null)) return false;
-            if (checkMask.VoiceTypes.HasValue && checkMask.VoiceTypes.Value != (item.VoiceTypes.FormKey != null)) return false;
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IQuestAliasGetter item,
-            QuestAlias.Mask<bool> mask)
-        {
-            mask.ID = true;
-            mask.Type = true;
-            mask.Name = (item.Name != null);
-            mask.Flags = (item.Flags != null);
-            mask.AliasIndexToForceIntoWhenFilled = (item.AliasIndexToForceIntoWhenFilled != null);
-            mask.SpecificLocation = (item.SpecificLocation.FormKey != null);
-            mask.ForcedReference = (item.ForcedReference.FormKey != null);
-            mask.UniqueActor = (item.UniqueActor.FormKey != null);
-            var itemLocation = item.Location;
-            mask.Location = new MaskItem<bool, LocationAliasReference.Mask<bool>?>(itemLocation != null, itemLocation?.GetHasBeenSetMask());
-            var itemExternal = item.External;
-            mask.External = new MaskItem<bool, ExternalAliasReference.Mask<bool>?>(itemExternal != null, itemExternal?.GetHasBeenSetMask());
-            var itemCreateReferenceToObject = item.CreateReferenceToObject;
-            mask.CreateReferenceToObject = new MaskItem<bool, CreateReferenceToObject.Mask<bool>?>(itemCreateReferenceToObject != null, itemCreateReferenceToObject?.GetHasBeenSetMask());
-            var itemFindMatchingRefNearAlias = item.FindMatchingRefNearAlias;
-            mask.FindMatchingRefNearAlias = new MaskItem<bool, FindMatchingRefNearAlias.Mask<bool>?>(itemFindMatchingRefNearAlias != null, itemFindMatchingRefNearAlias?.GetHasBeenSetMask());
-            var itemFindMatchingRefFromEvent = item.FindMatchingRefFromEvent;
-            mask.FindMatchingRefFromEvent = new MaskItem<bool, FindMatchingRefFromEvent.Mask<bool>?>(itemFindMatchingRefFromEvent != null, itemFindMatchingRefFromEvent?.GetHasBeenSetMask());
-            var ConditionsItem = item.Conditions;
-            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.Keywords = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Keywords != null), default);
-            if (item.Items.TryGet(out var ItemsItem))
-            {
-                mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ContainerEntry.Mask<bool>?>>?>(true, ItemsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, ContainerEntry.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            mask.SpectatorOverridePackageList = (item.SpectatorOverridePackageList.FormKey != null);
-            mask.ObserveDeadBodyOverridePackageList = (item.ObserveDeadBodyOverridePackageList.FormKey != null);
-            mask.GuardWarnOverridePackageList = (item.GuardWarnOverridePackageList.FormKey != null);
-            mask.CombatOverridePackageList = (item.CombatOverridePackageList.FormKey != null);
-            mask.DisplayName = (item.DisplayName.FormKey != null);
-            mask.Spells = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
-            mask.Factions = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
-            mask.PackageData = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
-            mask.VoiceTypes = (item.VoiceTypes.FormKey != null);
         }
         
         #region Equals and Hash
@@ -3026,18 +2907,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(AliasIndexToForceIntoWhenFilleditem);
             }
-            if (item.SpecificLocation.TryGet(out var SpecificLocationitem))
-            {
-                hash.Add(SpecificLocationitem);
-            }
-            if (item.ForcedReference.TryGet(out var ForcedReferenceitem))
-            {
-                hash.Add(ForcedReferenceitem);
-            }
-            if (item.UniqueActor.TryGet(out var UniqueActoritem))
-            {
-                hash.Add(UniqueActoritem);
-            }
+            hash.Add(item.SpecificLocation);
+            hash.Add(item.ForcedReference);
+            hash.Add(item.UniqueActor);
             if (item.Location.TryGet(out var Locationitem))
             {
                 hash.Add(Locationitem);
@@ -3061,33 +2933,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Conditions);
             hash.Add(item.Keywords);
             hash.Add(item.Items);
-            if (item.SpectatorOverridePackageList.TryGet(out var SpectatorOverridePackageListitem))
-            {
-                hash.Add(SpectatorOverridePackageListitem);
-            }
-            if (item.ObserveDeadBodyOverridePackageList.TryGet(out var ObserveDeadBodyOverridePackageListitem))
-            {
-                hash.Add(ObserveDeadBodyOverridePackageListitem);
-            }
-            if (item.GuardWarnOverridePackageList.TryGet(out var GuardWarnOverridePackageListitem))
-            {
-                hash.Add(GuardWarnOverridePackageListitem);
-            }
-            if (item.CombatOverridePackageList.TryGet(out var CombatOverridePackageListitem))
-            {
-                hash.Add(CombatOverridePackageListitem);
-            }
-            if (item.DisplayName.TryGet(out var DisplayNameitem))
-            {
-                hash.Add(DisplayNameitem);
-            }
+            hash.Add(item.SpectatorOverridePackageList);
+            hash.Add(item.ObserveDeadBodyOverridePackageList);
+            hash.Add(item.GuardWarnOverridePackageList);
+            hash.Add(item.CombatOverridePackageList);
+            hash.Add(item.DisplayName);
             hash.Add(item.Spells);
             hash.Add(item.Factions);
             hash.Add(item.PackageData);
-            if (item.VoiceTypes.TryGet(out var VoiceTypesitem))
-            {
-                hash.Add(VoiceTypesitem);
-            }
+            hash.Add(item.VoiceTypes);
             return hash.ToHashCode();
         }
         
@@ -3135,7 +2989,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainer> ()
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter> ()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
@@ -3149,7 +3003,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (obj.Items.TryGet(out var ItemsItem))
             {
-                foreach (var item in ItemsItem.WhereCastable<IContainerEntryGetter, ILinkedFormKeyContainer> ()
+                foreach (var item in ItemsItem.WhereCastable<IContainerEntryGetter, ILinkedFormKeyContainerGetter> ()
                     .SelectMany((f) => f.LinkFormKeys))
                 {
                     yield return item;
@@ -3231,15 +3085,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.SpecificLocation) ?? true))
             {
-                item.SpecificLocation = rhs.SpecificLocation.FormKey;
+                item.SpecificLocation = new FormLinkNullable<Location>(rhs.SpecificLocation.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.ForcedReference) ?? true))
             {
-                item.ForcedReference = rhs.ForcedReference.FormKey;
+                item.ForcedReference = new FormLinkNullable<IPlaced>(rhs.ForcedReference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.UniqueActor) ?? true))
             {
-                item.UniqueActor = rhs.UniqueActor.FormKey;
+                item.UniqueActor = new FormLinkNullable<Npc>(rhs.UniqueActor.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.Location) ?? true))
             {
@@ -3456,23 +3310,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.SpectatorOverridePackageList) ?? true))
             {
-                item.SpectatorOverridePackageList = rhs.SpectatorOverridePackageList.FormKey;
+                item.SpectatorOverridePackageList = new FormLinkNullable<FormList>(rhs.SpectatorOverridePackageList.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.ObserveDeadBodyOverridePackageList) ?? true))
             {
-                item.ObserveDeadBodyOverridePackageList = rhs.ObserveDeadBodyOverridePackageList.FormKey;
+                item.ObserveDeadBodyOverridePackageList = new FormLinkNullable<FormList>(rhs.ObserveDeadBodyOverridePackageList.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.GuardWarnOverridePackageList) ?? true))
             {
-                item.GuardWarnOverridePackageList = rhs.GuardWarnOverridePackageList.FormKey;
+                item.GuardWarnOverridePackageList = new FormLinkNullable<FormList>(rhs.GuardWarnOverridePackageList.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.CombatOverridePackageList) ?? true))
             {
-                item.CombatOverridePackageList = rhs.CombatOverridePackageList.FormKey;
+                item.CombatOverridePackageList = new FormLinkNullable<FormList>(rhs.CombatOverridePackageList.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.DisplayName) ?? true))
             {
-                item.DisplayName = rhs.DisplayName.FormKey;
+                item.DisplayName = new FormLinkNullable<Message>(rhs.DisplayName.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.Spells) ?? true))
             {
@@ -3533,7 +3387,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.VoiceTypes) ?? true))
             {
-                item.VoiceTypes = rhs.VoiceTypes.FormKey;
+                item.VoiceTypes = new FormLinkNullable<IAliasVoiceType>(rhs.VoiceTypes.FormKey);
             }
         }
         
@@ -4104,12 +3958,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IQuestAliasGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((QuestAliasBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -4141,15 +3996,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IQuestAliasGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => QuestAliasCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => QuestAliasCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestAliasCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestAliasCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => QuestAliasCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => QuestAliasBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -4183,18 +4034,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region SpecificLocation
         private int? _SpecificLocationLocation;
-        public bool SpecificLocation_IsSet => _SpecificLocationLocation.HasValue;
-        public IFormLinkNullable<ILocationGetter> SpecificLocation => _SpecificLocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SpecificLocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
+        public FormLinkNullable<ILocationGetter> SpecificLocation => _SpecificLocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SpecificLocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
         #endregion
         #region ForcedReference
         private int? _ForcedReferenceLocation;
-        public bool ForcedReference_IsSet => _ForcedReferenceLocation.HasValue;
-        public IFormLinkNullable<IPlacedGetter> ForcedReference => _ForcedReferenceLocation.HasValue ? new FormLinkNullable<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ForcedReferenceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedGetter>.Null;
+        public FormLinkNullable<IPlacedGetter> ForcedReference => _ForcedReferenceLocation.HasValue ? new FormLinkNullable<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ForcedReferenceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedGetter>.Null;
         #endregion
         #region UniqueActor
         private int? _UniqueActorLocation;
-        public bool UniqueActor_IsSet => _UniqueActorLocation.HasValue;
-        public IFormLinkNullable<INpcGetter> UniqueActor => _UniqueActorLocation.HasValue ? new FormLinkNullable<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _UniqueActorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcGetter>.Null;
+        public FormLinkNullable<INpcGetter> UniqueActor => _UniqueActorLocation.HasValue ? new FormLinkNullable<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _UniqueActorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcGetter>.Null;
         #endregion
         public ILocationAliasReferenceGetter? Location { get; private set; }
         public IExternalAliasReferenceGetter? External { get; private set; }
@@ -4213,36 +4061,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IContainerEntryGetter>? Items { get; private set; }
         #region SpectatorOverridePackageList
         private int? _SpectatorOverridePackageListLocation;
-        public bool SpectatorOverridePackageList_IsSet => _SpectatorOverridePackageListLocation.HasValue;
-        public IFormLinkNullable<IFormListGetter> SpectatorOverridePackageList => _SpectatorOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SpectatorOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public FormLinkNullable<IFormListGetter> SpectatorOverridePackageList => _SpectatorOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SpectatorOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         #region ObserveDeadBodyOverridePackageList
         private int? _ObserveDeadBodyOverridePackageListLocation;
-        public bool ObserveDeadBodyOverridePackageList_IsSet => _ObserveDeadBodyOverridePackageListLocation.HasValue;
-        public IFormLinkNullable<IFormListGetter> ObserveDeadBodyOverridePackageList => _ObserveDeadBodyOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ObserveDeadBodyOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public FormLinkNullable<IFormListGetter> ObserveDeadBodyOverridePackageList => _ObserveDeadBodyOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ObserveDeadBodyOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         #region GuardWarnOverridePackageList
         private int? _GuardWarnOverridePackageListLocation;
-        public bool GuardWarnOverridePackageList_IsSet => _GuardWarnOverridePackageListLocation.HasValue;
-        public IFormLinkNullable<IFormListGetter> GuardWarnOverridePackageList => _GuardWarnOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _GuardWarnOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public FormLinkNullable<IFormListGetter> GuardWarnOverridePackageList => _GuardWarnOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _GuardWarnOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         #region CombatOverridePackageList
         private int? _CombatOverridePackageListLocation;
-        public bool CombatOverridePackageList_IsSet => _CombatOverridePackageListLocation.HasValue;
-        public IFormLinkNullable<IFormListGetter> CombatOverridePackageList => _CombatOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CombatOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public FormLinkNullable<IFormListGetter> CombatOverridePackageList => _CombatOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CombatOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         #region DisplayName
         private int? _DisplayNameLocation;
-        public bool DisplayName_IsSet => _DisplayNameLocation.HasValue;
-        public IFormLinkNullable<IMessageGetter> DisplayName => _DisplayNameLocation.HasValue ? new FormLinkNullable<IMessageGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DisplayNameLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMessageGetter>.Null;
+        public FormLinkNullable<IMessageGetter> DisplayName => _DisplayNameLocation.HasValue ? new FormLinkNullable<IMessageGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DisplayNameLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMessageGetter>.Null;
         #endregion
         public IReadOnlyList<IFormLink<ISpellGetter>> Spells { get; private set; } = ListExt.Empty<IFormLink<ISpellGetter>>();
         public IReadOnlyList<IFormLink<IFactionGetter>> Factions { get; private set; } = ListExt.Empty<IFormLink<IFactionGetter>>();
         public IReadOnlyList<IFormLink<IPackageGetter>> PackageData { get; private set; } = ListExt.Empty<IFormLink<IPackageGetter>>();
         #region VoiceTypes
         private int? _VoiceTypesLocation;
-        public bool VoiceTypes_IsSet => _VoiceTypesLocation.HasValue;
-        public IFormLinkNullable<IAliasVoiceTypeGetter> VoiceTypes => _VoiceTypesLocation.HasValue ? new FormLinkNullable<IAliasVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _VoiceTypesLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAliasVoiceTypeGetter>.Null;
+        public FormLinkNullable<IAliasVoiceTypeGetter> VoiceTypes => _VoiceTypesLocation.HasValue ? new FormLinkNullable<IAliasVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _VoiceTypesLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAliasVoiceTypeGetter>.Null;
         #endregion
         #region End
         partial void EndCustomParse(

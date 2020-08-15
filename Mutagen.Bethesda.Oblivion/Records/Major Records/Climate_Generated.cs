@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IClimateInternal,
         ILoquiObjectSetter<Climate>,
-        IEquatable<Climate>,
-        IEqualsMask
+        IEquatable<Climate>
     {
         #region Ctor
         protected Climate()
@@ -597,7 +596,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => ClimateCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ClimateCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ClimateCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ClimateCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ClimateCommon.Instance.RemapLinks(this, mapping);
         public Climate(FormKey formKey)
@@ -632,14 +631,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new Climate CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static Climate CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -666,8 +657,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IClimateGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -686,7 +675,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IClimate :
         IClimateGetter,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<IClimateInternal>
+        ILoquiObjectSetter<IClimateInternal>,
+        ILinkedFormKeyContainer
     {
         new IExtendedList<WeatherType>? Weathers { get; set; }
         new String? SunTexture { get; set; }
@@ -705,7 +695,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IClimateGetter :
         IOblivionMajorRecordGetter,
         ILoquiObject<IClimateGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Climate_Registration.Instance;
@@ -760,24 +750,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IClimateGetter item,
-            Climate.Mask<bool?> checkMask)
-        {
-            return ((ClimateCommon)((IClimateGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Climate.Mask<bool> GetHasBeenSetMask(this IClimateGetter item)
-        {
-            var ret = new Climate.Mask<bool>(false);
-            ((ClimateCommon)((IClimateGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -849,17 +821,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IClimateInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IClimateInternal item,
             MutagenFrame frame,
@@ -1310,41 +1271,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 DataItem?.ToString(fg, "Data");
             }
-        }
-        
-        public bool HasBeenSet(
-            IClimateGetter item,
-            Climate.Mask<bool?> checkMask)
-        {
-            if (checkMask.Weathers?.Overall.HasValue ?? false && checkMask.Weathers!.Overall.Value != (item.Weathers != null)) return false;
-            if (checkMask.SunTexture.HasValue && checkMask.SunTexture.Value != (item.SunTexture != null)) return false;
-            if (checkMask.SunGlareTexture.HasValue && checkMask.SunGlareTexture.Value != (item.SunGlareTexture != null)) return false;
-            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
-            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
-            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IClimateGetter item,
-            Climate.Mask<bool> mask)
-        {
-            if (item.Weathers.TryGet(out var WeathersItem))
-            {
-                mask.Weathers = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WeatherType.Mask<bool>?>>?>(true, WeathersItem.WithIndex().Select((i) => new MaskItemIndexed<bool, WeatherType.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            mask.SunTexture = (item.SunTexture != null);
-            mask.SunGlareTexture = (item.SunGlareTexture != null);
-            var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            var itemData = item.Data;
-            mask.Data = new MaskItem<bool, ClimateData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static Climate_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
@@ -1951,15 +1877,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IClimateGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => ClimateCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ClimateCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ClimateCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ClimateCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ClimateCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ClimateBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1985,7 +1907,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Data
         private RangeInt32? _DataLocation;
         public IClimateDataGetter? Data => _DataLocation.HasValue ? ClimateDataBinaryOverlay.ClimateDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
-        public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class LinkedReferences :
         ILinkedReferences,
         ILoquiObjectSetter<LinkedReferences>,
-        IEquatable<LinkedReferences>,
-        IEqualsMask
+        IEquatable<LinkedReferences>
     {
         #region Ctor
         public LinkedReferences()
@@ -46,12 +45,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region KeywordOrReference
         public FormLink<IKeywordLinkedReference> KeywordOrReference { get; set; } = new FormLink<IKeywordLinkedReference>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IKeywordLinkedReferenceGetter> ILinkedReferencesGetter.KeywordOrReference => this.KeywordOrReference;
+        FormLink<IKeywordLinkedReferenceGetter> ILinkedReferencesGetter.KeywordOrReference => this.KeywordOrReference.ToGetter<IKeywordLinkedReference, IKeywordLinkedReferenceGetter>();
         #endregion
         #region Reference
         public FormLink<ILinkedReference> Reference { get; set; } = new FormLink<ILinkedReference>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ILinkedReferenceGetter> ILinkedReferencesGetter.Reference => this.Reference;
+        FormLink<ILinkedReferenceGetter> ILinkedReferencesGetter.Reference => this.Reference.ToGetter<ILinkedReference, ILinkedReferenceGetter>();
         #endregion
 
         #region To String
@@ -416,7 +415,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => LinkedReferencesCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LinkedReferencesCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LinkedReferencesCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LinkedReferencesCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LinkedReferencesCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -436,14 +435,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static LinkedReferences CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static LinkedReferences CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -470,8 +461,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILinkedReferencesGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -489,7 +478,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface ILinkedReferences :
         ILinkedReferencesGetter,
-        ILoquiObjectSetter<ILinkedReferences>
+        ILoquiObjectSetter<ILinkedReferences>,
+        ILinkedFormKeyContainer
     {
         new LinkedReferences.VersioningBreaks Versioning { get; set; }
         new FormLink<IKeywordLinkedReference> KeywordOrReference { get; set; }
@@ -499,7 +489,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILinkedReferencesGetter :
         ILoquiObject,
         ILoquiObject<ILinkedReferencesGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -510,8 +500,8 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => LinkedReferences_Registration.Instance;
         LinkedReferences.VersioningBreaks Versioning { get; }
-        IFormLink<IKeywordLinkedReferenceGetter> KeywordOrReference { get; }
-        IFormLink<ILinkedReferenceGetter> Reference { get; }
+        FormLink<IKeywordLinkedReferenceGetter> KeywordOrReference { get; }
+        FormLink<ILinkedReferenceGetter> Reference { get; }
 
     }
 
@@ -558,24 +548,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ILinkedReferencesGetter item,
-            LinkedReferences.Mask<bool?> checkMask)
-        {
-            return ((LinkedReferencesCommon)((ILinkedReferencesGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static LinkedReferences.Mask<bool> GetHasBeenSetMask(this ILinkedReferencesGetter item)
-        {
-            var ret = new LinkedReferences.Mask<bool>(false);
-            ((LinkedReferencesCommon)((ILinkedReferencesGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -670,17 +642,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ILinkedReferences item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ILinkedReferences item,
             MutagenFrame frame,
@@ -1016,28 +977,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.KeywordOrReference ?? true)
             {
-                fg.AppendItem(item.KeywordOrReference, "KeywordOrReference");
+                fg.AppendItem(item.KeywordOrReference.FormKey, "KeywordOrReference");
             }
             if (printMask?.Reference ?? true)
             {
-                fg.AppendItem(item.Reference, "Reference");
+                fg.AppendItem(item.Reference.FormKey, "Reference");
             }
-        }
-        
-        public bool HasBeenSet(
-            ILinkedReferencesGetter item,
-            LinkedReferences.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            ILinkedReferencesGetter item,
-            LinkedReferences.Mask<bool> mask)
-        {
-            mask.Versioning = true;
-            mask.KeywordOrReference = true;
-            mask.Reference = true;
         }
         
         #region Equals and Hash
@@ -1074,6 +1019,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IEnumerable<FormKey> GetLinkFormKeys(ILinkedReferencesGetter obj)
         {
             yield return obj.KeywordOrReference.FormKey;
+            if (obj.Versioning.HasFlag(LinkedReferences.VersioningBreaks.Break0)) yield break;
             yield return obj.Reference.FormKey;
             yield break;
         }
@@ -1099,12 +1045,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LinkedReferences_FieldIndex.KeywordOrReference) ?? true))
             {
-                item.KeywordOrReference = rhs.KeywordOrReference.FormKey;
+                item.KeywordOrReference = new FormLink<IKeywordLinkedReference>(rhs.KeywordOrReference.FormKey);
             }
             if (rhs.Versioning.HasFlag(LinkedReferences.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)LinkedReferences_FieldIndex.Reference) ?? true))
             {
-                item.Reference = rhs.Reference.FormKey;
+                item.Reference = new FormLink<ILinkedReference>(rhs.Reference.FormKey);
             }
         }
         
@@ -1264,12 +1210,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this ILinkedReferencesGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((LinkedReferencesBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1301,15 +1248,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILinkedReferencesGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => LinkedReferencesCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LinkedReferencesCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LinkedReferencesCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LinkedReferencesCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LinkedReferencesCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LinkedReferencesBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1325,8 +1268,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public LinkedReferences.VersioningBreaks Versioning { get; private set; }
-        public IFormLink<IKeywordLinkedReferenceGetter> KeywordOrReference => new FormLink<IKeywordLinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public IFormLink<ILinkedReferenceGetter> Reference => new FormLink<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public FormLink<IKeywordLinkedReferenceGetter> KeywordOrReference => new FormLink<IKeywordLinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<ILinkedReferenceGetter> Reference => new FormLink<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class CloudLayer :
         ICloudLayer,
         ILoquiObjectSetter<CloudLayer>,
-        IEquatable<CloudLayer>,
-        IEqualsMask
+        IEquatable<CloudLayer>
     {
         #region Ctor
         public CloudLayer()
@@ -518,14 +517,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static CloudLayer CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static CloudLayer CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -552,8 +543,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICloudLayerGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -643,24 +632,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ICloudLayerGetter item,
-            CloudLayer.Mask<bool?> checkMask)
-        {
-            return ((CloudLayerCommon)((ICloudLayerGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static CloudLayer.Mask<bool> GetHasBeenSetMask(this ICloudLayerGetter item)
-        {
-            var ret = new CloudLayer.Mask<bool>(false);
-            ((CloudLayerCommon)((ICloudLayerGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -755,17 +726,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ICloudLayer item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ICloudLayer item,
             MutagenFrame frame,
@@ -1155,33 +1115,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            ICloudLayerGetter item,
-            CloudLayer.Mask<bool?> checkMask)
-        {
-            if (checkMask.Enabled.HasValue && checkMask.Enabled.Value != (item.Enabled != null)) return false;
-            if (checkMask.XSpeed.HasValue && checkMask.XSpeed.Value != (item.XSpeed != null)) return false;
-            if (checkMask.YSpeed.HasValue && checkMask.YSpeed.Value != (item.YSpeed != null)) return false;
-            if (checkMask.Colors?.Overall.HasValue ?? false && checkMask.Colors.Overall.Value != (item.Colors != null)) return false;
-            if (checkMask.Colors?.Specific != null && (item.Colors == null || !item.Colors.HasBeenSet(checkMask.Colors.Specific))) return false;
-            if (checkMask.Alphas?.Overall.HasValue ?? false && checkMask.Alphas.Overall.Value != (item.Alphas != null)) return false;
-            if (checkMask.Alphas?.Specific != null && (item.Alphas == null || !item.Alphas.HasBeenSet(checkMask.Alphas.Specific))) return false;
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            ICloudLayerGetter item,
-            CloudLayer.Mask<bool> mask)
-        {
-            mask.Enabled = (item.Enabled != null);
-            mask.XSpeed = (item.XSpeed != null);
-            mask.YSpeed = (item.YSpeed != null);
-            var itemColors = item.Colors;
-            mask.Colors = new MaskItem<bool, WeatherColor.Mask<bool>?>(itemColors != null, itemColors?.GetHasBeenSetMask());
-            var itemAlphas = item.Alphas;
-            mask.Alphas = new MaskItem<bool, WeatherAlpha.Mask<bool>?>(itemAlphas != null, itemAlphas?.GetHasBeenSetMask());
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             ICloudLayerGetter? lhs,
@@ -1448,12 +1381,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this ICloudLayerGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((CloudLayerBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1485,8 +1419,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICloudLayerGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CloudLayerBinaryWriteTranslation.Instance;

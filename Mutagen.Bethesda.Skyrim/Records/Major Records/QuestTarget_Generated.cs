@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class QuestTarget :
         IQuestTarget,
         ILoquiObjectSetter<QuestTarget>,
-        IEquatable<QuestTarget>,
-        IEqualsMask
+        IEquatable<QuestTarget>
     {
         #region Ctor
         public QuestTarget()
@@ -44,7 +43,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Target
         public FormLink<IPlaced> Target { get; set; } = new FormLink<IPlaced>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IPlacedGetter> IQuestTargetGetter.Target => this.Target;
+        FormLink<IPlacedGetter> IQuestTargetGetter.Target => this.Target.ToGetter<IPlaced, IPlacedGetter>();
         #endregion
         #region Flags
         public Quest.TargetFlag Flags { get; set; } = default;
@@ -528,7 +527,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => QuestTargetCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => QuestTargetCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => QuestTargetCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestTargetCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestTargetCommon.Instance.RemapLinks(this, mapping);
         [Flags]
@@ -552,14 +551,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static QuestTarget CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static QuestTarget CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -586,8 +577,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IQuestTargetGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -605,7 +594,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IQuestTarget :
         IQuestTargetGetter,
-        ILoquiObjectSetter<IQuestTarget>
+        ILoquiObjectSetter<IQuestTarget>,
+        ILinkedFormKeyContainer
     {
         new FormLink<IPlaced> Target { get; set; }
         new Quest.TargetFlag Flags { get; set; }
@@ -616,7 +606,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IQuestTargetGetter :
         ILoquiObject,
         ILoquiObject<IQuestTargetGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -626,7 +616,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => QuestTarget_Registration.Instance;
-        IFormLink<IPlacedGetter> Target { get; }
+        FormLink<IPlacedGetter> Target { get; }
         Quest.TargetFlag Flags { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
         QuestTarget.QSTADataType QSTADataTypeState { get; }
@@ -676,24 +666,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IQuestTargetGetter item,
-            QuestTarget.Mask<bool?> checkMask)
-        {
-            return ((QuestTargetCommon)((IQuestTargetGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static QuestTarget.Mask<bool> GetHasBeenSetMask(this IQuestTargetGetter item)
-        {
-            var ret = new QuestTarget.Mask<bool>(false);
-            ((QuestTargetCommon)((IQuestTargetGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -788,17 +760,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IQuestTarget item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IQuestTarget item,
             MutagenFrame frame,
@@ -1147,7 +1108,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.Target ?? true)
             {
-                fg.AppendItem(item.Target, "Target");
+                fg.AppendItem(item.Target.FormKey, "Target");
             }
             if (printMask?.Flags ?? true)
             {
@@ -1175,24 +1136,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.QSTADataTypeState, "QSTADataTypeState");
             }
-        }
-        
-        public bool HasBeenSet(
-            IQuestTargetGetter item,
-            QuestTarget.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IQuestTargetGetter item,
-            QuestTarget.Mask<bool> mask)
-        {
-            mask.Target = true;
-            mask.Flags = true;
-            var ConditionsItem = item.Conditions;
-            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.QSTADataTypeState = true;
         }
         
         #region Equals and Hash
@@ -1231,7 +1174,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IEnumerable<FormKey> GetLinkFormKeys(IQuestTargetGetter obj)
         {
             yield return obj.Target.FormKey;
-            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainer> ()
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter> ()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
@@ -1256,7 +1199,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)QuestTarget_FieldIndex.Target) ?? true))
             {
-                item.Target = rhs.Target.FormKey;
+                item.Target = new FormLink<IPlaced>(rhs.Target.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)QuestTarget_FieldIndex.Flags) ?? true))
             {
@@ -1498,12 +1441,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IQuestTargetGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((QuestTargetBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1535,15 +1479,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IQuestTargetGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => QuestTargetCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => QuestTargetCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestTargetCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestTargetCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => QuestTargetCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => QuestTargetBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1563,7 +1503,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Target
         private int _TargetLocation => _QSTALocation!.Value;
         private bool _Target_IsSet => _QSTALocation.HasValue;
-        public IFormLink<IPlacedGetter> Target => _Target_IsSet ? new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_TargetLocation, 0x4)))) : FormLink<IPlacedGetter>.Null;
+        public FormLink<IPlacedGetter> Target => _Target_IsSet ? new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_TargetLocation, 0x4)))) : FormLink<IPlacedGetter>.Null;
         #endregion
         #region Flags
         private int _FlagsLocation => _QSTALocation!.Value + 0x4;

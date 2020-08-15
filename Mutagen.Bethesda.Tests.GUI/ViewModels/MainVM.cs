@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Tests.GUI
         public MainVM()
         {
             // Set up selected config swapping and loading
-            _SelectedSettings = this.WhenAny(x => x.SelectedConfigPath.TargetPath)
+            _SelectedSettings = this.WhenAnyValue(x => x.SelectedConfigPath.TargetPath)
                 .Select(x =>
                 {
                     TestingSettings? settings = null;
@@ -108,15 +108,15 @@ namespace Mutagen.Bethesda.Tests.GUI
                 .ToGuiProperty(this, nameof(SelectedSettings));
 
             // Set up additional file picker error to fire if settings couldn't parse
-            SelectedConfigPath.AdditionalError = this.WhenAny(x => x.SelectedSettings)
-                .Select<TestingSettings?, IErrorResponse>(settings =>
+            SelectedConfigPath.AdditionalError = this.WhenAnyValue(x => x.SelectedSettings)
+                .Select<TestingSettings?, ErrorResponse>(settings =>
                 {
                     if (settings == null) return ErrorResponse.Fail("Settings could not be serialized.");
                     return ErrorResponse.Success;
                 });
 
             // Funnel into convenient valid boolean for GUI use
-            _ValidTarget = this.WhenAny(x => x.SelectedConfigPath.ErrorState)
+            _ValidTarget = this.WhenAnyValue(x => x.SelectedConfigPath.ErrorState)
                 .Select(err => err.Succeeded)
                 .ToGuiProperty(this, nameof(ValidTarget));
 

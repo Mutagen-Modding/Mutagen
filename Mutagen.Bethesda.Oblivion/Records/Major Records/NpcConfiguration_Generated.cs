@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class NpcConfiguration :
         INpcConfiguration,
         ILoquiObjectSetter<NpcConfiguration>,
-        IEquatable<NpcConfiguration>,
-        IEqualsMask
+        IEquatable<NpcConfiguration>
     {
         #region Ctor
         public NpcConfiguration()
@@ -545,14 +544,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static NpcConfiguration CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static NpcConfiguration CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -579,8 +570,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((INpcConfigurationGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -676,24 +665,6 @@ namespace Mutagen.Bethesda.Oblivion
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this INpcConfigurationGetter item,
-            NpcConfiguration.Mask<bool?> checkMask)
-        {
-            return ((NpcConfigurationCommon)((INpcConfigurationGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static NpcConfiguration.Mask<bool> GetHasBeenSetMask(this INpcConfigurationGetter item)
-        {
-            var ret = new NpcConfiguration.Mask<bool>(false);
-            ((NpcConfigurationCommon)((INpcConfigurationGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this INpcConfigurationGetter item,
             INpcConfigurationGetter rhs)
@@ -786,17 +757,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this INpcConfiguration item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this INpcConfiguration item,
             MutagenFrame frame,
@@ -1212,26 +1172,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            INpcConfigurationGetter item,
-            NpcConfiguration.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            INpcConfigurationGetter item,
-            NpcConfiguration.Mask<bool> mask)
-        {
-            mask.Flags = true;
-            mask.BaseSpellPoints = true;
-            mask.Fatigue = true;
-            mask.BarterGold = true;
-            mask.LevelOffset = true;
-            mask.CalcMin = true;
-            mask.CalcMax = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             INpcConfigurationGetter? lhs,
@@ -1474,12 +1414,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this INpcConfigurationGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((NpcConfigurationBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1511,8 +1452,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((INpcConfigurationGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NpcConfigurationBinaryWriteTranslation.Instance;

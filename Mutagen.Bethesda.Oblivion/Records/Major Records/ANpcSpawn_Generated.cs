@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IANpcSpawnInternal,
         ILoquiObjectSetter<ANpcSpawn>,
-        IEquatable<ANpcSpawn>,
-        IEqualsMask
+        IEquatable<ANpcSpawn>
     {
         #region Ctor
         protected ANpcSpawn()
@@ -305,7 +304,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => ANpcSpawnCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ANpcSpawnCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ANpcSpawnCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANpcSpawnCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANpcSpawnCommon.Instance.RemapLinks(this, mapping);
         public ANpcSpawn(FormKey formKey)
@@ -342,8 +341,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IANpcSpawnGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -362,7 +359,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IANpcSpawn :
         IANpcSpawnGetter,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<IANpcSpawnInternal>
+        ILoquiObjectSetter<IANpcSpawnInternal>,
+        ILinkedFormKeyContainer
     {
     }
 
@@ -376,7 +374,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IANpcSpawnGetter :
         IOblivionMajorRecordGetter,
         ILoquiObject<IANpcSpawnGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => ANpcSpawn_Registration.Instance;
@@ -426,24 +424,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IANpcSpawnGetter item,
-            ANpcSpawn.Mask<bool?> checkMask)
-        {
-            return ((ANpcSpawnCommon)((IANpcSpawnGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static ANpcSpawn.Mask<bool> GetHasBeenSetMask(this IANpcSpawnGetter item)
-        {
-            var ret = new ANpcSpawn.Mask<bool>(false);
-            ((ANpcSpawnCommon)((IANpcSpawnGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -515,17 +495,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IANpcSpawnInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IANpcSpawnInternal item,
             MutagenFrame frame,
@@ -855,24 +824,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-        }
-        
-        public bool HasBeenSet(
-            IANpcSpawnGetter item,
-            ANpcSpawn.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IANpcSpawnGetter item,
-            ANpcSpawn.Mask<bool> mask)
-        {
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static ANpcSpawn_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
@@ -1231,15 +1182,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IANpcSpawnGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => ANpcSpawnCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ANpcSpawnCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANpcSpawnCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANpcSpawnCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ANpcSpawnCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ANpcSpawnBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

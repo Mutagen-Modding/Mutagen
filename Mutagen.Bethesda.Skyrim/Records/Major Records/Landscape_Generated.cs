@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ILandscapeInternal,
         ILoquiObjectSetter<Landscape>,
-        IEquatable<Landscape>,
-        IEqualsMask
+        IEquatable<Landscape>
     {
         #region Ctor
         protected Landscape()
@@ -710,7 +709,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => LandscapeCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LandscapeCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LandscapeCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LandscapeCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LandscapeCommon.Instance.RemapLinks(this, mapping);
         public Landscape(FormKey formKey)
@@ -745,14 +744,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new Landscape CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static Landscape CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -779,8 +770,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILandscapeGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -799,7 +788,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILandscape :
         ILandscapeGetter,
         ISkyrimMajorRecord,
-        ILoquiObjectSetter<ILandscapeInternal>
+        ILoquiObjectSetter<ILandscapeInternal>,
+        ILinkedFormKeyContainer
     {
         new MemorySlice<Byte>? DATA { get; set; }
         new MemorySlice<Byte>? VertexNormals { get; set; }
@@ -819,7 +809,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILandscapeGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<ILandscapeGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Landscape_Registration.Instance;
@@ -875,24 +865,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ILandscapeGetter item,
-            Landscape.Mask<bool?> checkMask)
-        {
-            return ((LandscapeCommon)((ILandscapeGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Landscape.Mask<bool> GetHasBeenSetMask(this ILandscapeGetter item)
-        {
-            var ret = new Landscape.Mask<bool>(false);
-            ((LandscapeCommon)((ILandscapeGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -964,17 +936,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ILandscapeInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ILandscapeInternal item,
             MutagenFrame frame,
@@ -1446,43 +1407,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendItem(subItem);
+                            fg.AppendItem(subItem.FormKey);
                         }
                         fg.AppendLine("]");
                     }
                 }
                 fg.AppendLine("]");
             }
-        }
-        
-        public bool HasBeenSet(
-            ILandscapeGetter item,
-            Landscape.Mask<bool?> checkMask)
-        {
-            if (checkMask.DATA.HasValue && checkMask.DATA.Value != (item.DATA != null)) return false;
-            if (checkMask.VertexNormals.HasValue && checkMask.VertexNormals.Value != (item.VertexNormals != null)) return false;
-            if (checkMask.VertexHeightMap.HasValue && checkMask.VertexHeightMap.Value != (item.VertexHeightMap != null)) return false;
-            if (checkMask.VertexColors.HasValue && checkMask.VertexColors.Value != (item.VertexColors != null)) return false;
-            if (checkMask.Textures?.Overall.HasValue ?? false && checkMask.Textures!.Overall.Value != (item.Textures != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            ILandscapeGetter item,
-            Landscape.Mask<bool> mask)
-        {
-            mask.DATA = (item.DATA != null);
-            mask.VertexNormals = (item.VertexNormals != null);
-            mask.VertexHeightMap = (item.VertexHeightMap != null);
-            mask.VertexColors = (item.VertexColors != null);
-            var LayersItem = item.Layers;
-            mask.Layers = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, BaseLayer.Mask<bool>?>>?>(true, LayersItem.WithIndex().Select((i) => new MaskItemIndexed<bool, BaseLayer.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.Textures = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Textures != null), default);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static Landscape_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -2127,15 +2058,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILandscapeGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => LandscapeCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LandscapeCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LandscapeCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LandscapeCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LandscapeCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LandscapeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

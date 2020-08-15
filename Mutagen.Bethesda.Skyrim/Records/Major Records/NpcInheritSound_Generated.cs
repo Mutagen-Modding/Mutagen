@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         ANpcSoundDefinition,
         INpcInheritSound,
         ILoquiObjectSetter<NpcInheritSound>,
-        IEquatable<NpcInheritSound>,
-        IEqualsMask
+        IEquatable<NpcInheritSound>
     {
         #region Ctor
         public NpcInheritSound()
@@ -45,7 +44,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region InheritsSoundsFrom
         public FormLinkNullable<Npc> InheritsSoundsFrom { get; set; } = new FormLinkNullable<Npc>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<INpcGetter> INpcInheritSoundGetter.InheritsSoundsFrom => this.InheritsSoundsFrom;
+        FormLinkNullable<INpcGetter> INpcInheritSoundGetter.InheritsSoundsFrom => this.InheritsSoundsFrom.ToGetter<Npc, INpcGetter>();
         #endregion
 
         #region To String
@@ -334,7 +333,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => NpcInheritSoundCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => NpcInheritSoundCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => NpcInheritSoundCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcInheritSoundCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcInheritSoundCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -352,14 +351,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new NpcInheritSound CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static NpcInheritSound CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -386,8 +377,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((INpcInheritSoundGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -406,7 +395,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface INpcInheritSound :
         INpcInheritSoundGetter,
         IANpcSoundDefinition,
-        ILoquiObjectSetter<INpcInheritSound>
+        ILoquiObjectSetter<INpcInheritSound>,
+        ILinkedFormKeyContainer
     {
         new FormLinkNullable<Npc> InheritsSoundsFrom { get; set; }
     }
@@ -414,11 +404,11 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface INpcInheritSoundGetter :
         IANpcSoundDefinitionGetter,
         ILoquiObject<INpcInheritSoundGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => NpcInheritSound_Registration.Instance;
-        IFormLinkNullable<INpcGetter> InheritsSoundsFrom { get; }
+        FormLinkNullable<INpcGetter> InheritsSoundsFrom { get; }
 
     }
 
@@ -465,24 +455,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this INpcInheritSoundGetter item,
-            NpcInheritSound.Mask<bool?> checkMask)
-        {
-            return ((NpcInheritSoundCommon)((INpcInheritSoundGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static NpcInheritSound.Mask<bool> GetHasBeenSetMask(this INpcInheritSoundGetter item)
-        {
-            var ret = new NpcInheritSound.Mask<bool>(false);
-            ((NpcInheritSoundCommon)((INpcInheritSoundGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -554,17 +526,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this INpcInheritSound item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this INpcInheritSound item,
             MutagenFrame frame,
@@ -886,31 +847,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if ((printMask?.InheritsSoundsFrom ?? true)
-                && item.InheritsSoundsFrom.TryGet(out var InheritsSoundsFromItem))
+            if (printMask?.InheritsSoundsFrom ?? true)
             {
-                fg.AppendItem(InheritsSoundsFromItem, "InheritsSoundsFrom");
+                fg.AppendItem(item.InheritsSoundsFrom.FormKey, "InheritsSoundsFrom");
             }
-        }
-        
-        public bool HasBeenSet(
-            INpcInheritSoundGetter item,
-            NpcInheritSound.Mask<bool?> checkMask)
-        {
-            if (checkMask.InheritsSoundsFrom.HasValue && checkMask.InheritsSoundsFrom.Value != (item.InheritsSoundsFrom.FormKey != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            INpcInheritSoundGetter item,
-            NpcInheritSound.Mask<bool> mask)
-        {
-            mask.InheritsSoundsFrom = (item.InheritsSoundsFrom.FormKey != null);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static NpcInheritSound_FieldIndex ConvertFieldIndex(ANpcSoundDefinition_FieldIndex index)
@@ -946,10 +886,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(INpcInheritSoundGetter item)
         {
             var hash = new HashCode();
-            if (item.InheritsSoundsFrom.TryGet(out var InheritsSoundsFromitem))
-            {
-                hash.Add(InheritsSoundsFromitem);
-            }
+            hash.Add(item.InheritsSoundsFrom);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1003,7 +940,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)NpcInheritSound_FieldIndex.InheritsSoundsFrom) ?? true))
             {
-                item.InheritsSoundsFrom = rhs.InheritsSoundsFrom.FormKey;
+                item.InheritsSoundsFrom = new FormLinkNullable<Npc>(rhs.InheritsSoundsFrom.FormKey);
             }
         }
         
@@ -1211,15 +1148,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((INpcInheritSoundGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => NpcInheritSoundCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => NpcInheritSoundCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcInheritSoundCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcInheritSoundCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => NpcInheritSoundCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => NpcInheritSoundBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1234,8 +1167,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region InheritsSoundsFrom
         private int? _InheritsSoundsFromLocation;
-        public bool InheritsSoundsFrom_IsSet => _InheritsSoundsFromLocation.HasValue;
-        public IFormLinkNullable<INpcGetter> InheritsSoundsFrom => _InheritsSoundsFromLocation.HasValue ? new FormLinkNullable<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _InheritsSoundsFromLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcGetter>.Null;
+        public FormLinkNullable<INpcGetter> InheritsSoundsFrom => _InheritsSoundsFromLocation.HasValue ? new FormLinkNullable<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _InheritsSoundsFromLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

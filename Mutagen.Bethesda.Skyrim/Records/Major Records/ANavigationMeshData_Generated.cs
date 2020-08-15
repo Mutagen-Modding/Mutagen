@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public abstract partial class ANavigationMeshData :
         IANavigationMeshData,
         ILoquiObjectSetter<ANavigationMeshData>,
-        IEquatable<ANavigationMeshData>,
-        IEqualsMask
+        IEquatable<ANavigationMeshData>
     {
         #region Ctor
         public ANavigationMeshData()
@@ -1041,7 +1040,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual IEnumerable<FormKey> LinkFormKeys => ANavigationMeshDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ANavigationMeshDataCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ANavigationMeshDataCommon.Instance.GetLinkFormKeys(this);
         protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANavigationMeshDataCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANavigationMeshDataCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -1063,8 +1062,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IANavigationMeshDataGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1082,7 +1079,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IANavigationMeshData :
         IANavigationMeshDataGetter,
-        ILoquiObjectSetter<IANavigationMeshData>
+        ILoquiObjectSetter<IANavigationMeshData>,
+        ILinkedFormKeyContainer
     {
         new UInt32 NavmeshVersion { get; set; }
         new UInt32 Magic { get; set; }
@@ -1101,7 +1099,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IANavigationMeshDataGetter :
         ILoquiObject,
         ILoquiObject<IANavigationMeshDataGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -1169,24 +1167,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IANavigationMeshDataGetter item,
-            ANavigationMeshData.Mask<bool?> checkMask)
-        {
-            return ((ANavigationMeshDataCommon)((IANavigationMeshDataGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static ANavigationMeshData.Mask<bool> GetHasBeenSetMask(this IANavigationMeshDataGetter item)
-        {
-            var ret = new ANavigationMeshData.Mask<bool>(false);
-            ((ANavigationMeshDataCommon)((IANavigationMeshDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -1281,17 +1261,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IANavigationMeshData item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IANavigationMeshData item,
             MutagenFrame frame,
@@ -1858,34 +1827,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IANavigationMeshDataGetter item,
-            ANavigationMeshData.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IANavigationMeshDataGetter item,
-            ANavigationMeshData.Mask<bool> mask)
-        {
-            mask.NavmeshVersion = true;
-            mask.Magic = true;
-            mask.Vertices = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
-            var TrianglesItem = item.Triangles;
-            mask.Triangles = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, NavmeshTriangle.Mask<bool>?>>?>(true, TrianglesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, NavmeshTriangle.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            var EdgeLinksItem = item.EdgeLinks;
-            mask.EdgeLinks = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, EdgeLink.Mask<bool>?>>?>(true, EdgeLinksItem.WithIndex().Select((i) => new MaskItemIndexed<bool, EdgeLink.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            var DoorTrianglesItem = item.DoorTriangles;
-            mask.DoorTriangles = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, DoorTriangle.Mask<bool>?>>?>(true, DoorTrianglesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, DoorTriangle.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.NavmeshGridDivisor = true;
-            mask.MaxDistanceX = true;
-            mask.MaxDistanceY = true;
-            mask.Min = true;
-            mask.Max = true;
-            mask.NavmeshGrid = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IANavigationMeshDataGetter? lhs,
@@ -2368,12 +2309,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IANavigationMeshDataGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((ANavigationMeshDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -2405,15 +2347,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IANavigationMeshDataGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual IEnumerable<FormKey> LinkFormKeys => ANavigationMeshDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ANavigationMeshDataCommon.Instance.GetLinkFormKeys(this);
-        protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANavigationMeshDataCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANavigationMeshDataCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ANavigationMeshDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => ANavigationMeshDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

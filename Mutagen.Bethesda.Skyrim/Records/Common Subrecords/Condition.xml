@@ -4,7 +4,7 @@
     <Fields>
       <Enum name="CompareOperator" enumName="CompareOperator" binary="NoGeneration" />
       <Enum name="Flags" enumName="Condition.Flag" binary="Custom" byteLength="1" />
-      <ByteArray name="Unknown1" byteLength="3" hasBeenSet="False" />
+      <ByteArray name="Unknown1" byteLength="3" nullable="False" />
     </Fields>
   </Object>
   <Object name="ConditionGlobal" objType="Subrecord" baseClass="Condition" recordType="CTDA" GUID="cafedc3d-b9cf-4eb9-92fc-dd38838b19ce" ID="37" customBinaryEnd="Normal">
@@ -30,10 +30,10 @@
       <CustomLogic name="ParameterParsing" />
       <FormLink name="ParameterOneRecord" refName="SkyrimMajorRecord" binary="NoGeneration" />
       <Int32 name="ParameterOneNumber" binary="NoGeneration" />
-      <String name="ParameterOneString" binary="NoGeneration" hasBeenSet="True" />
+      <String name="ParameterOneString" binary="NoGeneration" nullable="True" />
       <FormLink name="ParameterTwoRecord" refName="SkyrimMajorRecord" binary="NoGeneration" />
       <Int32 name="ParameterTwoNumber" binary="NoGeneration" />
-      <String name="ParameterTwoString" binary="NoGeneration" hasBeenSet="True" />
+      <String name="ParameterTwoString" binary="NoGeneration" nullable="True" />
       <Int32 name="Unknown3" binary="NoGeneration" />
       <Int32 name="Unknown4" binary="NoGeneration" />
       <Int32 name="Unknown5" binary="NoGeneration" default="-1" />
