@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Tests.GUI
 
             // Set up additional file picker error to fire if settings couldn't parse
             SelectedConfigPath.AdditionalError = this.WhenAnyValue(x => x.SelectedSettings)
-                .Select<TestingSettings?, IErrorResponse>(settings =>
+                .Select<TestingSettings?, ErrorResponse>(settings =>
                 {
                     if (settings == null) return ErrorResponse.Fail("Settings could not be serialized.");
                     return ErrorResponse.Success;
