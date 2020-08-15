@@ -1,5 +1,4 @@
-﻿using Alphaleonis.Win32.Filesystem;
-using Noggog;
+﻿using Noggog;
 using Noggog.WPF;
 using ReactiveUI;
 using System;

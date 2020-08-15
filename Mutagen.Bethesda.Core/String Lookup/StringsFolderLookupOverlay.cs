@@ -1,3 +1,4 @@
+using Compression.BSA;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using Wabbajack.Common;
-using Compression.BSA;
 
 namespace Mutagen.Bethesda
 {
@@ -69,7 +69,8 @@ namespace Mutagen.Bethesda
                     foreach (var bsaFile in Directory.EnumerateFiles(dataPath, "*.bsa"))
                     {
                         var bsaReader = BSAReader.Load(new AbsolutePath(bsaFile, skipValidation: true));
-                        foreach (var item in bsaReader.Files)
+                        if (!bsaReader.TryGetFolder("strings", out var stringsFolder)) continue;
+                        foreach (var item in stringsFolder.Files)
                         {
                             if (!StringsUtility.TryRetrieveInfoFromString(Path.GetFileName(item.Path.ToString()), out var type, out var lang, out var modName)) continue;
                             if (!MemoryExtensions.Equals(modKey.Name, modName, StringComparison.OrdinalIgnoreCase)) continue;

@@ -14,10 +14,10 @@
     <None Remove="Translations\Binary\WriteParameters\**" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Compression.BSA" Version="2.2.1.1" />
     <PackageReference Include="DotNetZip" Version="1.13.8" />
     <PackageReference Include="Loqui" Version="1.1.22" />
     <PackageReference Include="Noggog.CSharpExt" Version="1.0.37" />
-    <PackageReference Include="Wabbajack.Compression.BSA" Version="2.1.0" />
   </ItemGroup>
   <PropertyGroup>
     <PackageId>Mutagen.Bethesda.Core</PackageId>
