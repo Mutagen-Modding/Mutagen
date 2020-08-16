@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override bool CopyNeedsTryCatch => throw new NotImplementedException();
 
-        public override bool Copy => true;
+        public override CopyLevel CopyLevel => CopyLevel.All;
 
         public int Index;
 

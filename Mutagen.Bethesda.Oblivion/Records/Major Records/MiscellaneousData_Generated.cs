@@ -517,7 +517,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -529,7 +530,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -543,7 +545,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = MiscellaneousData.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -557,7 +560,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static MiscellaneousData DeepCopy(
@@ -959,12 +963,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly MiscellaneousDataSetterTranslationCommon Instance = new MiscellaneousDataSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IMiscellaneousData item,
             IMiscellaneousDataGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)MiscellaneousData_FieldIndex.Value) ?? true))
             {
@@ -983,9 +988,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MiscellaneousData.TranslationMask? copyMask = null)
         {
             MiscellaneousData ret = (MiscellaneousData)((MiscellaneousDataCommon)((IMiscellaneousDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((MiscellaneousDataSetterTranslationCommon)((IMiscellaneousDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -994,11 +1002,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out MiscellaneousData.ErrorMask errorMask,
             MiscellaneousData.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             MiscellaneousData ret = (MiscellaneousData)((MiscellaneousDataCommon)((IMiscellaneousDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((MiscellaneousDataSetterTranslationCommon)((IMiscellaneousDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = MiscellaneousData.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1008,10 +1020,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             MiscellaneousData ret = (MiscellaneousData)((MiscellaneousDataCommon)((IMiscellaneousDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((MiscellaneousDataSetterTranslationCommon)((IMiscellaneousDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

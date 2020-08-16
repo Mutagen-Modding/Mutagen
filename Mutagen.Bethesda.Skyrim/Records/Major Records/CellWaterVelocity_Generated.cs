@@ -591,7 +591,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -603,7 +604,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -617,7 +619,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = CellWaterVelocity.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -631,7 +634,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static CellWaterVelocity DeepCopy(
@@ -1073,12 +1077,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly CellWaterVelocitySetterTranslationCommon Instance = new CellWaterVelocitySetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             ICellWaterVelocity item,
             ICellWaterVelocityGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)CellWaterVelocity_FieldIndex.Offset) ?? true))
             {
@@ -1105,9 +1110,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             CellWaterVelocity.TranslationMask? copyMask = null)
         {
             CellWaterVelocity ret = (CellWaterVelocity)((CellWaterVelocityCommon)((ICellWaterVelocityGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((CellWaterVelocitySetterTranslationCommon)((ICellWaterVelocityGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1116,11 +1124,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out CellWaterVelocity.ErrorMask errorMask,
             CellWaterVelocity.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             CellWaterVelocity ret = (CellWaterVelocity)((CellWaterVelocityCommon)((ICellWaterVelocityGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((CellWaterVelocitySetterTranslationCommon)((ICellWaterVelocityGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = CellWaterVelocity.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1130,10 +1142,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             CellWaterVelocity ret = (CellWaterVelocity)((CellWaterVelocityCommon)((ICellWaterVelocityGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((CellWaterVelocitySetterTranslationCommon)((ICellWaterVelocityGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

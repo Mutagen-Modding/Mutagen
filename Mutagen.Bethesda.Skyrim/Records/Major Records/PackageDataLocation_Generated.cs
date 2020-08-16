@@ -495,7 +495,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = PackageDataLocation.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -509,7 +510,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static PackageDataLocation DeepCopy(
@@ -964,18 +966,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly PackageDataLocationSetterTranslationCommon Instance = new PackageDataLocationSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IPackageDataLocation item,
             IPackageDataLocationGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 (IAPackageData)item,
                 (IAPackageDataGetter)rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PackageDataLocation_FieldIndex.Location) ?? true))
             {
                 errorMask?.PushIndex((int)PackageDataLocation_FieldIndex.Location);
@@ -1005,13 +1009,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAPackageData item,
             IAPackageDataGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IPackageDataLocation)item,
                 rhs: (IPackageDataLocationGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         #endregion
@@ -1021,9 +1027,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             PackageDataLocation.TranslationMask? copyMask = null)
         {
             PackageDataLocation ret = (PackageDataLocation)((PackageDataLocationCommon)((IPackageDataLocationGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((PackageDataLocationSetterTranslationCommon)((IPackageDataLocationGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1032,11 +1041,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out PackageDataLocation.ErrorMask errorMask,
             PackageDataLocation.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             PackageDataLocation ret = (PackageDataLocation)((PackageDataLocationCommon)((IPackageDataLocationGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((PackageDataLocationSetterTranslationCommon)((IPackageDataLocationGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = PackageDataLocation.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1046,10 +1059,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             PackageDataLocation ret = (PackageDataLocation)((PackageDataLocationCommon)((IPackageDataLocationGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((PackageDataLocationSetterTranslationCommon)((IPackageDataLocationGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

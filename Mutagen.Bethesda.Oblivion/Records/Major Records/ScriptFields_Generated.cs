@@ -809,7 +809,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -821,7 +822,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -835,7 +837,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = ScriptFields.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -849,7 +852,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static ScriptFields DeepCopy(
@@ -1370,12 +1374,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly ScriptFieldsSetterTranslationCommon Instance = new ScriptFieldsSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IScriptFields item,
             IScriptFieldsGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)ScriptFields_FieldIndex.MetadataSummary) ?? true))
             {
@@ -1469,9 +1474,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptFields.TranslationMask? copyMask = null)
         {
             ScriptFields ret = (ScriptFields)((ScriptFieldsCommon)((IScriptFieldsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((ScriptFieldsSetterTranslationCommon)((IScriptFieldsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1480,11 +1488,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out ScriptFields.ErrorMask errorMask,
             ScriptFields.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ScriptFields ret = (ScriptFields)((ScriptFieldsCommon)((IScriptFieldsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((ScriptFieldsSetterTranslationCommon)((IScriptFieldsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = ScriptFields.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1494,10 +1506,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             ScriptFields ret = (ScriptFields)((ScriptFieldsCommon)((IScriptFieldsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((ScriptFieldsSetterTranslationCommon)((IScriptFieldsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

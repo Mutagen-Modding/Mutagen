@@ -613,7 +613,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -625,7 +626,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -639,7 +641,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = WorldspaceGridReference.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -653,7 +656,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static WorldspaceGridReference DeepCopy(
@@ -1078,12 +1082,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly WorldspaceGridReferenceSetterTranslationCommon Instance = new WorldspaceGridReferenceSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IWorldspaceGridReference item,
             IWorldspaceGridReferenceGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)WorldspaceGridReference_FieldIndex.GridPosition) ?? true))
             {
@@ -1122,9 +1127,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WorldspaceGridReference.TranslationMask? copyMask = null)
         {
             WorldspaceGridReference ret = (WorldspaceGridReference)((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((WorldspaceGridReferenceSetterTranslationCommon)((IWorldspaceGridReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1133,11 +1141,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out WorldspaceGridReference.ErrorMask errorMask,
             WorldspaceGridReference.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             WorldspaceGridReference ret = (WorldspaceGridReference)((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((WorldspaceGridReferenceSetterTranslationCommon)((IWorldspaceGridReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = WorldspaceGridReference.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1147,10 +1159,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             WorldspaceGridReference ret = (WorldspaceGridReference)((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((WorldspaceGridReferenceSetterTranslationCommon)((IWorldspaceGridReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

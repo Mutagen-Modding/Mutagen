@@ -516,7 +516,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = FactionOwner.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -530,7 +531,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static FactionOwner DeepCopy(
@@ -980,18 +982,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly FactionOwnerSetterTranslationCommon Instance = new FactionOwnerSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IFactionOwner item,
             IFactionOwnerGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 (IOwnerTarget)item,
                 (IOwnerTargetGetter)rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)FactionOwner_FieldIndex.Faction) ?? true))
             {
                 item.Faction = new FormLink<Faction>(rhs.Faction.FormKey);
@@ -1007,13 +1011,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IOwnerTarget item,
             IOwnerTargetGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IFactionOwner)item,
                 rhs: (IFactionOwnerGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         #endregion
@@ -1023,9 +1029,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FactionOwner.TranslationMask? copyMask = null)
         {
             FactionOwner ret = (FactionOwner)((FactionOwnerCommon)((IFactionOwnerGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((FactionOwnerSetterTranslationCommon)((IFactionOwnerGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1034,11 +1043,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out FactionOwner.ErrorMask errorMask,
             FactionOwner.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             FactionOwner ret = (FactionOwner)((FactionOwnerCommon)((IFactionOwnerGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((FactionOwnerSetterTranslationCommon)((IFactionOwnerGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = FactionOwner.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1048,10 +1061,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             FactionOwner ret = (FactionOwner)((FactionOwnerCommon)((IFactionOwnerGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((FactionOwnerSetterTranslationCommon)((IFactionOwnerGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

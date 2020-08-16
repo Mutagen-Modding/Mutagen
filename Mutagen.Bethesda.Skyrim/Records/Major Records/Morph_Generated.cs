@@ -482,7 +482,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -494,7 +495,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -508,7 +510,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = Morph.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -522,7 +525,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static Morph DeepCopy(
@@ -900,12 +904,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly MorphSetterTranslationCommon Instance = new MorphSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IMorph item,
             IMorphGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)Morph_FieldIndex.Data) ?? true))
             {
@@ -920,9 +925,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Morph.TranslationMask? copyMask = null)
         {
             Morph ret = (Morph)((MorphCommon)((IMorphGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((MorphSetterTranslationCommon)((IMorphGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -931,11 +939,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out Morph.ErrorMask errorMask,
             Morph.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             Morph ret = (Morph)((MorphCommon)((IMorphGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((MorphSetterTranslationCommon)((IMorphGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = Morph.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -945,10 +957,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             Morph ret = (Morph)((MorphCommon)((IMorphGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((MorphSetterTranslationCommon)((IMorphGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

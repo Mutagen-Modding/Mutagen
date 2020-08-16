@@ -463,7 +463,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = BookTeachesNothing.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -477,7 +478,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static BookTeachesNothing DeepCopy(
@@ -906,18 +908,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly BookTeachesNothingSetterTranslationCommon Instance = new BookTeachesNothingSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IBookTeachesNothing item,
             IBookTeachesNothingGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 (IBookTeachTarget)item,
                 (IBookTeachTargetGetter)rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)BookTeachesNothing_FieldIndex.RawContent) ?? true))
             {
                 item.RawContent = rhs.RawContent;
@@ -929,13 +933,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IBookTeachTarget item,
             IBookTeachTargetGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IBookTeachesNothing)item,
                 rhs: (IBookTeachesNothingGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         #endregion
@@ -945,9 +951,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BookTeachesNothing.TranslationMask? copyMask = null)
         {
             BookTeachesNothing ret = (BookTeachesNothing)((BookTeachesNothingCommon)((IBookTeachesNothingGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((BookTeachesNothingSetterTranslationCommon)((IBookTeachesNothingGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -956,11 +965,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out BookTeachesNothing.ErrorMask errorMask,
             BookTeachesNothing.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             BookTeachesNothing ret = (BookTeachesNothing)((BookTeachesNothingCommon)((IBookTeachesNothingGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((BookTeachesNothingSetterTranslationCommon)((IBookTeachesNothingGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = BookTeachesNothing.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -970,10 +983,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             BookTeachesNothing ret = (BookTeachesNothing)((BookTeachesNothingCommon)((IBookTeachesNothingGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((BookTeachesNothingSetterTranslationCommon)((IBookTeachesNothingGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

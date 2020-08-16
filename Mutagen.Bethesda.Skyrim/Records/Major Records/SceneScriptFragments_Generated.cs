@@ -565,7 +565,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = SceneScriptFragments.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -579,7 +580,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static SceneScriptFragments DeepCopy(
@@ -1033,18 +1035,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly SceneScriptFragmentsSetterTranslationCommon Instance = new SceneScriptFragmentsSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             ISceneScriptFragments item,
             ISceneScriptFragmentsGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 (IScriptFragments)item,
                 (IScriptFragmentsGetter)rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)SceneScriptFragments_FieldIndex.PhaseFragments) ?? true))
             {
                 errorMask?.PushIndex((int)SceneScriptFragments_FieldIndex.PhaseFragments);
@@ -1076,13 +1080,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IScriptFragments item,
             IScriptFragmentsGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (ISceneScriptFragments)item,
                 rhs: (ISceneScriptFragmentsGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         #endregion
@@ -1092,9 +1098,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SceneScriptFragments.TranslationMask? copyMask = null)
         {
             SceneScriptFragments ret = (SceneScriptFragments)((SceneScriptFragmentsCommon)((ISceneScriptFragmentsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((SceneScriptFragmentsSetterTranslationCommon)((ISceneScriptFragmentsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1103,11 +1112,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out SceneScriptFragments.ErrorMask errorMask,
             SceneScriptFragments.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             SceneScriptFragments ret = (SceneScriptFragments)((SceneScriptFragmentsCommon)((ISceneScriptFragmentsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((SceneScriptFragmentsSetterTranslationCommon)((ISceneScriptFragmentsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = SceneScriptFragments.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1117,10 +1130,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             SceneScriptFragments ret = (SceneScriptFragments)((SceneScriptFragmentsCommon)((ISceneScriptFragmentsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((SceneScriptFragmentsSetterTranslationCommon)((ISceneScriptFragmentsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

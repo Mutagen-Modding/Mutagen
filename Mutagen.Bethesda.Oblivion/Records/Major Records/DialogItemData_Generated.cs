@@ -555,7 +555,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -567,7 +568,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -581,7 +583,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = DialogItemData.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -595,7 +598,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static DialogItemData DeepCopy(
@@ -1017,12 +1021,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly DialogItemDataSetterTranslationCommon Instance = new DialogItemDataSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IDialogItemData item,
             IDialogItemDataGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)DialogItemData_FieldIndex.Versioning) ?? true))
             {
@@ -1046,9 +1051,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             DialogItemData.TranslationMask? copyMask = null)
         {
             DialogItemData ret = (DialogItemData)((DialogItemDataCommon)((IDialogItemDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((DialogItemDataSetterTranslationCommon)((IDialogItemDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1057,11 +1065,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out DialogItemData.ErrorMask errorMask,
             DialogItemData.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             DialogItemData ret = (DialogItemData)((DialogItemDataCommon)((IDialogItemDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((DialogItemDataSetterTranslationCommon)((IDialogItemDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = DialogItemData.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1071,10 +1083,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             DialogItemData ret = (DialogItemData)((DialogItemDataCommon)((IDialogItemDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((DialogItemDataSetterTranslationCommon)((IDialogItemDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

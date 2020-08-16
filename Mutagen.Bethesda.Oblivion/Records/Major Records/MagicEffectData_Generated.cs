@@ -848,7 +848,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -860,7 +861,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -874,7 +876,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = MagicEffectData.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -888,7 +891,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static MagicEffectData DeepCopy(
@@ -1489,12 +1493,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly MagicEffectDataSetterTranslationCommon Instance = new MagicEffectDataSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IMagicEffectData item,
             IMagicEffectDataGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.Versioning) ?? true))
             {
@@ -1572,9 +1577,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MagicEffectData.TranslationMask? copyMask = null)
         {
             MagicEffectData ret = (MagicEffectData)((MagicEffectDataCommon)((IMagicEffectDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((MagicEffectDataSetterTranslationCommon)((IMagicEffectDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1583,11 +1591,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out MagicEffectData.ErrorMask errorMask,
             MagicEffectData.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             MagicEffectData ret = (MagicEffectData)((MagicEffectDataCommon)((IMagicEffectDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((MagicEffectDataSetterTranslationCommon)((IMagicEffectDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = MagicEffectData.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1597,10 +1609,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             MagicEffectData ret = (MagicEffectData)((MagicEffectDataCommon)((IMagicEffectDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((MagicEffectDataSetterTranslationCommon)((IMagicEffectDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

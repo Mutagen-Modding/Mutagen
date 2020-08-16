@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "ublic static void WriteGroupPara";
+            string testString = "errorMask = MasterReference.ErrorMask.Factory(errorMaskBuilder);";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

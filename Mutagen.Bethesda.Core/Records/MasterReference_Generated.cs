@@ -516,7 +516,8 @@ namespace Mutagen.Bethesda
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -528,7 +529,8 @@ namespace Mutagen.Bethesda
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -542,7 +544,8 @@ namespace Mutagen.Bethesda
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = MasterReference.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -556,7 +559,8 @@ namespace Mutagen.Bethesda
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static MasterReference DeepCopy(
@@ -956,12 +960,13 @@ namespace Mutagen.Bethesda.Internals
     {
         public static readonly MasterReferenceSetterTranslationCommon Instance = new MasterReferenceSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IMasterReference item,
             IMasterReferenceGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)MasterReference_FieldIndex.Master) ?? true))
             {
@@ -980,9 +985,12 @@ namespace Mutagen.Bethesda.Internals
             MasterReference.TranslationMask? copyMask = null)
         {
             MasterReference ret = (MasterReference)((MasterReferenceCommon)((IMasterReferenceGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((MasterReferenceSetterTranslationCommon)((IMasterReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -991,11 +999,15 @@ namespace Mutagen.Bethesda.Internals
             out MasterReference.ErrorMask errorMask,
             MasterReference.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             MasterReference ret = (MasterReference)((MasterReferenceCommon)((IMasterReferenceGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((MasterReferenceSetterTranslationCommon)((IMasterReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = MasterReference.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1005,10 +1017,12 @@ namespace Mutagen.Bethesda.Internals
             TranslationCrystal? copyMask = null)
         {
             MasterReference ret = (MasterReference)((MasterReferenceCommon)((IMasterReferenceGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((MasterReferenceSetterTranslationCommon)((IMasterReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

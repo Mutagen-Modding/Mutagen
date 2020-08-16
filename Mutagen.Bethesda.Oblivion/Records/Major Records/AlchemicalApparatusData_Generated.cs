@@ -584,7 +584,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -596,7 +597,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -610,7 +612,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = AlchemicalApparatusData.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -624,7 +627,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static AlchemicalApparatusData DeepCopy(
@@ -1066,12 +1070,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly AlchemicalApparatusDataSetterTranslationCommon Instance = new AlchemicalApparatusDataSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IAlchemicalApparatusData item,
             IAlchemicalApparatusDataGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)AlchemicalApparatusData_FieldIndex.Type) ?? true))
             {
@@ -1098,9 +1103,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             AlchemicalApparatusData.TranslationMask? copyMask = null)
         {
             AlchemicalApparatusData ret = (AlchemicalApparatusData)((AlchemicalApparatusDataCommon)((IAlchemicalApparatusDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((AlchemicalApparatusDataSetterTranslationCommon)((IAlchemicalApparatusDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1109,11 +1117,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out AlchemicalApparatusData.ErrorMask errorMask,
             AlchemicalApparatusData.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             AlchemicalApparatusData ret = (AlchemicalApparatusData)((AlchemicalApparatusDataCommon)((IAlchemicalApparatusDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((AlchemicalApparatusDataSetterTranslationCommon)((IAlchemicalApparatusDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = AlchemicalApparatusData.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1123,10 +1135,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             AlchemicalApparatusData ret = (AlchemicalApparatusData)((AlchemicalApparatusDataCommon)((IAlchemicalApparatusDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((AlchemicalApparatusDataSetterTranslationCommon)((IAlchemicalApparatusDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

@@ -560,7 +560,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -572,7 +573,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -586,7 +588,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = TeleportDestination.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -600,7 +603,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static TeleportDestination DeepCopy(
@@ -1023,12 +1027,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly TeleportDestinationSetterTranslationCommon Instance = new TeleportDestinationSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             ITeleportDestination item,
             ITeleportDestinationGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Destination) ?? true))
             {
@@ -1051,9 +1056,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TeleportDestination.TranslationMask? copyMask = null)
         {
             TeleportDestination ret = (TeleportDestination)((TeleportDestinationCommon)((ITeleportDestinationGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((TeleportDestinationSetterTranslationCommon)((ITeleportDestinationGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1062,11 +1070,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out TeleportDestination.ErrorMask errorMask,
             TeleportDestination.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             TeleportDestination ret = (TeleportDestination)((TeleportDestinationCommon)((ITeleportDestinationGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((TeleportDestinationSetterTranslationCommon)((ITeleportDestinationGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = TeleportDestination.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1076,10 +1088,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             TeleportDestination ret = (TeleportDestination)((TeleportDestinationCommon)((ITeleportDestinationGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((TeleportDestinationSetterTranslationCommon)((ITeleportDestinationGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

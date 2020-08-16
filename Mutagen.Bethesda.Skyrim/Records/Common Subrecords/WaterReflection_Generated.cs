@@ -565,7 +565,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -577,7 +578,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -591,7 +593,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = WaterReflection.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -605,7 +608,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static WaterReflection DeepCopy(
@@ -1028,12 +1032,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly WaterReflectionSetterTranslationCommon Instance = new WaterReflectionSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IWaterReflection item,
             IWaterReflectionGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)WaterReflection_FieldIndex.Versioning) ?? true))
             {
@@ -1057,9 +1062,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WaterReflection.TranslationMask? copyMask = null)
         {
             WaterReflection ret = (WaterReflection)((WaterReflectionCommon)((IWaterReflectionGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((WaterReflectionSetterTranslationCommon)((IWaterReflectionGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1068,11 +1076,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out WaterReflection.ErrorMask errorMask,
             WaterReflection.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             WaterReflection ret = (WaterReflection)((WaterReflectionCommon)((IWaterReflectionGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((WaterReflectionSetterTranslationCommon)((IWaterReflectionGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = WaterReflection.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1082,10 +1094,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             WaterReflection ret = (WaterReflection)((WaterReflectionCommon)((IWaterReflectionGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((WaterReflectionSetterTranslationCommon)((IWaterReflectionGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

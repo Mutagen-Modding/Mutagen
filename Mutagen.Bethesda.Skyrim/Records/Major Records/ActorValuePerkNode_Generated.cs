@@ -862,7 +862,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -874,7 +875,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -888,7 +890,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = ActorValuePerkNode.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -902,7 +905,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static ActorValuePerkNode DeepCopy(
@@ -1489,12 +1493,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly ActorValuePerkNodeSetterTranslationCommon Instance = new ActorValuePerkNodeSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IActorValuePerkNode item,
             IActorValuePerkNodeGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.Perk) ?? true))
             {
@@ -1561,9 +1566,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ActorValuePerkNode.TranslationMask? copyMask = null)
         {
             ActorValuePerkNode ret = (ActorValuePerkNode)((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((ActorValuePerkNodeSetterTranslationCommon)((IActorValuePerkNodeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1572,11 +1580,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out ActorValuePerkNode.ErrorMask errorMask,
             ActorValuePerkNode.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ActorValuePerkNode ret = (ActorValuePerkNode)((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((ActorValuePerkNodeSetterTranslationCommon)((IActorValuePerkNodeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = ActorValuePerkNode.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1586,10 +1598,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             ActorValuePerkNode ret = (ActorValuePerkNode)((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((ActorValuePerkNodeSetterTranslationCommon)((IActorValuePerkNodeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

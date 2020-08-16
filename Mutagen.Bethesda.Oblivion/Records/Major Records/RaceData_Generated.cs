@@ -891,7 +891,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -903,7 +904,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -917,7 +919,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = RaceData.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -931,7 +934,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static RaceData DeepCopy(
@@ -1520,12 +1524,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly RaceDataSetterTranslationCommon Instance = new RaceDataSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IRaceData item,
             IRaceDataGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)RaceData_FieldIndex.SkillBoost0) ?? true))
             {
@@ -1704,9 +1709,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RaceData.TranslationMask? copyMask = null)
         {
             RaceData ret = (RaceData)((RaceDataCommon)((IRaceDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((RaceDataSetterTranslationCommon)((IRaceDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1715,11 +1723,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out RaceData.ErrorMask errorMask,
             RaceData.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             RaceData ret = (RaceData)((RaceDataCommon)((IRaceDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((RaceDataSetterTranslationCommon)((IRaceDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = RaceData.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1729,10 +1741,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             RaceData ret = (RaceData)((RaceDataCommon)((IRaceDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((RaceDataSetterTranslationCommon)((IRaceDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

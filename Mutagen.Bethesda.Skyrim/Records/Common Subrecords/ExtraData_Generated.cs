@@ -531,7 +531,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -543,7 +544,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -557,7 +559,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = ExtraData.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -571,7 +574,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static ExtraData DeepCopy(
@@ -981,12 +985,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly ExtraDataSetterTranslationCommon Instance = new ExtraDataSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IExtraData item,
             IExtraDataGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)ExtraData_FieldIndex.Owner) ?? true))
             {
@@ -1023,9 +1028,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ExtraData.TranslationMask? copyMask = null)
         {
             ExtraData ret = (ExtraData)((ExtraDataCommon)((IExtraDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((ExtraDataSetterTranslationCommon)((IExtraDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1034,11 +1042,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out ExtraData.ErrorMask errorMask,
             ExtraData.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ExtraData ret = (ExtraData)((ExtraDataCommon)((IExtraDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((ExtraDataSetterTranslationCommon)((IExtraDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = ExtraData.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1048,10 +1060,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             ExtraData ret = (ExtraData)((ExtraDataCommon)((IExtraDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((ExtraDataSetterTranslationCommon)((IExtraDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

@@ -7280,7 +7280,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = ImageSpaceAdapter.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -7294,7 +7295,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static ImageSpaceAdapter DeepCopy(
@@ -9993,31 +9995,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly ImageSpaceAdapterSetterTranslationCommon Instance = new ImageSpaceAdapterSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IImageSpaceAdapterInternal item,
             IImageSpaceAdapterGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
         }
         
         public void DeepCopyIn(
             IImageSpaceAdapter item,
             IImageSpaceAdapterGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 (ISkyrimMajorRecord)item,
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
@@ -11808,52 +11814,60 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISkyrimMajorRecordInternal item,
             ISkyrimMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IImageSpaceAdapterInternal)item,
                 rhs: (IImageSpaceAdapterGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
             ISkyrimMajorRecord item,
             ISkyrimMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IImageSpaceAdapter)item,
                 rhs: (IImageSpaceAdapterGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IImageSpaceAdapterInternal)item,
                 rhs: (IImageSpaceAdapterGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
             IMajorRecord item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IImageSpaceAdapter)item,
                 rhs: (IImageSpaceAdapterGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         #endregion
@@ -11863,9 +11877,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ImageSpaceAdapter.TranslationMask? copyMask = null)
         {
             ImageSpaceAdapter ret = (ImageSpaceAdapter)((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((ImageSpaceAdapterSetterTranslationCommon)((IImageSpaceAdapterGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -11874,11 +11891,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out ImageSpaceAdapter.ErrorMask errorMask,
             ImageSpaceAdapter.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ImageSpaceAdapter ret = (ImageSpaceAdapter)((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((ImageSpaceAdapterSetterTranslationCommon)((IImageSpaceAdapterGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = ImageSpaceAdapter.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -11888,10 +11909,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             ImageSpaceAdapter ret = (ImageSpaceAdapter)((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((ImageSpaceAdapterSetterTranslationCommon)((IImageSpaceAdapterGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

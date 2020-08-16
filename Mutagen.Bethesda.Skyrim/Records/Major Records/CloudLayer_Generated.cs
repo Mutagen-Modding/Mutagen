@@ -651,7 +651,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -663,7 +664,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -677,7 +679,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = CloudLayer.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -691,7 +694,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static CloudLayer DeepCopy(
@@ -1178,12 +1182,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly CloudLayerSetterTranslationCommon Instance = new CloudLayerSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             ICloudLayer item,
             ICloudLayerGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)CloudLayer_FieldIndex.Enabled) ?? true))
             {
@@ -1258,9 +1263,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             CloudLayer.TranslationMask? copyMask = null)
         {
             CloudLayer ret = (CloudLayer)((CloudLayerCommon)((ICloudLayerGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((CloudLayerSetterTranslationCommon)((ICloudLayerGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1269,11 +1277,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out CloudLayer.ErrorMask errorMask,
             CloudLayer.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             CloudLayer ret = (CloudLayer)((CloudLayerCommon)((ICloudLayerGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((CloudLayerSetterTranslationCommon)((ICloudLayerGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = CloudLayer.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1283,10 +1295,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             CloudLayer ret = (CloudLayer)((CloudLayerCommon)((ICloudLayerGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((CloudLayerSetterTranslationCommon)((ICloudLayerGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

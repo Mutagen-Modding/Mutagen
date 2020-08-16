@@ -563,7 +563,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -575,7 +576,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -589,7 +591,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = LocationCellUnique.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -603,7 +606,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static LocationCellUnique DeepCopy(
@@ -1024,12 +1028,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly LocationCellUniqueSetterTranslationCommon Instance = new LocationCellUniqueSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             ILocationCellUnique item,
             ILocationCellUniqueGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)LocationCellUnique_FieldIndex.Actor) ?? true))
             {
@@ -1052,9 +1057,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             LocationCellUnique.TranslationMask? copyMask = null)
         {
             LocationCellUnique ret = (LocationCellUnique)((LocationCellUniqueCommon)((ILocationCellUniqueGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((LocationCellUniqueSetterTranslationCommon)((ILocationCellUniqueGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1063,11 +1071,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out LocationCellUnique.ErrorMask errorMask,
             LocationCellUnique.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             LocationCellUnique ret = (LocationCellUnique)((LocationCellUniqueCommon)((ILocationCellUniqueGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((LocationCellUniqueSetterTranslationCommon)((ILocationCellUniqueGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = LocationCellUnique.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1077,10 +1089,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             LocationCellUnique ret = (LocationCellUnique)((LocationCellUniqueCommon)((ILocationCellUniqueGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((LocationCellUniqueSetterTranslationCommon)((ILocationCellUniqueGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

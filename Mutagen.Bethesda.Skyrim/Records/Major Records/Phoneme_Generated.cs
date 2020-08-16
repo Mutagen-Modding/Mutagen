@@ -1899,7 +1899,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -1911,7 +1912,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -1925,7 +1927,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = Phoneme.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -1939,7 +1942,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static Phoneme DeepCopy(
@@ -3177,12 +3181,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly PhonemeSetterTranslationCommon Instance = new PhonemeSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IPhoneme item,
             IPhonemeGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)Phoneme_FieldIndex.Name) ?? true))
             {
@@ -3369,9 +3374,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Phoneme.TranslationMask? copyMask = null)
         {
             Phoneme ret = (Phoneme)((PhonemeCommon)((IPhonemeGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((PhonemeSetterTranslationCommon)((IPhonemeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -3380,11 +3388,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out Phoneme.ErrorMask errorMask,
             Phoneme.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             Phoneme ret = (Phoneme)((PhonemeCommon)((IPhonemeGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((PhonemeSetterTranslationCommon)((IPhonemeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = Phoneme.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -3394,10 +3406,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             Phoneme ret = (Phoneme)((PhonemeCommon)((IPhonemeGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((PhonemeSetterTranslationCommon)((IPhonemeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

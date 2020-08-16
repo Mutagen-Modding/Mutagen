@@ -1064,7 +1064,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -1076,7 +1077,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -1090,7 +1092,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = PackageBranch.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -1104,7 +1107,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static PackageBranch DeepCopy(
@@ -1734,12 +1738,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly PackageBranchSetterTranslationCommon Instance = new PackageBranchSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IPackageBranch item,
             IPackageBranchGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)PackageBranch_FieldIndex.BranchType) ?? true))
             {
@@ -1900,9 +1905,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             PackageBranch.TranslationMask? copyMask = null)
         {
             PackageBranch ret = (PackageBranch)((PackageBranchCommon)((IPackageBranchGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((PackageBranchSetterTranslationCommon)((IPackageBranchGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1911,11 +1919,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out PackageBranch.ErrorMask errorMask,
             PackageBranch.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             PackageBranch ret = (PackageBranch)((PackageBranchCommon)((IPackageBranchGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((PackageBranchSetterTranslationCommon)((IPackageBranchGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = PackageBranch.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1925,10 +1937,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             PackageBranch ret = (PackageBranch)((PackageBranchCommon)((IPackageBranchGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((PackageBranchSetterTranslationCommon)((IPackageBranchGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

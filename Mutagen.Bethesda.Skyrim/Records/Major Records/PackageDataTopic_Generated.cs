@@ -613,7 +613,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = PackageDataTopic.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -627,7 +628,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static PackageDataTopic DeepCopy(
@@ -1123,18 +1125,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly PackageDataTopicSetterTranslationCommon Instance = new PackageDataTopicSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IPackageDataTopic item,
             IPackageDataTopicGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 (IAPackageData)item,
                 (IAPackageDataGetter)rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PackageDataTopic_FieldIndex.Topics) ?? true))
             {
                 errorMask?.PushIndex((int)PackageDataTopic_FieldIndex.Topics);
@@ -1177,13 +1181,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAPackageData item,
             IAPackageDataGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IPackageDataTopic)item,
                 rhs: (IPackageDataTopicGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         #endregion
@@ -1193,9 +1199,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             PackageDataTopic.TranslationMask? copyMask = null)
         {
             PackageDataTopic ret = (PackageDataTopic)((PackageDataTopicCommon)((IPackageDataTopicGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((PackageDataTopicSetterTranslationCommon)((IPackageDataTopicGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1204,11 +1213,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out PackageDataTopic.ErrorMask errorMask,
             PackageDataTopic.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             PackageDataTopic ret = (PackageDataTopic)((PackageDataTopicCommon)((IPackageDataTopicGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((PackageDataTopicSetterTranslationCommon)((IPackageDataTopicGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = PackageDataTopic.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1218,10 +1231,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             PackageDataTopic ret = (PackageDataTopic)((PackageDataTopicCommon)((IPackageDataTopicGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((PackageDataTopicSetterTranslationCommon)((IPackageDataTopicGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

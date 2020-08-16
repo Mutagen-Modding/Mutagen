@@ -550,7 +550,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -562,7 +563,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -576,7 +578,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = AIPackageTarget.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -590,7 +593,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static AIPackageTarget DeepCopy(
@@ -1012,12 +1016,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly AIPackageTargetSetterTranslationCommon Instance = new AIPackageTargetSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IAIPackageTarget item,
             IAIPackageTargetGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)AIPackageTarget_FieldIndex.ObjectType) ?? true))
             {
@@ -1040,9 +1045,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             AIPackageTarget.TranslationMask? copyMask = null)
         {
             AIPackageTarget ret = (AIPackageTarget)((AIPackageTargetCommon)((IAIPackageTargetGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((AIPackageTargetSetterTranslationCommon)((IAIPackageTargetGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1051,11 +1059,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out AIPackageTarget.ErrorMask errorMask,
             AIPackageTarget.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             AIPackageTarget ret = (AIPackageTarget)((AIPackageTargetCommon)((IAIPackageTargetGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((AIPackageTargetSetterTranslationCommon)((IAIPackageTargetGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = AIPackageTarget.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1065,10 +1077,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             AIPackageTarget ret = (AIPackageTarget)((AIPackageTargetCommon)((IAIPackageTargetGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((AIPackageTargetSetterTranslationCommon)((IAIPackageTargetGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

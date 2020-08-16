@@ -519,7 +519,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = PerkAddRangeToValue.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -533,7 +534,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static PerkAddRangeToValue DeepCopy(
@@ -1049,18 +1051,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly PerkAddRangeToValueSetterTranslationCommon Instance = new PerkAddRangeToValueSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IPerkAddRangeToValue item,
             IPerkAddRangeToValueGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 (IAPerkEntryPointEffect)item,
                 (IAPerkEntryPointEffectGetter)rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PerkAddRangeToValue_FieldIndex.From) ?? true))
             {
                 item.From = rhs.From;
@@ -1076,13 +1080,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAPerkEntryPointEffect item,
             IAPerkEntryPointEffectGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IPerkAddRangeToValue)item,
                 rhs: (IPerkAddRangeToValueGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         
@@ -1090,13 +1096,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAPerkEffect item,
             IAPerkEffectGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IPerkAddRangeToValue)item,
                 rhs: (IPerkAddRangeToValueGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         #endregion
@@ -1106,9 +1114,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             PerkAddRangeToValue.TranslationMask? copyMask = null)
         {
             PerkAddRangeToValue ret = (PerkAddRangeToValue)((PerkAddRangeToValueCommon)((IPerkAddRangeToValueGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((PerkAddRangeToValueSetterTranslationCommon)((IPerkAddRangeToValueGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1117,11 +1128,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out PerkAddRangeToValue.ErrorMask errorMask,
             PerkAddRangeToValue.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             PerkAddRangeToValue ret = (PerkAddRangeToValue)((PerkAddRangeToValueCommon)((IPerkAddRangeToValueGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((PerkAddRangeToValueSetterTranslationCommon)((IPerkAddRangeToValueGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = PerkAddRangeToValue.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1131,10 +1146,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             PerkAddRangeToValue ret = (PerkAddRangeToValue)((PerkAddRangeToValueCommon)((IPerkAddRangeToValueGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((PerkAddRangeToValueSetterTranslationCommon)((IPerkAddRangeToValueGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

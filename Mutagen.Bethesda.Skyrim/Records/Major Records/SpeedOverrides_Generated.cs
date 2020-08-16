@@ -814,7 +814,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -826,7 +827,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -840,7 +842,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = SpeedOverrides.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -854,7 +857,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static SpeedOverrides DeepCopy(
@@ -1436,12 +1440,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly SpeedOverridesSetterTranslationCommon Instance = new SpeedOverridesSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             ISpeedOverrides item,
             ISpeedOverridesGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)SpeedOverrides_FieldIndex.LeftWalk) ?? true))
             {
@@ -1496,9 +1501,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SpeedOverrides.TranslationMask? copyMask = null)
         {
             SpeedOverrides ret = (SpeedOverrides)((SpeedOverridesCommon)((ISpeedOverridesGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((SpeedOverridesSetterTranslationCommon)((ISpeedOverridesGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1507,11 +1515,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out SpeedOverrides.ErrorMask errorMask,
             SpeedOverrides.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             SpeedOverrides ret = (SpeedOverrides)((SpeedOverridesCommon)((ISpeedOverridesGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((SpeedOverridesSetterTranslationCommon)((ISpeedOverridesGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = SpeedOverrides.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1521,10 +1533,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             SpeedOverrides ret = (SpeedOverrides)((SpeedOverridesCommon)((ISpeedOverridesGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((SpeedOverridesSetterTranslationCommon)((ISpeedOverridesGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

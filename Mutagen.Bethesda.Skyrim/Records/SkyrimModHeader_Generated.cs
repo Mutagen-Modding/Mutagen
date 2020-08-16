@@ -1128,7 +1128,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -1140,7 +1141,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -1154,7 +1156,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = SkyrimModHeader.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -1168,7 +1171,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static SkyrimModHeader DeepCopy(
@@ -1879,12 +1883,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly SkyrimModHeaderSetterTranslationCommon Instance = new SkyrimModHeaderSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             ISkyrimModHeader item,
             ISkyrimModHeaderGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)SkyrimModHeader_FieldIndex.Flags) ?? true))
             {
@@ -2026,9 +2031,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SkyrimModHeader.TranslationMask? copyMask = null)
         {
             SkyrimModHeader ret = (SkyrimModHeader)((SkyrimModHeaderCommon)((ISkyrimModHeaderGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((SkyrimModHeaderSetterTranslationCommon)((ISkyrimModHeaderGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -2037,11 +2045,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out SkyrimModHeader.ErrorMask errorMask,
             SkyrimModHeader.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             SkyrimModHeader ret = (SkyrimModHeader)((SkyrimModHeaderCommon)((ISkyrimModHeaderGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((SkyrimModHeaderSetterTranslationCommon)((ISkyrimModHeaderGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = SkyrimModHeader.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -2051,10 +2063,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             SkyrimModHeader ret = (SkyrimModHeader)((SkyrimModHeaderCommon)((ISkyrimModHeaderGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((SkyrimModHeaderSetterTranslationCommon)((ISkyrimModHeaderGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

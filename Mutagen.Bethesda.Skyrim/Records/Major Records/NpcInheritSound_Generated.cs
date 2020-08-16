@@ -477,7 +477,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = NpcInheritSound.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -491,7 +492,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static NpcInheritSound DeepCopy(
@@ -926,18 +928,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly NpcInheritSoundSetterTranslationCommon Instance = new NpcInheritSoundSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             INpcInheritSound item,
             INpcInheritSoundGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 (IANpcSoundDefinition)item,
                 (IANpcSoundDefinitionGetter)rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)NpcInheritSound_FieldIndex.InheritsSoundsFrom) ?? true))
             {
                 item.InheritsSoundsFrom = new FormLinkNullable<Npc>(rhs.InheritsSoundsFrom.FormKey);
@@ -949,13 +953,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IANpcSoundDefinition item,
             IANpcSoundDefinitionGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (INpcInheritSound)item,
                 rhs: (INpcInheritSoundGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         #endregion
@@ -965,9 +971,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             NpcInheritSound.TranslationMask? copyMask = null)
         {
             NpcInheritSound ret = (NpcInheritSound)((NpcInheritSoundCommon)((INpcInheritSoundGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((NpcInheritSoundSetterTranslationCommon)((INpcInheritSoundGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -976,11 +985,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out NpcInheritSound.ErrorMask errorMask,
             NpcInheritSound.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             NpcInheritSound ret = (NpcInheritSound)((NpcInheritSoundCommon)((INpcInheritSoundGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((NpcInheritSoundSetterTranslationCommon)((INpcInheritSoundGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = NpcInheritSound.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -990,10 +1003,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             NpcInheritSound ret = (NpcInheritSound)((NpcInheritSoundCommon)((INpcInheritSoundGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((NpcInheritSoundSetterTranslationCommon)((INpcInheritSoundGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

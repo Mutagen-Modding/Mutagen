@@ -561,7 +561,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = NpcSoundTypes.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -575,7 +576,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static NpcSoundTypes DeepCopy(
@@ -1039,18 +1041,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly NpcSoundTypesSetterTranslationCommon Instance = new NpcSoundTypesSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             INpcSoundTypes item,
             INpcSoundTypesGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 (IANpcSoundDefinition)item,
                 (IANpcSoundDefinitionGetter)rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)NpcSoundTypes_FieldIndex.Types) ?? true))
             {
                 errorMask?.PushIndex((int)NpcSoundTypes_FieldIndex.Types);
@@ -1082,13 +1086,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IANpcSoundDefinition item,
             IANpcSoundDefinitionGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (INpcSoundTypes)item,
                 rhs: (INpcSoundTypesGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         #endregion
@@ -1098,9 +1104,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             NpcSoundTypes.TranslationMask? copyMask = null)
         {
             NpcSoundTypes ret = (NpcSoundTypes)((NpcSoundTypesCommon)((INpcSoundTypesGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((NpcSoundTypesSetterTranslationCommon)((INpcSoundTypesGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1109,11 +1118,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out NpcSoundTypes.ErrorMask errorMask,
             NpcSoundTypes.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             NpcSoundTypes ret = (NpcSoundTypes)((NpcSoundTypesCommon)((INpcSoundTypesGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((NpcSoundTypesSetterTranslationCommon)((INpcSoundTypesGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = NpcSoundTypes.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1123,10 +1136,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             NpcSoundTypes ret = (NpcSoundTypes)((NpcSoundTypesCommon)((INpcSoundTypesGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((NpcSoundTypesSetterTranslationCommon)((INpcSoundTypesGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

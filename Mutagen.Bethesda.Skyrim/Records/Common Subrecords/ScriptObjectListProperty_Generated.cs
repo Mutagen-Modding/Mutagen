@@ -572,7 +572,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = ScriptObjectListProperty.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -586,7 +587,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static ScriptObjectListProperty DeepCopy(
@@ -1042,18 +1044,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly ScriptObjectListPropertySetterTranslationCommon Instance = new ScriptObjectListPropertySetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IScriptObjectListProperty item,
             IScriptObjectListPropertyGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 (IScriptProperty)item,
                 (IScriptPropertyGetter)rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)ScriptObjectListProperty_FieldIndex.Objects) ?? true))
             {
                 errorMask?.PushIndex((int)ScriptObjectListProperty_FieldIndex.Objects);
@@ -1085,13 +1089,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IScriptProperty item,
             IScriptPropertyGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IScriptObjectListProperty)item,
                 rhs: (IScriptObjectListPropertyGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         #endregion
@@ -1101,9 +1107,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ScriptObjectListProperty.TranslationMask? copyMask = null)
         {
             ScriptObjectListProperty ret = (ScriptObjectListProperty)((ScriptObjectListPropertyCommon)((IScriptObjectListPropertyGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((ScriptObjectListPropertySetterTranslationCommon)((IScriptObjectListPropertyGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1112,11 +1121,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out ScriptObjectListProperty.ErrorMask errorMask,
             ScriptObjectListProperty.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ScriptObjectListProperty ret = (ScriptObjectListProperty)((ScriptObjectListPropertyCommon)((IScriptObjectListPropertyGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((ScriptObjectListPropertySetterTranslationCommon)((IScriptObjectListPropertyGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = ScriptObjectListProperty.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1126,10 +1139,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             ScriptObjectListProperty ret = (ScriptObjectListProperty)((ScriptObjectListPropertyCommon)((IScriptObjectListPropertyGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((ScriptObjectListPropertySetterTranslationCommon)((IScriptObjectListPropertyGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

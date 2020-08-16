@@ -652,7 +652,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -664,7 +665,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -678,7 +680,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = ScenePhaseUnusedData.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -692,7 +695,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static ScenePhaseUnusedData DeepCopy(
@@ -1186,12 +1190,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly ScenePhaseUnusedDataSetterTranslationCommon Instance = new ScenePhaseUnusedDataSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IScenePhaseUnusedData item,
             IScenePhaseUnusedDataGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)ScenePhaseUnusedData_FieldIndex.SCHR) ?? true))
             {
@@ -1257,9 +1262,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ScenePhaseUnusedData.TranslationMask? copyMask = null)
         {
             ScenePhaseUnusedData ret = (ScenePhaseUnusedData)((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((ScenePhaseUnusedDataSetterTranslationCommon)((IScenePhaseUnusedDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1268,11 +1276,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out ScenePhaseUnusedData.ErrorMask errorMask,
             ScenePhaseUnusedData.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ScenePhaseUnusedData ret = (ScenePhaseUnusedData)((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((ScenePhaseUnusedDataSetterTranslationCommon)((IScenePhaseUnusedDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = ScenePhaseUnusedData.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1282,10 +1294,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             ScenePhaseUnusedData ret = (ScenePhaseUnusedData)((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((ScenePhaseUnusedDataSetterTranslationCommon)((IScenePhaseUnusedDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

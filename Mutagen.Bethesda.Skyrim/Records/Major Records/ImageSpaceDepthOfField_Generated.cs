@@ -688,7 +688,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -700,7 +701,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -714,7 +716,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = ImageSpaceDepthOfField.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -728,7 +731,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static ImageSpaceDepthOfField DeepCopy(
@@ -1230,12 +1234,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly ImageSpaceDepthOfFieldSetterTranslationCommon Instance = new ImageSpaceDepthOfFieldSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IImageSpaceDepthOfField item,
             IImageSpaceDepthOfFieldGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)ImageSpaceDepthOfField_FieldIndex.Versioning) ?? true))
             {
@@ -1275,9 +1280,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ImageSpaceDepthOfField.TranslationMask? copyMask = null)
         {
             ImageSpaceDepthOfField ret = (ImageSpaceDepthOfField)((ImageSpaceDepthOfFieldCommon)((IImageSpaceDepthOfFieldGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((ImageSpaceDepthOfFieldSetterTranslationCommon)((IImageSpaceDepthOfFieldGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1286,11 +1294,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out ImageSpaceDepthOfField.ErrorMask errorMask,
             ImageSpaceDepthOfField.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ImageSpaceDepthOfField ret = (ImageSpaceDepthOfField)((ImageSpaceDepthOfFieldCommon)((IImageSpaceDepthOfFieldGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((ImageSpaceDepthOfFieldSetterTranslationCommon)((IImageSpaceDepthOfFieldGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = ImageSpaceDepthOfField.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1300,10 +1312,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             ImageSpaceDepthOfField ret = (ImageSpaceDepthOfField)((ImageSpaceDepthOfFieldCommon)((IImageSpaceDepthOfFieldGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((ImageSpaceDepthOfFieldSetterTranslationCommon)((IImageSpaceDepthOfFieldGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

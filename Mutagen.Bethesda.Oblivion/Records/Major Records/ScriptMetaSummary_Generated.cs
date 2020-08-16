@@ -615,7 +615,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -627,7 +628,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -641,7 +643,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = ScriptMetaSummary.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -655,7 +658,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static ScriptMetaSummary DeepCopy(
@@ -1118,12 +1122,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly ScriptMetaSummarySetterTranslationCommon Instance = new ScriptMetaSummarySetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IScriptMetaSummary item,
             IScriptMetaSummaryGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)ScriptMetaSummary_FieldIndex.Unknown) ?? true))
             {
@@ -1150,9 +1155,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptMetaSummary.TranslationMask? copyMask = null)
         {
             ScriptMetaSummary ret = (ScriptMetaSummary)((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((ScriptMetaSummarySetterTranslationCommon)((IScriptMetaSummaryGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1161,11 +1169,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out ScriptMetaSummary.ErrorMask errorMask,
             ScriptMetaSummary.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ScriptMetaSummary ret = (ScriptMetaSummary)((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((ScriptMetaSummarySetterTranslationCommon)((IScriptMetaSummaryGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = ScriptMetaSummary.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1175,10 +1187,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             ScriptMetaSummary ret = (ScriptMetaSummary)((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((ScriptMetaSummarySetterTranslationCommon)((IScriptMetaSummaryGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

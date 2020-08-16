@@ -682,7 +682,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -694,7 +695,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -708,7 +710,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = NpcConfiguration.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -722,7 +725,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static NpcConfiguration DeepCopy(
@@ -1224,12 +1228,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly NpcConfigurationSetterTranslationCommon Instance = new NpcConfigurationSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             INpcConfiguration item,
             INpcConfigurationGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)NpcConfiguration_FieldIndex.Flags) ?? true))
             {
@@ -1268,9 +1273,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NpcConfiguration.TranslationMask? copyMask = null)
         {
             NpcConfiguration ret = (NpcConfiguration)((NpcConfigurationCommon)((INpcConfigurationGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((NpcConfigurationSetterTranslationCommon)((INpcConfigurationGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1279,11 +1287,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out NpcConfiguration.ErrorMask errorMask,
             NpcConfiguration.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             NpcConfiguration ret = (NpcConfiguration)((NpcConfigurationCommon)((INpcConfigurationGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((NpcConfigurationSetterTranslationCommon)((INpcConfigurationGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = NpcConfiguration.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1293,10 +1305,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             NpcConfiguration ret = (NpcConfiguration)((NpcConfigurationCommon)((INpcConfigurationGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((NpcConfigurationSetterTranslationCommon)((INpcConfigurationGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

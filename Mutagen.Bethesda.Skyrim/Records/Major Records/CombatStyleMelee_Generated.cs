@@ -753,7 +753,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -765,7 +766,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -779,7 +781,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = CombatStyleMelee.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -793,7 +796,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static CombatStyleMelee DeepCopy(
@@ -1335,12 +1339,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly CombatStyleMeleeSetterTranslationCommon Instance = new CombatStyleMeleeSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             ICombatStyleMelee item,
             ICombatStyleMeleeGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)CombatStyleMelee_FieldIndex.Versioning) ?? true))
             {
@@ -1388,9 +1393,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             CombatStyleMelee.TranslationMask? copyMask = null)
         {
             CombatStyleMelee ret = (CombatStyleMelee)((CombatStyleMeleeCommon)((ICombatStyleMeleeGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((CombatStyleMeleeSetterTranslationCommon)((ICombatStyleMeleeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1399,11 +1407,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out CombatStyleMelee.ErrorMask errorMask,
             CombatStyleMelee.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             CombatStyleMelee ret = (CombatStyleMelee)((CombatStyleMeleeCommon)((ICombatStyleMeleeGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((CombatStyleMeleeSetterTranslationCommon)((ICombatStyleMeleeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = CombatStyleMelee.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1413,10 +1425,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             CombatStyleMelee ret = (CombatStyleMelee)((CombatStyleMeleeCommon)((ICombatStyleMeleeGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((CombatStyleMeleeSetterTranslationCommon)((ICombatStyleMeleeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

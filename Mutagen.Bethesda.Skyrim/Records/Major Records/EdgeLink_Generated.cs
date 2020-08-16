@@ -559,7 +559,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -571,7 +572,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -585,7 +587,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = EdgeLink.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -599,7 +602,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static EdgeLink DeepCopy(
@@ -1018,12 +1022,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly EdgeLinkSetterTranslationCommon Instance = new EdgeLinkSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IEdgeLink item,
             IEdgeLinkGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)EdgeLink_FieldIndex.Unknown) ?? true))
             {
@@ -1046,9 +1051,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EdgeLink.TranslationMask? copyMask = null)
         {
             EdgeLink ret = (EdgeLink)((EdgeLinkCommon)((IEdgeLinkGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((EdgeLinkSetterTranslationCommon)((IEdgeLinkGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1057,11 +1065,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out EdgeLink.ErrorMask errorMask,
             EdgeLink.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             EdgeLink ret = (EdgeLink)((EdgeLinkCommon)((IEdgeLinkGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((EdgeLinkSetterTranslationCommon)((IEdgeLinkGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = EdgeLink.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1071,10 +1083,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             EdgeLink ret = (EdgeLink)((EdgeLinkCommon)((IEdgeLinkGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((EdgeLinkSetterTranslationCommon)((IEdgeLinkGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

@@ -563,7 +563,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -575,7 +576,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -589,7 +591,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = LocationAliasReference.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -603,7 +606,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static LocationAliasReference DeepCopy(
@@ -1047,12 +1051,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly LocationAliasReferenceSetterTranslationCommon Instance = new LocationAliasReferenceSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             ILocationAliasReference item,
             ILocationAliasReferenceGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)LocationAliasReference_FieldIndex.AliasIndex) ?? true))
             {
@@ -1075,9 +1080,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             LocationAliasReference.TranslationMask? copyMask = null)
         {
             LocationAliasReference ret = (LocationAliasReference)((LocationAliasReferenceCommon)((ILocationAliasReferenceGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((LocationAliasReferenceSetterTranslationCommon)((ILocationAliasReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1086,11 +1094,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out LocationAliasReference.ErrorMask errorMask,
             LocationAliasReference.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             LocationAliasReference ret = (LocationAliasReference)((LocationAliasReferenceCommon)((ILocationAliasReferenceGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((LocationAliasReferenceSetterTranslationCommon)((ILocationAliasReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = LocationAliasReference.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1100,10 +1112,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             LocationAliasReference ret = (LocationAliasReference)((LocationAliasReferenceCommon)((ILocationAliasReferenceGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((LocationAliasReferenceSetterTranslationCommon)((ILocationAliasReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

@@ -278,7 +278,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn<T, TGetter, T_TranslMask>(
@@ -293,7 +294,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn<T, TGetter, T_ErrMask, T_TranslMask>(
@@ -311,7 +313,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = Group.ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
         }
 
@@ -327,7 +330,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static Group<T> DeepCopy<T, TGetter, T_TranslMask>(
@@ -957,12 +961,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly GroupSetterTranslationCommon Instance = new GroupSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn<T, TGetter>(
             IGroup<T> item,
             IGroupGetter<TGetter> rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
             where T : class, ISkyrimMajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
@@ -1012,9 +1017,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             where T_TranslMask : SkyrimMajorRecord.TranslationMask, ITranslationMask
         {
             Group<T> ret = (Group<T>)((GroupCommon<TGetter>)((IGroupGetter<TGetter>)item).CommonInstance()!).GetNew<T>();
-            ret.DeepCopyIn<T, TGetter, T_TranslMask>(
-                item,
-                copyMask: copyMask);
+            ((GroupSetterTranslationCommon)((IGroupGetter<T>)ret).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1027,11 +1035,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             where T_ErrMask : SkyrimMajorRecord.ErrorMask, IErrorMask<T_ErrMask>
             where T_TranslMask : SkyrimMajorRecord.TranslationMask, ITranslationMask
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             Group<T> ret = (Group<T>)((GroupCommon<TGetter>)((IGroupGetter<TGetter>)item).CommonInstance()!).GetNew<T>();
-            ret.DeepCopyIn<T, TGetter, T_ErrMask, T_TranslMask>(
+            ((GroupSetterTranslationCommon)((IGroupGetter<T>)ret).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = Group.ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1043,10 +1055,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             where TGetter : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
             Group<T> ret = (Group<T>)((GroupCommon<TGetter>)((IGroupGetter<TGetter>)item).CommonInstance()!).GetNew<T>();
-            ret.DeepCopyIn<T, TGetter>(
-                item,
+            ((GroupSetterTranslationCommon)((IGroupGetter<T>)ret).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

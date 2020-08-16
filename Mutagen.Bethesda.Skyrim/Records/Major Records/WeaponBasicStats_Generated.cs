@@ -552,7 +552,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -564,7 +565,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -578,7 +580,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = WeaponBasicStats.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -592,7 +595,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static WeaponBasicStats DeepCopy(
@@ -1014,12 +1018,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly WeaponBasicStatsSetterTranslationCommon Instance = new WeaponBasicStatsSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IWeaponBasicStats item,
             IWeaponBasicStatsGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)WeaponBasicStats_FieldIndex.Value) ?? true))
             {
@@ -1042,9 +1047,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WeaponBasicStats.TranslationMask? copyMask = null)
         {
             WeaponBasicStats ret = (WeaponBasicStats)((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((WeaponBasicStatsSetterTranslationCommon)((IWeaponBasicStatsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1053,11 +1061,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out WeaponBasicStats.ErrorMask errorMask,
             WeaponBasicStats.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             WeaponBasicStats ret = (WeaponBasicStats)((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((WeaponBasicStatsSetterTranslationCommon)((IWeaponBasicStatsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = WeaponBasicStats.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1067,10 +1079,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             WeaponBasicStats ret = (WeaponBasicStats)((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((WeaponBasicStatsSetterTranslationCommon)((IWeaponBasicStatsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

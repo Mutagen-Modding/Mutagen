@@ -477,7 +477,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = TopicReference.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -491,7 +492,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static TopicReference DeepCopy(
@@ -922,18 +924,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly TopicReferenceSetterTranslationCommon Instance = new TopicReferenceSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             ITopicReference item,
             ITopicReferenceGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 (IATopicReference)item,
                 (IATopicReferenceGetter)rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)TopicReference_FieldIndex.Reference) ?? true))
             {
                 item.Reference = new FormLink<DialogTopic>(rhs.Reference.FormKey);
@@ -945,13 +949,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IATopicReference item,
             IATopicReferenceGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (ITopicReference)item,
                 rhs: (ITopicReferenceGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         #endregion
@@ -961,9 +967,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TopicReference.TranslationMask? copyMask = null)
         {
             TopicReference ret = (TopicReference)((TopicReferenceCommon)((ITopicReferenceGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((TopicReferenceSetterTranslationCommon)((ITopicReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -972,11 +981,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out TopicReference.ErrorMask errorMask,
             TopicReference.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             TopicReference ret = (TopicReference)((TopicReferenceCommon)((ITopicReferenceGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((TopicReferenceSetterTranslationCommon)((ITopicReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = TopicReference.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -986,10 +999,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             TopicReference ret = (TopicReference)((TopicReferenceCommon)((ITopicReferenceGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((TopicReferenceSetterTranslationCommon)((ITopicReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

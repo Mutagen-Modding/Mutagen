@@ -799,7 +799,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = QuestAdapter.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -813,7 +814,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static QuestAdapter DeepCopy(
@@ -1376,18 +1378,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly QuestAdapterSetterTranslationCommon Instance = new QuestAdapterSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IQuestAdapter item,
             IQuestAdapterGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 (IAVirtualMachineAdapter)item,
                 (IAVirtualMachineAdapterGetter)rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)QuestAdapter_FieldIndex.Versioning) ?? true))
             {
                 item.Versioning = rhs.Versioning;
@@ -1456,13 +1460,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAVirtualMachineAdapter item,
             IAVirtualMachineAdapterGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IQuestAdapter)item,
                 rhs: (IQuestAdapterGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         #endregion
@@ -1472,9 +1478,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             QuestAdapter.TranslationMask? copyMask = null)
         {
             QuestAdapter ret = (QuestAdapter)((QuestAdapterCommon)((IQuestAdapterGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((QuestAdapterSetterTranslationCommon)((IQuestAdapterGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1483,11 +1492,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out QuestAdapter.ErrorMask errorMask,
             QuestAdapter.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             QuestAdapter ret = (QuestAdapter)((QuestAdapterCommon)((IQuestAdapterGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((QuestAdapterSetterTranslationCommon)((IQuestAdapterGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = QuestAdapter.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1497,10 +1510,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             QuestAdapter ret = (QuestAdapter)((QuestAdapterCommon)((IQuestAdapterGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((QuestAdapterSetterTranslationCommon)((IQuestAdapterGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         
