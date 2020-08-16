@@ -6050,10 +6050,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             byte[] groupBytes = new byte[GameConstants.Oblivion.GroupConstants.HeaderLength];
             BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);
             var groupByteStream = new MemoryStream(groupBytes);
-            var bundle = new WritingBundle(GameConstants.Oblivion)
-            {
-                MasterReferences = masters
-            };
             using (var stream = new MutagenWriter(groupByteStream, GameConstants.Oblivion, dispose: false))
             {
                 stream.Position += 8;
@@ -6063,6 +6059,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Parallel.ForEach(cuts, (cutItems, state, counter) =>
             {
                 MemoryTributary trib = new MemoryTributary();
+                var bundle = new WritingBundle(GameConstants.Oblivion)
+                {
+                    MasterReferences = masters
+                };
                 using (var stream = new MutagenWriter(trib, bundle, dispose: false))
                 {
                     foreach (var item in cutItems)

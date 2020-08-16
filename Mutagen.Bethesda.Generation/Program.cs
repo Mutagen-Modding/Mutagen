@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "odKey.Factory(BinaryStr";
+            string testString = "ublic static void WriteGroupPara";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

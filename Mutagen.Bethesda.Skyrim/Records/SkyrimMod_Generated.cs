@@ -10976,11 +10976,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             byte[] groupBytes = new byte[gameConstants.GroupConstants.HeaderLength];
             BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);
             var groupByteStream = new MemoryStream(groupBytes);
-            var bundle = new WritingBundle(gameConstants)
-            {
-                MasterReferences = masters,
-                StringsWriter = stringsWriter
-            };
             using (var stream = new MutagenWriter(groupByteStream, gameConstants, dispose: false))
             {
                 stream.Position += 8;
@@ -10990,6 +10985,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Parallel.ForEach(cuts, (cutItems, state, counter) =>
             {
                 MemoryTributary trib = new MemoryTributary();
+                var bundle = new WritingBundle(gameConstants)
+                {
+                    MasterReferences = masters,
+                    StringsWriter = stringsWriter
+                };
                 using (var stream = new MutagenWriter(trib, bundle, dispose: false))
                 {
                     foreach (var item in cutItems)

@@ -623,15 +623,6 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine($"byte[] groupBytes = new byte[{gameConstantsStr}.GroupConstants.HeaderLength];");
                     fg.AppendLine($"BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);");
                     fg.AppendLine($"var groupByteStream = new MemoryStream(groupBytes);");
-                    fg.AppendLine($"var bundle = new {nameof(WritingBundle)}({gameConstantsStr})");
-                    using (var prop = new PropertyCtorWrapper(fg))
-                    {
-                        prop.Add($"{nameof(WritingBundle.MasterReferences)} = masters");
-                        if (objData.UsesStringFiles)
-                        {
-                            prop.Add($"{nameof(WritingBundle.StringsWriter)} = stringsWriter");
-                        }
-                    }
                     fg.AppendLine($"using (var stream = new MutagenWriter(groupByteStream, {gameConstantsStr}, dispose: false))");
                     using (new BraceWrapper(fg))
                     {
@@ -643,6 +634,15 @@ namespace Mutagen.Bethesda.Generation
                     using (new BraceWrapper(fg) { AppendSemicolon = true, AppendParenthesis = true })
                     {
                         fg.AppendLine($"{nameof(MemoryTributary)} trib = new {nameof(MemoryTributary)}();");
+                        fg.AppendLine($"var bundle = new {nameof(WritingBundle)}({gameConstantsStr})");
+                        using (var prop = new PropertyCtorWrapper(fg))
+                        {
+                            prop.Add($"{nameof(WritingBundle.MasterReferences)} = masters");
+                            if (objData.UsesStringFiles)
+                            {
+                                prop.Add($"{nameof(WritingBundle.StringsWriter)} = stringsWriter");
+                            }
+                        }
                         fg.AppendLine($"using (var stream = new MutagenWriter(trib, bundle, dispose: false))");
                         using (new BraceWrapper(fg))
                         {

@@ -100,12 +100,14 @@ namespace Mutagen.Bethesda.Skyrim
                 Stream[] streams = new Stream[(cells?.Count ?? 0) + 1];
                 byte[] groupBytes = new byte[gameConstants.GroupConstants.HeaderLength];
                 var groupByteStream = new MemoryStream(groupBytes);
-                var bundle = new WritingBundle(gameConstants)
-                {
-                    MasterReferences = masters
-                };
                 BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);
-                using (var stream = new MutagenWriter(groupByteStream, bundle, dispose: false))
+                using (var stream = new MutagenWriter(
+                    groupByteStream,
+                    meta: new WritingBundle(gameConstants)
+                    {
+                        MasterReferences = masters
+                    }, 
+                    dispose: false))
                 {
                     stream.Position += 8;
                     CellSubBlockBinaryWriteTranslation.WriteEmbedded(subBlock, stream);
@@ -116,7 +118,13 @@ namespace Mutagen.Bethesda.Skyrim
                     Parallel.ForEach(cells, (cell, state, counter) =>
                     {
                         MemoryTributary trib = new MemoryTributary();
-                        cell.WriteToBinary(new MutagenWriter(trib, bundle, dispose: false));
+                        cell.WriteToBinary(new MutagenWriter(
+                            trib,
+                            new WritingBundle(gameConstants)
+                            {
+                                MasterReferences = masters
+                            },
+                            dispose: false));
                         streams[(int)counter + 1] = trib;
                     });
                 }
@@ -134,10 +142,6 @@ namespace Mutagen.Bethesda.Skyrim
                 var cache = group.RecordCache;
                 if (cache == null || cache.Count == 0) return;
                 Stream[] streams = new Stream[cache.Count + 1];
-                var bundle = new WritingBundle(gameConstants)
-                {
-                    MasterReferences = masters
-                };
                 byte[] groupBytes = new byte[gameConstants.GroupConstants.HeaderLength];
                 BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);
                 var groupByteStream = new MemoryStream(groupBytes);
@@ -150,6 +154,10 @@ namespace Mutagen.Bethesda.Skyrim
                 Parallel.ForEach(group, (worldspace, worldspaceState, worldspaceCounter) =>
                 {
                     var worldTrib = new MemoryTributary();
+                    var bundle = new WritingBundle(gameConstants)
+                    {
+                        MasterReferences = masters
+                    };
                     using (var writer = new MutagenWriter(worldTrib, bundle, dispose: false))
                     {
                         using (HeaderExport.Header(
@@ -252,15 +260,17 @@ namespace Mutagen.Bethesda.Skyrim
                 Stream[] streamDepositArray)
             {
                 var items = subBlock.Items;
-                var bundle = new WritingBundle(gameConstants)
-                {
-                    MasterReferences = masters
-                };
                 Stream[] streams = new Stream[(items?.Count ?? 0) + 1];
                 byte[] groupBytes = new byte[gameConstants.GroupConstants.HeaderLength];
                 BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);
                 var groupByteStream = new MemoryStream(groupBytes);
-                using (var stream = new MutagenWriter(groupByteStream, bundle, dispose: false))
+                using (var stream = new MutagenWriter(
+                    groupByteStream,
+                    new WritingBundle(gameConstants)
+                    {
+                        MasterReferences = masters
+                    },
+                    dispose: false))
                 {
                     stream.Position += 8;
                     WorldspaceSubBlockBinaryWriteTranslation.WriteEmbedded(subBlock, stream);
@@ -271,7 +281,13 @@ namespace Mutagen.Bethesda.Skyrim
                     Parallel.ForEach(items, (cell, state, counter) =>
                     {
                         MemoryTributary trib = new MemoryTributary();
-                        cell.WriteToBinary(new MutagenWriter(trib, bundle, dispose: false));
+                        cell.WriteToBinary(new MutagenWriter(
+                            trib,
+                            new WritingBundle(gameConstants)
+                            {
+                                MasterReferences = masters
+                            },
+                            dispose: false));
                         streams[(int)counter + 1] = trib;
                     });
                 }
@@ -293,10 +309,6 @@ namespace Mutagen.Bethesda.Skyrim
                 byte[] groupBytes = new byte[gameConstants.GroupConstants.HeaderLength];
                 BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);
                 var groupByteStream = new MemoryStream(groupBytes);
-                var bundle = new WritingBundle(gameConstants)
-                {
-                    MasterReferences = masters
-                };
                 using (var stream = new MutagenWriter(groupByteStream, gameConstants, dispose: false))
                 {
                     stream.Position += 8;
@@ -306,6 +318,10 @@ namespace Mutagen.Bethesda.Skyrim
                 Parallel.ForEach(cuts, (cutItems, state, counter) =>
                 {
                     MemoryTributary trib = new MemoryTributary();
+                    var bundle = new WritingBundle(gameConstants)
+                    {
+                        MasterReferences = masters
+                    };
                     using (var stream = new MutagenWriter(trib, bundle, dispose: false))
                     {
                         foreach (var item in cutItems)
