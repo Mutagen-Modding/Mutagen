@@ -606,7 +606,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = ImpactDataSet.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -620,7 +621,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static ImpactDataSet DeepCopy(
@@ -1148,31 +1150,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly ImpactDataSetSetterTranslationCommon Instance = new ImpactDataSetSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IImpactDataSetInternal item,
             IImpactDataSetGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
         }
         
         public void DeepCopyIn(
             IImpactDataSet item,
             IImpactDataSetGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 (ISkyrimMajorRecord)item,
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)ImpactDataSet_FieldIndex.Impacts) ?? true))
             {
                 errorMask?.PushIndex((int)ImpactDataSet_FieldIndex.Impacts);
@@ -1203,52 +1209,60 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISkyrimMajorRecordInternal item,
             ISkyrimMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IImpactDataSetInternal)item,
                 rhs: (IImpactDataSetGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
             ISkyrimMajorRecord item,
             ISkyrimMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IImpactDataSet)item,
                 rhs: (IImpactDataSetGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IImpactDataSetInternal)item,
                 rhs: (IImpactDataSetGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
             IMajorRecord item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IImpactDataSet)item,
                 rhs: (IImpactDataSetGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         #endregion
@@ -1258,9 +1272,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ImpactDataSet.TranslationMask? copyMask = null)
         {
             ImpactDataSet ret = (ImpactDataSet)((ImpactDataSetCommon)((IImpactDataSetGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((ImpactDataSetSetterTranslationCommon)((IImpactDataSetGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1269,11 +1286,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out ImpactDataSet.ErrorMask errorMask,
             ImpactDataSet.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ImpactDataSet ret = (ImpactDataSet)((ImpactDataSetCommon)((IImpactDataSetGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((ImpactDataSetSetterTranslationCommon)((IImpactDataSetGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = ImpactDataSet.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1283,10 +1304,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             ImpactDataSet ret = (ImpactDataSet)((ImpactDataSetCommon)((IImpactDataSetGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((ImpactDataSetSetterTranslationCommon)((IImpactDataSetGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

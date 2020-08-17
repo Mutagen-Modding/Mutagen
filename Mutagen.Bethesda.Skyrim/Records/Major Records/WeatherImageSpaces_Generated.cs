@@ -599,7 +599,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -611,7 +612,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -625,7 +627,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = WeatherImageSpaces.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -639,7 +642,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static WeatherImageSpaces DeepCopy(
@@ -1085,12 +1089,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly WeatherImageSpacesSetterTranslationCommon Instance = new WeatherImageSpacesSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IWeatherImageSpaces item,
             IWeatherImageSpacesGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)WeatherImageSpaces_FieldIndex.Sunrise) ?? true))
             {
@@ -1117,9 +1122,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WeatherImageSpaces.TranslationMask? copyMask = null)
         {
             WeatherImageSpaces ret = (WeatherImageSpaces)((WeatherImageSpacesCommon)((IWeatherImageSpacesGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((WeatherImageSpacesSetterTranslationCommon)((IWeatherImageSpacesGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1128,11 +1136,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out WeatherImageSpaces.ErrorMask errorMask,
             WeatherImageSpaces.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             WeatherImageSpaces ret = (WeatherImageSpaces)((WeatherImageSpacesCommon)((IWeatherImageSpacesGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((WeatherImageSpacesSetterTranslationCommon)((IWeatherImageSpacesGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = WeatherImageSpaces.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1142,10 +1154,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             WeatherImageSpaces ret = (WeatherImageSpaces)((WeatherImageSpacesCommon)((IWeatherImageSpacesGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((WeatherImageSpacesSetterTranslationCommon)((IWeatherImageSpacesGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

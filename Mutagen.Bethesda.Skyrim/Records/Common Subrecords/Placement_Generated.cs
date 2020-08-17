@@ -519,7 +519,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -531,7 +532,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -545,7 +547,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = Placement.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -559,7 +562,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static Placement DeepCopy(
@@ -961,12 +965,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly PlacementSetterTranslationCommon Instance = new PlacementSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IPlacement item,
             IPlacementGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)Placement_FieldIndex.Position) ?? true))
             {
@@ -985,9 +990,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Placement.TranslationMask? copyMask = null)
         {
             Placement ret = (Placement)((PlacementCommon)((IPlacementGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((PlacementSetterTranslationCommon)((IPlacementGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -996,11 +1004,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out Placement.ErrorMask errorMask,
             Placement.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             Placement ret = (Placement)((PlacementCommon)((IPlacementGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((PlacementSetterTranslationCommon)((IPlacementGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = Placement.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1010,10 +1022,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             Placement ret = (Placement)((PlacementCommon)((IPlacementGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((PlacementSetterTranslationCommon)((IPlacementGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

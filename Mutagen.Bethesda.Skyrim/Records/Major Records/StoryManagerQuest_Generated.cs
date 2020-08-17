@@ -569,7 +569,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -581,7 +582,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -595,7 +597,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = StoryManagerQuest.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -609,7 +612,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static StoryManagerQuest DeepCopy(
@@ -1053,12 +1057,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly StoryManagerQuestSetterTranslationCommon Instance = new StoryManagerQuestSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IStoryManagerQuest item,
             IStoryManagerQuestGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)StoryManagerQuest_FieldIndex.Quest) ?? true))
             {
@@ -1088,9 +1093,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             StoryManagerQuest.TranslationMask? copyMask = null)
         {
             StoryManagerQuest ret = (StoryManagerQuest)((StoryManagerQuestCommon)((IStoryManagerQuestGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((StoryManagerQuestSetterTranslationCommon)((IStoryManagerQuestGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1099,11 +1107,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out StoryManagerQuest.ErrorMask errorMask,
             StoryManagerQuest.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             StoryManagerQuest ret = (StoryManagerQuest)((StoryManagerQuestCommon)((IStoryManagerQuestGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((StoryManagerQuestSetterTranslationCommon)((IStoryManagerQuestGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = StoryManagerQuest.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1113,10 +1125,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             StoryManagerQuest ret = (StoryManagerQuest)((StoryManagerQuestCommon)((IStoryManagerQuestGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((StoryManagerQuestSetterTranslationCommon)((IStoryManagerQuestGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

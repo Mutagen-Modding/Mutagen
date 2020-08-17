@@ -4272,7 +4272,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = EffectShader.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -4286,7 +4287,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static EffectShader DeepCopy(
@@ -6915,31 +6917,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly EffectShaderSetterTranslationCommon Instance = new EffectShaderSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IEffectShaderInternal item,
             IEffectShaderGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
         }
         
         public void DeepCopyIn(
             IEffectShader item,
             IEffectShaderGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 (ISkyrimMajorRecord)item,
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTexture) ?? true))
             {
                 item.FillTexture = rhs.FillTexture;
@@ -7370,52 +7376,60 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISkyrimMajorRecordInternal item,
             ISkyrimMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IEffectShaderInternal)item,
                 rhs: (IEffectShaderGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
             ISkyrimMajorRecord item,
             ISkyrimMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IEffectShader)item,
                 rhs: (IEffectShaderGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IEffectShaderInternal)item,
                 rhs: (IEffectShaderGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
             IMajorRecord item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IEffectShader)item,
                 rhs: (IEffectShaderGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         #endregion
@@ -7425,9 +7439,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EffectShader.TranslationMask? copyMask = null)
         {
             EffectShader ret = (EffectShader)((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((EffectShaderSetterTranslationCommon)((IEffectShaderGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -7436,11 +7453,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out EffectShader.ErrorMask errorMask,
             EffectShader.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             EffectShader ret = (EffectShader)((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((EffectShaderSetterTranslationCommon)((IEffectShaderGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = EffectShader.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -7450,10 +7471,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             EffectShader ret = (EffectShader)((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((EffectShaderSetterTranslationCommon)((IEffectShaderGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

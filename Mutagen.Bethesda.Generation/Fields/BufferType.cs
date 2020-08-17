@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Generation
     {
         public bool Static;
 
-        public override bool Copy => false;
+        public override CopyLevel CopyLevel => CopyLevel.None;
 
         public override async Task Load(XElement node, bool requireName = true)
         {

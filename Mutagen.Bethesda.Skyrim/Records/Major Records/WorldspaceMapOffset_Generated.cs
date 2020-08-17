@@ -517,7 +517,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -529,7 +530,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -543,7 +545,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = WorldspaceMapOffset.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -557,7 +560,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static WorldspaceMapOffset DeepCopy(
@@ -959,12 +963,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly WorldspaceMapOffsetSetterTranslationCommon Instance = new WorldspaceMapOffsetSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IWorldspaceMapOffset item,
             IWorldspaceMapOffsetGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)WorldspaceMapOffset_FieldIndex.Scale) ?? true))
             {
@@ -983,9 +988,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WorldspaceMapOffset.TranslationMask? copyMask = null)
         {
             WorldspaceMapOffset ret = (WorldspaceMapOffset)((WorldspaceMapOffsetCommon)((IWorldspaceMapOffsetGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((WorldspaceMapOffsetSetterTranslationCommon)((IWorldspaceMapOffsetGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -994,11 +1002,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out WorldspaceMapOffset.ErrorMask errorMask,
             WorldspaceMapOffset.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             WorldspaceMapOffset ret = (WorldspaceMapOffset)((WorldspaceMapOffsetCommon)((IWorldspaceMapOffsetGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((WorldspaceMapOffsetSetterTranslationCommon)((IWorldspaceMapOffsetGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = WorldspaceMapOffset.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1008,10 +1020,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             WorldspaceMapOffset ret = (WorldspaceMapOffset)((WorldspaceMapOffsetCommon)((IWorldspaceMapOffsetGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((WorldspaceMapOffsetSetterTranslationCommon)((IWorldspaceMapOffsetGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

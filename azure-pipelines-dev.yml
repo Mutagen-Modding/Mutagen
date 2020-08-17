@@ -34,14 +34,3 @@ steps:
   inputs:
     command: 'test'
     projects: '**/*UnitTests.csproj'
-
-- task: DotNetCoreCLI@2
-  displayName: "Pack"
-  inputs:
-      command: pack
-
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact: Mutagen'
-  inputs:
-    PathtoPublish: '$(build.artifactstagingdirectory)'
-  condition: succeededOrFailed()

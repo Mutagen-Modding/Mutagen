@@ -657,7 +657,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -669,7 +670,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -683,7 +685,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = PackageFlagsOverride.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -697,7 +700,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static PackageFlagsOverride DeepCopy(
@@ -1179,12 +1183,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly PackageFlagsOverrideSetterTranslationCommon Instance = new PackageFlagsOverrideSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IPackageFlagsOverride item,
             IPackageFlagsOverrideGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)PackageFlagsOverride_FieldIndex.SetFlags) ?? true))
             {
@@ -1219,9 +1224,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             PackageFlagsOverride.TranslationMask? copyMask = null)
         {
             PackageFlagsOverride ret = (PackageFlagsOverride)((PackageFlagsOverrideCommon)((IPackageFlagsOverrideGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((PackageFlagsOverrideSetterTranslationCommon)((IPackageFlagsOverrideGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1230,11 +1238,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out PackageFlagsOverride.ErrorMask errorMask,
             PackageFlagsOverride.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             PackageFlagsOverride ret = (PackageFlagsOverride)((PackageFlagsOverrideCommon)((IPackageFlagsOverrideGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((PackageFlagsOverrideSetterTranslationCommon)((IPackageFlagsOverrideGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = PackageFlagsOverride.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1244,10 +1256,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             PackageFlagsOverride ret = (PackageFlagsOverride)((PackageFlagsOverrideCommon)((IPackageFlagsOverrideGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((PackageFlagsOverrideSetterTranslationCommon)((IPackageFlagsOverrideGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

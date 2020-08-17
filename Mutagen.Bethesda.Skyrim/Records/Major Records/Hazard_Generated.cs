@@ -1027,7 +1027,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = Hazard.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -1041,7 +1042,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static Hazard DeepCopy(
@@ -1856,31 +1858,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly HazardSetterTranslationCommon Instance = new HazardSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IHazardInternal item,
             IHazardGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
         }
         
         public void DeepCopyIn(
             IHazard item,
             IHazardGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 (ISkyrimMajorRecord)item,
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.ObjectBounds) ?? true))
             {
                 errorMask?.PushIndex((int)Hazard_FieldIndex.ObjectBounds);
@@ -1987,52 +1993,60 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISkyrimMajorRecordInternal item,
             ISkyrimMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IHazardInternal)item,
                 rhs: (IHazardGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
             ISkyrimMajorRecord item,
             ISkyrimMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IHazard)item,
                 rhs: (IHazardGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IHazardInternal)item,
                 rhs: (IHazardGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
             IMajorRecord item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IHazard)item,
                 rhs: (IHazardGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         #endregion
@@ -2042,9 +2056,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Hazard.TranslationMask? copyMask = null)
         {
             Hazard ret = (Hazard)((HazardCommon)((IHazardGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((HazardSetterTranslationCommon)((IHazardGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -2053,11 +2070,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out Hazard.ErrorMask errorMask,
             Hazard.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             Hazard ret = (Hazard)((HazardCommon)((IHazardGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((HazardSetterTranslationCommon)((IHazardGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = Hazard.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -2067,10 +2088,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             Hazard ret = (Hazard)((HazardCommon)((IHazardGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((HazardSetterTranslationCommon)((IHazardGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

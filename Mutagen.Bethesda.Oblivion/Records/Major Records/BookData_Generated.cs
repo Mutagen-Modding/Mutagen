@@ -583,7 +583,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -595,7 +596,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -609,7 +611,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = BookData.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -623,7 +626,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static BookData DeepCopy(
@@ -1065,12 +1069,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly BookDataSetterTranslationCommon Instance = new BookDataSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IBookData item,
             IBookDataGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)BookData_FieldIndex.Flags) ?? true))
             {
@@ -1097,9 +1102,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             BookData.TranslationMask? copyMask = null)
         {
             BookData ret = (BookData)((BookDataCommon)((IBookDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((BookDataSetterTranslationCommon)((IBookDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1108,11 +1116,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out BookData.ErrorMask errorMask,
             BookData.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             BookData ret = (BookData)((BookDataCommon)((IBookDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((BookDataSetterTranslationCommon)((IBookDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = BookData.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1122,10 +1134,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             BookData ret = (BookData)((BookDataCommon)((IBookDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((BookDataSetterTranslationCommon)((IBookDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

@@ -605,7 +605,8 @@ namespace Mutagen.Bethesda
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -617,7 +618,8 @@ namespace Mutagen.Bethesda
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -631,7 +633,8 @@ namespace Mutagen.Bethesda
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = MajorRecord.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -645,7 +648,8 @@ namespace Mutagen.Bethesda
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static MajorRecord DeepCopy(
@@ -1224,29 +1228,35 @@ namespace Mutagen.Bethesda.Internals
     {
         public static readonly MajorRecordSetterTranslationCommon Instance = new MajorRecordSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public virtual void DeepCopyIn(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)MajorRecord_FieldIndex.FormKey) ?? true))
+            if (deepCopy)
             {
-                item.FormKey = rhs.FormKey;
+                if ((copyMask?.GetShouldTranslate((int)MajorRecord_FieldIndex.FormKey) ?? true))
+                {
+                    item.FormKey = rhs.FormKey;
+                }
             }
             DeepCopyIn(
                 (IMajorRecord)item,
                 (IMajorRecordGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         public virtual void DeepCopyIn(
             IMajorRecord item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)MajorRecord_FieldIndex.MajorRecordFlagsRaw) ?? true))
             {
@@ -1269,9 +1279,12 @@ namespace Mutagen.Bethesda.Internals
             MajorRecord.TranslationMask? copyMask = null)
         {
             MajorRecord ret = (MajorRecord)((MajorRecordCommon)((IMajorRecordGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((MajorRecordSetterTranslationCommon)((IMajorRecordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1280,11 +1293,15 @@ namespace Mutagen.Bethesda.Internals
             out MajorRecord.ErrorMask errorMask,
             MajorRecord.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             MajorRecord ret = (MajorRecord)((MajorRecordCommon)((IMajorRecordGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((MajorRecordSetterTranslationCommon)((IMajorRecordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = MajorRecord.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1294,10 +1311,12 @@ namespace Mutagen.Bethesda.Internals
             TranslationCrystal? copyMask = null)
         {
             MajorRecord ret = (MajorRecord)((MajorRecordCommon)((IMajorRecordGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((MajorRecordSetterTranslationCommon)((IMajorRecordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

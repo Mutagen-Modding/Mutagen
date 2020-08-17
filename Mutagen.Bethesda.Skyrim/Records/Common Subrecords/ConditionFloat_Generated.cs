@@ -526,7 +526,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = ConditionFloat.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -540,7 +541,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static ConditionFloat DeepCopy(
@@ -1013,18 +1015,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly ConditionFloatSetterTranslationCommon Instance = new ConditionFloatSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IConditionFloat item,
             IConditionFloatGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 (ICondition)item,
                 (IConditionGetter)rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)ConditionFloat_FieldIndex.ComparisonValue) ?? true))
             {
                 item.ComparisonValue = rhs.ComparisonValue;
@@ -1058,13 +1062,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ICondition item,
             IConditionGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IConditionFloat)item,
                 rhs: (IConditionFloatGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         #endregion
@@ -1074,9 +1080,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ConditionFloat.TranslationMask? copyMask = null)
         {
             ConditionFloat ret = (ConditionFloat)((ConditionFloatCommon)((IConditionFloatGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((ConditionFloatSetterTranslationCommon)((IConditionFloatGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1085,11 +1094,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out ConditionFloat.ErrorMask errorMask,
             ConditionFloat.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ConditionFloat ret = (ConditionFloat)((ConditionFloatCommon)((IConditionFloatGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((ConditionFloatSetterTranslationCommon)((IConditionFloatGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = ConditionFloat.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1099,10 +1112,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             ConditionFloat ret = (ConditionFloat)((ConditionFloatCommon)((IConditionFloatGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((ConditionFloatSetterTranslationCommon)((IConditionFloatGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

@@ -831,7 +831,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = ConstructibleObject.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -845,7 +846,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static ConstructibleObject DeepCopy(
@@ -1494,31 +1496,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly ConstructibleObjectSetterTranslationCommon Instance = new ConstructibleObjectSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IConstructibleObjectInternal item,
             IConstructibleObjectGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
         }
         
         public void DeepCopyIn(
             IConstructibleObject item,
             IConstructibleObjectGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 (ISkyrimMajorRecord)item,
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Items) ?? true))
             {
                 errorMask?.PushIndex((int)ConstructibleObject_FieldIndex.Items);
@@ -1593,52 +1599,60 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISkyrimMajorRecordInternal item,
             ISkyrimMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IConstructibleObjectInternal)item,
                 rhs: (IConstructibleObjectGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
             ISkyrimMajorRecord item,
             ISkyrimMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IConstructibleObject)item,
                 rhs: (IConstructibleObjectGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IConstructibleObjectInternal)item,
                 rhs: (IConstructibleObjectGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
             IMajorRecord item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IConstructibleObject)item,
                 rhs: (IConstructibleObjectGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         #endregion
@@ -1648,9 +1662,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ConstructibleObject.TranslationMask? copyMask = null)
         {
             ConstructibleObject ret = (ConstructibleObject)((ConstructibleObjectCommon)((IConstructibleObjectGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((ConstructibleObjectSetterTranslationCommon)((IConstructibleObjectGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1659,11 +1676,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out ConstructibleObject.ErrorMask errorMask,
             ConstructibleObject.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ConstructibleObject ret = (ConstructibleObject)((ConstructibleObjectCommon)((IConstructibleObjectGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((ConstructibleObjectSetterTranslationCommon)((IConstructibleObjectGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = ConstructibleObject.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1673,10 +1694,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             ConstructibleObject ret = (ConstructibleObject)((ConstructibleObjectCommon)((IConstructibleObjectGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((ConstructibleObjectSetterTranslationCommon)((IConstructibleObjectGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

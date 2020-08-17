@@ -1186,7 +1186,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -1198,7 +1199,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -1212,7 +1214,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = ANavigationMeshData.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -1226,7 +1229,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static ANavigationMeshData DeepCopy(
@@ -1897,12 +1901,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly ANavigationMeshDataSetterTranslationCommon Instance = new ANavigationMeshDataSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public virtual void DeepCopyIn(
             IANavigationMeshData item,
             IANavigationMeshDataGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)ANavigationMeshData_FieldIndex.NavmeshVersion) ?? true))
             {
@@ -2034,9 +2039,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ANavigationMeshData.TranslationMask? copyMask = null)
         {
             ANavigationMeshData ret = (ANavigationMeshData)((ANavigationMeshDataCommon)((IANavigationMeshDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((ANavigationMeshDataSetterTranslationCommon)((IANavigationMeshDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -2045,11 +2053,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out ANavigationMeshData.ErrorMask errorMask,
             ANavigationMeshData.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ANavigationMeshData ret = (ANavigationMeshData)((ANavigationMeshDataCommon)((IANavigationMeshDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((ANavigationMeshDataSetterTranslationCommon)((IANavigationMeshDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = ANavigationMeshData.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -2059,10 +2071,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             ANavigationMeshData ret = (ANavigationMeshData)((ANavigationMeshDataCommon)((IANavigationMeshDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((ANavigationMeshDataSetterTranslationCommon)((IANavigationMeshDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

@@ -545,7 +545,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -557,7 +558,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -571,7 +573,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = BodyData.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -585,7 +588,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static BodyData DeepCopy(
@@ -1016,12 +1020,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly BodyDataSetterTranslationCommon Instance = new BodyDataSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IBodyData item,
             IBodyDataGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)BodyData_FieldIndex.Index) ?? true))
             {
@@ -1062,9 +1067,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BodyData.TranslationMask? copyMask = null)
         {
             BodyData ret = (BodyData)((BodyDataCommon)((IBodyDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((BodyDataSetterTranslationCommon)((IBodyDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1073,11 +1081,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out BodyData.ErrorMask errorMask,
             BodyData.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             BodyData ret = (BodyData)((BodyDataCommon)((IBodyDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((BodyDataSetterTranslationCommon)((IBodyDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = BodyData.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1087,10 +1099,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             BodyData ret = (BodyData)((BodyDataCommon)((IBodyDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((BodyDataSetterTranslationCommon)((IBodyDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

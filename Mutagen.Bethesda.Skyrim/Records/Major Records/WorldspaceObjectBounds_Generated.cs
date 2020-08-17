@@ -513,7 +513,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -525,7 +526,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -539,7 +541,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = WorldspaceObjectBounds.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -553,7 +556,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static WorldspaceObjectBounds DeepCopy(
@@ -964,12 +968,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly WorldspaceObjectBoundsSetterTranslationCommon Instance = new WorldspaceObjectBoundsSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IWorldspaceObjectBounds item,
             IWorldspaceObjectBoundsGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)WorldspaceObjectBounds_FieldIndex.Min) ?? true))
             {
@@ -988,9 +993,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WorldspaceObjectBounds.TranslationMask? copyMask = null)
         {
             WorldspaceObjectBounds ret = (WorldspaceObjectBounds)((WorldspaceObjectBoundsCommon)((IWorldspaceObjectBoundsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((WorldspaceObjectBoundsSetterTranslationCommon)((IWorldspaceObjectBoundsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -999,11 +1007,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out WorldspaceObjectBounds.ErrorMask errorMask,
             WorldspaceObjectBounds.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             WorldspaceObjectBounds ret = (WorldspaceObjectBounds)((WorldspaceObjectBoundsCommon)((IWorldspaceObjectBoundsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((WorldspaceObjectBoundsSetterTranslationCommon)((IWorldspaceObjectBoundsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = WorldspaceObjectBounds.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1013,10 +1025,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             WorldspaceObjectBounds ret = (WorldspaceObjectBounds)((WorldspaceObjectBoundsCommon)((IWorldspaceObjectBoundsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((WorldspaceObjectBoundsSetterTranslationCommon)((IWorldspaceObjectBoundsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

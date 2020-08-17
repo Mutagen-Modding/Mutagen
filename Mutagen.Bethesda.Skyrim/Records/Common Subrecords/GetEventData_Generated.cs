@@ -684,7 +684,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = GetEventData.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -698,7 +699,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static GetEventData DeepCopy(
@@ -1249,18 +1251,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly GetEventDataSetterTranslationCommon Instance = new GetEventDataSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IGetEventData item,
             IGetEventDataGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 (IConditionData)item,
                 (IConditionDataGetter)rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)GetEventData_FieldIndex.Unknown2) ?? true))
             {
                 item.Unknown2 = rhs.Unknown2;
@@ -1296,13 +1300,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IConditionData item,
             IConditionDataGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IGetEventData)item,
                 rhs: (IGetEventDataGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         #endregion
@@ -1312,9 +1318,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             GetEventData.TranslationMask? copyMask = null)
         {
             GetEventData ret = (GetEventData)((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((GetEventDataSetterTranslationCommon)((IGetEventDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1323,11 +1332,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out GetEventData.ErrorMask errorMask,
             GetEventData.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             GetEventData ret = (GetEventData)((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((GetEventDataSetterTranslationCommon)((IGetEventDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = GetEventData.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1337,10 +1350,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             GetEventData ret = (GetEventData)((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((GetEventDataSetterTranslationCommon)((IGetEventDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

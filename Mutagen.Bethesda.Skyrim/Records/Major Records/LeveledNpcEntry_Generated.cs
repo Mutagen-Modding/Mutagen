@@ -557,7 +557,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -569,7 +570,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -583,7 +585,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = LeveledNpcEntry.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -597,7 +600,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static LeveledNpcEntry DeepCopy(
@@ -1038,12 +1042,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly LeveledNpcEntrySetterTranslationCommon Instance = new LeveledNpcEntrySetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             ILeveledNpcEntry item,
             ILeveledNpcEntryGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)LeveledNpcEntry_FieldIndex.Data) ?? true))
             {
@@ -1106,9 +1111,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             LeveledNpcEntry.TranslationMask? copyMask = null)
         {
             LeveledNpcEntry ret = (LeveledNpcEntry)((LeveledNpcEntryCommon)((ILeveledNpcEntryGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((LeveledNpcEntrySetterTranslationCommon)((ILeveledNpcEntryGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1117,11 +1125,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out LeveledNpcEntry.ErrorMask errorMask,
             LeveledNpcEntry.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             LeveledNpcEntry ret = (LeveledNpcEntry)((LeveledNpcEntryCommon)((ILeveledNpcEntryGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((LeveledNpcEntrySetterTranslationCommon)((ILeveledNpcEntryGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = LeveledNpcEntry.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1131,10 +1143,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             LeveledNpcEntry ret = (LeveledNpcEntry)((LeveledNpcEntryCommon)((ILeveledNpcEntryGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((LeveledNpcEntrySetterTranslationCommon)((ILeveledNpcEntryGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

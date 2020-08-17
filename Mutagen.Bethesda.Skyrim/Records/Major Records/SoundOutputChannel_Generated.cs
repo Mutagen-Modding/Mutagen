@@ -711,7 +711,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -723,7 +724,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -737,7 +739,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = SoundOutputChannel.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -751,7 +754,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static SoundOutputChannel DeepCopy(
@@ -1269,12 +1273,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly SoundOutputChannelSetterTranslationCommon Instance = new SoundOutputChannelSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             ISoundOutputChannel item,
             ISoundOutputChannelGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)SoundOutputChannel_FieldIndex.L) ?? true))
             {
@@ -1317,9 +1322,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SoundOutputChannel.TranslationMask? copyMask = null)
         {
             SoundOutputChannel ret = (SoundOutputChannel)((SoundOutputChannelCommon)((ISoundOutputChannelGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((SoundOutputChannelSetterTranslationCommon)((ISoundOutputChannelGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1328,11 +1336,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out SoundOutputChannel.ErrorMask errorMask,
             SoundOutputChannel.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             SoundOutputChannel ret = (SoundOutputChannel)((SoundOutputChannelCommon)((ISoundOutputChannelGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((SoundOutputChannelSetterTranslationCommon)((ISoundOutputChannelGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = SoundOutputChannel.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1342,10 +1354,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             SoundOutputChannel ret = (SoundOutputChannel)((SoundOutputChannelCommon)((ISoundOutputChannelGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((SoundOutputChannelSetterTranslationCommon)((ISoundOutputChannelGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

@@ -541,7 +541,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = CellNavigationMesh.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -555,7 +556,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static CellNavigationMesh DeepCopy(
@@ -1137,31 +1139,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly CellNavigationMeshSetterTranslationCommon Instance = new CellNavigationMeshSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             ICellNavigationMeshInternal item,
             ICellNavigationMeshGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
         }
         
         public void DeepCopyIn(
             ICellNavigationMesh item,
             ICellNavigationMeshGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 (IANavigationMesh)item,
                 (IANavigationMeshGetter)rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)CellNavigationMesh_FieldIndex.Data) ?? true))
             {
                 errorMask?.PushIndex((int)CellNavigationMesh_FieldIndex.Data);
@@ -1194,78 +1200,90 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IANavigationMeshInternal item,
             IANavigationMeshGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (ICellNavigationMeshInternal)item,
                 rhs: (ICellNavigationMeshGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
             IANavigationMesh item,
             IANavigationMeshGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (ICellNavigationMesh)item,
                 rhs: (ICellNavigationMeshGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
             ISkyrimMajorRecordInternal item,
             ISkyrimMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (ICellNavigationMeshInternal)item,
                 rhs: (ICellNavigationMeshGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
             ISkyrimMajorRecord item,
             ISkyrimMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (ICellNavigationMesh)item,
                 rhs: (ICellNavigationMeshGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (ICellNavigationMeshInternal)item,
                 rhs: (ICellNavigationMeshGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
             IMajorRecord item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (ICellNavigationMesh)item,
                 rhs: (ICellNavigationMeshGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         #endregion
@@ -1275,9 +1293,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             CellNavigationMesh.TranslationMask? copyMask = null)
         {
             CellNavigationMesh ret = (CellNavigationMesh)((CellNavigationMeshCommon)((ICellNavigationMeshGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((CellNavigationMeshSetterTranslationCommon)((ICellNavigationMeshGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1286,11 +1307,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out CellNavigationMesh.ErrorMask errorMask,
             CellNavigationMesh.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             CellNavigationMesh ret = (CellNavigationMesh)((CellNavigationMeshCommon)((ICellNavigationMeshGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((CellNavigationMeshSetterTranslationCommon)((ICellNavigationMeshGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = CellNavigationMesh.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1300,10 +1325,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             CellNavigationMesh ret = (CellNavigationMesh)((CellNavigationMeshCommon)((ICellNavigationMeshGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((CellNavigationMeshSetterTranslationCommon)((ICellNavigationMeshGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

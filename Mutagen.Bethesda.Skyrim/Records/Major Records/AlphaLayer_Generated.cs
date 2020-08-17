@@ -483,7 +483,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = AlphaLayer.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -497,7 +498,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static AlphaLayer DeepCopy(
@@ -939,18 +941,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly AlphaLayerSetterTranslationCommon Instance = new AlphaLayerSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IAlphaLayer item,
             IAlphaLayerGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 (IBaseLayer)item,
                 (IBaseLayerGetter)rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)AlphaLayer_FieldIndex.AlphaLayerData) ?? true))
             {
                 if(rhs.AlphaLayerData.TryGet(out var AlphaLayerDatarhs))
@@ -969,13 +973,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IBaseLayer item,
             IBaseLayerGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IAlphaLayer)item,
                 rhs: (IAlphaLayerGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         #endregion
@@ -985,9 +991,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             AlphaLayer.TranslationMask? copyMask = null)
         {
             AlphaLayer ret = (AlphaLayer)((AlphaLayerCommon)((IAlphaLayerGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((AlphaLayerSetterTranslationCommon)((IAlphaLayerGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -996,11 +1005,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out AlphaLayer.ErrorMask errorMask,
             AlphaLayer.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             AlphaLayer ret = (AlphaLayer)((AlphaLayerCommon)((IAlphaLayerGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((AlphaLayerSetterTranslationCommon)((IAlphaLayerGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = AlphaLayer.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1010,10 +1023,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             AlphaLayer ret = (AlphaLayer)((AlphaLayerCommon)((IAlphaLayerGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((AlphaLayerSetterTranslationCommon)((IAlphaLayerGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

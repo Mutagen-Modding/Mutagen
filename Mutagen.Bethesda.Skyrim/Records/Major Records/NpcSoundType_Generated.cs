@@ -614,7 +614,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -626,7 +627,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -640,7 +642,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = NpcSoundType.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -654,7 +657,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static NpcSoundType DeepCopy(
@@ -1093,12 +1097,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly NpcSoundTypeSetterTranslationCommon Instance = new NpcSoundTypeSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             INpcSoundType item,
             INpcSoundTypeGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)NpcSoundType_FieldIndex.Type) ?? true))
             {
@@ -1137,9 +1142,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             NpcSoundType.TranslationMask? copyMask = null)
         {
             NpcSoundType ret = (NpcSoundType)((NpcSoundTypeCommon)((INpcSoundTypeGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((NpcSoundTypeSetterTranslationCommon)((INpcSoundTypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1148,11 +1156,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out NpcSoundType.ErrorMask errorMask,
             NpcSoundType.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             NpcSoundType ret = (NpcSoundType)((NpcSoundTypeCommon)((INpcSoundTypeGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((NpcSoundTypeSetterTranslationCommon)((INpcSoundTypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = NpcSoundType.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1162,10 +1174,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             NpcSoundType ret = (NpcSoundType)((NpcSoundTypeCommon)((INpcSoundTypeGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((NpcSoundTypeSetterTranslationCommon)((INpcSoundTypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

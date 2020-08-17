@@ -558,7 +558,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = ScriptBoolListProperty.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -572,7 +573,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static ScriptBoolListProperty DeepCopy(
@@ -1024,18 +1026,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly ScriptBoolListPropertySetterTranslationCommon Instance = new ScriptBoolListPropertySetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IScriptBoolListProperty item,
             IScriptBoolListPropertyGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 (IScriptProperty)item,
                 (IScriptPropertyGetter)rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)ScriptBoolListProperty_FieldIndex.Data) ?? true))
             {
                 errorMask?.PushIndex((int)ScriptBoolListProperty_FieldIndex.Data);
@@ -1060,13 +1064,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IScriptProperty item,
             IScriptPropertyGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IScriptBoolListProperty)item,
                 rhs: (IScriptBoolListPropertyGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         #endregion
@@ -1076,9 +1082,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ScriptBoolListProperty.TranslationMask? copyMask = null)
         {
             ScriptBoolListProperty ret = (ScriptBoolListProperty)((ScriptBoolListPropertyCommon)((IScriptBoolListPropertyGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((ScriptBoolListPropertySetterTranslationCommon)((IScriptBoolListPropertyGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1087,11 +1096,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out ScriptBoolListProperty.ErrorMask errorMask,
             ScriptBoolListProperty.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ScriptBoolListProperty ret = (ScriptBoolListProperty)((ScriptBoolListPropertyCommon)((IScriptBoolListPropertyGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((ScriptBoolListPropertySetterTranslationCommon)((IScriptBoolListPropertyGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = ScriptBoolListProperty.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1101,10 +1114,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             ScriptBoolListProperty ret = (ScriptBoolListProperty)((ScriptBoolListPropertyCommon)((IScriptBoolListPropertyGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((ScriptBoolListPropertySetterTranslationCommon)((IScriptBoolListPropertyGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

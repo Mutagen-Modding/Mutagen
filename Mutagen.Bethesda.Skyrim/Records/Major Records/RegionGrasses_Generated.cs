@@ -572,7 +572,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = RegionGrasses.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -586,7 +587,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static RegionGrasses DeepCopy(
@@ -1059,18 +1061,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly RegionGrassesSetterTranslationCommon Instance = new RegionGrassesSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IRegionGrasses item,
             IRegionGrassesGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 (IRegionData)item,
                 (IRegionDataGetter)rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)RegionGrasses_FieldIndex.Grasses) ?? true))
             {
                 errorMask?.PushIndex((int)RegionGrasses_FieldIndex.Grasses);
@@ -1110,13 +1114,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRegionData item,
             IRegionDataGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IRegionGrasses)item,
                 rhs: (IRegionGrassesGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         #endregion
@@ -1126,9 +1132,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RegionGrasses.TranslationMask? copyMask = null)
         {
             RegionGrasses ret = (RegionGrasses)((RegionGrassesCommon)((IRegionGrassesGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((RegionGrassesSetterTranslationCommon)((IRegionGrassesGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1137,11 +1146,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out RegionGrasses.ErrorMask errorMask,
             RegionGrasses.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             RegionGrasses ret = (RegionGrasses)((RegionGrassesCommon)((IRegionGrassesGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((RegionGrassesSetterTranslationCommon)((IRegionGrassesGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = RegionGrasses.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1151,10 +1164,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             RegionGrasses ret = (RegionGrasses)((RegionGrassesCommon)((IRegionGrassesGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((RegionGrassesSetterTranslationCommon)((IRegionGrassesGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

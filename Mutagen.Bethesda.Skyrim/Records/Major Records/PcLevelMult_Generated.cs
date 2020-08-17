@@ -463,7 +463,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = PcLevelMult.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -477,7 +478,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static PcLevelMult DeepCopy(
@@ -902,18 +904,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly PcLevelMultSetterTranslationCommon Instance = new PcLevelMultSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IPcLevelMult item,
             IPcLevelMultGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 (IANpcLevel)item,
                 (IANpcLevelGetter)rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PcLevelMult_FieldIndex.LevelMult) ?? true))
             {
                 item.LevelMult = rhs.LevelMult;
@@ -925,13 +929,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IANpcLevel item,
             IANpcLevelGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IPcLevelMult)item,
                 rhs: (IPcLevelMultGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         #endregion
@@ -941,9 +947,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             PcLevelMult.TranslationMask? copyMask = null)
         {
             PcLevelMult ret = (PcLevelMult)((PcLevelMultCommon)((IPcLevelMultGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((PcLevelMultSetterTranslationCommon)((IPcLevelMultGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -952,11 +961,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out PcLevelMult.ErrorMask errorMask,
             PcLevelMult.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             PcLevelMult ret = (PcLevelMult)((PcLevelMultCommon)((IPcLevelMultGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((PcLevelMultSetterTranslationCommon)((IPcLevelMultGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = PcLevelMult.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -966,10 +979,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             PcLevelMult ret = (PcLevelMult)((PcLevelMultCommon)((IPcLevelMultGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((PcLevelMultSetterTranslationCommon)((IPcLevelMultGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

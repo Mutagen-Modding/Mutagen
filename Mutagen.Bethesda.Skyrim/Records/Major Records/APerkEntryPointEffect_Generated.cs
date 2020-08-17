@@ -499,7 +499,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = APerkEntryPointEffect.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -513,7 +514,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static APerkEntryPointEffect DeepCopy(
@@ -970,18 +972,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly APerkEntryPointEffectSetterTranslationCommon Instance = new APerkEntryPointEffectSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public virtual void DeepCopyIn(
             IAPerkEntryPointEffect item,
             IAPerkEntryPointEffectGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 (IAPerkEffect)item,
                 (IAPerkEffectGetter)rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)APerkEntryPointEffect_FieldIndex.EntryPoint) ?? true))
             {
                 item.EntryPoint = rhs.EntryPoint;
@@ -997,13 +1001,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAPerkEffect item,
             IAPerkEffectGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IAPerkEntryPointEffect)item,
                 rhs: (IAPerkEntryPointEffectGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         #endregion
@@ -1013,9 +1019,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             APerkEntryPointEffect.TranslationMask? copyMask = null)
         {
             APerkEntryPointEffect ret = (APerkEntryPointEffect)((APerkEntryPointEffectCommon)((IAPerkEntryPointEffectGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((APerkEntryPointEffectSetterTranslationCommon)((IAPerkEntryPointEffectGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1024,11 +1033,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out APerkEntryPointEffect.ErrorMask errorMask,
             APerkEntryPointEffect.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             APerkEntryPointEffect ret = (APerkEntryPointEffect)((APerkEntryPointEffectCommon)((IAPerkEntryPointEffectGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((APerkEntryPointEffectSetterTranslationCommon)((IAPerkEntryPointEffectGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = APerkEntryPointEffect.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1038,10 +1051,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             APerkEntryPointEffect ret = (APerkEntryPointEffect)((APerkEntryPointEffectCommon)((IAPerkEntryPointEffectGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((APerkEntryPointEffectSetterTranslationCommon)((IAPerkEntryPointEffectGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

@@ -671,7 +671,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -683,7 +684,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -697,7 +699,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = PathGridPoint.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -711,7 +714,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static PathGridPoint DeepCopy(
@@ -1167,12 +1171,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly PathGridPointSetterTranslationCommon Instance = new PathGridPointSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IPathGridPoint item,
             IPathGridPointGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)PathGridPoint_FieldIndex.Point) ?? true))
             {
@@ -1212,9 +1217,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             PathGridPoint.TranslationMask? copyMask = null)
         {
             PathGridPoint ret = (PathGridPoint)((PathGridPointCommon)((IPathGridPointGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((PathGridPointSetterTranslationCommon)((IPathGridPointGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1223,11 +1231,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out PathGridPoint.ErrorMask errorMask,
             PathGridPoint.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             PathGridPoint ret = (PathGridPoint)((PathGridPointCommon)((IPathGridPointGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((PathGridPointSetterTranslationCommon)((IPathGridPointGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = PathGridPoint.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1237,10 +1249,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             PathGridPoint ret = (PathGridPoint)((PathGridPointCommon)((IPathGridPointGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((PathGridPointSetterTranslationCommon)((IPathGridPointGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

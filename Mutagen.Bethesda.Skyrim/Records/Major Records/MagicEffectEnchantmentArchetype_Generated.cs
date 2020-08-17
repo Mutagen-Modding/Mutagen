@@ -429,7 +429,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = MagicEffectEnchantmentArchetype.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -443,7 +444,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static MagicEffectEnchantmentArchetype DeepCopy(
@@ -852,57 +854,65 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly MagicEffectEnchantmentArchetypeSetterTranslationCommon Instance = new MagicEffectEnchantmentArchetypeSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IMagicEffectEnchantmentArchetypeInternal item,
             IMagicEffectEnchantmentArchetypeGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
         }
         
         public void DeepCopyIn(
             IMagicEffectEnchantmentArchetype item,
             IMagicEffectEnchantmentArchetypeGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 (IMagicEffectArchetype)item,
                 (IMagicEffectArchetypeGetter)rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
             IMagicEffectArchetypeInternal item,
             IMagicEffectArchetypeGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IMagicEffectEnchantmentArchetypeInternal)item,
                 rhs: (IMagicEffectEnchantmentArchetypeGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
             IMagicEffectArchetype item,
             IMagicEffectArchetypeGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IMagicEffectEnchantmentArchetype)item,
                 rhs: (IMagicEffectEnchantmentArchetypeGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         #endregion
@@ -912,9 +922,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MagicEffectEnchantmentArchetype.TranslationMask? copyMask = null)
         {
             MagicEffectEnchantmentArchetype ret = (MagicEffectEnchantmentArchetype)((MagicEffectEnchantmentArchetypeCommon)((IMagicEffectEnchantmentArchetypeGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((MagicEffectEnchantmentArchetypeSetterTranslationCommon)((IMagicEffectEnchantmentArchetypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -923,11 +936,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out MagicEffectEnchantmentArchetype.ErrorMask errorMask,
             MagicEffectEnchantmentArchetype.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             MagicEffectEnchantmentArchetype ret = (MagicEffectEnchantmentArchetype)((MagicEffectEnchantmentArchetypeCommon)((IMagicEffectEnchantmentArchetypeGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((MagicEffectEnchantmentArchetypeSetterTranslationCommon)((IMagicEffectEnchantmentArchetypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = MagicEffectEnchantmentArchetype.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -937,10 +954,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             MagicEffectEnchantmentArchetype ret = (MagicEffectEnchantmentArchetype)((MagicEffectEnchantmentArchetypeCommon)((IMagicEffectEnchantmentArchetypeGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((MagicEffectEnchantmentArchetypeSetterTranslationCommon)((IMagicEffectEnchantmentArchetypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

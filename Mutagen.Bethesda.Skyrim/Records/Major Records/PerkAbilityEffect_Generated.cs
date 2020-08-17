@@ -492,7 +492,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = PerkAbilityEffect.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -506,7 +507,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static PerkAbilityEffect DeepCopy(
@@ -950,18 +952,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly PerkAbilityEffectSetterTranslationCommon Instance = new PerkAbilityEffectSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IPerkAbilityEffect item,
             IPerkAbilityEffectGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 (IAPerkEffect)item,
                 (IAPerkEffectGetter)rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PerkAbilityEffect_FieldIndex.Ability) ?? true))
             {
                 item.Ability = new FormLink<Spell>(rhs.Ability.FormKey);
@@ -973,13 +977,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAPerkEffect item,
             IAPerkEffectGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IPerkAbilityEffect)item,
                 rhs: (IPerkAbilityEffectGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         #endregion
@@ -989,9 +995,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             PerkAbilityEffect.TranslationMask? copyMask = null)
         {
             PerkAbilityEffect ret = (PerkAbilityEffect)((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((PerkAbilityEffectSetterTranslationCommon)((IPerkAbilityEffectGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1000,11 +1009,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out PerkAbilityEffect.ErrorMask errorMask,
             PerkAbilityEffect.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             PerkAbilityEffect ret = (PerkAbilityEffect)((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((PerkAbilityEffectSetterTranslationCommon)((IPerkAbilityEffectGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = PerkAbilityEffect.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1014,10 +1027,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             PerkAbilityEffect ret = (PerkAbilityEffect)((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((PerkAbilityEffectSetterTranslationCommon)((IPerkAbilityEffectGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

@@ -558,7 +558,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -570,7 +571,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -584,7 +586,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = WorldspaceMaxHeight.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -598,7 +601,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static WorldspaceMaxHeight DeepCopy(
@@ -1020,12 +1024,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly WorldspaceMaxHeightSetterTranslationCommon Instance = new WorldspaceMaxHeightSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IWorldspaceMaxHeight item,
             IWorldspaceMaxHeightGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)WorldspaceMaxHeight_FieldIndex.Min) ?? true))
             {
@@ -1048,9 +1053,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WorldspaceMaxHeight.TranslationMask? copyMask = null)
         {
             WorldspaceMaxHeight ret = (WorldspaceMaxHeight)((WorldspaceMaxHeightCommon)((IWorldspaceMaxHeightGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((WorldspaceMaxHeightSetterTranslationCommon)((IWorldspaceMaxHeightGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1059,11 +1067,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out WorldspaceMaxHeight.ErrorMask errorMask,
             WorldspaceMaxHeight.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             WorldspaceMaxHeight ret = (WorldspaceMaxHeight)((WorldspaceMaxHeightCommon)((IWorldspaceMaxHeightGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((WorldspaceMaxHeightSetterTranslationCommon)((IWorldspaceMaxHeightGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = WorldspaceMaxHeight.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1073,10 +1085,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             WorldspaceMaxHeight ret = (WorldspaceMaxHeight)((WorldspaceMaxHeightCommon)((IWorldspaceMaxHeightGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((WorldspaceMaxHeightSetterTranslationCommon)((IWorldspaceMaxHeightGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

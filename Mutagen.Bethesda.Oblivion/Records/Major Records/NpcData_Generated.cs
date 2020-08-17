@@ -1441,7 +1441,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -1453,7 +1454,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -1467,7 +1469,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = NpcData.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -1481,7 +1484,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static NpcData DeepCopy(
@@ -2443,12 +2447,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly NpcDataSetterTranslationCommon Instance = new NpcDataSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             INpcData item,
             INpcDataGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)NpcData_FieldIndex.Armorer) ?? true))
             {
@@ -2579,9 +2584,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NpcData.TranslationMask? copyMask = null)
         {
             NpcData ret = (NpcData)((NpcDataCommon)((INpcDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((NpcDataSetterTranslationCommon)((INpcDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -2590,11 +2598,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out NpcData.ErrorMask errorMask,
             NpcData.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             NpcData ret = (NpcData)((NpcDataCommon)((INpcDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((NpcDataSetterTranslationCommon)((INpcDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = NpcData.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -2604,10 +2616,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             NpcData ret = (NpcData)((NpcDataCommon)((INpcDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((NpcDataSetterTranslationCommon)((INpcDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

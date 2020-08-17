@@ -517,7 +517,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -529,7 +530,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -543,7 +545,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = CellGrid.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -557,7 +560,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static CellGrid DeepCopy(
@@ -959,12 +963,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly CellGridSetterTranslationCommon Instance = new CellGridSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             ICellGrid item,
             ICellGridGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)CellGrid_FieldIndex.Point) ?? true))
             {
@@ -983,9 +988,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             CellGrid.TranslationMask? copyMask = null)
         {
             CellGrid ret = (CellGrid)((CellGridCommon)((ICellGridGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((CellGridSetterTranslationCommon)((ICellGridGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -994,11 +1002,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out CellGrid.ErrorMask errorMask,
             CellGrid.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             CellGrid ret = (CellGrid)((CellGridCommon)((ICellGridGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((CellGridSetterTranslationCommon)((ICellGridGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = CellGrid.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1008,10 +1020,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             CellGrid ret = (CellGrid)((CellGridCommon)((ICellGridGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((CellGridSetterTranslationCommon)((ICellGridGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

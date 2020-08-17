@@ -429,7 +429,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = MagicEffectNpcArchetype.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -443,7 +444,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static MagicEffectNpcArchetype DeepCopy(
@@ -852,57 +854,65 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly MagicEffectNpcArchetypeSetterTranslationCommon Instance = new MagicEffectNpcArchetypeSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IMagicEffectNpcArchetypeInternal item,
             IMagicEffectNpcArchetypeGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
         }
         
         public void DeepCopyIn(
             IMagicEffectNpcArchetype item,
             IMagicEffectNpcArchetypeGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 (IMagicEffectArchetype)item,
                 (IMagicEffectArchetypeGetter)rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
             IMagicEffectArchetypeInternal item,
             IMagicEffectArchetypeGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IMagicEffectNpcArchetypeInternal)item,
                 rhs: (IMagicEffectNpcArchetypeGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
             IMagicEffectArchetype item,
             IMagicEffectArchetypeGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IMagicEffectNpcArchetype)item,
                 rhs: (IMagicEffectNpcArchetypeGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         #endregion
@@ -912,9 +922,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MagicEffectNpcArchetype.TranslationMask? copyMask = null)
         {
             MagicEffectNpcArchetype ret = (MagicEffectNpcArchetype)((MagicEffectNpcArchetypeCommon)((IMagicEffectNpcArchetypeGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((MagicEffectNpcArchetypeSetterTranslationCommon)((IMagicEffectNpcArchetypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -923,11 +936,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out MagicEffectNpcArchetype.ErrorMask errorMask,
             MagicEffectNpcArchetype.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             MagicEffectNpcArchetype ret = (MagicEffectNpcArchetype)((MagicEffectNpcArchetypeCommon)((IMagicEffectNpcArchetypeGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((MagicEffectNpcArchetypeSetterTranslationCommon)((IMagicEffectNpcArchetypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = MagicEffectNpcArchetype.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -937,10 +954,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             MagicEffectNpcArchetype ret = (MagicEffectNpcArchetype)((MagicEffectNpcArchetypeCommon)((IMagicEffectNpcArchetypeGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((MagicEffectNpcArchetypeSetterTranslationCommon)((IMagicEffectNpcArchetypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

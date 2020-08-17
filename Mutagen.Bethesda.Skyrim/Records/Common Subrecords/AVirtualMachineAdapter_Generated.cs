@@ -624,7 +624,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -636,7 +637,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -650,7 +652,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = AVirtualMachineAdapter.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -664,7 +667,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static AVirtualMachineAdapter DeepCopy(
@@ -1102,12 +1106,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly AVirtualMachineAdapterSetterTranslationCommon Instance = new AVirtualMachineAdapterSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public virtual void DeepCopyIn(
             IAVirtualMachineAdapter item,
             IAVirtualMachineAdapterGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)AVirtualMachineAdapter_FieldIndex.Version) ?? true))
             {
@@ -1150,9 +1155,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             AVirtualMachineAdapter.TranslationMask? copyMask = null)
         {
             AVirtualMachineAdapter ret = (AVirtualMachineAdapter)((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((AVirtualMachineAdapterSetterTranslationCommon)((IAVirtualMachineAdapterGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1161,11 +1169,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out AVirtualMachineAdapter.ErrorMask errorMask,
             AVirtualMachineAdapter.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             AVirtualMachineAdapter ret = (AVirtualMachineAdapter)((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((AVirtualMachineAdapterSetterTranslationCommon)((IAVirtualMachineAdapterGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = AVirtualMachineAdapter.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1175,10 +1187,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             AVirtualMachineAdapter ret = (AVirtualMachineAdapter)((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((AVirtualMachineAdapterSetterTranslationCommon)((IAVirtualMachineAdapterGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

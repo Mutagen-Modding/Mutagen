@@ -562,7 +562,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -574,7 +575,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -588,7 +590,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = RegionDataHeader.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -602,7 +605,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static RegionDataHeader DeepCopy(
@@ -1024,12 +1028,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly RegionDataHeaderSetterTranslationCommon Instance = new RegionDataHeaderSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IRegionDataHeaderInternal item,
             IRegionDataHeaderGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)RegionDataHeader_FieldIndex.DataType) ?? true))
             {
@@ -1039,14 +1044,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (IRegionDataHeader)item,
                 (IRegionDataHeaderGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         public void DeepCopyIn(
             IRegionDataHeader item,
             IRegionDataHeaderGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)RegionDataHeader_FieldIndex.Flags) ?? true))
             {
@@ -1065,9 +1072,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RegionDataHeader.TranslationMask? copyMask = null)
         {
             RegionDataHeader ret = (RegionDataHeader)((RegionDataHeaderCommon)((IRegionDataHeaderGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((RegionDataHeaderSetterTranslationCommon)((IRegionDataHeaderGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1076,11 +1086,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out RegionDataHeader.ErrorMask errorMask,
             RegionDataHeader.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             RegionDataHeader ret = (RegionDataHeader)((RegionDataHeaderCommon)((IRegionDataHeaderGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((RegionDataHeaderSetterTranslationCommon)((IRegionDataHeaderGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = RegionDataHeader.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1090,10 +1104,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             RegionDataHeader ret = (RegionDataHeader)((RegionDataHeaderCommon)((IRegionDataHeaderGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((RegionDataHeaderSetterTranslationCommon)((IRegionDataHeaderGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

@@ -683,7 +683,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -695,7 +696,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -709,7 +711,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = ClimateData.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -723,7 +726,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static ClimateData DeepCopy(
@@ -1225,12 +1229,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly ClimateDataSetterTranslationCommon Instance = new ClimateDataSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IClimateData item,
             IClimateDataGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)ClimateData_FieldIndex.SunriseBegin) ?? true))
             {
@@ -1269,9 +1274,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClimateData.TranslationMask? copyMask = null)
         {
             ClimateData ret = (ClimateData)((ClimateDataCommon)((IClimateDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((ClimateDataSetterTranslationCommon)((IClimateDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1280,11 +1288,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out ClimateData.ErrorMask errorMask,
             ClimateData.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ClimateData ret = (ClimateData)((ClimateDataCommon)((IClimateDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((ClimateDataSetterTranslationCommon)((IClimateDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = ClimateData.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1294,10 +1306,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             ClimateData ret = (ClimateData)((ClimateDataCommon)((IClimateDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((ClimateDataSetterTranslationCommon)((IClimateDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

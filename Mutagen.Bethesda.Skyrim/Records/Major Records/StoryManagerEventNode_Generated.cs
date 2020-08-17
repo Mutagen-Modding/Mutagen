@@ -595,7 +595,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = StoryManagerEventNode.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -609,7 +610,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static StoryManagerEventNode DeepCopy(
@@ -1228,31 +1230,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly StoryManagerEventNodeSetterTranslationCommon Instance = new StoryManagerEventNodeSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IStoryManagerEventNodeInternal item,
             IStoryManagerEventNodeGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
         }
         
         public void DeepCopyIn(
             IStoryManagerEventNode item,
             IStoryManagerEventNodeGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 (IAStoryManagerNode)item,
                 (IAStoryManagerNodeGetter)rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)StoryManagerEventNode_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
@@ -1278,78 +1284,90 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAStoryManagerNodeInternal item,
             IAStoryManagerNodeGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IStoryManagerEventNodeInternal)item,
                 rhs: (IStoryManagerEventNodeGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
             IAStoryManagerNode item,
             IAStoryManagerNodeGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IStoryManagerEventNode)item,
                 rhs: (IStoryManagerEventNodeGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
             ISkyrimMajorRecordInternal item,
             ISkyrimMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IStoryManagerEventNodeInternal)item,
                 rhs: (IStoryManagerEventNodeGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
             ISkyrimMajorRecord item,
             ISkyrimMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IStoryManagerEventNode)item,
                 rhs: (IStoryManagerEventNodeGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IStoryManagerEventNodeInternal)item,
                 rhs: (IStoryManagerEventNodeGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
             IMajorRecord item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IStoryManagerEventNode)item,
                 rhs: (IStoryManagerEventNodeGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         #endregion
@@ -1359,9 +1377,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             StoryManagerEventNode.TranslationMask? copyMask = null)
         {
             StoryManagerEventNode ret = (StoryManagerEventNode)((StoryManagerEventNodeCommon)((IStoryManagerEventNodeGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((StoryManagerEventNodeSetterTranslationCommon)((IStoryManagerEventNodeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1370,11 +1391,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out StoryManagerEventNode.ErrorMask errorMask,
             StoryManagerEventNode.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             StoryManagerEventNode ret = (StoryManagerEventNode)((StoryManagerEventNodeCommon)((IStoryManagerEventNodeGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((StoryManagerEventNodeSetterTranslationCommon)((IStoryManagerEventNodeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = StoryManagerEventNode.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1384,10 +1409,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             StoryManagerEventNode ret = (StoryManagerEventNode)((StoryManagerEventNodeCommon)((IStoryManagerEventNodeGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((StoryManagerEventNodeSetterTranslationCommon)((IStoryManagerEventNodeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

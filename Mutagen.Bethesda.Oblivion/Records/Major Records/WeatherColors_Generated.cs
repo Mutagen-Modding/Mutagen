@@ -580,7 +580,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -592,7 +593,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -606,7 +608,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = WeatherColors.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -620,7 +623,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static WeatherColors DeepCopy(
@@ -1058,12 +1062,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly WeatherColorsSetterTranslationCommon Instance = new WeatherColorsSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IWeatherColors item,
             IWeatherColorsGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.Sunrise) ?? true))
             {
@@ -1090,9 +1095,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             WeatherColors.TranslationMask? copyMask = null)
         {
             WeatherColors ret = (WeatherColors)((WeatherColorsCommon)((IWeatherColorsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((WeatherColorsSetterTranslationCommon)((IWeatherColorsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1101,11 +1109,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out WeatherColors.ErrorMask errorMask,
             WeatherColors.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             WeatherColors ret = (WeatherColors)((WeatherColorsCommon)((IWeatherColorsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((WeatherColorsSetterTranslationCommon)((IWeatherColorsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = WeatherColors.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1115,10 +1127,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             WeatherColors ret = (WeatherColors)((WeatherColorsCommon)((IWeatherColorsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((WeatherColorsSetterTranslationCommon)((IWeatherColorsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

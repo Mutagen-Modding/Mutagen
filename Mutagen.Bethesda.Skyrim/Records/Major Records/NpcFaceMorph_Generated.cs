@@ -1078,7 +1078,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -1090,7 +1091,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -1104,7 +1106,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = NpcFaceMorph.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -1118,7 +1121,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static NpcFaceMorph DeepCopy(
@@ -1860,12 +1864,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly NpcFaceMorphSetterTranslationCommon Instance = new NpcFaceMorphSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             INpcFaceMorph item,
             INpcFaceMorphGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)NpcFaceMorph_FieldIndex.NoseLongVsShort) ?? true))
             {
@@ -1952,9 +1957,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             NpcFaceMorph.TranslationMask? copyMask = null)
         {
             NpcFaceMorph ret = (NpcFaceMorph)((NpcFaceMorphCommon)((INpcFaceMorphGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((NpcFaceMorphSetterTranslationCommon)((INpcFaceMorphGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1963,11 +1971,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out NpcFaceMorph.ErrorMask errorMask,
             NpcFaceMorph.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             NpcFaceMorph ret = (NpcFaceMorph)((NpcFaceMorphCommon)((INpcFaceMorphGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((NpcFaceMorphSetterTranslationCommon)((INpcFaceMorphGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = NpcFaceMorph.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1977,10 +1989,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             NpcFaceMorph ret = (NpcFaceMorph)((NpcFaceMorphCommon)((INpcFaceMorphGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((NpcFaceMorphSetterTranslationCommon)((INpcFaceMorphGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

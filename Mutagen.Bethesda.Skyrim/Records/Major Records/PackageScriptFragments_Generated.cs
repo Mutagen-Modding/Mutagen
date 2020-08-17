@@ -661,7 +661,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -673,7 +674,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -687,7 +689,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = PackageScriptFragments.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -701,7 +704,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static PackageScriptFragments DeepCopy(
@@ -1184,12 +1188,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly PackageScriptFragmentsSetterTranslationCommon Instance = new PackageScriptFragmentsSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IPackageScriptFragments item,
             IPackageScriptFragmentsGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)PackageScriptFragments_FieldIndex.Unknown) ?? true))
             {
@@ -1286,9 +1291,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             PackageScriptFragments.TranslationMask? copyMask = null)
         {
             PackageScriptFragments ret = (PackageScriptFragments)((PackageScriptFragmentsCommon)((IPackageScriptFragmentsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((PackageScriptFragmentsSetterTranslationCommon)((IPackageScriptFragmentsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1297,11 +1305,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out PackageScriptFragments.ErrorMask errorMask,
             PackageScriptFragments.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             PackageScriptFragments ret = (PackageScriptFragments)((PackageScriptFragmentsCommon)((IPackageScriptFragmentsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((PackageScriptFragmentsSetterTranslationCommon)((IPackageScriptFragmentsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = PackageScriptFragments.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1311,10 +1323,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             PackageScriptFragments ret = (PackageScriptFragments)((PackageScriptFragmentsCommon)((IPackageScriptFragmentsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((PackageScriptFragmentsSetterTranslationCommon)((IPackageScriptFragmentsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

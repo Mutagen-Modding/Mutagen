@@ -567,7 +567,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -579,7 +580,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -593,7 +595,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = DialogResponsesUnknownData.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -607,7 +610,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static DialogResponsesUnknownData DeepCopy(
@@ -1047,12 +1051,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly DialogResponsesUnknownDataSetterTranslationCommon Instance = new DialogResponsesUnknownDataSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IDialogResponsesUnknownData item,
             IDialogResponsesUnknownDataGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.SCHR) ?? true))
             {
@@ -1082,9 +1087,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             DialogResponsesUnknownData.TranslationMask? copyMask = null)
         {
             DialogResponsesUnknownData ret = (DialogResponsesUnknownData)((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((DialogResponsesUnknownDataSetterTranslationCommon)((IDialogResponsesUnknownDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1093,11 +1101,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out DialogResponsesUnknownData.ErrorMask errorMask,
             DialogResponsesUnknownData.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             DialogResponsesUnknownData ret = (DialogResponsesUnknownData)((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((DialogResponsesUnknownDataSetterTranslationCommon)((IDialogResponsesUnknownDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = DialogResponsesUnknownData.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1107,10 +1119,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             DialogResponsesUnknownData ret = (DialogResponsesUnknownData)((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((DialogResponsesUnknownDataSetterTranslationCommon)((IDialogResponsesUnknownDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

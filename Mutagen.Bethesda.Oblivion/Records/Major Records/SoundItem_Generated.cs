@@ -528,7 +528,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -540,7 +541,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -554,7 +556,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = SoundItem.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -568,7 +571,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static SoundItem DeepCopy(
@@ -987,12 +991,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly SoundItemSetterTranslationCommon Instance = new SoundItemSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             ISoundItem item,
             ISoundItemGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)SoundItem_FieldIndex.Sound) ?? true))
             {
@@ -1011,9 +1016,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             SoundItem.TranslationMask? copyMask = null)
         {
             SoundItem ret = (SoundItem)((SoundItemCommon)((ISoundItemGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((SoundItemSetterTranslationCommon)((ISoundItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1022,11 +1030,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out SoundItem.ErrorMask errorMask,
             SoundItem.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             SoundItem ret = (SoundItem)((SoundItemCommon)((ISoundItemGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((SoundItemSetterTranslationCommon)((ISoundItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = SoundItem.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1036,10 +1048,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             SoundItem ret = (SoundItem)((SoundItemCommon)((ISoundItemGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((SoundItemSetterTranslationCommon)((ISoundItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

@@ -476,7 +476,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = BookSpell.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -490,7 +491,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static BookSpell DeepCopy(
@@ -920,18 +922,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly BookSpellSetterTranslationCommon Instance = new BookSpellSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IBookSpell item,
             IBookSpellGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 (IBookTeachTarget)item,
                 (IBookTeachTargetGetter)rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)BookSpell_FieldIndex.Spell) ?? true))
             {
                 item.Spell = new FormLink<Spell>(rhs.Spell.FormKey);
@@ -943,13 +947,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IBookTeachTarget item,
             IBookTeachTargetGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IBookSpell)item,
                 rhs: (IBookSpellGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         #endregion
@@ -959,9 +965,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BookSpell.TranslationMask? copyMask = null)
         {
             BookSpell ret = (BookSpell)((BookSpellCommon)((IBookSpellGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((BookSpellSetterTranslationCommon)((IBookSpellGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -970,11 +979,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out BookSpell.ErrorMask errorMask,
             BookSpell.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             BookSpell ret = (BookSpell)((BookSpellCommon)((IBookSpellGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((BookSpellSetterTranslationCommon)((IBookSpellGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = BookSpell.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -984,10 +997,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             BookSpell ret = (BookSpell)((BookSpellCommon)((IBookSpellGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((BookSpellSetterTranslationCommon)((IBookSpellGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

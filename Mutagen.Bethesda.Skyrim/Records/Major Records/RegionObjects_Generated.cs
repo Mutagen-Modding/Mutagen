@@ -572,7 +572,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = RegionObjects.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -586,7 +587,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static RegionObjects DeepCopy(
@@ -1059,18 +1061,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly RegionObjectsSetterTranslationCommon Instance = new RegionObjectsSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IRegionObjects item,
             IRegionObjectsGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 (IRegionData)item,
                 (IRegionDataGetter)rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)RegionObjects_FieldIndex.Objects) ?? true))
             {
                 errorMask?.PushIndex((int)RegionObjects_FieldIndex.Objects);
@@ -1110,13 +1114,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRegionData item,
             IRegionDataGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IRegionObjects)item,
                 rhs: (IRegionObjectsGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         #endregion
@@ -1126,9 +1132,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RegionObjects.TranslationMask? copyMask = null)
         {
             RegionObjects ret = (RegionObjects)((RegionObjectsCommon)((IRegionObjectsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((RegionObjectsSetterTranslationCommon)((IRegionObjectsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1137,11 +1146,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out RegionObjects.ErrorMask errorMask,
             RegionObjects.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             RegionObjects ret = (RegionObjects)((RegionObjectsCommon)((IRegionObjectsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((RegionObjectsSetterTranslationCommon)((IRegionObjectsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = RegionObjects.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1151,10 +1164,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             RegionObjects ret = (RegionObjects)((RegionObjectsCommon)((IRegionObjectsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((RegionObjectsSetterTranslationCommon)((IRegionObjectsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

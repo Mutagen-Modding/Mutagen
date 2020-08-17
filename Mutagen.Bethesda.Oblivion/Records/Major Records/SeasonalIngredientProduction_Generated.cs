@@ -583,7 +583,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -595,7 +596,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -609,7 +611,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = SeasonalIngredientProduction.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -623,7 +626,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static SeasonalIngredientProduction DeepCopy(
@@ -1065,12 +1069,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly SeasonalIngredientProductionSetterTranslationCommon Instance = new SeasonalIngredientProductionSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             ISeasonalIngredientProduction item,
             ISeasonalIngredientProductionGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)SeasonalIngredientProduction_FieldIndex.Spring) ?? true))
             {
@@ -1097,9 +1102,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             SeasonalIngredientProduction.TranslationMask? copyMask = null)
         {
             SeasonalIngredientProduction ret = (SeasonalIngredientProduction)((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((SeasonalIngredientProductionSetterTranslationCommon)((ISeasonalIngredientProductionGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1108,11 +1116,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out SeasonalIngredientProduction.ErrorMask errorMask,
             SeasonalIngredientProduction.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             SeasonalIngredientProduction ret = (SeasonalIngredientProduction)((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((SeasonalIngredientProductionSetterTranslationCommon)((ISeasonalIngredientProductionGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = SeasonalIngredientProduction.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1122,10 +1134,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             SeasonalIngredientProduction ret = (SeasonalIngredientProduction)((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((SeasonalIngredientProductionSetterTranslationCommon)((ISeasonalIngredientProductionGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

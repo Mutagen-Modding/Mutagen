@@ -630,7 +630,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -642,7 +643,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -656,7 +658,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = CreateReferenceToObject.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -670,7 +673,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static CreateReferenceToObject DeepCopy(
@@ -1131,12 +1135,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly CreateReferenceToObjectSetterTranslationCommon Instance = new CreateReferenceToObjectSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             ICreateReferenceToObject item,
             ICreateReferenceToObjectGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)CreateReferenceToObject_FieldIndex.Object) ?? true))
             {
@@ -1167,9 +1172,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             CreateReferenceToObject.TranslationMask? copyMask = null)
         {
             CreateReferenceToObject ret = (CreateReferenceToObject)((CreateReferenceToObjectCommon)((ICreateReferenceToObjectGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((CreateReferenceToObjectSetterTranslationCommon)((ICreateReferenceToObjectGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1178,11 +1186,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out CreateReferenceToObject.ErrorMask errorMask,
             CreateReferenceToObject.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             CreateReferenceToObject ret = (CreateReferenceToObject)((CreateReferenceToObjectCommon)((ICreateReferenceToObjectGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((CreateReferenceToObjectSetterTranslationCommon)((ICreateReferenceToObjectGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = CreateReferenceToObject.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1192,10 +1204,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             CreateReferenceToObject ret = (CreateReferenceToObject)((CreateReferenceToObjectCommon)((ICreateReferenceToObjectGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((CreateReferenceToObjectSetterTranslationCommon)((ICreateReferenceToObjectGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

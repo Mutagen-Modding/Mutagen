@@ -517,7 +517,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -529,7 +530,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -543,7 +545,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = FindMatchingRefNearAlias.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -557,7 +560,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static FindMatchingRefNearAlias DeepCopy(
@@ -976,12 +980,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly FindMatchingRefNearAliasSetterTranslationCommon Instance = new FindMatchingRefNearAliasSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IFindMatchingRefNearAlias item,
             IFindMatchingRefNearAliasGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)FindMatchingRefNearAlias_FieldIndex.AliasIndex) ?? true))
             {
@@ -1000,9 +1005,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FindMatchingRefNearAlias.TranslationMask? copyMask = null)
         {
             FindMatchingRefNearAlias ret = (FindMatchingRefNearAlias)((FindMatchingRefNearAliasCommon)((IFindMatchingRefNearAliasGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((FindMatchingRefNearAliasSetterTranslationCommon)((IFindMatchingRefNearAliasGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1011,11 +1019,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out FindMatchingRefNearAlias.ErrorMask errorMask,
             FindMatchingRefNearAlias.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             FindMatchingRefNearAlias ret = (FindMatchingRefNearAlias)((FindMatchingRefNearAliasCommon)((IFindMatchingRefNearAliasGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((FindMatchingRefNearAliasSetterTranslationCommon)((IFindMatchingRefNearAliasGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = FindMatchingRefNearAlias.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1025,10 +1037,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             FindMatchingRefNearAlias ret = (FindMatchingRefNearAlias)((FindMatchingRefNearAliasCommon)((IFindMatchingRefNearAliasGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((FindMatchingRefNearAliasSetterTranslationCommon)((IFindMatchingRefNearAliasGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

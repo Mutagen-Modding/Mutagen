@@ -7388,7 +7388,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -7400,7 +7401,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -7414,7 +7416,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = SkyrimMod.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -7428,7 +7431,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static SkyrimMod DeepCopy(
@@ -10976,11 +10980,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             byte[] groupBytes = new byte[gameConstants.GroupConstants.HeaderLength];
             BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);
             var groupByteStream = new MemoryStream(groupBytes);
-            var bundle = new WritingBundle(gameConstants)
-            {
-                MasterReferences = masters,
-                StringsWriter = stringsWriter
-            };
             using (var stream = new MutagenWriter(groupByteStream, gameConstants, dispose: false))
             {
                 stream.Position += 8;
@@ -10990,6 +10989,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Parallel.ForEach(cuts, (cutItems, state, counter) =>
             {
                 MemoryTributary trib = new MemoryTributary();
+                var bundle = new WritingBundle(gameConstants)
+                {
+                    MasterReferences = masters,
+                    StringsWriter = stringsWriter
+                };
                 using (var stream = new MutagenWriter(trib, bundle, dispose: false))
                 {
                     foreach (var item in cutItems)
@@ -14334,12 +14338,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly SkyrimModSetterTranslationCommon Instance = new SkyrimModSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             ISkyrimMod item,
             ISkyrimModGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ModHeader) ?? true))
             {
@@ -16630,9 +16635,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SkyrimMod.TranslationMask? copyMask = null)
         {
             SkyrimMod ret = (SkyrimMod)((SkyrimModCommon)((ISkyrimModGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((SkyrimModSetterTranslationCommon)((ISkyrimModGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -16641,11 +16649,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out SkyrimMod.ErrorMask errorMask,
             SkyrimMod.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             SkyrimMod ret = (SkyrimMod)((SkyrimModCommon)((ISkyrimModGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((SkyrimModSetterTranslationCommon)((ISkyrimModGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = SkyrimMod.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -16655,10 +16667,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             SkyrimMod ret = (SkyrimMod)((SkyrimModCommon)((ISkyrimModGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((SkyrimModSetterTranslationCommon)((ISkyrimModGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

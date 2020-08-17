@@ -815,7 +815,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -827,7 +828,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -841,7 +843,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = Decal.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -855,7 +858,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static Decal DeepCopy(
@@ -1437,12 +1441,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly DecalSetterTranslationCommon Instance = new DecalSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IDecal item,
             IDecalGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)Decal_FieldIndex.MinWidth) ?? true))
             {
@@ -1497,9 +1502,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Decal.TranslationMask? copyMask = null)
         {
             Decal ret = (Decal)((DecalCommon)((IDecalGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((DecalSetterTranslationCommon)((IDecalGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1508,11 +1516,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out Decal.ErrorMask errorMask,
             Decal.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             Decal ret = (Decal)((DecalCommon)((IDecalGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((DecalSetterTranslationCommon)((IDecalGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = Decal.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1522,10 +1534,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             Decal ret = (Decal)((DecalCommon)((IDecalGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((DecalSetterTranslationCommon)((IDecalGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

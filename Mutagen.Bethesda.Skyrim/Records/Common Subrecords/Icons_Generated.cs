@@ -519,7 +519,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -531,7 +532,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -545,7 +547,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = Icons.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -559,7 +562,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static Icons DeepCopy(
@@ -963,12 +967,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly IconsSetterTranslationCommon Instance = new IconsSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IIcons item,
             IIconsGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)Icons_FieldIndex.LargeIconFilename) ?? true))
             {
@@ -987,9 +992,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Icons.TranslationMask? copyMask = null)
         {
             Icons ret = (Icons)((IconsCommon)((IIconsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((IconsSetterTranslationCommon)((IIconsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -998,11 +1006,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out Icons.ErrorMask errorMask,
             Icons.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             Icons ret = (Icons)((IconsCommon)((IIconsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((IconsSetterTranslationCommon)((IIconsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = Icons.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1012,10 +1024,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             Icons ret = (Icons)((IconsCommon)((IIconsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((IconsSetterTranslationCommon)((IIconsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

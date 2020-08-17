@@ -543,7 +543,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -555,7 +556,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -569,7 +571,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = Attack.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -583,7 +586,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static Attack DeepCopy(
@@ -1014,12 +1018,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly AttackSetterTranslationCommon Instance = new AttackSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IAttack item,
             IAttackGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)Attack_FieldIndex.AttackData) ?? true))
             {
@@ -1060,9 +1065,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Attack.TranslationMask? copyMask = null)
         {
             Attack ret = (Attack)((AttackCommon)((IAttackGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((AttackSetterTranslationCommon)((IAttackGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1071,11 +1079,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out Attack.ErrorMask errorMask,
             Attack.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             Attack ret = (Attack)((AttackCommon)((IAttackGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((AttackSetterTranslationCommon)((IAttackGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = Attack.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1085,10 +1097,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             Attack ret = (Attack)((AttackCommon)((IAttackGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((AttackSetterTranslationCommon)((IAttackGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

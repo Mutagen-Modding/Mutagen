@@ -719,7 +719,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -731,7 +732,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -745,7 +747,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = TintAssets.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -759,7 +762,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static TintAssets DeepCopy(
@@ -1274,12 +1278,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly TintAssetsSetterTranslationCommon Instance = new TintAssetsSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             ITintAssets item,
             ITintAssetsGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)TintAssets_FieldIndex.Index) ?? true))
             {
@@ -1330,9 +1335,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TintAssets.TranslationMask? copyMask = null)
         {
             TintAssets ret = (TintAssets)((TintAssetsCommon)((ITintAssetsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((TintAssetsSetterTranslationCommon)((ITintAssetsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1341,11 +1349,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out TintAssets.ErrorMask errorMask,
             TintAssets.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             TintAssets ret = (TintAssets)((TintAssetsCommon)((ITintAssetsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((TintAssetsSetterTranslationCommon)((ITintAssetsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = TintAssets.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1355,10 +1367,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             TintAssets ret = (TintAssets)((TintAssetsCommon)((ITintAssetsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((TintAssetsSetterTranslationCommon)((ITintAssetsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

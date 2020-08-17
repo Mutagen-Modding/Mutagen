@@ -1133,7 +1133,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -1145,7 +1146,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -1159,7 +1161,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = NavigationMapInfo.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -1173,7 +1176,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static NavigationMapInfo DeepCopy(
@@ -1851,12 +1855,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly NavigationMapInfoSetterTranslationCommon Instance = new NavigationMapInfoSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             INavigationMapInfo item,
             INavigationMapInfoGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.NavigationMesh) ?? true))
             {
@@ -1987,9 +1992,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             NavigationMapInfo.TranslationMask? copyMask = null)
         {
             NavigationMapInfo ret = (NavigationMapInfo)((NavigationMapInfoCommon)((INavigationMapInfoGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((NavigationMapInfoSetterTranslationCommon)((INavigationMapInfoGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1998,11 +2006,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out NavigationMapInfo.ErrorMask errorMask,
             NavigationMapInfo.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             NavigationMapInfo ret = (NavigationMapInfo)((NavigationMapInfoCommon)((INavigationMapInfoGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((NavigationMapInfoSetterTranslationCommon)((INavigationMapInfoGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = NavigationMapInfo.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -2012,10 +2024,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             NavigationMapInfo ret = (NavigationMapInfo)((NavigationMapInfoCommon)((INavigationMapInfoGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((NavigationMapInfoSetterTranslationCommon)((INavigationMapInfoGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

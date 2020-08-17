@@ -682,7 +682,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -694,7 +695,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -708,7 +710,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = CreatureAIData.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -722,7 +725,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static CreatureAIData DeepCopy(
@@ -1224,12 +1228,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly CreatureAIDataSetterTranslationCommon Instance = new CreatureAIDataSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             ICreatureAIData item,
             ICreatureAIDataGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)CreatureAIData_FieldIndex.Aggression) ?? true))
             {
@@ -1268,9 +1273,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CreatureAIData.TranslationMask? copyMask = null)
         {
             CreatureAIData ret = (CreatureAIData)((CreatureAIDataCommon)((ICreatureAIDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((CreatureAIDataSetterTranslationCommon)((ICreatureAIDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1279,11 +1287,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out CreatureAIData.ErrorMask errorMask,
             CreatureAIData.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             CreatureAIData ret = (CreatureAIData)((CreatureAIDataCommon)((ICreatureAIDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((CreatureAIDataSetterTranslationCommon)((ICreatureAIDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = CreatureAIData.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1293,10 +1305,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             CreatureAIData ret = (CreatureAIData)((CreatureAIDataCommon)((ICreatureAIDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((CreatureAIDataSetterTranslationCommon)((ICreatureAIDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

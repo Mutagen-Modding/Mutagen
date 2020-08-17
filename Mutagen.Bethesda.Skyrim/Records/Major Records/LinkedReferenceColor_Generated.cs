@@ -518,7 +518,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -530,7 +531,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -544,7 +546,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = LinkedReferenceColor.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -558,7 +561,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static LinkedReferenceColor DeepCopy(
@@ -960,12 +964,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly LinkedReferenceColorSetterTranslationCommon Instance = new LinkedReferenceColorSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             ILinkedReferenceColor item,
             ILinkedReferenceColorGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)LinkedReferenceColor_FieldIndex.Start) ?? true))
             {
@@ -984,9 +989,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             LinkedReferenceColor.TranslationMask? copyMask = null)
         {
             LinkedReferenceColor ret = (LinkedReferenceColor)((LinkedReferenceColorCommon)((ILinkedReferenceColorGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((LinkedReferenceColorSetterTranslationCommon)((ILinkedReferenceColorGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -995,11 +1003,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out LinkedReferenceColor.ErrorMask errorMask,
             LinkedReferenceColor.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             LinkedReferenceColor ret = (LinkedReferenceColor)((LinkedReferenceColorCommon)((ILinkedReferenceColorGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((LinkedReferenceColorSetterTranslationCommon)((ILinkedReferenceColorGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = LinkedReferenceColor.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1009,10 +1021,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             LinkedReferenceColor ret = (LinkedReferenceColor)((LinkedReferenceColorCommon)((ILinkedReferenceColorGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((LinkedReferenceColorSetterTranslationCommon)((ILinkedReferenceColorGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

@@ -428,7 +428,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -440,7 +441,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -454,7 +456,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = ANpcSoundDefinition.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -468,7 +471,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static ANpcSoundDefinition DeepCopy(
@@ -830,12 +834,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly ANpcSoundDefinitionSetterTranslationCommon Instance = new ANpcSoundDefinitionSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public virtual void DeepCopyIn(
             IANpcSoundDefinition item,
             IANpcSoundDefinitionGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
         }
         
@@ -846,9 +851,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ANpcSoundDefinition.TranslationMask? copyMask = null)
         {
             ANpcSoundDefinition ret = (ANpcSoundDefinition)((ANpcSoundDefinitionCommon)((IANpcSoundDefinitionGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((ANpcSoundDefinitionSetterTranslationCommon)((IANpcSoundDefinitionGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -857,11 +865,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out ANpcSoundDefinition.ErrorMask errorMask,
             ANpcSoundDefinition.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ANpcSoundDefinition ret = (ANpcSoundDefinition)((ANpcSoundDefinitionCommon)((IANpcSoundDefinitionGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((ANpcSoundDefinitionSetterTranslationCommon)((IANpcSoundDefinitionGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = ANpcSoundDefinition.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -871,10 +883,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             ANpcSoundDefinition ret = (ANpcSoundDefinition)((ANpcSoundDefinitionCommon)((IANpcSoundDefinitionGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((ANpcSoundDefinitionSetterTranslationCommon)((IANpcSoundDefinitionGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

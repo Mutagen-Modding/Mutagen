@@ -467,7 +467,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = ScriptVariableReference.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -481,7 +482,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static ScriptVariableReference DeepCopy(
@@ -912,18 +914,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly ScriptVariableReferenceSetterTranslationCommon Instance = new ScriptVariableReferenceSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IScriptVariableReference item,
             IScriptVariableReferenceGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 (IAScriptReference)item,
                 (IAScriptReferenceGetter)rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)ScriptVariableReference_FieldIndex.VariableIndex) ?? true))
             {
                 item.VariableIndex = rhs.VariableIndex;
@@ -935,13 +939,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAScriptReference item,
             IAScriptReferenceGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IScriptVariableReference)item,
                 rhs: (IScriptVariableReferenceGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         #endregion
@@ -951,9 +957,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptVariableReference.TranslationMask? copyMask = null)
         {
             ScriptVariableReference ret = (ScriptVariableReference)((ScriptVariableReferenceCommon)((IScriptVariableReferenceGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((ScriptVariableReferenceSetterTranslationCommon)((IScriptVariableReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -962,11 +971,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out ScriptVariableReference.ErrorMask errorMask,
             ScriptVariableReference.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ScriptVariableReference ret = (ScriptVariableReference)((ScriptVariableReferenceCommon)((IScriptVariableReferenceGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((ScriptVariableReferenceSetterTranslationCommon)((IScriptVariableReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = ScriptVariableReference.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -976,10 +989,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             ScriptVariableReference ret = (ScriptVariableReference)((ScriptVariableReferenceCommon)((IScriptVariableReferenceGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((ScriptVariableReferenceSetterTranslationCommon)((IScriptVariableReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

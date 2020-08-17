@@ -530,7 +530,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -542,7 +543,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -556,7 +558,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = LocationTargetRadius.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -570,7 +573,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static LocationTargetRadius DeepCopy(
@@ -976,12 +980,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly LocationTargetRadiusSetterTranslationCommon Instance = new LocationTargetRadiusSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             ILocationTargetRadius item,
             ILocationTargetRadiusGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)LocationTargetRadius_FieldIndex.Target) ?? true))
             {
@@ -1018,9 +1023,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             LocationTargetRadius.TranslationMask? copyMask = null)
         {
             LocationTargetRadius ret = (LocationTargetRadius)((LocationTargetRadiusCommon)((ILocationTargetRadiusGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((LocationTargetRadiusSetterTranslationCommon)((ILocationTargetRadiusGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1029,11 +1037,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out LocationTargetRadius.ErrorMask errorMask,
             LocationTargetRadius.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             LocationTargetRadius ret = (LocationTargetRadius)((LocationTargetRadiusCommon)((ILocationTargetRadiusGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((LocationTargetRadiusSetterTranslationCommon)((ILocationTargetRadiusGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = LocationTargetRadius.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1043,10 +1055,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             LocationTargetRadius ret = (LocationTargetRadius)((LocationTargetRadiusCommon)((ILocationTargetRadiusGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((LocationTargetRadiusSetterTranslationCommon)((ILocationTargetRadiusGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

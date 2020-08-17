@@ -528,7 +528,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = ConditionGlobal.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -542,7 +543,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static ConditionGlobal DeepCopy(
@@ -1016,18 +1018,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly ConditionGlobalSetterTranslationCommon Instance = new ConditionGlobalSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IConditionGlobal item,
             IConditionGlobalGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 (ICondition)item,
                 (IConditionGetter)rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)ConditionGlobal_FieldIndex.ComparisonValue) ?? true))
             {
                 item.ComparisonValue = new FormLink<Global>(rhs.ComparisonValue.FormKey);
@@ -1061,13 +1065,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ICondition item,
             IConditionGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IConditionGlobal)item,
                 rhs: (IConditionGlobalGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         #endregion
@@ -1077,9 +1083,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ConditionGlobal.TranslationMask? copyMask = null)
         {
             ConditionGlobal ret = (ConditionGlobal)((ConditionGlobalCommon)((IConditionGlobalGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((ConditionGlobalSetterTranslationCommon)((IConditionGlobalGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1088,11 +1097,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out ConditionGlobal.ErrorMask errorMask,
             ConditionGlobal.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ConditionGlobal ret = (ConditionGlobal)((ConditionGlobalCommon)((IConditionGlobalGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((ConditionGlobalSetterTranslationCommon)((IConditionGlobalGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = ConditionGlobal.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1102,10 +1115,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             ConditionGlobal ret = (ConditionGlobal)((ConditionGlobalCommon)((IConditionGlobalGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((ConditionGlobalSetterTranslationCommon)((IConditionGlobalGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

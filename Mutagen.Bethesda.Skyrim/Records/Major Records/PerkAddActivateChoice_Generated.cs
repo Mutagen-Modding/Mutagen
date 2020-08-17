@@ -574,7 +574,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = PerkAddActivateChoice.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -588,7 +589,8 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static PerkAddActivateChoice DeepCopy(
@@ -1133,18 +1135,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly PerkAddActivateChoiceSetterTranslationCommon Instance = new PerkAddActivateChoiceSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IPerkAddActivateChoice item,
             IPerkAddActivateChoiceGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             base.DeepCopyIn(
                 (IAPerkEntryPointEffect)item,
                 (IAPerkEntryPointEffectGetter)rhs,
                 errorMask,
-                copyMask);
+                copyMask,
+                deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PerkAddActivateChoice_FieldIndex.Spell) ?? true))
             {
                 item.Spell = new FormLinkNullable<Spell>(rhs.Spell.FormKey);
@@ -1182,13 +1186,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAPerkEntryPointEffect item,
             IAPerkEntryPointEffectGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IPerkAddActivateChoice)item,
                 rhs: (IPerkAddActivateChoiceGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         
@@ -1196,13 +1202,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAPerkEffect item,
             IAPerkEffectGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             this.DeepCopyIn(
                 item: (IPerkAddActivateChoice)item,
                 rhs: (IPerkAddActivateChoiceGetter)rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
         #endregion
@@ -1212,9 +1220,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             PerkAddActivateChoice.TranslationMask? copyMask = null)
         {
             PerkAddActivateChoice ret = (PerkAddActivateChoice)((PerkAddActivateChoiceCommon)((IPerkAddActivateChoiceGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((PerkAddActivateChoiceSetterTranslationCommon)((IPerkAddActivateChoiceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1223,11 +1234,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out PerkAddActivateChoice.ErrorMask errorMask,
             PerkAddActivateChoice.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             PerkAddActivateChoice ret = (PerkAddActivateChoice)((PerkAddActivateChoiceCommon)((IPerkAddActivateChoiceGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((PerkAddActivateChoiceSetterTranslationCommon)((IPerkAddActivateChoiceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = PerkAddActivateChoice.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1237,10 +1252,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             PerkAddActivateChoice ret = (PerkAddActivateChoice)((PerkAddActivateChoiceCommon)((IPerkAddActivateChoiceGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((PerkAddActivateChoiceSetterTranslationCommon)((IPerkAddActivateChoiceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         

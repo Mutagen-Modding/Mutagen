@@ -583,7 +583,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: default,
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -595,7 +596,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -609,7 +611,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask?.GetCrystal());
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
             errorMask = FogDistance.ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -623,7 +626,8 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: false);
         }
 
         public static FogDistance DeepCopy(
@@ -1065,12 +1069,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly FogDistanceSetterTranslationCommon Instance = new FogDistanceSetterTranslationCommon();
 
-        #region Deep Copy Fields From
+        #region DeepCopyIn
         public void DeepCopyIn(
             IFogDistance item,
             IFogDistanceGetter rhs,
             ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
+            TranslationCrystal? copyMask,
+            bool deepCopy)
         {
             if ((copyMask?.GetShouldTranslate((int)FogDistance_FieldIndex.DayNear) ?? true))
             {
@@ -1097,9 +1102,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FogDistance.TranslationMask? copyMask = null)
         {
             FogDistance ret = (FogDistance)((FogDistanceCommon)((IFogDistanceGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
-                copyMask: copyMask);
+            ((FogDistanceSetterTranslationCommon)((IFogDistanceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
+                errorMask: null,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
             return ret;
         }
         
@@ -1108,11 +1116,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out FogDistance.ErrorMask errorMask,
             FogDistance.TranslationMask? copyMask = null)
         {
+            var errorMaskBuilder = new ErrorMaskBuilder();
             FogDistance ret = (FogDistance)((FogDistanceCommon)((IFogDistanceGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
+            ((FogDistanceSetterTranslationCommon)((IFogDistanceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                ret,
                 item,
-                errorMask: out errorMask,
-                copyMask: copyMask);
+                errorMask: errorMaskBuilder,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: true);
+            errorMask = FogDistance.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
@@ -1122,10 +1134,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             FogDistance ret = (FogDistance)((FogDistanceCommon)((IFogDistanceGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyIn(
-                item,
+            ((FogDistanceSetterTranslationCommon)((IFogDistanceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: ret,
+                rhs: item,
                 errorMask: errorMask,
-                copyMask: copyMask);
+                copyMask: copyMask,
+                deepCopy: true);
             return ret;
         }
         
