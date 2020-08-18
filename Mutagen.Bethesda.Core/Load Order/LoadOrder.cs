@@ -172,6 +172,33 @@ namespace Mutagen.Bethesda
         }
 
         /// <summary>
+        /// Parses a file to retrieve all ModKeys in expected plugin file format,
+        /// Will order mods by timestamps if applicable
+        /// </summary>
+        /// <param name="game">Game type</param>
+        /// <param name="path">Path of plugin list</param>
+        /// <param name="dataPath">Path to game's data folder</param>
+        /// <param name="throwOnMissingMods">Whether to throw and exception if mods are missing</param>
+        /// <returns>Enumerable of modkeys representing a load order</returns>
+        /// <exception cref="ArgumentException">Line in plugin file is unexpected</exception>
+        public static IEnumerable<ModKey> FromPath(
+            GameRelease game,
+            FilePath path,
+            DirectoryPath dataPath,
+            bool throwOnMissingMods = true)
+        {
+            var mods = FromPath(path);
+            if (NeedsTimestampAlignment(game.ToCategory()))
+            {
+                return AlignToTimestamps(mods, dataPath, throwOnMissingMods: throwOnMissingMods);
+            }
+            else
+            {
+                return mods;
+            }
+        }
+
+        /// <summary>
         /// Returns a load order listing from the usual sources
         /// </summary>
         /// <param name="game">Game type</param>
@@ -190,16 +217,8 @@ namespace Mutagen.Bethesda
             {
                 throw new FileNotFoundException("Could not locate plugins file");
             }
-            
-            var mods = FromPath(path);
-            if (NeedsTimestampAlignment(game.ToCategory()))
-            {
-                return AlignToTimestamps(mods, dataPath, throwOnMissingMods: throwOnMissingMods);
-            }
-            else
-            {
-                return mods;
-            }
+
+            return FromPath(game, path, dataPath, throwOnMissingMods);
         }
 
         /// <summary>
