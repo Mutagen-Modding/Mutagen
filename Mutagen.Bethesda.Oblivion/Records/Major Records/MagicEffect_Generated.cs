@@ -589,8 +589,8 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Name;
             public bool Description;
             public bool Icon;
-            public MaskItem<bool, Model.TranslationMask?> Model;
-            public MaskItem<bool, MagicEffectData.TranslationMask?> Data;
+            public Model.TranslationMask? Model;
+            public MagicEffectData.TranslationMask? Data;
             public bool CounterEffects;
             #endregion
 
@@ -601,8 +601,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Name = defaultOn;
                 this.Description = defaultOn;
                 this.Icon = defaultOn;
-                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
-                this.Data = new MaskItem<bool, MagicEffectData.TranslationMask?>(defaultOn, null);
                 this.CounterEffects = defaultOn;
             }
 
@@ -614,10 +612,11 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Name, null));
                 ret.Add((Description, null));
                 ret.Add((Icon, null));
-                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
-                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
+                ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
+                ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
                 ret.Add((CounterEffects, null));
             }
+
         }
         #endregion
 

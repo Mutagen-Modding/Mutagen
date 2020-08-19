@@ -730,7 +730,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool RotateInPlaceWalk;
             public bool RotateInPlaceRun;
             public bool RotateWhileMovingRun;
-            public MaskItem<bool, AnimationChangeThresholds.TranslationMask?> AnimationChangeThresholds;
+            public AnimationChangeThresholds.TranslationMask? AnimationChangeThresholds;
             public bool SPEDDataTypeState;
             #endregion
 
@@ -750,7 +750,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.RotateInPlaceWalk = defaultOn;
                 this.RotateInPlaceRun = defaultOn;
                 this.RotateWhileMovingRun = defaultOn;
-                this.AnimationChangeThresholds = new MaskItem<bool, AnimationChangeThresholds.TranslationMask?>(defaultOn, null);
                 this.SPEDDataTypeState = defaultOn;
             }
 
@@ -771,9 +770,10 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((RotateInPlaceWalk, null));
                 ret.Add((RotateInPlaceRun, null));
                 ret.Add((RotateWhileMovingRun, null));
-                ret.Add((AnimationChangeThresholds?.Overall ?? true, AnimationChangeThresholds?.Specific?.GetCrystal()));
+                ret.Add((AnimationChangeThresholds != null || DefaultOn, AnimationChangeThresholds?.GetCrystal()));
                 ret.Add((SPEDDataTypeState, null));
             }
+
         }
         #endregion
 

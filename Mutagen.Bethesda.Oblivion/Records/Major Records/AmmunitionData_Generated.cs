@@ -424,6 +424,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Speed;
             public bool Flags;
             public bool Value;
@@ -434,6 +435,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Speed = defaultOn;
                 this.Flags = defaultOn;
                 this.Value = defaultOn;
@@ -460,6 +462,12 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Weight, null));
                 ret.Add((Damage, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

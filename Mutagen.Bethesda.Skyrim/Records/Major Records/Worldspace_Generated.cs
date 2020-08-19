@@ -1505,25 +1505,25 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             public MaskItem<bool, WorldspaceGridReference.TranslationMask?> LargeReferences;
-            public MaskItem<bool, WorldspaceMaxHeight.TranslationMask?> MaxHeight;
+            public WorldspaceMaxHeight.TranslationMask? MaxHeight;
             public bool Name;
             public bool FixedDimensionsCenterCell;
             public bool InteriorLighting;
             public bool EncounterZone;
             public bool Location;
-            public MaskItem<bool, WorldspaceParent.TranslationMask?> Parent;
+            public WorldspaceParent.TranslationMask? Parent;
             public bool Climate;
             public bool Water;
             public bool LodWater;
             public bool LodWaterHeight;
-            public MaskItem<bool, WorldspaceLandDefaults.TranslationMask?> LandDefaults;
+            public WorldspaceLandDefaults.TranslationMask? LandDefaults;
             public bool MapImage;
-            public MaskItem<bool, Model.TranslationMask?> CloudModel;
-            public MaskItem<bool, WorldspaceMap.TranslationMask?> MapData;
-            public MaskItem<bool, WorldspaceMapOffset.TranslationMask?> MapOffset;
+            public Model.TranslationMask? CloudModel;
+            public WorldspaceMap.TranslationMask? MapData;
+            public WorldspaceMapOffset.TranslationMask? MapOffset;
             public bool DistantLodMultiplier;
             public bool Flags;
-            public MaskItem<bool, WorldspaceObjectBounds.TranslationMask?> ObjectBounds;
+            public WorldspaceObjectBounds.TranslationMask? ObjectBounds;
             public bool Music;
             public bool CanopyShadow;
             public bool WaterNoiseTexture;
@@ -1531,7 +1531,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool HdLodNormalTexture;
             public bool WaterEnvironmentMap;
             public bool OffsetData;
-            public MaskItem<bool, Cell.TranslationMask?> TopCell;
+            public Cell.TranslationMask? TopCell;
             public bool SubCellsTimestamp;
             public bool SubCellsUnknown;
             public MaskItem<bool, WorldspaceBlock.TranslationMask?> SubCells;
@@ -1542,25 +1542,18 @@ namespace Mutagen.Bethesda.Skyrim
                 : base(defaultOn)
             {
                 this.LargeReferences = new MaskItem<bool, WorldspaceGridReference.TranslationMask?>(defaultOn, null);
-                this.MaxHeight = new MaskItem<bool, WorldspaceMaxHeight.TranslationMask?>(defaultOn, null);
                 this.Name = defaultOn;
                 this.FixedDimensionsCenterCell = defaultOn;
                 this.InteriorLighting = defaultOn;
                 this.EncounterZone = defaultOn;
                 this.Location = defaultOn;
-                this.Parent = new MaskItem<bool, WorldspaceParent.TranslationMask?>(defaultOn, null);
                 this.Climate = defaultOn;
                 this.Water = defaultOn;
                 this.LodWater = defaultOn;
                 this.LodWaterHeight = defaultOn;
-                this.LandDefaults = new MaskItem<bool, WorldspaceLandDefaults.TranslationMask?>(defaultOn, null);
                 this.MapImage = defaultOn;
-                this.CloudModel = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
-                this.MapData = new MaskItem<bool, WorldspaceMap.TranslationMask?>(defaultOn, null);
-                this.MapOffset = new MaskItem<bool, WorldspaceMapOffset.TranslationMask?>(defaultOn, null);
                 this.DistantLodMultiplier = defaultOn;
                 this.Flags = defaultOn;
-                this.ObjectBounds = new MaskItem<bool, WorldspaceObjectBounds.TranslationMask?>(defaultOn, null);
                 this.Music = defaultOn;
                 this.CanopyShadow = defaultOn;
                 this.WaterNoiseTexture = defaultOn;
@@ -1568,7 +1561,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.HdLodNormalTexture = defaultOn;
                 this.WaterEnvironmentMap = defaultOn;
                 this.OffsetData = defaultOn;
-                this.TopCell = new MaskItem<bool, Cell.TranslationMask?>(defaultOn, null);
                 this.SubCellsTimestamp = defaultOn;
                 this.SubCellsUnknown = defaultOn;
                 this.SubCells = new MaskItem<bool, WorldspaceBlock.TranslationMask?>(defaultOn, null);
@@ -1580,25 +1572,25 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.GetCrystal(ret);
                 ret.Add((LargeReferences?.Overall ?? true, LargeReferences?.Specific?.GetCrystal()));
-                ret.Add((MaxHeight?.Overall ?? true, MaxHeight?.Specific?.GetCrystal()));
+                ret.Add((MaxHeight != null || DefaultOn, MaxHeight?.GetCrystal()));
                 ret.Add((Name, null));
                 ret.Add((FixedDimensionsCenterCell, null));
                 ret.Add((InteriorLighting, null));
                 ret.Add((EncounterZone, null));
                 ret.Add((Location, null));
-                ret.Add((Parent?.Overall ?? true, Parent?.Specific?.GetCrystal()));
+                ret.Add((Parent != null || DefaultOn, Parent?.GetCrystal()));
                 ret.Add((Climate, null));
                 ret.Add((Water, null));
                 ret.Add((LodWater, null));
                 ret.Add((LodWaterHeight, null));
-                ret.Add((LandDefaults?.Overall ?? true, LandDefaults?.Specific?.GetCrystal()));
+                ret.Add((LandDefaults != null || DefaultOn, LandDefaults?.GetCrystal()));
                 ret.Add((MapImage, null));
-                ret.Add((CloudModel?.Overall ?? true, CloudModel?.Specific?.GetCrystal()));
-                ret.Add((MapData?.Overall ?? true, MapData?.Specific?.GetCrystal()));
-                ret.Add((MapOffset?.Overall ?? true, MapOffset?.Specific?.GetCrystal()));
+                ret.Add((CloudModel != null || DefaultOn, CloudModel?.GetCrystal()));
+                ret.Add((MapData != null || DefaultOn, MapData?.GetCrystal()));
+                ret.Add((MapOffset != null || DefaultOn, MapOffset?.GetCrystal()));
                 ret.Add((DistantLodMultiplier, null));
                 ret.Add((Flags, null));
-                ret.Add((ObjectBounds?.Overall ?? true, ObjectBounds?.Specific?.GetCrystal()));
+                ret.Add((ObjectBounds != null || DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((Music, null));
                 ret.Add((CanopyShadow, null));
                 ret.Add((WaterNoiseTexture, null));
@@ -1606,11 +1598,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((HdLodNormalTexture, null));
                 ret.Add((WaterEnvironmentMap, null));
                 ret.Add((OffsetData, null));
-                ret.Add((TopCell?.Overall ?? true, TopCell?.Specific?.GetCrystal()));
+                ret.Add((TopCell != null || DefaultOn, TopCell?.GetCrystal()));
                 ret.Add((SubCellsTimestamp, null));
                 ret.Add((SubCellsUnknown, null));
                 ret.Add((SubCells?.Overall ?? true, SubCells?.Specific?.GetCrystal()));
             }
+
         }
         #endregion
 

@@ -718,7 +718,7 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, Model.TranslationMask?> Model;
+            public Model.TranslationMask? Model;
             public bool Action;
             public bool Location;
             public bool Target;
@@ -738,7 +738,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
                 this.Action = defaultOn;
                 this.Location = defaultOn;
                 this.Target = defaultOn;
@@ -759,7 +758,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
                 ret.Add((Action, null));
                 ret.Add((Location, null));
                 ret.Add((Target, null));
@@ -774,6 +773,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((ImageSpaceModifier, null));
                 ret.Add((DATADataTypeState, null));
             }
+
         }
         #endregion
 

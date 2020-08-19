@@ -1041,6 +1041,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Versioning;
             public bool WindVelocity;
             public bool WindDirection;
@@ -1073,6 +1074,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Versioning = defaultOn;
                 this.WindVelocity = defaultOn;
                 this.WindDirection = defaultOn;
@@ -1143,6 +1145,12 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((DisplacementSimulatorStartingSize, null));
                 ret.Add((Damage, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

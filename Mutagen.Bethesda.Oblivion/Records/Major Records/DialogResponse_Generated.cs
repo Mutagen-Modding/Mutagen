@@ -389,7 +389,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public MaskItem<bool, DialogResponseData.TranslationMask?> Data;
+            public readonly bool DefaultOn;
+            public DialogResponseData.TranslationMask? Data;
             public bool ResponseText;
             public bool ActorNotes;
             #endregion
@@ -397,7 +398,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.Data = new MaskItem<bool, DialogResponseData.TranslationMask?>(defaultOn, null);
+                this.DefaultOn = defaultOn;
                 this.ResponseText = defaultOn;
                 this.ActorNotes = defaultOn;
             }
@@ -415,10 +416,16 @@ namespace Mutagen.Bethesda.Oblivion
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
+                ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
                 ret.Add((ResponseText, null));
                 ret.Add((ActorNotes, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

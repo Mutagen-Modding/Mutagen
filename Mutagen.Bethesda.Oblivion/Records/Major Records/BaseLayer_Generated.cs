@@ -323,13 +323,14 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public MaskItem<bool, LayerHeader.TranslationMask?> Header;
+            public readonly bool DefaultOn;
+            public LayerHeader.TranslationMask? Header;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.Header = new MaskItem<bool, LayerHeader.TranslationMask?>(defaultOn, null);
+                this.DefaultOn = defaultOn;
             }
 
             #endregion
@@ -345,8 +346,14 @@ namespace Mutagen.Bethesda.Oblivion
 
             protected virtual void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Header?.Overall ?? true, Header?.Specific?.GetCrystal()));
+                ret.Add((Header != null || DefaultOn, Header?.GetCrystal()));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

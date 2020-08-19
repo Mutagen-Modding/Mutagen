@@ -368,6 +368,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool UsableDimensions;
             public bool CellCoordinatesNWCell;
             public bool CellCoordinatesSECell;
@@ -376,6 +377,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.UsableDimensions = defaultOn;
                 this.CellCoordinatesNWCell = defaultOn;
                 this.CellCoordinatesSECell = defaultOn;
@@ -398,6 +400,12 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((CellCoordinatesNWCell, null));
                 ret.Add((CellCoordinatesSECell, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

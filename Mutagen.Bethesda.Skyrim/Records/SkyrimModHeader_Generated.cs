@@ -883,12 +883,13 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Flags;
             public bool FormID;
             public bool Version;
             public bool FormVersion;
             public bool Version2;
-            public MaskItem<bool, ModStats.TranslationMask?> Stats;
+            public ModStats.TranslationMask? Stats;
             public bool TypeOffsets;
             public bool Deleted;
             public bool Author;
@@ -902,12 +903,12 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Flags = defaultOn;
                 this.FormID = defaultOn;
                 this.Version = defaultOn;
                 this.FormVersion = defaultOn;
                 this.Version2 = defaultOn;
-                this.Stats = new MaskItem<bool, ModStats.TranslationMask?>(defaultOn, null);
                 this.TypeOffsets = defaultOn;
                 this.Deleted = defaultOn;
                 this.Author = defaultOn;
@@ -936,7 +937,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Version, null));
                 ret.Add((FormVersion, null));
                 ret.Add((Version2, null));
-                ret.Add((Stats?.Overall ?? true, Stats?.Specific?.GetCrystal()));
+                ret.Add((Stats != null || DefaultOn, Stats?.GetCrystal()));
                 ret.Add((TypeOffsets, null));
                 ret.Add((Deleted, null));
                 ret.Add((Author, null));
@@ -946,6 +947,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((INTV, null));
                 ret.Add((INCC, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

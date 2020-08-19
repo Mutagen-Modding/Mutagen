@@ -746,12 +746,12 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, VirtualMachineAdapter.TranslationMask?> VirtualMachineAdapter;
-            public MaskItem<bool, ObjectBounds.TranslationMask?> ObjectBounds;
+            public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
+            public ObjectBounds.TranslationMask? ObjectBounds;
             public bool Name;
-            public MaskItem<bool, Model.TranslationMask?> Model;
-            public MaskItem<bool, Icons.TranslationMask?> Icons;
-            public MaskItem<bool, Destructible.TranslationMask?> Destructible;
+            public Model.TranslationMask? Model;
+            public Icons.TranslationMask? Icons;
+            public Destructible.TranslationMask? Destructible;
             public bool PickUpSound;
             public bool PutDownSound;
             public bool Quality;
@@ -765,12 +765,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.VirtualMachineAdapter = new MaskItem<bool, VirtualMachineAdapter.TranslationMask?>(defaultOn, null);
-                this.ObjectBounds = new MaskItem<bool, ObjectBounds.TranslationMask?>(defaultOn, null);
                 this.Name = defaultOn;
-                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
-                this.Icons = new MaskItem<bool, Icons.TranslationMask?>(defaultOn, null);
-                this.Destructible = new MaskItem<bool, Destructible.TranslationMask?>(defaultOn, null);
                 this.PickUpSound = defaultOn;
                 this.PutDownSound = defaultOn;
                 this.Quality = defaultOn;
@@ -785,12 +780,12 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((VirtualMachineAdapter?.Overall ?? true, VirtualMachineAdapter?.Specific?.GetCrystal()));
-                ret.Add((ObjectBounds?.Overall ?? true, ObjectBounds?.Specific?.GetCrystal()));
+                ret.Add((VirtualMachineAdapter != null || DefaultOn, VirtualMachineAdapter?.GetCrystal()));
+                ret.Add((ObjectBounds != null || DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((Name, null));
-                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
-                ret.Add((Icons?.Overall ?? true, Icons?.Specific?.GetCrystal()));
-                ret.Add((Destructible?.Overall ?? true, Destructible?.Specific?.GetCrystal()));
+                ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
+                ret.Add((Icons != null || DefaultOn, Icons?.GetCrystal()));
+                ret.Add((Destructible != null || DefaultOn, Destructible?.GetCrystal()));
                 ret.Add((PickUpSound, null));
                 ret.Add((PutDownSound, null));
                 ret.Add((Quality, null));
@@ -799,6 +794,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Weight, null));
                 ret.Add((DATADataTypeState, null));
             }
+
         }
         #endregion
 

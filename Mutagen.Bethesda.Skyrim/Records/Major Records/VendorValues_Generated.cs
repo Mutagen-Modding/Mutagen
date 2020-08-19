@@ -480,6 +480,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool StartHour;
             public bool EndHour;
             public bool Radius;
@@ -492,6 +493,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.StartHour = defaultOn;
                 this.EndHour = defaultOn;
                 this.Radius = defaultOn;
@@ -522,6 +524,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((NotSellBuy, null));
                 ret.Add((Unknown2, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

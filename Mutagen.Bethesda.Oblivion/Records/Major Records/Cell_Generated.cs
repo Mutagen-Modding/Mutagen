@@ -1303,7 +1303,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Name;
             public bool Flags;
             public bool Grid;
-            public MaskItem<bool, CellLighting.TranslationMask?> Lighting;
+            public CellLighting.TranslationMask? Lighting;
             public bool Regions;
             public bool MusicType;
             public bool WaterHeight;
@@ -1312,8 +1312,8 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Owner;
             public bool FactionRank;
             public bool GlobalVariable;
-            public MaskItem<bool, PathGrid.TranslationMask?> PathGrid;
-            public MaskItem<bool, Landscape.TranslationMask?> Landscape;
+            public PathGrid.TranslationMask? PathGrid;
+            public Landscape.TranslationMask? Landscape;
             public bool Timestamp;
             public bool PersistentTimestamp;
             public bool Persistent;
@@ -1330,7 +1330,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Name = defaultOn;
                 this.Flags = defaultOn;
                 this.Grid = defaultOn;
-                this.Lighting = new MaskItem<bool, CellLighting.TranslationMask?>(defaultOn, null);
                 this.Regions = defaultOn;
                 this.MusicType = defaultOn;
                 this.WaterHeight = defaultOn;
@@ -1339,8 +1338,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Owner = defaultOn;
                 this.FactionRank = defaultOn;
                 this.GlobalVariable = defaultOn;
-                this.PathGrid = new MaskItem<bool, PathGrid.TranslationMask?>(defaultOn, null);
-                this.Landscape = new MaskItem<bool, Landscape.TranslationMask?>(defaultOn, null);
                 this.Timestamp = defaultOn;
                 this.PersistentTimestamp = defaultOn;
                 this.Persistent = defaultOn;
@@ -1358,7 +1355,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Name, null));
                 ret.Add((Flags, null));
                 ret.Add((Grid, null));
-                ret.Add((Lighting?.Overall ?? true, Lighting?.Specific?.GetCrystal()));
+                ret.Add((Lighting != null || DefaultOn, Lighting?.GetCrystal()));
                 ret.Add((Regions, null));
                 ret.Add((MusicType, null));
                 ret.Add((WaterHeight, null));
@@ -1367,8 +1364,8 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Owner, null));
                 ret.Add((FactionRank, null));
                 ret.Add((GlobalVariable, null));
-                ret.Add((PathGrid?.Overall ?? true, PathGrid?.Specific?.GetCrystal()));
-                ret.Add((Landscape?.Overall ?? true, Landscape?.Specific?.GetCrystal()));
+                ret.Add((PathGrid != null || DefaultOn, PathGrid?.GetCrystal()));
+                ret.Add((Landscape != null || DefaultOn, Landscape?.GetCrystal()));
                 ret.Add((Timestamp, null));
                 ret.Add((PersistentTimestamp, null));
                 ret.Add((Persistent, null));
@@ -1377,6 +1374,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((VisibleWhenDistantTimestamp, null));
                 ret.Add((VisibleWhenDistant, null));
             }
+
         }
         #endregion
 

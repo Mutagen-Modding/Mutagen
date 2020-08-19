@@ -424,6 +424,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Versioning;
             public bool CircleMult;
             public bool FallbackMult;
@@ -434,6 +435,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Versioning = defaultOn;
                 this.CircleMult = defaultOn;
                 this.FallbackMult = defaultOn;
@@ -460,6 +462,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((FlankDistance, null));
                 ret.Add((StalkTime, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

@@ -490,6 +490,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool EnchantEffect;
             public bool CastingSound;
             public bool BoltSound;
@@ -502,6 +503,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.EnchantEffect = defaultOn;
                 this.CastingSound = defaultOn;
                 this.BoltSound = defaultOn;
@@ -532,6 +534,12 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((ConstantEffectEnchantmentFactor, null));
                 ret.Add((ConstantEffectBarterFactor, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

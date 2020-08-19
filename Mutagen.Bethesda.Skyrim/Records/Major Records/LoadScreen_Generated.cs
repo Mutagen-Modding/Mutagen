@@ -679,13 +679,13 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, Icons.TranslationMask?> Icons;
+            public Icons.TranslationMask? Icons;
             public bool Description;
             public MaskItem<bool, Condition.TranslationMask?> Conditions;
             public bool LoadingScreenNif;
             public bool InitialScale;
             public bool InitialRotation;
-            public MaskItem<bool, Int16MinMax.TranslationMask?> RotationOffsetConstraints;
+            public Int16MinMax.TranslationMask? RotationOffsetConstraints;
             public bool InitialTranslationOffset;
             public bool CameraPath;
             #endregion
@@ -694,13 +694,11 @@ namespace Mutagen.Bethesda.Skyrim
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.Icons = new MaskItem<bool, Icons.TranslationMask?>(defaultOn, null);
                 this.Description = defaultOn;
                 this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
                 this.LoadingScreenNif = defaultOn;
                 this.InitialScale = defaultOn;
                 this.InitialRotation = defaultOn;
-                this.RotationOffsetConstraints = new MaskItem<bool, Int16MinMax.TranslationMask?>(defaultOn, null);
                 this.InitialTranslationOffset = defaultOn;
                 this.CameraPath = defaultOn;
             }
@@ -710,16 +708,17 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Icons?.Overall ?? true, Icons?.Specific?.GetCrystal()));
+                ret.Add((Icons != null || DefaultOn, Icons?.GetCrystal()));
                 ret.Add((Description, null));
                 ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
                 ret.Add((LoadingScreenNif, null));
                 ret.Add((InitialScale, null));
                 ret.Add((InitialRotation, null));
-                ret.Add((RotationOffsetConstraints?.Overall ?? true, RotationOffsetConstraints?.Specific?.GetCrystal()));
+                ret.Add((RotationOffsetConstraints != null || DefaultOn, RotationOffsetConstraints?.GetCrystal()));
                 ret.Add((InitialTranslationOffset, null));
                 ret.Add((CameraPath, null));
             }
+
         }
         #endregion
 

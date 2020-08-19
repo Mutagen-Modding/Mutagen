@@ -553,7 +553,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Skill;
             public bool Description;
             public bool Icon;
-            public MaskItem<bool, SkillData.TranslationMask?> Data;
+            public SkillData.TranslationMask? Data;
             public bool ApprenticeText;
             public bool JourneymanText;
             public bool ExpertText;
@@ -567,7 +567,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Skill = defaultOn;
                 this.Description = defaultOn;
                 this.Icon = defaultOn;
-                this.Data = new MaskItem<bool, SkillData.TranslationMask?>(defaultOn, null);
                 this.ApprenticeText = defaultOn;
                 this.JourneymanText = defaultOn;
                 this.ExpertText = defaultOn;
@@ -582,12 +581,13 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Skill, null));
                 ret.Add((Description, null));
                 ret.Add((Icon, null));
-                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
+                ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
                 ret.Add((ApprenticeText, null));
                 ret.Add((JourneymanText, null));
                 ret.Add((ExpertText, null));
                 ret.Add((MasterText, null));
             }
+
         }
         #endregion
 

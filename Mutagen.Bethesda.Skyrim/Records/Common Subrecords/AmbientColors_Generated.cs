@@ -537,6 +537,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Versioning;
             public bool DirectionalXPlus;
             public bool DirectionalXMinus;
@@ -551,6 +552,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Versioning = defaultOn;
                 this.DirectionalXPlus = defaultOn;
                 this.DirectionalXMinus = defaultOn;
@@ -585,6 +587,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Specular, null));
                 ret.Add((Scale, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

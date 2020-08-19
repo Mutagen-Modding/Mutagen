@@ -620,6 +620,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Density;
             public bool MinSlope;
             public bool MaxSlope;
@@ -637,6 +638,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Density = defaultOn;
                 this.MinSlope = defaultOn;
                 this.MaxSlope = defaultOn;
@@ -677,6 +679,12 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((WavePeriod, null));
                 ret.Add((Flags, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

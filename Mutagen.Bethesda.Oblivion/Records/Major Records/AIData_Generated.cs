@@ -508,6 +508,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Aggression;
             public bool Confidence;
             public bool EnergyLevel;
@@ -521,6 +522,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Aggression = defaultOn;
                 this.Confidence = defaultOn;
                 this.EnergyLevel = defaultOn;
@@ -553,6 +555,12 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((MaximumTrainingLevel, null));
                 ret.Add((Unused, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

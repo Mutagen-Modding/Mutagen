@@ -383,6 +383,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Number;
             public MaskItem<bool, GenderedItem<bool>?> Title;
             public bool Insignia;
@@ -391,6 +392,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Number = defaultOn;
                 this.Title = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
                 this.Insignia = defaultOn;
@@ -413,6 +415,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Title?.Overall ?? true, null));
                 ret.Add((Insignia, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

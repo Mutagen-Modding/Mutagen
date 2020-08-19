@@ -620,11 +620,11 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             public bool Name;
-            public MaskItem<bool, Model.TranslationMask?> Model;
+            public Model.TranslationMask? Model;
             public bool Icon;
             public bool Script;
             public bool Weight;
-            public MaskItem<bool, PotionData.TranslationMask?> Data;
+            public PotionData.TranslationMask? Data;
             public MaskItem<bool, Effect.TranslationMask?> Effects;
             #endregion
 
@@ -633,11 +633,9 @@ namespace Mutagen.Bethesda.Oblivion
                 : base(defaultOn)
             {
                 this.Name = defaultOn;
-                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
                 this.Icon = defaultOn;
                 this.Script = defaultOn;
                 this.Weight = defaultOn;
-                this.Data = new MaskItem<bool, PotionData.TranslationMask?>(defaultOn, null);
                 this.Effects = new MaskItem<bool, Effect.TranslationMask?>(defaultOn, null);
             }
 
@@ -647,13 +645,14 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 base.GetCrystal(ret);
                 ret.Add((Name, null));
-                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
                 ret.Add((Icon, null));
                 ret.Add((Script, null));
                 ret.Add((Weight, null));
-                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
+                ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
                 ret.Add((Effects?.Overall ?? true, Effects?.Specific?.GetCrystal()));
             }
+
         }
         #endregion
 

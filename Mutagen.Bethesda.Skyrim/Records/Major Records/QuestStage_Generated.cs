@@ -512,6 +512,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Index;
             public bool Flags;
             public bool Unknown;
@@ -522,6 +523,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Index = defaultOn;
                 this.Flags = defaultOn;
                 this.Unknown = defaultOn;
@@ -548,6 +550,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((LogEntries?.Overall ?? true, LogEntries?.Specific?.GetCrystal()));
                 ret.Add((INDXDataTypeState, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

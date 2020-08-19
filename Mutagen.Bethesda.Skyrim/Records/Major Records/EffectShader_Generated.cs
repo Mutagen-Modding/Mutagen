@@ -3878,6 +3878,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((SceneGraphEmitDepthLimit, null));
                 ret.Add((DATADataTypeState, null));
             }
+
         }
         #endregion
 

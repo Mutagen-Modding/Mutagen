@@ -460,6 +460,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Point;
             public bool NumConnectionsFluffBytes;
             public bool Connections;
@@ -468,6 +469,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Point = defaultOn;
                 this.NumConnectionsFluffBytes = defaultOn;
                 this.Connections = defaultOn;
@@ -490,6 +492,12 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((NumConnectionsFluffBytes, null));
                 ret.Add((Connections, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

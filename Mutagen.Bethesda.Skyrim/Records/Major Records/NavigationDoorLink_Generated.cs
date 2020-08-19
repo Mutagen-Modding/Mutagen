@@ -370,6 +370,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool NavMesh;
             public bool NavMeshTriangleIndex;
             public bool Unused;
@@ -378,6 +379,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.NavMesh = defaultOn;
                 this.NavMeshTriangleIndex = defaultOn;
                 this.Unused = defaultOn;
@@ -400,6 +402,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((NavMeshTriangleIndex, null));
                 ret.Add((Unused, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

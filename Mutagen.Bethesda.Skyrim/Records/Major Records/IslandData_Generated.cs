@@ -564,6 +564,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Min;
             public bool Max;
             public bool Triangles;
@@ -573,6 +574,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Min = defaultOn;
                 this.Max = defaultOn;
                 this.Triangles = defaultOn;
@@ -597,6 +599,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Triangles, null));
                 ret.Add((Vertices, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

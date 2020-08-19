@@ -722,6 +722,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((ZoomMustHaveCameraShots, null));
                 ret.Add((Shots, null));
             }
+
         }
         #endregion
 

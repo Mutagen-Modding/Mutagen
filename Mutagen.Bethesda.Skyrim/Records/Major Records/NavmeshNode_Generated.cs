@@ -342,6 +342,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool NavMesh;
             public bool NodeIndex;
             #endregion
@@ -349,6 +350,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.NavMesh = defaultOn;
                 this.NodeIndex = defaultOn;
             }
@@ -369,6 +371,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((NavMesh, null));
                 ret.Add((NodeIndex, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

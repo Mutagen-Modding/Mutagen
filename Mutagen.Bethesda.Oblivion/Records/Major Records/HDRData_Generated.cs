@@ -676,6 +676,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool EyeAdaptSpeed;
             public bool BlurRadius;
             public bool BlurPasses;
@@ -695,6 +696,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.EyeAdaptSpeed = defaultOn;
                 this.BlurRadius = defaultOn;
                 this.BlurPasses = defaultOn;
@@ -739,6 +741,12 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((GrassDimmer, null));
                 ret.Add((TreeDimmer, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

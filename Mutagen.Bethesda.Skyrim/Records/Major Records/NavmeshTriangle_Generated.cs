@@ -480,6 +480,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Vertices;
             public bool EdgeLink_0_1;
             public bool EdgeLink_1_2;
@@ -492,6 +493,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Vertices = defaultOn;
                 this.EdgeLink_0_1 = defaultOn;
                 this.EdgeLink_1_2 = defaultOn;
@@ -522,6 +524,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((CoverFlags, null));
                 ret.Add((IsCover, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

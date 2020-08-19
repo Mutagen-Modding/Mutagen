@@ -536,6 +536,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Versioning;
             public bool HoverChance;
             public bool DiveBombChance;
@@ -550,6 +551,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Versioning = defaultOn;
                 this.HoverChance = defaultOn;
                 this.DiveBombChance = defaultOn;
@@ -584,6 +586,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((PerchAttackTime, null));
                 ret.Add((FlyingAttackChance, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

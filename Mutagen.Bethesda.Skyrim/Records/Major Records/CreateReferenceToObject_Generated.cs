@@ -426,6 +426,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Object;
             public bool AliasIndex;
             public bool Create;
@@ -436,6 +437,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Object = defaultOn;
                 this.AliasIndex = defaultOn;
                 this.Create = defaultOn;
@@ -462,6 +464,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Level, null));
                 ret.Add((ALCADataTypeState, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

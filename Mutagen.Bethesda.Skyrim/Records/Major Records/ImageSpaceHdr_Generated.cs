@@ -536,6 +536,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool EyeAdaptSpeed;
             public bool BloomBlurRadius;
             public bool BloomThreshold;
@@ -550,6 +551,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.EyeAdaptSpeed = defaultOn;
                 this.BloomBlurRadius = defaultOn;
                 this.BloomThreshold = defaultOn;
@@ -584,6 +586,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((SkyScale, null));
                 ret.Add((EyeAdaptStrength, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

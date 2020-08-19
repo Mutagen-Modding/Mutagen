@@ -371,7 +371,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             public bool File;
-            public MaskItem<bool, SoundData.TranslationMask?> Data;
+            public SoundData.TranslationMask? Data;
             #endregion
 
             #region Ctors
@@ -379,7 +379,6 @@ namespace Mutagen.Bethesda.Oblivion
                 : base(defaultOn)
             {
                 this.File = defaultOn;
-                this.Data = new MaskItem<bool, SoundData.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -388,8 +387,9 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 base.GetCrystal(ret);
                 ret.Add((File, null));
-                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
+                ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
             }
+
         }
         #endregion
 

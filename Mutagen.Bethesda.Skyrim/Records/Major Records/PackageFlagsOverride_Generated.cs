@@ -460,6 +460,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool SetFlags;
             public bool ClearFlags;
             public bool SetInterruptFlags;
@@ -471,6 +472,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.SetFlags = defaultOn;
                 this.ClearFlags = defaultOn;
                 this.SetInterruptFlags = defaultOn;
@@ -499,6 +501,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((PreferredSpeed, null));
                 ret.Add((Unknown, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

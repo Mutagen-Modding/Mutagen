@@ -461,19 +461,17 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public MaskItem<bool, Morph.TranslationMask?> Nose;
-            public MaskItem<bool, Morph.TranslationMask?> Brow;
-            public MaskItem<bool, Morph.TranslationMask?> Eye;
-            public MaskItem<bool, Morph.TranslationMask?> Lip;
+            public readonly bool DefaultOn;
+            public Morph.TranslationMask? Nose;
+            public Morph.TranslationMask? Brow;
+            public Morph.TranslationMask? Eye;
+            public Morph.TranslationMask? Lip;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.Nose = new MaskItem<bool, Morph.TranslationMask?>(defaultOn, null);
-                this.Brow = new MaskItem<bool, Morph.TranslationMask?>(defaultOn, null);
-                this.Eye = new MaskItem<bool, Morph.TranslationMask?>(defaultOn, null);
-                this.Lip = new MaskItem<bool, Morph.TranslationMask?>(defaultOn, null);
+                this.DefaultOn = defaultOn;
             }
 
             #endregion
@@ -489,11 +487,17 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Nose?.Overall ?? true, Nose?.Specific?.GetCrystal()));
-                ret.Add((Brow?.Overall ?? true, Brow?.Specific?.GetCrystal()));
-                ret.Add((Eye?.Overall ?? true, Eye?.Specific?.GetCrystal()));
-                ret.Add((Lip?.Overall ?? true, Lip?.Specific?.GetCrystal()));
+                ret.Add((Nose != null || DefaultOn, Nose?.GetCrystal()));
+                ret.Add((Brow != null || DefaultOn, Brow?.GetCrystal()));
+                ret.Add((Eye != null || DefaultOn, Eye?.GetCrystal()));
+                ret.Add((Lip != null || DefaultOn, Lip?.GetCrystal()));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

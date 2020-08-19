@@ -511,10 +511,10 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             public bool ENAM;
-            public MaskItem<bool, ImageSpaceHdr.TranslationMask?> Hdr;
-            public MaskItem<bool, ImageSpaceCinematic.TranslationMask?> Cinematic;
-            public MaskItem<bool, ImageSpaceTint.TranslationMask?> Tint;
-            public MaskItem<bool, ImageSpaceDepthOfField.TranslationMask?> DepthOfField;
+            public ImageSpaceHdr.TranslationMask? Hdr;
+            public ImageSpaceCinematic.TranslationMask? Cinematic;
+            public ImageSpaceTint.TranslationMask? Tint;
+            public ImageSpaceDepthOfField.TranslationMask? DepthOfField;
             #endregion
 
             #region Ctors
@@ -522,10 +522,6 @@ namespace Mutagen.Bethesda.Skyrim
                 : base(defaultOn)
             {
                 this.ENAM = defaultOn;
-                this.Hdr = new MaskItem<bool, ImageSpaceHdr.TranslationMask?>(defaultOn, null);
-                this.Cinematic = new MaskItem<bool, ImageSpaceCinematic.TranslationMask?>(defaultOn, null);
-                this.Tint = new MaskItem<bool, ImageSpaceTint.TranslationMask?>(defaultOn, null);
-                this.DepthOfField = new MaskItem<bool, ImageSpaceDepthOfField.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -534,11 +530,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.GetCrystal(ret);
                 ret.Add((ENAM, null));
-                ret.Add((Hdr?.Overall ?? true, Hdr?.Specific?.GetCrystal()));
-                ret.Add((Cinematic?.Overall ?? true, Cinematic?.Specific?.GetCrystal()));
-                ret.Add((Tint?.Overall ?? true, Tint?.Specific?.GetCrystal()));
-                ret.Add((DepthOfField?.Overall ?? true, DepthOfField?.Specific?.GetCrystal()));
+                ret.Add((Hdr != null || DefaultOn, Hdr?.GetCrystal()));
+                ret.Add((Cinematic != null || DefaultOn, Cinematic?.GetCrystal()));
+                ret.Add((Tint != null || DefaultOn, Tint?.GetCrystal()));
+                ret.Add((DepthOfField != null || DefaultOn, DepthOfField?.GetCrystal()));
             }
+
         }
         #endregion
 

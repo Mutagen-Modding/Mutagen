@@ -620,10 +620,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             public bool Name;
-            public MaskItem<bool, Model.TranslationMask?> Model;
+            public Model.TranslationMask? Model;
             public bool Script;
             public MaskItem<bool, ContainerItem.TranslationMask?> Items;
-            public MaskItem<bool, ContainerData.TranslationMask?> Data;
+            public ContainerData.TranslationMask? Data;
             public bool OpenSound;
             public bool CloseSound;
             #endregion
@@ -633,10 +633,8 @@ namespace Mutagen.Bethesda.Oblivion
                 : base(defaultOn)
             {
                 this.Name = defaultOn;
-                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
                 this.Script = defaultOn;
                 this.Items = new MaskItem<bool, ContainerItem.TranslationMask?>(defaultOn, null);
-                this.Data = new MaskItem<bool, ContainerData.TranslationMask?>(defaultOn, null);
                 this.OpenSound = defaultOn;
                 this.CloseSound = defaultOn;
             }
@@ -647,13 +645,14 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 base.GetCrystal(ret);
                 ret.Add((Name, null));
-                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
                 ret.Add((Script, null));
                 ret.Add((Items?.Overall ?? true, Items?.Specific?.GetCrystal()));
-                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
+                ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
                 ret.Add((OpenSound, null));
                 ret.Add((CloseSound, null));
             }
+
         }
         #endregion
 

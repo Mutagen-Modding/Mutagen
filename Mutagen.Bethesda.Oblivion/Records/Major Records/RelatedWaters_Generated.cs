@@ -374,6 +374,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool RelatedWaterDaytime;
             public bool RelatedWaterNighttime;
             public bool RelatedWaterUnderwater;
@@ -382,6 +383,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.RelatedWaterDaytime = defaultOn;
                 this.RelatedWaterNighttime = defaultOn;
                 this.RelatedWaterUnderwater = defaultOn;
@@ -404,6 +406,12 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((RelatedWaterNighttime, null));
                 ret.Add((RelatedWaterUnderwater, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

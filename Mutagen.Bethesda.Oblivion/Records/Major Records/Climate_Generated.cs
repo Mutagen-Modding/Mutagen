@@ -562,8 +562,8 @@ namespace Mutagen.Bethesda.Oblivion
             public MaskItem<bool, WeatherType.TranslationMask?> Weathers;
             public bool SunTexture;
             public bool SunGlareTexture;
-            public MaskItem<bool, Model.TranslationMask?> Model;
-            public MaskItem<bool, ClimateData.TranslationMask?> Data;
+            public Model.TranslationMask? Model;
+            public ClimateData.TranslationMask? Data;
             #endregion
 
             #region Ctors
@@ -573,8 +573,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Weathers = new MaskItem<bool, WeatherType.TranslationMask?>(defaultOn, null);
                 this.SunTexture = defaultOn;
                 this.SunGlareTexture = defaultOn;
-                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
-                this.Data = new MaskItem<bool, ClimateData.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -585,9 +583,10 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Weathers?.Overall ?? true, Weathers?.Specific?.GetCrystal()));
                 ret.Add((SunTexture, null));
                 ret.Add((SunGlareTexture, null));
-                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
-                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
+                ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
+                ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
             }
+
         }
         #endregion
 

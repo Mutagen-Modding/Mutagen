@@ -421,6 +421,7 @@ namespace Mutagen.Bethesda.Skyrim
                 base.GetCrystal(ret);
                 ret.Add((Weathers?.Overall ?? true, Weathers?.Specific?.GetCrystal()));
             }
+
         }
         #endregion
 

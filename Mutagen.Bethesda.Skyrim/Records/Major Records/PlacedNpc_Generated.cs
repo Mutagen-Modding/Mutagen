@@ -1411,20 +1411,20 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, VirtualMachineAdapter.TranslationMask?> VirtualMachineAdapter;
+            public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
             public bool Base;
             public bool EncounterZone;
             public bool RagdollData;
             public bool RagdollBipedData;
-            public MaskItem<bool, Patrol.TranslationMask?> Patrol;
+            public Patrol.TranslationMask? Patrol;
             public bool LevelModifier;
             public bool MerchantContainer;
             public bool Count;
             public bool Radius;
             public bool Health;
             public MaskItem<bool, LinkedReferences.TranslationMask?> LinkedReferences;
-            public MaskItem<bool, ActivateParents.TranslationMask?> ActivateParents;
-            public MaskItem<bool, LinkedReferenceColor.TranslationMask?> LinkedReferenceColor;
+            public ActivateParents.TranslationMask? ActivateParents;
+            public LinkedReferenceColor.TranslationMask? LinkedReferenceColor;
             public bool PersistentLocation;
             public bool LocationReference;
             public bool IgnoredBySandbox;
@@ -1432,33 +1432,29 @@ namespace Mutagen.Bethesda.Skyrim
             public bool HeadTrackingWeight;
             public bool Horse;
             public bool FavorCost;
-            public MaskItem<bool, EnableParent.TranslationMask?> EnableParent;
-            public MaskItem<bool, Ownership.TranslationMask?> Ownership;
+            public EnableParent.TranslationMask? EnableParent;
+            public Ownership.TranslationMask? Ownership;
             public bool Emittance;
             public bool MultiboundReference;
             public bool IgnoredBySandbox2;
             public bool Scale;
-            public MaskItem<bool, Placement.TranslationMask?> Placement;
+            public Placement.TranslationMask? Placement;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.VirtualMachineAdapter = new MaskItem<bool, VirtualMachineAdapter.TranslationMask?>(defaultOn, null);
                 this.Base = defaultOn;
                 this.EncounterZone = defaultOn;
                 this.RagdollData = defaultOn;
                 this.RagdollBipedData = defaultOn;
-                this.Patrol = new MaskItem<bool, Patrol.TranslationMask?>(defaultOn, null);
                 this.LevelModifier = defaultOn;
                 this.MerchantContainer = defaultOn;
                 this.Count = defaultOn;
                 this.Radius = defaultOn;
                 this.Health = defaultOn;
                 this.LinkedReferences = new MaskItem<bool, LinkedReferences.TranslationMask?>(defaultOn, null);
-                this.ActivateParents = new MaskItem<bool, ActivateParents.TranslationMask?>(defaultOn, null);
-                this.LinkedReferenceColor = new MaskItem<bool, LinkedReferenceColor.TranslationMask?>(defaultOn, null);
                 this.PersistentLocation = defaultOn;
                 this.LocationReference = defaultOn;
                 this.IgnoredBySandbox = defaultOn;
@@ -1466,13 +1462,10 @@ namespace Mutagen.Bethesda.Skyrim
                 this.HeadTrackingWeight = defaultOn;
                 this.Horse = defaultOn;
                 this.FavorCost = defaultOn;
-                this.EnableParent = new MaskItem<bool, EnableParent.TranslationMask?>(defaultOn, null);
-                this.Ownership = new MaskItem<bool, Ownership.TranslationMask?>(defaultOn, null);
                 this.Emittance = defaultOn;
                 this.MultiboundReference = defaultOn;
                 this.IgnoredBySandbox2 = defaultOn;
                 this.Scale = defaultOn;
-                this.Placement = new MaskItem<bool, Placement.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -1480,20 +1473,20 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((VirtualMachineAdapter?.Overall ?? true, VirtualMachineAdapter?.Specific?.GetCrystal()));
+                ret.Add((VirtualMachineAdapter != null || DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((Base, null));
                 ret.Add((EncounterZone, null));
                 ret.Add((RagdollData, null));
                 ret.Add((RagdollBipedData, null));
-                ret.Add((Patrol?.Overall ?? true, Patrol?.Specific?.GetCrystal()));
+                ret.Add((Patrol != null || DefaultOn, Patrol?.GetCrystal()));
                 ret.Add((LevelModifier, null));
                 ret.Add((MerchantContainer, null));
                 ret.Add((Count, null));
                 ret.Add((Radius, null));
                 ret.Add((Health, null));
                 ret.Add((LinkedReferences?.Overall ?? true, LinkedReferences?.Specific?.GetCrystal()));
-                ret.Add((ActivateParents?.Overall ?? true, ActivateParents?.Specific?.GetCrystal()));
-                ret.Add((LinkedReferenceColor?.Overall ?? true, LinkedReferenceColor?.Specific?.GetCrystal()));
+                ret.Add((ActivateParents != null || DefaultOn, ActivateParents?.GetCrystal()));
+                ret.Add((LinkedReferenceColor != null || DefaultOn, LinkedReferenceColor?.GetCrystal()));
                 ret.Add((PersistentLocation, null));
                 ret.Add((LocationReference, null));
                 ret.Add((IgnoredBySandbox, null));
@@ -1501,14 +1494,15 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((HeadTrackingWeight, null));
                 ret.Add((Horse, null));
                 ret.Add((FavorCost, null));
-                ret.Add((EnableParent?.Overall ?? true, EnableParent?.Specific?.GetCrystal()));
-                ret.Add((Ownership?.Overall ?? true, Ownership?.Specific?.GetCrystal()));
+                ret.Add((EnableParent != null || DefaultOn, EnableParent?.GetCrystal()));
+                ret.Add((Ownership != null || DefaultOn, Ownership?.GetCrystal()));
                 ret.Add((Emittance, null));
                 ret.Add((MultiboundReference, null));
                 ret.Add((IgnoredBySandbox2, null));
                 ret.Add((Scale, null));
-                ret.Add((Placement?.Overall ?? true, Placement?.Specific?.GetCrystal()));
+                ret.Add((Placement != null || DefaultOn, Placement?.GetCrystal()));
             }
+
         }
         #endregion
 

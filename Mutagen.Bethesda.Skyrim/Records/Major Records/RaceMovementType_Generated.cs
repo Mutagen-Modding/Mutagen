@@ -359,15 +359,16 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool MovementType;
-            public MaskItem<bool, SpeedOverrides.TranslationMask?> Overrides;
+            public SpeedOverrides.TranslationMask? Overrides;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.MovementType = defaultOn;
-                this.Overrides = new MaskItem<bool, SpeedOverrides.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -384,8 +385,14 @@ namespace Mutagen.Bethesda.Skyrim
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((MovementType, null));
-                ret.Add((Overrides?.Overall ?? true, Overrides?.Specific?.GetCrystal()));
+                ret.Add((Overrides != null || DefaultOn, Overrides?.GetCrystal()));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

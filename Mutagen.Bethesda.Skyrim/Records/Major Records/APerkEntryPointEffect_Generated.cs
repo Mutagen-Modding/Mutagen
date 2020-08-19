@@ -369,6 +369,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((EntryPoint, null));
                 ret.Add((PerkConditionTabCount, null));
             }
+
         }
         #endregion
 

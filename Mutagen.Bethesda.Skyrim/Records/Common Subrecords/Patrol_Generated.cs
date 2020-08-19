@@ -530,6 +530,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool IdleTime;
             public bool Idle;
             public bool SCHR;
@@ -540,6 +541,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.IdleTime = defaultOn;
                 this.Idle = defaultOn;
                 this.SCHR = defaultOn;
@@ -566,6 +568,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((SCTX, null));
                 ret.Add((Topics?.Overall ?? true, Topics?.Specific?.GetCrystal()));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

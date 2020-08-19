@@ -596,6 +596,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool DamageMult;
             public bool Chance;
             public bool Spell;
@@ -612,6 +613,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.DamageMult = defaultOn;
                 this.Chance = defaultOn;
                 this.Spell = defaultOn;
@@ -650,6 +652,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((RecoveryTime, null));
                 ret.Add((StaminaMult, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

@@ -1017,45 +1017,31 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool ForceNames;
-            public MaskItem<bool, Phoneme.TranslationMask?> Aah_LipBigAah;
-            public MaskItem<bool, Phoneme.TranslationMask?> BigAah_LipDST;
-            public MaskItem<bool, Phoneme.TranslationMask?> BMP_LipEee;
-            public MaskItem<bool, Phoneme.TranslationMask?> ChJSh_LipFV;
-            public MaskItem<bool, Phoneme.TranslationMask?> DST_LipK;
-            public MaskItem<bool, Phoneme.TranslationMask?> Eee_LipL;
-            public MaskItem<bool, Phoneme.TranslationMask?> Eh_LipR;
-            public MaskItem<bool, Phoneme.TranslationMask?> FV_LipTh;
-            public MaskItem<bool, Phoneme.TranslationMask?> I;
-            public MaskItem<bool, Phoneme.TranslationMask?> K;
-            public MaskItem<bool, Phoneme.TranslationMask?> N;
-            public MaskItem<bool, Phoneme.TranslationMask?> Oh;
-            public MaskItem<bool, Phoneme.TranslationMask?> OohQ;
-            public MaskItem<bool, Phoneme.TranslationMask?> R;
-            public MaskItem<bool, Phoneme.TranslationMask?> Th;
-            public MaskItem<bool, Phoneme.TranslationMask?> W;
+            public Phoneme.TranslationMask? Aah_LipBigAah;
+            public Phoneme.TranslationMask? BigAah_LipDST;
+            public Phoneme.TranslationMask? BMP_LipEee;
+            public Phoneme.TranslationMask? ChJSh_LipFV;
+            public Phoneme.TranslationMask? DST_LipK;
+            public Phoneme.TranslationMask? Eee_LipL;
+            public Phoneme.TranslationMask? Eh_LipR;
+            public Phoneme.TranslationMask? FV_LipTh;
+            public Phoneme.TranslationMask? I;
+            public Phoneme.TranslationMask? K;
+            public Phoneme.TranslationMask? N;
+            public Phoneme.TranslationMask? Oh;
+            public Phoneme.TranslationMask? OohQ;
+            public Phoneme.TranslationMask? R;
+            public Phoneme.TranslationMask? Th;
+            public Phoneme.TranslationMask? W;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.ForceNames = defaultOn;
-                this.Aah_LipBigAah = new MaskItem<bool, Phoneme.TranslationMask?>(defaultOn, null);
-                this.BigAah_LipDST = new MaskItem<bool, Phoneme.TranslationMask?>(defaultOn, null);
-                this.BMP_LipEee = new MaskItem<bool, Phoneme.TranslationMask?>(defaultOn, null);
-                this.ChJSh_LipFV = new MaskItem<bool, Phoneme.TranslationMask?>(defaultOn, null);
-                this.DST_LipK = new MaskItem<bool, Phoneme.TranslationMask?>(defaultOn, null);
-                this.Eee_LipL = new MaskItem<bool, Phoneme.TranslationMask?>(defaultOn, null);
-                this.Eh_LipR = new MaskItem<bool, Phoneme.TranslationMask?>(defaultOn, null);
-                this.FV_LipTh = new MaskItem<bool, Phoneme.TranslationMask?>(defaultOn, null);
-                this.I = new MaskItem<bool, Phoneme.TranslationMask?>(defaultOn, null);
-                this.K = new MaskItem<bool, Phoneme.TranslationMask?>(defaultOn, null);
-                this.N = new MaskItem<bool, Phoneme.TranslationMask?>(defaultOn, null);
-                this.Oh = new MaskItem<bool, Phoneme.TranslationMask?>(defaultOn, null);
-                this.OohQ = new MaskItem<bool, Phoneme.TranslationMask?>(defaultOn, null);
-                this.R = new MaskItem<bool, Phoneme.TranslationMask?>(defaultOn, null);
-                this.Th = new MaskItem<bool, Phoneme.TranslationMask?>(defaultOn, null);
-                this.W = new MaskItem<bool, Phoneme.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -1072,23 +1058,29 @@ namespace Mutagen.Bethesda.Skyrim
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((ForceNames, null));
-                ret.Add((Aah_LipBigAah?.Overall ?? true, Aah_LipBigAah?.Specific?.GetCrystal()));
-                ret.Add((BigAah_LipDST?.Overall ?? true, BigAah_LipDST?.Specific?.GetCrystal()));
-                ret.Add((BMP_LipEee?.Overall ?? true, BMP_LipEee?.Specific?.GetCrystal()));
-                ret.Add((ChJSh_LipFV?.Overall ?? true, ChJSh_LipFV?.Specific?.GetCrystal()));
-                ret.Add((DST_LipK?.Overall ?? true, DST_LipK?.Specific?.GetCrystal()));
-                ret.Add((Eee_LipL?.Overall ?? true, Eee_LipL?.Specific?.GetCrystal()));
-                ret.Add((Eh_LipR?.Overall ?? true, Eh_LipR?.Specific?.GetCrystal()));
-                ret.Add((FV_LipTh?.Overall ?? true, FV_LipTh?.Specific?.GetCrystal()));
-                ret.Add((I?.Overall ?? true, I?.Specific?.GetCrystal()));
-                ret.Add((K?.Overall ?? true, K?.Specific?.GetCrystal()));
-                ret.Add((N?.Overall ?? true, N?.Specific?.GetCrystal()));
-                ret.Add((Oh?.Overall ?? true, Oh?.Specific?.GetCrystal()));
-                ret.Add((OohQ?.Overall ?? true, OohQ?.Specific?.GetCrystal()));
-                ret.Add((R?.Overall ?? true, R?.Specific?.GetCrystal()));
-                ret.Add((Th?.Overall ?? true, Th?.Specific?.GetCrystal()));
-                ret.Add((W?.Overall ?? true, W?.Specific?.GetCrystal()));
+                ret.Add((Aah_LipBigAah != null || DefaultOn, Aah_LipBigAah?.GetCrystal()));
+                ret.Add((BigAah_LipDST != null || DefaultOn, BigAah_LipDST?.GetCrystal()));
+                ret.Add((BMP_LipEee != null || DefaultOn, BMP_LipEee?.GetCrystal()));
+                ret.Add((ChJSh_LipFV != null || DefaultOn, ChJSh_LipFV?.GetCrystal()));
+                ret.Add((DST_LipK != null || DefaultOn, DST_LipK?.GetCrystal()));
+                ret.Add((Eee_LipL != null || DefaultOn, Eee_LipL?.GetCrystal()));
+                ret.Add((Eh_LipR != null || DefaultOn, Eh_LipR?.GetCrystal()));
+                ret.Add((FV_LipTh != null || DefaultOn, FV_LipTh?.GetCrystal()));
+                ret.Add((I != null || DefaultOn, I?.GetCrystal()));
+                ret.Add((K != null || DefaultOn, K?.GetCrystal()));
+                ret.Add((N != null || DefaultOn, N?.GetCrystal()));
+                ret.Add((Oh != null || DefaultOn, Oh?.GetCrystal()));
+                ret.Add((OohQ != null || DefaultOn, OohQ?.GetCrystal()));
+                ret.Add((R != null || DefaultOn, R?.GetCrystal()));
+                ret.Add((Th != null || DefaultOn, Th?.GetCrystal()));
+                ret.Add((W != null || DefaultOn, W?.GetCrystal()));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

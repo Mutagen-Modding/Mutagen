@@ -437,19 +437,17 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public MaskItem<bool, AmbientColors.TranslationMask?> Sunrise;
-            public MaskItem<bool, AmbientColors.TranslationMask?> Day;
-            public MaskItem<bool, AmbientColors.TranslationMask?> Sunset;
-            public MaskItem<bool, AmbientColors.TranslationMask?> Night;
+            public readonly bool DefaultOn;
+            public AmbientColors.TranslationMask? Sunrise;
+            public AmbientColors.TranslationMask? Day;
+            public AmbientColors.TranslationMask? Sunset;
+            public AmbientColors.TranslationMask? Night;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.Sunrise = new MaskItem<bool, AmbientColors.TranslationMask?>(defaultOn, null);
-                this.Day = new MaskItem<bool, AmbientColors.TranslationMask?>(defaultOn, null);
-                this.Sunset = new MaskItem<bool, AmbientColors.TranslationMask?>(defaultOn, null);
-                this.Night = new MaskItem<bool, AmbientColors.TranslationMask?>(defaultOn, null);
+                this.DefaultOn = defaultOn;
             }
 
             #endregion
@@ -465,11 +463,17 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Sunrise?.Overall ?? true, Sunrise?.Specific?.GetCrystal()));
-                ret.Add((Day?.Overall ?? true, Day?.Specific?.GetCrystal()));
-                ret.Add((Sunset?.Overall ?? true, Sunset?.Specific?.GetCrystal()));
-                ret.Add((Night?.Overall ?? true, Night?.Specific?.GetCrystal()));
+                ret.Add((Sunrise != null || DefaultOn, Sunrise?.GetCrystal()));
+                ret.Add((Day != null || DefaultOn, Day?.GetCrystal()));
+                ret.Add((Sunset != null || DefaultOn, Sunset?.GetCrystal()));
+                ret.Add((Night != null || DefaultOn, Night?.GetCrystal()));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

@@ -969,27 +969,27 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public MaskItem<bool, HeadPartReference.TranslationMask?> HeadParts;
-            public MaskItem<bool, AvailableMorphs.TranslationMask?> AvailableMorphs;
+            public AvailableMorphs.TranslationMask? AvailableMorphs;
             public bool RacePresets;
             public bool AvailableHairColors;
             public bool FaceDetails;
             public bool DefaultFaceTexture;
             public MaskItem<bool, TintAssets.TranslationMask?> TintMasks;
-            public MaskItem<bool, Model.TranslationMask?> Model;
+            public Model.TranslationMask? Model;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.HeadParts = new MaskItem<bool, HeadPartReference.TranslationMask?>(defaultOn, null);
-                this.AvailableMorphs = new MaskItem<bool, AvailableMorphs.TranslationMask?>(defaultOn, null);
                 this.RacePresets = defaultOn;
                 this.AvailableHairColors = defaultOn;
                 this.FaceDetails = defaultOn;
                 this.DefaultFaceTexture = defaultOn;
                 this.TintMasks = new MaskItem<bool, TintAssets.TranslationMask?>(defaultOn, null);
-                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -1006,14 +1006,20 @@ namespace Mutagen.Bethesda.Skyrim
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((HeadParts?.Overall ?? true, HeadParts?.Specific?.GetCrystal()));
-                ret.Add((AvailableMorphs?.Overall ?? true, AvailableMorphs?.Specific?.GetCrystal()));
+                ret.Add((AvailableMorphs != null || DefaultOn, AvailableMorphs?.GetCrystal()));
                 ret.Add((RacePresets, null));
                 ret.Add((AvailableHairColors, null));
                 ret.Add((FaceDetails, null));
                 ret.Add((DefaultFaceTexture, null));
                 ret.Add((TintMasks?.Overall ?? true, TintMasks?.Specific?.GetCrystal()));
-                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

@@ -481,6 +481,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool SunriseBegin;
             public bool SunriseEnd;
             public bool SunsetBegin;
@@ -493,6 +494,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.SunriseBegin = defaultOn;
                 this.SunriseEnd = defaultOn;
                 this.SunsetBegin = defaultOn;
@@ -523,6 +525,12 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Phase, null));
                 ret.Add((PhaseLength, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

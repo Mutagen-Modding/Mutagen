@@ -560,6 +560,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Script, null));
                 ret.Add((Template, null));
             }
+
         }
         #endregion
 

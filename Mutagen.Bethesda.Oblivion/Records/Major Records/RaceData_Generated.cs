@@ -669,13 +669,14 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public MaskItem<bool, SkillBoost.TranslationMask?> SkillBoost0;
-            public MaskItem<bool, SkillBoost.TranslationMask?> SkillBoost1;
-            public MaskItem<bool, SkillBoost.TranslationMask?> SkillBoost2;
-            public MaskItem<bool, SkillBoost.TranslationMask?> SkillBoost3;
-            public MaskItem<bool, SkillBoost.TranslationMask?> SkillBoost4;
-            public MaskItem<bool, SkillBoost.TranslationMask?> SkillBoost5;
-            public MaskItem<bool, SkillBoost.TranslationMask?> SkillBoost6;
+            public readonly bool DefaultOn;
+            public SkillBoost.TranslationMask? SkillBoost0;
+            public SkillBoost.TranslationMask? SkillBoost1;
+            public SkillBoost.TranslationMask? SkillBoost2;
+            public SkillBoost.TranslationMask? SkillBoost3;
+            public SkillBoost.TranslationMask? SkillBoost4;
+            public SkillBoost.TranslationMask? SkillBoost5;
+            public SkillBoost.TranslationMask? SkillBoost6;
             public bool Unused;
             public MaskItem<bool, GenderedItem<bool>?> Height;
             public MaskItem<bool, GenderedItem<bool>?> Weight;
@@ -685,13 +686,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.SkillBoost0 = new MaskItem<bool, SkillBoost.TranslationMask?>(defaultOn, null);
-                this.SkillBoost1 = new MaskItem<bool, SkillBoost.TranslationMask?>(defaultOn, null);
-                this.SkillBoost2 = new MaskItem<bool, SkillBoost.TranslationMask?>(defaultOn, null);
-                this.SkillBoost3 = new MaskItem<bool, SkillBoost.TranslationMask?>(defaultOn, null);
-                this.SkillBoost4 = new MaskItem<bool, SkillBoost.TranslationMask?>(defaultOn, null);
-                this.SkillBoost5 = new MaskItem<bool, SkillBoost.TranslationMask?>(defaultOn, null);
-                this.SkillBoost6 = new MaskItem<bool, SkillBoost.TranslationMask?>(defaultOn, null);
+                this.DefaultOn = defaultOn;
                 this.Unused = defaultOn;
                 this.Height = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
                 this.Weight = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
@@ -711,18 +706,24 @@ namespace Mutagen.Bethesda.Oblivion
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((SkillBoost0?.Overall ?? true, SkillBoost0?.Specific?.GetCrystal()));
-                ret.Add((SkillBoost1?.Overall ?? true, SkillBoost1?.Specific?.GetCrystal()));
-                ret.Add((SkillBoost2?.Overall ?? true, SkillBoost2?.Specific?.GetCrystal()));
-                ret.Add((SkillBoost3?.Overall ?? true, SkillBoost3?.Specific?.GetCrystal()));
-                ret.Add((SkillBoost4?.Overall ?? true, SkillBoost4?.Specific?.GetCrystal()));
-                ret.Add((SkillBoost5?.Overall ?? true, SkillBoost5?.Specific?.GetCrystal()));
-                ret.Add((SkillBoost6?.Overall ?? true, SkillBoost6?.Specific?.GetCrystal()));
+                ret.Add((SkillBoost0 != null || DefaultOn, SkillBoost0?.GetCrystal()));
+                ret.Add((SkillBoost1 != null || DefaultOn, SkillBoost1?.GetCrystal()));
+                ret.Add((SkillBoost2 != null || DefaultOn, SkillBoost2?.GetCrystal()));
+                ret.Add((SkillBoost3 != null || DefaultOn, SkillBoost3?.GetCrystal()));
+                ret.Add((SkillBoost4 != null || DefaultOn, SkillBoost4?.GetCrystal()));
+                ret.Add((SkillBoost5 != null || DefaultOn, SkillBoost5?.GetCrystal()));
+                ret.Add((SkillBoost6 != null || DefaultOn, SkillBoost6?.GetCrystal()));
                 ret.Add((Unused, null));
                 ret.Add((Height?.Overall ?? true, null));
                 ret.Add((Weight?.Overall ?? true, null));
                 ret.Add((Flags, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

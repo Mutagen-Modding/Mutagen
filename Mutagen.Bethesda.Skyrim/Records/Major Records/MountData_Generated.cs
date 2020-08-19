@@ -368,6 +368,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool MountOffset;
             public bool DismountOffset;
             public bool MountCameraOffset;
@@ -376,6 +377,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.MountOffset = defaultOn;
                 this.DismountOffset = defaultOn;
                 this.MountCameraOffset = defaultOn;
@@ -398,6 +400,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((DismountOffset, null));
                 ret.Add((MountCameraOffset, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

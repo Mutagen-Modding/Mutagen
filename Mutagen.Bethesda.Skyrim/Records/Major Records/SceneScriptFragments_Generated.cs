@@ -425,6 +425,7 @@ namespace Mutagen.Bethesda.Skyrim
                 base.GetCrystal(ret);
                 ret.Add((PhaseFragments?.Overall ?? true, PhaseFragments?.Specific?.GetCrystal()));
             }
+
         }
         #endregion
 

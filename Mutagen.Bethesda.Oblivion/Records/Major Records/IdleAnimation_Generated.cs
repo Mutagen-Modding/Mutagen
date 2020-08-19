@@ -597,7 +597,7 @@ namespace Mutagen.Bethesda.Oblivion
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, Model.TranslationMask?> Model;
+            public Model.TranslationMask? Model;
             public MaskItem<bool, Condition.TranslationMask?> Conditions;
             public bool AnimationGroupSection;
             public bool RelatedIdleAnimations;
@@ -607,7 +607,6 @@ namespace Mutagen.Bethesda.Oblivion
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
                 this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
                 this.AnimationGroupSection = defaultOn;
                 this.RelatedIdleAnimations = defaultOn;
@@ -618,11 +617,12 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
                 ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
                 ret.Add((AnimationGroupSection, null));
                 ret.Add((RelatedIdleAnimations, null));
             }
+
         }
         #endregion
 

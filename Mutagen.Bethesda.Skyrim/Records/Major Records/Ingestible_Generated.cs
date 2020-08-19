@@ -1045,13 +1045,13 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, ObjectBounds.TranslationMask?> ObjectBounds;
+            public ObjectBounds.TranslationMask? ObjectBounds;
             public bool Name;
             public bool Keywords;
             public bool Description;
-            public MaskItem<bool, Model.TranslationMask?> Model;
-            public MaskItem<bool, Destructible.TranslationMask?> Destructible;
-            public MaskItem<bool, Icons.TranslationMask?> Icons;
+            public Model.TranslationMask? Model;
+            public Destructible.TranslationMask? Destructible;
+            public Icons.TranslationMask? Icons;
             public bool PickUpSound;
             public bool PutDownSound;
             public bool EquipmentType;
@@ -1069,13 +1069,9 @@ namespace Mutagen.Bethesda.Skyrim
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.ObjectBounds = new MaskItem<bool, ObjectBounds.TranslationMask?>(defaultOn, null);
                 this.Name = defaultOn;
                 this.Keywords = defaultOn;
                 this.Description = defaultOn;
-                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
-                this.Destructible = new MaskItem<bool, Destructible.TranslationMask?>(defaultOn, null);
-                this.Icons = new MaskItem<bool, Icons.TranslationMask?>(defaultOn, null);
                 this.PickUpSound = defaultOn;
                 this.PutDownSound = defaultOn;
                 this.EquipmentType = defaultOn;
@@ -1094,13 +1090,13 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((ObjectBounds?.Overall ?? true, ObjectBounds?.Specific?.GetCrystal()));
+                ret.Add((ObjectBounds != null || DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((Name, null));
                 ret.Add((Keywords, null));
                 ret.Add((Description, null));
-                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
-                ret.Add((Destructible?.Overall ?? true, Destructible?.Specific?.GetCrystal()));
-                ret.Add((Icons?.Overall ?? true, Icons?.Specific?.GetCrystal()));
+                ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
+                ret.Add((Destructible != null || DefaultOn, Destructible?.GetCrystal()));
+                ret.Add((Icons != null || DefaultOn, Icons?.GetCrystal()));
                 ret.Add((PickUpSound, null));
                 ret.Add((PutDownSound, null));
                 ret.Add((EquipmentType, null));
@@ -1113,6 +1109,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Effects?.Overall ?? true, Effects?.Specific?.GetCrystal()));
                 ret.Add((ENITDataTypeState, null));
             }
+
         }
         #endregion
 

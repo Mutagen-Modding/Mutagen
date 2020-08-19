@@ -398,6 +398,7 @@ namespace Mutagen.Bethesda
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool MajorRecordFlagsRaw;
             public bool FormKey;
             public bool VersionControl;
@@ -407,6 +408,7 @@ namespace Mutagen.Bethesda
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.MajorRecordFlagsRaw = defaultOn;
                 this.FormKey = defaultOn;
                 this.VersionControl = defaultOn;
@@ -431,6 +433,12 @@ namespace Mutagen.Bethesda
                 ret.Add((VersionControl, null));
                 ret.Add((EditorID, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

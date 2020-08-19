@@ -529,6 +529,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Description, null));
                 ret.Add((WordsOfPower?.Overall ?? true, WordsOfPower?.Specific?.GetCrystal()));
             }
+
         }
         #endregion
 

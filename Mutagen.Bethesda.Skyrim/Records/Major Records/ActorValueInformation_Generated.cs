@@ -587,7 +587,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Description;
             public bool Abbreviation;
             public bool CNAM;
-            public MaskItem<bool, ActorValueSkill.TranslationMask?> Skill;
+            public ActorValueSkill.TranslationMask? Skill;
             public MaskItem<bool, ActorValuePerkNode.TranslationMask?> PerkTree;
             #endregion
 
@@ -599,7 +599,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Description = defaultOn;
                 this.Abbreviation = defaultOn;
                 this.CNAM = defaultOn;
-                this.Skill = new MaskItem<bool, ActorValueSkill.TranslationMask?>(defaultOn, null);
                 this.PerkTree = new MaskItem<bool, ActorValuePerkNode.TranslationMask?>(defaultOn, null);
             }
 
@@ -612,9 +611,10 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Description, null));
                 ret.Add((Abbreviation, null));
                 ret.Add((CNAM, null));
-                ret.Add((Skill?.Overall ?? true, Skill?.Specific?.GetCrystal()));
+                ret.Add((Skill != null || DefaultOn, Skill?.GetCrystal()));
                 ret.Add((PerkTree?.Overall ?? true, PerkTree?.Specific?.GetCrystal()));
             }
+
         }
         #endregion
 

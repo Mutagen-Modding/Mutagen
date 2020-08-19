@@ -1566,19 +1566,19 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             public bool Name;
-            public MaskItem<bool, Model.TranslationMask?> Model;
-            public MaskItem<bool, NpcConfiguration.TranslationMask?> Configuration;
+            public Model.TranslationMask? Model;
+            public NpcConfiguration.TranslationMask? Configuration;
             public MaskItem<bool, RankPlacement.TranslationMask?> Factions;
             public bool DeathItem;
             public bool Race;
             public bool Spells;
             public bool Script;
             public MaskItem<bool, ItemEntry.TranslationMask?> Items;
-            public MaskItem<bool, AIData.TranslationMask?> AIData;
+            public AIData.TranslationMask? AIData;
             public bool AIPackages;
             public bool Animations;
             public bool Class;
-            public MaskItem<bool, NpcData.TranslationMask?> Stats;
+            public NpcData.TranslationMask? Stats;
             public bool Hair;
             public bool HairLength;
             public bool Eyes;
@@ -1595,19 +1595,15 @@ namespace Mutagen.Bethesda.Oblivion
                 : base(defaultOn)
             {
                 this.Name = defaultOn;
-                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
-                this.Configuration = new MaskItem<bool, NpcConfiguration.TranslationMask?>(defaultOn, null);
                 this.Factions = new MaskItem<bool, RankPlacement.TranslationMask?>(defaultOn, null);
                 this.DeathItem = defaultOn;
                 this.Race = defaultOn;
                 this.Spells = defaultOn;
                 this.Script = defaultOn;
                 this.Items = new MaskItem<bool, ItemEntry.TranslationMask?>(defaultOn, null);
-                this.AIData = new MaskItem<bool, AIData.TranslationMask?>(defaultOn, null);
                 this.AIPackages = defaultOn;
                 this.Animations = defaultOn;
                 this.Class = defaultOn;
-                this.Stats = new MaskItem<bool, NpcData.TranslationMask?>(defaultOn, null);
                 this.Hair = defaultOn;
                 this.HairLength = defaultOn;
                 this.Eyes = defaultOn;
@@ -1625,19 +1621,19 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 base.GetCrystal(ret);
                 ret.Add((Name, null));
-                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
-                ret.Add((Configuration?.Overall ?? true, Configuration?.Specific?.GetCrystal()));
+                ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
+                ret.Add((Configuration != null || DefaultOn, Configuration?.GetCrystal()));
                 ret.Add((Factions?.Overall ?? true, Factions?.Specific?.GetCrystal()));
                 ret.Add((DeathItem, null));
                 ret.Add((Race, null));
                 ret.Add((Spells, null));
                 ret.Add((Script, null));
                 ret.Add((Items?.Overall ?? true, Items?.Specific?.GetCrystal()));
-                ret.Add((AIData?.Overall ?? true, AIData?.Specific?.GetCrystal()));
+                ret.Add((AIData != null || DefaultOn, AIData?.GetCrystal()));
                 ret.Add((AIPackages, null));
                 ret.Add((Animations, null));
                 ret.Add((Class, null));
-                ret.Add((Stats?.Overall ?? true, Stats?.Specific?.GetCrystal()));
+                ret.Add((Stats != null || DefaultOn, Stats?.GetCrystal()));
                 ret.Add((Hair, null));
                 ret.Add((HairLength, null));
                 ret.Add((Eyes, null));
@@ -1648,6 +1644,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((FaceGenTextureSymmetric, null));
                 ret.Add((FNAM, null));
             }
+
         }
         #endregion
 

@@ -355,7 +355,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             public bool ComparisonValue;
-            public MaskItem<bool, ConditionData.TranslationMask?> Data;
+            public ConditionData.TranslationMask? Data;
             #endregion
 
             #region Ctors
@@ -363,7 +363,6 @@ namespace Mutagen.Bethesda.Skyrim
                 : base(defaultOn)
             {
                 this.ComparisonValue = defaultOn;
-                this.Data = new MaskItem<bool, ConditionData.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -372,8 +371,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.GetCrystal(ret);
                 ret.Add((ComparisonValue, null));
-                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
+                ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
             }
+
         }
         #endregion
 

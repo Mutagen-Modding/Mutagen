@@ -659,13 +659,13 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Base;
             public bool XPCIFluff;
             public bool FULLFluff;
-            public MaskItem<bool, DistantLODData.TranslationMask?> DistantLODData;
-            public MaskItem<bool, EnableParent.TranslationMask?> EnableParent;
+            public DistantLODData.TranslationMask? DistantLODData;
+            public EnableParent.TranslationMask? EnableParent;
             public bool MerchantContainer;
             public bool Horse;
             public bool RagdollData;
             public bool Scale;
-            public MaskItem<bool, Location.TranslationMask?> Location;
+            public Location.TranslationMask? Location;
             #endregion
 
             #region Ctors
@@ -675,13 +675,10 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Base = defaultOn;
                 this.XPCIFluff = defaultOn;
                 this.FULLFluff = defaultOn;
-                this.DistantLODData = new MaskItem<bool, DistantLODData.TranslationMask?>(defaultOn, null);
-                this.EnableParent = new MaskItem<bool, EnableParent.TranslationMask?>(defaultOn, null);
                 this.MerchantContainer = defaultOn;
                 this.Horse = defaultOn;
                 this.RagdollData = defaultOn;
                 this.Scale = defaultOn;
-                this.Location = new MaskItem<bool, Location.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -692,14 +689,15 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Base, null));
                 ret.Add((XPCIFluff, null));
                 ret.Add((FULLFluff, null));
-                ret.Add((DistantLODData?.Overall ?? true, DistantLODData?.Specific?.GetCrystal()));
-                ret.Add((EnableParent?.Overall ?? true, EnableParent?.Specific?.GetCrystal()));
+                ret.Add((DistantLODData != null || DefaultOn, DistantLODData?.GetCrystal()));
+                ret.Add((EnableParent != null || DefaultOn, EnableParent?.GetCrystal()));
                 ret.Add((MerchantContainer, null));
                 ret.Add((Horse, null));
                 ret.Add((RagdollData, null));
                 ret.Add((Scale, null));
-                ret.Add((Location?.Overall ?? true, Location?.Specific?.GetCrystal()));
+                ret.Add((Location != null || DefaultOn, Location?.GetCrystal()));
             }
+
         }
         #endregion
 

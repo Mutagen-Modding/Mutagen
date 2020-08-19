@@ -396,6 +396,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool UseMult;
             public bool OffsetMult;
             public bool ImproveMult;
@@ -405,6 +406,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.UseMult = defaultOn;
                 this.OffsetMult = defaultOn;
                 this.ImproveMult = defaultOn;
@@ -429,6 +431,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((ImproveMult, null));
                 ret.Add((ImproveOffset, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

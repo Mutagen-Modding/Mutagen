@@ -613,6 +613,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Versioning;
             public bool Flags;
             public bool BaseCost;
@@ -623,12 +624,13 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Light;
             public bool ProjectileSpeed;
             public bool EffectShader;
-            public MaskItem<bool, MagicEffectSubData.TranslationMask?> SubData;
+            public MagicEffectSubData.TranslationMask? SubData;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Versioning = defaultOn;
                 this.Flags = defaultOn;
                 this.BaseCost = defaultOn;
@@ -639,7 +641,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Light = defaultOn;
                 this.ProjectileSpeed = defaultOn;
                 this.EffectShader = defaultOn;
-                this.SubData = new MaskItem<bool, MagicEffectSubData.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -665,8 +666,14 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Light, null));
                 ret.Add((ProjectileSpeed, null));
                 ret.Add((EffectShader, null));
-                ret.Add((SubData?.Overall ?? true, SubData?.Specific?.GetCrystal()));
+                ret.Add((SubData != null || DefaultOn, SubData?.GetCrystal()));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

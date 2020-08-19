@@ -1218,15 +1218,15 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, VirtualMachineAdapter.TranslationMask?> VirtualMachineAdapter;
+            public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
             public bool EncounterZone;
-            public MaskItem<bool, Ownership.TranslationMask?> Ownership;
+            public Ownership.TranslationMask? Ownership;
             public bool HeadTrackingWeight;
             public bool FavorCost;
             public MaskItem<bool, WaterReflection.TranslationMask?> Reflections;
             public MaskItem<bool, LinkedReferences.TranslationMask?> LinkedReferences;
-            public MaskItem<bool, ActivateParents.TranslationMask?> ActivateParents;
-            public MaskItem<bool, EnableParent.TranslationMask?> EnableParent;
+            public ActivateParents.TranslationMask? ActivateParents;
+            public EnableParent.TranslationMask? EnableParent;
             public bool Emittance;
             public bool MultiBoundReference;
             public bool IgnoredBySandbox;
@@ -1234,22 +1234,18 @@ namespace Mutagen.Bethesda.Skyrim
             public bool LocationReference;
             public bool DistantLodData;
             public bool Scale;
-            public MaskItem<bool, Placement.TranslationMask?> Placement;
+            public Placement.TranslationMask? Placement;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.VirtualMachineAdapter = new MaskItem<bool, VirtualMachineAdapter.TranslationMask?>(defaultOn, null);
                 this.EncounterZone = defaultOn;
-                this.Ownership = new MaskItem<bool, Ownership.TranslationMask?>(defaultOn, null);
                 this.HeadTrackingWeight = defaultOn;
                 this.FavorCost = defaultOn;
                 this.Reflections = new MaskItem<bool, WaterReflection.TranslationMask?>(defaultOn, null);
                 this.LinkedReferences = new MaskItem<bool, LinkedReferences.TranslationMask?>(defaultOn, null);
-                this.ActivateParents = new MaskItem<bool, ActivateParents.TranslationMask?>(defaultOn, null);
-                this.EnableParent = new MaskItem<bool, EnableParent.TranslationMask?>(defaultOn, null);
                 this.Emittance = defaultOn;
                 this.MultiBoundReference = defaultOn;
                 this.IgnoredBySandbox = defaultOn;
@@ -1257,7 +1253,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.LocationReference = defaultOn;
                 this.DistantLodData = defaultOn;
                 this.Scale = defaultOn;
-                this.Placement = new MaskItem<bool, Placement.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -1265,15 +1260,15 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((VirtualMachineAdapter?.Overall ?? true, VirtualMachineAdapter?.Specific?.GetCrystal()));
+                ret.Add((VirtualMachineAdapter != null || DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((EncounterZone, null));
-                ret.Add((Ownership?.Overall ?? true, Ownership?.Specific?.GetCrystal()));
+                ret.Add((Ownership != null || DefaultOn, Ownership?.GetCrystal()));
                 ret.Add((HeadTrackingWeight, null));
                 ret.Add((FavorCost, null));
                 ret.Add((Reflections?.Overall ?? true, Reflections?.Specific?.GetCrystal()));
                 ret.Add((LinkedReferences?.Overall ?? true, LinkedReferences?.Specific?.GetCrystal()));
-                ret.Add((ActivateParents?.Overall ?? true, ActivateParents?.Specific?.GetCrystal()));
-                ret.Add((EnableParent?.Overall ?? true, EnableParent?.Specific?.GetCrystal()));
+                ret.Add((ActivateParents != null || DefaultOn, ActivateParents?.GetCrystal()));
+                ret.Add((EnableParent != null || DefaultOn, EnableParent?.GetCrystal()));
                 ret.Add((Emittance, null));
                 ret.Add((MultiBoundReference, null));
                 ret.Add((IgnoredBySandbox, null));
@@ -1281,8 +1276,9 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((LocationReference, null));
                 ret.Add((DistantLodData, null));
                 ret.Add((Scale, null));
-                ret.Add((Placement?.Overall ?? true, Placement?.Specific?.GetCrystal()));
+                ret.Add((Placement != null || DefaultOn, Placement?.GetCrystal()));
             }
+
         }
         #endregion
 

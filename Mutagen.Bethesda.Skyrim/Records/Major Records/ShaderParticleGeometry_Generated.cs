@@ -768,6 +768,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((ParticleTexture, null));
                 ret.Add((DATADataTypeState, null));
             }
+
         }
         #endregion
 

@@ -700,12 +700,12 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Script;
             public bool Enchantment;
             public bool EnchantmentPoints;
-            public MaskItem<bool, ClothingFlags.TranslationMask?> ClothingFlags;
-            public MaskItem<bool, Model.TranslationMask?> MaleBipedModel;
-            public MaskItem<bool, Model.TranslationMask?> MaleWorldModel;
+            public ClothingFlags.TranslationMask? ClothingFlags;
+            public Model.TranslationMask? MaleBipedModel;
+            public Model.TranslationMask? MaleWorldModel;
             public bool MaleIcon;
-            public MaskItem<bool, Model.TranslationMask?> FemaleBipedModel;
-            public MaskItem<bool, Model.TranslationMask?> FemaleWorldModel;
+            public Model.TranslationMask? FemaleBipedModel;
+            public Model.TranslationMask? FemaleWorldModel;
             public bool FemaleIcon;
             #endregion
 
@@ -717,12 +717,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Script = defaultOn;
                 this.Enchantment = defaultOn;
                 this.EnchantmentPoints = defaultOn;
-                this.ClothingFlags = new MaskItem<bool, ClothingFlags.TranslationMask?>(defaultOn, null);
-                this.MaleBipedModel = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
-                this.MaleWorldModel = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
                 this.MaleIcon = defaultOn;
-                this.FemaleBipedModel = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
-                this.FemaleWorldModel = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
                 this.FemaleIcon = defaultOn;
             }
 
@@ -735,14 +730,15 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Script, null));
                 ret.Add((Enchantment, null));
                 ret.Add((EnchantmentPoints, null));
-                ret.Add((ClothingFlags?.Overall ?? true, ClothingFlags?.Specific?.GetCrystal()));
-                ret.Add((MaleBipedModel?.Overall ?? true, MaleBipedModel?.Specific?.GetCrystal()));
-                ret.Add((MaleWorldModel?.Overall ?? true, MaleWorldModel?.Specific?.GetCrystal()));
+                ret.Add((ClothingFlags != null || DefaultOn, ClothingFlags?.GetCrystal()));
+                ret.Add((MaleBipedModel != null || DefaultOn, MaleBipedModel?.GetCrystal()));
+                ret.Add((MaleWorldModel != null || DefaultOn, MaleWorldModel?.GetCrystal()));
                 ret.Add((MaleIcon, null));
-                ret.Add((FemaleBipedModel?.Overall ?? true, FemaleBipedModel?.Specific?.GetCrystal()));
-                ret.Add((FemaleWorldModel?.Overall ?? true, FemaleWorldModel?.Specific?.GetCrystal()));
+                ret.Add((FemaleBipedModel != null || DefaultOn, FemaleBipedModel?.GetCrystal()));
+                ret.Add((FemaleWorldModel != null || DefaultOn, FemaleWorldModel?.GetCrystal()));
                 ret.Add((FemaleIcon, null));
             }
+
         }
         #endregion
 

@@ -2803,14 +2803,14 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, VirtualMachineAdapter.TranslationMask?> VirtualMachineAdapter;
+            public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
             public bool Base;
             public bool BoundHalfExtents;
-            public MaskItem<bool, PlacedPrimitive.TranslationMask?> Primitive;
+            public PlacedPrimitive.TranslationMask? Primitive;
             public bool XORD;
-            public MaskItem<bool, Bounding.TranslationMask?> OcclusionPlane;
+            public Bounding.TranslationMask? OcclusionPlane;
             public MaskItem<bool, Portal.TranslationMask?> Portals;
-            public MaskItem<bool, Bounding.TranslationMask?> RoomPortal;
+            public Bounding.TranslationMask? RoomPortal;
             public bool Unknown;
             public bool LightingTemplate;
             public bool ImageSpace;
@@ -2822,59 +2822,55 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, WaterReflection.TranslationMask?> Reflections;
             public bool LitWater;
             public bool Emittance;
-            public MaskItem<bool, LightData.TranslationMask?> LightData;
-            public MaskItem<bool, Alpha.TranslationMask?> Alpha;
-            public MaskItem<bool, TeleportDestination.TranslationMask?> TeleportDestination;
+            public LightData.TranslationMask? LightData;
+            public Alpha.TranslationMask? Alpha;
+            public TeleportDestination.TranslationMask? TeleportDestination;
             public bool TeleportMessageBox;
             public bool MultiboundReference;
             public bool XWCN;
             public bool XWCS;
-            public MaskItem<bool, WaterVelocity.TranslationMask?> WaterVelocity;
+            public WaterVelocity.TranslationMask? WaterVelocity;
             public bool XCVL;
             public bool XCZR;
             public bool XCZA;
             public bool XCZC;
             public bool Scale;
             public bool SpawnContainer;
-            public MaskItem<bool, ActivateParents.TranslationMask?> ActivateParents;
+            public ActivateParents.TranslationMask? ActivateParents;
             public bool LeveledItemBaseObject;
             public bool LevelModifier;
             public bool PersistentLocation;
             public bool CollisionLayer;
-            public MaskItem<bool, LockData.TranslationMask?> Lock;
+            public LockData.TranslationMask? Lock;
             public bool EncounterZone;
-            public MaskItem<bool, NavigationDoorLink.TranslationMask?> NavigationDoorLink;
+            public NavigationDoorLink.TranslationMask? NavigationDoorLink;
             public bool LocationRefTypes;
             public bool IgnoredBySandbox;
-            public MaskItem<bool, Ownership.TranslationMask?> Ownership;
+            public Ownership.TranslationMask? Ownership;
             public bool ItemCount;
             public bool Charge;
             public bool LocationReference;
-            public MaskItem<bool, EnableParent.TranslationMask?> EnableParent;
+            public EnableParent.TranslationMask? EnableParent;
             public MaskItem<bool, LinkedReferences.TranslationMask?> LinkedReferences;
-            public MaskItem<bool, Patrol.TranslationMask?> Patrol;
+            public Patrol.TranslationMask? Patrol;
             public bool Action;
             public bool HeadTrackingWeight;
             public bool FavorCost;
             public bool OpenByDefault;
-            public MaskItem<bool, MapMarker.TranslationMask?> MapMarker;
+            public MapMarker.TranslationMask? MapMarker;
             public bool AttachRef;
             public bool DistantLodData;
-            public MaskItem<bool, Placement.TranslationMask?> Placement;
+            public Placement.TranslationMask? Placement;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.VirtualMachineAdapter = new MaskItem<bool, VirtualMachineAdapter.TranslationMask?>(defaultOn, null);
                 this.Base = defaultOn;
                 this.BoundHalfExtents = defaultOn;
-                this.Primitive = new MaskItem<bool, PlacedPrimitive.TranslationMask?>(defaultOn, null);
                 this.XORD = defaultOn;
-                this.OcclusionPlane = new MaskItem<bool, Bounding.TranslationMask?>(defaultOn, null);
                 this.Portals = new MaskItem<bool, Portal.TranslationMask?>(defaultOn, null);
-                this.RoomPortal = new MaskItem<bool, Bounding.TranslationMask?>(defaultOn, null);
                 this.Unknown = defaultOn;
                 this.LightingTemplate = defaultOn;
                 this.ImageSpace = defaultOn;
@@ -2886,45 +2882,33 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Reflections = new MaskItem<bool, WaterReflection.TranslationMask?>(defaultOn, null);
                 this.LitWater = defaultOn;
                 this.Emittance = defaultOn;
-                this.LightData = new MaskItem<bool, LightData.TranslationMask?>(defaultOn, null);
-                this.Alpha = new MaskItem<bool, Alpha.TranslationMask?>(defaultOn, null);
-                this.TeleportDestination = new MaskItem<bool, TeleportDestination.TranslationMask?>(defaultOn, null);
                 this.TeleportMessageBox = defaultOn;
                 this.MultiboundReference = defaultOn;
                 this.XWCN = defaultOn;
                 this.XWCS = defaultOn;
-                this.WaterVelocity = new MaskItem<bool, WaterVelocity.TranslationMask?>(defaultOn, null);
                 this.XCVL = defaultOn;
                 this.XCZR = defaultOn;
                 this.XCZA = defaultOn;
                 this.XCZC = defaultOn;
                 this.Scale = defaultOn;
                 this.SpawnContainer = defaultOn;
-                this.ActivateParents = new MaskItem<bool, ActivateParents.TranslationMask?>(defaultOn, null);
                 this.LeveledItemBaseObject = defaultOn;
                 this.LevelModifier = defaultOn;
                 this.PersistentLocation = defaultOn;
                 this.CollisionLayer = defaultOn;
-                this.Lock = new MaskItem<bool, LockData.TranslationMask?>(defaultOn, null);
                 this.EncounterZone = defaultOn;
-                this.NavigationDoorLink = new MaskItem<bool, NavigationDoorLink.TranslationMask?>(defaultOn, null);
                 this.LocationRefTypes = defaultOn;
                 this.IgnoredBySandbox = defaultOn;
-                this.Ownership = new MaskItem<bool, Ownership.TranslationMask?>(defaultOn, null);
                 this.ItemCount = defaultOn;
                 this.Charge = defaultOn;
                 this.LocationReference = defaultOn;
-                this.EnableParent = new MaskItem<bool, EnableParent.TranslationMask?>(defaultOn, null);
                 this.LinkedReferences = new MaskItem<bool, LinkedReferences.TranslationMask?>(defaultOn, null);
-                this.Patrol = new MaskItem<bool, Patrol.TranslationMask?>(defaultOn, null);
                 this.Action = defaultOn;
                 this.HeadTrackingWeight = defaultOn;
                 this.FavorCost = defaultOn;
                 this.OpenByDefault = defaultOn;
-                this.MapMarker = new MaskItem<bool, MapMarker.TranslationMask?>(defaultOn, null);
                 this.AttachRef = defaultOn;
                 this.DistantLodData = defaultOn;
-                this.Placement = new MaskItem<bool, Placement.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -2932,14 +2916,14 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((VirtualMachineAdapter?.Overall ?? true, VirtualMachineAdapter?.Specific?.GetCrystal()));
+                ret.Add((VirtualMachineAdapter != null || DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((Base, null));
                 ret.Add((BoundHalfExtents, null));
-                ret.Add((Primitive?.Overall ?? true, Primitive?.Specific?.GetCrystal()));
+                ret.Add((Primitive != null || DefaultOn, Primitive?.GetCrystal()));
                 ret.Add((XORD, null));
-                ret.Add((OcclusionPlane?.Overall ?? true, OcclusionPlane?.Specific?.GetCrystal()));
+                ret.Add((OcclusionPlane != null || DefaultOn, OcclusionPlane?.GetCrystal()));
                 ret.Add((Portals?.Overall ?? true, Portals?.Specific?.GetCrystal()));
-                ret.Add((RoomPortal?.Overall ?? true, RoomPortal?.Specific?.GetCrystal()));
+                ret.Add((RoomPortal != null || DefaultOn, RoomPortal?.GetCrystal()));
                 ret.Add((Unknown, null));
                 ret.Add((LightingTemplate, null));
                 ret.Add((ImageSpace, null));
@@ -2951,46 +2935,47 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Reflections?.Overall ?? true, Reflections?.Specific?.GetCrystal()));
                 ret.Add((LitWater, null));
                 ret.Add((Emittance, null));
-                ret.Add((LightData?.Overall ?? true, LightData?.Specific?.GetCrystal()));
-                ret.Add((Alpha?.Overall ?? true, Alpha?.Specific?.GetCrystal()));
-                ret.Add((TeleportDestination?.Overall ?? true, TeleportDestination?.Specific?.GetCrystal()));
+                ret.Add((LightData != null || DefaultOn, LightData?.GetCrystal()));
+                ret.Add((Alpha != null || DefaultOn, Alpha?.GetCrystal()));
+                ret.Add((TeleportDestination != null || DefaultOn, TeleportDestination?.GetCrystal()));
                 ret.Add((TeleportMessageBox, null));
                 ret.Add((MultiboundReference, null));
                 ret.Add((XWCN, null));
                 ret.Add((XWCS, null));
-                ret.Add((WaterVelocity?.Overall ?? true, WaterVelocity?.Specific?.GetCrystal()));
+                ret.Add((WaterVelocity != null || DefaultOn, WaterVelocity?.GetCrystal()));
                 ret.Add((XCVL, null));
                 ret.Add((XCZR, null));
                 ret.Add((XCZA, null));
                 ret.Add((XCZC, null));
                 ret.Add((Scale, null));
                 ret.Add((SpawnContainer, null));
-                ret.Add((ActivateParents?.Overall ?? true, ActivateParents?.Specific?.GetCrystal()));
+                ret.Add((ActivateParents != null || DefaultOn, ActivateParents?.GetCrystal()));
                 ret.Add((LeveledItemBaseObject, null));
                 ret.Add((LevelModifier, null));
                 ret.Add((PersistentLocation, null));
                 ret.Add((CollisionLayer, null));
-                ret.Add((Lock?.Overall ?? true, Lock?.Specific?.GetCrystal()));
+                ret.Add((Lock != null || DefaultOn, Lock?.GetCrystal()));
                 ret.Add((EncounterZone, null));
-                ret.Add((NavigationDoorLink?.Overall ?? true, NavigationDoorLink?.Specific?.GetCrystal()));
+                ret.Add((NavigationDoorLink != null || DefaultOn, NavigationDoorLink?.GetCrystal()));
                 ret.Add((LocationRefTypes, null));
                 ret.Add((IgnoredBySandbox, null));
-                ret.Add((Ownership?.Overall ?? true, Ownership?.Specific?.GetCrystal()));
+                ret.Add((Ownership != null || DefaultOn, Ownership?.GetCrystal()));
                 ret.Add((ItemCount, null));
                 ret.Add((Charge, null));
                 ret.Add((LocationReference, null));
-                ret.Add((EnableParent?.Overall ?? true, EnableParent?.Specific?.GetCrystal()));
+                ret.Add((EnableParent != null || DefaultOn, EnableParent?.GetCrystal()));
                 ret.Add((LinkedReferences?.Overall ?? true, LinkedReferences?.Specific?.GetCrystal()));
-                ret.Add((Patrol?.Overall ?? true, Patrol?.Specific?.GetCrystal()));
+                ret.Add((Patrol != null || DefaultOn, Patrol?.GetCrystal()));
                 ret.Add((Action, null));
                 ret.Add((HeadTrackingWeight, null));
                 ret.Add((FavorCost, null));
                 ret.Add((OpenByDefault, null));
-                ret.Add((MapMarker?.Overall ?? true, MapMarker?.Specific?.GetCrystal()));
+                ret.Add((MapMarker != null || DefaultOn, MapMarker?.GetCrystal()));
                 ret.Add((AttachRef, null));
                 ret.Add((DistantLodData, null));
-                ret.Add((Placement?.Overall ?? true, Placement?.Specific?.GetCrystal()));
+                ret.Add((Placement != null || DefaultOn, Placement?.GetCrystal()));
             }
+
         }
         #endregion
 

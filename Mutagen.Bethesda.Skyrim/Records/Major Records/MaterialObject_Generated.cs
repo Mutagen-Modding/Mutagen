@@ -739,7 +739,7 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, Model.TranslationMask?> Model;
+            public Model.TranslationMask? Model;
             public bool DNAMs;
             public bool FalloffScale;
             public bool FalloffBias;
@@ -756,7 +756,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
                 this.DNAMs = defaultOn;
                 this.FalloffScale = defaultOn;
                 this.FalloffBias = defaultOn;
@@ -774,7 +773,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
                 ret.Add((DNAMs, null));
                 ret.Add((FalloffScale, null));
                 ret.Add((FalloffBias, null));
@@ -786,6 +785,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Flags, null));
                 ret.Add((DATADataTypeState, null));
             }
+
         }
         #endregion
 

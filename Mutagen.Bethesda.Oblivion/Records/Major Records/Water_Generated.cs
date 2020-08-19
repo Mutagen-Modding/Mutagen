@@ -539,8 +539,8 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Flags;
             public bool MaterialID;
             public bool Sound;
-            public MaskItem<bool, WaterData.TranslationMask?> Data;
-            public MaskItem<bool, RelatedWaters.TranslationMask?> RelatedWaters;
+            public WaterData.TranslationMask? Data;
+            public RelatedWaters.TranslationMask? RelatedWaters;
             #endregion
 
             #region Ctors
@@ -552,8 +552,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Flags = defaultOn;
                 this.MaterialID = defaultOn;
                 this.Sound = defaultOn;
-                this.Data = new MaskItem<bool, WaterData.TranslationMask?>(defaultOn, null);
-                this.RelatedWaters = new MaskItem<bool, RelatedWaters.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -566,9 +564,10 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Flags, null));
                 ret.Add((MaterialID, null));
                 ret.Add((Sound, null));
-                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
-                ret.Add((RelatedWaters?.Overall ?? true, RelatedWaters?.Specific?.GetCrystal()));
+                ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
+                ret.Add((RelatedWaters != null || DefaultOn, RelatedWaters?.GetCrystal()));
             }
+
         }
         #endregion
 

@@ -516,6 +516,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool CompareOperator;
             public bool Flags;
             public bool Fluff;
@@ -529,6 +530,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.CompareOperator = defaultOn;
                 this.Flags = defaultOn;
                 this.Fluff = defaultOn;
@@ -561,6 +563,12 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((SecondParameter, null));
                 ret.Add((ThirdParameter, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

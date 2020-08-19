@@ -351,7 +351,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             public bool Type;
-            public MaskItem<bool, APackageTarget.TranslationMask?> Target;
+            public APackageTarget.TranslationMask? Target;
             #endregion
 
             #region Ctors
@@ -359,7 +359,6 @@ namespace Mutagen.Bethesda.Skyrim
                 : base(defaultOn)
             {
                 this.Type = defaultOn;
-                this.Target = new MaskItem<bool, APackageTarget.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -368,8 +367,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.GetCrystal(ret);
                 ret.Add((Type, null));
-                ret.Add((Target?.Overall ?? true, Target?.Specific?.GetCrystal()));
+                ret.Add((Target != null || DefaultOn, Target?.GetCrystal()));
             }
+
         }
         #endregion
 

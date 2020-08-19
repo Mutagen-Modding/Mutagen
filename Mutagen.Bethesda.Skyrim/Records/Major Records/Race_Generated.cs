@@ -3541,15 +3541,15 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Description;
             public bool ActorEffect;
             public bool Skin;
-            public MaskItem<bool, BodyTemplate.TranslationMask?> BodyTemplate;
+            public BodyTemplate.TranslationMask? BodyTemplate;
             public bool Keywords;
-            public MaskItem<bool, SkillBoost.TranslationMask?> SkillBoost0;
-            public MaskItem<bool, SkillBoost.TranslationMask?> SkillBoost1;
-            public MaskItem<bool, SkillBoost.TranslationMask?> SkillBoost2;
-            public MaskItem<bool, SkillBoost.TranslationMask?> SkillBoost3;
-            public MaskItem<bool, SkillBoost.TranslationMask?> SkillBoost4;
-            public MaskItem<bool, SkillBoost.TranslationMask?> SkillBoost5;
-            public MaskItem<bool, SkillBoost.TranslationMask?> SkillBoost6;
+            public SkillBoost.TranslationMask? SkillBoost0;
+            public SkillBoost.TranslationMask? SkillBoost1;
+            public SkillBoost.TranslationMask? SkillBoost2;
+            public SkillBoost.TranslationMask? SkillBoost3;
+            public SkillBoost.TranslationMask? SkillBoost4;
+            public SkillBoost.TranslationMask? SkillBoost5;
+            public SkillBoost.TranslationMask? SkillBoost6;
             public bool Unknown;
             public MaskItem<bool, GenderedItem<bool>?> Height;
             public MaskItem<bool, GenderedItem<bool>?> Weight;
@@ -3572,7 +3572,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool FlightRadius;
             public bool AngularAccelerationRate;
             public bool AngularTolerance;
-            public MaskItem<bool, MountData.TranslationMask?> MountData;
+            public MountData.TranslationMask? MountData;
             public MaskItem<bool, GenderedItem<SimpleModel.TranslationMask?>?> SkeletalModel;
             public bool MovementTypeNames;
             public MaskItem<bool, GenderedItem<bool>?> Voices;
@@ -3598,7 +3598,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool EquipmentFlags;
             public bool EquipmentSlots;
             public bool UnarmedEquipSlot;
-            public MaskItem<bool, FaceFxPhonemes.TranslationMask?> FaceFxPhonemes;
+            public FaceFxPhonemes.TranslationMask? FaceFxPhonemes;
             public bool BaseMovementDefaultWalk;
             public bool BaseMovementDefaultRun;
             public bool BaseMovementDefaultSwim;
@@ -3619,15 +3619,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Description = defaultOn;
                 this.ActorEffect = defaultOn;
                 this.Skin = defaultOn;
-                this.BodyTemplate = new MaskItem<bool, BodyTemplate.TranslationMask?>(defaultOn, null);
                 this.Keywords = defaultOn;
-                this.SkillBoost0 = new MaskItem<bool, SkillBoost.TranslationMask?>(defaultOn, null);
-                this.SkillBoost1 = new MaskItem<bool, SkillBoost.TranslationMask?>(defaultOn, null);
-                this.SkillBoost2 = new MaskItem<bool, SkillBoost.TranslationMask?>(defaultOn, null);
-                this.SkillBoost3 = new MaskItem<bool, SkillBoost.TranslationMask?>(defaultOn, null);
-                this.SkillBoost4 = new MaskItem<bool, SkillBoost.TranslationMask?>(defaultOn, null);
-                this.SkillBoost5 = new MaskItem<bool, SkillBoost.TranslationMask?>(defaultOn, null);
-                this.SkillBoost6 = new MaskItem<bool, SkillBoost.TranslationMask?>(defaultOn, null);
                 this.Unknown = defaultOn;
                 this.Height = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
                 this.Weight = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
@@ -3650,7 +3642,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.FlightRadius = defaultOn;
                 this.AngularAccelerationRate = defaultOn;
                 this.AngularTolerance = defaultOn;
-                this.MountData = new MaskItem<bool, MountData.TranslationMask?>(defaultOn, null);
                 this.SkeletalModel = new MaskItem<bool, GenderedItem<SimpleModel.TranslationMask?>?>(defaultOn, default);
                 this.MovementTypeNames = defaultOn;
                 this.Voices = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
@@ -3676,7 +3667,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.EquipmentFlags = defaultOn;
                 this.EquipmentSlots = defaultOn;
                 this.UnarmedEquipSlot = defaultOn;
-                this.FaceFxPhonemes = new MaskItem<bool, FaceFxPhonemes.TranslationMask?>(defaultOn, null);
                 this.BaseMovementDefaultWalk = defaultOn;
                 this.BaseMovementDefaultRun = defaultOn;
                 this.BaseMovementDefaultSwim = defaultOn;
@@ -3698,15 +3688,15 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Description, null));
                 ret.Add((ActorEffect, null));
                 ret.Add((Skin, null));
-                ret.Add((BodyTemplate?.Overall ?? true, BodyTemplate?.Specific?.GetCrystal()));
+                ret.Add((BodyTemplate != null || DefaultOn, BodyTemplate?.GetCrystal()));
                 ret.Add((Keywords, null));
-                ret.Add((SkillBoost0?.Overall ?? true, SkillBoost0?.Specific?.GetCrystal()));
-                ret.Add((SkillBoost1?.Overall ?? true, SkillBoost1?.Specific?.GetCrystal()));
-                ret.Add((SkillBoost2?.Overall ?? true, SkillBoost2?.Specific?.GetCrystal()));
-                ret.Add((SkillBoost3?.Overall ?? true, SkillBoost3?.Specific?.GetCrystal()));
-                ret.Add((SkillBoost4?.Overall ?? true, SkillBoost4?.Specific?.GetCrystal()));
-                ret.Add((SkillBoost5?.Overall ?? true, SkillBoost5?.Specific?.GetCrystal()));
-                ret.Add((SkillBoost6?.Overall ?? true, SkillBoost6?.Specific?.GetCrystal()));
+                ret.Add((SkillBoost0 != null || DefaultOn, SkillBoost0?.GetCrystal()));
+                ret.Add((SkillBoost1 != null || DefaultOn, SkillBoost1?.GetCrystal()));
+                ret.Add((SkillBoost2 != null || DefaultOn, SkillBoost2?.GetCrystal()));
+                ret.Add((SkillBoost3 != null || DefaultOn, SkillBoost3?.GetCrystal()));
+                ret.Add((SkillBoost4 != null || DefaultOn, SkillBoost4?.GetCrystal()));
+                ret.Add((SkillBoost5 != null || DefaultOn, SkillBoost5?.GetCrystal()));
+                ret.Add((SkillBoost6 != null || DefaultOn, SkillBoost6?.GetCrystal()));
                 ret.Add((Unknown, null));
                 ret.Add((Height?.Overall ?? true, null));
                 ret.Add((Weight?.Overall ?? true, null));
@@ -3729,7 +3719,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((FlightRadius, null));
                 ret.Add((AngularAccelerationRate, null));
                 ret.Add((AngularTolerance, null));
-                ret.Add((MountData?.Overall ?? true, MountData?.Specific?.GetCrystal()));
+                ret.Add((MountData != null || DefaultOn, MountData?.GetCrystal()));
                 ret.Add((SkeletalModel?.Overall ?? true, null));
                 ret.Add((MovementTypeNames, null));
                 ret.Add((Voices?.Overall ?? true, null));
@@ -3755,7 +3745,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((EquipmentFlags, null));
                 ret.Add((EquipmentSlots, null));
                 ret.Add((UnarmedEquipSlot, null));
-                ret.Add((FaceFxPhonemes?.Overall ?? true, FaceFxPhonemes?.Specific?.GetCrystal()));
+                ret.Add((FaceFxPhonemes != null || DefaultOn, FaceFxPhonemes?.GetCrystal()));
                 ret.Add((BaseMovementDefaultWalk, null));
                 ret.Add((BaseMovementDefaultRun, null));
                 ret.Add((BaseMovementDefaultSwim, null));
@@ -3767,6 +3757,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((ArmorRace, null));
                 ret.Add((DATADataTypeState, null));
             }
+
         }
         #endregion
 

@@ -568,26 +568,23 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, SoundOutputData.TranslationMask?> Data;
+            public SoundOutputData.TranslationMask? Data;
             public bool FNAM;
             public bool Type;
             public bool CNAM;
             public bool SNAM;
-            public MaskItem<bool, SoundOutputChannels.TranslationMask?> OutputChannels;
-            public MaskItem<bool, SoundOutputAttenuation.TranslationMask?> Attenuation;
+            public SoundOutputChannels.TranslationMask? OutputChannels;
+            public SoundOutputAttenuation.TranslationMask? Attenuation;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.Data = new MaskItem<bool, SoundOutputData.TranslationMask?>(defaultOn, null);
                 this.FNAM = defaultOn;
                 this.Type = defaultOn;
                 this.CNAM = defaultOn;
                 this.SNAM = defaultOn;
-                this.OutputChannels = new MaskItem<bool, SoundOutputChannels.TranslationMask?>(defaultOn, null);
-                this.Attenuation = new MaskItem<bool, SoundOutputAttenuation.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -595,14 +592,15 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
+                ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
                 ret.Add((FNAM, null));
                 ret.Add((Type, null));
                 ret.Add((CNAM, null));
                 ret.Add((SNAM, null));
-                ret.Add((OutputChannels?.Overall ?? true, OutputChannels?.Specific?.GetCrystal()));
-                ret.Add((Attenuation?.Overall ?? true, Attenuation?.Specific?.GetCrystal()));
+                ret.Add((OutputChannels != null || DefaultOn, OutputChannels?.GetCrystal()));
+                ret.Add((Attenuation != null || DefaultOn, Attenuation?.GetCrystal()));
             }
+
         }
         #endregion
 

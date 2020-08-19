@@ -587,10 +587,10 @@ namespace Mutagen.Bethesda.Oblivion
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, AIPackageData.TranslationMask?> Data;
-            public MaskItem<bool, AIPackageLocation.TranslationMask?> Location;
-            public MaskItem<bool, AIPackageSchedule.TranslationMask?> Schedule;
-            public MaskItem<bool, AIPackageTarget.TranslationMask?> Target;
+            public AIPackageData.TranslationMask? Data;
+            public AIPackageLocation.TranslationMask? Location;
+            public AIPackageSchedule.TranslationMask? Schedule;
+            public AIPackageTarget.TranslationMask? Target;
             public MaskItem<bool, Condition.TranslationMask?> Conditions;
             #endregion
 
@@ -598,10 +598,6 @@ namespace Mutagen.Bethesda.Oblivion
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.Data = new MaskItem<bool, AIPackageData.TranslationMask?>(defaultOn, null);
-                this.Location = new MaskItem<bool, AIPackageLocation.TranslationMask?>(defaultOn, null);
-                this.Schedule = new MaskItem<bool, AIPackageSchedule.TranslationMask?>(defaultOn, null);
-                this.Target = new MaskItem<bool, AIPackageTarget.TranslationMask?>(defaultOn, null);
                 this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
             }
 
@@ -610,12 +606,13 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
-                ret.Add((Location?.Overall ?? true, Location?.Specific?.GetCrystal()));
-                ret.Add((Schedule?.Overall ?? true, Schedule?.Specific?.GetCrystal()));
-                ret.Add((Target?.Overall ?? true, Target?.Specific?.GetCrystal()));
+                ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
+                ret.Add((Location != null || DefaultOn, Location?.GetCrystal()));
+                ret.Add((Schedule != null || DefaultOn, Schedule?.GetCrystal()));
+                ret.Add((Target != null || DefaultOn, Target?.GetCrystal()));
                 ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
             }
+
         }
         #endregion
 

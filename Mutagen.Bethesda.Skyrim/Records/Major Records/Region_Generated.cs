@@ -741,12 +741,12 @@ namespace Mutagen.Bethesda.Skyrim
             public bool MapColor;
             public bool Worldspace;
             public MaskItem<bool, RegionArea.TranslationMask?> RegionAreas;
-            public MaskItem<bool, RegionObjects.TranslationMask?> Objects;
-            public MaskItem<bool, RegionWeather.TranslationMask?> Weather;
-            public MaskItem<bool, RegionMap.TranslationMask?> Map;
-            public MaskItem<bool, RegionLand.TranslationMask?> Land;
-            public MaskItem<bool, RegionGrasses.TranslationMask?> Grasses;
-            public MaskItem<bool, RegionSounds.TranslationMask?> Sounds;
+            public RegionObjects.TranslationMask? Objects;
+            public RegionWeather.TranslationMask? Weather;
+            public RegionMap.TranslationMask? Map;
+            public RegionLand.TranslationMask? Land;
+            public RegionGrasses.TranslationMask? Grasses;
+            public RegionSounds.TranslationMask? Sounds;
             #endregion
 
             #region Ctors
@@ -756,12 +756,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.MapColor = defaultOn;
                 this.Worldspace = defaultOn;
                 this.RegionAreas = new MaskItem<bool, RegionArea.TranslationMask?>(defaultOn, null);
-                this.Objects = new MaskItem<bool, RegionObjects.TranslationMask?>(defaultOn, null);
-                this.Weather = new MaskItem<bool, RegionWeather.TranslationMask?>(defaultOn, null);
-                this.Map = new MaskItem<bool, RegionMap.TranslationMask?>(defaultOn, null);
-                this.Land = new MaskItem<bool, RegionLand.TranslationMask?>(defaultOn, null);
-                this.Grasses = new MaskItem<bool, RegionGrasses.TranslationMask?>(defaultOn, null);
-                this.Sounds = new MaskItem<bool, RegionSounds.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -772,13 +766,14 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((MapColor, null));
                 ret.Add((Worldspace, null));
                 ret.Add((RegionAreas?.Overall ?? true, RegionAreas?.Specific?.GetCrystal()));
-                ret.Add((Objects?.Overall ?? true, Objects?.Specific?.GetCrystal()));
-                ret.Add((Weather?.Overall ?? true, Weather?.Specific?.GetCrystal()));
-                ret.Add((Map?.Overall ?? true, Map?.Specific?.GetCrystal()));
-                ret.Add((Land?.Overall ?? true, Land?.Specific?.GetCrystal()));
-                ret.Add((Grasses?.Overall ?? true, Grasses?.Specific?.GetCrystal()));
-                ret.Add((Sounds?.Overall ?? true, Sounds?.Specific?.GetCrystal()));
+                ret.Add((Objects != null || DefaultOn, Objects?.GetCrystal()));
+                ret.Add((Weather != null || DefaultOn, Weather?.GetCrystal()));
+                ret.Add((Map != null || DefaultOn, Map?.GetCrystal()));
+                ret.Add((Land != null || DefaultOn, Land?.GetCrystal()));
+                ret.Add((Grasses != null || DefaultOn, Grasses?.GetCrystal()));
+                ret.Add((Sounds != null || DefaultOn, Sounds?.GetCrystal()));
             }
+
         }
         #endregion
 

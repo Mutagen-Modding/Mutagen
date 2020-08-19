@@ -537,6 +537,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool AmbientColor;
             public bool DirectionalColor;
             public bool FogColor;
@@ -551,6 +552,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.AmbientColor = defaultOn;
                 this.DirectionalColor = defaultOn;
                 this.FogColor = defaultOn;
@@ -585,6 +587,12 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((DirectionalFade, null));
                 ret.Add((FogClipDistance, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

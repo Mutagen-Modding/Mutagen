@@ -484,6 +484,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Rank;
             public bool Priority;
             public MaskItem<bool, PerkCondition.TranslationMask?> Conditions;
@@ -493,6 +494,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Rank = defaultOn;
                 this.Priority = defaultOn;
                 this.Conditions = new MaskItem<bool, PerkCondition.TranslationMask?>(defaultOn, null);
@@ -517,6 +519,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
                 ret.Add((PRKEDataTypeState, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

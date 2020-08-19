@@ -396,6 +396,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool DayNear;
             public bool DayFar;
             public bool NightNear;
@@ -405,6 +406,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.DayNear = defaultOn;
                 this.DayFar = defaultOn;
                 this.NightNear = defaultOn;
@@ -429,6 +431,12 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((NightNear, null));
                 ret.Add((NightFar, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

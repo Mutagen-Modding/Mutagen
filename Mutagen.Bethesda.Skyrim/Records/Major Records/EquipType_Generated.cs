@@ -460,6 +460,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((SlotParents, null));
                 ret.Add((UseAllParents, null));
             }
+
         }
         #endregion
 

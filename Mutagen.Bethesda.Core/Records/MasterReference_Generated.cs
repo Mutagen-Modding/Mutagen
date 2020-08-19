@@ -339,6 +339,7 @@ namespace Mutagen.Bethesda
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Master;
             public bool FileSize;
             #endregion
@@ -346,6 +347,7 @@ namespace Mutagen.Bethesda
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Master = defaultOn;
                 this.FileSize = defaultOn;
             }
@@ -366,6 +368,12 @@ namespace Mutagen.Bethesda
                 ret.Add((Master, null));
                 ret.Add((FileSize, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

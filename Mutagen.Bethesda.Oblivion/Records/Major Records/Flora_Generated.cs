@@ -475,10 +475,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             public bool Name;
-            public MaskItem<bool, Model.TranslationMask?> Model;
+            public Model.TranslationMask? Model;
             public bool Script;
             public bool Ingredient;
-            public MaskItem<bool, SeasonalIngredientProduction.TranslationMask?> SeasonalIngredientProduction;
+            public SeasonalIngredientProduction.TranslationMask? SeasonalIngredientProduction;
             #endregion
 
             #region Ctors
@@ -486,10 +486,8 @@ namespace Mutagen.Bethesda.Oblivion
                 : base(defaultOn)
             {
                 this.Name = defaultOn;
-                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
                 this.Script = defaultOn;
                 this.Ingredient = defaultOn;
-                this.SeasonalIngredientProduction = new MaskItem<bool, SeasonalIngredientProduction.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -498,11 +496,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 base.GetCrystal(ret);
                 ret.Add((Name, null));
-                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
                 ret.Add((Script, null));
                 ret.Add((Ingredient, null));
-                ret.Add((SeasonalIngredientProduction?.Overall ?? true, SeasonalIngredientProduction?.Specific?.GetCrystal()));
+                ret.Add((SeasonalIngredientProduction != null || DefaultOn, SeasonalIngredientProduction?.GetCrystal()));
             }
+
         }
         #endregion
 

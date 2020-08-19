@@ -520,6 +520,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Index;
             public bool FileName;
             public bool MaskType;
@@ -530,6 +531,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Index = defaultOn;
                 this.FileName = defaultOn;
                 this.MaskType = defaultOn;
@@ -556,6 +558,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((PresetDefault, null));
                 ret.Add((Presets?.Overall ?? true, Presets?.Specific?.GetCrystal()));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

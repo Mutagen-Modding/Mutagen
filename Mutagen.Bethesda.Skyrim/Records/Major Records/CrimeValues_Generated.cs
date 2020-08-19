@@ -592,6 +592,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Versioning;
             public bool Arrest;
             public bool AttackOnSight;
@@ -608,6 +609,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Versioning = defaultOn;
                 this.Arrest = defaultOn;
                 this.AttackOnSight = defaultOn;
@@ -646,6 +648,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Escape, null));
                 ret.Add((Werewolf, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

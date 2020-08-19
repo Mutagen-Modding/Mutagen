@@ -6988,6 +6988,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Unknown54?.Overall ?? true, Unknown54?.Specific?.GetCrystal()));
                 ret.Add((DNAMDataTypeState, null));
             }
+
         }
         #endregion
 

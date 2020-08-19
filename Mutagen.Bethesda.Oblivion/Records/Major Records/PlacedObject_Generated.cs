@@ -1119,27 +1119,27 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Base;
             public bool XPCIFluff;
             public bool FULLFluff;
-            public MaskItem<bool, TeleportDestination.TranslationMask?> TeleportDestination;
-            public MaskItem<bool, LockInformation.TranslationMask?> Lock;
+            public TeleportDestination.TranslationMask? TeleportDestination;
+            public LockInformation.TranslationMask? Lock;
             public bool Owner;
             public bool FactionRank;
             public bool GlobalVariable;
-            public MaskItem<bool, EnableParent.TranslationMask?> EnableParent;
+            public EnableParent.TranslationMask? EnableParent;
             public bool Target;
             public bool SpeedTreeSeed;
-            public MaskItem<bool, DistantLODData.TranslationMask?> DistantLODData;
+            public DistantLODData.TranslationMask? DistantLODData;
             public bool Charge;
             public bool Health;
             public bool LevelModifier;
             public bool XRTM;
             public bool ActionFlags;
             public bool Count;
-            public MaskItem<bool, MapMarker.TranslationMask?> MapMarker;
+            public MapMarker.TranslationMask? MapMarker;
             public bool OpenByDefault;
             public bool RagdollData;
             public bool Scale;
             public bool ContainedSoul;
-            public MaskItem<bool, Location.TranslationMask?> Location;
+            public Location.TranslationMask? Location;
             #endregion
 
             #region Ctors
@@ -1149,27 +1149,21 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Base = defaultOn;
                 this.XPCIFluff = defaultOn;
                 this.FULLFluff = defaultOn;
-                this.TeleportDestination = new MaskItem<bool, TeleportDestination.TranslationMask?>(defaultOn, null);
-                this.Lock = new MaskItem<bool, LockInformation.TranslationMask?>(defaultOn, null);
                 this.Owner = defaultOn;
                 this.FactionRank = defaultOn;
                 this.GlobalVariable = defaultOn;
-                this.EnableParent = new MaskItem<bool, EnableParent.TranslationMask?>(defaultOn, null);
                 this.Target = defaultOn;
                 this.SpeedTreeSeed = defaultOn;
-                this.DistantLODData = new MaskItem<bool, DistantLODData.TranslationMask?>(defaultOn, null);
                 this.Charge = defaultOn;
                 this.Health = defaultOn;
                 this.LevelModifier = defaultOn;
                 this.XRTM = defaultOn;
                 this.ActionFlags = defaultOn;
                 this.Count = defaultOn;
-                this.MapMarker = new MaskItem<bool, MapMarker.TranslationMask?>(defaultOn, null);
                 this.OpenByDefault = defaultOn;
                 this.RagdollData = defaultOn;
                 this.Scale = defaultOn;
                 this.ContainedSoul = defaultOn;
-                this.Location = new MaskItem<bool, Location.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -1180,28 +1174,29 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Base, null));
                 ret.Add((XPCIFluff, null));
                 ret.Add((FULLFluff, null));
-                ret.Add((TeleportDestination?.Overall ?? true, TeleportDestination?.Specific?.GetCrystal()));
-                ret.Add((Lock?.Overall ?? true, Lock?.Specific?.GetCrystal()));
+                ret.Add((TeleportDestination != null || DefaultOn, TeleportDestination?.GetCrystal()));
+                ret.Add((Lock != null || DefaultOn, Lock?.GetCrystal()));
                 ret.Add((Owner, null));
                 ret.Add((FactionRank, null));
                 ret.Add((GlobalVariable, null));
-                ret.Add((EnableParent?.Overall ?? true, EnableParent?.Specific?.GetCrystal()));
+                ret.Add((EnableParent != null || DefaultOn, EnableParent?.GetCrystal()));
                 ret.Add((Target, null));
                 ret.Add((SpeedTreeSeed, null));
-                ret.Add((DistantLODData?.Overall ?? true, DistantLODData?.Specific?.GetCrystal()));
+                ret.Add((DistantLODData != null || DefaultOn, DistantLODData?.GetCrystal()));
                 ret.Add((Charge, null));
                 ret.Add((Health, null));
                 ret.Add((LevelModifier, null));
                 ret.Add((XRTM, null));
                 ret.Add((ActionFlags, null));
                 ret.Add((Count, null));
-                ret.Add((MapMarker?.Overall ?? true, MapMarker?.Specific?.GetCrystal()));
+                ret.Add((MapMarker != null || DefaultOn, MapMarker?.GetCrystal()));
                 ret.Add((OpenByDefault, null));
                 ret.Add((RagdollData, null));
                 ret.Add((Scale, null));
                 ret.Add((ContainedSoul, null));
-                ret.Add((Location?.Overall ?? true, Location?.Specific?.GetCrystal()));
+                ret.Add((Location != null || DefaultOn, Location?.GetCrystal()));
             }
+
         }
         #endregion
 

@@ -1006,7 +1006,7 @@ namespace Mutagen.Bethesda.Oblivion
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, DialogItemData.TranslationMask?> Data;
+            public DialogItemData.TranslationMask? Data;
             public bool Quest;
             public bool PreviousTopic;
             public bool Topics;
@@ -1014,14 +1014,13 @@ namespace Mutagen.Bethesda.Oblivion
             public MaskItem<bool, Condition.TranslationMask?> Conditions;
             public bool Choices;
             public bool LinkFrom;
-            public MaskItem<bool, ScriptFields.TranslationMask?> Script;
+            public ScriptFields.TranslationMask? Script;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.Data = new MaskItem<bool, DialogItemData.TranslationMask?>(defaultOn, null);
                 this.Quest = defaultOn;
                 this.PreviousTopic = defaultOn;
                 this.Topics = defaultOn;
@@ -1029,7 +1028,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
                 this.Choices = defaultOn;
                 this.LinkFrom = defaultOn;
-                this.Script = new MaskItem<bool, ScriptFields.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -1037,7 +1035,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
+                ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
                 ret.Add((Quest, null));
                 ret.Add((PreviousTopic, null));
                 ret.Add((Topics, null));
@@ -1045,8 +1043,9 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
                 ret.Add((Choices, null));
                 ret.Add((LinkFrom, null));
-                ret.Add((Script?.Overall ?? true, Script?.Specific?.GetCrystal()));
+                ret.Add((Script != null || DefaultOn, Script?.GetCrystal()));
             }
+
         }
         #endregion
 

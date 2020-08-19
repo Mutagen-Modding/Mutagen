@@ -887,6 +887,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((RunForwardAlternateFootsteps, null));
                 ret.Add((WalkForwardAlternateFootsteps2, null));
             }
+
         }
         #endregion
 

@@ -816,6 +816,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool NoseLongVsShort;
             public bool NoseUpVsDown;
             public bool JawUpVsDown;
@@ -840,6 +841,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.NoseLongVsShort = defaultOn;
                 this.NoseUpVsDown = defaultOn;
                 this.JawUpVsDown = defaultOn;
@@ -894,6 +896,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((EyesForwardVsBack, null));
                 ret.Add((Unknown, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

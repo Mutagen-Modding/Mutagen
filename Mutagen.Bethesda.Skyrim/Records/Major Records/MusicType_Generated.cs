@@ -513,7 +513,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             public bool Flags;
-            public MaskItem<bool, MusicTypeData.TranslationMask?> Data;
+            public MusicTypeData.TranslationMask? Data;
             public bool FadeDuration;
             public bool Tracks;
             #endregion
@@ -523,7 +523,6 @@ namespace Mutagen.Bethesda.Skyrim
                 : base(defaultOn)
             {
                 this.Flags = defaultOn;
-                this.Data = new MaskItem<bool, MusicTypeData.TranslationMask?>(defaultOn, null);
                 this.FadeDuration = defaultOn;
                 this.Tracks = defaultOn;
             }
@@ -534,10 +533,11 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.GetCrystal(ret);
                 ret.Add((Flags, null));
-                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
+                ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
                 ret.Add((FadeDuration, null));
                 ret.Add((Tracks, null));
             }
+
         }
         #endregion
 

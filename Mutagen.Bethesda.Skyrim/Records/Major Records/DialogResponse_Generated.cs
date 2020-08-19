@@ -698,6 +698,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Emotion;
             public bool EmotionValue;
             public bool Unknown;
@@ -717,6 +718,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Emotion = defaultOn;
                 this.EmotionValue = defaultOn;
                 this.Unknown = defaultOn;
@@ -761,6 +763,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((ListenerIdleAnimation, null));
                 ret.Add((TRDTDataTypeState, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

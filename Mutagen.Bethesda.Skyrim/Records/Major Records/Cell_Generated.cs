@@ -1745,8 +1745,8 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public bool Name;
             public bool Flags;
-            public MaskItem<bool, CellGrid.TranslationMask?> Grid;
-            public MaskItem<bool, CellLighting.TranslationMask?> Lighting;
+            public CellGrid.TranslationMask? Grid;
+            public CellLighting.TranslationMask? Lighting;
             public bool OcclusionData;
             public bool MaxHeightData;
             public bool LightingTemplate;
@@ -1757,9 +1757,9 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Location;
             public bool XWCN;
             public bool XWCS;
-            public MaskItem<bool, CellWaterVelocity.TranslationMask?> WaterVelocity;
+            public CellWaterVelocity.TranslationMask? WaterVelocity;
             public bool Water;
-            public MaskItem<bool, Ownership.TranslationMask?> Ownership;
+            public Ownership.TranslationMask? Ownership;
             public bool LockList;
             public bool WaterEnvironmentMap;
             public bool SkyAndWeatherFromRegion;
@@ -1767,7 +1767,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool EncounterZone;
             public bool Music;
             public bool ImageSpace;
-            public MaskItem<bool, Landscape.TranslationMask?> Landscape;
+            public Landscape.TranslationMask? Landscape;
             public MaskItem<bool, ANavigationMesh.TranslationMask?> NavigationMeshes;
             public bool Timestamp;
             public bool UnknownGroupData;
@@ -1785,8 +1785,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.Name = defaultOn;
                 this.Flags = defaultOn;
-                this.Grid = new MaskItem<bool, CellGrid.TranslationMask?>(defaultOn, null);
-                this.Lighting = new MaskItem<bool, CellLighting.TranslationMask?>(defaultOn, null);
                 this.OcclusionData = defaultOn;
                 this.MaxHeightData = defaultOn;
                 this.LightingTemplate = defaultOn;
@@ -1797,9 +1795,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Location = defaultOn;
                 this.XWCN = defaultOn;
                 this.XWCS = defaultOn;
-                this.WaterVelocity = new MaskItem<bool, CellWaterVelocity.TranslationMask?>(defaultOn, null);
                 this.Water = defaultOn;
-                this.Ownership = new MaskItem<bool, Ownership.TranslationMask?>(defaultOn, null);
                 this.LockList = defaultOn;
                 this.WaterEnvironmentMap = defaultOn;
                 this.SkyAndWeatherFromRegion = defaultOn;
@@ -1807,7 +1803,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.EncounterZone = defaultOn;
                 this.Music = defaultOn;
                 this.ImageSpace = defaultOn;
-                this.Landscape = new MaskItem<bool, Landscape.TranslationMask?>(defaultOn, null);
                 this.NavigationMeshes = new MaskItem<bool, ANavigationMesh.TranslationMask?>(defaultOn, null);
                 this.Timestamp = defaultOn;
                 this.UnknownGroupData = defaultOn;
@@ -1826,8 +1821,8 @@ namespace Mutagen.Bethesda.Skyrim
                 base.GetCrystal(ret);
                 ret.Add((Name, null));
                 ret.Add((Flags, null));
-                ret.Add((Grid?.Overall ?? true, Grid?.Specific?.GetCrystal()));
-                ret.Add((Lighting?.Overall ?? true, Lighting?.Specific?.GetCrystal()));
+                ret.Add((Grid != null || DefaultOn, Grid?.GetCrystal()));
+                ret.Add((Lighting != null || DefaultOn, Lighting?.GetCrystal()));
                 ret.Add((OcclusionData, null));
                 ret.Add((MaxHeightData, null));
                 ret.Add((LightingTemplate, null));
@@ -1838,9 +1833,9 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Location, null));
                 ret.Add((XWCN, null));
                 ret.Add((XWCS, null));
-                ret.Add((WaterVelocity?.Overall ?? true, WaterVelocity?.Specific?.GetCrystal()));
+                ret.Add((WaterVelocity != null || DefaultOn, WaterVelocity?.GetCrystal()));
                 ret.Add((Water, null));
-                ret.Add((Ownership?.Overall ?? true, Ownership?.Specific?.GetCrystal()));
+                ret.Add((Ownership != null || DefaultOn, Ownership?.GetCrystal()));
                 ret.Add((LockList, null));
                 ret.Add((WaterEnvironmentMap, null));
                 ret.Add((SkyAndWeatherFromRegion, null));
@@ -1848,7 +1843,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((EncounterZone, null));
                 ret.Add((Music, null));
                 ret.Add((ImageSpace, null));
-                ret.Add((Landscape?.Overall ?? true, Landscape?.Specific?.GetCrystal()));
+                ret.Add((Landscape != null || DefaultOn, Landscape?.GetCrystal()));
                 ret.Add((NavigationMeshes?.Overall ?? true, NavigationMeshes?.Specific?.GetCrystal()));
                 ret.Add((Timestamp, null));
                 ret.Add((UnknownGroupData, null));
@@ -1859,6 +1854,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((TemporaryUnknownGroupData, null));
                 ret.Add((Temporary, null));
             }
+
         }
         #endregion
 

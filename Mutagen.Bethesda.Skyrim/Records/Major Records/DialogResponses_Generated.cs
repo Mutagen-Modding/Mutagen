@@ -1119,9 +1119,9 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, DialogResponsesAdapter.TranslationMask?> VirtualMachineAdapter;
+            public DialogResponsesAdapter.TranslationMask? VirtualMachineAdapter;
             public bool DATA;
-            public MaskItem<bool, DialogResponseFlags.TranslationMask?> Flags;
+            public DialogResponseFlags.TranslationMask? Flags;
             public bool Topic;
             public bool PreviousDialog;
             public bool FavorLevel;
@@ -1140,9 +1140,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.VirtualMachineAdapter = new MaskItem<bool, DialogResponsesAdapter.TranslationMask?>(defaultOn, null);
                 this.DATA = defaultOn;
-                this.Flags = new MaskItem<bool, DialogResponseFlags.TranslationMask?>(defaultOn, null);
                 this.Topic = defaultOn;
                 this.PreviousDialog = defaultOn;
                 this.FavorLevel = defaultOn;
@@ -1162,9 +1160,9 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((VirtualMachineAdapter?.Overall ?? true, VirtualMachineAdapter?.Specific?.GetCrystal()));
+                ret.Add((VirtualMachineAdapter != null || DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((DATA, null));
-                ret.Add((Flags?.Overall ?? true, Flags?.Specific?.GetCrystal()));
+                ret.Add((Flags != null || DefaultOn, Flags?.GetCrystal()));
                 ret.Add((Topic, null));
                 ret.Add((PreviousDialog, null));
                 ret.Add((FavorLevel, null));
@@ -1178,6 +1176,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((WalkAwayTopic, null));
                 ret.Add((AudioOutputOverride, null));
             }
+
         }
         #endregion
 

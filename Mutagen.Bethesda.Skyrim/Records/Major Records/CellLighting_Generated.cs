@@ -957,6 +957,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Versioning;
             public bool AmbientColor;
             public bool DirectionalColor;
@@ -986,6 +987,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Versioning = defaultOn;
                 this.AmbientColor = defaultOn;
                 this.DirectionalColor = defaultOn;
@@ -1050,6 +1052,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((LightFadeEnd, null));
                 ret.Add((Inherits, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

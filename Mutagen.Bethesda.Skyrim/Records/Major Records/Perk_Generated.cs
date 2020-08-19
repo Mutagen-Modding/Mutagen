@@ -872,10 +872,10 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, PerkAdapter.TranslationMask?> VirtualMachineAdapter;
+            public PerkAdapter.TranslationMask? VirtualMachineAdapter;
             public bool Name;
             public bool Description;
-            public MaskItem<bool, Icons.TranslationMask?> Icons;
+            public Icons.TranslationMask? Icons;
             public MaskItem<bool, Condition.TranslationMask?> Conditions;
             public bool Trait;
             public bool Level;
@@ -891,10 +891,8 @@ namespace Mutagen.Bethesda.Skyrim
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.VirtualMachineAdapter = new MaskItem<bool, PerkAdapter.TranslationMask?>(defaultOn, null);
                 this.Name = defaultOn;
                 this.Description = defaultOn;
-                this.Icons = new MaskItem<bool, Icons.TranslationMask?>(defaultOn, null);
                 this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
                 this.Trait = defaultOn;
                 this.Level = defaultOn;
@@ -911,10 +909,10 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((VirtualMachineAdapter?.Overall ?? true, VirtualMachineAdapter?.Specific?.GetCrystal()));
+                ret.Add((VirtualMachineAdapter != null || DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((Name, null));
                 ret.Add((Description, null));
-                ret.Add((Icons?.Overall ?? true, Icons?.Specific?.GetCrystal()));
+                ret.Add((Icons != null || DefaultOn, Icons?.GetCrystal()));
                 ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
                 ret.Add((Trait, null));
                 ret.Add((Level, null));
@@ -925,6 +923,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Effects?.Overall ?? true, Effects?.Specific?.GetCrystal()));
                 ret.Add((DATADataTypeState, null));
             }
+
         }
         #endregion
 

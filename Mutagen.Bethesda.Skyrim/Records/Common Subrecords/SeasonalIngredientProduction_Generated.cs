@@ -396,6 +396,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Spring;
             public bool Summer;
             public bool Fall;
@@ -405,6 +406,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Spring = defaultOn;
                 this.Summer = defaultOn;
                 this.Fall = defaultOn;
@@ -429,6 +431,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Fall, null));
                 ret.Add((Winter, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

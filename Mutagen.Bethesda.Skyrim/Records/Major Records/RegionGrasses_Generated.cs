@@ -421,6 +421,7 @@ namespace Mutagen.Bethesda.Skyrim
                 base.GetCrystal(ret);
                 ret.Add((Grasses?.Overall ?? true, Grasses?.Specific?.GetCrystal()));
             }
+
         }
         #endregion
 

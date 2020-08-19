@@ -745,7 +745,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, WeatherType.TranslationMask?> WeatherTypes;
             public bool SunTexture;
             public bool SunGlareTexture;
-            public MaskItem<bool, Model.TranslationMask?> Model;
+            public Model.TranslationMask? Model;
             public bool SunriseBeginRaw;
             public bool SunriseEndRaw;
             public bool SunsetBeginRaw;
@@ -763,7 +763,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.WeatherTypes = new MaskItem<bool, WeatherType.TranslationMask?>(defaultOn, null);
                 this.SunTexture = defaultOn;
                 this.SunGlareTexture = defaultOn;
-                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
                 this.SunriseBeginRaw = defaultOn;
                 this.SunriseEndRaw = defaultOn;
                 this.SunsetBeginRaw = defaultOn;
@@ -782,7 +781,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((WeatherTypes?.Overall ?? true, WeatherTypes?.Specific?.GetCrystal()));
                 ret.Add((SunTexture, null));
                 ret.Add((SunGlareTexture, null));
-                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
                 ret.Add((SunriseBeginRaw, null));
                 ret.Add((SunriseEndRaw, null));
                 ret.Add((SunsetBeginRaw, null));
@@ -792,6 +791,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((PhaseLength, null));
                 ret.Add((TNAMDataTypeState, null));
             }
+
         }
         #endregion
 
