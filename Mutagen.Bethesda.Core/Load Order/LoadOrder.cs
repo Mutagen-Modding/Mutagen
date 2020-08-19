@@ -174,6 +174,7 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// Parses a file to retrieve all ModKeys in expected plugin file format,
         /// Will order mods by timestamps if applicable
+        /// Will add implicit base mods if applicable
         /// </summary>
         /// <param name="game">Game type</param>
         /// <param name="path">Path of plugin list</param>
@@ -188,6 +189,7 @@ namespace Mutagen.Bethesda
             bool throwOnMissingMods = true)
         {
             var mods = FromPath(path);
+            AddImplicitMods(game, dataPath, mods);
             if (NeedsTimestampAlignment(game.ToCategory()))
             {
                 return AlignToTimestamps(mods, dataPath, throwOnMissingMods: throwOnMissingMods);
@@ -195,6 +197,29 @@ namespace Mutagen.Bethesda
             else
             {
                 return mods;
+            }
+        }
+
+        private readonly static ModKey[] _sseImplicitMods = new ModKey[]
+        {
+            "Skyrim.esm",
+            "Update.esm",
+            "Dawnguard.esm",
+            "HearthFires.esm",
+            "Dragonborn.esm",
+        };
+
+        internal static void AddImplicitMods(
+            GameRelease release,
+            DirectoryPath dataPath, 
+            IList<ModKey> loadOrder)
+        {
+            if (release != GameRelease.SkyrimSE) return;
+            foreach (var implicitMod in _sseImplicitMods.Reverse())
+            {
+                if (loadOrder.Contains(implicitMod)) continue;
+                if (!File.Exists(Path.Combine(dataPath.Path, implicitMod.FileName))) continue;
+                loadOrder.Insert(0, implicitMod);
             }
         }
 
