@@ -380,6 +380,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Quest;
             public bool FNAM;
             public bool HoursUntilReset;
@@ -388,6 +389,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Quest = defaultOn;
                 this.FNAM = defaultOn;
                 this.HoursUntilReset = defaultOn;
@@ -410,6 +412,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((FNAM, null));
                 ret.Add((HoursUntilReset, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

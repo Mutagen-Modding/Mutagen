@@ -927,10 +927,10 @@ namespace Mutagen.Bethesda.Skyrim
             public bool EquipmentScoreMultStaff;
             public bool AvoidThreatChance;
             public bool CSMD;
-            public MaskItem<bool, CombatStyleMelee.TranslationMask?> Melee;
-            public MaskItem<bool, CombatStyleCloseRange.TranslationMask?> CloseRange;
+            public CombatStyleMelee.TranslationMask? Melee;
+            public CombatStyleCloseRange.TranslationMask? CloseRange;
             public bool LongRangeStrafeMult;
-            public MaskItem<bool, CombatStyleFlight.TranslationMask?> Flight;
+            public CombatStyleFlight.TranslationMask? Flight;
             public bool Flags;
             public bool CSGDDataTypeState;
             #endregion
@@ -950,10 +950,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.EquipmentScoreMultStaff = defaultOn;
                 this.AvoidThreatChance = defaultOn;
                 this.CSMD = defaultOn;
-                this.Melee = new MaskItem<bool, CombatStyleMelee.TranslationMask?>(defaultOn, null);
-                this.CloseRange = new MaskItem<bool, CombatStyleCloseRange.TranslationMask?>(defaultOn, null);
                 this.LongRangeStrafeMult = defaultOn;
-                this.Flight = new MaskItem<bool, CombatStyleFlight.TranslationMask?>(defaultOn, null);
                 this.Flags = defaultOn;
                 this.CSGDDataTypeState = defaultOn;
             }
@@ -974,13 +971,14 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((EquipmentScoreMultStaff, null));
                 ret.Add((AvoidThreatChance, null));
                 ret.Add((CSMD, null));
-                ret.Add((Melee?.Overall ?? true, Melee?.Specific?.GetCrystal()));
-                ret.Add((CloseRange?.Overall ?? true, CloseRange?.Specific?.GetCrystal()));
+                ret.Add((Melee != null || DefaultOn, Melee?.GetCrystal()));
+                ret.Add((CloseRange != null || DefaultOn, CloseRange?.GetCrystal()));
                 ret.Add((LongRangeStrafeMult, null));
-                ret.Add((Flight?.Overall ?? true, Flight?.Specific?.GetCrystal()));
+                ret.Add((Flight != null || DefaultOn, Flight?.GetCrystal()));
                 ret.Add((Flags, null));
                 ret.Add((CSGDDataTypeState, null));
             }
+
         }
         #endregion
 

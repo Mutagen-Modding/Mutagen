@@ -882,14 +882,14 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Climate;
             public bool Water;
             public bool Icon;
-            public MaskItem<bool, MapData.TranslationMask?> MapData;
+            public MapData.TranslationMask? MapData;
             public bool Flags;
             public bool ObjectBoundsMin;
             public bool ObjectBoundsMax;
             public bool Music;
             public bool OffsetData;
-            public MaskItem<bool, Road.TranslationMask?> Road;
-            public MaskItem<bool, Cell.TranslationMask?> TopCell;
+            public Road.TranslationMask? Road;
+            public Cell.TranslationMask? TopCell;
             public bool SubCellsTimestamp;
             public MaskItem<bool, WorldspaceBlock.TranslationMask?> SubCells;
             #endregion
@@ -903,14 +903,11 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Climate = defaultOn;
                 this.Water = defaultOn;
                 this.Icon = defaultOn;
-                this.MapData = new MaskItem<bool, MapData.TranslationMask?>(defaultOn, null);
                 this.Flags = defaultOn;
                 this.ObjectBoundsMin = defaultOn;
                 this.ObjectBoundsMax = defaultOn;
                 this.Music = defaultOn;
                 this.OffsetData = defaultOn;
-                this.Road = new MaskItem<bool, Road.TranslationMask?>(defaultOn, null);
-                this.TopCell = new MaskItem<bool, Cell.TranslationMask?>(defaultOn, null);
                 this.SubCellsTimestamp = defaultOn;
                 this.SubCells = new MaskItem<bool, WorldspaceBlock.TranslationMask?>(defaultOn, null);
             }
@@ -925,17 +922,18 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Climate, null));
                 ret.Add((Water, null));
                 ret.Add((Icon, null));
-                ret.Add((MapData?.Overall ?? true, MapData?.Specific?.GetCrystal()));
+                ret.Add((MapData != null || DefaultOn, MapData?.GetCrystal()));
                 ret.Add((Flags, null));
                 ret.Add((ObjectBoundsMin, null));
                 ret.Add((ObjectBoundsMax, null));
                 ret.Add((Music, null));
                 ret.Add((OffsetData, null));
-                ret.Add((Road?.Overall ?? true, Road?.Specific?.GetCrystal()));
-                ret.Add((TopCell?.Overall ?? true, TopCell?.Specific?.GetCrystal()));
+                ret.Add((Road != null || DefaultOn, Road?.GetCrystal()));
+                ret.Add((TopCell != null || DefaultOn, TopCell?.GetCrystal()));
                 ret.Add((SubCellsTimestamp, null));
                 ret.Add((SubCells?.Overall ?? true, SubCells?.Specific?.GetCrystal()));
             }
+
         }
         #endregion
 

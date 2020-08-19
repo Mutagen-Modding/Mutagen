@@ -712,6 +712,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((PhaseFunctionScattering, null));
                 ret.Add((SamplingRepartitionRangeFactor, null));
             }
+
         }
         #endregion
 

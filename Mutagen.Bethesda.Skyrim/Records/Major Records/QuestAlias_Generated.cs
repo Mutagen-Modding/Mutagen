@@ -1599,6 +1599,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool ID;
             public bool Type;
             public bool Name;
@@ -1607,11 +1608,11 @@ namespace Mutagen.Bethesda.Skyrim
             public bool SpecificLocation;
             public bool ForcedReference;
             public bool UniqueActor;
-            public MaskItem<bool, LocationAliasReference.TranslationMask?> Location;
-            public MaskItem<bool, ExternalAliasReference.TranslationMask?> External;
-            public MaskItem<bool, CreateReferenceToObject.TranslationMask?> CreateReferenceToObject;
-            public MaskItem<bool, FindMatchingRefNearAlias.TranslationMask?> FindMatchingRefNearAlias;
-            public MaskItem<bool, FindMatchingRefFromEvent.TranslationMask?> FindMatchingRefFromEvent;
+            public LocationAliasReference.TranslationMask? Location;
+            public ExternalAliasReference.TranslationMask? External;
+            public CreateReferenceToObject.TranslationMask? CreateReferenceToObject;
+            public FindMatchingRefNearAlias.TranslationMask? FindMatchingRefNearAlias;
+            public FindMatchingRefFromEvent.TranslationMask? FindMatchingRefFromEvent;
             public MaskItem<bool, Condition.TranslationMask?> Conditions;
             public bool Keywords;
             public MaskItem<bool, ContainerEntry.TranslationMask?> Items;
@@ -1629,6 +1630,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.ID = defaultOn;
                 this.Type = defaultOn;
                 this.Name = defaultOn;
@@ -1637,11 +1639,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.SpecificLocation = defaultOn;
                 this.ForcedReference = defaultOn;
                 this.UniqueActor = defaultOn;
-                this.Location = new MaskItem<bool, LocationAliasReference.TranslationMask?>(defaultOn, null);
-                this.External = new MaskItem<bool, ExternalAliasReference.TranslationMask?>(defaultOn, null);
-                this.CreateReferenceToObject = new MaskItem<bool, CreateReferenceToObject.TranslationMask?>(defaultOn, null);
-                this.FindMatchingRefNearAlias = new MaskItem<bool, FindMatchingRefNearAlias.TranslationMask?>(defaultOn, null);
-                this.FindMatchingRefFromEvent = new MaskItem<bool, FindMatchingRefFromEvent.TranslationMask?>(defaultOn, null);
                 this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
                 this.Keywords = defaultOn;
                 this.Items = new MaskItem<bool, ContainerEntry.TranslationMask?>(defaultOn, null);
@@ -1677,11 +1674,11 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((SpecificLocation, null));
                 ret.Add((ForcedReference, null));
                 ret.Add((UniqueActor, null));
-                ret.Add((Location?.Overall ?? true, Location?.Specific?.GetCrystal()));
-                ret.Add((External?.Overall ?? true, External?.Specific?.GetCrystal()));
-                ret.Add((CreateReferenceToObject?.Overall ?? true, CreateReferenceToObject?.Specific?.GetCrystal()));
-                ret.Add((FindMatchingRefNearAlias?.Overall ?? true, FindMatchingRefNearAlias?.Specific?.GetCrystal()));
-                ret.Add((FindMatchingRefFromEvent?.Overall ?? true, FindMatchingRefFromEvent?.Specific?.GetCrystal()));
+                ret.Add((Location != null || DefaultOn, Location?.GetCrystal()));
+                ret.Add((External != null || DefaultOn, External?.GetCrystal()));
+                ret.Add((CreateReferenceToObject != null || DefaultOn, CreateReferenceToObject?.GetCrystal()));
+                ret.Add((FindMatchingRefNearAlias != null || DefaultOn, FindMatchingRefNearAlias?.GetCrystal()));
+                ret.Add((FindMatchingRefFromEvent != null || DefaultOn, FindMatchingRefFromEvent?.GetCrystal()));
                 ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
                 ret.Add((Keywords, null));
                 ret.Add((Items?.Overall ?? true, Items?.Specific?.GetCrystal()));
@@ -1695,6 +1692,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((PackageData, null));
                 ret.Add((VoiceTypes, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

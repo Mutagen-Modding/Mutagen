@@ -327,14 +327,13 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, LocationTargetRadius.TranslationMask?> Location;
+            public LocationTargetRadius.TranslationMask? Location;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.Location = new MaskItem<bool, LocationTargetRadius.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -342,8 +341,9 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Location?.Overall ?? true, Location?.Specific?.GetCrystal()));
+                ret.Add((Location != null || DefaultOn, Location?.GetCrystal()));
             }
+
         }
         #endregion
 

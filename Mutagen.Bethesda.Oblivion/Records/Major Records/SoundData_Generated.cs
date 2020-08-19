@@ -390,6 +390,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool MinimumAttenuationDistance;
             public bool MaximumAttenuationDistance;
             public bool FrequencyAdjustment;
@@ -399,6 +400,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.MinimumAttenuationDistance = defaultOn;
                 this.MaximumAttenuationDistance = defaultOn;
                 this.FrequencyAdjustment = defaultOn;
@@ -423,6 +425,12 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((FrequencyAdjustment, null));
                 ret.Add((Flags, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

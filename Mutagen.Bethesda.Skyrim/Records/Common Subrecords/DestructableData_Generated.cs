@@ -396,6 +396,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Health;
             public bool DESTCount;
             public bool VATSTargetable;
@@ -405,6 +406,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Health = defaultOn;
                 this.DESTCount = defaultOn;
                 this.VATSTargetable = defaultOn;
@@ -429,6 +431,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((VATSTargetable, null));
                 ret.Add((Unknown, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

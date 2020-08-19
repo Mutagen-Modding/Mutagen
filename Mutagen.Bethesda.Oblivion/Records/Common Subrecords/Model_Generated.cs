@@ -376,6 +376,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool File;
             public bool BoundRadius;
             public bool Hashes;
@@ -384,6 +385,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.File = defaultOn;
                 this.BoundRadius = defaultOn;
                 this.Hashes = defaultOn;
@@ -406,6 +408,12 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((BoundRadius, null));
                 ret.Add((Hashes, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

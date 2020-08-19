@@ -512,10 +512,10 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, ObjectBounds.TranslationMask?> ObjectBounds;
+            public ObjectBounds.TranslationMask? ObjectBounds;
             public bool Name;
-            public MaskItem<bool, Model.TranslationMask?> Model;
-            public MaskItem<bool, Destructible.TranslationMask?> Destructible;
+            public Model.TranslationMask? Model;
+            public Destructible.TranslationMask? Destructible;
             public bool Flags;
             public bool LoopingSound;
             #endregion
@@ -524,10 +524,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.ObjectBounds = new MaskItem<bool, ObjectBounds.TranslationMask?>(defaultOn, null);
                 this.Name = defaultOn;
-                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
-                this.Destructible = new MaskItem<bool, Destructible.TranslationMask?>(defaultOn, null);
                 this.Flags = defaultOn;
                 this.LoopingSound = defaultOn;
             }
@@ -537,13 +534,14 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((ObjectBounds?.Overall ?? true, ObjectBounds?.Specific?.GetCrystal()));
+                ret.Add((ObjectBounds != null || DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((Name, null));
-                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
-                ret.Add((Destructible?.Overall ?? true, Destructible?.Specific?.GetCrystal()));
+                ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
+                ret.Add((Destructible != null || DefaultOn, Destructible?.GetCrystal()));
                 ret.Add((Flags, null));
                 ret.Add((LoopingSound, null));
             }
+
         }
         #endregion
 

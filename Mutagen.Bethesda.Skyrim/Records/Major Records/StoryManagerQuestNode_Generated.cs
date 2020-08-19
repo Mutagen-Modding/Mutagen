@@ -535,6 +535,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((MaxNumQuestsToRun, null));
                 ret.Add((Quests?.Overall ?? true, Quests?.Specific?.GetCrystal()));
             }
+
         }
         #endregion
 

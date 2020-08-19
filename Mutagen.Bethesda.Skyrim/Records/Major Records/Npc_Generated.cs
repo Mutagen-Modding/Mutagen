@@ -2503,16 +2503,16 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, VirtualMachineAdapter.TranslationMask?> VirtualMachineAdapter;
-            public MaskItem<bool, ObjectBounds.TranslationMask?> ObjectBounds;
-            public MaskItem<bool, NpcConfiguration.TranslationMask?> Configuration;
+            public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
+            public ObjectBounds.TranslationMask? ObjectBounds;
+            public NpcConfiguration.TranslationMask? Configuration;
             public MaskItem<bool, RankPlacement.TranslationMask?> Factions;
             public bool DeathItem;
             public bool Voice;
             public bool Template;
             public bool Race;
             public bool ActorEffect;
-            public MaskItem<bool, Destructible.TranslationMask?> Destructible;
+            public Destructible.TranslationMask? Destructible;
             public bool WornArmor;
             public bool FarAwayModel;
             public bool AttackRace;
@@ -2523,13 +2523,13 @@ namespace Mutagen.Bethesda.Skyrim
             public bool CombatOverridePackageList;
             public MaskItem<bool, PerkPlacement.TranslationMask?> Perks;
             public MaskItem<bool, ContainerEntry.TranslationMask?> Items;
-            public MaskItem<bool, AIData.TranslationMask?> AIData;
+            public AIData.TranslationMask? AIData;
             public bool Packages;
             public bool Keywords;
             public bool Class;
             public bool Name;
             public bool ShortName;
-            public MaskItem<bool, PlayerSkills.TranslationMask?> PlayerSkills;
+            public PlayerSkills.TranslationMask? PlayerSkills;
             public bool HeadParts;
             public bool HairColor;
             public bool CombatStyle;
@@ -2538,15 +2538,15 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Height;
             public bool Weight;
             public bool SoundLevel;
-            public MaskItem<bool, ANpcSoundDefinition.TranslationMask?> Sound;
+            public ANpcSoundDefinition.TranslationMask? Sound;
             public bool DefaultOutfit;
             public bool SleepingOutfit;
             public bool DefaultPackageList;
             public bool CrimeFaction;
             public bool HeadTexture;
             public bool TextureLighting;
-            public MaskItem<bool, NpcFaceMorph.TranslationMask?> FaceMorph;
-            public MaskItem<bool, NpcFaceParts.TranslationMask?> FaceParts;
+            public NpcFaceMorph.TranslationMask? FaceMorph;
+            public NpcFaceParts.TranslationMask? FaceParts;
             public MaskItem<bool, TintLayer.TranslationMask?> TintLayers;
             #endregion
 
@@ -2554,16 +2554,12 @@ namespace Mutagen.Bethesda.Skyrim
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.VirtualMachineAdapter = new MaskItem<bool, VirtualMachineAdapter.TranslationMask?>(defaultOn, null);
-                this.ObjectBounds = new MaskItem<bool, ObjectBounds.TranslationMask?>(defaultOn, null);
-                this.Configuration = new MaskItem<bool, NpcConfiguration.TranslationMask?>(defaultOn, null);
                 this.Factions = new MaskItem<bool, RankPlacement.TranslationMask?>(defaultOn, null);
                 this.DeathItem = defaultOn;
                 this.Voice = defaultOn;
                 this.Template = defaultOn;
                 this.Race = defaultOn;
                 this.ActorEffect = defaultOn;
-                this.Destructible = new MaskItem<bool, Destructible.TranslationMask?>(defaultOn, null);
                 this.WornArmor = defaultOn;
                 this.FarAwayModel = defaultOn;
                 this.AttackRace = defaultOn;
@@ -2574,13 +2570,11 @@ namespace Mutagen.Bethesda.Skyrim
                 this.CombatOverridePackageList = defaultOn;
                 this.Perks = new MaskItem<bool, PerkPlacement.TranslationMask?>(defaultOn, null);
                 this.Items = new MaskItem<bool, ContainerEntry.TranslationMask?>(defaultOn, null);
-                this.AIData = new MaskItem<bool, AIData.TranslationMask?>(defaultOn, null);
                 this.Packages = defaultOn;
                 this.Keywords = defaultOn;
                 this.Class = defaultOn;
                 this.Name = defaultOn;
                 this.ShortName = defaultOn;
-                this.PlayerSkills = new MaskItem<bool, PlayerSkills.TranslationMask?>(defaultOn, null);
                 this.HeadParts = defaultOn;
                 this.HairColor = defaultOn;
                 this.CombatStyle = defaultOn;
@@ -2589,15 +2583,12 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Height = defaultOn;
                 this.Weight = defaultOn;
                 this.SoundLevel = defaultOn;
-                this.Sound = new MaskItem<bool, ANpcSoundDefinition.TranslationMask?>(defaultOn, null);
                 this.DefaultOutfit = defaultOn;
                 this.SleepingOutfit = defaultOn;
                 this.DefaultPackageList = defaultOn;
                 this.CrimeFaction = defaultOn;
                 this.HeadTexture = defaultOn;
                 this.TextureLighting = defaultOn;
-                this.FaceMorph = new MaskItem<bool, NpcFaceMorph.TranslationMask?>(defaultOn, null);
-                this.FaceParts = new MaskItem<bool, NpcFaceParts.TranslationMask?>(defaultOn, null);
                 this.TintLayers = new MaskItem<bool, TintLayer.TranslationMask?>(defaultOn, null);
             }
 
@@ -2606,16 +2597,16 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((VirtualMachineAdapter?.Overall ?? true, VirtualMachineAdapter?.Specific?.GetCrystal()));
-                ret.Add((ObjectBounds?.Overall ?? true, ObjectBounds?.Specific?.GetCrystal()));
-                ret.Add((Configuration?.Overall ?? true, Configuration?.Specific?.GetCrystal()));
+                ret.Add((VirtualMachineAdapter != null || DefaultOn, VirtualMachineAdapter?.GetCrystal()));
+                ret.Add((ObjectBounds != null || DefaultOn, ObjectBounds?.GetCrystal()));
+                ret.Add((Configuration != null || DefaultOn, Configuration?.GetCrystal()));
                 ret.Add((Factions?.Overall ?? true, Factions?.Specific?.GetCrystal()));
                 ret.Add((DeathItem, null));
                 ret.Add((Voice, null));
                 ret.Add((Template, null));
                 ret.Add((Race, null));
                 ret.Add((ActorEffect, null));
-                ret.Add((Destructible?.Overall ?? true, Destructible?.Specific?.GetCrystal()));
+                ret.Add((Destructible != null || DefaultOn, Destructible?.GetCrystal()));
                 ret.Add((WornArmor, null));
                 ret.Add((FarAwayModel, null));
                 ret.Add((AttackRace, null));
@@ -2626,13 +2617,13 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((CombatOverridePackageList, null));
                 ret.Add((Perks?.Overall ?? true, Perks?.Specific?.GetCrystal()));
                 ret.Add((Items?.Overall ?? true, Items?.Specific?.GetCrystal()));
-                ret.Add((AIData?.Overall ?? true, AIData?.Specific?.GetCrystal()));
+                ret.Add((AIData != null || DefaultOn, AIData?.GetCrystal()));
                 ret.Add((Packages, null));
                 ret.Add((Keywords, null));
                 ret.Add((Class, null));
                 ret.Add((Name, null));
                 ret.Add((ShortName, null));
-                ret.Add((PlayerSkills?.Overall ?? true, PlayerSkills?.Specific?.GetCrystal()));
+                ret.Add((PlayerSkills != null || DefaultOn, PlayerSkills?.GetCrystal()));
                 ret.Add((HeadParts, null));
                 ret.Add((HairColor, null));
                 ret.Add((CombatStyle, null));
@@ -2641,17 +2632,18 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Height, null));
                 ret.Add((Weight, null));
                 ret.Add((SoundLevel, null));
-                ret.Add((Sound?.Overall ?? true, Sound?.Specific?.GetCrystal()));
+                ret.Add((Sound != null || DefaultOn, Sound?.GetCrystal()));
                 ret.Add((DefaultOutfit, null));
                 ret.Add((SleepingOutfit, null));
                 ret.Add((DefaultPackageList, null));
                 ret.Add((CrimeFaction, null));
                 ret.Add((HeadTexture, null));
                 ret.Add((TextureLighting, null));
-                ret.Add((FaceMorph?.Overall ?? true, FaceMorph?.Specific?.GetCrystal()));
-                ret.Add((FaceParts?.Overall ?? true, FaceParts?.Specific?.GetCrystal()));
+                ret.Add((FaceMorph != null || DefaultOn, FaceMorph?.GetCrystal()));
+                ret.Add((FaceParts != null || DefaultOn, FaceParts?.GetCrystal()));
                 ret.Add((TintLayers?.Overall ?? true, TintLayers?.Specific?.GetCrystal()));
             }
+
         }
         #endregion
 

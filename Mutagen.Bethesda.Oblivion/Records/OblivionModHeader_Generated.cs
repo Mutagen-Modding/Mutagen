@@ -655,10 +655,11 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Flags;
             public bool FormID;
             public bool Version;
-            public MaskItem<bool, ModStats.TranslationMask?> Stats;
+            public ModStats.TranslationMask? Stats;
             public bool TypeOffsets;
             public bool Deleted;
             public bool Author;
@@ -669,10 +670,10 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Flags = defaultOn;
                 this.FormID = defaultOn;
                 this.Version = defaultOn;
-                this.Stats = new MaskItem<bool, ModStats.TranslationMask?>(defaultOn, null);
                 this.TypeOffsets = defaultOn;
                 this.Deleted = defaultOn;
                 this.Author = defaultOn;
@@ -696,13 +697,19 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Flags, null));
                 ret.Add((FormID, null));
                 ret.Add((Version, null));
-                ret.Add((Stats?.Overall ?? true, Stats?.Specific?.GetCrystal()));
+                ret.Add((Stats != null || DefaultOn, Stats?.GetCrystal()));
                 ret.Add((TypeOffsets, null));
                 ret.Add((Deleted, null));
                 ret.Add((Author, null));
                 ret.Add((Description, null));
                 ret.Add((MasterReferences?.Overall ?? true, MasterReferences?.Specific?.GetCrystal()));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

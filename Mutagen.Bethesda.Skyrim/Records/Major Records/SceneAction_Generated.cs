@@ -895,6 +895,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Type;
             public bool Name;
             public bool ActorID;
@@ -911,12 +912,13 @@ namespace Mutagen.Bethesda.Skyrim
             public bool LoopingMin;
             public bool Emotion;
             public bool EmotionValue;
-            public MaskItem<bool, ScenePhaseUnusedData.TranslationMask?> Unused;
+            public ScenePhaseUnusedData.TranslationMask? Unused;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Type = defaultOn;
                 this.Name = defaultOn;
                 this.ActorID = defaultOn;
@@ -933,7 +935,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.LoopingMin = defaultOn;
                 this.Emotion = defaultOn;
                 this.EmotionValue = defaultOn;
-                this.Unused = new MaskItem<bool, ScenePhaseUnusedData.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -965,8 +966,14 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((LoopingMin, null));
                 ret.Add((Emotion, null));
                 ret.Add((EmotionValue, null));
-                ret.Add((Unused?.Overall ?? true, Unused?.Specific?.GetCrystal()));
+                ret.Add((Unused != null || DefaultOn, Unused?.GetCrystal()));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

@@ -778,7 +778,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Script;
             public bool Name;
             public bool Icon;
-            public MaskItem<bool, QuestData.TranslationMask?> Data;
+            public QuestData.TranslationMask? Data;
             public MaskItem<bool, Condition.TranslationMask?> Conditions;
             public MaskItem<bool, QuestStage.TranslationMask?> Stages;
             public MaskItem<bool, QuestTarget.TranslationMask?> Targets;
@@ -791,7 +791,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Script = defaultOn;
                 this.Name = defaultOn;
                 this.Icon = defaultOn;
-                this.Data = new MaskItem<bool, QuestData.TranslationMask?>(defaultOn, null);
                 this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
                 this.Stages = new MaskItem<bool, QuestStage.TranslationMask?>(defaultOn, null);
                 this.Targets = new MaskItem<bool, QuestTarget.TranslationMask?>(defaultOn, null);
@@ -805,11 +804,12 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Script, null));
                 ret.Add((Name, null));
                 ret.Add((Icon, null));
-                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
+                ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
                 ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
                 ret.Add((Stages?.Overall ?? true, Stages?.Specific?.GetCrystal()));
                 ret.Add((Targets?.Overall ?? true, Targets?.Specific?.GetCrystal()));
             }
+
         }
         #endregion
 

@@ -1016,13 +1016,13 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, SceneAdapter.TranslationMask?> VirtualMachineAdapter;
+            public SceneAdapter.TranslationMask? VirtualMachineAdapter;
             public bool Flags;
             public MaskItem<bool, ScenePhase.TranslationMask?> Phases;
             public MaskItem<bool, SceneActor.TranslationMask?> Actors;
             public MaskItem<bool, SceneAction.TranslationMask?> Actions;
-            public MaskItem<bool, ScenePhaseUnusedData.TranslationMask?> Unused;
-            public MaskItem<bool, ScenePhaseUnusedData.TranslationMask?> Unused2;
+            public ScenePhaseUnusedData.TranslationMask? Unused;
+            public ScenePhaseUnusedData.TranslationMask? Unused2;
             public bool Quest;
             public bool LastActionIndex;
             public bool VNAM;
@@ -1033,13 +1033,10 @@ namespace Mutagen.Bethesda.Skyrim
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.VirtualMachineAdapter = new MaskItem<bool, SceneAdapter.TranslationMask?>(defaultOn, null);
                 this.Flags = defaultOn;
                 this.Phases = new MaskItem<bool, ScenePhase.TranslationMask?>(defaultOn, null);
                 this.Actors = new MaskItem<bool, SceneActor.TranslationMask?>(defaultOn, null);
                 this.Actions = new MaskItem<bool, SceneAction.TranslationMask?>(defaultOn, null);
-                this.Unused = new MaskItem<bool, ScenePhaseUnusedData.TranslationMask?>(defaultOn, null);
-                this.Unused2 = new MaskItem<bool, ScenePhaseUnusedData.TranslationMask?>(defaultOn, null);
                 this.Quest = defaultOn;
                 this.LastActionIndex = defaultOn;
                 this.VNAM = defaultOn;
@@ -1051,18 +1048,19 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((VirtualMachineAdapter?.Overall ?? true, VirtualMachineAdapter?.Specific?.GetCrystal()));
+                ret.Add((VirtualMachineAdapter != null || DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((Flags, null));
                 ret.Add((Phases?.Overall ?? true, Phases?.Specific?.GetCrystal()));
                 ret.Add((Actors?.Overall ?? true, Actors?.Specific?.GetCrystal()));
                 ret.Add((Actions?.Overall ?? true, Actions?.Specific?.GetCrystal()));
-                ret.Add((Unused?.Overall ?? true, Unused?.Specific?.GetCrystal()));
-                ret.Add((Unused2?.Overall ?? true, Unused2?.Specific?.GetCrystal()));
+                ret.Add((Unused != null || DefaultOn, Unused?.GetCrystal()));
+                ret.Add((Unused2 != null || DefaultOn, Unused2?.GetCrystal()));
                 ret.Add((Quest, null));
                 ret.Add((LastActionIndex, null));
                 ret.Add((VNAM, null));
                 ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
             }
+
         }
         #endregion
 

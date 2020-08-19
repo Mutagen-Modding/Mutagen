@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Alphaleonis.Win32.Filesystem;
+using Noggog.Utility;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -42,6 +44,30 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.Equal(Utility.ModKey3, results[1]);
             Assert.Equal(Utility.ModKey4, results[2]);
             Assert.Equal(Utility.ModKey2, results[3]);
+        }
+
+        [Fact]
+        public void AddImplicitMods()
+        {
+            using var tmpFolder = new TempFolder(Path.Combine(Utility.TempFolderPath, "AddImplicitMods"));
+            File.WriteAllText(Path.Combine(tmpFolder.Dir.Path, Utility.Skyrim.FileName), "TEST");
+            File.WriteAllText(Path.Combine(tmpFolder.Dir.Path, Utility.Dawnguard.FileName), "TEST");
+            File.WriteAllText(Path.Combine(tmpFolder.Dir.Path, Utility.Dragonborn.FileName), "TEST");
+            File.WriteAllText(Path.Combine(tmpFolder.Dir.Path, Utility.Update.FileName), "TEST");
+            List<ModKey> loadOrder = new List<ModKey>()
+            {
+                Utility.ModKey,
+                Utility.Dawnguard,
+                Utility.ModKey2
+            };
+            LoadOrder.AddImplicitMods(GameRelease.SkyrimSE, tmpFolder.Dir, loadOrder);
+            Assert.Equal(6, loadOrder.Count);
+            Assert.Equal(Utility.Skyrim, loadOrder[0]);
+            Assert.Equal(Utility.Update, loadOrder[1]);
+            Assert.Equal(Utility.Dragonborn, loadOrder[2]);
+            Assert.Equal(Utility.ModKey, loadOrder[3]);
+            Assert.Equal(Utility.Dawnguard, loadOrder[4]);
+            Assert.Equal(Utility.ModKey2, loadOrder[5]);
         }
     }
 }

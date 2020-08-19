@@ -2565,6 +2565,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((HorseMarkerRef, null));
                 ret.Add((Color, null));
             }
+
         }
         #endregion
 

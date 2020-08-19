@@ -399,17 +399,16 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public MaskItem<bool, SoundOutputChannel.TranslationMask?> Channel0;
-            public MaskItem<bool, SoundOutputChannel.TranslationMask?> Channel1;
-            public MaskItem<bool, SoundOutputChannel.TranslationMask?> Channel2;
+            public readonly bool DefaultOn;
+            public SoundOutputChannel.TranslationMask? Channel0;
+            public SoundOutputChannel.TranslationMask? Channel1;
+            public SoundOutputChannel.TranslationMask? Channel2;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.Channel0 = new MaskItem<bool, SoundOutputChannel.TranslationMask?>(defaultOn, null);
-                this.Channel1 = new MaskItem<bool, SoundOutputChannel.TranslationMask?>(defaultOn, null);
-                this.Channel2 = new MaskItem<bool, SoundOutputChannel.TranslationMask?>(defaultOn, null);
+                this.DefaultOn = defaultOn;
             }
 
             #endregion
@@ -425,10 +424,16 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Channel0?.Overall ?? true, Channel0?.Specific?.GetCrystal()));
-                ret.Add((Channel1?.Overall ?? true, Channel1?.Specific?.GetCrystal()));
-                ret.Add((Channel2?.Overall ?? true, Channel2?.Specific?.GetCrystal()));
+                ret.Add((Channel0 != null || DefaultOn, Channel0?.GetCrystal()));
+                ret.Add((Channel1 != null || DefaultOn, Channel1?.GetCrystal()));
+                ret.Add((Channel2 != null || DefaultOn, Channel2?.GetCrystal()));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

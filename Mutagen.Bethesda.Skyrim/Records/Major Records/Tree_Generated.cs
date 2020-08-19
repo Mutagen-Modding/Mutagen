@@ -734,12 +734,12 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, VirtualMachineAdapter.TranslationMask?> VirtualMachineAdapter;
-            public MaskItem<bool, ObjectBounds.TranslationMask?> ObjectBounds;
-            public MaskItem<bool, Model.TranslationMask?> Model;
+            public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
+            public ObjectBounds.TranslationMask? ObjectBounds;
+            public Model.TranslationMask? Model;
             public bool Ingredient;
             public bool HarvestSound;
-            public MaskItem<bool, SeasonalIngredientProduction.TranslationMask?> Production;
+            public SeasonalIngredientProduction.TranslationMask? Production;
             public bool Name;
             public bool TrunkFlexibility;
             public bool BranchFlexibility;
@@ -753,12 +753,8 @@ namespace Mutagen.Bethesda.Skyrim
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.VirtualMachineAdapter = new MaskItem<bool, VirtualMachineAdapter.TranslationMask?>(defaultOn, null);
-                this.ObjectBounds = new MaskItem<bool, ObjectBounds.TranslationMask?>(defaultOn, null);
-                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
                 this.Ingredient = defaultOn;
                 this.HarvestSound = defaultOn;
-                this.Production = new MaskItem<bool, SeasonalIngredientProduction.TranslationMask?>(defaultOn, null);
                 this.Name = defaultOn;
                 this.TrunkFlexibility = defaultOn;
                 this.BranchFlexibility = defaultOn;
@@ -773,12 +769,12 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((VirtualMachineAdapter?.Overall ?? true, VirtualMachineAdapter?.Specific?.GetCrystal()));
-                ret.Add((ObjectBounds?.Overall ?? true, ObjectBounds?.Specific?.GetCrystal()));
-                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((VirtualMachineAdapter != null || DefaultOn, VirtualMachineAdapter?.GetCrystal()));
+                ret.Add((ObjectBounds != null || DefaultOn, ObjectBounds?.GetCrystal()));
+                ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
                 ret.Add((Ingredient, null));
                 ret.Add((HarvestSound, null));
-                ret.Add((Production?.Overall ?? true, Production?.Specific?.GetCrystal()));
+                ret.Add((Production != null || DefaultOn, Production?.GetCrystal()));
                 ret.Add((Name, null));
                 ret.Add((TrunkFlexibility, null));
                 ret.Add((BranchFlexibility, null));
@@ -787,6 +783,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((LeafFrequency, null));
                 ret.Add((CNAMDataTypeState, null));
             }
+
         }
         #endregion
 

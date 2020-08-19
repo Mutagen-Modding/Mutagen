@@ -634,6 +634,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Fragments?.Overall ?? true, Fragments?.Specific?.GetCrystal()));
                 ret.Add((Aliases?.Overall ?? true, Aliases?.Specific?.GetCrystal()));
             }
+
         }
         #endregion
 

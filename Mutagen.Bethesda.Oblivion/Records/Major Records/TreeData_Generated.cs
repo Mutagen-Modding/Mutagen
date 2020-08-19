@@ -508,6 +508,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool LeafCurvature;
             public bool MinimumLeafAngle;
             public bool MaximumLeafAngle;
@@ -521,6 +522,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.LeafCurvature = defaultOn;
                 this.MinimumLeafAngle = defaultOn;
                 this.MaximumLeafAngle = defaultOn;
@@ -553,6 +555,12 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((RockingSpeed, null));
                 ret.Add((RustleSpeed, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

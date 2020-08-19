@@ -570,22 +570,19 @@ namespace Mutagen.Bethesda.Oblivion
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, Model.TranslationMask?> Model;
+            public Model.TranslationMask? Model;
             public bool Icon;
             public bool SpeedTreeSeeds;
-            public MaskItem<bool, TreeData.TranslationMask?> Data;
-            public MaskItem<bool, Dimensions.TranslationMask?> BillboardDimensions;
+            public TreeData.TranslationMask? Data;
+            public Dimensions.TranslationMask? BillboardDimensions;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
                 this.Icon = defaultOn;
                 this.SpeedTreeSeeds = defaultOn;
-                this.Data = new MaskItem<bool, TreeData.TranslationMask?>(defaultOn, null);
-                this.BillboardDimensions = new MaskItem<bool, Dimensions.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -593,12 +590,13 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
                 ret.Add((Icon, null));
                 ret.Add((SpeedTreeSeeds, null));
-                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
-                ret.Add((BillboardDimensions?.Overall ?? true, BillboardDimensions?.Specific?.GetCrystal()));
+                ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
+                ret.Add((BillboardDimensions != null || DefaultOn, BillboardDimensions?.GetCrystal()));
             }
+
         }
         #endregion
 

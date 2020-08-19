@@ -760,6 +760,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool SkillValues;
             public bool SkillOffsets;
             public bool Health;
@@ -774,6 +775,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.SkillValues = defaultOn;
                 this.SkillOffsets = defaultOn;
                 this.Health = defaultOn;
@@ -808,6 +810,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((GearedUpWeapons, null));
                 ret.Add((Unused2, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

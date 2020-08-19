@@ -764,11 +764,11 @@ namespace Mutagen.Bethesda.Oblivion
             #region Members
             public bool TextureLowerLayer;
             public bool TextureUpperLayer;
-            public MaskItem<bool, Model.TranslationMask?> Model;
+            public Model.TranslationMask? Model;
             public MaskItem<bool, WeatherColors.TranslationMask?> Colors;
-            public MaskItem<bool, FogDistance.TranslationMask?> FogDistance;
-            public MaskItem<bool, HDRData.TranslationMask?> HDRData;
-            public MaskItem<bool, WeatherData.TranslationMask?> Data;
+            public FogDistance.TranslationMask? FogDistance;
+            public HDRData.TranslationMask? HDRData;
+            public WeatherData.TranslationMask? Data;
             public MaskItem<bool, WeatherSound.TranslationMask?> Sounds;
             #endregion
 
@@ -778,11 +778,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.TextureLowerLayer = defaultOn;
                 this.TextureUpperLayer = defaultOn;
-                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
                 this.Colors = new MaskItem<bool, WeatherColors.TranslationMask?>(defaultOn, null);
-                this.FogDistance = new MaskItem<bool, FogDistance.TranslationMask?>(defaultOn, null);
-                this.HDRData = new MaskItem<bool, HDRData.TranslationMask?>(defaultOn, null);
-                this.Data = new MaskItem<bool, WeatherData.TranslationMask?>(defaultOn, null);
                 this.Sounds = new MaskItem<bool, WeatherSound.TranslationMask?>(defaultOn, null);
             }
 
@@ -793,13 +789,14 @@ namespace Mutagen.Bethesda.Oblivion
                 base.GetCrystal(ret);
                 ret.Add((TextureLowerLayer, null));
                 ret.Add((TextureUpperLayer, null));
-                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
                 ret.Add((Colors?.Overall ?? true, Colors?.Specific?.GetCrystal()));
-                ret.Add((FogDistance?.Overall ?? true, FogDistance?.Specific?.GetCrystal()));
-                ret.Add((HDRData?.Overall ?? true, HDRData?.Specific?.GetCrystal()));
-                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
+                ret.Add((FogDistance != null || DefaultOn, FogDistance?.GetCrystal()));
+                ret.Add((HDRData != null || DefaultOn, HDRData?.GetCrystal()));
+                ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
                 ret.Add((Sounds?.Overall ?? true, Sounds?.Specific?.GetCrystal()));
             }
+
         }
         #endregion
 

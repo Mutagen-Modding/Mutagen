@@ -1749,6 +1749,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Type;
             public bool LastModified;
             public MaskItem<bool, T_TranslMask?> RecordCache;
@@ -1757,6 +1758,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Type = defaultOn;
                 this.LastModified = defaultOn;
                 this.RecordCache = new MaskItem<bool, T_TranslMask?>(defaultOn, null);
@@ -1779,6 +1781,12 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((LastModified, null));
                 ret.Add((RecordCache?.Overall ?? true, RecordCache?.Specific?.GetCrystal()));
             }
+        
+            public static implicit operator TranslationMask<T_TranslMask>(bool defaultOn)
+            {
+                return new TranslationMask<T_TranslMask>(defaultOn);
+            }
+        
         }
     }
 }

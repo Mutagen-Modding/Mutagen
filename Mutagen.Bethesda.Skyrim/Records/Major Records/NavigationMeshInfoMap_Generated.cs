@@ -525,7 +525,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public bool NavMeshVersion;
             public MaskItem<bool, NavigationMapInfo.TranslationMask?> MapInfos;
-            public MaskItem<bool, PreferredPathing.TranslationMask?> PreferredPathing;
+            public PreferredPathing.TranslationMask? PreferredPathing;
             public bool NVSI;
             #endregion
 
@@ -535,7 +535,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.NavMeshVersion = defaultOn;
                 this.MapInfos = new MaskItem<bool, NavigationMapInfo.TranslationMask?>(defaultOn, null);
-                this.PreferredPathing = new MaskItem<bool, PreferredPathing.TranslationMask?>(defaultOn, null);
                 this.NVSI = defaultOn;
             }
 
@@ -546,9 +545,10 @@ namespace Mutagen.Bethesda.Skyrim
                 base.GetCrystal(ret);
                 ret.Add((NavMeshVersion, null));
                 ret.Add((MapInfos?.Overall ?? true, MapInfos?.Specific?.GetCrystal()));
-                ret.Add((PreferredPathing?.Overall ?? true, PreferredPathing?.Specific?.GetCrystal()));
+                ret.Add((PreferredPathing != null || DefaultOn, PreferredPathing?.GetCrystal()));
                 ret.Add((NVSI, null));
             }
+
         }
         #endregion
 

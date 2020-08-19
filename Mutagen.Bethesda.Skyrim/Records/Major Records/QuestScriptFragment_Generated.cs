@@ -452,6 +452,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Stage;
             public bool Unknown;
             public bool StageIndex;
@@ -463,6 +464,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Stage = defaultOn;
                 this.Unknown = defaultOn;
                 this.StageIndex = defaultOn;
@@ -491,6 +493,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((ScriptName, null));
                 ret.Add((FragmentName, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

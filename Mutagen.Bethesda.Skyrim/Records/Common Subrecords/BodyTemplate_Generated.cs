@@ -396,6 +396,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool FirstPersonFlags;
             public bool Flags;
             public bool ArmorType;
@@ -405,6 +406,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.FirstPersonFlags = defaultOn;
                 this.Flags = defaultOn;
                 this.ArmorType = defaultOn;
@@ -429,6 +431,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((ArmorType, null));
                 ret.Add((ActsLike44, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

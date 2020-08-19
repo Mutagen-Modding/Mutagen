@@ -481,6 +481,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Versioning;
             public bool Strength;
             public bool Distance;
@@ -493,6 +494,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Versioning = defaultOn;
                 this.Strength = defaultOn;
                 this.Distance = defaultOn;
@@ -523,6 +525,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((BlurRadius, null));
                 ret.Add((Sky, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

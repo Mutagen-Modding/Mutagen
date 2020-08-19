@@ -1317,7 +1317,7 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, QuestAdapter.TranslationMask?> VirtualMachineAdapter;
+            public QuestAdapter.TranslationMask? VirtualMachineAdapter;
             public bool Name;
             public bool Flags;
             public bool Priority;
@@ -1340,7 +1340,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.VirtualMachineAdapter = new MaskItem<bool, QuestAdapter.TranslationMask?>(defaultOn, null);
                 this.Name = defaultOn;
                 this.Flags = defaultOn;
                 this.Priority = defaultOn;
@@ -1364,7 +1363,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((VirtualMachineAdapter?.Overall ?? true, VirtualMachineAdapter?.Specific?.GetCrystal()));
+                ret.Add((VirtualMachineAdapter != null || DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((Name, null));
                 ret.Add((Flags, null));
                 ret.Add((Priority, null));
@@ -1382,6 +1381,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Description, null));
                 ret.Add((DNAMDataTypeState, null));
             }
+
         }
         #endregion
 

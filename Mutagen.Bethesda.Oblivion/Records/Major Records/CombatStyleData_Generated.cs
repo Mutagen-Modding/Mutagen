@@ -1332,6 +1332,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Versioning;
             public bool DodgePercentChance;
             public bool LeftRightPercentChance;
@@ -1374,6 +1375,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Versioning = defaultOn;
                 this.DodgePercentChance = defaultOn;
                 this.LeftRightPercentChance = defaultOn;
@@ -1464,6 +1466,12 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((RushingAttackPercentChance, null));
                 ret.Add((RushingAttackDistanceMult, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

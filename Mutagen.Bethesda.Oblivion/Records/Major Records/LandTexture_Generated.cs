@@ -513,7 +513,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             public bool Icon;
-            public MaskItem<bool, HavokData.TranslationMask?> Havok;
+            public HavokData.TranslationMask? Havok;
             public bool TextureSpecularExponent;
             public bool PotentialGrass;
             #endregion
@@ -523,7 +523,6 @@ namespace Mutagen.Bethesda.Oblivion
                 : base(defaultOn)
             {
                 this.Icon = defaultOn;
-                this.Havok = new MaskItem<bool, HavokData.TranslationMask?>(defaultOn, null);
                 this.TextureSpecularExponent = defaultOn;
                 this.PotentialGrass = defaultOn;
             }
@@ -534,10 +533,11 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 base.GetCrystal(ret);
                 ret.Add((Icon, null));
-                ret.Add((Havok?.Overall ?? true, Havok?.Specific?.GetCrystal()));
+                ret.Add((Havok != null || DefaultOn, Havok?.GetCrystal()));
                 ret.Add((TextureSpecularExponent, null));
                 ret.Add((PotentialGrass, null));
             }
+
         }
         #endregion
 

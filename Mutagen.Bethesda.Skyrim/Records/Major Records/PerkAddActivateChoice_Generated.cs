@@ -397,7 +397,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public bool Spell;
             public bool ButtonLabel;
-            public MaskItem<bool, PerkScriptFlag.TranslationMask?> Flags;
+            public PerkScriptFlag.TranslationMask? Flags;
             #endregion
 
             #region Ctors
@@ -406,7 +406,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.Spell = defaultOn;
                 this.ButtonLabel = defaultOn;
-                this.Flags = new MaskItem<bool, PerkScriptFlag.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -416,8 +415,9 @@ namespace Mutagen.Bethesda.Skyrim
                 base.GetCrystal(ret);
                 ret.Add((Spell, null));
                 ret.Add((ButtonLabel, null));
-                ret.Add((Flags?.Overall ?? true, Flags?.Specific?.GetCrystal()));
+                ret.Add((Flags != null || DefaultOn, Flags?.GetCrystal()));
             }
+
         }
         #endregion
 

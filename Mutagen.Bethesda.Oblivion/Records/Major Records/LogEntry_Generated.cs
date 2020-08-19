@@ -504,19 +504,20 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Flags;
             public MaskItem<bool, Condition.TranslationMask?> Conditions;
             public bool Entry;
-            public MaskItem<bool, ScriptFields.TranslationMask?> ResultScript;
+            public ScriptFields.TranslationMask? ResultScript;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Flags = defaultOn;
                 this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
                 this.Entry = defaultOn;
-                this.ResultScript = new MaskItem<bool, ScriptFields.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -535,8 +536,14 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Flags, null));
                 ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
                 ret.Add((Entry, null));
-                ret.Add((ResultScript?.Overall ?? true, ResultScript?.Specific?.GetCrystal()));
+                ret.Add((ResultScript != null || DefaultOn, ResultScript?.GetCrystal()));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

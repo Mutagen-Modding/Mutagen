@@ -756,9 +756,9 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, ObjectBounds.TranslationMask?> ObjectBounds;
+            public ObjectBounds.TranslationMask? ObjectBounds;
             public bool Name;
-            public MaskItem<bool, Model.TranslationMask?> Model;
+            public Model.TranslationMask? Model;
             public bool ImageSpaceModifier;
             public bool Limit;
             public bool Radius;
@@ -777,9 +777,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.ObjectBounds = new MaskItem<bool, ObjectBounds.TranslationMask?>(defaultOn, null);
                 this.Name = defaultOn;
-                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
                 this.ImageSpaceModifier = defaultOn;
                 this.Limit = defaultOn;
                 this.Radius = defaultOn;
@@ -799,9 +797,9 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((ObjectBounds?.Overall ?? true, ObjectBounds?.Specific?.GetCrystal()));
+                ret.Add((ObjectBounds != null || DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((Name, null));
-                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
                 ret.Add((ImageSpaceModifier, null));
                 ret.Add((Limit, null));
                 ret.Add((Radius, null));
@@ -815,6 +813,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Sound, null));
                 ret.Add((DATADataTypeState, null));
             }
+
         }
         #endregion
 

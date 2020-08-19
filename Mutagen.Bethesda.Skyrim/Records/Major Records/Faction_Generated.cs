@@ -1082,12 +1082,12 @@ namespace Mutagen.Bethesda.Skyrim
             public bool PlayerInventoryContainer;
             public bool SharedCrimeFactionList;
             public bool JailOutfit;
-            public MaskItem<bool, CrimeValues.TranslationMask?> CrimeValues;
+            public CrimeValues.TranslationMask? CrimeValues;
             public MaskItem<bool, Rank.TranslationMask?> Ranks;
             public bool VendorBuySellList;
             public bool MerchantContainer;
-            public MaskItem<bool, VendorValues.TranslationMask?> VendorValues;
-            public MaskItem<bool, LocationTargetRadius.TranslationMask?> VendorLocation;
+            public VendorValues.TranslationMask? VendorValues;
+            public LocationTargetRadius.TranslationMask? VendorLocation;
             public MaskItem<bool, Condition.TranslationMask?> Conditions;
             #endregion
 
@@ -1104,12 +1104,9 @@ namespace Mutagen.Bethesda.Skyrim
                 this.PlayerInventoryContainer = defaultOn;
                 this.SharedCrimeFactionList = defaultOn;
                 this.JailOutfit = defaultOn;
-                this.CrimeValues = new MaskItem<bool, CrimeValues.TranslationMask?>(defaultOn, null);
                 this.Ranks = new MaskItem<bool, Rank.TranslationMask?>(defaultOn, null);
                 this.VendorBuySellList = defaultOn;
                 this.MerchantContainer = defaultOn;
-                this.VendorValues = new MaskItem<bool, VendorValues.TranslationMask?>(defaultOn, null);
-                this.VendorLocation = new MaskItem<bool, LocationTargetRadius.TranslationMask?>(defaultOn, null);
                 this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
             }
 
@@ -1127,14 +1124,15 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((PlayerInventoryContainer, null));
                 ret.Add((SharedCrimeFactionList, null));
                 ret.Add((JailOutfit, null));
-                ret.Add((CrimeValues?.Overall ?? true, CrimeValues?.Specific?.GetCrystal()));
+                ret.Add((CrimeValues != null || DefaultOn, CrimeValues?.GetCrystal()));
                 ret.Add((Ranks?.Overall ?? true, Ranks?.Specific?.GetCrystal()));
                 ret.Add((VendorBuySellList, null));
                 ret.Add((MerchantContainer, null));
-                ret.Add((VendorValues?.Overall ?? true, VendorValues?.Specific?.GetCrystal()));
-                ret.Add((VendorLocation?.Overall ?? true, VendorLocation?.Specific?.GetCrystal()));
+                ret.Add((VendorValues != null || DefaultOn, VendorValues?.GetCrystal()));
+                ret.Add((VendorLocation != null || DefaultOn, VendorLocation?.GetCrystal()));
                 ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
             }
+
         }
         #endregion
 

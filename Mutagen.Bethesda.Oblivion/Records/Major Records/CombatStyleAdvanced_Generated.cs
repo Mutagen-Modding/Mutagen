@@ -872,6 +872,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool DodgeFatigueModMult;
             public bool DodgeFatigueModBase;
             public bool EncumbSpeedModBase;
@@ -898,6 +899,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.DodgeFatigueModMult = defaultOn;
                 this.DodgeFatigueModBase = defaultOn;
                 this.EncumbSpeedModBase = defaultOn;
@@ -956,6 +958,12 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((PowerAttackFatigueModBase, null));
                 ret.Add((PowerAttackFatigueModMult, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

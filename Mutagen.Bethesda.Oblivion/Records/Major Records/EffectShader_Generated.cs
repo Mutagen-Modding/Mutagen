@@ -402,7 +402,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Members
             public bool FillTexture;
             public bool ParticleShaderTexture;
-            public MaskItem<bool, EffectShaderData.TranslationMask?> Data;
+            public EffectShaderData.TranslationMask? Data;
             #endregion
 
             #region Ctors
@@ -411,7 +411,6 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.FillTexture = defaultOn;
                 this.ParticleShaderTexture = defaultOn;
-                this.Data = new MaskItem<bool, EffectShaderData.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -421,8 +420,9 @@ namespace Mutagen.Bethesda.Oblivion
                 base.GetCrystal(ret);
                 ret.Add((FillTexture, null));
                 ret.Add((ParticleShaderTexture, null));
-                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
+                ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
             }
+
         }
         #endregion
 

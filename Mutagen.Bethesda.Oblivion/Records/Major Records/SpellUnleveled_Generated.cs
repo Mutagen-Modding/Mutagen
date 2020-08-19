@@ -457,7 +457,7 @@ namespace Mutagen.Bethesda.Oblivion
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, SpellData.TranslationMask?> Data;
+            public SpellData.TranslationMask? Data;
             public MaskItem<bool, Effect.TranslationMask?> Effects;
             #endregion
 
@@ -465,7 +465,6 @@ namespace Mutagen.Bethesda.Oblivion
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.Data = new MaskItem<bool, SpellData.TranslationMask?>(defaultOn, null);
                 this.Effects = new MaskItem<bool, Effect.TranslationMask?>(defaultOn, null);
             }
 
@@ -474,9 +473,10 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
+                ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
                 ret.Add((Effects?.Overall ?? true, Effects?.Specific?.GetCrystal()));
             }
+
         }
         #endregion
 

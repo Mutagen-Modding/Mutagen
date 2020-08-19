@@ -900,7 +900,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool OutputModel;
             public bool String;
             public MaskItem<bool, Condition.TranslationMask?> Conditions;
-            public MaskItem<bool, SoundLoopAndRumble.TranslationMask?> LoopAndRumble;
+            public SoundLoopAndRumble.TranslationMask? LoopAndRumble;
             public bool PercentFrequencyShift;
             public bool PercentFrequencyVariance;
             public bool Priority;
@@ -920,7 +920,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.OutputModel = defaultOn;
                 this.String = defaultOn;
                 this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
-                this.LoopAndRumble = new MaskItem<bool, SoundLoopAndRumble.TranslationMask?>(defaultOn, null);
                 this.PercentFrequencyShift = defaultOn;
                 this.PercentFrequencyVariance = defaultOn;
                 this.Priority = defaultOn;
@@ -941,7 +940,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((OutputModel, null));
                 ret.Add((String, null));
                 ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
-                ret.Add((LoopAndRumble?.Overall ?? true, LoopAndRumble?.Specific?.GetCrystal()));
+                ret.Add((LoopAndRumble != null || DefaultOn, LoopAndRumble?.GetCrystal()));
                 ret.Add((PercentFrequencyShift, null));
                 ret.Add((PercentFrequencyVariance, null));
                 ret.Add((Priority, null));
@@ -949,6 +948,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((StaticAttenuation, null));
                 ret.Add((BNAMDataTypeState, null));
             }
+
         }
         #endregion
 

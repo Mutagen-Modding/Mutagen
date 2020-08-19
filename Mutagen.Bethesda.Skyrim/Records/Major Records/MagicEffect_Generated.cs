@@ -1993,7 +1993,7 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, VirtualMachineAdapter.TranslationMask?> VirtualMachineAdapter;
+            public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
             public bool Name;
             public bool MenuDisplayObject;
             public bool Keywords;
@@ -2013,7 +2013,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool TaperCurve;
             public bool TaperDuration;
             public bool SecondActorValueWeight;
-            public MaskItem<bool, MagicEffectArchetype.TranslationMask?> Archetype;
+            public MagicEffectArchetype.TranslationMask? Archetype;
             public bool Projectile;
             public bool Explosion;
             public bool CastType;
@@ -2045,7 +2045,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.VirtualMachineAdapter = new MaskItem<bool, VirtualMachineAdapter.TranslationMask?>(defaultOn, null);
                 this.Name = defaultOn;
                 this.MenuDisplayObject = defaultOn;
                 this.Keywords = defaultOn;
@@ -2065,7 +2064,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.TaperCurve = defaultOn;
                 this.TaperDuration = defaultOn;
                 this.SecondActorValueWeight = defaultOn;
-                this.Archetype = new MaskItem<bool, MagicEffectArchetype.TranslationMask?>(defaultOn, null);
                 this.Projectile = defaultOn;
                 this.Explosion = defaultOn;
                 this.CastType = defaultOn;
@@ -2098,7 +2096,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((VirtualMachineAdapter?.Overall ?? true, VirtualMachineAdapter?.Specific?.GetCrystal()));
+                ret.Add((VirtualMachineAdapter != null || DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((Name, null));
                 ret.Add((MenuDisplayObject, null));
                 ret.Add((Keywords, null));
@@ -2118,7 +2116,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((TaperCurve, null));
                 ret.Add((TaperDuration, null));
                 ret.Add((SecondActorValueWeight, null));
-                ret.Add((Archetype?.Overall ?? true, Archetype?.Specific?.GetCrystal()));
+                ret.Add((Archetype != null || DefaultOn, Archetype?.GetCrystal()));
                 ret.Add((Projectile, null));
                 ret.Add((Explosion, null));
                 ret.Add((CastType, null));
@@ -2145,6 +2143,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
                 ret.Add((DATADataTypeState, null));
             }
+
         }
         #endregion
 

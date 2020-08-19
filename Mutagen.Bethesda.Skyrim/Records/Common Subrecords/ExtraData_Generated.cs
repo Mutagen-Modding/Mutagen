@@ -346,14 +346,15 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public MaskItem<bool, OwnerTarget.TranslationMask?> Owner;
+            public readonly bool DefaultOn;
+            public OwnerTarget.TranslationMask? Owner;
             public bool ItemCondition;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.Owner = new MaskItem<bool, OwnerTarget.TranslationMask?>(defaultOn, null);
+                this.DefaultOn = defaultOn;
                 this.ItemCondition = defaultOn;
             }
 
@@ -370,9 +371,15 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Owner?.Overall ?? true, Owner?.Specific?.GetCrystal()));
+                ret.Add((Owner != null || DefaultOn, Owner?.GetCrystal()));
                 ret.Add((ItemCondition, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

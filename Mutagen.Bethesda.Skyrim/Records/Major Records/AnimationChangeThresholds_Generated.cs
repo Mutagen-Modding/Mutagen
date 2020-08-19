@@ -368,6 +368,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Directional;
             public bool MovementSpeed;
             public bool RotationSpeed;
@@ -376,6 +377,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Directional = defaultOn;
                 this.MovementSpeed = defaultOn;
                 this.RotationSpeed = defaultOn;
@@ -398,6 +400,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((MovementSpeed, null));
                 ret.Add((RotationSpeed, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

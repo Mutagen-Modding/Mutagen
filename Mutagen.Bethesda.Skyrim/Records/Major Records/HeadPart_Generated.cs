@@ -748,7 +748,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             public bool Name;
-            public MaskItem<bool, Model.TranslationMask?> Model;
+            public Model.TranslationMask? Model;
             public bool Flags;
             public bool Type;
             public bool ExtraParts;
@@ -763,7 +763,6 @@ namespace Mutagen.Bethesda.Skyrim
                 : base(defaultOn)
             {
                 this.Name = defaultOn;
-                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
                 this.Flags = defaultOn;
                 this.Type = defaultOn;
                 this.ExtraParts = defaultOn;
@@ -779,7 +778,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.GetCrystal(ret);
                 ret.Add((Name, null));
-                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
                 ret.Add((Flags, null));
                 ret.Add((Type, null));
                 ret.Add((ExtraParts, null));
@@ -788,6 +787,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Color, null));
                 ret.Add((ValidRaces, null));
             }
+
         }
         #endregion
 

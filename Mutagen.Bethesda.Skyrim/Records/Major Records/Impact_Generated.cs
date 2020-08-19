@@ -788,7 +788,7 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, Model.TranslationMask?> Model;
+            public Model.TranslationMask? Model;
             public bool Duration;
             public bool Orientation;
             public bool AngleThreshold;
@@ -797,7 +797,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Flags;
             public bool Result;
             public bool Unknown;
-            public MaskItem<bool, Decal.TranslationMask?> Decal;
+            public Decal.TranslationMask? Decal;
             public bool TextureSet;
             public bool SecondaryTextureSet;
             public bool Sound1;
@@ -810,7 +810,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
                 this.Duration = defaultOn;
                 this.Orientation = defaultOn;
                 this.AngleThreshold = defaultOn;
@@ -819,7 +818,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Flags = defaultOn;
                 this.Result = defaultOn;
                 this.Unknown = defaultOn;
-                this.Decal = new MaskItem<bool, Decal.TranslationMask?>(defaultOn, null);
                 this.TextureSet = defaultOn;
                 this.SecondaryTextureSet = defaultOn;
                 this.Sound1 = defaultOn;
@@ -833,7 +831,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
                 ret.Add((Duration, null));
                 ret.Add((Orientation, null));
                 ret.Add((AngleThreshold, null));
@@ -842,7 +840,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Flags, null));
                 ret.Add((Result, null));
                 ret.Add((Unknown, null));
-                ret.Add((Decal?.Overall ?? true, Decal?.Specific?.GetCrystal()));
+                ret.Add((Decal != null || DefaultOn, Decal?.GetCrystal()));
                 ret.Add((TextureSet, null));
                 ret.Add((SecondaryTextureSet, null));
                 ret.Add((Sound1, null));
@@ -850,6 +848,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Hazard, null));
                 ret.Add((DATADataTypeState, null));
             }
+
         }
         #endregion
 

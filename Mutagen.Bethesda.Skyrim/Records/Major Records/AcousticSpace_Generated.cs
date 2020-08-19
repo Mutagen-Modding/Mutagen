@@ -426,7 +426,7 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, ObjectBounds.TranslationMask?> ObjectBounds;
+            public ObjectBounds.TranslationMask? ObjectBounds;
             public bool AmbientSound;
             public bool UseSoundFromRegion;
             public bool EnvironmentType;
@@ -436,7 +436,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.ObjectBounds = new MaskItem<bool, ObjectBounds.TranslationMask?>(defaultOn, null);
                 this.AmbientSound = defaultOn;
                 this.UseSoundFromRegion = defaultOn;
                 this.EnvironmentType = defaultOn;
@@ -447,11 +446,12 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((ObjectBounds?.Overall ?? true, ObjectBounds?.Specific?.GetCrystal()));
+                ret.Add((ObjectBounds != null || DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((AmbientSound, null));
                 ret.Add((UseSoundFromRegion, null));
                 ret.Add((EnvironmentType, null));
             }
+
         }
         #endregion
 

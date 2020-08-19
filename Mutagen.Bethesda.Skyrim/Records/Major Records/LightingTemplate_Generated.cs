@@ -1113,7 +1113,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool LightFadeStartDistance;
             public bool LightFadeEndDistance;
             public bool Unknown;
-            public MaskItem<bool, AmbientColors.TranslationMask?> DirectionalAmbientColors;
+            public AmbientColors.TranslationMask? DirectionalAmbientColors;
             public bool DATADataTypeState;
             #endregion
 
@@ -1144,7 +1144,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.LightFadeStartDistance = defaultOn;
                 this.LightFadeEndDistance = defaultOn;
                 this.Unknown = defaultOn;
-                this.DirectionalAmbientColors = new MaskItem<bool, AmbientColors.TranslationMask?>(defaultOn, null);
                 this.DATADataTypeState = defaultOn;
             }
 
@@ -1176,9 +1175,10 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((LightFadeStartDistance, null));
                 ret.Add((LightFadeEndDistance, null));
                 ret.Add((Unknown, null));
-                ret.Add((DirectionalAmbientColors?.Overall ?? true, DirectionalAmbientColors?.Specific?.GetCrystal()));
+                ret.Add((DirectionalAmbientColors != null || DefaultOn, DirectionalAmbientColors?.GetCrystal()));
                 ret.Add((DATADataTypeState, null));
             }
+
         }
         #endregion
 

@@ -642,6 +642,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Perk;
             public bool FNAM;
             public bool PerkGridX;
@@ -656,6 +657,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Perk = defaultOn;
                 this.FNAM = defaultOn;
                 this.PerkGridX = defaultOn;
@@ -690,6 +692,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((ConnectionLineToIndices, null));
                 ret.Add((Index, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

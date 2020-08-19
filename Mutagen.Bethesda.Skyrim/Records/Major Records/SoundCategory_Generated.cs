@@ -477,6 +477,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((StaticVolumeMultiplier, null));
                 ret.Add((DefaultMenuVolume, null));
             }
+
         }
         #endregion
 

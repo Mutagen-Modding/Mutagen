@@ -278,11 +278,13 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
             }
 
             #endregion
@@ -299,6 +301,12 @@ namespace Mutagen.Bethesda.Oblivion
             protected virtual void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

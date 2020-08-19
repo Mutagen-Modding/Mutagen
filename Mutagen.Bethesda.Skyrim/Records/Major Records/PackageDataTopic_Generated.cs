@@ -460,6 +460,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Topics?.Overall ?? true, Topics?.Specific?.GetCrystal()));
                 ret.Add((TPIC, null));
             }
+
         }
         #endregion
 

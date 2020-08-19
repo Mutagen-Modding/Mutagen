@@ -699,6 +699,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Layers?.Overall ?? true, Layers?.Specific?.GetCrystal()));
                 ret.Add((Textures, null));
             }
+
         }
         #endregion
 

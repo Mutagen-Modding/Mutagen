@@ -1436,14 +1436,14 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, VirtualMachineAdapter.TranslationMask?> VirtualMachineAdapter;
-            public MaskItem<bool, ObjectBounds.TranslationMask?> ObjectBounds;
+            public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
+            public ObjectBounds.TranslationMask? ObjectBounds;
             public bool Name;
-            public MaskItem<bool, Model.TranslationMask?> Model;
-            public MaskItem<bool, Icons.TranslationMask?> Icons;
+            public Model.TranslationMask? Model;
+            public Icons.TranslationMask? Icons;
             public bool ObjectEffect;
             public bool EnchantmentAmount;
-            public MaskItem<bool, Destructible.TranslationMask?> Destructible;
+            public Destructible.TranslationMask? Destructible;
             public bool EquipmentType;
             public bool BlockBashImpact;
             public bool AlternateBlockMaterial;
@@ -1451,7 +1451,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool PutDownSound;
             public bool Keywords;
             public bool Description;
-            public MaskItem<bool, Model.TranslationMask?> ScopeModel;
+            public Model.TranslationMask? ScopeModel;
             public bool Unused;
             public bool ImpactDataSet;
             public bool FirstPersonModel;
@@ -1462,9 +1462,9 @@ namespace Mutagen.Bethesda.Skyrim
             public bool IdleSound;
             public bool EquipSound;
             public bool UnequipSound;
-            public MaskItem<bool, WeaponBasicStats.TranslationMask?> BasicStats;
-            public MaskItem<bool, WeaponData.TranslationMask?> Data;
-            public MaskItem<bool, CriticalData.TranslationMask?> Critical;
+            public WeaponBasicStats.TranslationMask? BasicStats;
+            public WeaponData.TranslationMask? Data;
+            public CriticalData.TranslationMask? Critical;
             public bool DetectionSoundLevel;
             public bool Template;
             #endregion
@@ -1473,14 +1473,9 @@ namespace Mutagen.Bethesda.Skyrim
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.VirtualMachineAdapter = new MaskItem<bool, VirtualMachineAdapter.TranslationMask?>(defaultOn, null);
-                this.ObjectBounds = new MaskItem<bool, ObjectBounds.TranslationMask?>(defaultOn, null);
                 this.Name = defaultOn;
-                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
-                this.Icons = new MaskItem<bool, Icons.TranslationMask?>(defaultOn, null);
                 this.ObjectEffect = defaultOn;
                 this.EnchantmentAmount = defaultOn;
-                this.Destructible = new MaskItem<bool, Destructible.TranslationMask?>(defaultOn, null);
                 this.EquipmentType = defaultOn;
                 this.BlockBashImpact = defaultOn;
                 this.AlternateBlockMaterial = defaultOn;
@@ -1488,7 +1483,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.PutDownSound = defaultOn;
                 this.Keywords = defaultOn;
                 this.Description = defaultOn;
-                this.ScopeModel = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
                 this.Unused = defaultOn;
                 this.ImpactDataSet = defaultOn;
                 this.FirstPersonModel = defaultOn;
@@ -1499,9 +1493,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.IdleSound = defaultOn;
                 this.EquipSound = defaultOn;
                 this.UnequipSound = defaultOn;
-                this.BasicStats = new MaskItem<bool, WeaponBasicStats.TranslationMask?>(defaultOn, null);
-                this.Data = new MaskItem<bool, WeaponData.TranslationMask?>(defaultOn, null);
-                this.Critical = new MaskItem<bool, CriticalData.TranslationMask?>(defaultOn, null);
                 this.DetectionSoundLevel = defaultOn;
                 this.Template = defaultOn;
             }
@@ -1511,14 +1502,14 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((VirtualMachineAdapter?.Overall ?? true, VirtualMachineAdapter?.Specific?.GetCrystal()));
-                ret.Add((ObjectBounds?.Overall ?? true, ObjectBounds?.Specific?.GetCrystal()));
+                ret.Add((VirtualMachineAdapter != null || DefaultOn, VirtualMachineAdapter?.GetCrystal()));
+                ret.Add((ObjectBounds != null || DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((Name, null));
-                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
-                ret.Add((Icons?.Overall ?? true, Icons?.Specific?.GetCrystal()));
+                ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
+                ret.Add((Icons != null || DefaultOn, Icons?.GetCrystal()));
                 ret.Add((ObjectEffect, null));
                 ret.Add((EnchantmentAmount, null));
-                ret.Add((Destructible?.Overall ?? true, Destructible?.Specific?.GetCrystal()));
+                ret.Add((Destructible != null || DefaultOn, Destructible?.GetCrystal()));
                 ret.Add((EquipmentType, null));
                 ret.Add((BlockBashImpact, null));
                 ret.Add((AlternateBlockMaterial, null));
@@ -1526,7 +1517,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((PutDownSound, null));
                 ret.Add((Keywords, null));
                 ret.Add((Description, null));
-                ret.Add((ScopeModel?.Overall ?? true, ScopeModel?.Specific?.GetCrystal()));
+                ret.Add((ScopeModel != null || DefaultOn, ScopeModel?.GetCrystal()));
                 ret.Add((Unused, null));
                 ret.Add((ImpactDataSet, null));
                 ret.Add((FirstPersonModel, null));
@@ -1537,12 +1528,13 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((IdleSound, null));
                 ret.Add((EquipSound, null));
                 ret.Add((UnequipSound, null));
-                ret.Add((BasicStats?.Overall ?? true, BasicStats?.Specific?.GetCrystal()));
-                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
-                ret.Add((Critical?.Overall ?? true, Critical?.Specific?.GetCrystal()));
+                ret.Add((BasicStats != null || DefaultOn, BasicStats?.GetCrystal()));
+                ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
+                ret.Add((Critical != null || DefaultOn, Critical?.GetCrystal()));
                 ret.Add((DetectionSoundLevel, null));
                 ret.Add((Template, null));
             }
+
         }
         #endregion
 

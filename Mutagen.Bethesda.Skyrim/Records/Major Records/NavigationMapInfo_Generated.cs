@@ -898,6 +898,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool NavigationMesh;
             public bool Unknown;
             public bool Point;
@@ -905,7 +906,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool MergedTo;
             public bool PreferredMerges;
             public MaskItem<bool, LinkedDoor.TranslationMask?> LinkedDoors;
-            public MaskItem<bool, IslandData.TranslationMask?> Island;
+            public IslandData.TranslationMask? Island;
             public bool Unknown2;
             public bool ParentWorldspace;
             public bool ParentWorldspaceCoord;
@@ -915,6 +916,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.NavigationMesh = defaultOn;
                 this.Unknown = defaultOn;
                 this.Point = defaultOn;
@@ -922,7 +924,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.MergedTo = defaultOn;
                 this.PreferredMerges = defaultOn;
                 this.LinkedDoors = new MaskItem<bool, LinkedDoor.TranslationMask?>(defaultOn, null);
-                this.Island = new MaskItem<bool, IslandData.TranslationMask?>(defaultOn, null);
                 this.Unknown2 = defaultOn;
                 this.ParentWorldspace = defaultOn;
                 this.ParentWorldspaceCoord = defaultOn;
@@ -949,12 +950,18 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((MergedTo, null));
                 ret.Add((PreferredMerges, null));
                 ret.Add((LinkedDoors?.Overall ?? true, LinkedDoors?.Specific?.GetCrystal()));
-                ret.Add((Island?.Overall ?? true, Island?.Specific?.GetCrystal()));
+                ret.Add((Island != null || DefaultOn, Island?.GetCrystal()));
                 ret.Add((Unknown2, null));
                 ret.Add((ParentWorldspace, null));
                 ret.Add((ParentWorldspaceCoord, null));
                 ret.Add((ParentCell, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

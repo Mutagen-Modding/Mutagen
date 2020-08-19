@@ -598,10 +598,11 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Flags;
             public bool MagickaOffset;
             public bool StaminaOffset;
-            public MaskItem<bool, ANpcLevel.TranslationMask?> Level;
+            public ANpcLevel.TranslationMask? Level;
             public bool CalcMinLevel;
             public bool CalcMaxLevel;
             public bool SpeedMultiplier;
@@ -614,10 +615,10 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Flags = defaultOn;
                 this.MagickaOffset = defaultOn;
                 this.StaminaOffset = defaultOn;
-                this.Level = new MaskItem<bool, ANpcLevel.TranslationMask?>(defaultOn, null);
                 this.CalcMinLevel = defaultOn;
                 this.CalcMaxLevel = defaultOn;
                 this.SpeedMultiplier = defaultOn;
@@ -643,7 +644,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Flags, null));
                 ret.Add((MagickaOffset, null));
                 ret.Add((StaminaOffset, null));
-                ret.Add((Level?.Overall ?? true, Level?.Specific?.GetCrystal()));
+                ret.Add((Level != null || DefaultOn, Level?.GetCrystal()));
                 ret.Add((CalcMinLevel, null));
                 ret.Add((CalcMaxLevel, null));
                 ret.Add((SpeedMultiplier, null));
@@ -652,6 +653,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((HealthOffset, null));
                 ret.Add((BleedoutOverride, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

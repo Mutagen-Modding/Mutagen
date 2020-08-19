@@ -494,6 +494,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Flags, null));
                 ret.Add((Entries?.Overall ?? true, Entries?.Specific?.GetCrystal()));
             }
+
         }
         #endregion
 

@@ -630,6 +630,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((DisplayTime, null));
                 ret.Add((MenuButtons?.Overall ?? true, MenuButtons?.Specific?.GetCrystal()));
             }
+
         }
         #endregion
 

@@ -633,7 +633,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             public bool Name;
-            public MaskItem<bool, Model.TranslationMask?> Model;
+            public Model.TranslationMask? Model;
             public bool Script;
             public bool OpenSound;
             public bool CloseSound;
@@ -647,7 +647,6 @@ namespace Mutagen.Bethesda.Oblivion
                 : base(defaultOn)
             {
                 this.Name = defaultOn;
-                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
                 this.Script = defaultOn;
                 this.OpenSound = defaultOn;
                 this.CloseSound = defaultOn;
@@ -662,7 +661,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 base.GetCrystal(ret);
                 ret.Add((Name, null));
-                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
                 ret.Add((Script, null));
                 ret.Add((OpenSound, null));
                 ret.Add((CloseSound, null));
@@ -670,6 +669,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Flags, null));
                 ret.Add((RandomTeleportDestinations, null));
             }
+
         }
         #endregion
 

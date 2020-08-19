@@ -663,22 +663,22 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Name;
             public MaskItem<bool, Condition.TranslationMask?> StartConditions;
             public MaskItem<bool, Condition.TranslationMask?> CompletionConditions;
-            public MaskItem<bool, ScenePhaseUnusedData.TranslationMask?> Unused;
-            public MaskItem<bool, ScenePhaseUnusedData.TranslationMask?> Unused2;
+            public ScenePhaseUnusedData.TranslationMask? Unused;
+            public ScenePhaseUnusedData.TranslationMask? Unused2;
             public bool EditorWidth;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Name = defaultOn;
                 this.StartConditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
                 this.CompletionConditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
-                this.Unused = new MaskItem<bool, ScenePhaseUnusedData.TranslationMask?>(defaultOn, null);
-                this.Unused2 = new MaskItem<bool, ScenePhaseUnusedData.TranslationMask?>(defaultOn, null);
                 this.EditorWidth = defaultOn;
             }
 
@@ -698,10 +698,16 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Name, null));
                 ret.Add((StartConditions?.Overall ?? true, StartConditions?.Specific?.GetCrystal()));
                 ret.Add((CompletionConditions?.Overall ?? true, CompletionConditions?.Specific?.GetCrystal()));
-                ret.Add((Unused?.Overall ?? true, Unused?.Specific?.GetCrystal()));
-                ret.Add((Unused2?.Overall ?? true, Unused2?.Specific?.GetCrystal()));
+                ret.Add((Unused != null || DefaultOn, Unused?.GetCrystal()));
+                ret.Add((Unused2 != null || DefaultOn, Unused2?.GetCrystal()));
                 ret.Add((EditorWidth, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

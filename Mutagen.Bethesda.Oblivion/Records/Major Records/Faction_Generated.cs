@@ -645,6 +645,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((CrimeGoldMultiplier, null));
                 ret.Add((Ranks?.Overall ?? true, Ranks?.Specific?.GetCrystal()));
             }
+
         }
         #endregion
 

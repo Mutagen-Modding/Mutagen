@@ -424,6 +424,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Month;
             public bool DayOfWeek;
             public bool Day;
@@ -434,6 +435,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Month = defaultOn;
                 this.DayOfWeek = defaultOn;
                 this.Day = defaultOn;
@@ -460,6 +462,12 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Time, null));
                 ret.Add((Duration, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

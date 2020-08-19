@@ -1532,7 +1532,7 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, PackageAdapter.TranslationMask?> VirtualMachineAdapter;
+            public PackageAdapter.TranslationMask? VirtualMachineAdapter;
             public bool Flags;
             public bool Type;
             public bool InterruptOverride;
@@ -1549,7 +1549,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool ScheduleDurationInMinutes;
             public MaskItem<bool, Condition.TranslationMask?> Conditions;
             public bool Unknown4;
-            public MaskItem<bool, PackageIdles.TranslationMask?> IdleAnimations;
+            public PackageIdles.TranslationMask? IdleAnimations;
             public bool CombatStyle;
             public bool OwnerQuest;
             public bool PackageTemplate;
@@ -1557,9 +1557,9 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, APackageData.TranslationMask?> Data;
             public bool XnamMarker;
             public MaskItem<bool, PackageBranch.TranslationMask?> ProcedureTree;
-            public MaskItem<bool, PackageEvent.TranslationMask?> OnBegin;
-            public MaskItem<bool, PackageEvent.TranslationMask?> OnEnd;
-            public MaskItem<bool, PackageEvent.TranslationMask?> OnChange;
+            public PackageEvent.TranslationMask? OnBegin;
+            public PackageEvent.TranslationMask? OnEnd;
+            public PackageEvent.TranslationMask? OnChange;
             public bool PKDTDataTypeState;
             public bool PSDTDataTypeState;
             #endregion
@@ -1568,7 +1568,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.VirtualMachineAdapter = new MaskItem<bool, PackageAdapter.TranslationMask?>(defaultOn, null);
                 this.Flags = defaultOn;
                 this.Type = defaultOn;
                 this.InterruptOverride = defaultOn;
@@ -1585,7 +1584,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ScheduleDurationInMinutes = defaultOn;
                 this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
                 this.Unknown4 = defaultOn;
-                this.IdleAnimations = new MaskItem<bool, PackageIdles.TranslationMask?>(defaultOn, null);
                 this.CombatStyle = defaultOn;
                 this.OwnerQuest = defaultOn;
                 this.PackageTemplate = defaultOn;
@@ -1593,9 +1591,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Data = new MaskItem<bool, APackageData.TranslationMask?>(defaultOn, null);
                 this.XnamMarker = defaultOn;
                 this.ProcedureTree = new MaskItem<bool, PackageBranch.TranslationMask?>(defaultOn, null);
-                this.OnBegin = new MaskItem<bool, PackageEvent.TranslationMask?>(defaultOn, null);
-                this.OnEnd = new MaskItem<bool, PackageEvent.TranslationMask?>(defaultOn, null);
-                this.OnChange = new MaskItem<bool, PackageEvent.TranslationMask?>(defaultOn, null);
                 this.PKDTDataTypeState = defaultOn;
                 this.PSDTDataTypeState = defaultOn;
             }
@@ -1605,7 +1600,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((VirtualMachineAdapter?.Overall ?? true, VirtualMachineAdapter?.Specific?.GetCrystal()));
+                ret.Add((VirtualMachineAdapter != null || DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((Flags, null));
                 ret.Add((Type, null));
                 ret.Add((InterruptOverride, null));
@@ -1622,7 +1617,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((ScheduleDurationInMinutes, null));
                 ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
                 ret.Add((Unknown4, null));
-                ret.Add((IdleAnimations?.Overall ?? true, IdleAnimations?.Specific?.GetCrystal()));
+                ret.Add((IdleAnimations != null || DefaultOn, IdleAnimations?.GetCrystal()));
                 ret.Add((CombatStyle, null));
                 ret.Add((OwnerQuest, null));
                 ret.Add((PackageTemplate, null));
@@ -1630,12 +1625,13 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
                 ret.Add((XnamMarker, null));
                 ret.Add((ProcedureTree?.Overall ?? true, ProcedureTree?.Specific?.GetCrystal()));
-                ret.Add((OnBegin?.Overall ?? true, OnBegin?.Specific?.GetCrystal()));
-                ret.Add((OnEnd?.Overall ?? true, OnEnd?.Specific?.GetCrystal()));
-                ret.Add((OnChange?.Overall ?? true, OnChange?.Specific?.GetCrystal()));
+                ret.Add((OnBegin != null || DefaultOn, OnBegin?.GetCrystal()));
+                ret.Add((OnEnd != null || DefaultOn, OnEnd?.GetCrystal()));
+                ret.Add((OnChange != null || DefaultOn, OnChange?.GetCrystal()));
                 ret.Add((PKDTDataTypeState, null));
                 ret.Add((PSDTDataTypeState, null));
             }
+
         }
         #endregion
 

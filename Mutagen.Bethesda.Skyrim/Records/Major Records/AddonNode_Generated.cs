@@ -522,8 +522,8 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, ObjectBounds.TranslationMask?> ObjectBounds;
-            public MaskItem<bool, Model.TranslationMask?> Model;
+            public ObjectBounds.TranslationMask? ObjectBounds;
+            public Model.TranslationMask? Model;
             public bool NodeIndex;
             public bool Sound;
             public bool MasterParticleSystemCap;
@@ -535,8 +535,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.ObjectBounds = new MaskItem<bool, ObjectBounds.TranslationMask?>(defaultOn, null);
-                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
                 this.NodeIndex = defaultOn;
                 this.Sound = defaultOn;
                 this.MasterParticleSystemCap = defaultOn;
@@ -549,14 +547,15 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((ObjectBounds?.Overall ?? true, ObjectBounds?.Specific?.GetCrystal()));
-                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((ObjectBounds != null || DefaultOn, ObjectBounds?.GetCrystal()));
+                ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
                 ret.Add((NodeIndex, null));
                 ret.Add((Sound, null));
                 ret.Add((MasterParticleSystemCap, null));
                 ret.Add((AlwaysLoaded, null));
                 ret.Add((DNAMDataTypeState, null));
             }
+
         }
         #endregion
 

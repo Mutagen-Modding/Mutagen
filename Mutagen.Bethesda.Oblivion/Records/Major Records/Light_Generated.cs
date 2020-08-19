@@ -534,11 +534,11 @@ namespace Mutagen.Bethesda.Oblivion
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, Model.TranslationMask?> Model;
+            public Model.TranslationMask? Model;
             public bool Script;
             public bool Name;
             public bool Icon;
-            public MaskItem<bool, LightData.TranslationMask?> Data;
+            public LightData.TranslationMask? Data;
             public bool Fade;
             public bool Sound;
             #endregion
@@ -547,11 +547,9 @@ namespace Mutagen.Bethesda.Oblivion
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
                 this.Script = defaultOn;
                 this.Name = defaultOn;
                 this.Icon = defaultOn;
-                this.Data = new MaskItem<bool, LightData.TranslationMask?>(defaultOn, null);
                 this.Fade = defaultOn;
                 this.Sound = defaultOn;
             }
@@ -561,14 +559,15 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
                 ret.Add((Script, null));
                 ret.Add((Name, null));
                 ret.Add((Icon, null));
-                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
+                ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
                 ret.Add((Fade, null));
                 ret.Add((Sound, null));
             }
+
         }
         #endregion
 

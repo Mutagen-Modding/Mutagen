@@ -574,10 +574,10 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Owner;
             public bool FactionRank;
             public bool GlobalVariable;
-            public MaskItem<bool, EnableParent.TranslationMask?> EnableParent;
+            public EnableParent.TranslationMask? EnableParent;
             public bool RagdollData;
             public bool Scale;
-            public MaskItem<bool, Location.TranslationMask?> Location;
+            public Location.TranslationMask? Location;
             #endregion
 
             #region Ctors
@@ -588,10 +588,8 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Owner = defaultOn;
                 this.FactionRank = defaultOn;
                 this.GlobalVariable = defaultOn;
-                this.EnableParent = new MaskItem<bool, EnableParent.TranslationMask?>(defaultOn, null);
                 this.RagdollData = defaultOn;
                 this.Scale = defaultOn;
-                this.Location = new MaskItem<bool, Location.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -603,11 +601,12 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Owner, null));
                 ret.Add((FactionRank, null));
                 ret.Add((GlobalVariable, null));
-                ret.Add((EnableParent?.Overall ?? true, EnableParent?.Specific?.GetCrystal()));
+                ret.Add((EnableParent != null || DefaultOn, EnableParent?.GetCrystal()));
                 ret.Add((RagdollData, null));
                 ret.Add((Scale, null));
-                ret.Add((Location?.Overall ?? true, Location?.Specific?.GetCrystal()));
+                ret.Add((Location != null || DefaultOn, Location?.GetCrystal()));
             }
+
         }
         #endregion
 

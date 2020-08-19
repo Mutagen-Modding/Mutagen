@@ -650,7 +650,7 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, ObjectBounds.TranslationMask?> ObjectBounds;
+            public ObjectBounds.TranslationMask? ObjectBounds;
             public bool Diffuse;
             public bool NormalOrGloss;
             public bool EnvironmentMaskOrSubsurfaceTint;
@@ -659,7 +659,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Environment;
             public bool Multilayer;
             public bool BacklightMaskOrSpecular;
-            public MaskItem<bool, Decal.TranslationMask?> Decal;
+            public Decal.TranslationMask? Decal;
             public bool Flags;
             #endregion
 
@@ -667,7 +667,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.ObjectBounds = new MaskItem<bool, ObjectBounds.TranslationMask?>(defaultOn, null);
                 this.Diffuse = defaultOn;
                 this.NormalOrGloss = defaultOn;
                 this.EnvironmentMaskOrSubsurfaceTint = defaultOn;
@@ -676,7 +675,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Environment = defaultOn;
                 this.Multilayer = defaultOn;
                 this.BacklightMaskOrSpecular = defaultOn;
-                this.Decal = new MaskItem<bool, Decal.TranslationMask?>(defaultOn, null);
                 this.Flags = defaultOn;
             }
 
@@ -685,7 +683,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((ObjectBounds?.Overall ?? true, ObjectBounds?.Specific?.GetCrystal()));
+                ret.Add((ObjectBounds != null || DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((Diffuse, null));
                 ret.Add((NormalOrGloss, null));
                 ret.Add((EnvironmentMaskOrSubsurfaceTint, null));
@@ -694,9 +692,10 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Environment, null));
                 ret.Add((Multilayer, null));
                 ret.Add((BacklightMaskOrSpecular, null));
-                ret.Add((Decal?.Overall ?? true, Decal?.Specific?.GetCrystal()));
+                ret.Add((Decal != null || DefaultOn, Decal?.GetCrystal()));
                 ret.Add((Flags, null));
             }
+
         }
         #endregion
 

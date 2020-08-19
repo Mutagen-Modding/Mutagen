@@ -511,6 +511,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Flags, null));
                 ret.Add((HavokImpactDataSet, null));
             }
+
         }
         #endregion
 

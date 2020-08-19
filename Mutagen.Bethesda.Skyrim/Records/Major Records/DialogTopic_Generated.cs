@@ -777,6 +777,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Responses?.Overall ?? true, Responses?.Specific?.GetCrystal()));
                 ret.Add((DATADataTypeState, null));
             }
+
         }
         #endregion
 

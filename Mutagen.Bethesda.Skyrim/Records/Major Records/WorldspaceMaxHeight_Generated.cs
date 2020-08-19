@@ -376,6 +376,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Min;
             public bool Max;
             public bool CellData;
@@ -384,6 +385,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Min = defaultOn;
                 this.Max = defaultOn;
                 this.CellData = defaultOn;
@@ -406,6 +408,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Max, null));
                 ret.Add((CellData, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

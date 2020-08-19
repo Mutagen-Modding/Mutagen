@@ -844,28 +844,27 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool BranchType;
             public MaskItem<bool, Condition.TranslationMask?> Conditions;
-            public MaskItem<bool, PackageRoot.TranslationMask?> Root;
+            public PackageRoot.TranslationMask? Root;
             public bool ProcedureType;
             public bool Flags;
             public bool DataInputIndices;
-            public MaskItem<bool, PackageFlagsOverride.TranslationMask?> FlagsOverride;
-            public MaskItem<bool, PackageFlagsOverride.TranslationMask?> FlagsOverrideUnused;
+            public PackageFlagsOverride.TranslationMask? FlagsOverride;
+            public PackageFlagsOverride.TranslationMask? FlagsOverrideUnused;
             public bool Unknown;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.BranchType = defaultOn;
                 this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
-                this.Root = new MaskItem<bool, PackageRoot.TranslationMask?>(defaultOn, null);
                 this.ProcedureType = defaultOn;
                 this.Flags = defaultOn;
                 this.DataInputIndices = defaultOn;
-                this.FlagsOverride = new MaskItem<bool, PackageFlagsOverride.TranslationMask?>(defaultOn, null);
-                this.FlagsOverrideUnused = new MaskItem<bool, PackageFlagsOverride.TranslationMask?>(defaultOn, null);
                 this.Unknown = defaultOn;
             }
 
@@ -884,14 +883,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 ret.Add((BranchType, null));
                 ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
-                ret.Add((Root?.Overall ?? true, Root?.Specific?.GetCrystal()));
+                ret.Add((Root != null || DefaultOn, Root?.GetCrystal()));
                 ret.Add((ProcedureType, null));
                 ret.Add((Flags, null));
                 ret.Add((DataInputIndices, null));
-                ret.Add((FlagsOverride?.Overall ?? true, FlagsOverride?.Specific?.GetCrystal()));
-                ret.Add((FlagsOverrideUnused?.Overall ?? true, FlagsOverrideUnused?.Specific?.GetCrystal()));
+                ret.Add((FlagsOverride != null || DefaultOn, FlagsOverride?.GetCrystal()));
+                ret.Add((FlagsOverrideUnused != null || DefaultOn, FlagsOverrideUnused?.GetCrystal()));
                 ret.Add((Unknown, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

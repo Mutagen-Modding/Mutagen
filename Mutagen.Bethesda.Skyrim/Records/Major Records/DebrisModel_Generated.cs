@@ -442,6 +442,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Percentage;
             public bool ModelFilename;
             public bool Flags;
@@ -452,6 +453,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Percentage = defaultOn;
                 this.ModelFilename = defaultOn;
                 this.Flags = defaultOn;
@@ -478,6 +480,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((TextureFileHashes, null));
                 ret.Add((DATADataTypeState, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

@@ -433,7 +433,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Name;
             public bool Description;
             public bool Icon;
-            public MaskItem<bool, ClassData.TranslationMask?> Data;
+            public ClassData.TranslationMask? Data;
             #endregion
 
             #region Ctors
@@ -443,7 +443,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Name = defaultOn;
                 this.Description = defaultOn;
                 this.Icon = defaultOn;
-                this.Data = new MaskItem<bool, ClassData.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -454,8 +453,9 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Name, null));
                 ret.Add((Description, null));
                 ret.Add((Icon, null));
-                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
+                ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
             }
+
         }
         #endregion
 

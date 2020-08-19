@@ -963,7 +963,7 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, ObjectBounds.TranslationMask?> ObjectBounds;
+            public ObjectBounds.TranslationMask? ObjectBounds;
             public bool Name;
             public bool Keywords;
             public bool MenuDisplayObject;
@@ -986,7 +986,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.ObjectBounds = new MaskItem<bool, ObjectBounds.TranslationMask?>(defaultOn, null);
                 this.Name = defaultOn;
                 this.Keywords = defaultOn;
                 this.MenuDisplayObject = defaultOn;
@@ -1010,7 +1009,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((ObjectBounds?.Overall ?? true, ObjectBounds?.Specific?.GetCrystal()));
+                ret.Add((ObjectBounds != null || DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((Name, null));
                 ret.Add((Keywords, null));
                 ret.Add((MenuDisplayObject, null));
@@ -1028,6 +1027,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Effects?.Overall ?? true, Effects?.Specific?.GetCrystal()));
                 ret.Add((SPITDataTypeState, null));
             }
+
         }
         #endregion
 

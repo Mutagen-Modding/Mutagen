@@ -780,8 +780,8 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, ObjectBounds.TranslationMask?> ObjectBounds;
-            public MaskItem<bool, Model.TranslationMask?> Model;
+            public ObjectBounds.TranslationMask? ObjectBounds;
+            public Model.TranslationMask? Model;
             public bool Density;
             public bool MinSlope;
             public bool MaxSlope;
@@ -802,8 +802,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.ObjectBounds = new MaskItem<bool, ObjectBounds.TranslationMask?>(defaultOn, null);
-                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
                 this.Density = defaultOn;
                 this.MinSlope = defaultOn;
                 this.MaxSlope = defaultOn;
@@ -825,8 +823,8 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((ObjectBounds?.Overall ?? true, ObjectBounds?.Specific?.GetCrystal()));
-                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((ObjectBounds != null || DefaultOn, ObjectBounds?.GetCrystal()));
+                ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
                 ret.Add((Density, null));
                 ret.Add((MinSlope, null));
                 ret.Add((MaxSlope, null));
@@ -842,6 +840,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Unknown3, null));
                 ret.Add((DATADataTypeState, null));
             }
+
         }
         #endregion
 

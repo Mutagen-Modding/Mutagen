@@ -703,6 +703,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((InterCellConnections?.Overall ?? true, InterCellConnections?.Specific?.GetCrystal()));
                 ret.Add((PointToReferenceMappings?.Overall ?? true, PointToReferenceMappings?.Specific?.GetCrystal()));
             }
+
         }
         #endregion
 

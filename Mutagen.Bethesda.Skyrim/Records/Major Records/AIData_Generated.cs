@@ -592,6 +592,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Aggression;
             public bool Confidence;
             public bool EnergyLevel;
@@ -608,6 +609,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Aggression = defaultOn;
                 this.Confidence = defaultOn;
                 this.EnergyLevel = defaultOn;
@@ -646,6 +648,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((WarnOrAttack, null));
                 ret.Add((Attack, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

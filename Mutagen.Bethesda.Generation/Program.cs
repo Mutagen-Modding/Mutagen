@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "errorMask = MasterReference.ErrorMask.Factory(errorMaskBuilder);";
+            string testString = "Add((AIData?.Overall ?? true, AIData?.Specific?.GetCrystal(";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

@@ -1632,19 +1632,19 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             public bool Name;
-            public MaskItem<bool, Model.TranslationMask?> Model;
+            public Model.TranslationMask? Model;
             public MaskItem<bool, ItemEntry.TranslationMask?> Items;
             public bool Spells;
             public bool Models;
             public bool NIFT;
-            public MaskItem<bool, CreatureConfiguration.TranslationMask?> Configuration;
+            public CreatureConfiguration.TranslationMask? Configuration;
             public MaskItem<bool, RankPlacement.TranslationMask?> Factions;
             public bool DeathItem;
             public bool Script;
-            public MaskItem<bool, CreatureAIData.TranslationMask?> AIData;
+            public CreatureAIData.TranslationMask? AIData;
             public bool AIPackages;
             public bool Animations;
-            public MaskItem<bool, CreatureData.TranslationMask?> Data;
+            public CreatureData.TranslationMask? Data;
             public bool AttackReach;
             public bool CombatStyle;
             public bool TurningSpeed;
@@ -1661,19 +1661,15 @@ namespace Mutagen.Bethesda.Oblivion
                 : base(defaultOn)
             {
                 this.Name = defaultOn;
-                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
                 this.Items = new MaskItem<bool, ItemEntry.TranslationMask?>(defaultOn, null);
                 this.Spells = defaultOn;
                 this.Models = defaultOn;
                 this.NIFT = defaultOn;
-                this.Configuration = new MaskItem<bool, CreatureConfiguration.TranslationMask?>(defaultOn, null);
                 this.Factions = new MaskItem<bool, RankPlacement.TranslationMask?>(defaultOn, null);
                 this.DeathItem = defaultOn;
                 this.Script = defaultOn;
-                this.AIData = new MaskItem<bool, CreatureAIData.TranslationMask?>(defaultOn, null);
                 this.AIPackages = defaultOn;
                 this.Animations = defaultOn;
-                this.Data = new MaskItem<bool, CreatureData.TranslationMask?>(defaultOn, null);
                 this.AttackReach = defaultOn;
                 this.CombatStyle = defaultOn;
                 this.TurningSpeed = defaultOn;
@@ -1691,19 +1687,19 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 base.GetCrystal(ret);
                 ret.Add((Name, null));
-                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
                 ret.Add((Items?.Overall ?? true, Items?.Specific?.GetCrystal()));
                 ret.Add((Spells, null));
                 ret.Add((Models, null));
                 ret.Add((NIFT, null));
-                ret.Add((Configuration?.Overall ?? true, Configuration?.Specific?.GetCrystal()));
+                ret.Add((Configuration != null || DefaultOn, Configuration?.GetCrystal()));
                 ret.Add((Factions?.Overall ?? true, Factions?.Specific?.GetCrystal()));
                 ret.Add((DeathItem, null));
                 ret.Add((Script, null));
-                ret.Add((AIData?.Overall ?? true, AIData?.Specific?.GetCrystal()));
+                ret.Add((AIData != null || DefaultOn, AIData?.GetCrystal()));
                 ret.Add((AIPackages, null));
                 ret.Add((Animations, null));
-                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
+                ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
                 ret.Add((AttackReach, null));
                 ret.Add((CombatStyle, null));
                 ret.Add((TurningSpeed, null));
@@ -1714,6 +1710,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((InheritsSoundFrom, null));
                 ret.Add((Sounds?.Overall ?? true, Sounds?.Specific?.GetCrystal()));
             }
+
         }
         #endregion
 

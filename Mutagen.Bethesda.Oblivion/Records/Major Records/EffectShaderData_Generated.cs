@@ -1881,6 +1881,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Versioning;
             public bool Flags;
             public bool MembraneShaderSourceBlendMode;
@@ -1943,6 +1944,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Versioning = defaultOn;
                 this.Flags = defaultOn;
                 this.MembraneShaderSourceBlendMode = defaultOn;
@@ -2073,6 +2075,12 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((ColorKey2ColorKeyTime, null));
                 ret.Add((ColorKey3ColorKeyTime, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

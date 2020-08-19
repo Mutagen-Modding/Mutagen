@@ -576,13 +576,13 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, ObjectBounds.TranslationMask?> ObjectBounds;
-            public MaskItem<bool, Model.TranslationMask?> Model;
+            public ObjectBounds.TranslationMask? ObjectBounds;
+            public Model.TranslationMask? Model;
             public bool MaxAngle;
             public bool Material;
             public bool Flags;
             public bool Unused;
-            public MaskItem<bool, Lod.TranslationMask?> Lod;
+            public Lod.TranslationMask? Lod;
             public bool DNAMDataTypeState;
             #endregion
 
@@ -590,13 +590,10 @@ namespace Mutagen.Bethesda.Skyrim
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.ObjectBounds = new MaskItem<bool, ObjectBounds.TranslationMask?>(defaultOn, null);
-                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
                 this.MaxAngle = defaultOn;
                 this.Material = defaultOn;
                 this.Flags = defaultOn;
                 this.Unused = defaultOn;
-                this.Lod = new MaskItem<bool, Lod.TranslationMask?>(defaultOn, null);
                 this.DNAMDataTypeState = defaultOn;
             }
 
@@ -605,15 +602,16 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((ObjectBounds?.Overall ?? true, ObjectBounds?.Specific?.GetCrystal()));
-                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((ObjectBounds != null || DefaultOn, ObjectBounds?.GetCrystal()));
+                ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
                 ret.Add((MaxAngle, null));
                 ret.Add((Material, null));
                 ret.Add((Flags, null));
                 ret.Add((Unused, null));
-                ret.Add((Lod?.Overall ?? true, Lod?.Specific?.GetCrystal()));
+                ret.Add((Lod != null || DefaultOn, Lod?.GetCrystal()));
                 ret.Add((DNAMDataTypeState, null));
             }
+
         }
         #endregion
 

@@ -378,6 +378,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Faction;
             public bool Rank;
             public bool Fluff;
@@ -386,6 +387,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Faction = defaultOn;
                 this.Rank = defaultOn;
                 this.Fluff = defaultOn;
@@ -408,6 +410,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Rank, null));
                 ret.Add((Fluff, null));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

@@ -904,7 +904,7 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, BodyTemplate.TranslationMask?> BodyTemplate;
+            public BodyTemplate.TranslationMask? BodyTemplate;
             public bool Race;
             public MaskItem<bool, GenderedItem<bool>?> Priority;
             public MaskItem<bool, GenderedItem<bool>?> WeightSliderEnabled;
@@ -926,7 +926,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.BodyTemplate = new MaskItem<bool, BodyTemplate.TranslationMask?>(defaultOn, null);
                 this.Race = defaultOn;
                 this.Priority = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
                 this.WeightSliderEnabled = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
@@ -949,7 +948,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((BodyTemplate?.Overall ?? true, BodyTemplate?.Specific?.GetCrystal()));
+                ret.Add((BodyTemplate != null || DefaultOn, BodyTemplate?.GetCrystal()));
                 ret.Add((Race, null));
                 ret.Add((Priority?.Overall ?? true, null));
                 ret.Add((WeightSliderEnabled?.Overall ?? true, null));
@@ -966,6 +965,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((ArtObject, null));
                 ret.Add((DNAMDataTypeState, null));
             }
+
         }
         #endregion
 

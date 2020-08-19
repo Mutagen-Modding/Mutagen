@@ -473,21 +473,20 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
             public bool Unknown;
             public bool FileName;
-            public MaskItem<bool, ScriptFragment.TranslationMask?> OnBegin;
-            public MaskItem<bool, ScriptFragment.TranslationMask?> OnEnd;
-            public MaskItem<bool, ScriptFragment.TranslationMask?> OnChange;
+            public ScriptFragment.TranslationMask? OnBegin;
+            public ScriptFragment.TranslationMask? OnEnd;
+            public ScriptFragment.TranslationMask? OnChange;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.DefaultOn = defaultOn;
                 this.Unknown = defaultOn;
                 this.FileName = defaultOn;
-                this.OnBegin = new MaskItem<bool, ScriptFragment.TranslationMask?>(defaultOn, null);
-                this.OnEnd = new MaskItem<bool, ScriptFragment.TranslationMask?>(defaultOn, null);
-                this.OnChange = new MaskItem<bool, ScriptFragment.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -505,10 +504,16 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 ret.Add((Unknown, null));
                 ret.Add((FileName, null));
-                ret.Add((OnBegin?.Overall ?? true, OnBegin?.Specific?.GetCrystal()));
-                ret.Add((OnEnd?.Overall ?? true, OnEnd?.Specific?.GetCrystal()));
-                ret.Add((OnChange?.Overall ?? true, OnChange?.Specific?.GetCrystal()));
+                ret.Add((OnBegin != null || DefaultOn, OnBegin?.GetCrystal()));
+                ret.Add((OnEnd != null || DefaultOn, OnEnd?.GetCrystal()));
+                ret.Add((OnChange != null || DefaultOn, OnChange?.GetCrystal()));
             }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

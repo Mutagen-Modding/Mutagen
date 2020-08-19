@@ -387,6 +387,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Parent, null));
                 ret.Add((Coordinates, null));
             }
+
         }
         #endregion
 

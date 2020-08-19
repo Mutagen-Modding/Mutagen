@@ -647,6 +647,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((WorkbenchKeyword, null));
                 ret.Add((CreatedObjectCount, null));
             }
+
         }
         #endregion
 
