@@ -213,6 +213,9 @@ namespace Mutagen.Bethesda.Generation
         public override async Task GenerateInCommonMixin(ObjectGeneration obj, FileGeneration fg)
         {
             if (await HasMajorRecordsInTree(obj, includeBaseClass: false) == Case.No) return;
+            var needsCatch = obj.GetObjectType() == ObjectType.Mod;
+            string catchLine = needsCatch ? ".Catch(e => throw RecordException.Factory(e, obj.ModKey))" : string.Empty;
+            string enderSemi = needsCatch ? string.Empty : ";";
             fg.AppendLine("[DebuggerStepThrough]");
             using (var args = new FunctionWrapper(fg,
                 $"public static IEnumerable<{nameof(IMajorRecordCommonGetter)}> EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal)}"))
@@ -223,7 +226,8 @@ namespace Mutagen.Bethesda.Generation
             using (new BraceWrapper(fg))
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"return {obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class)}.EnumerateMajorRecords"))
+                    $"return {obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class)}.EnumerateMajorRecords",
+                    suffixLine: catchLine))
                 {
                     args.AddPassArg("obj");
                 }
@@ -249,7 +253,11 @@ namespace Mutagen.Bethesda.Generation
                 }
                 using (new DepthWrapper(fg))
                 {
-                    fg.AppendLine(".Select(m => (TMajor)m);");
+                    fg.AppendLine($".Select(m => (TMajor)m){enderSemi}");
+                    if (needsCatch)
+                    {
+                        fg.AppendLine($"{catchLine};");
+                    }
                 }
             }
             fg.AppendLine();
@@ -274,7 +282,11 @@ namespace Mutagen.Bethesda.Generation
                 }
                 using (new DepthWrapper(fg))
                 {
-                    fg.AppendLine($".Select(m => ({nameof(IMajorRecordCommonGetter)})m);");
+                    fg.AppendLine($".Select(m => ({nameof(IMajorRecordCommonGetter)})m){enderSemi}");
+                    if (needsCatch)
+                    {
+                        fg.AppendLine($"{catchLine};");
+                    }
                 }
             }
             fg.AppendLine();
@@ -289,7 +301,8 @@ namespace Mutagen.Bethesda.Generation
             using (new BraceWrapper(fg))
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"return {obj.CommonClassInstance("obj", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.EnumerateMajorRecords"))
+                    $"return {obj.CommonClassInstance("obj", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.EnumerateMajorRecords",
+                    suffixLine: catchLine))
                 {
                     args.AddPassArg("obj");
                 }
@@ -315,7 +328,11 @@ namespace Mutagen.Bethesda.Generation
                 }
                 using (new DepthWrapper(fg))
                 {
-                    fg.AppendLine(".Select(m => (TMajor)m);");
+                    fg.AppendLine($".Select(m => (TMajor)m){enderSemi}");
+                    if (needsCatch)
+                    {
+                        fg.AppendLine($"{catchLine};");
+                    }
                 }
             }
             fg.AppendLine();
@@ -340,7 +357,11 @@ namespace Mutagen.Bethesda.Generation
                 }
                 using (new DepthWrapper(fg))
                 {
-                    fg.AppendLine($".Select(m => ({nameof(IMajorRecordCommon)})m);");
+                    fg.AppendLine($".Select(m => ({nameof(IMajorRecordCommon)})m){enderSemi}");
+                    if (needsCatch)
+                    {
+                        fg.AppendLine($"{catchLine};");
+                    }
                 }
             }
             fg.AppendLine();

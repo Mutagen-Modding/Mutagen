@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "Add((AIData?.Overall ?? true, AIData?.Specific?.GetCrystal(";
+            string testString = "lic IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IOblivionModGetter obj";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

@@ -4047,7 +4047,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(this IOblivionModGetter obj)
         {
-            return ((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).EnumerateMajorRecords(obj: obj);
+            return ((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).EnumerateMajorRecords(obj: obj).Catch(e => throw RecordException.Factory(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -4058,7 +4058,8 @@ namespace Mutagen.Bethesda.Oblivion
                 obj: obj,
                 type: typeof(TMajor),
                 throwIfUnknown: true)
-                .Select(m => (TMajor)m);
+                .Select(m => (TMajor)m)
+                .Catch(e => throw RecordException.Factory(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -4071,13 +4072,14 @@ namespace Mutagen.Bethesda.Oblivion
                 obj: obj,
                 type: type,
                 throwIfUnknown: throwIfUnknown)
-                .Select(m => (IMajorRecordCommonGetter)m);
+                .Select(m => (IMajorRecordCommonGetter)m)
+                .Catch(e => throw RecordException.Factory(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(this IOblivionMod obj)
         {
-            return ((OblivionModSetterCommon)((IOblivionModGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(obj: obj);
+            return ((OblivionModSetterCommon)((IOblivionModGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(obj: obj).Catch(e => throw RecordException.Factory(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -4088,7 +4090,8 @@ namespace Mutagen.Bethesda.Oblivion
                 obj: obj,
                 type: typeof(TMajor),
                 throwIfUnknown: true)
-                .Select(m => (TMajor)m);
+                .Select(m => (TMajor)m)
+                .Catch(e => throw RecordException.Factory(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -4101,7 +4104,8 @@ namespace Mutagen.Bethesda.Oblivion
                 obj: obj,
                 type: type,
                 throwIfUnknown: throwIfUnknown)
-                .Select(m => (IMajorRecordCommon)m);
+                .Select(m => (IMajorRecordCommon)m)
+                .Catch(e => throw RecordException.Factory(e, obj.ModKey));
         }
 
         #endregion

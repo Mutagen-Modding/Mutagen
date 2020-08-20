@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Loqui" Version="1.2.1" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.1.0" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.1.1-dev" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
       <PrivateAssets>all</PrivateAssets>
