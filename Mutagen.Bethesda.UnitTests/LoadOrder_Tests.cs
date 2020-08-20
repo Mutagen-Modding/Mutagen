@@ -54,20 +54,20 @@ namespace Mutagen.Bethesda.UnitTests
             File.WriteAllText(Path.Combine(tmpFolder.Dir.Path, Utility.Dawnguard.FileName), "TEST");
             File.WriteAllText(Path.Combine(tmpFolder.Dir.Path, Utility.Dragonborn.FileName), "TEST");
             File.WriteAllText(Path.Combine(tmpFolder.Dir.Path, Utility.Update.FileName), "TEST");
-            var loadOrder = new List<(bool Enabled, ModKey ModKey)>()
+            var loadOrder = new List<LoadOrderListing>()
             {
-                (true, Utility.ModKey),
-                (true, Utility.Dawnguard),
-                (true, Utility.ModKey2),
+                new LoadOrderListing(Utility.ModKey, true),
+                new LoadOrderListing(Utility.Dawnguard, true),
+                new LoadOrderListing(Utility.ModKey2, true),
             };
             LoadOrder.AddImplicitMods(GameRelease.SkyrimSE, tmpFolder.Dir, loadOrder);
             Assert.Equal(6, loadOrder.Count);
-            Assert.Equal((true, Utility.Skyrim), loadOrder[0]);
-            Assert.Equal((true, Utility.Update), loadOrder[1]);
-            Assert.Equal((true, Utility.Dragonborn), loadOrder[2]);
-            Assert.Equal((true, Utility.ModKey), loadOrder[3]);
-            Assert.Equal((true, Utility.Dawnguard), loadOrder[4]);
-            Assert.Equal((true, Utility.ModKey2), loadOrder[5]);
+            Assert.Equal(new LoadOrderListing(Utility.Skyrim, true), loadOrder[0]);
+            Assert.Equal(new LoadOrderListing(Utility.Update, true), loadOrder[1]);
+            Assert.Equal(new LoadOrderListing(Utility.Dragonborn, true), loadOrder[2]);
+            Assert.Equal(new LoadOrderListing(Utility.ModKey, true), loadOrder[3]);
+            Assert.Equal(new LoadOrderListing(Utility.Dawnguard, true), loadOrder[4]);
+            Assert.Equal(new LoadOrderListing(Utility.ModKey2, true), loadOrder[5]);
         }
 
         [Fact]

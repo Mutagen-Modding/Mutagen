@@ -75,6 +75,7 @@
     <Compile Include="Links\MutableLoadOrderLinkCache.cs" />
     <Compile Include="Load Order\LoadOrder.cs" />
     <Compile Include="Extensions\OverrideMixIns.cs" />
+    <Compile Include="Load Order\LoadOrderListing.cs" />
     <Compile Include="Load Order\LoadOrderTimestampComparer.cs" />
     <Compile Include="Records\RecordTypeInts.cs" />
     <Compile Include="Records\RecordTypes.cs" />
