@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.13.2</Version>
+    <Version>0.13.3</Version>
     <Authors>Noggog</Authors>
     <Company>Mutagen</Company>
     <Product>Mutagen</Product>
@@ -920,7 +920,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Loqui" Version="1.2.1" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.1.0" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.1.2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />

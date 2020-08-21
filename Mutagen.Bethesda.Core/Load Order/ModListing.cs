@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ namespace Mutagen.Bethesda
     /// <summary>
     /// Class associating a ModKey with a Mod object that may or may not exist.
     /// </summary>
+    [DebuggerDisplay("ModListing {ToString()}")]
     public class ModListing<TMod> : IModListing<TMod>
         where TMod : class, IModGetter
     {
@@ -50,7 +52,7 @@ namespace Mutagen.Bethesda
         /// <inheritdoc/>
         public override string ToString()
         {
-            return ModKey.ToString();
+            return $"{ModKey} => {(Mod == null ? "Missing" : "Present")}";
         }
 
         public static implicit operator ModListing<TMod>(TMod mod)

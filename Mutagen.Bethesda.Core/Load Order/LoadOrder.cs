@@ -66,25 +66,26 @@ namespace Mutagen.Bethesda
         /// <param name="throwOnMissingMods">Whether to throw and exception if mods are missing</param>
         /// <returns>Enumerable of modkeys in load order, excluding missing mods</returns>
         /// <exception cref="MissingModException">If throwOnMissingMods true and file is missing</exception>
-        public static IEnumerable<ModKey> AlignToTimestamps(
-            IEnumerable<ModKey> incomingLoadOrder,
+        public static IEnumerable<LoadOrderListing> AlignToTimestamps(
+            IEnumerable<LoadOrderListing> incomingLoadOrder,
             DirectoryPath dataPath,
             bool throwOnMissingMods = true)
         {
-            var list = new List<(ModKey ModKey, DateTime Write)>();
+            var list = new List<(bool Enabled, ModKey ModKey, DateTime Write)>();
             foreach (var key in incomingLoadOrder)
             {
-                ModPath modPath = new ModPath(key, Path.Combine(dataPath.Path, key.ToString()));
+                ModPath modPath = new ModPath(key.ModKey, Path.Combine(dataPath.Path, key.ModKey.FileName));
                 if (!File.Exists(modPath.Path))
                 {
                     if (throwOnMissingMods) throw new MissingModException(modPath);
                     continue;
                 }
-                list.Add((key, File.GetLastWriteTime(modPath.Path)));
+                list.Add((key.Enabled, key.ModKey, File.GetLastWriteTime(modPath.Path)));
             }
+            var comp = new LoadOrderTimestampComparer(incomingLoadOrder.Select(i => i.ModKey).ToList());
             return list
-                .OrderBy(i => i, new LoadOrderTimestampComparer(incomingLoadOrder.ToList()))
-                .Select(i => i.ModKey);
+                .OrderBy(i => (i.ModKey, i.Write), comp)
+                .Select(i => new LoadOrderListing(i.ModKey, i.Enabled));
         }
 
         /// <summary>
@@ -132,43 +133,50 @@ namespace Mutagen.Bethesda
             }
         }
 
+        internal static LoadOrderListing FromString(ReadOnlySpan<char> str, bool enabledMarkerProcessing)
+        {
+            str = str.Trim();
+            bool enabled = true;
+            if (enabledMarkerProcessing)
+            {
+                if (str[0] == '*')
+                {
+                    str = str[1..];
+                }
+                else
+                {
+                    enabled = false;
+                }
+            }
+            if (!ModKey.TryFactory(str, out var key))
+            {
+                throw new ArgumentException($"Load order file had malformed line: {str.ToString()}");
+            }
+            return new LoadOrderListing(key, enabled);
+        }
+
         /// <summary>
         /// Parses a stream to retrieve all ModKeys in expected plugin file format
         /// </summary>
         /// <param name="stream">Stream to read from</param>
+        /// <param name="game">Game type</param>
         /// <returns>List of modkeys representing a load order</returns>
         /// <exception cref="ArgumentException">Line in plugin stream is unexpected</exception>
-        public static IEnumerable<ModKey> FromStream(Stream stream)
+        public static IEnumerable<LoadOrderListing> FromStream(Stream stream, GameRelease game)
         {
             using var streamReader = new StreamReader(stream);
+            var enabledMarkerProcessing = HasEnabledMarkers(game);
             while (!streamReader.EndOfStream)
             {
-                var str = streamReader.ReadLine();
+                var str = streamReader.ReadLine().AsSpan();
                 var commentIndex = str.IndexOf('#');
                 if (commentIndex != -1)
                 {
-                    str = str.Substring(0, commentIndex);
+                    str = str.Slice(0, commentIndex);
                 }
-                if (string.IsNullOrWhiteSpace(str)) continue;
-                str = str.Trim();
-                if (!ModKey.TryFactory(str, out var key))
-                {
-                    throw new ArgumentException($"Load order file had malformed line: {str}");   
-                }
-                yield return key;
+                if (MemoryExtensions.IsWhiteSpace(str) || str.Length == 0) continue;
+                yield return FromString(str, enabledMarkerProcessing);
             }
-        }
-
-        /// <summary>
-        /// Parses a file to retrieve all ModKeys in expected plugin file format
-        /// </summary>
-        /// <param name="path">Path of plugin list</param>
-        /// <returns>Enumerable of modkeys representing a load order</returns>
-        /// <exception cref="ArgumentException">Line in plugin file is unexpected</exception>
-        public static IList<ModKey> FromPath(FilePath path)
-        {
-            using var stream = new FileStream(path.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
-            return FromStream(stream).ToList();
         }
 
         /// <summary>
@@ -182,13 +190,14 @@ namespace Mutagen.Bethesda
         /// <param name="throwOnMissingMods">Whether to throw and exception if mods are missing</param>
         /// <returns>Enumerable of modkeys representing a load order</returns>
         /// <exception cref="ArgumentException">Line in plugin file is unexpected</exception>
-        public static IEnumerable<ModKey> FromPath(
-            GameRelease game,
+        public static IEnumerable<LoadOrderListing> FromPath(
             FilePath path,
+            GameRelease game,
             DirectoryPath dataPath,
             bool throwOnMissingMods = true)
         {
-            var mods = FromPath(path);
+            using var stream = new FileStream(path.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
+            var mods = FromStream(stream, game).ToList();
             AddImplicitMods(game, dataPath, mods);
             if (NeedsTimestampAlignment(game.ToCategory()))
             {
@@ -209,18 +218,37 @@ namespace Mutagen.Bethesda
             "Dragonborn.esm",
         };
 
+        internal static IEnumerable<ModKey> GetImplicitMods(GameRelease release)
+        {
+            return release switch
+            {
+                GameRelease.SkyrimSE => _sseImplicitMods,
+                _ => Enumerable.Empty<ModKey>(),
+            };
+        }
+
         internal static void AddImplicitMods(
             GameRelease release,
-            DirectoryPath dataPath, 
-            IList<ModKey> loadOrder)
+            DirectoryPath dataPath,
+            IList<LoadOrderListing> loadOrder)
         {
-            if (release != GameRelease.SkyrimSE) return;
-            foreach (var implicitMod in _sseImplicitMods.Reverse())
+            foreach (var implicitMod in GetImplicitMods(release).Reverse())
             {
-                if (loadOrder.Contains(implicitMod)) continue;
+                if (loadOrder.Any(x => x.ModKey == implicitMod)) continue;
                 if (!File.Exists(Path.Combine(dataPath.Path, implicitMod.FileName))) continue;
-                loadOrder.Insert(0, implicitMod);
+                loadOrder.Insert(0, new LoadOrderListing(implicitMod, true));
             }
+        }
+
+        public static bool HasEnabledMarkers(GameRelease game)
+        {
+            return game switch
+            {
+                GameRelease.SkyrimSE => true,
+                GameRelease.SkyrimLE => false,
+                GameRelease.Oblivion => false,
+                _ => throw new NotImplementedException(),
+            };
         }
 
         /// <summary>
@@ -233,7 +261,7 @@ namespace Mutagen.Bethesda
         /// <exception cref="ArgumentException">Line in plugin file is unexpected</exception>
         /// <exception cref="FileNotFoundException">If plugin file not located</exception>
         /// <exception cref="MissingModException">If throwOnMissingMods true and file is missing</exception>
-        public static IEnumerable<ModKey> GetUsualLoadOrder(
+        public static IEnumerable<LoadOrderListing> GetUsualLoadOrder(
             GameRelease game,
             DirectoryPath dataPath,
             bool throwOnMissingMods = true)
@@ -243,7 +271,38 @@ namespace Mutagen.Bethesda
                 throw new FileNotFoundException("Could not locate plugins file");
             }
 
-            return FromPath(game, path, dataPath, throwOnMissingMods);
+            return FromPath(path, game, dataPath, throwOnMissingMods);
+        }
+
+        public static void Write(string path, GameRelease release, IEnumerable<LoadOrderListing> loadOrder)
+        {
+            bool markers = HasEnabledMarkers(release);
+            var loadOrderList = loadOrder.ToList();
+            foreach (var implicitMod in GetImplicitMods(release))
+            {
+                if (loadOrderList.Count > 0
+                    && loadOrderList[0].ModKey == implicitMod
+                    && loadOrderList[0].Enabled)
+                {
+                    loadOrderList.RemoveAt(0);
+                }
+            }
+            File.WriteAllLines(path,
+                loadOrderList.Where(x =>
+                {
+                    return (markers || x.Enabled);
+                })
+                .Select(x =>
+                {
+                    if (x.Enabled && markers)
+                    {
+                        return $"*{x.ModKey.FileName}";
+                    }
+                    else
+                    {
+                        return x.ModKey.FileName;
+                    }
+                }));
         }
 
         /// <summary>
@@ -256,7 +315,7 @@ namespace Mutagen.Bethesda
         /// </param>
         public static LoadOrder<IModListing<TMod>> Import<TMod>(
             DirectoryPath dataFolder,
-            IReadOnlyList<ModKey> loadOrder,
+            IEnumerable<ModKey> loadOrder,
             GameRelease gameRelease)
             where TMod : class, IModGetter
         {
@@ -274,12 +333,13 @@ namespace Mutagen.Bethesda
         /// <param name="factory">Func to use to create a new mod from a path</param>
         public static LoadOrder<IModListing<TMod>> Import<TMod>(
             DirectoryPath dataFolder,
-            IReadOnlyList<ModKey> loadOrder,
+            IEnumerable<ModKey> loadOrder,
             Func<ModPath, TMod> factory)
             where TMod : class, IModGetter
         {
-            var results = new (ModKey ModKey, int ModIndex, TryGet<TMod> Mod)[loadOrder.Count];
-            Parallel.ForEach(loadOrder, (modKey, state, modIndex) =>
+            var loList = loadOrder.ToList();
+            var results = new (ModKey ModKey, int ModIndex, TryGet<TMod> Mod)[loList.Count];
+            Parallel.ForEach(loList, (modKey, state, modIndex) =>
             {
                 var modPath = new ModPath(modKey, dataFolder.GetFile(modKey.FileName).Path);
                 if (!File.Exists(modPath.Path))

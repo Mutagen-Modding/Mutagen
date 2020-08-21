@@ -22,15 +22,15 @@ namespace Mutagen.Bethesda
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected abstract ICache<TMajor, FormKey> ProtectedCache { get; }
-        
+
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         internal ICache<TMajor, FormKey> InternalCache => this.ProtectedCache;
-        
+
         /// <summary>
         /// An enumerable of all the records contained by the group.
         /// </summary>
         public IEnumerable<TMajor> Records => ProtectedCache.Items;
-        
+
         /// <summary>
         /// Number of records contained in the group.
         /// </summary>
@@ -161,7 +161,20 @@ namespace Mutagen.Bethesda
                 this._package = package;
             }
 
-            public T this[FormKey key] => ConstructWrapper(this._locs[key]);
+            public T this[FormKey key]
+            {
+                get
+                {
+                    try
+                    {
+                        return ConstructWrapper(this._locs[key]);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw RecordException.Factory(ex, key);
+                    }
+                }
+            }
 
             public int Count => this._locs.Count;
 
@@ -175,7 +188,16 @@ namespace Mutagen.Bethesda
             {
                 foreach (var kv in this._locs)
                 {
-                    yield return new KeyValue<T, FormKey>(kv.Key, ConstructWrapper(kv.Value));
+                    KeyValue<T, FormKey> item;
+                    try
+                    {
+                        item = new KeyValue<T, FormKey>(kv.Key, ConstructWrapper(kv.Value));
+                    }
+                    catch (Exception ex)
+                    {
+                        throw RecordException.Factory(ex, kv.Key);
+                    }
+                    yield return item;
                 }
             }
 
@@ -209,9 +231,9 @@ namespace Mutagen.Bethesda
             }
 
             public static GroupMajorRecordCacheWrapper<T> Factory(
-                IBinaryReadStream stream, 
+                IBinaryReadStream stream,
                 ReadOnlyMemorySlice<byte> data,
-                BinaryOverlayFactoryPackage package, 
+                BinaryOverlayFactoryPackage package,
                 int offset)
             {
                 Dictionary<FormKey, int> locationDict = new Dictionary<FormKey, int>();
@@ -249,7 +271,7 @@ namespace Mutagen.Bethesda
                 }
 
                 return new GroupMajorRecordCacheWrapper<T>(
-                    locationDict, 
+                    locationDict,
                     data,
                     package);
             }

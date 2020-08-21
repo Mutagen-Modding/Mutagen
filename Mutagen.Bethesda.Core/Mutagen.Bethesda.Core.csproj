@@ -17,11 +17,11 @@
     <PackageReference Include="Compression.BSA" Version="2.2.1.1" />
     <PackageReference Include="DotNetZip" Version="1.13.8" />
     <PackageReference Include="Loqui" Version="1.2.1" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.1.0" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.1.2" />
   </ItemGroup>
   <PropertyGroup>
     <PackageId>Mutagen.Bethesda.Core</PackageId>
-    <Version>0.13.2</Version>
+    <Version>0.13.3</Version>
     <Authors>Noggog</Authors>
     <Company>Mutagen</Company>
     <Product>Mutagen</Product>
@@ -47,8 +47,10 @@
     <Compile Include="Enums\StringsFileFormat.cs" />
     <Compile Include="Enums\StringsSource.cs" />
     <Compile Include="Exceptions\MissingModException.cs" />
+    <Compile Include="Exceptions\RecordException.cs" />
     <Compile Include="Extensions\EnumerableExt.cs" />
     <Compile Include="Extensions\FormLinkExt.cs" />
+    <Compile Include="Extensions\LoadOrderExt.cs" />
     <Compile Include="Extensions\MutagenEnumExt.cs" />
     <Compile Include="Interfaces\IDuplicatable.cs" />
     <Compile Include="Interfaces\IGameSettingCommon.cs" />
@@ -73,6 +75,7 @@
     <Compile Include="Links\MutableLoadOrderLinkCache.cs" />
     <Compile Include="Load Order\LoadOrder.cs" />
     <Compile Include="Extensions\OverrideMixIns.cs" />
+    <Compile Include="Load Order\LoadOrderListing.cs" />
     <Compile Include="Load Order\LoadOrderTimestampComparer.cs" />
     <Compile Include="Records\RecordTypeInts.cs" />
     <Compile Include="Records\RecordTypes.cs" />
