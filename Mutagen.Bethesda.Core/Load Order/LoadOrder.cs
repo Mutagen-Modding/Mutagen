@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda
             var list = new List<(bool Enabled, ModKey ModKey, DateTime Write)>();
             foreach (var key in incomingLoadOrder)
             {
-                ModPath modPath = new ModPath(key.ModKey, Path.Combine(dataPath.Path, key.ToString()));
+                ModPath modPath = new ModPath(key.ModKey, Path.Combine(dataPath.Path, key.ModKey.FileName));
                 if (!File.Exists(modPath.Path))
                 {
                     if (throwOnMissingMods) throw new MissingModException(modPath);
