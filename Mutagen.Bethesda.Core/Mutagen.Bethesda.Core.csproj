@@ -17,7 +17,7 @@
     <PackageReference Include="Compression.BSA" Version="2.2.1.1" />
     <PackageReference Include="DotNetZip" Version="1.13.8" />
     <PackageReference Include="Loqui" Version="1.2.1" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.1.1-dev" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.1.2" />
   </ItemGroup>
   <PropertyGroup>
     <PackageId>Mutagen.Bethesda.Core</PackageId>
