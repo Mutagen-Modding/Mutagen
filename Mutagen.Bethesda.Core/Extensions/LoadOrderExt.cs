@@ -12,5 +12,10 @@ namespace Mutagen.Bethesda
             return loadOrder.Where(x => x.Enabled)
                 .Select(x => x.ModKey);
         }
+
+        public static IEnumerable<LoadOrderListing> AsListings(this IEnumerable<ModKey> loadOrder)
+        {
+            return loadOrder.Select(x => new LoadOrderListing(x, true));
+        }
     }
 }

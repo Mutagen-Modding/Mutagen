@@ -1,4 +1,5 @@
 ﻿using Alphaleonis.Win32.Filesystem;
+using Iced.Intel;
 using Noggog.Utility;
 using System;
 using System.Collections.Generic;
@@ -79,6 +80,66 @@ namespace Mutagen.Bethesda.UnitTests
             item = LoadOrder.FromString($"*{Utility.ModKey.FileName}", enabledMarkerProcessing: true);
             Assert.True(item.Enabled);
             Assert.Equal(Utility.ModKey, item.ModKey);
+        }
+
+        [Fact]
+        public void WriteExclude()
+        {
+            using var tmpFolder = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(WriteExclude)));
+            var path = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
+            LoadOrder.Write(
+                path,
+                GameRelease.Oblivion,
+                new LoadOrderListing[]
+                {
+                    new LoadOrderListing(Utility.ModKey, false),
+                    new LoadOrderListing(Utility.ModKey2, true),
+                    new LoadOrderListing(Utility.ModKey3, false),
+                });
+            var lines = File.ReadAllLines(path).ToList();
+            Assert.Single(lines);
+            Assert.Equal(Utility.ModKey2.FileName, lines[0]);
+        }
+
+        [Fact]
+        public void WriteMarkers()
+        {
+            using var tmpFolder = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(WriteMarkers)));
+            var path = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
+            LoadOrder.Write(
+                path,
+                GameRelease.SkyrimSE,
+                new LoadOrderListing[]
+                {
+                    new LoadOrderListing(Utility.ModKey, false),
+                    new LoadOrderListing(Utility.ModKey2, true),
+                    new LoadOrderListing(Utility.ModKey3, false),
+                });
+            var lines = File.ReadAllLines(path).ToList();
+            Assert.Equal(3, lines.Count);
+            Assert.Equal($"{Utility.ModKey.FileName}", lines[0]);
+            Assert.Equal($"*{Utility.ModKey2.FileName}", lines[1]);
+            Assert.Equal($"{Utility.ModKey3.FileName}", lines[2]);
+        }
+
+        [Fact]
+        public void WriteImplicit()
+        {
+            using var tmpFolder = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(WriteMarkers)));
+            var path = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
+            LoadOrder.Write(
+                path,
+                GameRelease.SkyrimSE,
+                new LoadOrderListing[]
+                {
+                    new LoadOrderListing(Utility.Skyrim, true),
+                    new LoadOrderListing(Utility.ModKey2, true),
+                    new LoadOrderListing(Utility.Dawnguard, false),
+                });
+            var lines = File.ReadAllLines(path).ToList();
+            Assert.Equal(2, lines.Count);
+            Assert.Equal($"*{Utility.ModKey2.FileName}", lines[0]);
+            Assert.Equal($"{Utility.Dawnguard.FileName}", lines[1]);
         }
     }
 }

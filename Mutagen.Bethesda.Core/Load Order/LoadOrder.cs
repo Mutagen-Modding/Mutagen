@@ -180,19 +180,6 @@ namespace Mutagen.Bethesda
         }
 
         /// <summary>
-        /// Parses a file to retrieve all ModKeys in expected plugin file format
-        /// </summary>
-        /// <param name="path">Path of plugin list</param>
-        /// <param name="game">Game type</param>
-        /// <returns>Enumerable of modkeys representing a load order</returns>
-        /// <exception cref="ArgumentException">Line in plugin file is unexpected</exception>
-        public static IList<LoadOrderListing> FromPath(FilePath path, GameRelease game)
-        {
-            using var stream = new FileStream(path.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
-            return FromStream(stream, game).ToList();
-        }
-
-        /// <summary>
         /// Parses a file to retrieve all ModKeys in expected plugin file format,
         /// Will order mods by timestamps if applicable
         /// Will add implicit base mods if applicable
@@ -204,12 +191,13 @@ namespace Mutagen.Bethesda
         /// <returns>Enumerable of modkeys representing a load order</returns>
         /// <exception cref="ArgumentException">Line in plugin file is unexpected</exception>
         public static IEnumerable<LoadOrderListing> FromPath(
-            GameRelease game,
             FilePath path,
+            GameRelease game,
             DirectoryPath dataPath,
             bool throwOnMissingMods = true)
         {
-            var mods = FromPath(path, game);
+            using var stream = new FileStream(path.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
+            var mods = FromStream(stream, game).ToList();
             AddImplicitMods(game, dataPath, mods);
             if (NeedsTimestampAlignment(game.ToCategory()))
             {
@@ -230,13 +218,21 @@ namespace Mutagen.Bethesda
             "Dragonborn.esm",
         };
 
+        internal static IEnumerable<ModKey> GetImplicitMods(GameRelease release)
+        {
+            return release switch
+            {
+                GameRelease.SkyrimSE => _sseImplicitMods,
+                _ => Enumerable.Empty<ModKey>(),
+            };
+        }
+
         internal static void AddImplicitMods(
             GameRelease release,
             DirectoryPath dataPath,
             IList<LoadOrderListing> loadOrder)
         {
-            if (release != GameRelease.SkyrimSE) return;
-            foreach (var implicitMod in _sseImplicitMods.Reverse())
+            foreach (var implicitMod in GetImplicitMods(release).Reverse())
             {
                 if (loadOrder.Any(x => x.ModKey == implicitMod)) continue;
                 if (!File.Exists(Path.Combine(dataPath.Path, implicitMod.FileName))) continue;
@@ -275,7 +271,38 @@ namespace Mutagen.Bethesda
                 throw new FileNotFoundException("Could not locate plugins file");
             }
 
-            return FromPath(game, path, dataPath, throwOnMissingMods);
+            return FromPath(path, game, dataPath, throwOnMissingMods);
+        }
+
+        public static void Write(string path, GameRelease release, IEnumerable<LoadOrderListing> loadOrder)
+        {
+            bool markers = HasEnabledMarkers(release);
+            var loadOrderList = loadOrder.ToList();
+            foreach (var implicitMod in GetImplicitMods(release))
+            {
+                if (loadOrderList.Count > 0
+                    && loadOrderList[0].ModKey == implicitMod
+                    && loadOrderList[0].Enabled)
+                {
+                    loadOrderList.RemoveAt(0);
+                }
+            }
+            File.WriteAllLines(path,
+                loadOrderList.Where(x =>
+                {
+                    return (markers || x.Enabled);
+                })
+                .Select(x =>
+                {
+                    if (x.Enabled && markers)
+                    {
+                        return $"*{x.ModKey.FileName}";
+                    }
+                    else
+                    {
+                        return x.ModKey.FileName;
+                    }
+                }));
         }
 
         /// <summary>
