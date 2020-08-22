@@ -55,13 +55,21 @@ namespace Mutagen.Bethesda
             return $"{ModKey} => {(Mod == null ? "Missing" : "Present")}";
         }
 
+        public void Dispose()
+        {
+            if (Mod is IDisposable disp)
+            {
+                disp.Dispose();
+            }
+        }
+
         public static implicit operator ModListing<TMod>(TMod mod)
         {
             return new ModListing<TMod>(mod);
         }
     }
 
-    public interface IModListing<out TMod> : IModKeyed
+    public interface IModListing<out TMod> : IModKeyed, IDisposable
         where TMod : class, IModGetter
     {
         /// <summary>
