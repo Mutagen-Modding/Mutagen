@@ -10654,10 +10654,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var stream = new MutagenBinaryReadStream(
                 path: path.Path,
                 metaData: meta);
-            return OblivionModFactory(
-                stream: stream,
-                path.ModKey,
-                shouldDispose: true);
+            try
+            {
+                return OblivionModFactory(
+                    stream: stream,
+                    path.ModKey,
+                    shouldDispose: true);
+            }
+            catch (Exception)
+            {
+                stream.Dispose();
+                throw;
+            }
         }
 
         public static OblivionModBinaryOverlay OblivionModFactory(

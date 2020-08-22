@@ -1,8 +1,11 @@
 ﻿using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Skyrim;
 using Noggog;
+using Noggog.Utility;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using Xunit;
 
@@ -203,6 +206,23 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.Equal(40, pos[2]);
             Assert.Equal(60, stream.Position);
             Assert.False(stream.Complete);
+        }
+
+        [Fact]
+        public void DisposedIfException()
+        {
+            using var tmpFolder = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(DisposedIfException)));
+            var modPath = Path.Combine(tmpFolder.Dir.Path, "Test.esp");
+            try
+            {
+                File.WriteAllText(modPath, "DERP");
+                var mod = SkyrimMod.CreateFromBinaryOverlay(modPath, SkyrimRelease.SkyrimLE);
+            }
+            catch (ArgumentException)
+            {
+            }
+            // Assert that file is released from wrapper's internal stream
+            File.Delete(modPath);
         }
         #endregion
     }
