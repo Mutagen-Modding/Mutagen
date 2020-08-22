@@ -73,6 +73,9 @@
     <Compile Include="Records\Common Subrecords\Condition.cs">
       <DependentUpon>Condition.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\ConditionData.cs">
+      <DependentUpon>Condition.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Common Subrecords\ConditionFloat.cs">
       <DependentUpon>Condition.xml</DependentUpon>
     </Compile>

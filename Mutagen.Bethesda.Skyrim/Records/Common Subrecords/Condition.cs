@@ -320,8 +320,33 @@ namespace Mutagen.Bethesda.Skyrim
         {
             static partial void WriteBinaryParameterParsingCustom(MutagenWriter writer, IFunctionConditionDataGetter item)
             {
-                writer.Write(item.ParameterOneNumber);
-                writer.Write(item.ParameterTwoNumber);
+                var paramTypes = ConditionData.GetParameterTypes(item.Function);
+                switch (paramTypes.First.GetCategory())
+                {
+                    case ConditionData.ParameterCategory.None:
+                    case ConditionData.ParameterCategory.Number:
+                        writer.Write(item.ParameterOneNumber);
+                        break;
+                    case ConditionData.ParameterCategory.Form:
+                        FormKeyBinaryTranslation.Instance.Write(writer, item.ParameterOneRecord.FormKey);
+                        break;
+                    case ConditionData.ParameterCategory.String:
+                    default:
+                        throw new NotImplementedException();
+                }
+                switch (paramTypes.Second.GetCategory())
+                {
+                    case ConditionData.ParameterCategory.None:
+                    case ConditionData.ParameterCategory.Number:
+                        writer.Write(item.ParameterTwoNumber);
+                        break;
+                    case ConditionData.ParameterCategory.Form:
+                        FormKeyBinaryTranslation.Instance.Write(writer, item.ParameterTwoRecord.FormKey);
+                        break;
+                    case ConditionData.ParameterCategory.String:
+                    default:
+                        throw new NotImplementedException();
+                }
                 writer.Write(item.Unknown3);
                 writer.Write(item.Unknown4);
                 writer.Write(item.Unknown5);
