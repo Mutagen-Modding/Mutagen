@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.13.3</Version>
+    <Version>0.13.4-dev</Version>
     <Authors>Noggog</Authors>
     <Company>Mutagen</Company>
     <Product>Mutagen</Product>
@@ -13,11 +13,12 @@
     <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/Noggog/Mutagen</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Noggog/Mutagen</RepositoryUrl>
-    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>Mutagen.Bethesda.Oblivion.xml</DocumentationFile>
+    <DebugType>embedded</DebugType>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
     <None Remove=".editorconfig" />

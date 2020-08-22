@@ -6,6 +6,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>Mutagen.Bethesda.Core.xml</DocumentationFile>
+    <DebugType>embedded</DebugType>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
   </PropertyGroup>
@@ -21,7 +23,7 @@
   </ItemGroup>
   <PropertyGroup>
     <PackageId>Mutagen.Bethesda.Core</PackageId>
-    <Version>0.13.3</Version>
+    <Version>0.13.4-dev</Version>
     <Authors>Noggog</Authors>
     <Company>Mutagen</Company>
     <Product>Mutagen</Product>
@@ -33,7 +35,6 @@
     <PackageReleaseNotes>Bethesda Modding</PackageReleaseNotes>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
