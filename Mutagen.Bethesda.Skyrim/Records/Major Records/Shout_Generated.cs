@@ -506,7 +506,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Name;
             public bool MenuDisplayObject;
             public bool Description;
-            public MaskItem<bool, ShoutWord.TranslationMask?> WordsOfPower;
+            public ShoutWord.TranslationMask? WordsOfPower;
             #endregion
 
             #region Ctors
@@ -516,7 +516,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Name = defaultOn;
                 this.MenuDisplayObject = defaultOn;
                 this.Description = defaultOn;
-                this.WordsOfPower = new MaskItem<bool, ShoutWord.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -527,7 +526,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Name, null));
                 ret.Add((MenuDisplayObject, null));
                 ret.Add((Description, null));
-                ret.Add((WordsOfPower?.Overall ?? true, WordsOfPower?.Specific?.GetCrystal()));
+                ret.Add((WordsOfPower != null || DefaultOn, WordsOfPower?.GetCrystal()));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

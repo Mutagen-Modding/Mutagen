@@ -899,7 +899,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool SoundFiles;
             public bool OutputModel;
             public bool String;
-            public MaskItem<bool, Condition.TranslationMask?> Conditions;
+            public Condition.TranslationMask? Conditions;
             public SoundLoopAndRumble.TranslationMask? LoopAndRumble;
             public bool PercentFrequencyShift;
             public bool PercentFrequencyVariance;
@@ -919,7 +919,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.SoundFiles = defaultOn;
                 this.OutputModel = defaultOn;
                 this.String = defaultOn;
-                this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
                 this.PercentFrequencyShift = defaultOn;
                 this.PercentFrequencyVariance = defaultOn;
                 this.Priority = defaultOn;
@@ -939,7 +938,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((SoundFiles, null));
                 ret.Add((OutputModel, null));
                 ret.Add((String, null));
-                ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
+                ret.Add((Conditions != null || DefaultOn, Conditions?.GetCrystal()));
                 ret.Add((LoopAndRumble != null || DefaultOn, LoopAndRumble?.GetCrystal()));
                 ret.Add((PercentFrequencyShift, null));
                 ret.Add((PercentFrequencyVariance, null));
@@ -947,6 +946,11 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Variance, null));
                 ret.Add((StaticAttenuation, null));
                 ret.Add((BNAMDataTypeState, null));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

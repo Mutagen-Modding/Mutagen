@@ -512,7 +512,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Flags;
             public bool MaxConcurrentQuests;
             public bool MaxNumQuestsToRun;
-            public MaskItem<bool, StoryManagerQuest.TranslationMask?> Quests;
+            public StoryManagerQuest.TranslationMask? Quests;
             #endregion
 
             #region Ctors
@@ -522,7 +522,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Flags = defaultOn;
                 this.MaxConcurrentQuests = defaultOn;
                 this.MaxNumQuestsToRun = defaultOn;
-                this.Quests = new MaskItem<bool, StoryManagerQuest.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -533,7 +532,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Flags, null));
                 ret.Add((MaxConcurrentQuests, null));
                 ret.Add((MaxNumQuestsToRun, null));
-                ret.Add((Quests?.Overall ?? true, Quests?.Specific?.GetCrystal()));
+                ret.Add((Quests != null || DefaultOn, Quests?.GetCrystal()));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

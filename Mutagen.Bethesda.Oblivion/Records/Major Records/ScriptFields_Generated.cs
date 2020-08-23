@@ -614,8 +614,8 @@ namespace Mutagen.Bethesda.Oblivion
             public ScriptMetaSummary.TranslationMask? MetadataSummary;
             public bool CompiledScript;
             public bool SourceCode;
-            public MaskItem<bool, LocalVariable.TranslationMask?> LocalVariables;
-            public MaskItem<bool, AScriptReference.TranslationMask?> References;
+            public LocalVariable.TranslationMask? LocalVariables;
+            public AScriptReference.TranslationMask? References;
             #endregion
 
             #region Ctors
@@ -624,8 +624,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.DefaultOn = defaultOn;
                 this.CompiledScript = defaultOn;
                 this.SourceCode = defaultOn;
-                this.LocalVariables = new MaskItem<bool, LocalVariable.TranslationMask?>(defaultOn, null);
-                this.References = new MaskItem<bool, AScriptReference.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -644,8 +642,8 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((MetadataSummary != null || DefaultOn, MetadataSummary?.GetCrystal()));
                 ret.Add((CompiledScript, null));
                 ret.Add((SourceCode, null));
-                ret.Add((LocalVariables?.Overall ?? true, LocalVariables?.Specific?.GetCrystal()));
-                ret.Add((References?.Overall ?? true, References?.Specific?.GetCrystal()));
+                ret.Add((LocalVariables != null || DefaultOn, LocalVariables?.GetCrystal()));
+                ret.Add((References != null || DefaultOn, References?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)

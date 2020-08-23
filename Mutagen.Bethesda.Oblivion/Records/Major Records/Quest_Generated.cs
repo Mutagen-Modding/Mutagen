@@ -779,9 +779,9 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Name;
             public bool Icon;
             public QuestData.TranslationMask? Data;
-            public MaskItem<bool, Condition.TranslationMask?> Conditions;
-            public MaskItem<bool, QuestStage.TranslationMask?> Stages;
-            public MaskItem<bool, QuestTarget.TranslationMask?> Targets;
+            public Condition.TranslationMask? Conditions;
+            public QuestStage.TranslationMask? Stages;
+            public QuestTarget.TranslationMask? Targets;
             #endregion
 
             #region Ctors
@@ -791,9 +791,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Script = defaultOn;
                 this.Name = defaultOn;
                 this.Icon = defaultOn;
-                this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
-                this.Stages = new MaskItem<bool, QuestStage.TranslationMask?>(defaultOn, null);
-                this.Targets = new MaskItem<bool, QuestTarget.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -805,9 +802,14 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Name, null));
                 ret.Add((Icon, null));
                 ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
-                ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
-                ret.Add((Stages?.Overall ?? true, Stages?.Specific?.GetCrystal()));
-                ret.Add((Targets?.Overall ?? true, Targets?.Specific?.GetCrystal()));
+                ret.Add((Conditions != null || DefaultOn, Conditions?.GetCrystal()));
+                ret.Add((Stages != null || DefaultOn, Stages?.GetCrystal()));
+                ret.Add((Targets != null || DefaultOn, Targets?.GetCrystal()));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

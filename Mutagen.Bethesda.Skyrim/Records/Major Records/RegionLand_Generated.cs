@@ -290,6 +290,11 @@ namespace Mutagen.Bethesda.Skyrim
 
             #endregion
 
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

@@ -568,6 +568,11 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((RelatedWaters != null || DefaultOn, RelatedWaters?.GetCrystal()));
             }
 
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

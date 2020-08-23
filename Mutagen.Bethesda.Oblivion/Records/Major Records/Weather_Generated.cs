@@ -765,11 +765,11 @@ namespace Mutagen.Bethesda.Oblivion
             public bool TextureLowerLayer;
             public bool TextureUpperLayer;
             public Model.TranslationMask? Model;
-            public MaskItem<bool, WeatherColors.TranslationMask?> Colors;
+            public WeatherColors.TranslationMask? Colors;
             public FogDistance.TranslationMask? FogDistance;
             public HDRData.TranslationMask? HDRData;
             public WeatherData.TranslationMask? Data;
-            public MaskItem<bool, WeatherSound.TranslationMask?> Sounds;
+            public WeatherSound.TranslationMask? Sounds;
             #endregion
 
             #region Ctors
@@ -778,8 +778,6 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.TextureLowerLayer = defaultOn;
                 this.TextureUpperLayer = defaultOn;
-                this.Colors = new MaskItem<bool, WeatherColors.TranslationMask?>(defaultOn, null);
-                this.Sounds = new MaskItem<bool, WeatherSound.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -790,11 +788,16 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((TextureLowerLayer, null));
                 ret.Add((TextureUpperLayer, null));
                 ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
-                ret.Add((Colors?.Overall ?? true, Colors?.Specific?.GetCrystal()));
+                ret.Add((Colors != null || DefaultOn, Colors?.GetCrystal()));
                 ret.Add((FogDistance != null || DefaultOn, FogDistance?.GetCrystal()));
                 ret.Add((HDRData != null || DefaultOn, HDRData?.GetCrystal()));
                 ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
-                ret.Add((Sounds?.Overall ?? true, Sounds?.Specific?.GetCrystal()));
+                ret.Add((Sounds != null || DefaultOn, Sounds?.GetCrystal()));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

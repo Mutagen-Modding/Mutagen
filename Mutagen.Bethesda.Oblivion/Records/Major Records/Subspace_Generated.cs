@@ -344,6 +344,11 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Point, null));
             }
 
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

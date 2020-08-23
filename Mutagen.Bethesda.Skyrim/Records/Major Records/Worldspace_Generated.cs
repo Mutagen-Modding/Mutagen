@@ -1504,7 +1504,7 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, WorldspaceGridReference.TranslationMask?> LargeReferences;
+            public WorldspaceGridReference.TranslationMask? LargeReferences;
             public WorldspaceMaxHeight.TranslationMask? MaxHeight;
             public bool Name;
             public bool FixedDimensionsCenterCell;
@@ -1534,14 +1534,13 @@ namespace Mutagen.Bethesda.Skyrim
             public Cell.TranslationMask? TopCell;
             public bool SubCellsTimestamp;
             public bool SubCellsUnknown;
-            public MaskItem<bool, WorldspaceBlock.TranslationMask?> SubCells;
+            public WorldspaceBlock.TranslationMask? SubCells;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.LargeReferences = new MaskItem<bool, WorldspaceGridReference.TranslationMask?>(defaultOn, null);
                 this.Name = defaultOn;
                 this.FixedDimensionsCenterCell = defaultOn;
                 this.InteriorLighting = defaultOn;
@@ -1563,7 +1562,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.OffsetData = defaultOn;
                 this.SubCellsTimestamp = defaultOn;
                 this.SubCellsUnknown = defaultOn;
-                this.SubCells = new MaskItem<bool, WorldspaceBlock.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -1571,7 +1569,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((LargeReferences?.Overall ?? true, LargeReferences?.Specific?.GetCrystal()));
+                ret.Add((LargeReferences != null || DefaultOn, LargeReferences?.GetCrystal()));
                 ret.Add((MaxHeight != null || DefaultOn, MaxHeight?.GetCrystal()));
                 ret.Add((Name, null));
                 ret.Add((FixedDimensionsCenterCell, null));
@@ -1601,7 +1599,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((TopCell != null || DefaultOn, TopCell?.GetCrystal()));
                 ret.Add((SubCellsTimestamp, null));
                 ret.Add((SubCellsUnknown, null));
-                ret.Add((SubCells?.Overall ?? true, SubCells?.Specific?.GetCrystal()));
+                ret.Add((SubCells != null || DefaultOn, SubCells?.GetCrystal()));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

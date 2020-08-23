@@ -1613,9 +1613,9 @@ namespace Mutagen.Bethesda.Skyrim
             public CreateReferenceToObject.TranslationMask? CreateReferenceToObject;
             public FindMatchingRefNearAlias.TranslationMask? FindMatchingRefNearAlias;
             public FindMatchingRefFromEvent.TranslationMask? FindMatchingRefFromEvent;
-            public MaskItem<bool, Condition.TranslationMask?> Conditions;
+            public Condition.TranslationMask? Conditions;
             public bool Keywords;
-            public MaskItem<bool, ContainerEntry.TranslationMask?> Items;
+            public ContainerEntry.TranslationMask? Items;
             public bool SpectatorOverridePackageList;
             public bool ObserveDeadBodyOverridePackageList;
             public bool GuardWarnOverridePackageList;
@@ -1639,9 +1639,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.SpecificLocation = defaultOn;
                 this.ForcedReference = defaultOn;
                 this.UniqueActor = defaultOn;
-                this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
                 this.Keywords = defaultOn;
-                this.Items = new MaskItem<bool, ContainerEntry.TranslationMask?>(defaultOn, null);
                 this.SpectatorOverridePackageList = defaultOn;
                 this.ObserveDeadBodyOverridePackageList = defaultOn;
                 this.GuardWarnOverridePackageList = defaultOn;
@@ -1679,9 +1677,9 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((CreateReferenceToObject != null || DefaultOn, CreateReferenceToObject?.GetCrystal()));
                 ret.Add((FindMatchingRefNearAlias != null || DefaultOn, FindMatchingRefNearAlias?.GetCrystal()));
                 ret.Add((FindMatchingRefFromEvent != null || DefaultOn, FindMatchingRefFromEvent?.GetCrystal()));
-                ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
+                ret.Add((Conditions != null || DefaultOn, Conditions?.GetCrystal()));
                 ret.Add((Keywords, null));
-                ret.Add((Items?.Overall ?? true, Items?.Specific?.GetCrystal()));
+                ret.Add((Items != null || DefaultOn, Items?.GetCrystal()));
                 ret.Add((SpectatorOverridePackageList, null));
                 ret.Add((ObserveDeadBodyOverridePackageList, null));
                 ret.Add((GuardWarnOverridePackageList, null));

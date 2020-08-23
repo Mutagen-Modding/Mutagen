@@ -525,7 +525,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool FileName;
             public bool MaskType;
             public bool PresetDefault;
-            public MaskItem<bool, TintPreset.TranslationMask?> Presets;
+            public TintPreset.TranslationMask? Presets;
             #endregion
 
             #region Ctors
@@ -536,7 +536,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.FileName = defaultOn;
                 this.MaskType = defaultOn;
                 this.PresetDefault = defaultOn;
-                this.Presets = new MaskItem<bool, TintPreset.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -556,7 +555,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((FileName, null));
                 ret.Add((MaskType, null));
                 ret.Add((PresetDefault, null));
-                ret.Add((Presets?.Overall ?? true, Presets?.Specific?.GetCrystal()));
+                ret.Add((Presets != null || DefaultOn, Presets?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)

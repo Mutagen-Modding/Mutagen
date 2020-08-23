@@ -608,8 +608,8 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Versioning;
             public bool Unknown;
             public bool FileName;
-            public MaskItem<bool, QuestScriptFragment.TranslationMask?> Fragments;
-            public MaskItem<bool, QuestFragmentAlias.TranslationMask?> Aliases;
+            public QuestScriptFragment.TranslationMask? Fragments;
+            public QuestFragmentAlias.TranslationMask? Aliases;
             #endregion
 
             #region Ctors
@@ -619,8 +619,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Versioning = defaultOn;
                 this.Unknown = defaultOn;
                 this.FileName = defaultOn;
-                this.Fragments = new MaskItem<bool, QuestScriptFragment.TranslationMask?>(defaultOn, null);
-                this.Aliases = new MaskItem<bool, QuestFragmentAlias.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -631,8 +629,13 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Versioning, null));
                 ret.Add((Unknown, null));
                 ret.Add((FileName, null));
-                ret.Add((Fragments?.Overall ?? true, Fragments?.Specific?.GetCrystal()));
-                ret.Add((Aliases?.Overall ?? true, Aliases?.Specific?.GetCrystal()));
+                ret.Add((Fragments != null || DefaultOn, Fragments?.GetCrystal()));
+                ret.Add((Aliases != null || DefaultOn, Aliases?.GetCrystal()));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

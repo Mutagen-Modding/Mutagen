@@ -473,7 +473,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Members
             public bool ChanceNone;
             public bool Flags;
-            public MaskItem<bool, LeveledEntry.TranslationMask<AItem.TranslationMask>?> Entries;
+            public LeveledEntry.TranslationMask<AItem.TranslationMask>? Entries;
             #endregion
 
             #region Ctors
@@ -482,7 +482,6 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.ChanceNone = defaultOn;
                 this.Flags = defaultOn;
-                this.Entries = new MaskItem<bool, LeveledEntry.TranslationMask<AItem.TranslationMask>?>(defaultOn, null);
             }
 
             #endregion
@@ -492,7 +491,12 @@ namespace Mutagen.Bethesda.Oblivion
                 base.GetCrystal(ret);
                 ret.Add((ChanceNone, null));
                 ret.Add((Flags, null));
-                ret.Add((Entries?.Overall ?? true, Entries?.Specific?.GetCrystal()));
+                ret.Add((Entries != null || DefaultOn, Entries?.GetCrystal()));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

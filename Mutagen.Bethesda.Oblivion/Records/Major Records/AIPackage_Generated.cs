@@ -591,14 +591,13 @@ namespace Mutagen.Bethesda.Oblivion
             public AIPackageLocation.TranslationMask? Location;
             public AIPackageSchedule.TranslationMask? Schedule;
             public AIPackageTarget.TranslationMask? Target;
-            public MaskItem<bool, Condition.TranslationMask?> Conditions;
+            public Condition.TranslationMask? Conditions;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -610,7 +609,12 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Location != null || DefaultOn, Location?.GetCrystal()));
                 ret.Add((Schedule != null || DefaultOn, Schedule?.GetCrystal()));
                 ret.Add((Target != null || DefaultOn, Target?.GetCrystal()));
-                ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
+                ret.Add((Conditions != null || DefaultOn, Conditions?.GetCrystal()));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

@@ -403,6 +403,11 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Advanced != null || DefaultOn, Advanced?.GetCrystal()));
             }
 
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

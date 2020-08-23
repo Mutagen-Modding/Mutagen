@@ -430,7 +430,7 @@ namespace Mutagen.Bethesda.Skyrim
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool GridPosition;
-            public MaskItem<bool, WorldspaceReference.TranslationMask?> References;
+            public WorldspaceReference.TranslationMask? References;
             #endregion
 
             #region Ctors
@@ -438,7 +438,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.DefaultOn = defaultOn;
                 this.GridPosition = defaultOn;
-                this.References = new MaskItem<bool, WorldspaceReference.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -455,7 +454,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((GridPosition, null));
-                ret.Add((References?.Overall ?? true, References?.Specific?.GetCrystal()));
+                ret.Add((References != null || DefaultOn, References?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)

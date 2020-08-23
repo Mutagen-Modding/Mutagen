@@ -1291,16 +1291,16 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Name;
             public bool Description;
             public bool Spells;
-            public MaskItem<bool, RaceRelation.TranslationMask?> Relations;
+            public RaceRelation.TranslationMask? Relations;
             public RaceData.TranslationMask? Data;
-            public MaskItem<bool, GenderedItem<bool>?> Voices;
-            public MaskItem<bool, GenderedItem<bool>?> DefaultHair;
+            public GenderedItem<bool>? Voices;
+            public GenderedItem<bool>? DefaultHair;
             public bool DefaultHairColor;
             public bool FaceGenMainClamp;
             public bool FaceGenFaceClamp;
-            public MaskItem<bool, GenderedItem<RaceStats.TranslationMask?>?> RaceStats;
-            public MaskItem<bool, FacePart.TranslationMask?> FaceData;
-            public MaskItem<bool, GenderedItem<BodyData.TranslationMask?>?> BodyData;
+            public GenderedItem<RaceStats.TranslationMask>? RaceStats;
+            public FacePart.TranslationMask? FaceData;
+            public GenderedItem<BodyData.TranslationMask>? BodyData;
             public bool Hairs;
             public bool Eyes;
             public FaceGenData.TranslationMask? FaceGenData;
@@ -1314,15 +1314,9 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Name = defaultOn;
                 this.Description = defaultOn;
                 this.Spells = defaultOn;
-                this.Relations = new MaskItem<bool, RaceRelation.TranslationMask?>(defaultOn, null);
-                this.Voices = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
-                this.DefaultHair = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
                 this.DefaultHairColor = defaultOn;
                 this.FaceGenMainClamp = defaultOn;
                 this.FaceGenFaceClamp = defaultOn;
-                this.RaceStats = new MaskItem<bool, GenderedItem<RaceStats.TranslationMask?>?>(defaultOn, default);
-                this.FaceData = new MaskItem<bool, FacePart.TranslationMask?>(defaultOn, null);
-                this.BodyData = new MaskItem<bool, GenderedItem<BodyData.TranslationMask?>?>(defaultOn, default);
                 this.Hairs = defaultOn;
                 this.Eyes = defaultOn;
                 this.SNAM = defaultOn;
@@ -1336,20 +1330,25 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Name, null));
                 ret.Add((Description, null));
                 ret.Add((Spells, null));
-                ret.Add((Relations?.Overall ?? true, Relations?.Specific?.GetCrystal()));
+                ret.Add((Relations != null || DefaultOn, Relations?.GetCrystal()));
                 ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
-                ret.Add((Voices?.Overall ?? true, null));
-                ret.Add((DefaultHair?.Overall ?? true, null));
+                ret.Add((Voices != null || DefaultOn, null));
+                ret.Add((DefaultHair != null || DefaultOn, null));
                 ret.Add((DefaultHairColor, null));
                 ret.Add((FaceGenMainClamp, null));
                 ret.Add((FaceGenFaceClamp, null));
-                ret.Add((RaceStats?.Overall ?? true, null));
-                ret.Add((FaceData?.Overall ?? true, FaceData?.Specific?.GetCrystal()));
-                ret.Add((BodyData?.Overall ?? true, null));
+                ret.Add((RaceStats != null || DefaultOn, null));
+                ret.Add((FaceData != null || DefaultOn, FaceData?.GetCrystal()));
+                ret.Add((BodyData != null || DefaultOn, null));
                 ret.Add((Hairs, null));
                 ret.Add((Eyes, null));
                 ret.Add((FaceGenData != null || DefaultOn, FaceGenData?.GetCrystal()));
                 ret.Add((SNAM, null));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

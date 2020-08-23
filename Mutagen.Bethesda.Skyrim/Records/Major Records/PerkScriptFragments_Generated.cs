@@ -459,7 +459,7 @@ namespace Mutagen.Bethesda.Skyrim
             public readonly bool DefaultOn;
             public bool Unknown;
             public bool FileName;
-            public MaskItem<bool, IndexedScriptFragment.TranslationMask?> Fragments;
+            public IndexedScriptFragment.TranslationMask? Fragments;
             #endregion
 
             #region Ctors
@@ -468,7 +468,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DefaultOn = defaultOn;
                 this.Unknown = defaultOn;
                 this.FileName = defaultOn;
-                this.Fragments = new MaskItem<bool, IndexedScriptFragment.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -486,7 +485,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 ret.Add((Unknown, null));
                 ret.Add((FileName, null));
-                ret.Add((Fragments?.Overall ?? true, Fragments?.Specific?.GetCrystal()));
+                ret.Add((Fragments != null || DefaultOn, Fragments?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)

@@ -432,7 +432,7 @@ namespace Mutagen.Bethesda.Skyrim
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool Type;
-            public MaskItem<bool, NpcSound.TranslationMask?> Sounds;
+            public NpcSound.TranslationMask? Sounds;
             #endregion
 
             #region Ctors
@@ -440,7 +440,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.DefaultOn = defaultOn;
                 this.Type = defaultOn;
-                this.Sounds = new MaskItem<bool, NpcSound.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -457,7 +456,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Type, null));
-                ret.Add((Sounds?.Overall ?? true, Sounds?.Specific?.GetCrystal()));
+                ret.Add((Sounds != null || DefaultOn, Sounds?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)

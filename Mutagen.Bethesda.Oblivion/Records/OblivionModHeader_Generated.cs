@@ -664,7 +664,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Deleted;
             public bool Author;
             public bool Description;
-            public MaskItem<bool, MasterReference.TranslationMask?> MasterReferences;
+            public MasterReference.TranslationMask? MasterReferences;
             #endregion
 
             #region Ctors
@@ -678,7 +678,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Deleted = defaultOn;
                 this.Author = defaultOn;
                 this.Description = defaultOn;
-                this.MasterReferences = new MaskItem<bool, MasterReference.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -702,7 +701,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Deleted, null));
                 ret.Add((Author, null));
                 ret.Add((Description, null));
-                ret.Add((MasterReferences?.Overall ?? true, MasterReferences?.Specific?.GetCrystal()));
+                ret.Add((MasterReferences != null || DefaultOn, MasterReferences?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)

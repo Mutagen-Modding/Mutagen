@@ -517,7 +517,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool GroupType;
             public bool LastModified;
             public bool Unknown;
-            public MaskItem<bool, CellSubBlock.TranslationMask?> SubBlocks;
+            public CellSubBlock.TranslationMask? SubBlocks;
             #endregion
 
             #region Ctors
@@ -528,7 +528,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.GroupType = defaultOn;
                 this.LastModified = defaultOn;
                 this.Unknown = defaultOn;
-                this.SubBlocks = new MaskItem<bool, CellSubBlock.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -548,7 +547,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((GroupType, null));
                 ret.Add((LastModified, null));
                 ret.Add((Unknown, null));
-                ret.Add((SubBlocks?.Overall ?? true, SubBlocks?.Specific?.GetCrystal()));
+                ret.Add((SubBlocks != null || DefaultOn, SubBlocks?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)

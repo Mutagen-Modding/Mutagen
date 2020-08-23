@@ -671,7 +671,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool VertexNormals;
             public bool VertexHeightMap;
             public bool VertexColors;
-            public MaskItem<bool, BaseLayer.TranslationMask?> Layers;
+            public BaseLayer.TranslationMask? Layers;
             public bool Textures;
             #endregion
 
@@ -683,7 +683,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.VertexNormals = defaultOn;
                 this.VertexHeightMap = defaultOn;
                 this.VertexColors = defaultOn;
-                this.Layers = new MaskItem<bool, BaseLayer.TranslationMask?>(defaultOn, null);
                 this.Textures = defaultOn;
             }
 
@@ -696,8 +695,13 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((VertexNormals, null));
                 ret.Add((VertexHeightMap, null));
                 ret.Add((VertexColors, null));
-                ret.Add((Layers?.Overall ?? true, Layers?.Specific?.GetCrystal()));
+                ret.Add((Layers != null || DefaultOn, Layers?.GetCrystal()));
                 ret.Add((Textures, null));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

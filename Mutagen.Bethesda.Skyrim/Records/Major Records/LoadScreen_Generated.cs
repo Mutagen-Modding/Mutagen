@@ -681,7 +681,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public Icons.TranslationMask? Icons;
             public bool Description;
-            public MaskItem<bool, Condition.TranslationMask?> Conditions;
+            public Condition.TranslationMask? Conditions;
             public bool LoadingScreenNif;
             public bool InitialScale;
             public bool InitialRotation;
@@ -695,7 +695,6 @@ namespace Mutagen.Bethesda.Skyrim
                 : base(defaultOn)
             {
                 this.Description = defaultOn;
-                this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
                 this.LoadingScreenNif = defaultOn;
                 this.InitialScale = defaultOn;
                 this.InitialRotation = defaultOn;
@@ -710,13 +709,18 @@ namespace Mutagen.Bethesda.Skyrim
                 base.GetCrystal(ret);
                 ret.Add((Icons != null || DefaultOn, Icons?.GetCrystal()));
                 ret.Add((Description, null));
-                ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
+                ret.Add((Conditions != null || DefaultOn, Conditions?.GetCrystal()));
                 ret.Add((LoadingScreenNif, null));
                 ret.Add((InitialScale, null));
                 ret.Add((InitialRotation, null));
                 ret.Add((RotationOffsetConstraints != null || DefaultOn, RotationOffsetConstraints?.GetCrystal()));
                 ret.Add((InitialTranslationOffset, null));
                 ret.Add((CameraPath, null));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

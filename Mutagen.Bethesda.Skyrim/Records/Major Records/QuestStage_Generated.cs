@@ -516,7 +516,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Index;
             public bool Flags;
             public bool Unknown;
-            public MaskItem<bool, QuestLogEntry.TranslationMask?> LogEntries;
+            public QuestLogEntry.TranslationMask? LogEntries;
             public bool INDXDataTypeState;
             #endregion
 
@@ -527,7 +527,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Index = defaultOn;
                 this.Flags = defaultOn;
                 this.Unknown = defaultOn;
-                this.LogEntries = new MaskItem<bool, QuestLogEntry.TranslationMask?>(defaultOn, null);
                 this.INDXDataTypeState = defaultOn;
             }
 
@@ -547,7 +546,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Index, null));
                 ret.Add((Flags, null));
                 ret.Add((Unknown, null));
-                ret.Add((LogEntries?.Overall ?? true, LogEntries?.Specific?.GetCrystal()));
+                ret.Add((LogEntries != null || DefaultOn, LogEntries?.GetCrystal()));
                 ret.Add((INDXDataTypeState, null));
             }
 

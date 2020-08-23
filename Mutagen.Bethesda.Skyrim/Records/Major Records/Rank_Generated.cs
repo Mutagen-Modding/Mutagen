@@ -385,7 +385,7 @@ namespace Mutagen.Bethesda.Skyrim
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool Number;
-            public MaskItem<bool, GenderedItem<bool>?> Title;
+            public GenderedItem<bool>? Title;
             public bool Insignia;
             #endregion
 
@@ -394,7 +394,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.DefaultOn = defaultOn;
                 this.Number = defaultOn;
-                this.Title = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
                 this.Insignia = defaultOn;
             }
 
@@ -412,7 +411,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Number, null));
-                ret.Add((Title?.Overall ?? true, null));
+                ret.Add((Title != null || DefaultOn, null));
                 ret.Add((Insignia, null));
             }
 

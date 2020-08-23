@@ -44,12 +44,12 @@ namespace Mutagen.Bethesda.Oblivion
         {
             private static WorldspaceBlock.TranslationMask duplicateBlockCopyMask = new WorldspaceBlock.TranslationMask(true)
             {
-                Items = new MaskItem<bool, WorldspaceSubBlock.TranslationMask?>(false, default)
+                Items = false
             };
 
             private static WorldspaceSubBlock.TranslationMask duplicateSubBlockCopyMask = new WorldspaceSubBlock.TranslationMask(true)
             {
-                Items = new MaskItem<bool, Cell.TranslationMask?>(false, default)
+                Items = false
             };
 
             partial void PostDuplicate(Worldspace obj, Worldspace rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)

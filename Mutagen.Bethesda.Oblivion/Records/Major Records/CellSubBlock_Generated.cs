@@ -488,7 +488,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool BlockNumber;
             public bool GroupType;
             public bool LastModified;
-            public MaskItem<bool, Cell.TranslationMask?> Cells;
+            public Cell.TranslationMask? Cells;
             #endregion
 
             #region Ctors
@@ -498,7 +498,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.BlockNumber = defaultOn;
                 this.GroupType = defaultOn;
                 this.LastModified = defaultOn;
-                this.Cells = new MaskItem<bool, Cell.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -517,7 +516,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((BlockNumber, null));
                 ret.Add((GroupType, null));
                 ret.Add((LastModified, null));
-                ret.Add((Cells?.Overall ?? true, Cells?.Specific?.GetCrystal()));
+                ret.Add((Cells != null || DefaultOn, Cells?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)

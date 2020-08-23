@@ -776,7 +776,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool ChargeTime;
             public bool BaseEnchantment;
             public bool WornRestrictions;
-            public MaskItem<bool, Effect.TranslationMask?> Effects;
+            public Effect.TranslationMask? Effects;
             public bool ENITDataTypeState;
             #endregion
 
@@ -794,7 +794,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ChargeTime = defaultOn;
                 this.BaseEnchantment = defaultOn;
                 this.WornRestrictions = defaultOn;
-                this.Effects = new MaskItem<bool, Effect.TranslationMask?>(defaultOn, null);
                 this.ENITDataTypeState = defaultOn;
             }
 
@@ -814,8 +813,13 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((ChargeTime, null));
                 ret.Add((BaseEnchantment, null));
                 ret.Add((WornRestrictions, null));
-                ret.Add((Effects?.Overall ?? true, Effects?.Specific?.GetCrystal()));
+                ret.Add((Effects != null || DefaultOn, Effects?.GetCrystal()));
                 ret.Add((ENITDataTypeState, null));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

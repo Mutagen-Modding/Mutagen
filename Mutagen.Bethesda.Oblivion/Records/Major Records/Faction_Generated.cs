@@ -617,10 +617,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             public bool Name;
-            public MaskItem<bool, Relation.TranslationMask?> Relations;
+            public Relation.TranslationMask? Relations;
             public bool Flags;
             public bool CrimeGoldMultiplier;
-            public MaskItem<bool, Rank.TranslationMask?> Ranks;
+            public Rank.TranslationMask? Ranks;
             #endregion
 
             #region Ctors
@@ -628,10 +628,8 @@ namespace Mutagen.Bethesda.Oblivion
                 : base(defaultOn)
             {
                 this.Name = defaultOn;
-                this.Relations = new MaskItem<bool, Relation.TranslationMask?>(defaultOn, null);
                 this.Flags = defaultOn;
                 this.CrimeGoldMultiplier = defaultOn;
-                this.Ranks = new MaskItem<bool, Rank.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -640,10 +638,15 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 base.GetCrystal(ret);
                 ret.Add((Name, null));
-                ret.Add((Relations?.Overall ?? true, Relations?.Specific?.GetCrystal()));
+                ret.Add((Relations != null || DefaultOn, Relations?.GetCrystal()));
                 ret.Add((Flags, null));
                 ret.Add((CrimeGoldMultiplier, null));
-                ret.Add((Ranks?.Overall ?? true, Ranks?.Specific?.GetCrystal()));
+                ret.Add((Ranks != null || DefaultOn, Ranks?.GetCrystal()));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

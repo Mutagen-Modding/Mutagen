@@ -2476,22 +2476,22 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, LocationReference.TranslationMask?> ActorCellPersistentReferences;
-            public MaskItem<bool, LocationReference.TranslationMask?> LocationCellPersistentReferences;
+            public LocationReference.TranslationMask? ActorCellPersistentReferences;
+            public LocationReference.TranslationMask? LocationCellPersistentReferences;
             public bool ReferenceCellPersistentReferences;
-            public MaskItem<bool, LocationReference.TranslationMask?> ActorCellUniques;
-            public MaskItem<bool, LocationReference.TranslationMask?> LocationCellUniques;
+            public LocationReference.TranslationMask? ActorCellUniques;
+            public LocationReference.TranslationMask? LocationCellUniques;
             public bool ReferenceCellUnique;
-            public MaskItem<bool, LocationCellStaticReference.TranslationMask?> ActorCellStaticReferences;
-            public MaskItem<bool, LocationCellStaticReference.TranslationMask?> LocationCellStaticReferences;
+            public LocationCellStaticReference.TranslationMask? ActorCellStaticReferences;
+            public LocationCellStaticReference.TranslationMask? LocationCellStaticReferences;
             public bool ReferenceCellStaticReferences;
-            public MaskItem<bool, LocationCoordinate.TranslationMask?> ActorCellEncounterCell;
-            public MaskItem<bool, LocationCoordinate.TranslationMask?> LocationCellEncounterCell;
-            public MaskItem<bool, LocationCoordinate.TranslationMask?> ReferenceCellEncounterCell;
+            public LocationCoordinate.TranslationMask? ActorCellEncounterCell;
+            public LocationCoordinate.TranslationMask? LocationCellEncounterCell;
+            public LocationCoordinate.TranslationMask? ReferenceCellEncounterCell;
             public bool ActorCellMarkerReference;
             public bool LocationCellMarkerReference;
-            public MaskItem<bool, LocationCellEnablePoint.TranslationMask?> ActorCellEnablePoint;
-            public MaskItem<bool, LocationCellEnablePoint.TranslationMask?> LocationCellEnablePoint;
+            public LocationCellEnablePoint.TranslationMask? ActorCellEnablePoint;
+            public LocationCellEnablePoint.TranslationMask? LocationCellEnablePoint;
             public bool Name;
             public bool Keywords;
             public bool ParentLocation;
@@ -2507,22 +2507,11 @@ namespace Mutagen.Bethesda.Skyrim
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.ActorCellPersistentReferences = new MaskItem<bool, LocationReference.TranslationMask?>(defaultOn, null);
-                this.LocationCellPersistentReferences = new MaskItem<bool, LocationReference.TranslationMask?>(defaultOn, null);
                 this.ReferenceCellPersistentReferences = defaultOn;
-                this.ActorCellUniques = new MaskItem<bool, LocationReference.TranslationMask?>(defaultOn, null);
-                this.LocationCellUniques = new MaskItem<bool, LocationReference.TranslationMask?>(defaultOn, null);
                 this.ReferenceCellUnique = defaultOn;
-                this.ActorCellStaticReferences = new MaskItem<bool, LocationCellStaticReference.TranslationMask?>(defaultOn, null);
-                this.LocationCellStaticReferences = new MaskItem<bool, LocationCellStaticReference.TranslationMask?>(defaultOn, null);
                 this.ReferenceCellStaticReferences = defaultOn;
-                this.ActorCellEncounterCell = new MaskItem<bool, LocationCoordinate.TranslationMask?>(defaultOn, null);
-                this.LocationCellEncounterCell = new MaskItem<bool, LocationCoordinate.TranslationMask?>(defaultOn, null);
-                this.ReferenceCellEncounterCell = new MaskItem<bool, LocationCoordinate.TranslationMask?>(defaultOn, null);
                 this.ActorCellMarkerReference = defaultOn;
                 this.LocationCellMarkerReference = defaultOn;
-                this.ActorCellEnablePoint = new MaskItem<bool, LocationCellEnablePoint.TranslationMask?>(defaultOn, null);
-                this.LocationCellEnablePoint = new MaskItem<bool, LocationCellEnablePoint.TranslationMask?>(defaultOn, null);
                 this.Name = defaultOn;
                 this.Keywords = defaultOn;
                 this.ParentLocation = defaultOn;
@@ -2539,22 +2528,22 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((ActorCellPersistentReferences?.Overall ?? true, ActorCellPersistentReferences?.Specific?.GetCrystal()));
-                ret.Add((LocationCellPersistentReferences?.Overall ?? true, LocationCellPersistentReferences?.Specific?.GetCrystal()));
+                ret.Add((ActorCellPersistentReferences != null || DefaultOn, ActorCellPersistentReferences?.GetCrystal()));
+                ret.Add((LocationCellPersistentReferences != null || DefaultOn, LocationCellPersistentReferences?.GetCrystal()));
                 ret.Add((ReferenceCellPersistentReferences, null));
-                ret.Add((ActorCellUniques?.Overall ?? true, ActorCellUniques?.Specific?.GetCrystal()));
-                ret.Add((LocationCellUniques?.Overall ?? true, LocationCellUniques?.Specific?.GetCrystal()));
+                ret.Add((ActorCellUniques != null || DefaultOn, ActorCellUniques?.GetCrystal()));
+                ret.Add((LocationCellUniques != null || DefaultOn, LocationCellUniques?.GetCrystal()));
                 ret.Add((ReferenceCellUnique, null));
-                ret.Add((ActorCellStaticReferences?.Overall ?? true, ActorCellStaticReferences?.Specific?.GetCrystal()));
-                ret.Add((LocationCellStaticReferences?.Overall ?? true, LocationCellStaticReferences?.Specific?.GetCrystal()));
+                ret.Add((ActorCellStaticReferences != null || DefaultOn, ActorCellStaticReferences?.GetCrystal()));
+                ret.Add((LocationCellStaticReferences != null || DefaultOn, LocationCellStaticReferences?.GetCrystal()));
                 ret.Add((ReferenceCellStaticReferences, null));
-                ret.Add((ActorCellEncounterCell?.Overall ?? true, ActorCellEncounterCell?.Specific?.GetCrystal()));
-                ret.Add((LocationCellEncounterCell?.Overall ?? true, LocationCellEncounterCell?.Specific?.GetCrystal()));
-                ret.Add((ReferenceCellEncounterCell?.Overall ?? true, ReferenceCellEncounterCell?.Specific?.GetCrystal()));
+                ret.Add((ActorCellEncounterCell != null || DefaultOn, ActorCellEncounterCell?.GetCrystal()));
+                ret.Add((LocationCellEncounterCell != null || DefaultOn, LocationCellEncounterCell?.GetCrystal()));
+                ret.Add((ReferenceCellEncounterCell != null || DefaultOn, ReferenceCellEncounterCell?.GetCrystal()));
                 ret.Add((ActorCellMarkerReference, null));
                 ret.Add((LocationCellMarkerReference, null));
-                ret.Add((ActorCellEnablePoint?.Overall ?? true, ActorCellEnablePoint?.Specific?.GetCrystal()));
-                ret.Add((LocationCellEnablePoint?.Overall ?? true, LocationCellEnablePoint?.Specific?.GetCrystal()));
+                ret.Add((ActorCellEnablePoint != null || DefaultOn, ActorCellEnablePoint?.GetCrystal()));
+                ret.Add((LocationCellEnablePoint != null || DefaultOn, LocationCellEnablePoint?.GetCrystal()));
                 ret.Add((Name, null));
                 ret.Add((Keywords, null));
                 ret.Add((ParentLocation, null));
@@ -2564,6 +2553,11 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((WorldLocationRadius, null));
                 ret.Add((HorseMarkerRef, null));
                 ret.Add((Color, null));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

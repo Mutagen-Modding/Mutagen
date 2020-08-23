@@ -1209,7 +1209,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Name;
             public bool ObjectEffect;
             public bool EnchantmentAmount;
-            public MaskItem<bool, GenderedItem<ArmorModel.TranslationMask?>?> WorldModel;
+            public GenderedItem<ArmorModel.TranslationMask>? WorldModel;
             public BodyTemplate.TranslationMask? BodyTemplate;
             public Destructible.TranslationMask? Destructible;
             public bool PickUpSound;
@@ -1236,7 +1236,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Name = defaultOn;
                 this.ObjectEffect = defaultOn;
                 this.EnchantmentAmount = defaultOn;
-                this.WorldModel = new MaskItem<bool, GenderedItem<ArmorModel.TranslationMask?>?>(defaultOn, default);
                 this.PickUpSound = defaultOn;
                 this.PutDownSound = defaultOn;
                 this.RagdollConstraintTemplate = defaultOn;
@@ -1264,7 +1263,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Name, null));
                 ret.Add((ObjectEffect, null));
                 ret.Add((EnchantmentAmount, null));
-                ret.Add((WorldModel?.Overall ?? true, null));
+                ret.Add((WorldModel != null || DefaultOn, null));
                 ret.Add((BodyTemplate != null || DefaultOn, BodyTemplate?.GetCrystal()));
                 ret.Add((Destructible != null || DefaultOn, Destructible?.GetCrystal()));
                 ret.Add((PickUpSound, null));
@@ -1282,6 +1281,11 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((ArmorRating, null));
                 ret.Add((TemplateArmor, null));
                 ret.Add((DATADataTypeState, null));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

@@ -894,7 +894,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Deleted;
             public bool Author;
             public bool Description;
-            public MaskItem<bool, MasterReference.TranslationMask?> MasterReferences;
+            public MasterReference.TranslationMask? MasterReferences;
             public bool OverriddenForms;
             public bool INTV;
             public bool INCC;
@@ -913,7 +913,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Deleted = defaultOn;
                 this.Author = defaultOn;
                 this.Description = defaultOn;
-                this.MasterReferences = new MaskItem<bool, MasterReference.TranslationMask?>(defaultOn, null);
                 this.OverriddenForms = defaultOn;
                 this.INTV = defaultOn;
                 this.INCC = defaultOn;
@@ -942,7 +941,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Deleted, null));
                 ret.Add((Author, null));
                 ret.Add((Description, null));
-                ret.Add((MasterReferences?.Overall ?? true, MasterReferences?.Specific?.GetCrystal()));
+                ret.Add((MasterReferences != null || DefaultOn, MasterReferences?.GetCrystal()));
                 ret.Add((OverriddenForms, null));
                 ret.Add((INTV, null));
                 ret.Add((INCC, null));

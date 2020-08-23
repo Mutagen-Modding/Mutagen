@@ -536,6 +536,11 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((DepthOfField != null || DefaultOn, DepthOfField?.GetCrystal()));
             }
 
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

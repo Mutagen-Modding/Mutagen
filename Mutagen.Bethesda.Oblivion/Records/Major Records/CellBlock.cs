@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static CellBlock.TranslationMask duplicateMask = new CellBlock.TranslationMask(true)
         {
-            SubBlocks = new MaskItem<bool, CellSubBlock.TranslationMask?>(false, default)
+            SubBlocks = false
         };
 
         public object Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecordTracker = null)

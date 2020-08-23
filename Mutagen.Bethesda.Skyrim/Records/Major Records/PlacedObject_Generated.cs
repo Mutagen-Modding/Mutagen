@@ -2809,7 +2809,7 @@ namespace Mutagen.Bethesda.Skyrim
             public PlacedPrimitive.TranslationMask? Primitive;
             public bool XORD;
             public Bounding.TranslationMask? OcclusionPlane;
-            public MaskItem<bool, Portal.TranslationMask?> Portals;
+            public Portal.TranslationMask? Portals;
             public Bounding.TranslationMask? RoomPortal;
             public bool Unknown;
             public bool LightingTemplate;
@@ -2819,7 +2819,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool RagdollData;
             public bool RagdollBipedData;
             public bool Radius;
-            public MaskItem<bool, WaterReflection.TranslationMask?> Reflections;
+            public WaterReflection.TranslationMask? Reflections;
             public bool LitWater;
             public bool Emittance;
             public LightData.TranslationMask? LightData;
@@ -2851,7 +2851,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Charge;
             public bool LocationReference;
             public EnableParent.TranslationMask? EnableParent;
-            public MaskItem<bool, LinkedReferences.TranslationMask?> LinkedReferences;
+            public LinkedReferences.TranslationMask? LinkedReferences;
             public Patrol.TranslationMask? Patrol;
             public bool Action;
             public bool HeadTrackingWeight;
@@ -2870,7 +2870,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Base = defaultOn;
                 this.BoundHalfExtents = defaultOn;
                 this.XORD = defaultOn;
-                this.Portals = new MaskItem<bool, Portal.TranslationMask?>(defaultOn, null);
                 this.Unknown = defaultOn;
                 this.LightingTemplate = defaultOn;
                 this.ImageSpace = defaultOn;
@@ -2879,7 +2878,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.RagdollData = defaultOn;
                 this.RagdollBipedData = defaultOn;
                 this.Radius = defaultOn;
-                this.Reflections = new MaskItem<bool, WaterReflection.TranslationMask?>(defaultOn, null);
                 this.LitWater = defaultOn;
                 this.Emittance = defaultOn;
                 this.TeleportMessageBox = defaultOn;
@@ -2902,7 +2900,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ItemCount = defaultOn;
                 this.Charge = defaultOn;
                 this.LocationReference = defaultOn;
-                this.LinkedReferences = new MaskItem<bool, LinkedReferences.TranslationMask?>(defaultOn, null);
                 this.Action = defaultOn;
                 this.HeadTrackingWeight = defaultOn;
                 this.FavorCost = defaultOn;
@@ -2922,7 +2919,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Primitive != null || DefaultOn, Primitive?.GetCrystal()));
                 ret.Add((XORD, null));
                 ret.Add((OcclusionPlane != null || DefaultOn, OcclusionPlane?.GetCrystal()));
-                ret.Add((Portals?.Overall ?? true, Portals?.Specific?.GetCrystal()));
+                ret.Add((Portals != null || DefaultOn, Portals?.GetCrystal()));
                 ret.Add((RoomPortal != null || DefaultOn, RoomPortal?.GetCrystal()));
                 ret.Add((Unknown, null));
                 ret.Add((LightingTemplate, null));
@@ -2932,7 +2929,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((RagdollData, null));
                 ret.Add((RagdollBipedData, null));
                 ret.Add((Radius, null));
-                ret.Add((Reflections?.Overall ?? true, Reflections?.Specific?.GetCrystal()));
+                ret.Add((Reflections != null || DefaultOn, Reflections?.GetCrystal()));
                 ret.Add((LitWater, null));
                 ret.Add((Emittance, null));
                 ret.Add((LightData != null || DefaultOn, LightData?.GetCrystal()));
@@ -2964,7 +2961,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Charge, null));
                 ret.Add((LocationReference, null));
                 ret.Add((EnableParent != null || DefaultOn, EnableParent?.GetCrystal()));
-                ret.Add((LinkedReferences?.Overall ?? true, LinkedReferences?.Specific?.GetCrystal()));
+                ret.Add((LinkedReferences != null || DefaultOn, LinkedReferences?.GetCrystal()));
                 ret.Add((Patrol != null || DefaultOn, Patrol?.GetCrystal()));
                 ret.Add((Action, null));
                 ret.Add((HeadTrackingWeight, null));
@@ -2974,6 +2971,11 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((AttachRef, null));
                 ret.Add((DistantLodData, null));
                 ret.Add((Placement != null || DefaultOn, Placement?.GetCrystal()));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

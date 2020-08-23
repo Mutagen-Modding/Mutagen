@@ -678,8 +678,8 @@ namespace Mutagen.Bethesda.Oblivion
             public SkillBoost.TranslationMask? SkillBoost5;
             public SkillBoost.TranslationMask? SkillBoost6;
             public bool Unused;
-            public MaskItem<bool, GenderedItem<bool>?> Height;
-            public MaskItem<bool, GenderedItem<bool>?> Weight;
+            public GenderedItem<bool>? Height;
+            public GenderedItem<bool>? Weight;
             public bool Flags;
             #endregion
 
@@ -688,8 +688,6 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DefaultOn = defaultOn;
                 this.Unused = defaultOn;
-                this.Height = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
-                this.Weight = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
                 this.Flags = defaultOn;
             }
 
@@ -714,8 +712,8 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((SkillBoost5 != null || DefaultOn, SkillBoost5?.GetCrystal()));
                 ret.Add((SkillBoost6 != null || DefaultOn, SkillBoost6?.GetCrystal()));
                 ret.Add((Unused, null));
-                ret.Add((Height?.Overall ?? true, null));
-                ret.Add((Weight?.Overall ?? true, null));
+                ret.Add((Height != null || DefaultOn, null));
+                ret.Add((Weight != null || DefaultOn, null));
                 ret.Add((Flags, null));
             }
 

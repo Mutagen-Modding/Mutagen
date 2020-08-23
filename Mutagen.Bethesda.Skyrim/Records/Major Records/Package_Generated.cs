@@ -1547,16 +1547,16 @@ namespace Mutagen.Bethesda.Skyrim
             public bool ScheduleMinute;
             public bool Unknown3;
             public bool ScheduleDurationInMinutes;
-            public MaskItem<bool, Condition.TranslationMask?> Conditions;
+            public Condition.TranslationMask? Conditions;
             public bool Unknown4;
             public PackageIdles.TranslationMask? IdleAnimations;
             public bool CombatStyle;
             public bool OwnerQuest;
             public bool PackageTemplate;
             public bool DataInputVersion;
-            public MaskItem<bool, APackageData.TranslationMask?> Data;
+            public APackageData.TranslationMask? Data;
             public bool XnamMarker;
-            public MaskItem<bool, PackageBranch.TranslationMask?> ProcedureTree;
+            public PackageBranch.TranslationMask? ProcedureTree;
             public PackageEvent.TranslationMask? OnBegin;
             public PackageEvent.TranslationMask? OnEnd;
             public PackageEvent.TranslationMask? OnChange;
@@ -1582,15 +1582,12 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ScheduleMinute = defaultOn;
                 this.Unknown3 = defaultOn;
                 this.ScheduleDurationInMinutes = defaultOn;
-                this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
                 this.Unknown4 = defaultOn;
                 this.CombatStyle = defaultOn;
                 this.OwnerQuest = defaultOn;
                 this.PackageTemplate = defaultOn;
                 this.DataInputVersion = defaultOn;
-                this.Data = new MaskItem<bool, APackageData.TranslationMask?>(defaultOn, null);
                 this.XnamMarker = defaultOn;
-                this.ProcedureTree = new MaskItem<bool, PackageBranch.TranslationMask?>(defaultOn, null);
                 this.PKDTDataTypeState = defaultOn;
                 this.PSDTDataTypeState = defaultOn;
             }
@@ -1615,21 +1612,26 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((ScheduleMinute, null));
                 ret.Add((Unknown3, null));
                 ret.Add((ScheduleDurationInMinutes, null));
-                ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
+                ret.Add((Conditions != null || DefaultOn, Conditions?.GetCrystal()));
                 ret.Add((Unknown4, null));
                 ret.Add((IdleAnimations != null || DefaultOn, IdleAnimations?.GetCrystal()));
                 ret.Add((CombatStyle, null));
                 ret.Add((OwnerQuest, null));
                 ret.Add((PackageTemplate, null));
                 ret.Add((DataInputVersion, null));
-                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
+                ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
                 ret.Add((XnamMarker, null));
-                ret.Add((ProcedureTree?.Overall ?? true, ProcedureTree?.Specific?.GetCrystal()));
+                ret.Add((ProcedureTree != null || DefaultOn, ProcedureTree?.GetCrystal()));
                 ret.Add((OnBegin != null || DefaultOn, OnBegin?.GetCrystal()));
                 ret.Add((OnEnd != null || DefaultOn, OnEnd?.GetCrystal()));
                 ret.Add((OnChange != null || DefaultOn, OnChange?.GetCrystal()));
                 ret.Add((PKDTDataTypeState, null));
                 ret.Add((PSDTDataTypeState, null));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

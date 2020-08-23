@@ -618,8 +618,8 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, ContainerEntry.TranslationMask?> Items;
-            public MaskItem<bool, Condition.TranslationMask?> Conditions;
+            public ContainerEntry.TranslationMask? Items;
+            public Condition.TranslationMask? Conditions;
             public bool CreatedObject;
             public bool WorkbenchKeyword;
             public bool CreatedObjectCount;
@@ -629,8 +629,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.Items = new MaskItem<bool, ContainerEntry.TranslationMask?>(defaultOn, null);
-                this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
                 this.CreatedObject = defaultOn;
                 this.WorkbenchKeyword = defaultOn;
                 this.CreatedObjectCount = defaultOn;
@@ -641,11 +639,16 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Items?.Overall ?? true, Items?.Specific?.GetCrystal()));
-                ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
+                ret.Add((Items != null || DefaultOn, Items?.GetCrystal()));
+                ret.Add((Conditions != null || DefaultOn, Conditions?.GetCrystal()));
                 ret.Add((CreatedObject, null));
                 ret.Add((WorkbenchKeyword, null));
                 ret.Add((CreatedObjectCount, null));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

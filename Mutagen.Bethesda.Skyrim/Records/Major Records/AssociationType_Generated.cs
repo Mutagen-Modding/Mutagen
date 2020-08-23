@@ -404,8 +404,8 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, GenderedItem<bool>?> ParentTitle;
-            public MaskItem<bool, GenderedItem<bool>?> Title;
+            public GenderedItem<bool>? ParentTitle;
+            public GenderedItem<bool>? Title;
             public bool Flags;
             #endregion
 
@@ -413,8 +413,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.ParentTitle = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
-                this.Title = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
                 this.Flags = defaultOn;
             }
 
@@ -423,9 +421,14 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((ParentTitle?.Overall ?? true, null));
-                ret.Add((Title?.Overall ?? true, null));
+                ret.Add((ParentTitle != null || DefaultOn, null));
+                ret.Add((Title != null || DefaultOn, null));
                 ret.Add((Flags, null));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

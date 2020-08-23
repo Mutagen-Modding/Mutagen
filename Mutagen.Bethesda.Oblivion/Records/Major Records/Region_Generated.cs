@@ -725,7 +725,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Icon;
             public bool MapColor;
             public bool Worldspace;
-            public MaskItem<bool, RegionArea.TranslationMask?> Areas;
+            public RegionArea.TranslationMask? Areas;
             public RegionObjects.TranslationMask? Objects;
             public RegionWeather.TranslationMask? Weather;
             public RegionMap.TranslationMask? MapName;
@@ -740,7 +740,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Icon = defaultOn;
                 this.MapColor = defaultOn;
                 this.Worldspace = defaultOn;
-                this.Areas = new MaskItem<bool, RegionArea.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -751,12 +750,17 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Icon, null));
                 ret.Add((MapColor, null));
                 ret.Add((Worldspace, null));
-                ret.Add((Areas?.Overall ?? true, Areas?.Specific?.GetCrystal()));
+                ret.Add((Areas != null || DefaultOn, Areas?.GetCrystal()));
                 ret.Add((Objects != null || DefaultOn, Objects?.GetCrystal()));
                 ret.Add((Weather != null || DefaultOn, Weather?.GetCrystal()));
                 ret.Add((MapName != null || DefaultOn, MapName?.GetCrystal()));
                 ret.Add((Grasses != null || DefaultOn, Grasses?.GetCrystal()));
                 ret.Add((Sounds != null || DefaultOn, Sounds?.GetCrystal()));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

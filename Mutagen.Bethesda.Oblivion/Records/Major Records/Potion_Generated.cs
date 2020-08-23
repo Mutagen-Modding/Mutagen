@@ -625,7 +625,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Script;
             public bool Weight;
             public PotionData.TranslationMask? Data;
-            public MaskItem<bool, Effect.TranslationMask?> Effects;
+            public Effect.TranslationMask? Effects;
             #endregion
 
             #region Ctors
@@ -636,7 +636,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Icon = defaultOn;
                 this.Script = defaultOn;
                 this.Weight = defaultOn;
-                this.Effects = new MaskItem<bool, Effect.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -650,7 +649,12 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Script, null));
                 ret.Add((Weight, null));
                 ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
-                ret.Add((Effects?.Overall ?? true, Effects?.Specific?.GetCrystal()));
+                ret.Add((Effects != null || DefaultOn, Effects?.GetCrystal()));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

@@ -665,8 +665,8 @@ namespace Mutagen.Bethesda.Skyrim
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool Name;
-            public MaskItem<bool, Condition.TranslationMask?> StartConditions;
-            public MaskItem<bool, Condition.TranslationMask?> CompletionConditions;
+            public Condition.TranslationMask? StartConditions;
+            public Condition.TranslationMask? CompletionConditions;
             public ScenePhaseUnusedData.TranslationMask? Unused;
             public ScenePhaseUnusedData.TranslationMask? Unused2;
             public bool EditorWidth;
@@ -677,8 +677,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.DefaultOn = defaultOn;
                 this.Name = defaultOn;
-                this.StartConditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
-                this.CompletionConditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
                 this.EditorWidth = defaultOn;
             }
 
@@ -696,8 +694,8 @@ namespace Mutagen.Bethesda.Skyrim
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Name, null));
-                ret.Add((StartConditions?.Overall ?? true, StartConditions?.Specific?.GetCrystal()));
-                ret.Add((CompletionConditions?.Overall ?? true, CompletionConditions?.Specific?.GetCrystal()));
+                ret.Add((StartConditions != null || DefaultOn, StartConditions?.GetCrystal()));
+                ret.Add((CompletionConditions != null || DefaultOn, CompletionConditions?.GetCrystal()));
                 ret.Add((Unused != null || DefaultOn, Unused?.GetCrystal()));
                 ret.Add((Unused2 != null || DefaultOn, Unused2?.GetCrystal()));
                 ret.Add((EditorWidth, null));

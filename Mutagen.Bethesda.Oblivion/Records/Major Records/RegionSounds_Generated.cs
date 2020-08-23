@@ -432,7 +432,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             public bool MusicType;
-            public MaskItem<bool, RegionSound.TranslationMask?> Sounds;
+            public RegionSound.TranslationMask? Sounds;
             #endregion
 
             #region Ctors
@@ -440,7 +440,6 @@ namespace Mutagen.Bethesda.Oblivion
                 : base(defaultOn)
             {
                 this.MusicType = defaultOn;
-                this.Sounds = new MaskItem<bool, RegionSound.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -449,7 +448,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 base.GetCrystal(ret);
                 ret.Add((MusicType, null));
-                ret.Add((Sounds?.Overall ?? true, Sounds?.Specific?.GetCrystal()));
+                ret.Add((Sounds != null || DefaultOn, Sounds?.GetCrystal()));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

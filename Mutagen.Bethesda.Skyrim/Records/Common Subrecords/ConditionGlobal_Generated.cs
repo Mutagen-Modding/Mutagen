@@ -374,6 +374,11 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
             }
 
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

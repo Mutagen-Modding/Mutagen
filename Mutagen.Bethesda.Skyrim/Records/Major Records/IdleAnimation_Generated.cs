@@ -753,7 +753,7 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, Condition.TranslationMask?> Conditions;
+            public Condition.TranslationMask? Conditions;
             public bool Filename;
             public bool AnimationEvent;
             public bool RelatedIdles;
@@ -769,7 +769,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
                 this.Filename = defaultOn;
                 this.AnimationEvent = defaultOn;
                 this.RelatedIdles = defaultOn;
@@ -786,7 +785,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
+                ret.Add((Conditions != null || DefaultOn, Conditions?.GetCrystal()));
                 ret.Add((Filename, null));
                 ret.Add((AnimationEvent, null));
                 ret.Add((RelatedIdles, null));
@@ -796,6 +795,11 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((AnimationGroupSection, null));
                 ret.Add((ReplayDelay, null));
                 ret.Add((DATADataTypeState, null));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

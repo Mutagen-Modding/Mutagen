@@ -1061,7 +1061,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Addiction;
             public bool AddictionChance;
             public bool ConsumeSound;
-            public MaskItem<bool, Effect.TranslationMask?> Effects;
+            public Effect.TranslationMask? Effects;
             public bool ENITDataTypeState;
             #endregion
 
@@ -1081,7 +1081,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Addiction = defaultOn;
                 this.AddictionChance = defaultOn;
                 this.ConsumeSound = defaultOn;
-                this.Effects = new MaskItem<bool, Effect.TranslationMask?>(defaultOn, null);
                 this.ENITDataTypeState = defaultOn;
             }
 
@@ -1106,8 +1105,13 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Addiction, null));
                 ret.Add((AddictionChance, null));
                 ret.Add((ConsumeSound, null));
-                ret.Add((Effects?.Overall ?? true, Effects?.Specific?.GetCrystal()));
+                ret.Add((Effects != null || DefaultOn, Effects?.GetCrystal()));
                 ret.Add((ENITDataTypeState, null));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

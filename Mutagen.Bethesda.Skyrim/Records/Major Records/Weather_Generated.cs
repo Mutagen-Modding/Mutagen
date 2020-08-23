@@ -2721,7 +2721,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Precipitation;
             public bool VisualEffect;
             public bool ONAM;
-            public MaskItem<bool, CloudLayer.TranslationMask?> Clouds;
+            public CloudLayer.TranslationMask? Clouds;
             public WeatherColor.TranslationMask? SkyUpperColor;
             public WeatherColor.TranslationMask? FogNearColor;
             public WeatherColor.TranslationMask? UnknownColor;
@@ -2763,7 +2763,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool VisualEffectEnd;
             public bool WindDirection;
             public bool WindDirectionRange;
-            public MaskItem<bool, WeatherSound.TranslationMask?> Sounds;
+            public WeatherSound.TranslationMask? Sounds;
             public bool SkyStatics;
             public WeatherImageSpaces.TranslationMask? ImageSpaces;
             public WeatherVolumetricLighting.TranslationMask? VolumetricLighting;
@@ -2790,7 +2790,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Precipitation = defaultOn;
                 this.VisualEffect = defaultOn;
                 this.ONAM = defaultOn;
-                this.Clouds = new MaskItem<bool, CloudLayer.TranslationMask?>(defaultOn, null);
                 this.FogDistanceDayNear = defaultOn;
                 this.FogDistanceDayFar = defaultOn;
                 this.FogDistanceNightNear = defaultOn;
@@ -2815,7 +2814,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.VisualEffectEnd = defaultOn;
                 this.WindDirection = defaultOn;
                 this.WindDirectionRange = defaultOn;
-                this.Sounds = new MaskItem<bool, WeatherSound.TranslationMask?>(defaultOn, null);
                 this.SkyStatics = defaultOn;
                 this.NAM2 = defaultOn;
                 this.NAM3 = defaultOn;
@@ -2839,7 +2837,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Precipitation, null));
                 ret.Add((VisualEffect, null));
                 ret.Add((ONAM, null));
-                ret.Add((Clouds?.Overall ?? true, Clouds?.Specific?.GetCrystal()));
+                ret.Add((Clouds != null || DefaultOn, Clouds?.GetCrystal()));
                 ret.Add((SkyUpperColor != null || DefaultOn, SkyUpperColor?.GetCrystal()));
                 ret.Add((FogNearColor != null || DefaultOn, FogNearColor?.GetCrystal()));
                 ret.Add((UnknownColor != null || DefaultOn, UnknownColor?.GetCrystal()));
@@ -2881,7 +2879,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((VisualEffectEnd, null));
                 ret.Add((WindDirection, null));
                 ret.Add((WindDirectionRange, null));
-                ret.Add((Sounds?.Overall ?? true, Sounds?.Specific?.GetCrystal()));
+                ret.Add((Sounds != null || DefaultOn, Sounds?.GetCrystal()));
                 ret.Add((SkyStatics, null));
                 ret.Add((ImageSpaces != null || DefaultOn, ImageSpaces?.GetCrystal()));
                 ret.Add((VolumetricLighting != null || DefaultOn, VolumetricLighting?.GetCrystal()));
@@ -2893,6 +2891,11 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((NAM0DataTypeState, null));
                 ret.Add((FNAMDataTypeState, null));
                 ret.Add((DATADataTypeState, null));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

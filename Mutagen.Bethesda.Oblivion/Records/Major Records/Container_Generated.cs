@@ -622,7 +622,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Name;
             public Model.TranslationMask? Model;
             public bool Script;
-            public MaskItem<bool, ContainerItem.TranslationMask?> Items;
+            public ContainerItem.TranslationMask? Items;
             public ContainerData.TranslationMask? Data;
             public bool OpenSound;
             public bool CloseSound;
@@ -634,7 +634,6 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.Name = defaultOn;
                 this.Script = defaultOn;
-                this.Items = new MaskItem<bool, ContainerItem.TranslationMask?>(defaultOn, null);
                 this.OpenSound = defaultOn;
                 this.CloseSound = defaultOn;
             }
@@ -647,10 +646,15 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Name, null));
                 ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
                 ret.Add((Script, null));
-                ret.Add((Items?.Overall ?? true, Items?.Specific?.GetCrystal()));
+                ret.Add((Items != null || DefaultOn, Items?.GetCrystal()));
                 ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
                 ret.Add((OpenSound, null));
                 ret.Add((CloseSound, null));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

@@ -905,7 +905,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool PreferredMergesFlag;
             public bool MergedTo;
             public bool PreferredMerges;
-            public MaskItem<bool, LinkedDoor.TranslationMask?> LinkedDoors;
+            public LinkedDoor.TranslationMask? LinkedDoors;
             public IslandData.TranslationMask? Island;
             public bool Unknown2;
             public bool ParentWorldspace;
@@ -923,7 +923,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.PreferredMergesFlag = defaultOn;
                 this.MergedTo = defaultOn;
                 this.PreferredMerges = defaultOn;
-                this.LinkedDoors = new MaskItem<bool, LinkedDoor.TranslationMask?>(defaultOn, null);
                 this.Unknown2 = defaultOn;
                 this.ParentWorldspace = defaultOn;
                 this.ParentWorldspaceCoord = defaultOn;
@@ -949,7 +948,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((PreferredMergesFlag, null));
                 ret.Add((MergedTo, null));
                 ret.Add((PreferredMerges, null));
-                ret.Add((LinkedDoors?.Overall ?? true, LinkedDoors?.Specific?.GetCrystal()));
+                ret.Add((LinkedDoors != null || DefaultOn, LinkedDoors?.GetCrystal()));
                 ret.Add((Island != null || DefaultOn, Island?.GetCrystal()));
                 ret.Add((Unknown2, null));
                 ret.Add((ParentWorldspace, null));
