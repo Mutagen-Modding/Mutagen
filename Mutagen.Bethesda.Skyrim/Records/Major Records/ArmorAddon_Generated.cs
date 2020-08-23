@@ -906,16 +906,16 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public BodyTemplate.TranslationMask? BodyTemplate;
             public bool Race;
-            public MaskItem<bool, GenderedItem<bool>?> Priority;
-            public MaskItem<bool, GenderedItem<bool>?> WeightSliderEnabled;
+            public GenderedItem<bool>? Priority;
+            public GenderedItem<bool>? WeightSliderEnabled;
             public bool Unknown;
             public bool DetectionSoundValue;
             public bool Unknown2;
             public bool WeaponAdjust;
-            public MaskItem<bool, GenderedItem<Model.TranslationMask?>?> WorldModel;
-            public MaskItem<bool, GenderedItem<Model.TranslationMask?>?> FirstPersonModel;
-            public MaskItem<bool, GenderedItem<bool>?> SkinTexture;
-            public MaskItem<bool, GenderedItem<bool>?> TextureSwapList;
+            public GenderedItem<Model.TranslationMask>? WorldModel;
+            public GenderedItem<Model.TranslationMask>? FirstPersonModel;
+            public GenderedItem<bool>? SkinTexture;
+            public GenderedItem<bool>? TextureSwapList;
             public bool AdditionalRaces;
             public bool FootstepSound;
             public bool ArtObject;
@@ -927,16 +927,10 @@ namespace Mutagen.Bethesda.Skyrim
                 : base(defaultOn)
             {
                 this.Race = defaultOn;
-                this.Priority = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
-                this.WeightSliderEnabled = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
                 this.Unknown = defaultOn;
                 this.DetectionSoundValue = defaultOn;
                 this.Unknown2 = defaultOn;
                 this.WeaponAdjust = defaultOn;
-                this.WorldModel = new MaskItem<bool, GenderedItem<Model.TranslationMask?>?>(defaultOn, default);
-                this.FirstPersonModel = new MaskItem<bool, GenderedItem<Model.TranslationMask?>?>(defaultOn, default);
-                this.SkinTexture = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
-                this.TextureSwapList = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
                 this.AdditionalRaces = defaultOn;
                 this.FootstepSound = defaultOn;
                 this.ArtObject = defaultOn;
@@ -950,20 +944,25 @@ namespace Mutagen.Bethesda.Skyrim
                 base.GetCrystal(ret);
                 ret.Add((BodyTemplate != null || DefaultOn, BodyTemplate?.GetCrystal()));
                 ret.Add((Race, null));
-                ret.Add((Priority?.Overall ?? true, null));
-                ret.Add((WeightSliderEnabled?.Overall ?? true, null));
+                ret.Add((Priority != null || DefaultOn, null));
+                ret.Add((WeightSliderEnabled != null || DefaultOn, null));
                 ret.Add((Unknown, null));
                 ret.Add((DetectionSoundValue, null));
                 ret.Add((Unknown2, null));
                 ret.Add((WeaponAdjust, null));
-                ret.Add((WorldModel?.Overall ?? true, null));
-                ret.Add((FirstPersonModel?.Overall ?? true, null));
-                ret.Add((SkinTexture?.Overall ?? true, null));
-                ret.Add((TextureSwapList?.Overall ?? true, null));
+                ret.Add((WorldModel != null || DefaultOn, null));
+                ret.Add((FirstPersonModel != null || DefaultOn, null));
+                ret.Add((SkinTexture != null || DefaultOn, null));
+                ret.Add((TextureSwapList != null || DefaultOn, null));
                 ret.Add((AdditionalRaces, null));
                 ret.Add((FootstepSound, null));
                 ret.Add((ArtObject, null));
                 ret.Add((DNAMDataTypeState, null));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

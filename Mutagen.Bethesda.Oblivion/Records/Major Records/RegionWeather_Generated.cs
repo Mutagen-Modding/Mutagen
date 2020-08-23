@@ -401,14 +401,13 @@ namespace Mutagen.Bethesda.Oblivion
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, WeatherType.TranslationMask?> Weathers;
+            public WeatherType.TranslationMask? Weathers;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.Weathers = new MaskItem<bool, WeatherType.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -416,7 +415,12 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Weathers?.Overall ?? true, Weathers?.Specific?.GetCrystal()));
+                ret.Add((Weathers != null || DefaultOn, Weathers?.GetCrystal()));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

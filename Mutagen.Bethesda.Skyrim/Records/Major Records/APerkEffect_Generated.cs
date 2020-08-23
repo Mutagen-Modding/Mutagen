@@ -487,7 +487,7 @@ namespace Mutagen.Bethesda.Skyrim
             public readonly bool DefaultOn;
             public bool Rank;
             public bool Priority;
-            public MaskItem<bool, PerkCondition.TranslationMask?> Conditions;
+            public PerkCondition.TranslationMask? Conditions;
             public bool PRKEDataTypeState;
             #endregion
 
@@ -497,7 +497,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DefaultOn = defaultOn;
                 this.Rank = defaultOn;
                 this.Priority = defaultOn;
-                this.Conditions = new MaskItem<bool, PerkCondition.TranslationMask?>(defaultOn, null);
                 this.PRKEDataTypeState = defaultOn;
             }
 
@@ -516,7 +515,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 ret.Add((Rank, null));
                 ret.Add((Priority, null));
-                ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
+                ret.Add((Conditions != null || DefaultOn, Conditions?.GetCrystal()));
                 ret.Add((PRKEDataTypeState, null));
             }
 

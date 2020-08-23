@@ -761,7 +761,7 @@ namespace Mutagen.Bethesda.Skyrim
             public ObjectBounds.TranslationMask? ObjectBounds;
             public bool Name;
             public Model.TranslationMask? Model;
-            public MaskItem<bool, ContainerEntry.TranslationMask?> Items;
+            public ContainerEntry.TranslationMask? Items;
             public Destructible.TranslationMask? Destructible;
             public bool Flags;
             public bool Weight;
@@ -775,7 +775,6 @@ namespace Mutagen.Bethesda.Skyrim
                 : base(defaultOn)
             {
                 this.Name = defaultOn;
-                this.Items = new MaskItem<bool, ContainerEntry.TranslationMask?>(defaultOn, null);
                 this.Flags = defaultOn;
                 this.Weight = defaultOn;
                 this.OpenSound = defaultOn;
@@ -792,13 +791,18 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((ObjectBounds != null || DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((Name, null));
                 ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
-                ret.Add((Items?.Overall ?? true, Items?.Specific?.GetCrystal()));
+                ret.Add((Items != null || DefaultOn, Items?.GetCrystal()));
                 ret.Add((Destructible != null || DefaultOn, Destructible?.GetCrystal()));
                 ret.Add((Flags, null));
                 ret.Add((Weight, null));
                 ret.Add((OpenSound, null));
                 ret.Add((CloseSound, null));
                 ret.Add((DATADataTypeState, null));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

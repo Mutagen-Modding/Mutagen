@@ -535,7 +535,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Idle;
             public bool SCHR;
             public bool SCTX;
-            public MaskItem<bool, ATopicReference.TranslationMask?> Topics;
+            public ATopicReference.TranslationMask? Topics;
             #endregion
 
             #region Ctors
@@ -546,7 +546,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Idle = defaultOn;
                 this.SCHR = defaultOn;
                 this.SCTX = defaultOn;
-                this.Topics = new MaskItem<bool, ATopicReference.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -566,7 +565,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Idle, null));
                 ret.Add((SCHR, null));
                 ret.Add((SCTX, null));
-                ret.Add((Topics?.Overall ?? true, Topics?.Specific?.GetCrystal()));
+                ret.Add((Topics != null || DefaultOn, Topics?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)

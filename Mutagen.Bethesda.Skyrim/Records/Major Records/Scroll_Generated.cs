@@ -1218,7 +1218,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool CastDuration;
             public bool Range;
             public bool HalfCostPerk;
-            public MaskItem<bool, Effect.TranslationMask?> Effects;
+            public Effect.TranslationMask? Effects;
             public bool DATADataTypeState;
             public bool SPITDataTypeState;
             #endregion
@@ -1245,7 +1245,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.CastDuration = defaultOn;
                 this.Range = defaultOn;
                 this.HalfCostPerk = defaultOn;
-                this.Effects = new MaskItem<bool, Effect.TranslationMask?>(defaultOn, null);
                 this.DATADataTypeState = defaultOn;
                 this.SPITDataTypeState = defaultOn;
             }
@@ -1276,9 +1275,14 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((CastDuration, null));
                 ret.Add((Range, null));
                 ret.Add((HalfCostPerk, null));
-                ret.Add((Effects?.Overall ?? true, Effects?.Specific?.GetCrystal()));
+                ret.Add((Effects != null || DefaultOn, Effects?.GetCrystal()));
                 ret.Add((DATADataTypeState, null));
                 ret.Add((SPITDataTypeState, null));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

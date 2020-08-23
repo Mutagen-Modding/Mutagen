@@ -846,7 +846,7 @@ namespace Mutagen.Bethesda.Skyrim
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool BranchType;
-            public MaskItem<bool, Condition.TranslationMask?> Conditions;
+            public Condition.TranslationMask? Conditions;
             public PackageRoot.TranslationMask? Root;
             public bool ProcedureType;
             public bool Flags;
@@ -861,7 +861,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.DefaultOn = defaultOn;
                 this.BranchType = defaultOn;
-                this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
                 this.ProcedureType = defaultOn;
                 this.Flags = defaultOn;
                 this.DataInputIndices = defaultOn;
@@ -882,7 +881,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((BranchType, null));
-                ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
+                ret.Add((Conditions != null || DefaultOn, Conditions?.GetCrystal()));
                 ret.Add((Root != null || DefaultOn, Root?.GetCrystal()));
                 ret.Add((ProcedureType, null));
                 ret.Add((Flags, null));

@@ -693,7 +693,7 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, Condition.TranslationMask?> Conditions;
+            public Condition.TranslationMask? Conditions;
             public bool RelatedPaths;
             public bool Zoom;
             public bool ZoomMustHaveCameraShots;
@@ -704,7 +704,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
                 this.RelatedPaths = defaultOn;
                 this.Zoom = defaultOn;
                 this.ZoomMustHaveCameraShots = defaultOn;
@@ -716,11 +715,16 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
+                ret.Add((Conditions != null || DefaultOn, Conditions?.GetCrystal()));
                 ret.Add((RelatedPaths, null));
                 ret.Add((Zoom, null));
                 ret.Add((ZoomMustHaveCameraShots, null));
                 ret.Add((Shots, null));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

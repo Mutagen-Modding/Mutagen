@@ -1074,7 +1074,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             public bool Name;
-            public MaskItem<bool, Relation.TranslationMask?> Relations;
+            public Relation.TranslationMask? Relations;
             public bool Flags;
             public bool ExteriorJailMarker;
             public bool FollowerWaitMarker;
@@ -1083,12 +1083,12 @@ namespace Mutagen.Bethesda.Skyrim
             public bool SharedCrimeFactionList;
             public bool JailOutfit;
             public CrimeValues.TranslationMask? CrimeValues;
-            public MaskItem<bool, Rank.TranslationMask?> Ranks;
+            public Rank.TranslationMask? Ranks;
             public bool VendorBuySellList;
             public bool MerchantContainer;
             public VendorValues.TranslationMask? VendorValues;
             public LocationTargetRadius.TranslationMask? VendorLocation;
-            public MaskItem<bool, Condition.TranslationMask?> Conditions;
+            public Condition.TranslationMask? Conditions;
             #endregion
 
             #region Ctors
@@ -1096,7 +1096,6 @@ namespace Mutagen.Bethesda.Skyrim
                 : base(defaultOn)
             {
                 this.Name = defaultOn;
-                this.Relations = new MaskItem<bool, Relation.TranslationMask?>(defaultOn, null);
                 this.Flags = defaultOn;
                 this.ExteriorJailMarker = defaultOn;
                 this.FollowerWaitMarker = defaultOn;
@@ -1104,10 +1103,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.PlayerInventoryContainer = defaultOn;
                 this.SharedCrimeFactionList = defaultOn;
                 this.JailOutfit = defaultOn;
-                this.Ranks = new MaskItem<bool, Rank.TranslationMask?>(defaultOn, null);
                 this.VendorBuySellList = defaultOn;
                 this.MerchantContainer = defaultOn;
-                this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -1116,7 +1113,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.GetCrystal(ret);
                 ret.Add((Name, null));
-                ret.Add((Relations?.Overall ?? true, Relations?.Specific?.GetCrystal()));
+                ret.Add((Relations != null || DefaultOn, Relations?.GetCrystal()));
                 ret.Add((Flags, null));
                 ret.Add((ExteriorJailMarker, null));
                 ret.Add((FollowerWaitMarker, null));
@@ -1125,12 +1122,17 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((SharedCrimeFactionList, null));
                 ret.Add((JailOutfit, null));
                 ret.Add((CrimeValues != null || DefaultOn, CrimeValues?.GetCrystal()));
-                ret.Add((Ranks?.Overall ?? true, Ranks?.Specific?.GetCrystal()));
+                ret.Add((Ranks != null || DefaultOn, Ranks?.GetCrystal()));
                 ret.Add((VendorBuySellList, null));
                 ret.Add((MerchantContainer, null));
                 ret.Add((VendorValues != null || DefaultOn, VendorValues?.GetCrystal()));
                 ret.Add((VendorLocation != null || DefaultOn, VendorLocation?.GetCrystal()));
-                ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
+                ret.Add((Conditions != null || DefaultOn, Conditions?.GetCrystal()));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

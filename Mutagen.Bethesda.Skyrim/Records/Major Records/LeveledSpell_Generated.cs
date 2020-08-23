@@ -512,7 +512,7 @@ namespace Mutagen.Bethesda.Skyrim
             public ObjectBounds.TranslationMask? ObjectBounds;
             public bool ChanceNone;
             public bool Flags;
-            public MaskItem<bool, LeveledSpellEntry.TranslationMask?> Entries;
+            public LeveledSpellEntry.TranslationMask? Entries;
             #endregion
 
             #region Ctors
@@ -521,7 +521,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.ChanceNone = defaultOn;
                 this.Flags = defaultOn;
-                this.Entries = new MaskItem<bool, LeveledSpellEntry.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -532,7 +531,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((ObjectBounds != null || DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((ChanceNone, null));
                 ret.Add((Flags, null));
-                ret.Add((Entries?.Overall ?? true, Entries?.Specific?.GetCrystal()));
+                ret.Add((Entries != null || DefaultOn, Entries?.GetCrystal()));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

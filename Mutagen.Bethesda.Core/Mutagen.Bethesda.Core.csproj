@@ -6,6 +6,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>Mutagen.Bethesda.Core.xml</DocumentationFile>
+    <DebugType>embedded</DebugType>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
   </PropertyGroup>
@@ -16,12 +18,12 @@
   <ItemGroup>
     <PackageReference Include="Compression.BSA" Version="2.2.1.1" />
     <PackageReference Include="DotNetZip" Version="1.13.8" />
-    <PackageReference Include="Loqui" Version="1.2.1" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.1.2" />
+    <PackageReference Include="Loqui" Version="1.2.2" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.1.3" />
   </ItemGroup>
   <PropertyGroup>
     <PackageId>Mutagen.Bethesda.Core</PackageId>
-    <Version>0.13.3</Version>
+    <Version>0.13.4.0</Version>
     <Authors>Noggog</Authors>
     <Company>Mutagen</Company>
     <Product>Mutagen</Product>
@@ -33,7 +35,6 @@
     <PackageReleaseNotes>Bethesda Modding</PackageReleaseNotes>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

@@ -1327,11 +1327,11 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Event;
             public bool TextDisplayGlobals;
             public bool ObjectWindowFilter;
-            public MaskItem<bool, Condition.TranslationMask?> DialogConditions;
-            public MaskItem<bool, Condition.TranslationMask?> UnusedConditions;
-            public MaskItem<bool, QuestStage.TranslationMask?> Stages;
-            public MaskItem<bool, QuestObjective.TranslationMask?> Objectives;
-            public MaskItem<bool, QuestAlias.TranslationMask?> Aliases;
+            public Condition.TranslationMask? DialogConditions;
+            public Condition.TranslationMask? UnusedConditions;
+            public QuestStage.TranslationMask? Stages;
+            public QuestObjective.TranslationMask? Objectives;
+            public QuestAlias.TranslationMask? Aliases;
             public bool Description;
             public bool DNAMDataTypeState;
             #endregion
@@ -1349,11 +1349,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Event = defaultOn;
                 this.TextDisplayGlobals = defaultOn;
                 this.ObjectWindowFilter = defaultOn;
-                this.DialogConditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
-                this.UnusedConditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
-                this.Stages = new MaskItem<bool, QuestStage.TranslationMask?>(defaultOn, null);
-                this.Objectives = new MaskItem<bool, QuestObjective.TranslationMask?>(defaultOn, null);
-                this.Aliases = new MaskItem<bool, QuestAlias.TranslationMask?>(defaultOn, null);
                 this.Description = defaultOn;
                 this.DNAMDataTypeState = defaultOn;
             }
@@ -1373,13 +1368,18 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Event, null));
                 ret.Add((TextDisplayGlobals, null));
                 ret.Add((ObjectWindowFilter, null));
-                ret.Add((DialogConditions?.Overall ?? true, DialogConditions?.Specific?.GetCrystal()));
-                ret.Add((UnusedConditions?.Overall ?? true, UnusedConditions?.Specific?.GetCrystal()));
-                ret.Add((Stages?.Overall ?? true, Stages?.Specific?.GetCrystal()));
-                ret.Add((Objectives?.Overall ?? true, Objectives?.Specific?.GetCrystal()));
-                ret.Add((Aliases?.Overall ?? true, Aliases?.Specific?.GetCrystal()));
+                ret.Add((DialogConditions != null || DefaultOn, DialogConditions?.GetCrystal()));
+                ret.Add((UnusedConditions != null || DefaultOn, UnusedConditions?.GetCrystal()));
+                ret.Add((Stages != null || DefaultOn, Stages?.GetCrystal()));
+                ret.Add((Objectives != null || DefaultOn, Objectives?.GetCrystal()));
+                ret.Add((Aliases != null || DefaultOn, Aliases?.GetCrystal()));
                 ret.Add((Description, null));
                 ret.Add((DNAMDataTypeState, null));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

@@ -473,7 +473,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Members
             public bool Icon;
             public bool Description;
-            public MaskItem<bool, LoadScreenLocation.TranslationMask?> Locations;
+            public LoadScreenLocation.TranslationMask? Locations;
             #endregion
 
             #region Ctors
@@ -482,7 +482,6 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.Icon = defaultOn;
                 this.Description = defaultOn;
-                this.Locations = new MaskItem<bool, LoadScreenLocation.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -492,7 +491,12 @@ namespace Mutagen.Bethesda.Oblivion
                 base.GetCrystal(ret);
                 ret.Add((Icon, null));
                 ret.Add((Description, null));
-                ret.Add((Locations?.Overall ?? true, Locations?.Specific?.GetCrystal()));
+                ret.Add((Locations != null || DefaultOn, Locations?.GetCrystal()));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

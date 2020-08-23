@@ -836,7 +836,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool FinaleFilename;
             public MusicTrackLoopData.TranslationMask? LoopData;
             public bool CuePoints;
-            public MaskItem<bool, Condition.TranslationMask?> Conditions;
+            public Condition.TranslationMask? Conditions;
             public bool Tracks;
             #endregion
 
@@ -850,7 +850,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.TrackFilename = defaultOn;
                 this.FinaleFilename = defaultOn;
                 this.CuePoints = defaultOn;
-                this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
                 this.Tracks = defaultOn;
             }
 
@@ -866,8 +865,13 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((FinaleFilename, null));
                 ret.Add((LoopData != null || DefaultOn, LoopData?.GetCrystal()));
                 ret.Add((CuePoints, null));
-                ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
+                ret.Add((Conditions != null || DefaultOn, Conditions?.GetCrystal()));
                 ret.Add((Tracks, null));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

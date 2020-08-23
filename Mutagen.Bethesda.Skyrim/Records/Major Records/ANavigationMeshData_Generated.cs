@@ -980,9 +980,9 @@ namespace Mutagen.Bethesda.Skyrim
             public bool NavmeshVersion;
             public bool Magic;
             public bool Vertices;
-            public MaskItem<bool, NavmeshTriangle.TranslationMask?> Triangles;
-            public MaskItem<bool, EdgeLink.TranslationMask?> EdgeLinks;
-            public MaskItem<bool, DoorTriangle.TranslationMask?> DoorTriangles;
+            public NavmeshTriangle.TranslationMask? Triangles;
+            public EdgeLink.TranslationMask? EdgeLinks;
+            public DoorTriangle.TranslationMask? DoorTriangles;
             public bool NavmeshGridDivisor;
             public bool MaxDistanceX;
             public bool MaxDistanceY;
@@ -998,9 +998,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.NavmeshVersion = defaultOn;
                 this.Magic = defaultOn;
                 this.Vertices = defaultOn;
-                this.Triangles = new MaskItem<bool, NavmeshTriangle.TranslationMask?>(defaultOn, null);
-                this.EdgeLinks = new MaskItem<bool, EdgeLink.TranslationMask?>(defaultOn, null);
-                this.DoorTriangles = new MaskItem<bool, DoorTriangle.TranslationMask?>(defaultOn, null);
                 this.NavmeshGridDivisor = defaultOn;
                 this.MaxDistanceX = defaultOn;
                 this.MaxDistanceY = defaultOn;
@@ -1025,9 +1022,9 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((NavmeshVersion, null));
                 ret.Add((Magic, null));
                 ret.Add((Vertices, null));
-                ret.Add((Triangles?.Overall ?? true, Triangles?.Specific?.GetCrystal()));
-                ret.Add((EdgeLinks?.Overall ?? true, EdgeLinks?.Specific?.GetCrystal()));
-                ret.Add((DoorTriangles?.Overall ?? true, DoorTriangles?.Specific?.GetCrystal()));
+                ret.Add((Triangles != null || DefaultOn, Triangles?.GetCrystal()));
+                ret.Add((EdgeLinks != null || DefaultOn, EdgeLinks?.GetCrystal()));
+                ret.Add((DoorTriangles != null || DefaultOn, DoorTriangles?.GetCrystal()));
                 ret.Add((NavmeshGridDivisor, null));
                 ret.Add((MaxDistanceX, null));
                 ret.Add((MaxDistanceY, null));

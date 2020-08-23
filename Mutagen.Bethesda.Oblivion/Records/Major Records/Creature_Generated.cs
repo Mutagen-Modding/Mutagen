@@ -1633,12 +1633,12 @@ namespace Mutagen.Bethesda.Oblivion
             #region Members
             public bool Name;
             public Model.TranslationMask? Model;
-            public MaskItem<bool, ItemEntry.TranslationMask?> Items;
+            public ItemEntry.TranslationMask? Items;
             public bool Spells;
             public bool Models;
             public bool NIFT;
             public CreatureConfiguration.TranslationMask? Configuration;
-            public MaskItem<bool, RankPlacement.TranslationMask?> Factions;
+            public RankPlacement.TranslationMask? Factions;
             public bool DeathItem;
             public bool Script;
             public CreatureAIData.TranslationMask? AIData;
@@ -1653,7 +1653,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool BloodSpray;
             public bool BloodDecal;
             public bool InheritsSoundFrom;
-            public MaskItem<bool, CreatureSound.TranslationMask?> Sounds;
+            public CreatureSound.TranslationMask? Sounds;
             #endregion
 
             #region Ctors
@@ -1661,11 +1661,9 @@ namespace Mutagen.Bethesda.Oblivion
                 : base(defaultOn)
             {
                 this.Name = defaultOn;
-                this.Items = new MaskItem<bool, ItemEntry.TranslationMask?>(defaultOn, null);
                 this.Spells = defaultOn;
                 this.Models = defaultOn;
                 this.NIFT = defaultOn;
-                this.Factions = new MaskItem<bool, RankPlacement.TranslationMask?>(defaultOn, null);
                 this.DeathItem = defaultOn;
                 this.Script = defaultOn;
                 this.AIPackages = defaultOn;
@@ -1678,7 +1676,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.BloodSpray = defaultOn;
                 this.BloodDecal = defaultOn;
                 this.InheritsSoundFrom = defaultOn;
-                this.Sounds = new MaskItem<bool, CreatureSound.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -1688,12 +1685,12 @@ namespace Mutagen.Bethesda.Oblivion
                 base.GetCrystal(ret);
                 ret.Add((Name, null));
                 ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
-                ret.Add((Items?.Overall ?? true, Items?.Specific?.GetCrystal()));
+                ret.Add((Items != null || DefaultOn, Items?.GetCrystal()));
                 ret.Add((Spells, null));
                 ret.Add((Models, null));
                 ret.Add((NIFT, null));
                 ret.Add((Configuration != null || DefaultOn, Configuration?.GetCrystal()));
-                ret.Add((Factions?.Overall ?? true, Factions?.Specific?.GetCrystal()));
+                ret.Add((Factions != null || DefaultOn, Factions?.GetCrystal()));
                 ret.Add((DeathItem, null));
                 ret.Add((Script, null));
                 ret.Add((AIData != null || DefaultOn, AIData?.GetCrystal()));
@@ -1708,7 +1705,12 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((BloodSpray, null));
                 ret.Add((BloodDecal, null));
                 ret.Add((InheritsSoundFrom, null));
-                ret.Add((Sounds?.Overall ?? true, Sounds?.Specific?.GetCrystal()));
+                ret.Add((Sounds != null || DefaultOn, Sounds?.GetCrystal()));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

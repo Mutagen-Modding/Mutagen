@@ -440,7 +440,7 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, ATopicReference.TranslationMask?> Topics;
+            public ATopicReference.TranslationMask? Topics;
             public bool TPIC;
             #endregion
 
@@ -448,7 +448,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.Topics = new MaskItem<bool, ATopicReference.TranslationMask?>(defaultOn, null);
                 this.TPIC = defaultOn;
             }
 
@@ -457,8 +456,13 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Topics?.Overall ?? true, Topics?.Specific?.GetCrystal()));
+                ret.Add((Topics != null || DefaultOn, Topics?.GetCrystal()));
                 ret.Add((TPIC, null));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

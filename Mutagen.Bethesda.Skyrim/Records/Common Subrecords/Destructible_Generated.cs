@@ -446,14 +446,13 @@ namespace Mutagen.Bethesda.Skyrim
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public DestructableData.TranslationMask? Data;
-            public MaskItem<bool, DestructionStage.TranslationMask?> Stages;
+            public DestructionStage.TranslationMask? Stages;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
                 this.DefaultOn = defaultOn;
-                this.Stages = new MaskItem<bool, DestructionStage.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -470,7 +469,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
-                ret.Add((Stages?.Overall ?? true, Stages?.Specific?.GetCrystal()));
+                ret.Add((Stages != null || DefaultOn, Stages?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)

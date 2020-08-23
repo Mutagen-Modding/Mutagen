@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "lic IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IOblivionModGetter obj";
+            string testString = "t.Add((DefaultHairColors?.Overall ?? true, null";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

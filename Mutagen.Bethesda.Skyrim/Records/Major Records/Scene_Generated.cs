@@ -1018,15 +1018,15 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public SceneAdapter.TranslationMask? VirtualMachineAdapter;
             public bool Flags;
-            public MaskItem<bool, ScenePhase.TranslationMask?> Phases;
-            public MaskItem<bool, SceneActor.TranslationMask?> Actors;
-            public MaskItem<bool, SceneAction.TranslationMask?> Actions;
+            public ScenePhase.TranslationMask? Phases;
+            public SceneActor.TranslationMask? Actors;
+            public SceneAction.TranslationMask? Actions;
             public ScenePhaseUnusedData.TranslationMask? Unused;
             public ScenePhaseUnusedData.TranslationMask? Unused2;
             public bool Quest;
             public bool LastActionIndex;
             public bool VNAM;
-            public MaskItem<bool, Condition.TranslationMask?> Conditions;
+            public Condition.TranslationMask? Conditions;
             #endregion
 
             #region Ctors
@@ -1034,13 +1034,9 @@ namespace Mutagen.Bethesda.Skyrim
                 : base(defaultOn)
             {
                 this.Flags = defaultOn;
-                this.Phases = new MaskItem<bool, ScenePhase.TranslationMask?>(defaultOn, null);
-                this.Actors = new MaskItem<bool, SceneActor.TranslationMask?>(defaultOn, null);
-                this.Actions = new MaskItem<bool, SceneAction.TranslationMask?>(defaultOn, null);
                 this.Quest = defaultOn;
                 this.LastActionIndex = defaultOn;
                 this.VNAM = defaultOn;
-                this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -1050,15 +1046,20 @@ namespace Mutagen.Bethesda.Skyrim
                 base.GetCrystal(ret);
                 ret.Add((VirtualMachineAdapter != null || DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((Flags, null));
-                ret.Add((Phases?.Overall ?? true, Phases?.Specific?.GetCrystal()));
-                ret.Add((Actors?.Overall ?? true, Actors?.Specific?.GetCrystal()));
-                ret.Add((Actions?.Overall ?? true, Actions?.Specific?.GetCrystal()));
+                ret.Add((Phases != null || DefaultOn, Phases?.GetCrystal()));
+                ret.Add((Actors != null || DefaultOn, Actors?.GetCrystal()));
+                ret.Add((Actions != null || DefaultOn, Actions?.GetCrystal()));
                 ret.Add((Unused != null || DefaultOn, Unused?.GetCrystal()));
                 ret.Add((Unused2 != null || DefaultOn, Unused2?.GetCrystal()));
                 ret.Add((Quest, null));
                 ret.Add((LastActionIndex, null));
                 ret.Add((VNAM, null));
-                ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
+                ret.Add((Conditions != null || DefaultOn, Conditions?.GetCrystal()));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

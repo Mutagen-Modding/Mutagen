@@ -752,7 +752,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Flags;
             public bool Type;
             public bool ExtraParts;
-            public MaskItem<bool, Part.TranslationMask?> Parts;
+            public Part.TranslationMask? Parts;
             public bool TextureSet;
             public bool Color;
             public bool ValidRaces;
@@ -766,7 +766,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Flags = defaultOn;
                 this.Type = defaultOn;
                 this.ExtraParts = defaultOn;
-                this.Parts = new MaskItem<bool, Part.TranslationMask?>(defaultOn, null);
                 this.TextureSet = defaultOn;
                 this.Color = defaultOn;
                 this.ValidRaces = defaultOn;
@@ -782,10 +781,15 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Flags, null));
                 ret.Add((Type, null));
                 ret.Add((ExtraParts, null));
-                ret.Add((Parts?.Overall ?? true, Parts?.Specific?.GetCrystal()));
+                ret.Add((Parts != null || DefaultOn, Parts?.GetCrystal()));
                 ret.Add((TextureSet, null));
                 ret.Add((Color, null));
                 ret.Add((ValidRaces, null));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

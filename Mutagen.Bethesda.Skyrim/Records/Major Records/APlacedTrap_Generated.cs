@@ -1223,8 +1223,8 @@ namespace Mutagen.Bethesda.Skyrim
             public Ownership.TranslationMask? Ownership;
             public bool HeadTrackingWeight;
             public bool FavorCost;
-            public MaskItem<bool, WaterReflection.TranslationMask?> Reflections;
-            public MaskItem<bool, LinkedReferences.TranslationMask?> LinkedReferences;
+            public WaterReflection.TranslationMask? Reflections;
+            public LinkedReferences.TranslationMask? LinkedReferences;
             public ActivateParents.TranslationMask? ActivateParents;
             public EnableParent.TranslationMask? EnableParent;
             public bool Emittance;
@@ -1244,8 +1244,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.EncounterZone = defaultOn;
                 this.HeadTrackingWeight = defaultOn;
                 this.FavorCost = defaultOn;
-                this.Reflections = new MaskItem<bool, WaterReflection.TranslationMask?>(defaultOn, null);
-                this.LinkedReferences = new MaskItem<bool, LinkedReferences.TranslationMask?>(defaultOn, null);
                 this.Emittance = defaultOn;
                 this.MultiBoundReference = defaultOn;
                 this.IgnoredBySandbox = defaultOn;
@@ -1265,8 +1263,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Ownership != null || DefaultOn, Ownership?.GetCrystal()));
                 ret.Add((HeadTrackingWeight, null));
                 ret.Add((FavorCost, null));
-                ret.Add((Reflections?.Overall ?? true, Reflections?.Specific?.GetCrystal()));
-                ret.Add((LinkedReferences?.Overall ?? true, LinkedReferences?.Specific?.GetCrystal()));
+                ret.Add((Reflections != null || DefaultOn, Reflections?.GetCrystal()));
+                ret.Add((LinkedReferences != null || DefaultOn, LinkedReferences?.GetCrystal()));
                 ret.Add((ActivateParents != null || DefaultOn, ActivateParents?.GetCrystal()));
                 ret.Add((EnableParent != null || DefaultOn, EnableParent?.GetCrystal()));
                 ret.Add((Emittance, null));
@@ -1277,6 +1275,11 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((DistantLodData, null));
                 ret.Add((Scale, null));
                 ret.Add((Placement != null || DefaultOn, Placement?.GetCrystal()));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

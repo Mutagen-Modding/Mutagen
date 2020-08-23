@@ -385,7 +385,7 @@ namespace Mutagen.Bethesda.Oblivion
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool RankNumber;
-            public MaskItem<bool, GenderedItem<bool>?> Name;
+            public GenderedItem<bool>? Name;
             public bool Insignia;
             #endregion
 
@@ -394,7 +394,6 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DefaultOn = defaultOn;
                 this.RankNumber = defaultOn;
-                this.Name = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
                 this.Insignia = defaultOn;
             }
 
@@ -412,7 +411,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((RankNumber, null));
-                ret.Add((Name?.Overall ?? true, null));
+                ret.Add((Name != null || DefaultOn, null));
                 ret.Add((Insignia, null));
             }
 

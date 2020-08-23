@@ -1127,9 +1127,9 @@ namespace Mutagen.Bethesda.Skyrim
             public bool FavorLevel;
             public bool LinkTo;
             public bool ResponseData;
-            public MaskItem<bool, DialogResponse.TranslationMask?> Responses;
-            public MaskItem<bool, Condition.TranslationMask?> Conditions;
-            public MaskItem<bool, DialogResponsesUnknownData.TranslationMask?> UnknownData;
+            public DialogResponse.TranslationMask? Responses;
+            public Condition.TranslationMask? Conditions;
+            public DialogResponsesUnknownData.TranslationMask? UnknownData;
             public bool Prompt;
             public bool Speaker;
             public bool WalkAwayTopic;
@@ -1146,9 +1146,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.FavorLevel = defaultOn;
                 this.LinkTo = defaultOn;
                 this.ResponseData = defaultOn;
-                this.Responses = new MaskItem<bool, DialogResponse.TranslationMask?>(defaultOn, null);
-                this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
-                this.UnknownData = new MaskItem<bool, DialogResponsesUnknownData.TranslationMask?>(defaultOn, null);
                 this.Prompt = defaultOn;
                 this.Speaker = defaultOn;
                 this.WalkAwayTopic = defaultOn;
@@ -1168,13 +1165,18 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((FavorLevel, null));
                 ret.Add((LinkTo, null));
                 ret.Add((ResponseData, null));
-                ret.Add((Responses?.Overall ?? true, Responses?.Specific?.GetCrystal()));
-                ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
-                ret.Add((UnknownData?.Overall ?? true, UnknownData?.Specific?.GetCrystal()));
+                ret.Add((Responses != null || DefaultOn, Responses?.GetCrystal()));
+                ret.Add((Conditions != null || DefaultOn, Conditions?.GetCrystal()));
+                ret.Add((UnknownData != null || DefaultOn, UnknownData?.GetCrystal()));
                 ret.Add((Prompt, null));
                 ret.Add((Speaker, null));
                 ret.Add((WalkAwayTopic, null));
                 ret.Add((AudioOutputOverride, null));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

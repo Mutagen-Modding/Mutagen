@@ -1810,7 +1810,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Type;
             public bool LastModified;
             public bool Unknown;
-            public MaskItem<bool, T_TranslMask?> RecordCache;
+            public T_TranslMask? RecordCache;
             #endregion
         
             #region Ctors
@@ -1820,7 +1820,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Type = defaultOn;
                 this.LastModified = defaultOn;
                 this.Unknown = defaultOn;
-                this.RecordCache = new MaskItem<bool, T_TranslMask?>(defaultOn, null);
             }
         
             #endregion
@@ -1839,7 +1838,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Type, null));
                 ret.Add((LastModified, null));
                 ret.Add((Unknown, null));
-                ret.Add((RecordCache?.Overall ?? true, RecordCache?.Specific?.GetCrystal()));
+                ret.Add((RecordCache != null || DefaultOn, RecordCache?.GetCrystal()));
             }
         
             public static implicit operator TranslationMask<T_TranslMask>(bool defaultOn)

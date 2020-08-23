@@ -477,7 +477,7 @@ namespace Mutagen.Bethesda.Skyrim
             public readonly bool DefaultOn;
             public bool BaseEffect;
             public EffectData.TranslationMask? Data;
-            public MaskItem<bool, Condition.TranslationMask?> Conditions;
+            public Condition.TranslationMask? Conditions;
             #endregion
 
             #region Ctors
@@ -485,7 +485,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.DefaultOn = defaultOn;
                 this.BaseEffect = defaultOn;
-                this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -503,7 +502,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 ret.Add((BaseEffect, null));
                 ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
-                ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
+                ret.Add((Conditions != null || DefaultOn, Conditions?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)

@@ -516,16 +516,14 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
-            public MaskItem<bool, NavmeshSet.TranslationMask?> NavmeshSets;
-            public MaskItem<bool, NavmeshNode.TranslationMask?> NavmeshTree;
+            public NavmeshSet.TranslationMask? NavmeshSets;
+            public NavmeshNode.TranslationMask? NavmeshTree;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
                 this.DefaultOn = defaultOn;
-                this.NavmeshSets = new MaskItem<bool, NavmeshSet.TranslationMask?>(defaultOn, null);
-                this.NavmeshTree = new MaskItem<bool, NavmeshNode.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -541,8 +539,8 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((NavmeshSets?.Overall ?? true, NavmeshSets?.Specific?.GetCrystal()));
-                ret.Add((NavmeshTree?.Overall ?? true, NavmeshTree?.Specific?.GetCrystal()));
+                ret.Add((NavmeshSets != null || DefaultOn, NavmeshSets?.GetCrystal()));
+                ret.Add((NavmeshTree != null || DefaultOn, NavmeshTree?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)

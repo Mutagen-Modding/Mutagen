@@ -435,7 +435,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             public bool Music;
-            public MaskItem<bool, RegionSound.TranslationMask?> Sounds;
+            public RegionSound.TranslationMask? Sounds;
             #endregion
 
             #region Ctors
@@ -443,7 +443,6 @@ namespace Mutagen.Bethesda.Skyrim
                 : base(defaultOn)
             {
                 this.Music = defaultOn;
-                this.Sounds = new MaskItem<bool, RegionSound.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -452,7 +451,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.GetCrystal(ret);
                 ret.Add((Music, null));
-                ret.Add((Sounds?.Overall ?? true, Sounds?.Specific?.GetCrystal()));
+                ret.Add((Sounds != null || DefaultOn, Sounds?.GetCrystal()));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

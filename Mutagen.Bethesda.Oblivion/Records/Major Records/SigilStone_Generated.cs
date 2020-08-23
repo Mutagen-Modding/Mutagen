@@ -593,7 +593,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Model.TranslationMask? Model;
             public bool Icon;
             public bool Script;
-            public MaskItem<bool, Effect.TranslationMask?> Effects;
+            public Effect.TranslationMask? Effects;
             public SigilStoneData.TranslationMask? Data;
             #endregion
 
@@ -604,7 +604,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Name = defaultOn;
                 this.Icon = defaultOn;
                 this.Script = defaultOn;
-                this.Effects = new MaskItem<bool, Effect.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -616,8 +615,13 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
                 ret.Add((Icon, null));
                 ret.Add((Script, null));
-                ret.Add((Effects?.Overall ?? true, Effects?.Specific?.GetCrystal()));
+                ret.Add((Effects != null || DefaultOn, Effects?.GetCrystal()));
                 ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

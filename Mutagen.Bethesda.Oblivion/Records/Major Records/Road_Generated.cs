@@ -411,14 +411,13 @@ namespace Mutagen.Bethesda.Oblivion
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, RoadPoint.TranslationMask?> Points;
+            public RoadPoint.TranslationMask? Points;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.Points = new MaskItem<bool, RoadPoint.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -426,7 +425,12 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Points?.Overall ?? true, Points?.Specific?.GetCrystal()));
+                ret.Add((Points != null || DefaultOn, Points?.GetCrystal()));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

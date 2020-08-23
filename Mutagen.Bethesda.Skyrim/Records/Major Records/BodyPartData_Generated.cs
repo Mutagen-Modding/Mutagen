@@ -458,14 +458,13 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             public Model.TranslationMask? Model;
-            public MaskItem<bool, BodyPart.TranslationMask?> Parts;
+            public BodyPart.TranslationMask? Parts;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.Parts = new MaskItem<bool, BodyPart.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -474,7 +473,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.GetCrystal(ret);
                 ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
-                ret.Add((Parts?.Overall ?? true, Parts?.Specific?.GetCrystal()));
+                ret.Add((Parts != null || DefaultOn, Parts?.GetCrystal()));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

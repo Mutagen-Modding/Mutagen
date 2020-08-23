@@ -615,7 +615,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Name;
             public bool DialogType;
             public bool Timestamp;
-            public MaskItem<bool, DialogItem.TranslationMask?> Items;
+            public DialogItem.TranslationMask? Items;
             #endregion
 
             #region Ctors
@@ -626,7 +626,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Name = defaultOn;
                 this.DialogType = defaultOn;
                 this.Timestamp = defaultOn;
-                this.Items = new MaskItem<bool, DialogItem.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -638,7 +637,12 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Name, null));
                 ret.Add((DialogType, null));
                 ret.Add((Timestamp, null));
-                ret.Add((Items?.Overall ?? true, Items?.Specific?.GetCrystal()));
+                ret.Add((Items != null || DefaultOn, Items?.GetCrystal()));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

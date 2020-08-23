@@ -1041,7 +1041,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Weight;
             public bool IngredientValue;
             public bool Flags;
-            public MaskItem<bool, Effect.TranslationMask?> Effects;
+            public Effect.TranslationMask? Effects;
             public bool DATADataTypeState;
             public bool ENITDataTypeState;
             #endregion
@@ -1059,7 +1059,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Weight = defaultOn;
                 this.IngredientValue = defaultOn;
                 this.Flags = defaultOn;
-                this.Effects = new MaskItem<bool, Effect.TranslationMask?>(defaultOn, null);
                 this.DATADataTypeState = defaultOn;
                 this.ENITDataTypeState = defaultOn;
             }
@@ -1083,9 +1082,14 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Weight, null));
                 ret.Add((IngredientValue, null));
                 ret.Add((Flags, null));
-                ret.Add((Effects?.Overall ?? true, Effects?.Specific?.GetCrystal()));
+                ret.Add((Effects != null || DefaultOn, Effects?.GetCrystal()));
                 ret.Add((DATADataTypeState, null));
                 ret.Add((ENITDataTypeState, null));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

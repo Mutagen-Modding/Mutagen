@@ -876,14 +876,14 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Name;
             public bool Description;
             public Icons.TranslationMask? Icons;
-            public MaskItem<bool, Condition.TranslationMask?> Conditions;
+            public Condition.TranslationMask? Conditions;
             public bool Trait;
             public bool Level;
             public bool NumRanks;
             public bool Playable;
             public bool Hidden;
             public bool NextPerk;
-            public MaskItem<bool, APerkEffect.TranslationMask?> Effects;
+            public APerkEffect.TranslationMask? Effects;
             public bool DATADataTypeState;
             #endregion
 
@@ -893,14 +893,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.Name = defaultOn;
                 this.Description = defaultOn;
-                this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
                 this.Trait = defaultOn;
                 this.Level = defaultOn;
                 this.NumRanks = defaultOn;
                 this.Playable = defaultOn;
                 this.Hidden = defaultOn;
                 this.NextPerk = defaultOn;
-                this.Effects = new MaskItem<bool, APerkEffect.TranslationMask?>(defaultOn, null);
                 this.DATADataTypeState = defaultOn;
             }
 
@@ -913,15 +911,20 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Name, null));
                 ret.Add((Description, null));
                 ret.Add((Icons != null || DefaultOn, Icons?.GetCrystal()));
-                ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
+                ret.Add((Conditions != null || DefaultOn, Conditions?.GetCrystal()));
                 ret.Add((Trait, null));
                 ret.Add((Level, null));
                 ret.Add((NumRanks, null));
                 ret.Add((Playable, null));
                 ret.Add((Hidden, null));
                 ret.Add((NextPerk, null));
-                ret.Add((Effects?.Overall ?? true, Effects?.Specific?.GetCrystal()));
+                ret.Add((Effects != null || DefaultOn, Effects?.GetCrystal()));
                 ret.Add((DATADataTypeState, null));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

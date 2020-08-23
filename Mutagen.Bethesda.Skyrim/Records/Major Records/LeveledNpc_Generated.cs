@@ -585,7 +585,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool ChanceNone;
             public bool Flags;
             public bool Global;
-            public MaskItem<bool, LeveledNpcEntry.TranslationMask?> Entries;
+            public LeveledNpcEntry.TranslationMask? Entries;
             public Model.TranslationMask? Model;
             #endregion
 
@@ -596,7 +596,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ChanceNone = defaultOn;
                 this.Flags = defaultOn;
                 this.Global = defaultOn;
-                this.Entries = new MaskItem<bool, LeveledNpcEntry.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -608,8 +607,13 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((ChanceNone, null));
                 ret.Add((Flags, null));
                 ret.Add((Global, null));
-                ret.Add((Entries?.Overall ?? true, Entries?.Specific?.GetCrystal()));
+                ret.Add((Entries != null || DefaultOn, Entries?.GetCrystal()));
                 ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

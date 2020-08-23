@@ -538,6 +538,11 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((PotentialGrass, null));
             }
 
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

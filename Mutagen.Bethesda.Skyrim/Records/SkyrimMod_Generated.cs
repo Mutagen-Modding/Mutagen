@@ -20550,20 +20550,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var stream = new MutagenBinaryReadStream(
                 path: path.Path,
                 metaData: meta);
-            if (stream.Remaining < 12)
+            try
             {
-                throw new ArgumentException("File stream was too short to parse flags");
+                if (stream.Remaining < 12)
+                {
+                    throw new ArgumentException("File stream was too short to parse flags");
+                }
+                var flags = stream.GetInt32(offset: 8);
+                if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
+                {
+                    meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path.Path), stringsParam, path.ModKey);
+                }
+                return SkyrimModFactory(
+                    stream: stream,
+                    path.ModKey,
+                    release: release,
+                    shouldDispose: true);
             }
-            var flags = stream.GetInt32(offset: 8);
-            if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
+            catch (Exception)
             {
-                meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path.Path), stringsParam, path.ModKey);
+                stream.Dispose();
+                throw;
             }
-            return SkyrimModFactory(
-                stream: stream,
-                path.ModKey,
-                release: release,
-                shouldDispose: true);
         }
 
         public static SkyrimModBinaryOverlay SkyrimModFactory(

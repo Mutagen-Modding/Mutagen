@@ -487,7 +487,7 @@ namespace Mutagen.Bethesda.Skyrim
             public readonly bool DefaultOn;
             public bool AliasIndex;
             public bool Flags;
-            public MaskItem<bool, Condition.TranslationMask?> Conditions;
+            public Condition.TranslationMask? Conditions;
             public bool QSTADataTypeState;
             #endregion
 
@@ -497,7 +497,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DefaultOn = defaultOn;
                 this.AliasIndex = defaultOn;
                 this.Flags = defaultOn;
-                this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
                 this.QSTADataTypeState = defaultOn;
             }
 
@@ -516,7 +515,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 ret.Add((AliasIndex, null));
                 ret.Add((Flags, null));
-                ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
+                ret.Add((Conditions != null || DefaultOn, Conditions?.GetCrystal()));
                 ret.Add((QSTADataTypeState, null));
             }
 

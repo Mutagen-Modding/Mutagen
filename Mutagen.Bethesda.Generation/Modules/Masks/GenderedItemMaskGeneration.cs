@@ -199,17 +199,17 @@ namespace Mutagen.Bethesda.Generation
             GenderedType gendered = field as GenderedType;
             if (gendered.SubTypeGeneration is LoquiType loqui)
             {
-                return $"MaskItem<bool, GenderedItem<{loqui.Mask(MaskType.Translation)}?>?>";
+                return $"GenderedItem<{loqui.Mask(MaskType.Translation)}>?";
             }
             else
             {
-                return $"MaskItem<bool, GenderedItem<bool>?>";
+                return $"GenderedItem<bool>?";
             }
         }
 
         public override void GenerateForTranslationMaskSet(FileGeneration fg, TypeGeneration field, Accessor accessor, string onAccessor)
         {
-            fg.AppendLine($"{accessor} = new {this.GetTranslationMaskTypeStr(field)}({onAccessor}, default);");
+            // Nothing
         }
 
         public override string GenerateForTranslationMaskCrystalization(TypeGeneration field)
@@ -219,11 +219,11 @@ namespace Mutagen.Bethesda.Generation
             //Implement crystal construction
             if (gendered.SubTypeGeneration is LoquiType loqui)
             {
-                return $"({field.Name}?.Overall ?? true, null)";
+                return $"({field.Name} != null || DefaultOn, null)";
             }
             else
             {
-                return $"({field.Name}?.Overall ?? true, null)";
+                return $"({field.Name} != null || DefaultOn, null)";
             }
         }
     }

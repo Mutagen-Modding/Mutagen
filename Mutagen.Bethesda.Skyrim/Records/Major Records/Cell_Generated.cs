@@ -1768,7 +1768,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Music;
             public bool ImageSpace;
             public Landscape.TranslationMask? Landscape;
-            public MaskItem<bool, ANavigationMesh.TranslationMask?> NavigationMeshes;
+            public ANavigationMesh.TranslationMask? NavigationMeshes;
             public bool Timestamp;
             public bool UnknownGroupData;
             public bool PersistentTimestamp;
@@ -1803,7 +1803,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.EncounterZone = defaultOn;
                 this.Music = defaultOn;
                 this.ImageSpace = defaultOn;
-                this.NavigationMeshes = new MaskItem<bool, ANavigationMesh.TranslationMask?>(defaultOn, null);
                 this.Timestamp = defaultOn;
                 this.UnknownGroupData = defaultOn;
                 this.PersistentTimestamp = defaultOn;
@@ -1844,7 +1843,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Music, null));
                 ret.Add((ImageSpace, null));
                 ret.Add((Landscape != null || DefaultOn, Landscape?.GetCrystal()));
-                ret.Add((NavigationMeshes?.Overall ?? true, NavigationMeshes?.Specific?.GetCrystal()));
+                ret.Add((NavigationMeshes != null || DefaultOn, NavigationMeshes?.GetCrystal()));
                 ret.Add((Timestamp, null));
                 ret.Add((UnknownGroupData, null));
                 ret.Add((PersistentTimestamp, null));
@@ -1853,6 +1852,11 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((TemporaryTimestamp, null));
                 ret.Add((TemporaryUnknownGroupData, null));
                 ret.Add((Temporary, null));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

@@ -1568,12 +1568,12 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Name;
             public Model.TranslationMask? Model;
             public NpcConfiguration.TranslationMask? Configuration;
-            public MaskItem<bool, RankPlacement.TranslationMask?> Factions;
+            public RankPlacement.TranslationMask? Factions;
             public bool DeathItem;
             public bool Race;
             public bool Spells;
             public bool Script;
-            public MaskItem<bool, ItemEntry.TranslationMask?> Items;
+            public ItemEntry.TranslationMask? Items;
             public AIData.TranslationMask? AIData;
             public bool AIPackages;
             public bool Animations;
@@ -1595,12 +1595,10 @@ namespace Mutagen.Bethesda.Oblivion
                 : base(defaultOn)
             {
                 this.Name = defaultOn;
-                this.Factions = new MaskItem<bool, RankPlacement.TranslationMask?>(defaultOn, null);
                 this.DeathItem = defaultOn;
                 this.Race = defaultOn;
                 this.Spells = defaultOn;
                 this.Script = defaultOn;
-                this.Items = new MaskItem<bool, ItemEntry.TranslationMask?>(defaultOn, null);
                 this.AIPackages = defaultOn;
                 this.Animations = defaultOn;
                 this.Class = defaultOn;
@@ -1623,12 +1621,12 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Name, null));
                 ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
                 ret.Add((Configuration != null || DefaultOn, Configuration?.GetCrystal()));
-                ret.Add((Factions?.Overall ?? true, Factions?.Specific?.GetCrystal()));
+                ret.Add((Factions != null || DefaultOn, Factions?.GetCrystal()));
                 ret.Add((DeathItem, null));
                 ret.Add((Race, null));
                 ret.Add((Spells, null));
                 ret.Add((Script, null));
-                ret.Add((Items?.Overall ?? true, Items?.Specific?.GetCrystal()));
+                ret.Add((Items != null || DefaultOn, Items?.GetCrystal()));
                 ret.Add((AIData != null || DefaultOn, AIData?.GetCrystal()));
                 ret.Add((AIPackages, null));
                 ret.Add((Animations, null));
@@ -1643,6 +1641,11 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((FaceGenGeometryAsymmetric, null));
                 ret.Add((FaceGenTextureSymmetric, null));
                 ret.Add((FNAM, null));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

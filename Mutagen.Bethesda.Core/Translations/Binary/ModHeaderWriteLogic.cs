@@ -12,11 +12,11 @@ namespace Mutagen.Bethesda.Internals
     public class ModHeaderWriteLogic
     {
         private readonly List<Action<IMajorRecordCommonGetter>> _recordIterationActions = new List<Action<IMajorRecordCommonGetter>>();
-        private readonly List<Action<FormKey>> _formLinkIterationActions = new List<Action<FormKey>>();
+        private readonly List<Action<FormKey, FormKey>> _formLinkIterationActions = new List<Action<FormKey, FormKey>>();
         private readonly BinaryWriteParameters _params;
 
         private readonly ModKey _modKey;
-        private readonly HashSet<ModKey> _modKeys = new HashSet<ModKey>();
+        private readonly Dictionary<ModKey, FormKey> _modKeys = new Dictionary<ModKey, FormKey>();
         private uint _numRecords;
         private uint _nextFormID;
         private uint _uniqueRecordsFromMod;
@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Internals
                     {
                         foreach (var formLinkAction in _formLinkIterationActions)
                         {
-                            formLinkAction(formKey);
+                            formLinkAction(maj.FormKey, formKey);
                         }
                     }
                 }
@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Internals
             MasterReferenceReader ret = new MasterReferenceReader(mod.ModKey);
             _modKeys.Remove(mod.ModKey);
             _modKeys.Remove(ModKey.Null);
-            var modKeysList = _modKeys.ToList();
+            var modKeysList = _modKeys.Keys.ToList();
             SortMasters(modKeysList);
             ret.SetTo(modKeysList.Select(m => new MasterReference()
             {
@@ -126,11 +126,11 @@ namespace Mutagen.Bethesda.Internals
             switch (_params.MastersListContent)
             {
                 case BinaryWriteParameters.MastersListContentOption.NoCheck:
-                    _modKeys.Add(mod.MasterReferences.Select(m => m.Master));
+                    _modKeys.Set(mod.MasterReferences.Select(m => new KeyValuePair<ModKey, FormKey>(m.Master, FormKey.Null)));
                     break;
                 case BinaryWriteParameters.MastersListContentOption.Iterate:
-                    _recordIterationActions.Add(maj => _modKeys.Add(maj.FormKey.ModKey));
-                    _formLinkIterationActions.Add(formLink => _modKeys.Add(formLink.ModKey));
+                    _recordIterationActions.Add(maj => _modKeys[maj.FormKey.ModKey] = maj.FormKey);
+                    _formLinkIterationActions.Add((maj, formLink) => _modKeys[formLink.ModKey] = maj);
                     break;
                 default:
                     throw new NotImplementedException();
@@ -218,7 +218,17 @@ namespace Mutagen.Bethesda.Internals
                             throw new NotImplementedException();
                     }
                 case BinaryWriteParameters.MastersListOrderingByLoadOrder lo:
-                    modKeys.Sort(ModKey.LoadOrderComparer(lo.LoadOrder));
+                    try
+                    {
+                        modKeys.Sort(ModKey.LoadOrderComparer(lo.LoadOrder));
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        var keys = modKeys.ToHashSet();
+                        keys.Remove(lo.LoadOrder);
+                        var modToComplainAbout = keys.First();
+                        throw new MissingModException(modToComplainAbout, $"A referenced mod was not present on the load order being sorted against: {modToComplainAbout}.  This mod was referenced by MajorRecord: {_modKeys[modToComplainAbout]}");
+                    }
                     return;
                 default:
                     throw new NotImplementedException();

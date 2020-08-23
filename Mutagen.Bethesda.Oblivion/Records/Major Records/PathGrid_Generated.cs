@@ -677,20 +677,17 @@ namespace Mutagen.Bethesda.Oblivion
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, PathGridPoint.TranslationMask?> PointToPointConnections;
+            public PathGridPoint.TranslationMask? PointToPointConnections;
             public bool PGAG;
-            public MaskItem<bool, InterCellPoint.TranslationMask?> InterCellConnections;
-            public MaskItem<bool, PointToReferenceMapping.TranslationMask?> PointToReferenceMappings;
+            public InterCellPoint.TranslationMask? InterCellConnections;
+            public PointToReferenceMapping.TranslationMask? PointToReferenceMappings;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.PointToPointConnections = new MaskItem<bool, PathGridPoint.TranslationMask?>(defaultOn, null);
                 this.PGAG = defaultOn;
-                this.InterCellConnections = new MaskItem<bool, InterCellPoint.TranslationMask?>(defaultOn, null);
-                this.PointToReferenceMappings = new MaskItem<bool, PointToReferenceMapping.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -698,10 +695,15 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((PointToPointConnections?.Overall ?? true, PointToPointConnections?.Specific?.GetCrystal()));
+                ret.Add((PointToPointConnections != null || DefaultOn, PointToPointConnections?.GetCrystal()));
                 ret.Add((PGAG, null));
-                ret.Add((InterCellConnections?.Overall ?? true, InterCellConnections?.Specific?.GetCrystal()));
-                ret.Add((PointToReferenceMappings?.Overall ?? true, PointToReferenceMappings?.Specific?.GetCrystal()));
+                ret.Add((InterCellConnections != null || DefaultOn, InterCellConnections?.GetCrystal()));
+                ret.Add((PointToReferenceMappings != null || DefaultOn, PointToReferenceMappings?.GetCrystal()));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

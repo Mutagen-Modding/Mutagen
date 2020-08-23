@@ -740,7 +740,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public bool MapColor;
             public bool Worldspace;
-            public MaskItem<bool, RegionArea.TranslationMask?> RegionAreas;
+            public RegionArea.TranslationMask? RegionAreas;
             public RegionObjects.TranslationMask? Objects;
             public RegionWeather.TranslationMask? Weather;
             public RegionMap.TranslationMask? Map;
@@ -755,7 +755,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.MapColor = defaultOn;
                 this.Worldspace = defaultOn;
-                this.RegionAreas = new MaskItem<bool, RegionArea.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -765,13 +764,18 @@ namespace Mutagen.Bethesda.Skyrim
                 base.GetCrystal(ret);
                 ret.Add((MapColor, null));
                 ret.Add((Worldspace, null));
-                ret.Add((RegionAreas?.Overall ?? true, RegionAreas?.Specific?.GetCrystal()));
+                ret.Add((RegionAreas != null || DefaultOn, RegionAreas?.GetCrystal()));
                 ret.Add((Objects != null || DefaultOn, Objects?.GetCrystal()));
                 ret.Add((Weather != null || DefaultOn, Weather?.GetCrystal()));
                 ret.Add((Map != null || DefaultOn, Map?.GetCrystal()));
                 ret.Add((Land != null || DefaultOn, Land?.GetCrystal()));
                 ret.Add((Grasses != null || DefaultOn, Grasses?.GetCrystal()));
                 ret.Add((Sounds != null || DefaultOn, Sounds?.GetCrystal()));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

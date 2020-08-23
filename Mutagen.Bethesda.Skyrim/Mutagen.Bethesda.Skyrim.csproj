@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Version>0.13.3</Version>
+    <Version>0.13.4.0</Version>
     <Authors>Noggog</Authors>
     <Company>Mutagen</Company>
     <Product>Mutagen</Product>
@@ -13,11 +13,12 @@
     <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/Noggog/Mutagen</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Noggog/Mutagen</RepositoryUrl>
-    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>Mutagen.Bethesda.Skyrim.xml</DocumentationFile>
+    <DebugType>embedded</DebugType>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
@@ -70,6 +71,9 @@
       <DependentUpon>BodyTemplate.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\Condition.cs">
+      <DependentUpon>Condition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ConditionData.cs">
       <DependentUpon>Condition.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\ConditionFloat.cs">
@@ -2099,8 +2103,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Loqui" Version="1.2.1" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.1.2" />
+    <PackageReference Include="Loqui" Version="1.2.2" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.1.3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />

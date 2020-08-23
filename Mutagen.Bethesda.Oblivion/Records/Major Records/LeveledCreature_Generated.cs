@@ -533,7 +533,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Members
             public bool ChanceNone;
             public bool Flags;
-            public MaskItem<bool, LeveledEntry.TranslationMask<ANpcSpawn.TranslationMask>?> Entries;
+            public LeveledEntry.TranslationMask<ANpcSpawn.TranslationMask>? Entries;
             public bool Script;
             public bool Template;
             #endregion
@@ -544,7 +544,6 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.ChanceNone = defaultOn;
                 this.Flags = defaultOn;
-                this.Entries = new MaskItem<bool, LeveledEntry.TranslationMask<ANpcSpawn.TranslationMask>?>(defaultOn, null);
                 this.Script = defaultOn;
                 this.Template = defaultOn;
             }
@@ -556,9 +555,14 @@ namespace Mutagen.Bethesda.Oblivion
                 base.GetCrystal(ret);
                 ret.Add((ChanceNone, null));
                 ret.Add((Flags, null));
-                ret.Add((Entries?.Overall ?? true, Entries?.Specific?.GetCrystal()));
+                ret.Add((Entries != null || DefaultOn, Entries?.GetCrystal()));
                 ret.Add((Script, null));
                 ret.Add((Template, null));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

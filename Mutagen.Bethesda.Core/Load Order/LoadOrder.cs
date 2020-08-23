@@ -315,7 +315,7 @@ namespace Mutagen.Bethesda
         /// </param>
         public static LoadOrder<IModListing<TMod>> Import<TMod>(
             DirectoryPath dataFolder,
-            IEnumerable<ModKey> loadOrder,
+            IEnumerable<LoadOrderListing> loadOrder,
             GameRelease gameRelease)
             where TMod : class, IModGetter
         {
@@ -333,36 +333,51 @@ namespace Mutagen.Bethesda
         /// <param name="factory">Func to use to create a new mod from a path</param>
         public static LoadOrder<IModListing<TMod>> Import<TMod>(
             DirectoryPath dataFolder,
-            IEnumerable<ModKey> loadOrder,
+            IEnumerable<LoadOrderListing> loadOrder,
             Func<ModPath, TMod> factory)
             where TMod : class, IModGetter
         {
             var loList = loadOrder.ToList();
-            var results = new (ModKey ModKey, int ModIndex, TryGet<TMod> Mod)[loList.Count];
-            Parallel.ForEach(loList, (modKey, state, modIndex) =>
+            var results = new (ModKey ModKey, int ModIndex, TryGet<TMod> Mod, bool Enabled)[loList.Count];
+            try
             {
-                var modPath = new ModPath(modKey, dataFolder.GetFile(modKey.FileName).Path);
-                if (!File.Exists(modPath.Path))
+                Parallel.ForEach(loList, (listing, state, modIndex) =>
                 {
-                    results[modIndex] = (modKey, (int)modIndex, TryGet<TMod>.Failure);
-                    return;
+                    var modPath = new ModPath(listing.ModKey, dataFolder.GetFile(listing.ModKey.FileName).Path);
+                    if (!File.Exists(modPath.Path))
+                    {
+                        results[modIndex] = (listing.ModKey, (int)modIndex, TryGet<TMod>.Failure, listing.Enabled);
+                        return;
+                    }
+                    var mod = factory(modPath);
+                    results[modIndex] = (listing.ModKey, (int)modIndex, TryGet<TMod>.Succeed(mod), listing.Enabled);
+                });
+                return new LoadOrder<IModListing<TMod>>(results
+                    .OrderBy(i => i.ModIndex)
+                    .Select(item =>
+                    {
+                        if (item.Mod.Succeeded)
+                        {
+                            return new ModListing<TMod>(item.Mod.Value, item.Enabled);
+                        }
+                        else
+                        {
+                            return ModListing<TMod>.UnloadedModListing(item.ModKey, item.Enabled);
+                        }
+                    }));
+            }
+            catch (Exception)
+            {
+                // We're aborting, but we still want to dispose any that were successful
+                foreach (var result in results)
+                {
+                    if (result.Mod.Value is IDisposable disp)
+                    {
+                        disp.Dispose();
+                    }
                 }
-                var mod = factory(modPath);
-                results[modIndex] = (modKey, (int)modIndex, TryGet<TMod>.Succeed(mod));
-            });
-            return new LoadOrder<IModListing<TMod>>(results
-                .OrderBy(i => i.ModIndex)
-                .Select(item =>
-                {
-                    if (item.Mod.Succeeded)
-                    {
-                        return new ModListing<TMod>(item.Mod.Value);
-                    }
-                    else
-                    {
-                        return ModListing<TMod>.UnloadedModListing(item.ModKey);
-                    }
-                }));
+                throw;
+            }
         }
     }
 

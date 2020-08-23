@@ -2035,9 +2035,9 @@ namespace Mutagen.Bethesda.Skyrim
             public bool ScriptEffectAIScore;
             public bool ScriptEffectAIDelayTime;
             public bool CounterEffects;
-            public MaskItem<bool, MagicEffectSound.TranslationMask?> Sounds;
+            public MagicEffectSound.TranslationMask? Sounds;
             public bool Description;
-            public MaskItem<bool, Condition.TranslationMask?> Conditions;
+            public Condition.TranslationMask? Conditions;
             public bool DATADataTypeState;
             #endregion
 
@@ -2085,9 +2085,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ScriptEffectAIScore = defaultOn;
                 this.ScriptEffectAIDelayTime = defaultOn;
                 this.CounterEffects = defaultOn;
-                this.Sounds = new MaskItem<bool, MagicEffectSound.TranslationMask?>(defaultOn, null);
                 this.Description = defaultOn;
-                this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
                 this.DATADataTypeState = defaultOn;
             }
 
@@ -2138,10 +2136,15 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((ScriptEffectAIScore, null));
                 ret.Add((ScriptEffectAIDelayTime, null));
                 ret.Add((CounterEffects, null));
-                ret.Add((Sounds?.Overall ?? true, Sounds?.Specific?.GetCrystal()));
+                ret.Add((Sounds != null || DefaultOn, Sounds?.GetCrystal()));
                 ret.Add((Description, null));
-                ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
+                ret.Add((Conditions != null || DefaultOn, Conditions?.GetCrystal()));
                 ret.Add((DATADataTypeState, null));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

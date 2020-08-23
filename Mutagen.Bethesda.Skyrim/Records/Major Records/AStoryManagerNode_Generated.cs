@@ -475,7 +475,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public bool Parent;
             public bool PreviousSibling;
-            public MaskItem<bool, Condition.TranslationMask?> Conditions;
+            public Condition.TranslationMask? Conditions;
             #endregion
 
             #region Ctors
@@ -484,7 +484,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.Parent = defaultOn;
                 this.PreviousSibling = defaultOn;
-                this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -494,7 +493,12 @@ namespace Mutagen.Bethesda.Skyrim
                 base.GetCrystal(ret);
                 ret.Add((Parent, null));
                 ret.Add((PreviousSibling, null));
-                ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
+                ret.Add((Conditions != null || DefaultOn, Conditions?.GetCrystal()));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

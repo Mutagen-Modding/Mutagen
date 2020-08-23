@@ -597,6 +597,11 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((BillboardDimensions != null || DefaultOn, BillboardDimensions?.GetCrystal()));
             }
 
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

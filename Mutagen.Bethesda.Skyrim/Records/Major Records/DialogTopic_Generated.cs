@@ -737,7 +737,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool SubtypeName;
             public bool Timestamp;
             public bool Unknown;
-            public MaskItem<bool, DialogResponses.TranslationMask?> Responses;
+            public DialogResponses.TranslationMask? Responses;
             public bool DATADataTypeState;
             #endregion
 
@@ -755,7 +755,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.SubtypeName = defaultOn;
                 this.Timestamp = defaultOn;
                 this.Unknown = defaultOn;
-                this.Responses = new MaskItem<bool, DialogResponses.TranslationMask?>(defaultOn, null);
                 this.DATADataTypeState = defaultOn;
             }
 
@@ -774,8 +773,13 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((SubtypeName, null));
                 ret.Add((Timestamp, null));
                 ret.Add((Unknown, null));
-                ret.Add((Responses?.Overall ?? true, Responses?.Specific?.GetCrystal()));
+                ret.Add((Responses != null || DefaultOn, Responses?.GetCrystal()));
                 ret.Add((DATADataTypeState, null));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

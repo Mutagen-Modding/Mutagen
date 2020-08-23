@@ -601,7 +601,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Quest;
             public bool Flags;
             public bool DisplayTime;
-            public MaskItem<bool, MessageButton.TranslationMask?> MenuButtons;
+            public MessageButton.TranslationMask? MenuButtons;
             #endregion
 
             #region Ctors
@@ -614,7 +614,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Quest = defaultOn;
                 this.Flags = defaultOn;
                 this.DisplayTime = defaultOn;
-                this.MenuButtons = new MaskItem<bool, MessageButton.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -628,7 +627,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Quest, null));
                 ret.Add((Flags, null));
                 ret.Add((DisplayTime, null));
-                ret.Add((MenuButtons?.Overall ?? true, MenuButtons?.Specific?.GetCrystal()));
+                ret.Add((MenuButtons != null || DefaultOn, MenuButtons?.GetCrystal()));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

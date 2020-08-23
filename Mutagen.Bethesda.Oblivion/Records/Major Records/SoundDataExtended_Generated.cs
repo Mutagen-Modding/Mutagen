@@ -403,6 +403,11 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((StartTime, null));
             }
 
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
+            }
+
         }
         #endregion
 

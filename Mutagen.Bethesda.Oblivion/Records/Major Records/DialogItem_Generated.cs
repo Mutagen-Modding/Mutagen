@@ -1010,8 +1010,8 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Quest;
             public bool PreviousTopic;
             public bool Topics;
-            public MaskItem<bool, DialogResponse.TranslationMask?> Responses;
-            public MaskItem<bool, Condition.TranslationMask?> Conditions;
+            public DialogResponse.TranslationMask? Responses;
+            public Condition.TranslationMask? Conditions;
             public bool Choices;
             public bool LinkFrom;
             public ScriptFields.TranslationMask? Script;
@@ -1024,8 +1024,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Quest = defaultOn;
                 this.PreviousTopic = defaultOn;
                 this.Topics = defaultOn;
-                this.Responses = new MaskItem<bool, DialogResponse.TranslationMask?>(defaultOn, null);
-                this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
                 this.Choices = defaultOn;
                 this.LinkFrom = defaultOn;
             }
@@ -1039,11 +1037,16 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Quest, null));
                 ret.Add((PreviousTopic, null));
                 ret.Add((Topics, null));
-                ret.Add((Responses?.Overall ?? true, Responses?.Specific?.GetCrystal()));
-                ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
+                ret.Add((Responses != null || DefaultOn, Responses?.GetCrystal()));
+                ret.Add((Conditions != null || DefaultOn, Conditions?.GetCrystal()));
                 ret.Add((Choices, null));
                 ret.Add((LinkFrom, null));
                 ret.Add((Script != null || DefaultOn, Script?.GetCrystal()));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

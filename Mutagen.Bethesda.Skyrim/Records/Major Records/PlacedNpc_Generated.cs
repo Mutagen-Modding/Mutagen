@@ -1422,7 +1422,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Count;
             public bool Radius;
             public bool Health;
-            public MaskItem<bool, LinkedReferences.TranslationMask?> LinkedReferences;
+            public LinkedReferences.TranslationMask? LinkedReferences;
             public ActivateParents.TranslationMask? ActivateParents;
             public LinkedReferenceColor.TranslationMask? LinkedReferenceColor;
             public bool PersistentLocation;
@@ -1454,7 +1454,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Count = defaultOn;
                 this.Radius = defaultOn;
                 this.Health = defaultOn;
-                this.LinkedReferences = new MaskItem<bool, LinkedReferences.TranslationMask?>(defaultOn, null);
                 this.PersistentLocation = defaultOn;
                 this.LocationReference = defaultOn;
                 this.IgnoredBySandbox = defaultOn;
@@ -1484,7 +1483,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Count, null));
                 ret.Add((Radius, null));
                 ret.Add((Health, null));
-                ret.Add((LinkedReferences?.Overall ?? true, LinkedReferences?.Specific?.GetCrystal()));
+                ret.Add((LinkedReferences != null || DefaultOn, LinkedReferences?.GetCrystal()));
                 ret.Add((ActivateParents != null || DefaultOn, ActivateParents?.GetCrystal()));
                 ret.Add((LinkedReferenceColor != null || DefaultOn, LinkedReferenceColor?.GetCrystal()));
                 ret.Add((PersistentLocation, null));
@@ -1501,6 +1500,11 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((IgnoredBySandbox2, null));
                 ret.Add((Scale, null));
                 ret.Add((Placement != null || DefaultOn, Placement?.GetCrystal()));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

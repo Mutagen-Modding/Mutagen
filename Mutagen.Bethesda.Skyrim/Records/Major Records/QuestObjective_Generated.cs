@@ -492,7 +492,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Index;
             public bool Flags;
             public bool DisplayText;
-            public MaskItem<bool, QuestObjectiveTarget.TranslationMask?> Targets;
+            public QuestObjectiveTarget.TranslationMask? Targets;
             #endregion
 
             #region Ctors
@@ -502,7 +502,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Index = defaultOn;
                 this.Flags = defaultOn;
                 this.DisplayText = defaultOn;
-                this.Targets = new MaskItem<bool, QuestObjectiveTarget.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -521,7 +520,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Index, null));
                 ret.Add((Flags, null));
                 ret.Add((DisplayText, null));
-                ret.Add((Targets?.Overall ?? true, Targets?.Specific?.GetCrystal()));
+                ret.Add((Targets != null || DefaultOn, Targets?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)

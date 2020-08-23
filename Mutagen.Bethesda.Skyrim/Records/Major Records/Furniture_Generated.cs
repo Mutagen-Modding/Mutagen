@@ -936,7 +936,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool InteractionKeyword;
             public WorkbenchData.TranslationMask? WorkbenchData;
             public bool AssociatedSpell;
-            public MaskItem<bool, FurnitureMarker.TranslationMask?> Markers;
+            public FurnitureMarker.TranslationMask? Markers;
             public bool ModelFilename;
             #endregion
 
@@ -950,7 +950,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Flags = defaultOn;
                 this.InteractionKeyword = defaultOn;
                 this.AssociatedSpell = defaultOn;
-                this.Markers = new MaskItem<bool, FurnitureMarker.TranslationMask?>(defaultOn, null);
                 this.ModelFilename = defaultOn;
             }
 
@@ -970,8 +969,13 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((InteractionKeyword, null));
                 ret.Add((WorkbenchData != null || DefaultOn, WorkbenchData?.GetCrystal()));
                 ret.Add((AssociatedSpell, null));
-                ret.Add((Markers?.Overall ?? true, Markers?.Specific?.GetCrystal()));
+                ret.Add((Markers != null || DefaultOn, Markers?.GetCrystal()));
                 ret.Add((ModelFilename, null));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

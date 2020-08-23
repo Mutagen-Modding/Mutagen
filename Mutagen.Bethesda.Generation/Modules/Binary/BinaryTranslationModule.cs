@@ -2438,31 +2438,41 @@ namespace Mutagen.Bethesda.Generation
                                 args.Add($"path: path.{nameof(ModPath.Path)}");
                                 args.Add($"metaData: meta");
                             }
-                            if (objData.UsesStringFiles)
+                            fg.AppendLine("try");
+                            using (new BraceWrapper(fg))
                             {
-                                fg.AppendLine("if (stream.Remaining < 12)");
-                                using (new BraceWrapper(fg))
+                                if (objData.UsesStringFiles)
                                 {
-                                    fg.AppendLine($"throw new ArgumentException(\"File stream was too short to parse flags\");");
+                                    fg.AppendLine("if (stream.Remaining < 12)");
+                                    using (new BraceWrapper(fg))
+                                    {
+                                        fg.AppendLine($"throw new ArgumentException(\"File stream was too short to parse flags\");");
+                                    }
+                                    fg.AppendLine($"var flags = stream.GetInt32(offset: 8);");
+                                    fg.AppendLine($"if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))");
+                                    using (new BraceWrapper(fg))
+                                    {
+                                        fg.AppendLine($"meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path.{nameof(ModPath.Path)}), stringsParam, path.{nameof(ModPath.ModKey)});");
+                                    }
                                 }
-                                fg.AppendLine($"var flags = stream.GetInt32(offset: 8);");
-                                fg.AppendLine($"if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))");
-                                using (new BraceWrapper(fg))
+
+                                using (var args = new ArgsWrapper(fg,
+                                    $"return {obj.Name}Factory"))
                                 {
-                                    fg.AppendLine($"meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path.{nameof(ModPath.Path)}), stringsParam, path.{nameof(ModPath.ModKey)});");
+                                    args.AddPassArg("stream");
+                                    args.Add($"path.{nameof(ModPath.ModKey)}");
+                                    if (objData.GameReleaseOptions != null)
+                                    {
+                                        args.AddPassArg("release");
+                                    }
+                                    args.Add("shouldDispose: true");
                                 }
                             }
-
-                            using (var args = new ArgsWrapper(fg,
-                                $"return {obj.Name}Factory"))
+                            fg.AppendLine("catch (Exception)");
+                            using (new BraceWrapper(fg))
                             {
-                                args.AddPassArg("stream");
-                                args.Add($"path.{nameof(ModPath.ModKey)}");
-                                if (objData.GameReleaseOptions != null)
-                                {
-                                    args.AddPassArg("release");
-                                }
-                                args.Add("shouldDispose: true");
+                                fg.AppendLine("stream.Dispose();");
+                                fg.AppendLine("throw;");
                             }
                         }
                         fg.AppendLine();

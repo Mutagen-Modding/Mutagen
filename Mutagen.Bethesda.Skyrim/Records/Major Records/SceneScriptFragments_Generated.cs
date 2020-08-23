@@ -408,14 +408,13 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, ScenePhaseFragment.TranslationMask?> PhaseFragments;
+            public ScenePhaseFragment.TranslationMask? PhaseFragments;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.PhaseFragments = new MaskItem<bool, ScenePhaseFragment.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -423,7 +422,12 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((PhaseFragments?.Overall ?? true, PhaseFragments?.Specific?.GetCrystal()));
+                ret.Add((PhaseFragments != null || DefaultOn, PhaseFragments?.GetCrystal()));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

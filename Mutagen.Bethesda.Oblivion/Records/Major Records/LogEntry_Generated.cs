@@ -506,7 +506,7 @@ namespace Mutagen.Bethesda.Oblivion
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool Flags;
-            public MaskItem<bool, Condition.TranslationMask?> Conditions;
+            public Condition.TranslationMask? Conditions;
             public bool Entry;
             public ScriptFields.TranslationMask? ResultScript;
             #endregion
@@ -516,7 +516,6 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DefaultOn = defaultOn;
                 this.Flags = defaultOn;
-                this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
                 this.Entry = defaultOn;
             }
 
@@ -534,7 +533,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Flags, null));
-                ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
+                ret.Add((Conditions != null || DefaultOn, Conditions?.GetCrystal()));
                 ret.Add((Entry, null));
                 ret.Add((ResultScript != null || DefaultOn, ResultScript?.GetCrystal()));
             }

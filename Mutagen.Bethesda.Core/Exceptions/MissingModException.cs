@@ -13,10 +13,21 @@ namespace Mutagen.Bethesda
             ModPath = path;
         }
 
-        public MissingModException(ModPath path, string message) 
+        public MissingModException(ModPath path, string message)
             : base(message)
         {
             ModPath = path;
+        }
+
+        public MissingModException(ModKey key)
+        {
+            ModPath = new ModPath(key, string.Empty);
+        }
+
+        public MissingModException(ModKey key, string message) 
+            : base(message)
+        {
+            ModPath = new ModPath(key, string.Empty);
         }
     }
 }

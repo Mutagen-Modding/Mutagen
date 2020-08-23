@@ -742,7 +742,7 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, WeatherType.TranslationMask?> WeatherTypes;
+            public WeatherType.TranslationMask? WeatherTypes;
             public bool SunTexture;
             public bool SunGlareTexture;
             public Model.TranslationMask? Model;
@@ -760,7 +760,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.WeatherTypes = new MaskItem<bool, WeatherType.TranslationMask?>(defaultOn, null);
                 this.SunTexture = defaultOn;
                 this.SunGlareTexture = defaultOn;
                 this.SunriseBeginRaw = defaultOn;
@@ -778,7 +777,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((WeatherTypes?.Overall ?? true, WeatherTypes?.Specific?.GetCrystal()));
+                ret.Add((WeatherTypes != null || DefaultOn, WeatherTypes?.GetCrystal()));
                 ret.Add((SunTexture, null));
                 ret.Add((SunGlareTexture, null));
                 ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
@@ -790,6 +789,11 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Moons, null));
                 ret.Add((PhaseLength, null));
                 ret.Add((TNAMDataTypeState, null));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }

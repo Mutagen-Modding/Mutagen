@@ -891,7 +891,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Road.TranslationMask? Road;
             public Cell.TranslationMask? TopCell;
             public bool SubCellsTimestamp;
-            public MaskItem<bool, WorldspaceBlock.TranslationMask?> SubCells;
+            public WorldspaceBlock.TranslationMask? SubCells;
             #endregion
 
             #region Ctors
@@ -909,7 +909,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Music = defaultOn;
                 this.OffsetData = defaultOn;
                 this.SubCellsTimestamp = defaultOn;
-                this.SubCells = new MaskItem<bool, WorldspaceBlock.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -931,7 +930,12 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Road != null || DefaultOn, Road?.GetCrystal()));
                 ret.Add((TopCell != null || DefaultOn, TopCell?.GetCrystal()));
                 ret.Add((SubCellsTimestamp, null));
-                ret.Add((SubCells?.Overall ?? true, SubCells?.Specific?.GetCrystal()));
+                ret.Add((SubCells != null || DefaultOn, SubCells?.GetCrystal()));
+            }
+
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn);
             }
 
         }
