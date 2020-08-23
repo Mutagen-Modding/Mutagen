@@ -33,5 +33,10 @@ namespace Mutagen.Bethesda
         {
             return $"{ModKey} => {(Enabled ? "On" : "Off")}";
         }
+
+        public static implicit operator LoadOrderListing(ModKey modKey)
+        {
+            return new LoadOrderListing(modKey, enabled: true);
+        }
     }
 }

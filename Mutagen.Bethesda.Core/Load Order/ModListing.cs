@@ -14,45 +14,47 @@ namespace Mutagen.Bethesda
     public class ModListing<TMod> : IModListing<TMod>
         where TMod : class, IModGetter
     {
-        /// <summary>
-        /// Mod object
-        /// </summary>
-        public TMod? Mod { get; private set; }
+        /// <inheritdoc />
+        public TMod? Mod { get; }
 
-        /// <summary>
-        /// ModKey associated with listing
-        /// </summary>
-        public ModKey ModKey { get; private set; }
+        /// <inheritdoc />
+        public ModKey ModKey { get; }
 
-        private ModListing(ModKey key, TMod? mod)
+        /// <inheritdoc />
+        public bool Enabled { get; }
+
+        private ModListing(ModKey key, TMod? mod, bool enabled)
         {
             this.ModKey = key;
             this.Mod = mod;
+            this.Enabled = enabled;
         }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public ModListing(TMod mod)
+        public ModListing(TMod mod, bool enabled)
         {
             this.ModKey = mod.ModKey;
             this.Mod = mod;
+            this.Enabled = enabled;
         }
 
         /// <summary>
         /// Factory to create a ModListing which does not have a mod object
         /// </summary>
         /// <param name="key">ModKey to associate with listing</param>
+        /// <param name="enabled">Whether the listing is enabled in the load order</param>
         /// <returns>ModListing with no mod object</returns>
-        public static ModListing<TMod> UnloadedModListing(ModKey key)
+        public static ModListing<TMod> UnloadedModListing(ModKey key, bool enabled)
         {
-            return new ModListing<TMod>(key, default);
+            return new ModListing<TMod>(key, default, enabled: enabled);
         }
 
         /// <inheritdoc/>
         public override string ToString()
         {
-            return $"{ModKey} => {(Mod == null ? "Missing" : "Present")}";
+            return $"{ModKey} : {(Enabled ? "On" : "Off")} : {(Mod == null ? "Missing" : "Present")}";
         }
 
         public void Dispose()
@@ -61,11 +63,6 @@ namespace Mutagen.Bethesda
             {
                 disp.Dispose();
             }
-        }
-
-        public static implicit operator ModListing<TMod>(TMod mod)
-        {
-            return new ModListing<TMod>(mod);
         }
     }
 
@@ -76,5 +73,10 @@ namespace Mutagen.Bethesda
         /// Mod object
         /// </summary>
         TMod? Mod { get; }
+
+        /// <summary>
+        /// Whether the listing is enabled in the load order
+        /// </summary>
+        bool Enabled { get; }
     }
 }
