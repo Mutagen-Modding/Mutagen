@@ -1,4 +1,5 @@
 ﻿using Mutagen.Bethesda.Skyrim;
+using Noggog;
 using Noggog.Utility;
 using System;
 using System.Collections.Generic;
@@ -143,6 +144,29 @@ namespace Mutagen.Bethesda.UnitTests
                     ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
                     MastersListContent = BinaryWriteParameters.MastersListContentOption.Iterate,
                 });
+        }
+
+        [Fact]
+        public void Write_ModNotOnLoadOrder()
+        {
+            using var tmp = GetFile();
+            var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimLE);
+            mod.Weapons.RecordCache.Set(
+                new Weapon(FormKey.Factory("012345:Skyrim.esm")));
+            mod.Weapons.RecordCache.Set(
+                new Weapon(FormKey.Factory("012345:SomeOtherMod.esp")));
+            Assert.Throws<MissingModException>(() =>
+            {
+                mod.WriteToBinary(
+                   tmp.File.Path,
+                   new BinaryWriteParameters()
+                   {
+                       ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
+                       MastersListContent = BinaryWriteParameters.MastersListContentOption.Iterate,
+                       MastersListOrdering = new BinaryWriteParameters.MastersListOrderingByLoadOrder(
+                           Constants.Skyrim.AsEnumerable())
+                   });
+            });
         }
     }
 }

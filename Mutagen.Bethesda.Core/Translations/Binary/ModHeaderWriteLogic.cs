@@ -218,7 +218,17 @@ namespace Mutagen.Bethesda.Internals
                             throw new NotImplementedException();
                     }
                 case BinaryWriteParameters.MastersListOrderingByLoadOrder lo:
-                    modKeys.Sort(ModKey.LoadOrderComparer(lo.LoadOrder));
+                    try
+                    {
+                        modKeys.Sort(ModKey.LoadOrderComparer(lo.LoadOrder));
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        var keys = modKeys.ToHashSet();
+                        keys.Remove(lo.LoadOrder);
+                        var modToComplainAbout = keys.First();
+                        throw new MissingModException(modToComplainAbout, $"A referenced mod was not present on the load order being sorted against: {modToComplainAbout}");
+                    }
                     return;
                 default:
                     throw new NotImplementedException();
