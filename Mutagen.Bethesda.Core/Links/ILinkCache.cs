@@ -61,8 +61,14 @@ namespace Mutagen.Bethesda
         /// <returns>True if a matching record was found</returns>
         bool TryLookup(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec);
 
+        /// <summary>
+        /// Iterates through the contained mods in the order they were listed, with the least prioritized mod first.
+        /// </summary>
         public IReadOnlyList<IModGetter> ListedOrder { get; }
 
+        /// <summary>
+        /// Iterates through the contained mods in priority order (reversed), with the most prioritized mod first.
+        /// </summary>
         public IReadOnlyList<IModGetter> PriorityOrder { get; }
     }
 

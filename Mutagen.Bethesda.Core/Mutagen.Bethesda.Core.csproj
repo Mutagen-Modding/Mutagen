@@ -139,8 +139,8 @@
     <Compile Include="Translations\Binary\Headers\VariableHeader.cs" />
     <Compile Include="Translations\Binary\Fields\LoquiBinaryOverlayTranslation.cs" />
     <Compile Include="Translations\Binary\Headers\GameConstants.cs" />
-    <Compile Include="Preprocessing\BinaryFileProcessor.cs" />
-    <Compile Include="Preprocessing\ModRecordAligner.cs" />
+    <Compile Include="Processing\BinaryFileProcessor.cs" />
+    <Compile Include="Processing\ModRecordAligner.cs" />
     <Compile Include="Translations\Binary\BinaryStringUtility.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Enums\GroupTypeEnum.cs" />
@@ -152,9 +152,9 @@
     <Compile Include="Links\ILink.cs" />
     <Compile Include="Links\ILinkedFormKeyContainerGetter.cs" />
     <Compile Include="Utility\MasterReferenceReader.cs" />
-    <Compile Include="Preprocessing\ModDecompressor.cs" />
+    <Compile Include="Processing\ModDecompressor.cs" />
     <Compile Include="Load Order\ModListing.cs" />
-    <Compile Include="Preprocessing\ModRecordSorter.cs" />
+    <Compile Include="Processing\ModRecordSorter.cs" />
     <Compile Include="Enums\ObjectType.cs" />
     <Compile Include="Utility\RecordInterest.cs" />
     <Compile Include="Utility\RecordLocator.cs" />
