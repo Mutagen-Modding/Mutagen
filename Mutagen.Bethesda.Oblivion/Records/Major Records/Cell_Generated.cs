@@ -1420,6 +1420,12 @@ namespace Mutagen.Bethesda.Oblivion
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys) => this.Remove(formKeys);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => this.Remove(formKeys);
         #endregion
 
         #region Binary Translation
@@ -1721,6 +1727,38 @@ namespace Mutagen.Bethesda.Oblivion
                 type: type,
                 throwIfUnknown: throwIfUnknown)
                 .Select(m => (IMajorRecordCommon)m);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this ICellInternal obj,
+            FormKey key)
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this ICellInternal obj,
+            IEnumerable<FormKey> keys)
+        {
+            ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys.ToHashSet());
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this ICellInternal obj,
+            HashSet<FormKey> keys)
+        {
+            ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys);
         }
 
         #endregion
@@ -2237,6 +2275,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
+        }
+        
+        public void Remove(
+            ICellInternal obj,
+            HashSet<FormKey> keys)
+        {
+            if (obj.PathGrid != null && keys.Contains(obj.PathGrid.FormKey))
+            {
+                obj.PathGrid = null;
+            }
+            if (obj.Landscape != null && keys.Contains(obj.Landscape.FormKey))
+            {
+                obj.Landscape = null;
+            }
+            obj.Persistent.Remove(keys);
+            obj.Temporary.Remove(keys);
+            obj.VisibleWhenDistant.Remove(keys);
         }
         
         #endregion

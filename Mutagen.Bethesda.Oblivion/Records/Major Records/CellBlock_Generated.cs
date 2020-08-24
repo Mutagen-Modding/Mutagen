@@ -547,6 +547,12 @@ namespace Mutagen.Bethesda.Oblivion
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys) => this.Remove(formKeys);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => this.Remove(formKeys);
         #endregion
 
         #region Binary Translation
@@ -839,6 +845,38 @@ namespace Mutagen.Bethesda.Oblivion
                 .Select(m => (IMajorRecordCommon)m);
         }
 
+        [DebuggerStepThrough]
+        public static void Remove(
+            this ICellBlock obj,
+            FormKey key)
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((CellBlockSetterCommon)((ICellBlockGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this ICellBlock obj,
+            IEnumerable<FormKey> keys)
+        {
+            ((CellBlockSetterCommon)((ICellBlockGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys.ToHashSet());
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this ICellBlock obj,
+            HashSet<FormKey> keys)
+        {
+            ((CellBlockSetterCommon)((ICellBlockGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1111,6 +1149,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
+        }
+        
+        public void Remove(
+            ICellBlock obj,
+            HashSet<FormKey> keys)
+        {
+            obj.SubBlocks.ForEach(i => i.Remove(keys));
+            obj.SubBlocks.Remove(i => i.Cells.Count == 0);
         }
         
         #endregion

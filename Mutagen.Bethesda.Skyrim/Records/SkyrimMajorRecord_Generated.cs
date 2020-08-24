@@ -653,6 +653,28 @@ namespace Mutagen.Bethesda.Skyrim
                 .Select(m => (IMajorRecordCommon)m);
         }
 
+        [DebuggerStepThrough]
+        public static void Remove(
+            this ISkyrimMajorRecordInternal obj,
+            FormKey key)
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((SkyrimMajorRecordSetterCommon)((ISkyrimMajorRecordGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this ISkyrimMajorRecordInternal obj,
+            HashSet<FormKey> keys)
+        {
+            ((SkyrimMajorRecordSetterCommon)((ISkyrimMajorRecordGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -906,6 +928,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
+        }
+        
+        public virtual void Remove(
+            ISkyrimMajorRecordInternal obj,
+            HashSet<FormKey> keys)
+        {
         }
         
         #endregion

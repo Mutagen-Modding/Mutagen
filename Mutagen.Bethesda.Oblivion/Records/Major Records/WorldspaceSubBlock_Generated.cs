@@ -578,6 +578,12 @@ namespace Mutagen.Bethesda.Oblivion
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys) => this.Remove(formKeys);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => this.Remove(formKeys);
         #endregion
 
         #region Binary Translation
@@ -872,6 +878,38 @@ namespace Mutagen.Bethesda.Oblivion
                 .Select(m => (IMajorRecordCommon)m);
         }
 
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IWorldspaceSubBlock obj,
+            FormKey key)
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((WorldspaceSubBlockSetterCommon)((IWorldspaceSubBlockGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IWorldspaceSubBlock obj,
+            IEnumerable<FormKey> keys)
+        {
+            ((WorldspaceSubBlockSetterCommon)((IWorldspaceSubBlockGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys.ToHashSet());
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IWorldspaceSubBlock obj,
+            HashSet<FormKey> keys)
+        {
+            ((WorldspaceSubBlockSetterCommon)((IWorldspaceSubBlockGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1157,6 +1195,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
+        }
+        
+        public void Remove(
+            IWorldspaceSubBlock obj,
+            HashSet<FormKey> keys)
+        {
+            obj.Items.Remove(keys);
+            obj.Items.ForEach(i => i.Remove(keys));
         }
         
         #endregion

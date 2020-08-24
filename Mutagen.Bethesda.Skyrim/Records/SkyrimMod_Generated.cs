@@ -7479,6 +7479,28 @@ namespace Mutagen.Bethesda.Skyrim
                 .Catch(e => throw RecordException.Factory(e, obj.ModKey));
         }
 
+        [DebuggerStepThrough]
+        public static void Remove(
+            this ISkyrimMod obj,
+            FormKey key)
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((SkyrimModSetterCommon)((ISkyrimModGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this ISkyrimMod obj,
+            HashSet<FormKey> keys)
+        {
+            ((SkyrimModSetterCommon)((ISkyrimModGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -9238,6 +9260,125 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
+        }
+        
+        public void Remove(
+            ISkyrimMod obj,
+            HashSet<FormKey> keys)
+        {
+            obj.GameSettings.Remove(keys);
+            obj.Keywords.Remove(keys);
+            obj.LocationReferenceTypes.Remove(keys);
+            obj.Actions.Remove(keys);
+            obj.TextureSets.Remove(keys);
+            obj.Globals.Remove(keys);
+            obj.Classes.Remove(keys);
+            obj.Factions.Remove(keys);
+            obj.HeadParts.Remove(keys);
+            obj.Hairs.Remove(keys);
+            obj.Eyes.Remove(keys);
+            obj.Races.Remove(keys);
+            obj.SoundMarkers.Remove(keys);
+            obj.AcousticSpaces.Remove(keys);
+            obj.MagicEffects.Remove(keys);
+            obj.LandscapeTextures.Remove(keys);
+            obj.ObjectEffects.Remove(keys);
+            obj.Spells.Remove(keys);
+            obj.Scrolls.Remove(keys);
+            obj.Activators.Remove(keys);
+            obj.TalkingActivators.Remove(keys);
+            obj.Armors.Remove(keys);
+            obj.Books.Remove(keys);
+            obj.Containers.Remove(keys);
+            obj.Doors.Remove(keys);
+            obj.Ingredients.Remove(keys);
+            obj.Lights.Remove(keys);
+            obj.MiscItems.Remove(keys);
+            obj.AlchemicalApparatuses.Remove(keys);
+            obj.Statics.Remove(keys);
+            obj.MoveableStatics.Remove(keys);
+            obj.Grasses.Remove(keys);
+            obj.Trees.Remove(keys);
+            obj.Florae.Remove(keys);
+            obj.Furniture.Remove(keys);
+            obj.Weapons.Remove(keys);
+            obj.Ammunitions.Remove(keys);
+            obj.Npcs.Remove(keys);
+            obj.LeveledNpcs.Remove(keys);
+            obj.Keys.Remove(keys);
+            obj.Ingestibles.Remove(keys);
+            obj.IdleMarkers.Remove(keys);
+            obj.ConstructibleObjects.Remove(keys);
+            obj.Projectiles.Remove(keys);
+            obj.Hazards.Remove(keys);
+            obj.SoulGems.Remove(keys);
+            obj.LeveledItems.Remove(keys);
+            obj.Weathers.Remove(keys);
+            obj.Climates.Remove(keys);
+            obj.ShaderParticleGeometries.Remove(keys);
+            obj.VisualEffects.Remove(keys);
+            obj.Regions.Remove(keys);
+            obj.NavigationMeshInfoMaps.Remove(keys);
+            obj.Cells.Remove(keys);
+            obj.Worldspaces.Remove(keys);
+            obj.DialogTopics.Remove(keys);
+            obj.Quests.Remove(keys);
+            obj.IdleAnimations.Remove(keys);
+            obj.Packages.Remove(keys);
+            obj.CombatStyles.Remove(keys);
+            obj.LoadScreens.Remove(keys);
+            obj.LeveledSpells.Remove(keys);
+            obj.AnimatedObjects.Remove(keys);
+            obj.Waters.Remove(keys);
+            obj.EffectShaders.Remove(keys);
+            obj.Explosions.Remove(keys);
+            obj.Debris.Remove(keys);
+            obj.ImageSpaces.Remove(keys);
+            obj.ImageSpaceAdapters.Remove(keys);
+            obj.FormLists.Remove(keys);
+            obj.Perks.Remove(keys);
+            obj.BodyParts.Remove(keys);
+            obj.AddonNodes.Remove(keys);
+            obj.ActorValueInformation.Remove(keys);
+            obj.CameraShots.Remove(keys);
+            obj.CameraPaths.Remove(keys);
+            obj.VoiceTypes.Remove(keys);
+            obj.MaterialTypes.Remove(keys);
+            obj.Impacts.Remove(keys);
+            obj.ImpactDataSets.Remove(keys);
+            obj.ArmorAddons.Remove(keys);
+            obj.EncounterZones.Remove(keys);
+            obj.Locations.Remove(keys);
+            obj.Messages.Remove(keys);
+            obj.DefaultObjectManagers.Remove(keys);
+            obj.LightingTemplates.Remove(keys);
+            obj.MusicTypes.Remove(keys);
+            obj.Footsteps.Remove(keys);
+            obj.FootstepSets.Remove(keys);
+            obj.StoryManagerBranchNodes.Remove(keys);
+            obj.StoryManagerQuestNodes.Remove(keys);
+            obj.StoryManagerEventNodes.Remove(keys);
+            obj.DialogBranches.Remove(keys);
+            obj.MusicTracks.Remove(keys);
+            obj.DialogViews.Remove(keys);
+            obj.WordsOfPower.Remove(keys);
+            obj.Shouts.Remove(keys);
+            obj.EquipTypes.Remove(keys);
+            obj.Relationships.Remove(keys);
+            obj.Scenes.Remove(keys);
+            obj.AssociationTypes.Remove(keys);
+            obj.Outfits.Remove(keys);
+            obj.ArtObjects.Remove(keys);
+            obj.MaterialObjects.Remove(keys);
+            obj.MovementTypes.Remove(keys);
+            obj.SoundDescriptors.Remove(keys);
+            obj.DualCastData.Remove(keys);
+            obj.SoundCategories.Remove(keys);
+            obj.SoundOutputModels.Remove(keys);
+            obj.CollisionLayers.Remove(keys);
+            obj.Colors.Remove(keys);
+            obj.ReverbParameters.Remove(keys);
+            obj.VolumetricLightings.Remove(keys);
         }
         
         #endregion

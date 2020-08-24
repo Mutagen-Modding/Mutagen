@@ -2243,6 +2243,28 @@ namespace Mutagen.Bethesda.Skyrim
                 .Select(m => (IMajorRecordCommon)m);
         }
 
+        [DebuggerStepThrough]
+        public static void Remove(
+            this ICellInternal obj,
+            FormKey key)
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this ICellInternal obj,
+            HashSet<FormKey> keys)
+        {
+            ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2922,6 +2944,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
+        }
+        
+        public void Remove(
+            ICellInternal obj,
+            HashSet<FormKey> keys)
+        {
+            if (obj.Landscape != null && keys.Contains(obj.Landscape.FormKey))
+            {
+                obj.Landscape = null;
+            }
+            obj.NavigationMeshes.Remove(keys);
+            obj.Persistent.Remove(keys);
+            obj.Temporary.Remove(keys);
         }
         
         #endregion

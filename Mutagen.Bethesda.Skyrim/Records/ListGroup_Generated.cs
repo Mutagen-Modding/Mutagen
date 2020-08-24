@@ -444,6 +444,30 @@ namespace Mutagen.Bethesda.Skyrim
                 .Select(m => (IMajorRecordCommon)m);
         }
 
+        [DebuggerStepThrough]
+        public static void Remove<T>(
+            this IListGroup<T> obj,
+            FormKey key)
+            where T : class, ICellBlock, IBinaryItem
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((ListGroupSetterCommon<T>)((IListGroupGetter<T>)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<T>(
+            this IListGroup<T> obj,
+            HashSet<FormKey> keys)
+            where T : class, ICellBlock, IBinaryItem
+        {
+            ((ListGroupSetterCommon<T>)((IListGroupGetter<T>)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -727,6 +751,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
+        }
+        
+        public void Remove(
+            IListGroup<T> obj,
+            HashSet<FormKey> keys)
+        {
+            obj.Records.ForEach(i => i.Remove(keys));
         }
         
         #endregion

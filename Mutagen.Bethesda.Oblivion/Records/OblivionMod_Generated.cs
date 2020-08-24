@@ -3581,6 +3581,12 @@ namespace Mutagen.Bethesda.Oblivion
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys) => this.Remove(formKeys);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => this.Remove(formKeys);
         #endregion
 
         #region Binary Translation
@@ -4111,6 +4117,38 @@ namespace Mutagen.Bethesda.Oblivion
                 throwIfUnknown: throwIfUnknown)
                 .Select(m => (IMajorRecordCommon)m)
                 .Catch(e => throw RecordException.Factory(e, obj.ModKey));
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IOblivionMod obj,
+            FormKey key)
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((OblivionModSetterCommon)((IOblivionModGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IOblivionMod obj,
+            IEnumerable<FormKey> keys)
+        {
+            ((OblivionModSetterCommon)((IOblivionModGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys.ToHashSet());
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IOblivionMod obj,
+            HashSet<FormKey> keys)
+        {
+            ((OblivionModSetterCommon)((IOblivionModGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys);
         }
 
         #endregion
@@ -5114,6 +5152,68 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
+        }
+        
+        public void Remove(
+            IOblivionMod obj,
+            HashSet<FormKey> keys)
+        {
+            obj.GameSettings.Remove(keys);
+            obj.Globals.Remove(keys);
+            obj.Classes.Remove(keys);
+            obj.Factions.Remove(keys);
+            obj.Hairs.Remove(keys);
+            obj.Eyes.Remove(keys);
+            obj.Races.Remove(keys);
+            obj.Sounds.Remove(keys);
+            obj.Skills.Remove(keys);
+            obj.MagicEffects.Remove(keys);
+            obj.Scripts.Remove(keys);
+            obj.LandTextures.Remove(keys);
+            obj.Enchantments.Remove(keys);
+            obj.Spells.Remove(keys);
+            obj.Birthsigns.Remove(keys);
+            obj.Activators.Remove(keys);
+            obj.AlchemicalApparatus.Remove(keys);
+            obj.Armors.Remove(keys);
+            obj.Books.Remove(keys);
+            obj.Clothes.Remove(keys);
+            obj.Containers.Remove(keys);
+            obj.Doors.Remove(keys);
+            obj.Ingredients.Remove(keys);
+            obj.Lights.Remove(keys);
+            obj.Miscellaneous.Remove(keys);
+            obj.Statics.Remove(keys);
+            obj.Grasses.Remove(keys);
+            obj.Trees.Remove(keys);
+            obj.Flora.Remove(keys);
+            obj.Furniture.Remove(keys);
+            obj.Weapons.Remove(keys);
+            obj.Ammunitions.Remove(keys);
+            obj.Npcs.Remove(keys);
+            obj.Creatures.Remove(keys);
+            obj.LeveledCreatures.Remove(keys);
+            obj.SoulGems.Remove(keys);
+            obj.Keys.Remove(keys);
+            obj.Potions.Remove(keys);
+            obj.Subspaces.Remove(keys);
+            obj.SigilStones.Remove(keys);
+            obj.LeveledItems.Remove(keys);
+            obj.Weathers.Remove(keys);
+            obj.Climates.Remove(keys);
+            obj.Regions.Remove(keys);
+            obj.Cells.Remove(keys);
+            obj.Worldspaces.Remove(keys);
+            obj.DialogTopics.Remove(keys);
+            obj.Quests.Remove(keys);
+            obj.IdleAnimations.Remove(keys);
+            obj.AIPackages.Remove(keys);
+            obj.CombatStyles.Remove(keys);
+            obj.LoadScreens.Remove(keys);
+            obj.LeveledSpells.Remove(keys);
+            obj.AnimatedObjects.Remove(keys);
+            obj.Waters.Remove(keys);
+            obj.EffectShaders.Remove(keys);
         }
         
         #endregion

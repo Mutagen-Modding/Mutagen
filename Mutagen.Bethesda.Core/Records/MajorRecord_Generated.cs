@@ -478,6 +478,12 @@ namespace Mutagen.Bethesda
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys) => this.Remove(formKeys);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => this.Remove(formKeys);
         #endregion
 
         #region Binary Translation
@@ -762,6 +768,38 @@ namespace Mutagen.Bethesda
                 .Select(m => (IMajorRecordCommon)m);
         }
 
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IMajorRecordInternal obj,
+            FormKey key)
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((MajorRecordSetterCommon)((IMajorRecordGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IMajorRecordInternal obj,
+            IEnumerable<FormKey> keys)
+        {
+            ((MajorRecordSetterCommon)((IMajorRecordGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys.ToHashSet());
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IMajorRecordInternal obj,
+            HashSet<FormKey> keys)
+        {
+            ((MajorRecordSetterCommon)((IMajorRecordGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1031,6 +1069,12 @@ namespace Mutagen.Bethesda.Internals
             {
                 yield return item;
             }
+        }
+        
+        public virtual void Remove(
+            IMajorRecordInternal obj,
+            HashSet<FormKey> keys)
+        {
         }
         
         #endregion

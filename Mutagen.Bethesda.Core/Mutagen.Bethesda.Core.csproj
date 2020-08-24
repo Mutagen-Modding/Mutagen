@@ -19,7 +19,7 @@
     <PackageReference Include="Compression.BSA" Version="2.2.1.1" />
     <PackageReference Include="DotNetZip" Version="1.13.8" />
     <PackageReference Include="Loqui" Version="1.2.2" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.1.3" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.1.4-dev" />
   </ItemGroup>
   <PropertyGroup>
     <PackageId>Mutagen.Bethesda.Core</PackageId>
@@ -51,6 +51,7 @@
     <Compile Include="Exceptions\RecordException.cs" />
     <Compile Include="Extensions\EnumerableExt.cs" />
     <Compile Include="Extensions\FormLinkExt.cs" />
+    <Compile Include="Extensions\RemoveExt.cs" />
     <Compile Include="Extensions\LoadOrderExt.cs" />
     <Compile Include="Extensions\MutagenEnumExt.cs" />
     <Compile Include="Interfaces\IDuplicatable.cs" />

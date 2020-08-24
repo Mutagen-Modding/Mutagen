@@ -116,6 +116,12 @@ namespace Mutagen.Bethesda.Oblivion
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<T, TMajor>();
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys) => this.Remove(formKeys);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => this.Remove(formKeys);
         #endregion
 
         #region Binary Translation
@@ -439,6 +445,41 @@ namespace Mutagen.Bethesda.Oblivion
                 .Select(m => (IMajorRecordCommon)m);
         }
 
+        [DebuggerStepThrough]
+        public static void Remove<T>(
+            this IListGroup<T> obj,
+            FormKey key)
+            where T : class, ICellBlock, IBinaryItem
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((ListGroupSetterCommon<T>)((IListGroupGetter<T>)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<T>(
+            this IListGroup<T> obj,
+            IEnumerable<FormKey> keys)
+            where T : class, ICellBlock, IBinaryItem
+        {
+            ((ListGroupSetterCommon<T>)((IListGroupGetter<T>)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys.ToHashSet());
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<T>(
+            this IListGroup<T> obj,
+            HashSet<FormKey> keys)
+            where T : class, ICellBlock, IBinaryItem
+        {
+            ((ListGroupSetterCommon<T>)((IListGroupGetter<T>)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys);
+        }
+
         #endregion
 
         #region Binary Translation
@@ -709,6 +750,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
+        }
+        
+        public void Remove(
+            IListGroup<T> obj,
+            HashSet<FormKey> keys)
+        {
+            obj.Records.ForEach(i => i.Remove(keys));
+            obj.Records.Remove(i => i.SubBlocks.Count == 0);
         }
         
         #endregion

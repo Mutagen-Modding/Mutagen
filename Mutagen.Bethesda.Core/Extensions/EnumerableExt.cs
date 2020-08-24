@@ -1,5 +1,6 @@
 ﻿using Noggog;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Mutagen.Bethesda.Internals
 {

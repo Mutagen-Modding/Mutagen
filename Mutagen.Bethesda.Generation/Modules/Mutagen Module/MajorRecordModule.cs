@@ -120,11 +120,11 @@ namespace Mutagen.Bethesda.Generation
             return Case.No;
         }
 
-        public static async Task<Case> HasMajorRecords(LoquiType loqui, bool includeBaseClass, GenericSpecification specifications = null)
+        public static async Task<Case> HasMajorRecords(LoquiType loqui, bool includeBaseClass, GenericSpecification specifications = null, bool includeSelf = true)
         {
             if (loqui.TargetObjectGeneration != null)
             {
-                if (await loqui.TargetObjectGeneration.IsMajorRecord()) return Case.Yes;
+                if (includeSelf && await loqui.TargetObjectGeneration.IsMajorRecord()) return Case.Yes;
                 return await MajorRecordModule.HasMajorRecordsInTree(loqui.TargetObjectGeneration, includeBaseClass, loqui.GenericSpecification);
             }
             else if (specifications != null)
@@ -141,7 +141,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 // ToDo  
                 // Quick hack.  Real solution should use reflection to investigate the interface  
-                return Case.Yes;
+                return includeSelf ? Case.Yes : Case.No;
             }
             return Case.Maybe;
         }

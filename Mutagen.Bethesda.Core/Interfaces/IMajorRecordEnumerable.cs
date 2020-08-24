@@ -31,6 +31,27 @@ namespace Mutagen.Bethesda
         /// <exception cref="ArgumentException">If a non applicable type is provided</exception>  
         /// <returns>Enumerable of all applicable major records</returns>  
         new IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(Type t, bool throwIfUnknown = true);
+
+        /// <summary>
+        /// Removes any records within matching the given FormKey.
+        /// </summary>
+        /// <param name="formKey">FormKey to remove</param>
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        void Remove(FormKey formKey);
+
+        /// <summary>
+        /// Removes any records within matching the given FormKeys.
+        /// </summary>
+        /// <param name="formKeys">FormKeys to remove</param>
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        void Remove(IEnumerable<FormKey> formKeys);
+
+        /// <summary>
+        /// Removes any records within matching the given FormKeys.
+        /// </summary>
+        /// <param name="formKeys">FormKeys to remove</param>
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        void Remove(HashSet<FormKey> formKeys);
     }
 
     /// <summary>  
