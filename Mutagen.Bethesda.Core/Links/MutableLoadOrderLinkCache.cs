@@ -55,9 +55,19 @@ namespace Mutagen.Bethesda
         {
             for (int i = _mutableMods.Count - 1; i >= 0; i--)
             {
-                if (_mutableMods[i].TryLookup(formKey, out majorRec)) return true;
+                if (_mutableMods[i].TryLookup<TMajor>(formKey, out majorRec)) return true;
             }
-            return _wrappedCache.TryLookup(formKey, out majorRec);
+            return _wrappedCache.TryLookup<TMajor>(formKey, out majorRec);
+        }
+
+        /// <inheritdoc />
+        public bool TryLookup(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
+        {
+            for (int i = _mutableMods.Count - 1; i >= 0; i--)
+            {
+                if (_mutableMods[i].TryLookup(formKey, type, out majorRec)) return true;
+            }
+            return _wrappedCache.TryLookup(formKey, type, out majorRec);
         }
 
         /// <summary>

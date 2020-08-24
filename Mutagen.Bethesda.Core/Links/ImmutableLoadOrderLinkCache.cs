@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda
     {
         class InternalTypedCache
         {
-            public Dictionary<FormKey, object> Dictionary { get; } = new Dictionary<FormKey, object>();
+            public Dictionary<FormKey, IMajorRecordCommonGetter> Dictionary { get; } = new Dictionary<FormKey, IMajorRecordCommonGetter>();
             public int Depth;
         }
         private readonly bool _hasAny;
@@ -103,6 +103,19 @@ namespace Mutagen.Bethesda
         public bool TryLookup<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out TMajor majorRec)
             where TMajor : class, IMajorRecordCommonGetter
         {
+            if (!TryLookup(formKey, typeof(TMajor), out var commonRec))
+            {
+                majorRec = default;
+                return false;
+            }
+
+            majorRec = commonRec as TMajor;
+            return majorRec != null;
+        }
+
+        /// <inheritdoc />
+        public bool TryLookup(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
+        {
             if (!_hasAny)
             {
                 majorRec = default;
@@ -112,16 +125,16 @@ namespace Mutagen.Bethesda
             lock (this._loadOrderMajorRecords)
             {
                 // Get cache object by type
-                if (!this._loadOrderMajorRecords.TryGetValue(typeof(TMajor), out InternalTypedCache cache))
+                if (!this._loadOrderMajorRecords.TryGetValue(type, out InternalTypedCache cache))
                 {
                     cache = new InternalTypedCache();
-                    if (typeof(TMajor).Equals(typeof(IMajorRecordCommon))
-                        || typeof(TMajor).Equals(typeof(IMajorRecordCommonGetter)))
+                    if (type.Equals(typeof(IMajorRecordCommon))
+                        || type.Equals(typeof(IMajorRecordCommonGetter)))
                     {
                         this._loadOrderMajorRecords[typeof(IMajorRecordCommon)] = cache;
                         this._loadOrderMajorRecords[typeof(IMajorRecordCommonGetter)] = cache;
                     }
-                    else if (LoquiRegistration.TryGetRegister(typeof(TMajor), out var registration))
+                    else if (LoquiRegistration.TryGetRegister(type, out var registration))
                     {
                         this._loadOrderMajorRecords[registration.ClassType] = cache;
                         this._loadOrderMajorRecords[registration.GetterType] = cache;
@@ -138,19 +151,18 @@ namespace Mutagen.Bethesda
                     else
                     {
                         var interfaceMappings = LinkInterfaceMapping.InterfaceToObjectTypes(_gameCategory);
-                        if (!interfaceMappings.TryGetValue(typeof(TMajor), out var objs))
+                        if (!interfaceMappings.TryGetValue(type, out var objs))
                         {
-                            throw new ArgumentException($"A lookup was queried for an unregistered type: {typeof(TMajor).Name}");
+                            throw new ArgumentException($"A lookup was queried for an unregistered type: {type.Name}");
                         }
-                        this._loadOrderMajorRecords[typeof(TMajor)] = cache;
+                        this._loadOrderMajorRecords[type] = cache;
                     }
                 }
 
                 // Check for record
-                if (cache.Dictionary.TryGetValue(formKey, out var majorRecObj))
+                if (cache.Dictionary.TryGetValue(formKey, out majorRec))
                 {
-                    majorRec = (majorRecObj as TMajor)!;
-                    return majorRec != null;
+                    return true;
                 }
                 if (cache.Depth >= this._listedOrder.Count)
                 {
@@ -164,7 +176,7 @@ namespace Mutagen.Bethesda
                     var targetIndex = this._listedOrder.Count - cache.Depth - 1;
                     var targetMod = this._listedOrder[targetIndex];
                     cache.Depth++;
-                    
+
                     void AddRecords(TMod mod, Type type)
                     {
                         foreach (var record in mod.EnumerateMajorRecords(type))
@@ -177,7 +189,7 @@ namespace Mutagen.Bethesda
                     }
 
                     // Add records from that mod that aren't already cached
-                    if (LinkInterfaceMapping.InterfaceToObjectTypes(_gameCategory).TryGetValue(typeof(TMajor), out var objs))
+                    if (LinkInterfaceMapping.InterfaceToObjectTypes(_gameCategory).TryGetValue(type, out var objs))
                     {
                         foreach (var objType in objs)
                         {
@@ -186,13 +198,12 @@ namespace Mutagen.Bethesda
                     }
                     else
                     {
-                        AddRecords(targetMod, typeof(TMajor));
+                        AddRecords(targetMod, type);
                     }
                     // Check again
-                    if (cache.Dictionary.TryGetValue(formKey, out majorRecObj))
+                    if (cache.Dictionary.TryGetValue(formKey, out majorRec))
                     {
-                        majorRec = (majorRecObj as TMajor)!;
-                        return majorRec != null;
+                        return true;
                     }
                 }
                 // Record doesn't exist

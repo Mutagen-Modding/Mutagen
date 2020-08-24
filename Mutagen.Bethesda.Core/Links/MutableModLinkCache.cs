@@ -75,5 +75,23 @@ namespace Mutagen.Bethesda
             majorRec = default;
             return false;
         }
+
+        /// <inheritdoc />
+        public bool TryLookup(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
+        {
+            // ToDo
+            // Upgrade to EnumerateGroups<TMajor>()
+            foreach (var major in this._sourceMod.EnumerateMajorRecords(type))
+            {
+                if (major.FormKey == formKey)
+                {
+                    majorRec = major;
+                    return true;
+                }
+            }
+
+            majorRec = default;
+            return false;
+        }
     }
 }
