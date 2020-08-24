@@ -2169,7 +2169,7 @@ namespace Mutagen.Bethesda.Generation
                     await LinkModule.GenerateInterfaceImplementation(obj, fg, getter: true);
                 }
 
-                if (await MajorRecordEnumerationModule.HasMajorRecordsInTree(obj, includeBaseClass: false) != MajorRecordEnumerationModule.Case.No)
+                if (await MajorRecordModule.HasMajorRecordsInTree(obj, includeBaseClass: false) != Case.No)
                 {
                     MajorRecordEnumerationModule.GenerateClassImplementation(obj, fg, onlyGetter: true);
                 }

@@ -13,18 +13,16 @@ namespace Mutagen.Bethesda.Generation
 {
     public class MajorRecordEnumerationModule : GenerationModule
     {
-        public enum Case { No, Yes, Maybe }
-
         public override async Task PostLoad(ObjectGeneration obj)
         {
-            if (await HasMajorRecordsInTree(obj, false) == Case.No) return;
+            if (await MajorRecordModule.HasMajorRecordsInTree(obj, false) == Case.No) return;
             obj.Interfaces.Add(LoquiInterfaceDefinitionType.IGetter, nameof(IMajorRecordGetterEnumerable));
             obj.Interfaces.Add(LoquiInterfaceDefinitionType.ISetter, nameof(IMajorRecordEnumerable));
         }
 
         public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
         {
-            if (await HasMajorRecordsInTree(obj, false) == Case.No) return;
+            if (await MajorRecordModule.HasMajorRecordsInTree(obj, false) == Case.No) return;
             GenerateClassImplementation(obj, fg);
         }
 
@@ -47,172 +45,9 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public static async Task<Case> HasMajorRecords(LoquiType loqui, bool includeBaseClass, GenericSpecification specifications = null)
-        {
-            if (loqui.TargetObjectGeneration != null)
-            {
-                if (await loqui.TargetObjectGeneration.IsMajorRecord()) return Case.Yes;
-                return await HasMajorRecordsInTree(loqui.TargetObjectGeneration, includeBaseClass, loqui.GenericSpecification);
-            }
-            else if (specifications != null)
-            {
-                foreach (var target in specifications.Specifications.Values)
-                {
-                    if (!ObjectNamedKey.TryFactory(target, out var key)) continue;
-                    var specObj = loqui.ObjectGen.ProtoGen.Gen.ObjectGenerationsByObjectNameKey[key];
-                    if (await specObj.IsMajorRecord()) return Case.Yes;
-                    return await HasMajorRecordsInTree(specObj, includeBaseClass);
-                }
-            }
-            else if (loqui.RefType == LoquiType.LoquiRefType.Interface)
-            {
-                // ToDo  
-                // Quick hack.  Real solution should use reflection to investigate the interface  
-                return Case.Yes;
-            }
-            return Case.Maybe;
-        }
-
-        public static async Task<Case> HasMajorRecords(ObjectGeneration obj, bool includeBaseClass, bool includeSelf, GenericSpecification specifications = null)
-        {
-            if (obj.Name == "ListGroup") return Case.Yes;
-            foreach (var field in obj.IterateFields(includeBaseClass: includeBaseClass))
-            {
-                if (field is LoquiType loqui)
-                {
-                    if (includeSelf
-                        && loqui.TargetObjectGeneration != null
-                        && await loqui.TargetObjectGeneration.IsMajorRecord())
-                    {
-                        return Case.Yes;
-                    }
-                    if (await HasMajorRecords(loqui, includeBaseClass, specifications) == Case.Yes) return Case.Yes;
-                }
-                else if (field is ContainerType cont)
-                {
-                    if (cont.SubTypeGeneration is LoquiType contLoqui)
-                    {
-                        if (await HasMajorRecords(contLoqui, includeBaseClass, specifications) == Case.Yes) return Case.Yes;
-                    }
-                }
-                else if (field is DictType dict)
-                {
-                    if (dict.ValueTypeGen is LoquiType valLoqui)
-                    {
-                        if (await HasMajorRecords(valLoqui, includeBaseClass, specifications) == Case.Yes) return Case.Yes;
-                    }
-                    if (dict.KeyTypeGen is LoquiType keyLoqui)
-                    {
-                        if (await HasMajorRecords(keyLoqui, includeBaseClass, specifications) == Case.Yes) return Case.Yes;
-                    }
-                }
-            }
-            return Case.No;
-        }
-
-        public static async IAsyncEnumerable<ObjectGeneration> IterateMajorRecords(LoquiType loqui, bool includeBaseClass, GenericSpecification specifications = null)
-        {
-            if (specifications?.Specifications.Count > 0)
-            {
-                foreach (var target in specifications.Specifications.Values)
-                {
-                    if (!ObjectNamedKey.TryFactory(target, out var key)) continue;
-                    var specObj = loqui.ObjectGen.ProtoGen.Gen.ObjectGenerationsByObjectNameKey[key];
-                    if (await specObj.IsMajorRecord()) yield return specObj;
-                    await foreach (var item in IterateMajorRecords(specObj, includeBaseClass, includeSelf: true, loqui.GenericSpecification))
-                    {
-                        yield return item;
-                    }
-                }
-            }
-            else if (loqui.TargetObjectGeneration != null)
-            {
-                if (await loqui.TargetObjectGeneration.IsMajorRecord()) yield return loqui.TargetObjectGeneration;
-                await foreach (var item in IterateMajorRecords(loqui.TargetObjectGeneration, includeBaseClass, includeSelf: true, loqui.GenericSpecification))
-                {
-                    yield return item;
-                }
-            }
-            else if (loqui.RefType == LoquiType.LoquiRefType.Interface)
-            {
-                // Must be a link interface 
-                if (!LinkInterfaceModule.ObjectMappings[loqui.ObjectGen.ProtoGen.Protocol].TryGetValue(loqui.SetterInterface, out var mappings))
-                {
-                    throw new ArgumentException();
-                }
-                foreach (var obj in mappings)
-                {
-                    yield return obj;
-                }
-            }
-            else
-            {
-                throw new ArgumentException();
-            }
-        }
-
-        public static async IAsyncEnumerable<ObjectGeneration> IterateMajorRecords(ObjectGeneration obj, bool includeBaseClass, bool includeSelf, GenericSpecification specifications = null)
-        {
-            foreach (var field in obj.IterateFields(includeBaseClass: includeBaseClass))
-            {
-                if (field is LoquiType loqui)
-                {
-                    if (includeSelf
-                        && loqui.TargetObjectGeneration != null
-                        && await loqui.TargetObjectGeneration.IsMajorRecord())
-                    {
-                        yield return loqui.TargetObjectGeneration;
-                    }
-                    await foreach (var item in IterateMajorRecords(loqui, includeBaseClass, specifications))
-                    {
-                        yield return item;
-                    }
-                }
-                else if (field is ContainerType cont)
-                {
-                    if (cont.SubTypeGeneration is LoquiType contLoqui)
-                    {
-                        await foreach (var item in IterateMajorRecords(contLoqui, includeBaseClass, specifications))
-                        {
-                            yield return item;
-                        }
-                    }
-                }
-                else if (field is DictType dict)
-                {
-                    if (dict.ValueTypeGen is LoquiType valLoqui)
-                    {
-                        await foreach (var item in IterateMajorRecords(valLoqui, includeBaseClass, specifications))
-                        {
-                            yield return item;
-                        }
-                    }
-                    if (dict.KeyTypeGen is LoquiType keyLoqui)
-                    {
-                        await foreach (var item in IterateMajorRecords(keyLoqui, includeBaseClass, specifications))
-                        {
-                            yield return item;
-                        }
-                    }
-                }
-            }
-        }
-
-        public static async Task<Case> HasMajorRecordsInTree(ObjectGeneration obj, bool includeBaseClass, GenericSpecification specifications = null)
-        {
-            if (await HasMajorRecords(obj, includeBaseClass: includeBaseClass, includeSelf: false, specifications: specifications) == Case.Yes) return Case.Yes;
-            // If no, check subclasses  
-            foreach (var inheritingObject in await obj.InheritingObjects())
-            {
-                if (await HasMajorRecordsInTree(inheritingObject, includeBaseClass: false, specifications: specifications) == Case.Yes) return Case.Yes;
-            }
-
-            return Case.No;
-        }
-
         public override async Task GenerateInCommonMixin(ObjectGeneration obj, FileGeneration fg)
         {
-            if (await HasMajorRecordsInTree(obj, includeBaseClass: false) == Case.No) return;
+            if (await MajorRecordModule.HasMajorRecordsInTree(obj, includeBaseClass: false) == Case.No) return;
             var needsCatch = obj.GetObjectType() == ObjectType.Mod;
             string catchLine = needsCatch ? ".Catch(e => throw RecordException.Factory(e, obj.ModKey))" : string.Empty;
             string enderSemi = needsCatch ? string.Empty : ";";
@@ -401,7 +236,7 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine($"yield return {loquiAccessor};");
                 }
             }
-            if (await HasMajorRecords(loquiType, includeBaseClass: true) == Case.No)
+            if (await MajorRecordModule.HasMajorRecords(loquiType, includeBaseClass: true) == Case.No)
             {
                 return;
             }
@@ -418,8 +253,8 @@ namespace Mutagen.Bethesda.Generation
             bool setter = maskTypes.Applicable(LoquiInterfaceType.ISetter, CommonGenerics.Class);
             if (!getter && !setter) return;
             var accessor = new Accessor("obj");
-            if (await HasMajorRecordsInTree(obj, includeBaseClass: false) == Case.No) return;
-            var overrideStr = await obj.FunctionOverride(async c => await HasMajorRecords(c, includeBaseClass: false, includeSelf: true) != Case.No);
+            if (await MajorRecordModule.HasMajorRecordsInTree(obj, includeBaseClass: false) == Case.No) return;
+            var overrideStr = await obj.FunctionOverride(async c => await MajorRecordModule.HasMajorRecords(c, includeBaseClass: false, includeSelf: true) != Case.No);
 
             using (var args = new FunctionWrapper(fg,
                 $"public{overrideStr}IEnumerable<{nameof(IMajorRecordCommon)}{(getter ? "Getter" : null)}> EnumerateMajorRecords"))
@@ -442,7 +277,7 @@ namespace Mutagen.Bethesda.Generation
                     var fgCount = fg.Count;
                     foreach (var baseClass in obj.BaseClassTrail())
                     {
-                        if (await HasMajorRecords(baseClass, includeBaseClass: true, includeSelf: true) != Case.No)
+                        if (await MajorRecordModule.HasMajorRecords(baseClass, includeBaseClass: true, includeSelf: true) != Case.No)
                         {
                             fg.AppendLine("foreach (var item in base.EnumerateMajorRecords(obj))");
                             using (new BraceWrapper(fg))
@@ -469,7 +304,7 @@ namespace Mutagen.Bethesda.Generation
                         {
                             var isMajorRecord = loqui.TargetObjectGeneration != null && await loqui.TargetObjectGeneration.IsMajorRecord();
                             if (isMajorRecord
-                                || await HasMajorRecords(loqui, includeBaseClass: true) != Case.No)
+                                || await MajorRecordModule.HasMajorRecords(loqui, includeBaseClass: true) != Case.No)
                             {
                                 var subFg = new FileGeneration();
                                 var fieldAccessor = loqui.Nullable ? $"{loqui.Name}item" : $"{accessor}.{loqui.Name}";
@@ -495,9 +330,9 @@ namespace Mutagen.Bethesda.Generation
                             if (!(cont.SubTypeGeneration is LoquiType contLoqui)) continue;
                             var isMajorRecord = contLoqui.TargetObjectGeneration != null && await contLoqui.TargetObjectGeneration.IsMajorRecord();
                             if (isMajorRecord
-                                || await HasMajorRecords(contLoqui, includeBaseClass: true) != Case.No)
+                                || await MajorRecordModule.HasMajorRecords(contLoqui, includeBaseClass: true) != Case.No)
                             {
-                                switch (await HasMajorRecords(contLoqui, includeBaseClass: true))
+                                switch (await MajorRecordModule.HasMajorRecords(contLoqui, includeBaseClass: true))
                                 {
                                     case Case.Yes:
                                         fieldFg.AppendLine($"foreach (var subItem in {accessor}.{field.Name}{(field.Nullable ? ".TryIterate()" : null)})");
@@ -525,9 +360,9 @@ namespace Mutagen.Bethesda.Generation
                             if (!(dict.ValueTypeGen is LoquiType dictLoqui)) continue;
                             var isMajorRecord = dictLoqui.TargetObjectGeneration != null && await dictLoqui.TargetObjectGeneration.IsMajorRecord();
                             if (isMajorRecord
-                                || await HasMajorRecords(dictLoqui, includeBaseClass: true) != Case.No)
+                                || await MajorRecordModule.HasMajorRecords(dictLoqui, includeBaseClass: true) != Case.No)
                             {
-                                switch (await HasMajorRecords(dictLoqui, includeBaseClass: true))
+                                switch (await MajorRecordModule.HasMajorRecords(dictLoqui, includeBaseClass: true))
                                 {
                                     case Case.Yes:
                                         fieldFg.AppendLine($"foreach (var subItem in {accessor}.{field.Name}.Items)");
@@ -573,7 +408,7 @@ namespace Mutagen.Bethesda.Generation
             // Generate base overrides  
             foreach (var baseClass in obj.BaseClassTrail())
             {
-                if (await HasMajorRecords(baseClass, includeBaseClass: true, includeSelf: true) != Case.No)
+                if (await MajorRecordModule.HasMajorRecords(baseClass, includeBaseClass: true, includeSelf: true) != Case.No)
                 {
                     using (var args = new FunctionWrapper(fg,
                         $"public override IEnumerable<{nameof(IMajorRecordCommon)}{(getter ? "Getter" : null)}> EnumerateMajorRecords"))
@@ -615,7 +450,7 @@ namespace Mutagen.Bethesda.Generation
                     var fgCount = fg.Count;
                     foreach (var baseClass in obj.BaseClassTrail())
                     {
-                        if (await HasMajorRecords(baseClass, includeBaseClass: true, includeSelf: true) != Case.No)
+                        if (await MajorRecordModule.HasMajorRecords(baseClass, includeBaseClass: true, includeSelf: true) != Case.No)
                         {
                             fg.AppendLine("foreach (var item in base.EnumerateMajorRecords<TMajor>(obj))");
                             using (new BraceWrapper(fg))
@@ -672,7 +507,7 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 var isMajorRecord = loqui.TargetObjectGeneration != null && await loqui.TargetObjectGeneration.IsMajorRecord();
                                 if (!isMajorRecord
-                                    && await HasMajorRecords(loqui, includeBaseClass: true) == Case.No)
+                                    && await MajorRecordModule.HasMajorRecords(loqui, includeBaseClass: true) == Case.No)
                                 {
                                     continue;
                                 }
@@ -729,7 +564,7 @@ namespace Mutagen.Bethesda.Generation
                                 if (field is LoquiType loqui)
                                 {
                                     var groupType = field as GroupType;
-                                    await foreach (var deepObj in IterateMajorRecords(loqui, includeBaseClass: true))
+                                    await foreach (var deepObj in MajorRecordModule.IterateMajorRecords(loqui, includeBaseClass: true))
                                     {
                                         if (groupType != null
                                             && groupType.GetGroupTarget() == deepObj)
@@ -743,7 +578,7 @@ namespace Mutagen.Bethesda.Generation
                                 else if (field is ContainerType cont)
                                 {
                                     if (!(cont.SubTypeGeneration is LoquiType subLoqui)) continue;
-                                    await foreach (var deepObj in IterateMajorRecords(subLoqui, includeBaseClass: true))
+                                    await foreach (var deepObj in MajorRecordModule.IterateMajorRecords(subLoqui, includeBaseClass: true))
                                     {
                                         if (subLoqui.TargetObjectGeneration == deepObj) continue;
                                         deepRecordMapping.GetOrAdd(deepObj).Add(field);
@@ -904,7 +739,7 @@ namespace Mutagen.Bethesda.Generation
             // Generate base overrides  
             foreach (var baseClass in obj.BaseClassTrail())
             {
-                if (await HasMajorRecords(baseClass, includeBaseClass: true, includeSelf: true) != Case.No)
+                if (await MajorRecordModule.HasMajorRecords(baseClass, includeBaseClass: true, includeSelf: true) != Case.No)
                 {
                     using (var args = new FunctionWrapper(fg,
                         $"public override IEnumerable<TMajor> EnumerateMajorRecords<TMajor>"))
@@ -1002,9 +837,9 @@ namespace Mutagen.Bethesda.Generation
                 {
                     var isMajorRecord = contLoqui.TargetObjectGeneration != null && await contLoqui.TargetObjectGeneration.IsMajorRecord();
                     if (isMajorRecord
-                        || await HasMajorRecords(contLoqui, includeBaseClass: true) != Case.No)
+                        || await MajorRecordModule.HasMajorRecords(contLoqui, includeBaseClass: true) != Case.No)
                     {
-                        switch (await HasMajorRecords(contLoqui, includeBaseClass: true))
+                        switch (await MajorRecordModule.HasMajorRecords(contLoqui, includeBaseClass: true))
                         {
                             case Case.Yes:
                                 fieldGen.AppendLine($"foreach (var subItem in {accessor}.{field.Name}{(field.Nullable ? ".TryIterate()" : null)})");
@@ -1052,9 +887,9 @@ namespace Mutagen.Bethesda.Generation
                 {
                     var isMajorRecord = dictLoqui.TargetObjectGeneration != null && await dictLoqui.TargetObjectGeneration.IsMajorRecord();
                     if (isMajorRecord
-                        || await HasMajorRecords(dictLoqui, includeBaseClass: true) != Case.No)
+                        || await MajorRecordModule.HasMajorRecords(dictLoqui, includeBaseClass: true) != Case.No)
                     {
-                        switch (await HasMajorRecords(dictLoqui, includeBaseClass: true))
+                        switch (await MajorRecordModule.HasMajorRecords(dictLoqui, includeBaseClass: true))
                         {
                             case Case.Yes:
                                 fieldGen.AppendLine($"foreach (var subItem in {accessor}.{field.Name}.Items)");
