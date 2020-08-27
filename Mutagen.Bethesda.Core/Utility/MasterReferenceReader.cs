@@ -1,6 +1,8 @@
+using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +15,7 @@ namespace Mutagen.Bethesda.Internals
     /// </summary>
     public class MasterReferenceReader
     {
-        private Dictionary<ModKey, ModIndex> _masterIndices = new Dictionary<ModKey, ModIndex>();
+        private readonly Dictionary<ModKey, ModIndex> _masterIndices = new Dictionary<ModKey, ModIndex>();
         
         /// <summary>
         /// A static singleton that is an empty registry containing no masters
@@ -102,6 +104,22 @@ namespace Mutagen.Bethesda.Internals
                 return FormID.Null;
             }
             throw new ArgumentException($"Could not map FormKey to a master index: {key}");
+        }
+
+        public static MasterReferenceReader FromPath(ModPath path, GameRelease release)
+        {
+            using var stream = new MutagenBinaryReadStream(path, release);
+            var mutaFrame = new MutagenFrame(stream);
+            var header = stream.ReadModHeaderFrame(readSafe: true);
+            return new MasterReferenceReader(
+                path.ModKey,
+                header
+                    .Masters()
+                    .Select(mastPin =>
+                    {
+                        stream.Position = mastPin.Location;
+                        return MasterReference.CreateFromBinary(mutaFrame);
+                    }));
         }
     }
 }
