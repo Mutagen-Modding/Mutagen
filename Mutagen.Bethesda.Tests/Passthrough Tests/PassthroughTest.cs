@@ -1,4 +1,5 @@
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Preprocessing;
 using Noggog;
 using Noggog.Extensions;
@@ -137,6 +138,8 @@ namespace Mutagen.Bethesda.Tests
             var copyInPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_CopyIn");
             var strsProcessedPath = Path.Combine(tmp.Dir.Path, "Strings/Processed");
 
+            var masterRefs = MasterReferenceReader.FromPath(new ModPath(ModKey, processedPath), GameRelease);
+
             var writeParams = new BinaryWriteParameters()
             {
                 ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
@@ -144,6 +147,7 @@ namespace Mutagen.Bethesda.Tests
                 RecordCount = BinaryWriteParameters.RecordCountOption.NoCheck,
                 NextFormID = BinaryWriteParameters.NextFormIDOption.NoCheck,
                 FormIDUniqueness = BinaryWriteParameters.FormIDUniquenessOption.NoCheck,
+                MastersListOrdering = masterRefs
             };
 
             // Do normal
