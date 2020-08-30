@@ -914,9 +914,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     yield break;
                 default:
+                    var assignable = type.IsAssignableFrom(typeof(T));
                     foreach (var item in obj.RecordCache.Items)
                     {
-                        if (type.IsAssignableFrom(typeof(T)))
+                        if (assignable)
                         {
                             yield return item;
                         }

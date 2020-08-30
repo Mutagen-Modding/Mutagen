@@ -868,10 +868,11 @@ namespace Mutagen.Bethesda.Generation
                 if (!(dict.ValueTypeGen is LoquiType dictLoqui)) return;
                 if (dictLoqui.RefType == LoquiType.LoquiRefType.Generic)
                 {
+                    fieldGen.AppendLine($"var assignable = type.IsAssignableFrom(typeof({dictLoqui.GenericDef.Name}));");
                     fieldGen.AppendLine($"foreach (var item in obj.{field.Name}.Items)");
                     using (new BraceWrapper(fieldGen))
                     {
-                        fieldGen.AppendLine($"if (type.IsAssignableFrom(typeof({dictLoqui.GenericDef.Name})))");
+                        fieldGen.AppendLine($"if (assignable)");
                         using (new BraceWrapper(fieldGen))
                         {
                             fieldGen.AppendLine($"yield return item;");
