@@ -264,6 +264,9 @@ namespace Mutagen.Bethesda.Tests.GUI
             catch (Exception ex)
             {
                 RunningTests.Error = ex;
+                // ToDo
+                // Add display
+                throw;
             }
         }
     }

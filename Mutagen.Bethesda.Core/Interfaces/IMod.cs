@@ -58,6 +58,11 @@ namespace Mutagen.Bethesda
         /// Whether a mod supports localization features
         /// </summary>
         bool CanUseLocalization { get; }
+
+        /// <summary>
+        /// Whether a mod has localization enabled
+        /// </summary>
+        bool UsingLocalization { get; }
     }
 
     /// <summary>
@@ -84,9 +89,15 @@ namespace Mutagen.Bethesda
         /// </exception>
         ICache<TMajor, FormKey> GetGroup<TMajor>() where TMajor : IMajorRecordCommon;
 
+        /// <summary>
+        /// The next FormID to be allocated
+        /// </summary>
         uint NextFormID { get; set; }
 
-        void SyncRecordCount();
+        /// <summary>
+        /// Whether a mod has localization enabled
+        /// </summary>
+        new bool UsingLocalization { get; set; }
     }
 
     /// <summary>

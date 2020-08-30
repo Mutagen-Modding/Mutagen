@@ -56,7 +56,26 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"void IModGetter.WriteToBinaryParallel(string path, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinaryParallel(path, param);");
 
             // Localization enabled member
-            fg.AppendLine($"public override bool CanUseLocalization => {(obj.GetObjectData().UsesStringFiles ? "true" : "false")};");
+            if (obj.GetObjectData().UsesStringFiles)
+            {
+                fg.AppendLine($"public override bool CanUseLocalization => true;");
+                fg.AppendLine($"public override bool UsingLocalization");
+                using (new BraceWrapper(fg))
+                {
+                    fg.AppendLine($"get => this.ModHeader.Flags.HasFlag({obj.GetObjectData().GameCategory}ModHeader.HeaderFlag.Localized);");
+                    fg.AppendLine($"set => this.ModHeader.Flags.SetFlag({obj.GetObjectData().GameCategory}ModHeader.HeaderFlag.Localized, value);");
+                }
+            }
+            else
+            {
+                fg.AppendLine($"public override bool CanUseLocalization => false;");
+                fg.AppendLine($"public override bool UsingLocalization");
+                using (new BraceWrapper(fg))
+                {
+                    fg.AppendLine("get => false;");
+                    fg.AppendLine("set => throw new ArgumentException(\"Tried to set localization flag on unsupported mod type\");");
+                }
+            }
 
             // Master references member
             fg.AppendLine($"[DebuggerBrowsable(DebuggerBrowsableState.Never)]");

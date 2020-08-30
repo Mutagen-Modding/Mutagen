@@ -58,6 +58,7 @@ namespace Mutagen.Bethesda.Binary
             T? maleObj = null, femaleObj = null;
             for (int i = 0; i < 2; i++)
             {
+                if (stream.Complete) break;
                 var subHeader = stream.GetSubrecord();
                 var recType = subHeader.RecordType;
                 if (maleRecordConverter.ToConversions.TryGetValue(recType, out var _))
@@ -90,6 +91,7 @@ namespace Mutagen.Bethesda.Binary
             int? maleLoc = null, femaleLoc = null;
             for (int i = 0; i < 2; i++)
             {
+                if (stream.Complete) break;
                 var recType = HeaderTranslation.ReadNextRecordType(stream, package.MetaData.Constants.SubConstants.LengthLength, out var markerLen);
                 stream.Position += markerLen;
                 if (recType == male)
@@ -134,6 +136,7 @@ namespace Mutagen.Bethesda.Binary
             T? maleObj = null, femaleObj = null;
             for (int i = 0; i < 2; i++)
             {
+                if (stream.Complete) break;
                 var recType = HeaderTranslation.ReadNextRecordType(stream, package.MetaData.Constants.SubConstants.LengthLength, out var markerLen);
                 stream.Position += markerLen;
                 if (recType == male)
@@ -182,6 +185,7 @@ namespace Mutagen.Bethesda.Binary
             T? maleObj = null, femaleObj = null;
             for (int i = 0; i < 2; i++)
             {
+                if (stream.Complete) break;
                 // Skip marker
                 var recType = HeaderTranslation.ReadNextRecordType(stream, package.MetaData.Constants.SubConstants.LengthLength, out var markerLen);
                 if (recType != marker) break;

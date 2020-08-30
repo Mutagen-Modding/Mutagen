@@ -14,7 +14,9 @@ namespace Mutagen.Bethesda.Skyrim
         [Flags]
         public enum HeaderFlag
         {
-            Master = 0x01
+            Master = 0x0000_0001,
+            Localized = 0x0000_0080,
+            LightMaster = 0x0000_0200,
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

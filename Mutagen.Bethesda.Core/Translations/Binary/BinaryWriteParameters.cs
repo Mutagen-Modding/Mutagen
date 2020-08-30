@@ -1,3 +1,4 @@
+using Mutagen.Bethesda.Internals;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -126,10 +127,15 @@ namespace Mutagen.Bethesda
                     Option = option
                 };
             }
+
+            public static implicit operator AMastersListOrderingOption(MasterReferenceReader reader)
+            {
+                return new MastersListOrderingByLoadOrder(reader.Masters.Select(m => m.Master));
+            }
         }
 
         /// <summary>
-        /// 
+        /// A class that instructs the export to make masters listings match a given load order.
         /// </summary>
         public class MastersListOrderingByLoadOrder : AMastersListOrderingOption
         {

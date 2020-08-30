@@ -8,6 +8,7 @@ using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Subjects;
 using System.Text;
 using System.Threading.Tasks;
@@ -598,7 +599,8 @@ namespace Mutagen.Bethesda.Tests
             params AStringsAlignment[] recordTypes)
         {
             var folderOverlay = StringsFolderLookupOverlay.TypicalFactory(dataFolder.FullName, null, modKey);
-            var overlay = folderOverlay.Get(source)[language].Value;
+            var sourceDict = folderOverlay.Get(source);
+            if (!sourceDict.TryGetValue(language, out var overlay)) return ListExt.Empty<KeyValuePair<uint, uint>>();
             var ret = new List<KeyValuePair<uint, uint>>();
             var dict = new Dictionary<RecordType, AStringsAlignment>();
             foreach (var item in recordTypes)
@@ -624,7 +626,7 @@ namespace Mutagen.Bethesda.Tests
                 {
                     continue;
                 }
-                instructions.Handler(stream, major, _Instructions, ret, overlay, ref newIndex);
+                instructions.Handler(stream, major, _Instructions, ret, overlay.Value, ref newIndex);
             }
 
             return ret;

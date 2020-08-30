@@ -5229,6 +5229,11 @@ namespace Mutagen.Bethesda.Skyrim
         void IModGetter.WriteToBinary(string path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
         void IModGetter.WriteToBinaryParallel(string path, BinaryWriteParameters? param) => this.WriteToBinaryParallel(path, param);
         public override bool CanUseLocalization => true;
+        public override bool UsingLocalization
+        {
+            get => this.ModHeader.Flags.HasFlag(SkyrimModHeader.HeaderFlag.Localized);
+            set => this.ModHeader.Flags.SetFlag(SkyrimModHeader.HeaderFlag.Localized, value);
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IList<MasterReference> IMod.MasterReferences => this.ModHeader.MasterReferences;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -19916,6 +19921,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IModGetter.WriteToBinaryParallel(string path, BinaryWriteParameters? param) => this.WriteToBinaryParallel(path, param: param);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
         public bool CanUseLocalization => true;
+        public bool UsingLocalization => this.ModHeader.Flags.HasFlag(SkyrimModHeader.HeaderFlag.Localized);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => SkyrimModCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

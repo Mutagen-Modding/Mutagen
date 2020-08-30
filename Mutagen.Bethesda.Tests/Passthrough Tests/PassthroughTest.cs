@@ -1,4 +1,5 @@
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Preprocessing;
 using Noggog;
 using Noggog.Extensions;
@@ -137,14 +138,7 @@ namespace Mutagen.Bethesda.Tests
             var copyInPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_CopyIn");
             var strsProcessedPath = Path.Combine(tmp.Dir.Path, "Strings/Processed");
 
-            var writeParams = new BinaryWriteParameters()
-            {
-                ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
-                MastersListContent = BinaryWriteParameters.MastersListContentOption.NoCheck,
-                RecordCount = BinaryWriteParameters.RecordCountOption.NoCheck,
-                NextFormID = BinaryWriteParameters.NextFormIDOption.NoCheck,
-                FormIDUniqueness = BinaryWriteParameters.FormIDUniquenessOption.NoCheck,
-            };
+            var masterRefs = MasterReferenceReader.FromPath(new ModPath(ModKey, this.FilePath.Path), GameRelease);
 
             // Do normal
             if (Settings.TestNormal)
@@ -160,19 +154,19 @@ namespace Mutagen.Bethesda.Tests
                     {
                         o.OnNext(FilePath.ToString());
                         var mod = await ImportBinary(this.FilePath.Path);
-                        doStrings = mod.CanUseLocalization;
+                        doStrings = mod.UsingLocalization;
 
                         foreach (var record in mod.EnumerateMajorRecords())
                         {
                             record.IsCompressed = false;
                         }
 
-                        using var stringsWriter = new StringsWriter(mod.ModKey, strsWriteDir);
-                        writeParams.StringsWriter = stringsWriter;
-                        mod.WriteToBinary(outputPath, writeParams);
+                        var writeParam = GetWriteParam(masterRefs, doStrings ? new StringsWriter(mod.ModKey, strsWriteDir) : null);
+                        mod.WriteToBinary(outputPath, writeParam);
                         GC.Collect();
 
                         using var stream = new MutagenBinaryReadStream(processedPath, this.GameRelease);
+                        writeParam.StringsWriter?.Dispose();
 
                         AssertFilesEqual(
                             stream,
@@ -206,10 +200,10 @@ namespace Mutagen.Bethesda.Tests
                         o.OnNext(FilePath.ToString());
                         using (var wrapper = await ImportBinaryOverlay(this.FilePath.Path))
                         {
-                            doStrings = wrapper.CanUseLocalization;
-                            using var stringsWriter = new StringsWriter(wrapper.ModKey, strsWriteDir);
-                            writeParams.StringsWriter = stringsWriter;
-                            wrapper.WriteToBinary(binaryOverlayPath, writeParams);
+                            doStrings = wrapper.UsingLocalization;
+                            var writeParam = GetWriteParam(masterRefs, doStrings ? new StringsWriter(wrapper.ModKey, strsWriteDir) : null);
+                            wrapper.WriteToBinary(binaryOverlayPath, writeParam);
+                            writeParam.StringsWriter?.Dispose();
                         }
 
                         using var stream = new MutagenBinaryReadStream(processedPath, this.GameRelease);
@@ -245,9 +239,10 @@ namespace Mutagen.Bethesda.Tests
                     {
                         o.OnNext(FilePath.ToString());
                         var copyIn = await ImportCopyIn(this.FilePath.Path);
-                        using var stringsWriter = new StringsWriter(copyIn.ModKey, strsWriteDir);
-                        writeParams.StringsWriter = stringsWriter;
-                        copyIn.WriteToBinary(copyInPath, writeParams);
+                        doStrings = copyIn.UsingLocalization;
+                        var writeParam = GetWriteParam(masterRefs, doStrings ? new StringsWriter(copyIn.ModKey, strsWriteDir) : null);
+                        copyIn.WriteToBinary(copyInPath, writeParam);
+                        writeParam.StringsWriter?.Dispose();
 
                         using var stream = new MutagenBinaryReadStream(processedPath, this.GameRelease);
 
@@ -285,6 +280,20 @@ namespace Mutagen.Bethesda.Tests
                 Target = target,
                 GameRelease = group.GameRelease,
             });
+        }
+
+        public BinaryWriteParameters GetWriteParam(MasterReferenceReader masterRefs, StringsWriter stringsWriter)
+        {
+            return new BinaryWriteParameters()
+            {
+                ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
+                MastersListContent = BinaryWriteParameters.MastersListContentOption.NoCheck,
+                RecordCount = BinaryWriteParameters.RecordCountOption.NoCheck,
+                NextFormID = BinaryWriteParameters.NextFormIDOption.NoCheck,
+                FormIDUniqueness = BinaryWriteParameters.FormIDUniquenessOption.NoCheck,
+                MastersListOrdering = masterRefs,
+                StringsWriter = stringsWriter,
+            };
         }
 
         public static PassthroughTest Factory(PassthroughTestParams passthroughSettings)
