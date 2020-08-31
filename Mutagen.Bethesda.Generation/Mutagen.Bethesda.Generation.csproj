@@ -19,7 +19,7 @@
   <PropertyGroup>
     <Nullable>disable</Nullable>
     <Description>Skyrim</Description>
-    <Version>0.13.5.0</Version>
+    <Version>0.13.6.0</Version>
   </PropertyGroup>
 
 </Project>
