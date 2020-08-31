@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "t.Add((DefaultHairColors?.Overall ?? true, null";
+            string testString = "obj.IdleMarkers.Remove(keys)";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

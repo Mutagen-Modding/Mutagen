@@ -107,5 +107,168 @@ namespace Mutagen.Bethesda.Generation
                 }
             }
         }
+
+        public static async Task<Case> HasMajorRecordsInTree(ObjectGeneration obj, bool includeBaseClass, GenericSpecification specifications = null)
+        {
+            if (await HasMajorRecords(obj, includeBaseClass: includeBaseClass, includeSelf: false, specifications: specifications) == Case.Yes) return Case.Yes;
+            // If no, check subclasses  
+            foreach (var inheritingObject in await obj.InheritingObjects())
+            {
+                if (await HasMajorRecordsInTree(inheritingObject, includeBaseClass: false, specifications: specifications) == Case.Yes) return Case.Yes;
+            }
+
+            return Case.No;
+        }
+
+        public static async Task<Case> HasMajorRecords(LoquiType loqui, bool includeBaseClass, GenericSpecification specifications = null, bool includeSelf = true)
+        {
+            if (loqui.TargetObjectGeneration != null)
+            {
+                if (includeSelf && await loqui.TargetObjectGeneration.IsMajorRecord()) return Case.Yes;
+                return await MajorRecordModule.HasMajorRecordsInTree(loqui.TargetObjectGeneration, includeBaseClass, loqui.GenericSpecification);
+            }
+            else if (specifications != null)
+            {
+                foreach (var target in specifications.Specifications.Values)
+                {
+                    if (!ObjectNamedKey.TryFactory(target, out var key)) continue;
+                    var specObj = loqui.ObjectGen.ProtoGen.Gen.ObjectGenerationsByObjectNameKey[key];
+                    if (await specObj.IsMajorRecord()) return Case.Yes;
+                    return await MajorRecordModule.HasMajorRecordsInTree(specObj, includeBaseClass);
+                }
+            }
+            else if (loqui.RefType == LoquiType.LoquiRefType.Interface)
+            {
+                // ToDo  
+                // Quick hack.  Real solution should use reflection to investigate the interface  
+                return includeSelf ? Case.Yes : Case.No;
+            }
+            return Case.Maybe;
+        }
+
+        public static async Task<Case> HasMajorRecords(ObjectGeneration obj, bool includeBaseClass, bool includeSelf, GenericSpecification specifications = null)
+        {
+            if (obj.Name == "ListGroup") return Case.Yes;
+            foreach (var field in obj.IterateFields(includeBaseClass: includeBaseClass))
+            {
+                if (field is LoquiType loqui)
+                {
+                    if (includeSelf
+                        && loqui.TargetObjectGeneration != null
+                        && await loqui.TargetObjectGeneration.IsMajorRecord())
+                    {
+                        return Case.Yes;
+                    }
+                    if (await HasMajorRecords(loqui, includeBaseClass, specifications) == Case.Yes) return Case.Yes;
+                }
+                else if (field is ContainerType cont)
+                {
+                    if (cont.SubTypeGeneration is LoquiType contLoqui)
+                    {
+                        if (await HasMajorRecords(contLoqui, includeBaseClass, specifications) == Case.Yes) return Case.Yes;
+                    }
+                }
+                else if (field is DictType dict)
+                {
+                    if (dict.ValueTypeGen is LoquiType valLoqui)
+                    {
+                        if (await HasMajorRecords(valLoqui, includeBaseClass, specifications) == Case.Yes) return Case.Yes;
+                    }
+                    if (dict.KeyTypeGen is LoquiType keyLoqui)
+                    {
+                        if (await HasMajorRecords(keyLoqui, includeBaseClass, specifications) == Case.Yes) return Case.Yes;
+                    }
+                }
+            }
+            return Case.No;
+        }
+
+        public static async IAsyncEnumerable<ObjectGeneration> IterateMajorRecords(LoquiType loqui, bool includeBaseClass, GenericSpecification specifications = null)
+        {
+            if (specifications?.Specifications.Count > 0)
+            {
+                foreach (var target in specifications.Specifications.Values)
+                {
+                    if (!ObjectNamedKey.TryFactory(target, out var key)) continue;
+                    var specObj = loqui.ObjectGen.ProtoGen.Gen.ObjectGenerationsByObjectNameKey[key];
+                    if (await specObj.IsMajorRecord()) yield return specObj;
+                    await foreach (var item in IterateMajorRecords(specObj, includeBaseClass, includeSelf: true, loqui.GenericSpecification))
+                    {
+                        yield return item;
+                    }
+                }
+            }
+            else if (loqui.TargetObjectGeneration != null)
+            {
+                if (await loqui.TargetObjectGeneration.IsMajorRecord()) yield return loqui.TargetObjectGeneration;
+                await foreach (var item in IterateMajorRecords(loqui.TargetObjectGeneration, includeBaseClass, includeSelf: true, loqui.GenericSpecification))
+                {
+                    yield return item;
+                }
+            }
+            else if (loqui.RefType == LoquiType.LoquiRefType.Interface)
+            {
+                // Must be a link interface 
+                if (!LinkInterfaceModule.ObjectMappings[loqui.ObjectGen.ProtoGen.Protocol].TryGetValue(loqui.SetterInterface, out var mappings))
+                {
+                    throw new ArgumentException();
+                }
+                foreach (var obj in mappings)
+                {
+                    yield return obj;
+                }
+            }
+            else
+            {
+                throw new ArgumentException();
+            }
+        }
+
+        public static async IAsyncEnumerable<ObjectGeneration> IterateMajorRecords(ObjectGeneration obj, bool includeBaseClass, bool includeSelf, GenericSpecification specifications = null)
+        {
+            foreach (var field in obj.IterateFields(includeBaseClass: includeBaseClass))
+            {
+                if (field is LoquiType loqui)
+                {
+                    if (includeSelf
+                        && loqui.TargetObjectGeneration != null
+                        && await loqui.TargetObjectGeneration.IsMajorRecord())
+                    {
+                        yield return loqui.TargetObjectGeneration;
+                    }
+                    await foreach (var item in IterateMajorRecords(loqui, includeBaseClass, specifications))
+                    {
+                        yield return item;
+                    }
+                }
+                else if (field is ContainerType cont)
+                {
+                    if (cont.SubTypeGeneration is LoquiType contLoqui)
+                    {
+                        await foreach (var item in IterateMajorRecords(contLoqui, includeBaseClass, specifications))
+                        {
+                            yield return item;
+                        }
+                    }
+                }
+                else if (field is DictType dict)
+                {
+                    if (dict.ValueTypeGen is LoquiType valLoqui)
+                    {
+                        await foreach (var item in IterateMajorRecords(valLoqui, includeBaseClass, specifications))
+                        {
+                            yield return item;
+                        }
+                    }
+                    if (dict.KeyTypeGen is LoquiType keyLoqui)
+                    {
+                        await foreach (var item in IterateMajorRecords(keyLoqui, includeBaseClass, specifications))
+                        {
+                            yield return item;
+                        }
+                    }
+                }
+            }
+        }
     }
 }

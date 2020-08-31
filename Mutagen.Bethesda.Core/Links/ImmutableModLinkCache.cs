@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda
         public bool TryLookup<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out TMajor majorRec)
             where TMajor : class, IMajorRecordCommonGetter
         {
-            IReadOnlyCache<object, FormKey> cache;
+            IReadOnlyCache<IMajorRecordCommonGetter, FormKey> cache;
             lock (_majorRecords)
             {
                 cache = GetCache(typeof(TMajor));
@@ -73,6 +73,22 @@ namespace Mutagen.Bethesda
             }
             majorRec = (majorRecObj as TMajor)!;
             return majorRec != null;
+        }
+
+        /// <inheritdoc />
+        public bool TryLookup(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
+        {
+            IReadOnlyCache<IMajorRecordCommonGetter, FormKey> cache;
+            lock (_majorRecords)
+            {
+                cache = GetCache(type);
+            }
+            if (!cache.TryGetValue(formKey, out majorRec))
+            {
+                majorRec = default!;
+                return false;
+            }
+            return true;
         }
 
         private IReadOnlyCache<IMajorRecordCommonGetter, FormKey> GetCache(Type type)

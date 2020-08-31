@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Xunit;
 #nullable disable
+#pragma warning disable CS0618 // Type or member is obsolete
 
 namespace Mutagen.Bethesda.UnitTests
 {

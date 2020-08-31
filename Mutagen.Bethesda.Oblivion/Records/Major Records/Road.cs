@@ -85,7 +85,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool anyConnections = false;
             using (HeaderExport.Subrecord(writer, RoadBinaryCreateTranslation.PGRP))
             {
-                foreach (var pt in item.Points.TryIterate())
+                foreach (var pt in item.Points.EmptyIfNull())
                 {
                     writer.Write(pt.Point.X);
                     writer.Write(pt.Point.Y);
@@ -102,7 +102,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!anyConnections) return;
             using (HeaderExport.Subrecord(writer, RoadBinaryCreateTranslation.PGRR))
             {
-                foreach (var pt in item.Points.TryIterate())
+                foreach (var pt in item.Points.EmptyIfNull())
                 {
                     foreach (var conn in pt.Connections)
                     {

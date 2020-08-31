@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda
         where TMod : class, IMod
         where TModGetter : class, IModGetter
     {
-        private readonly ImmutableLoadOrderLinkCache<TModGetter> _wrappedCache;
+        public ImmutableLoadOrderLinkCache<TModGetter> WrappedImmutableCache { get; }
         private readonly List<MutableModLinkCache<TMod>> _mutableMods;
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda
         /// <param name="mutableMods">Set of mods to place at the end of the load order, which are allowed to be modified afterwards</param>
         public MutableLoadOrderLinkCache(ImmutableLoadOrderLinkCache<TModGetter> immutableBaseCache, params TMod[] mutableMods)
         {
-            _wrappedCache = immutableBaseCache;
+            WrappedImmutableCache = immutableBaseCache;
             _mutableMods = mutableMods.Select(m => m.ToMutableLinkCache()).ToList();
         }
 
@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda
             {
                 if (_mutableMods[i].TryLookup(formKey, out majorRec)) return true;
             }
-            return _wrappedCache.TryLookup(formKey, out majorRec);
+            return WrappedImmutableCache.TryLookup(formKey, out majorRec);
         }
 
         /// <inheritdoc />
@@ -55,9 +55,19 @@ namespace Mutagen.Bethesda
         {
             for (int i = _mutableMods.Count - 1; i >= 0; i--)
             {
-                if (_mutableMods[i].TryLookup(formKey, out majorRec)) return true;
+                if (_mutableMods[i].TryLookup<TMajor>(formKey, out majorRec)) return true;
             }
-            return _wrappedCache.TryLookup(formKey, out majorRec);
+            return WrappedImmutableCache.TryLookup<TMajor>(formKey, out majorRec);
+        }
+
+        /// <inheritdoc />
+        public bool TryLookup(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
+        {
+            for (int i = _mutableMods.Count - 1; i >= 0; i--)
+            {
+                if (_mutableMods[i].TryLookup(formKey, type, out majorRec)) return true;
+            }
+            return WrappedImmutableCache.TryLookup(formKey, type, out majorRec);
         }
 
         /// <summary>
