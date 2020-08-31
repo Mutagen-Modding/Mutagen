@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine("[DebuggerStepThrough]");
             fg.AppendLine($"IEnumerable<{nameof(IMajorRecordCommonGetter)}> {nameof(IMajorRecordGetterEnumerable)}.EnumerateMajorRecords() => this.EnumerateMajorRecords();");
             fg.AppendLine("[DebuggerStepThrough]");
-            fg.AppendLine($"IEnumerable<TMajor> {nameof(IMajorRecordGetterEnumerable)}.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal, "TMajor")}();");
+            fg.AppendLine($"IEnumerable<TMajor> {nameof(IMajorRecordGetterEnumerable)}.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal, "TMajor")}(throwIfUnknown);");
             fg.AppendLine("[DebuggerStepThrough]");
             fg.AppendLine($"IEnumerable<{nameof(IMajorRecordCommonGetter)}> {nameof(IMajorRecordGetterEnumerable)}.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type, throwIfUnknown);");
             if (!onlyGetter)
@@ -76,6 +76,7 @@ namespace Mutagen.Bethesda.Generation
                 args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, obj.Generics));
                 args.Wheres.Add($"where TMajor : class, IMajorRecordCommonGetter");
                 args.Add($"this {obj.Interface(getter: true, internalInterface: true)} obj");
+                args.Add($"bool throwIfUnknown = true");
             }
             using (new BraceWrapper(fg))
             {
@@ -84,7 +85,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.AddPassArg("obj");
                     args.Add("type: typeof(TMajor)");
-                    args.Add("throwIfUnknown: true");
+                    args.AddPassArg("throwIfUnknown");
                 }
                 using (new DepthWrapper(fg))
                 {
@@ -335,14 +336,14 @@ namespace Mutagen.Bethesda.Generation
                                 switch (await MajorRecordModule.HasMajorRecords(contLoqui, includeBaseClass: true))
                                 {
                                     case Case.Yes:
-                                        fieldFg.AppendLine($"foreach (var subItem in {accessor}.{field.Name}{(field.Nullable ? ".TryIterate()" : null)})");
+                                        fieldFg.AppendLine($"foreach (var subItem in {accessor}.{field.Name}{(field.Nullable ? ".EmptyIfNull()" : null)})");
                                         using (new BraceWrapper(fieldFg))
                                         {
                                             await LoquiTypeHandler(fieldFg, $"subItem", contLoqui, generic: null, checkType: false);
                                         }
                                         break;
                                     case Case.Maybe:
-                                        fieldFg.AppendLine($"foreach (var subItem in {accessor}.{field.Name}{(field.Nullable ? ".TryIterate()" : null)}.WhereCastable<{contLoqui.TypeName(getter: false)}, {(getter ? nameof(IMajorRecordGetterEnumerable) : nameof(IMajorRecordEnumerable))}>())");
+                                        fieldFg.AppendLine($"foreach (var subItem in {accessor}.{field.Name}{(field.Nullable ? ".EmptyIfNull()" : null)}.WhereCastable<{contLoqui.TypeName(getter: false)}, {(getter ? nameof(IMajorRecordGetterEnumerable) : nameof(IMajorRecordEnumerable))}>())");
                                         using (new BraceWrapper(fieldFg))
                                         {
                                             await LoquiTypeHandler(fieldFg, $"subItem", contLoqui, generic: null, checkType: false);
@@ -842,14 +843,14 @@ namespace Mutagen.Bethesda.Generation
                         switch (await MajorRecordModule.HasMajorRecords(contLoqui, includeBaseClass: true))
                         {
                             case Case.Yes:
-                                fieldGen.AppendLine($"foreach (var subItem in {accessor}.{field.Name}{(field.Nullable ? ".TryIterate()" : null)})");
+                                fieldGen.AppendLine($"foreach (var subItem in {accessor}.{field.Name}{(field.Nullable ? ".EmptyIfNull()" : null)})");
                                 using (new BraceWrapper(fieldGen))
                                 {
                                     await LoquiTypeHandler(fieldGen, $"subItem", contLoqui, generic: "TMajor", checkType: true);
                                 }
                                 break;
                             case Case.Maybe:
-                                fieldGen.AppendLine($"foreach (var subItem in {accessor}.{field.Name}{(field.Nullable ? ".TryIterate()" : null)}.Where(i => i.GetType() == type))");
+                                fieldGen.AppendLine($"foreach (var subItem in {accessor}.{field.Name}{(field.Nullable ? ".EmptyIfNull()" : null)}.Where(i => i.GetType() == type))");
                                 using (new BraceWrapper(fieldGen))
                                 {
                                     await LoquiTypeHandler(fieldGen, $"subItem", contLoqui, generic: "TMajor", checkType: true);

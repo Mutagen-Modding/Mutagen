@@ -332,7 +332,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
-        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
+        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type, throwIfUnknown);
         [DebuggerStepThrough]
@@ -347,6 +347,22 @@ namespace Mutagen.Bethesda.Oblivion
         void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys) => this.Remove(formKeys);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => this.Remove(formKeys);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(FormKey formKey, Type type, bool throwIfUnknown) => this.Remove(formKey, type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys, Type type, bool throwIfUnknown) => this.Remove(formKeys, type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys, Type type, bool throwIfUnknown) => this.Remove(formKeys, type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(FormKey formKey, bool throwIfUnknown) => this.Remove<TMajor>(formKey, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(HashSet<FormKey> formKeys, bool throwIfUnknown) => this.Remove<TMajor>(formKeys, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<FormKey> formKeys, bool throwIfUnknown) => this.Remove<TMajor>(formKeys, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(TMajor record, bool throwIfUnknown) => this.Remove<TMajor>(record, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
         #endregion
 
         #region Binary Translation
@@ -529,13 +545,15 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IPlaceGetter obj)
+        public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(
+            this IPlaceGetter obj,
+            bool throwIfUnknown = true)
             where TMajor : class, IMajorRecordCommonGetter
         {
             return ((PlaceCommon)((IPlaceGetter)obj).CommonInstance()!).EnumerateMajorRecords(
                 obj: obj,
                 type: typeof(TMajor),
-                throwIfUnknown: true)
+                throwIfUnknown: throwIfUnknown)
                 .Select(m => (TMajor)m);
         }
 
@@ -612,6 +630,124 @@ namespace Mutagen.Bethesda.Oblivion
             ((PlaceSetterCommon)((IPlaceGetter)obj).CommonSetterInstance()!).Remove(
                 obj: obj,
                 keys: keys);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IPlaceInternal obj,
+            FormKey key,
+            Type type,
+            bool throwIfUnknown = true)
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((PlaceSetterCommon)((IPlaceGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IPlaceInternal obj,
+            IEnumerable<FormKey> keys,
+            Type type,
+            bool throwIfUnknown = true)
+        {
+            ((PlaceSetterCommon)((IPlaceGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys.ToHashSet(),
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IPlaceInternal obj,
+            HashSet<FormKey> keys,
+            Type type,
+            bool throwIfUnknown = true)
+        {
+            ((PlaceSetterCommon)((IPlaceGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IPlaceInternal obj,
+            TMajor record,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordCommonGetter
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(record.FormKey);
+            ((PlaceSetterCommon)((IPlaceGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IPlaceInternal obj,
+            IEnumerable<TMajor> records,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordCommonGetter
+        {
+            ((PlaceSetterCommon)((IPlaceGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: records.Select(m => m.FormKey).ToHashSet(),
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IPlaceInternal obj,
+            FormKey key,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordCommonGetter
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((PlaceSetterCommon)((IPlaceGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IPlaceInternal obj,
+            IEnumerable<FormKey> keys,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordCommonGetter
+        {
+            ((PlaceSetterCommon)((IPlaceGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys.ToHashSet(),
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IPlaceInternal obj,
+            HashSet<FormKey> keys,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordCommonGetter
+        {
+            ((PlaceSetterCommon)((IPlaceGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
         }
 
         #endregion
@@ -860,6 +996,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPlaceInternal obj,
             HashSet<FormKey> keys)
         {
+        }
+        
+        public virtual void Remove(
+            IPlaceInternal obj,
+            HashSet<FormKey> keys,
+            Type type,
+            bool throwIfUnknown)
+        {
+            switch (type.Name)
+            {
+                case "IMajorRecordCommon":
+                case "IMajorRecord":
+                case "MajorRecord":
+                case "IOblivionMajorRecord":
+                case "OblivionMajorRecord":
+                case "IMajorRecordGetter":
+                case "IMajorRecordCommonGetter":
+                case "IOblivionMajorRecordGetter":
+                    if (!Place_Registration.SetterType.IsAssignableFrom(obj.GetType())) return;
+                    this.Remove(obj, keys);
+                    break;
+                default:
+                    if (throwIfUnknown)
+                    {
+                        throw new ArgumentException($"Unknown major record type: {type}");
+                    }
+                    else
+                    {
+                        break;
+                    }
+            }
         }
         
         #endregion
@@ -1403,7 +1570,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
-        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
+        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type, throwIfUnknown);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

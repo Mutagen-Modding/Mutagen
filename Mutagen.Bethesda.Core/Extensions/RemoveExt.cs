@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda.Internals
         public static void Remove<TItem>(this IExtendedList<TItem>? enumer, HashSet<FormKey> removeSet)
             where TItem : IMajorRecordCommonGetter
         {
-            enumer.Remove((i) => removeSet.Contains(i.FormKey));
+            enumer.RemoveWhere((i) => removeSet.Contains(i.FormKey));
         }
     }
 }

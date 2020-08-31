@@ -3572,7 +3572,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
-        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
+        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type, throwIfUnknown);
         [DebuggerStepThrough]
@@ -3587,6 +3587,22 @@ namespace Mutagen.Bethesda.Oblivion
         void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys) => this.Remove(formKeys);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => this.Remove(formKeys);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(FormKey formKey, Type type, bool throwIfUnknown) => this.Remove(formKey, type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys, Type type, bool throwIfUnknown) => this.Remove(formKeys, type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys, Type type, bool throwIfUnknown) => this.Remove(formKeys, type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(FormKey formKey, bool throwIfUnknown) => this.Remove<TMajor>(formKey, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(HashSet<FormKey> formKeys, bool throwIfUnknown) => this.Remove<TMajor>(formKeys, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<FormKey> formKeys, bool throwIfUnknown) => this.Remove<TMajor>(formKeys, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(TMajor record, bool throwIfUnknown) => this.Remove<TMajor>(record, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
         #endregion
 
         #region Binary Translation
@@ -4062,13 +4078,15 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IOblivionModGetter obj)
+        public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(
+            this IOblivionModGetter obj,
+            bool throwIfUnknown = true)
             where TMajor : class, IMajorRecordCommonGetter
         {
             return ((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).EnumerateMajorRecords(
                 obj: obj,
                 type: typeof(TMajor),
-                throwIfUnknown: true)
+                throwIfUnknown: throwIfUnknown)
                 .Select(m => (TMajor)m)
                 .Catch(e => throw RecordException.Factory(e, obj.ModKey));
         }
@@ -4149,6 +4167,124 @@ namespace Mutagen.Bethesda.Oblivion
             ((OblivionModSetterCommon)((IOblivionModGetter)obj).CommonSetterInstance()!).Remove(
                 obj: obj,
                 keys: keys);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IOblivionMod obj,
+            FormKey key,
+            Type type,
+            bool throwIfUnknown = true)
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((OblivionModSetterCommon)((IOblivionModGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IOblivionMod obj,
+            IEnumerable<FormKey> keys,
+            Type type,
+            bool throwIfUnknown = true)
+        {
+            ((OblivionModSetterCommon)((IOblivionModGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys.ToHashSet(),
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IOblivionMod obj,
+            HashSet<FormKey> keys,
+            Type type,
+            bool throwIfUnknown = true)
+        {
+            ((OblivionModSetterCommon)((IOblivionModGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IOblivionMod obj,
+            TMajor record,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordCommonGetter
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(record.FormKey);
+            ((OblivionModSetterCommon)((IOblivionModGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IOblivionMod obj,
+            IEnumerable<TMajor> records,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordCommonGetter
+        {
+            ((OblivionModSetterCommon)((IOblivionModGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: records.Select(m => m.FormKey).ToHashSet(),
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IOblivionMod obj,
+            FormKey key,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordCommonGetter
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((OblivionModSetterCommon)((IOblivionModGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IOblivionMod obj,
+            IEnumerable<FormKey> keys,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordCommonGetter
+        {
+            ((OblivionModSetterCommon)((IOblivionModGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys.ToHashSet(),
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IOblivionMod obj,
+            HashSet<FormKey> keys,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordCommonGetter
+        {
+            ((OblivionModSetterCommon)((IOblivionModGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
         }
 
         #endregion
@@ -5214,6 +5350,580 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.AnimatedObjects.Remove(keys);
             obj.Waters.Remove(keys);
             obj.EffectShaders.Remove(keys);
+        }
+        
+        public void Remove(
+            IOblivionMod obj,
+            HashSet<FormKey> keys,
+            Type type,
+            bool throwIfUnknown)
+        {
+            switch (type.Name)
+            {
+                case "IMajorRecordCommon":
+                case "IMajorRecord":
+                case "MajorRecord":
+                case "IOblivionMajorRecord":
+                case "OblivionMajorRecord":
+                case "IMajorRecordGetter":
+                case "IMajorRecordCommonGetter":
+                case "IOblivionMajorRecordGetter":
+                    if (!OblivionMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) return;
+                    this.Remove(obj, keys);
+                    break;
+                case "GameSetting":
+                case "IGameSettingGetter":
+                case "IGameSetting":
+                case "IGameSettingInternal":
+                    obj.GameSettings.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Global":
+                case "IGlobalGetter":
+                case "IGlobal":
+                case "IGlobalInternal":
+                    obj.Globals.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Class":
+                case "IClassGetter":
+                case "IClass":
+                case "IClassInternal":
+                    obj.Classes.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Faction":
+                case "IFactionGetter":
+                case "IFaction":
+                case "IFactionInternal":
+                    obj.Factions.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Hair":
+                case "IHairGetter":
+                case "IHair":
+                case "IHairInternal":
+                    obj.Hairs.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Eye":
+                case "IEyeGetter":
+                case "IEye":
+                case "IEyeInternal":
+                    obj.Eyes.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Race":
+                case "IRaceGetter":
+                case "IRace":
+                case "IRaceInternal":
+                    obj.Races.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Sound":
+                case "ISoundGetter":
+                case "ISound":
+                case "ISoundInternal":
+                    obj.Sounds.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "SkillRecord":
+                case "ISkillRecordGetter":
+                case "ISkillRecord":
+                case "ISkillRecordInternal":
+                    obj.Skills.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "MagicEffect":
+                case "IMagicEffectGetter":
+                case "IMagicEffect":
+                case "IMagicEffectInternal":
+                    obj.MagicEffects.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Script":
+                case "IScriptGetter":
+                case "IScript":
+                case "IScriptInternal":
+                    obj.Scripts.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "LandTexture":
+                case "ILandTextureGetter":
+                case "ILandTexture":
+                case "ILandTextureInternal":
+                    obj.LandTextures.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Enchantment":
+                case "IEnchantmentGetter":
+                case "IEnchantment":
+                case "IEnchantmentInternal":
+                    obj.Enchantments.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "SpellUnleveled":
+                case "ISpellUnleveledGetter":
+                case "ISpellUnleveled":
+                case "ISpellUnleveledInternal":
+                    obj.Spells.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Birthsign":
+                case "IBirthsignGetter":
+                case "IBirthsign":
+                case "IBirthsignInternal":
+                    obj.Birthsigns.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Activator":
+                case "IActivatorGetter":
+                case "IActivator":
+                case "IActivatorInternal":
+                    obj.Activators.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "AlchemicalApparatus":
+                case "IAlchemicalApparatusGetter":
+                case "IAlchemicalApparatus":
+                case "IAlchemicalApparatusInternal":
+                    obj.AlchemicalApparatus.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Armor":
+                case "IArmorGetter":
+                case "IArmor":
+                case "IArmorInternal":
+                    obj.Armors.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Book":
+                case "IBookGetter":
+                case "IBook":
+                case "IBookInternal":
+                    obj.Books.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Clothing":
+                case "IClothingGetter":
+                case "IClothing":
+                case "IClothingInternal":
+                    obj.Clothes.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Container":
+                case "IContainerGetter":
+                case "IContainer":
+                case "IContainerInternal":
+                    obj.Containers.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Door":
+                case "IDoorGetter":
+                case "IDoor":
+                case "IDoorInternal":
+                    obj.Doors.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Ingredient":
+                case "IIngredientGetter":
+                case "IIngredient":
+                case "IIngredientInternal":
+                    obj.Ingredients.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Light":
+                case "ILightGetter":
+                case "ILight":
+                case "ILightInternal":
+                    obj.Lights.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Miscellaneous":
+                case "IMiscellaneousGetter":
+                case "IMiscellaneous":
+                case "IMiscellaneousInternal":
+                    obj.Miscellaneous.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Static":
+                case "IStaticGetter":
+                case "IStatic":
+                case "IStaticInternal":
+                    obj.Statics.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Grass":
+                case "IGrassGetter":
+                case "IGrass":
+                case "IGrassInternal":
+                    obj.Grasses.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Tree":
+                case "ITreeGetter":
+                case "ITree":
+                case "ITreeInternal":
+                    obj.Trees.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Flora":
+                case "IFloraGetter":
+                case "IFlora":
+                case "IFloraInternal":
+                    obj.Flora.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Furniture":
+                case "IFurnitureGetter":
+                case "IFurniture":
+                case "IFurnitureInternal":
+                    obj.Furniture.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Weapon":
+                case "IWeaponGetter":
+                case "IWeapon":
+                case "IWeaponInternal":
+                    obj.Weapons.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Ammunition":
+                case "IAmmunitionGetter":
+                case "IAmmunition":
+                case "IAmmunitionInternal":
+                    obj.Ammunitions.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Npc":
+                case "INpcGetter":
+                case "INpc":
+                case "INpcInternal":
+                    obj.Npcs.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Creature":
+                case "ICreatureGetter":
+                case "ICreature":
+                case "ICreatureInternal":
+                    obj.Creatures.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "LeveledCreature":
+                case "ILeveledCreatureGetter":
+                case "ILeveledCreature":
+                case "ILeveledCreatureInternal":
+                    obj.LeveledCreatures.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "SoulGem":
+                case "ISoulGemGetter":
+                case "ISoulGem":
+                case "ISoulGemInternal":
+                    obj.SoulGems.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Key":
+                case "IKeyGetter":
+                case "IKey":
+                case "IKeyInternal":
+                    obj.Keys.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Potion":
+                case "IPotionGetter":
+                case "IPotion":
+                case "IPotionInternal":
+                    obj.Potions.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Subspace":
+                case "ISubspaceGetter":
+                case "ISubspace":
+                case "ISubspaceInternal":
+                    obj.Subspaces.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "SigilStone":
+                case "ISigilStoneGetter":
+                case "ISigilStone":
+                case "ISigilStoneInternal":
+                    obj.SigilStones.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "LeveledItem":
+                case "ILeveledItemGetter":
+                case "ILeveledItem":
+                case "ILeveledItemInternal":
+                    obj.LeveledItems.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Weather":
+                case "IWeatherGetter":
+                case "IWeather":
+                case "IWeatherInternal":
+                    obj.Weathers.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Climate":
+                case "IClimateGetter":
+                case "IClimate":
+                case "IClimateInternal":
+                    obj.Climates.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Region":
+                case "IRegionGetter":
+                case "IRegion":
+                case "IRegionInternal":
+                    obj.Regions.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "CellBlock":
+                case "ICellBlockGetter":
+                case "ICellBlock":
+                    obj.Cells.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Worldspace":
+                case "IWorldspaceGetter":
+                case "IWorldspace":
+                case "IWorldspaceInternal":
+                    obj.Worldspaces.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "DialogTopic":
+                case "IDialogTopicGetter":
+                case "IDialogTopic":
+                case "IDialogTopicInternal":
+                    obj.DialogTopics.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Quest":
+                case "IQuestGetter":
+                case "IQuest":
+                case "IQuestInternal":
+                    obj.Quests.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "IdleAnimation":
+                case "IIdleAnimationGetter":
+                case "IIdleAnimation":
+                case "IIdleAnimationInternal":
+                    obj.IdleAnimations.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "AIPackage":
+                case "IAIPackageGetter":
+                case "IAIPackage":
+                case "IAIPackageInternal":
+                    obj.AIPackages.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "CombatStyle":
+                case "ICombatStyleGetter":
+                case "ICombatStyle":
+                case "ICombatStyleInternal":
+                    obj.CombatStyles.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "LoadScreen":
+                case "ILoadScreenGetter":
+                case "ILoadScreen":
+                case "ILoadScreenInternal":
+                    obj.LoadScreens.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "LeveledSpell":
+                case "ILeveledSpellGetter":
+                case "ILeveledSpell":
+                case "ILeveledSpellInternal":
+                    obj.LeveledSpells.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "AnimatedObject":
+                case "IAnimatedObjectGetter":
+                case "IAnimatedObject":
+                case "IAnimatedObjectInternal":
+                    obj.AnimatedObjects.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Water":
+                case "IWaterGetter":
+                case "IWater":
+                case "IWaterInternal":
+                    obj.Waters.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "EffectShader":
+                case "IEffectShaderGetter":
+                case "IEffectShader":
+                case "IEffectShaderInternal":
+                    obj.EffectShaders.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Cell":
+                case "ICellGetter":
+                case "ICell":
+                case "ICellInternal":
+                    obj.Cells.Remove(
+                        type: type,
+                        keys: keys);
+                    obj.Worldspaces.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "PathGrid":
+                case "IPathGridGetter":
+                case "IPathGrid":
+                case "IPathGridInternal":
+                    obj.Cells.Remove(
+                        type: type,
+                        keys: keys);
+                    obj.Worldspaces.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Landscape":
+                case "ILandscapeGetter":
+                case "ILandscape":
+                case "ILandscapeInternal":
+                    obj.Cells.Remove(
+                        type: type,
+                        keys: keys);
+                    obj.Worldspaces.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "PlacedCreature":
+                case "IPlacedCreatureGetter":
+                case "IPlacedCreature":
+                case "IPlacedCreatureInternal":
+                    obj.Cells.Remove(
+                        type: type,
+                        keys: keys);
+                    obj.Worldspaces.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "PlacedNpc":
+                case "IPlacedNpcGetter":
+                case "IPlacedNpc":
+                case "IPlacedNpcInternal":
+                    obj.Cells.Remove(
+                        type: type,
+                        keys: keys);
+                    obj.Worldspaces.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "PlacedObject":
+                case "IPlacedObjectGetter":
+                case "IPlacedObject":
+                case "IPlacedObjectInternal":
+                    obj.Cells.Remove(
+                        type: type,
+                        keys: keys);
+                    obj.Worldspaces.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Road":
+                case "IRoadGetter":
+                case "IRoad":
+                case "IRoadInternal":
+                    obj.Worldspaces.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "DialogItem":
+                case "IDialogItemGetter":
+                case "IDialogItem":
+                case "IDialogItemInternal":
+                    obj.DialogTopics.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "IOwner":
+                case "IOwnerGetter":
+                    Remove(obj, keys, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(INpcGetter), throwIfUnknown: throwIfUnknown);
+                    break;
+                case "IPlaced":
+                case "IPlacedGetter":
+                    obj.Cells.Remove(
+                        type: type,
+                        keys: keys);
+                    obj.Worldspaces.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                default:
+                    if (throwIfUnknown)
+                    {
+                        throw new ArgumentException($"Unknown major record type: {type}");
+                    }
+                    else
+                    {
+                        break;
+                    }
+            }
         }
         
         #endregion
@@ -10427,7 +11137,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
-        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
+        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type, throwIfUnknown);
         public ModKey ModKey { get; }
