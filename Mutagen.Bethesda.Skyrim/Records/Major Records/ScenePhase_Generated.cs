@@ -1402,8 +1402,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!lhs.StartConditions.SequenceEqual(rhs.StartConditions)) return false;
-            if (!lhs.CompletionConditions.SequenceEqual(rhs.CompletionConditions)) return false;
+            if (!lhs.StartConditions.SequenceEqualNullable(rhs.StartConditions)) return false;
+            if (!lhs.CompletionConditions.SequenceEqualNullable(rhs.CompletionConditions)) return false;
             if (!object.Equals(lhs.Unused, rhs.Unused)) return false;
             if (!object.Equals(lhs.Unused2, rhs.Unused2)) return false;
             if (lhs.EditorWidth != rhs.EditorWidth) return false;

@@ -1213,10 +1213,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IASpellGetter)lhs, (IASpellGetter)rhs)) return false;
             if (lhs.ChanceNone != rhs.ChanceNone) return false;
             if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.Entries.SequenceEqual(rhs.Entries)) return false;
+            if (!lhs.Entries.SequenceEqualNullable(rhs.Entries)) return false;
             return true;
         }
         

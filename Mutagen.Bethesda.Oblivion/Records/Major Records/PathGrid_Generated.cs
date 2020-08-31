@@ -1440,11 +1440,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!lhs.PointToPointConnections.SequenceEqual(rhs.PointToPointConnections)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
+            if (!lhs.PointToPointConnections.SequenceEqualNullable(rhs.PointToPointConnections)) return false;
             if (!MemorySliceExt.Equal(lhs.PGAG, rhs.PGAG)) return false;
-            if (!lhs.InterCellConnections.SequenceEqual(rhs.InterCellConnections)) return false;
-            if (!lhs.PointToReferenceMappings.SequenceEqual(rhs.PointToReferenceMappings)) return false;
+            if (!lhs.InterCellConnections.SequenceEqualNullable(rhs.InterCellConnections)) return false;
+            if (!lhs.PointToReferenceMappings.SequenceEqualNullable(rhs.PointToReferenceMappings)) return false;
             return true;
         }
         

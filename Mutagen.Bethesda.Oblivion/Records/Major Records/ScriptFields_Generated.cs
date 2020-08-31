@@ -1330,8 +1330,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(lhs.MetadataSummary, rhs.MetadataSummary)) return false;
             if (!MemorySliceExt.Equal(lhs.CompiledScript, rhs.CompiledScript)) return false;
             if (!string.Equals(lhs.SourceCode, rhs.SourceCode)) return false;
-            if (!lhs.LocalVariables.SequenceEqual(rhs.LocalVariables)) return false;
-            if (!lhs.References.SequenceEqual(rhs.References)) return false;
+            if (!lhs.LocalVariables.SequenceEqualNullable(rhs.LocalVariables)) return false;
+            if (!lhs.References.SequenceEqualNullable(rhs.References)) return false;
             return true;
         }
         

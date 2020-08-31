@@ -1006,8 +1006,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!lhs.Weathers.SequenceEqual(rhs.Weathers)) return false;
+            if (!base.Equals((IRegionDataGetter)lhs, (IRegionDataGetter)rhs)) return false;
+            if (!lhs.Weathers.SequenceEqualNullable(rhs.Weathers)) return false;
             return true;
         }
         

@@ -1815,8 +1815,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!MemorySliceExt.Equal(lhs.Deleted, rhs.Deleted)) return false;
             if (!string.Equals(lhs.Author, rhs.Author)) return false;
             if (!string.Equals(lhs.Description, rhs.Description)) return false;
-            if (!lhs.MasterReferences.SequenceEqual(rhs.MasterReferences)) return false;
-            if (!lhs.OverriddenForms.SequenceEqual(rhs.OverriddenForms)) return false;
+            if (!lhs.MasterReferences.SequenceEqualNullable(rhs.MasterReferences)) return false;
+            if (!lhs.OverriddenForms.SequenceEqualNullable(rhs.OverriddenForms)) return false;
             if (lhs.INTV != rhs.INTV) return false;
             if (lhs.INCC != rhs.INCC) return false;
             return true;

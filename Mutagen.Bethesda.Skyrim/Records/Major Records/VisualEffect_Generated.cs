@@ -1131,7 +1131,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!lhs.EffectArt.Equals(rhs.EffectArt)) return false;
             if (!lhs.Shader.Equals(rhs.Shader)) return false;
             if (lhs.Flags != rhs.Flags) return false;

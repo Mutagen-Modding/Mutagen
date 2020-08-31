@@ -1845,10 +1845,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null || rhs == null) return false;
             if (lhs.NavmeshVersion != rhs.NavmeshVersion) return false;
             if (lhs.Magic != rhs.Magic) return false;
-            if (!lhs.Vertices.SequenceEqual(rhs.Vertices)) return false;
-            if (!lhs.Triangles.SequenceEqual(rhs.Triangles)) return false;
-            if (!lhs.EdgeLinks.SequenceEqual(rhs.EdgeLinks)) return false;
-            if (!lhs.DoorTriangles.SequenceEqual(rhs.DoorTriangles)) return false;
+            if (!lhs.Vertices.SequenceEqualNullable(rhs.Vertices)) return false;
+            if (!lhs.Triangles.SequenceEqualNullable(rhs.Triangles)) return false;
+            if (!lhs.EdgeLinks.SequenceEqualNullable(rhs.EdgeLinks)) return false;
+            if (!lhs.DoorTriangles.SequenceEqualNullable(rhs.DoorTriangles)) return false;
             if (lhs.NavmeshGridDivisor != rhs.NavmeshGridDivisor) return false;
             if (!lhs.MaxDistanceX.EqualsWithin(rhs.MaxDistanceX)) return false;
             if (!lhs.MaxDistanceY.EqualsWithin(rhs.MaxDistanceY)) return false;

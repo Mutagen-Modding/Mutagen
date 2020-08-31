@@ -2880,17 +2880,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.CreateReferenceToObject, rhs.CreateReferenceToObject)) return false;
             if (!object.Equals(lhs.FindMatchingRefNearAlias, rhs.FindMatchingRefNearAlias)) return false;
             if (!object.Equals(lhs.FindMatchingRefFromEvent, rhs.FindMatchingRefFromEvent)) return false;
-            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
-            if (!lhs.Keywords.SequenceEqual(rhs.Keywords)) return false;
-            if (!lhs.Items.SequenceEqual(rhs.Items)) return false;
+            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
+            if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
             if (!lhs.SpectatorOverridePackageList.Equals(rhs.SpectatorOverridePackageList)) return false;
             if (!lhs.ObserveDeadBodyOverridePackageList.Equals(rhs.ObserveDeadBodyOverridePackageList)) return false;
             if (!lhs.GuardWarnOverridePackageList.Equals(rhs.GuardWarnOverridePackageList)) return false;
             if (!lhs.CombatOverridePackageList.Equals(rhs.CombatOverridePackageList)) return false;
             if (!lhs.DisplayName.Equals(rhs.DisplayName)) return false;
-            if (!lhs.Spells.SequenceEqual(rhs.Spells)) return false;
-            if (!lhs.Factions.SequenceEqual(rhs.Factions)) return false;
-            if (!lhs.PackageData.SequenceEqual(rhs.PackageData)) return false;
+            if (!lhs.Spells.SequenceEqualNullable(rhs.Spells)) return false;
+            if (!lhs.Factions.SequenceEqualNullable(rhs.Factions)) return false;
+            if (!lhs.PackageData.SequenceEqualNullable(rhs.PackageData)) return false;
             if (!lhs.VoiceTypes.Equals(rhs.VoiceTypes)) return false;
             return true;
         }

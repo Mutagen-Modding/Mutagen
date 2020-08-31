@@ -1856,19 +1856,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!string.Equals(lhs.Description, rhs.Description)) return false;
             if (!object.Equals(lhs.Icons, rhs.Icons)) return false;
-            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
+            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
             if (lhs.Trait != rhs.Trait) return false;
             if (lhs.Level != rhs.Level) return false;
             if (lhs.NumRanks != rhs.NumRanks) return false;
             if (lhs.Playable != rhs.Playable) return false;
             if (lhs.Hidden != rhs.Hidden) return false;
             if (!lhs.NextPerk.Equals(rhs.NextPerk)) return false;
-            if (!lhs.Effects.SequenceEqual(rhs.Effects)) return false;
+            if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
             if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }

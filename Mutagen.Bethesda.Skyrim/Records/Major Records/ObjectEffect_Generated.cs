@@ -1714,7 +1714,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (lhs.EnchantmentCost != rhs.EnchantmentCost) return false;
@@ -1726,7 +1726,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.ChargeTime.EqualsWithin(rhs.ChargeTime)) return false;
             if (!lhs.BaseEnchantment.Equals(rhs.BaseEnchantment)) return false;
             if (!lhs.WornRestrictions.Equals(rhs.WornRestrictions)) return false;
-            if (!lhs.Effects.SequenceEqual(rhs.Effects)) return false;
+            if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
             if (lhs.ENITDataTypeState != rhs.ENITDataTypeState) return false;
             return true;
         }

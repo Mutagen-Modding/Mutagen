@@ -1986,7 +1986,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.BodyTemplate, rhs.BodyTemplate)) return false;
             if (!lhs.Race.Equals(rhs.Race)) return false;
             if (!Equals(lhs.Priority, rhs.Priority)) return false;
@@ -1999,7 +1999,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!Equals(lhs.FirstPersonModel, rhs.FirstPersonModel)) return false;
             if (!Equals(lhs.SkinTexture, rhs.SkinTexture)) return false;
             if (!Equals(lhs.TextureSwapList, rhs.TextureSwapList)) return false;
-            if (!lhs.AdditionalRaces.SequenceEqual(rhs.AdditionalRaces)) return false;
+            if (!lhs.AdditionalRaces.SequenceEqualNullable(rhs.AdditionalRaces)) return false;
             if (!lhs.FootstepSound.Equals(rhs.FootstepSound)) return false;
             if (!lhs.ArtObject.Equals(rhs.ArtObject)) return false;
             if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;

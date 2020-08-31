@@ -1014,7 +1014,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISoundDataInternalGetter)lhs, (ISoundDataInternalGetter)rhs)) return false;
             if (!lhs.StaticAttenuation.EqualsWithin(rhs.StaticAttenuation)) return false;
             if (!lhs.StopTime.EqualsWithin(rhs.StopTime)) return false;
             if (!lhs.StartTime.EqualsWithin(rhs.StartTime)) return false;

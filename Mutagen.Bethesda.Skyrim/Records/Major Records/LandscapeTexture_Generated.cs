@@ -1442,13 +1442,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!lhs.TextureSet.Equals(rhs.TextureSet)) return false;
             if (!lhs.MaterialType.Equals(rhs.MaterialType)) return false;
             if (lhs.HavokFriction != rhs.HavokFriction) return false;
             if (lhs.HavokRestitution != rhs.HavokRestitution) return false;
             if (lhs.TextureSpecularExponent != rhs.TextureSpecularExponent) return false;
-            if (!lhs.Grasses.SequenceEqual(rhs.Grasses)) return false;
+            if (!lhs.Grasses.SequenceEqualNullable(rhs.Grasses)) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (lhs.HNAMDataTypeState != rhs.HNAMDataTypeState) return false;
             return true;

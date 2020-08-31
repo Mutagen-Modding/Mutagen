@@ -1049,7 +1049,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (lhs.Stage != rhs.Stage) return false;
-            if (!lhs.LogEntries.SequenceEqual(rhs.LogEntries)) return false;
+            if (!lhs.LogEntries.SequenceEqualNullable(rhs.LogEntries)) return false;
             return true;
         }
         

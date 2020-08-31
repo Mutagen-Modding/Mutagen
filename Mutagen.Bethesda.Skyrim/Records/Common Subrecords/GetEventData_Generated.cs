@@ -1190,7 +1190,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IConditionDataGetter)lhs, (IConditionDataGetter)rhs)) return false;
             if (lhs.Unknown2 != rhs.Unknown2) return false;
             if (lhs.EventFunction != rhs.EventFunction) return false;
             if (lhs.EventMember != rhs.EventMember) return false;

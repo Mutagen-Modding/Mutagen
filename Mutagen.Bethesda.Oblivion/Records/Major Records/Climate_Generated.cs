@@ -1321,8 +1321,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!lhs.Weathers.SequenceEqual(rhs.Weathers)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
+            if (!lhs.Weathers.SequenceEqualNullable(rhs.Weathers)) return false;
             if (!string.Equals(lhs.SunTexture, rhs.SunTexture)) return false;
             if (!string.Equals(lhs.SunGlareTexture, rhs.SunGlareTexture)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;

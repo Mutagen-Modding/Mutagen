@@ -1370,13 +1370,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!string.Equals(lhs.Description, rhs.Description)) return false;
             if (!string.Equals(lhs.Abbreviation, rhs.Abbreviation)) return false;
             if (!MemorySliceExt.Equal(lhs.CNAM, rhs.CNAM)) return false;
             if (!object.Equals(lhs.Skill, rhs.Skill)) return false;
-            if (!lhs.PerkTree.SequenceEqual(rhs.PerkTree)) return false;
+            if (!lhs.PerkTree.SequenceEqualNullable(rhs.PerkTree)) return false;
             return true;
         }
         

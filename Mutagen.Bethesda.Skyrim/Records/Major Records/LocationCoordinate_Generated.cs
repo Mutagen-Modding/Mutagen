@@ -1044,7 +1044,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!lhs.Location.Equals(rhs.Location)) return false;
-            if (!lhs.Coordinates.SequenceEqual(rhs.Coordinates)) return false;
+            if (!lhs.Coordinates.SequenceEqualNullable(rhs.Coordinates)) return false;
             return true;
         }
         

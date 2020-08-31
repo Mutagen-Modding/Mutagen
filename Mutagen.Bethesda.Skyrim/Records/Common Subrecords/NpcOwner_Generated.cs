@@ -932,7 +932,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IOwnerTargetGetter)lhs, (IOwnerTargetGetter)rhs)) return false;
             if (!lhs.Npc.Equals(rhs.Npc)) return false;
             if (lhs.RawVariableData != rhs.RawVariableData) return false;
             return true;

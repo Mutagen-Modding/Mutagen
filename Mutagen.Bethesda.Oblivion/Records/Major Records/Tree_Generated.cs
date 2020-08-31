@@ -1328,10 +1328,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
-            if (!lhs.SpeedTreeSeeds.SequenceEqual(rhs.SpeedTreeSeeds)) return false;
+            if (!lhs.SpeedTreeSeeds.SequenceEqualNullable(rhs.SpeedTreeSeeds)) return false;
             if (!object.Equals(lhs.Data, rhs.Data)) return false;
             if (!object.Equals(lhs.BillboardDimensions, rhs.BillboardDimensions)) return false;
             return true;

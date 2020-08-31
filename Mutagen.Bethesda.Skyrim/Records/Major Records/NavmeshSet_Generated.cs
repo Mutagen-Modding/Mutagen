@@ -983,7 +983,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Navmeshes.SequenceEqual(rhs.Navmeshes)) return false;
+            if (!lhs.Navmeshes.SequenceEqualNullable(rhs.Navmeshes)) return false;
             return true;
         }
         

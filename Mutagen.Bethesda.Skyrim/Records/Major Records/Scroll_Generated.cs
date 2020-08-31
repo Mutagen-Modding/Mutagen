@@ -2435,10 +2435,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!lhs.Keywords.SequenceEqual(rhs.Keywords)) return false;
+            if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             if (!lhs.MenuDisplayObject.Equals(rhs.MenuDisplayObject)) return false;
             if (!lhs.EquipmentType.Equals(rhs.EquipmentType)) return false;
             if (!string.Equals(lhs.Description, rhs.Description)) return false;
@@ -2457,7 +2457,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.CastDuration.EqualsWithin(rhs.CastDuration)) return false;
             if (!lhs.Range.EqualsWithin(rhs.Range)) return false;
             if (!lhs.HalfCostPerk.Equals(rhs.HalfCostPerk)) return false;
-            if (!lhs.Effects.SequenceEqual(rhs.Effects)) return false;
+            if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
             if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             if (lhs.SPITDataTypeState != rhs.SPITDataTypeState) return false;
             return true;

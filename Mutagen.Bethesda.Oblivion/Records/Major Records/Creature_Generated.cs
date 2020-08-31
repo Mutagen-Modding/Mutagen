@@ -2994,20 +2994,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IANpcGetter)lhs, (IANpcGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (!lhs.Items.SequenceEqual(rhs.Items)) return false;
-            if (!lhs.Spells.SequenceEqual(rhs.Spells)) return false;
-            if (!lhs.Models.SequenceEqual(rhs.Models)) return false;
+            if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
+            if (!lhs.Spells.SequenceEqualNullable(rhs.Spells)) return false;
+            if (!lhs.Models.SequenceEqualNullable(rhs.Models)) return false;
             if (!MemorySliceExt.Equal(lhs.NIFT, rhs.NIFT)) return false;
             if (!object.Equals(lhs.Configuration, rhs.Configuration)) return false;
-            if (!lhs.Factions.SequenceEqual(rhs.Factions)) return false;
+            if (!lhs.Factions.SequenceEqualNullable(rhs.Factions)) return false;
             if (!lhs.DeathItem.Equals(rhs.DeathItem)) return false;
             if (!lhs.Script.Equals(rhs.Script)) return false;
             if (!object.Equals(lhs.AIData, rhs.AIData)) return false;
-            if (!lhs.AIPackages.SequenceEqual(rhs.AIPackages)) return false;
-            if (!lhs.Animations.SequenceEqual(rhs.Animations)) return false;
+            if (!lhs.AIPackages.SequenceEqualNullable(rhs.AIPackages)) return false;
+            if (!lhs.Animations.SequenceEqualNullable(rhs.Animations)) return false;
             if (!object.Equals(lhs.Data, rhs.Data)) return false;
             if (lhs.AttackReach != rhs.AttackReach) return false;
             if (!lhs.CombatStyle.Equals(rhs.CombatStyle)) return false;
@@ -3017,7 +3017,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!string.Equals(lhs.BloodSpray, rhs.BloodSpray)) return false;
             if (!string.Equals(lhs.BloodDecal, rhs.BloodDecal)) return false;
             if (!lhs.InheritsSoundFrom.Equals(rhs.InheritsSoundFrom)) return false;
-            if (!lhs.Sounds.SequenceEqual(rhs.Sounds)) return false;
+            if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds)) return false;
             return true;
         }
         

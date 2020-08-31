@@ -1921,15 +1921,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.Data, rhs.Data)) return false;
             if (!lhs.Quest.Equals(rhs.Quest)) return false;
             if (!lhs.PreviousTopic.Equals(rhs.PreviousTopic)) return false;
-            if (!lhs.Topics.SequenceEqual(rhs.Topics)) return false;
-            if (!lhs.Responses.SequenceEqual(rhs.Responses)) return false;
-            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
-            if (!lhs.Choices.SequenceEqual(rhs.Choices)) return false;
-            if (!lhs.LinkFrom.SequenceEqual(rhs.LinkFrom)) return false;
+            if (!lhs.Topics.SequenceEqualNullable(rhs.Topics)) return false;
+            if (!lhs.Responses.SequenceEqualNullable(rhs.Responses)) return false;
+            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            if (!lhs.Choices.SequenceEqualNullable(rhs.Choices)) return false;
+            if (!lhs.LinkFrom.SequenceEqualNullable(rhs.LinkFrom)) return false;
             if (!object.Equals(lhs.Script, rhs.Script)) return false;
             return true;
         }

@@ -1579,7 +1579,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs.BlockNumberX != rhs.BlockNumberX) return false;
             if (lhs.GroupType != rhs.GroupType) return false;
             if (lhs.LastModified != rhs.LastModified) return false;
-            if (!lhs.Items.SequenceEqual(rhs.Items)) return false;
+            if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
             return true;
         }
         

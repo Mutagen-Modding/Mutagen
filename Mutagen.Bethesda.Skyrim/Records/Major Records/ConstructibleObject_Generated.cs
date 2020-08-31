@@ -1390,9 +1390,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!lhs.Items.SequenceEqual(rhs.Items)) return false;
-            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
+            if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
+            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
             if (!lhs.CreatedObject.Equals(rhs.CreatedObject)) return false;
             if (!lhs.WorkbenchKeyword.Equals(rhs.WorkbenchKeyword)) return false;
             if (lhs.CreatedObjectCount != rhs.CreatedObjectCount) return false;

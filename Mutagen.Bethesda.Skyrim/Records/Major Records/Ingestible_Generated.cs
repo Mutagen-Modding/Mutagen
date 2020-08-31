@@ -2156,10 +2156,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!lhs.Keywords.SequenceEqual(rhs.Keywords)) return false;
+            if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             if (!string.Equals(lhs.Description, rhs.Description)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
@@ -2173,7 +2173,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.Addiction.Equals(rhs.Addiction)) return false;
             if (!lhs.AddictionChance.EqualsWithin(rhs.AddictionChance)) return false;
             if (!lhs.ConsumeSound.Equals(rhs.ConsumeSound)) return false;
-            if (!lhs.Effects.SequenceEqual(rhs.Effects)) return false;
+            if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
             if (lhs.ENITDataTypeState != rhs.ENITDataTypeState) return false;
             return true;
         }

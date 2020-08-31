@@ -1789,17 +1789,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!string.Equals(lhs.Description, rhs.Description)) return false;
             if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
             if (lhs.Unknown != rhs.Unknown) return false;
             if (lhs.Teaches != rhs.Teaches) return false;
             if (lhs.MaxTrainingLevel != rhs.MaxTrainingLevel) return false;
-            if (!lhs.SkillWeights.SequenceEqual(rhs.SkillWeights)) return false;
+            if (!lhs.SkillWeights.SequenceEqualNullable(rhs.SkillWeights)) return false;
             if (!lhs.BleedoutDefault.EqualsWithin(rhs.BleedoutDefault)) return false;
             if (lhs.VoicePoints != rhs.VoicePoints) return false;
-            if (!lhs.StatWeights.SequenceEqual(rhs.StatWeights)) return false;
+            if (!lhs.StatWeights.SequenceEqualNullable(rhs.StatWeights)) return false;
             if (lhs.Unknown2 != rhs.Unknown2) return false;
             if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;

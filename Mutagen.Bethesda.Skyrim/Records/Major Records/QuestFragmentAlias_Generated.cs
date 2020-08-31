@@ -1161,7 +1161,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.Property, rhs.Property)) return false;
             if (lhs.Version != rhs.Version) return false;
             if (lhs.ObjectFormat != rhs.ObjectFormat) return false;
-            if (!lhs.Scripts.SequenceEqual(rhs.Scripts)) return false;
+            if (!lhs.Scripts.SequenceEqualNullable(rhs.Scripts)) return false;
             return true;
         }
         

@@ -861,7 +861,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IBookTeachTargetGetter)lhs, (IBookTeachTargetGetter)rhs)) return false;
             if (lhs.RawContent != rhs.RawContent) return false;
             return true;
         }

@@ -1247,11 +1247,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
             if (!object.Equals(lhs.Havok, rhs.Havok)) return false;
             if (lhs.TextureSpecularExponent != rhs.TextureSpecularExponent) return false;
-            if (!lhs.PotentialGrass.SequenceEqual(rhs.PotentialGrass)) return false;
+            if (!lhs.PotentialGrass.SequenceEqualNullable(rhs.PotentialGrass)) return false;
             return true;
         }
         

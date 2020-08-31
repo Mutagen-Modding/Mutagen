@@ -1922,19 +1922,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
-            if (!lhs.Keywords.SequenceEqual(rhs.Keywords)) return false;
+            if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             if (!MemorySliceExt.Equal(lhs.PNAM, rhs.PNAM)) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (!lhs.InteractionKeyword.Equals(rhs.InteractionKeyword)) return false;
             if (!object.Equals(lhs.WorkbenchData, rhs.WorkbenchData)) return false;
             if (!lhs.AssociatedSpell.Equals(rhs.AssociatedSpell)) return false;
-            if (!lhs.Markers.SequenceEqual(rhs.Markers)) return false;
+            if (!lhs.Markers.SequenceEqualNullable(rhs.Markers)) return false;
             if (!string.Equals(lhs.ModelFilename, rhs.ModelFilename)) return false;
             return true;
         }

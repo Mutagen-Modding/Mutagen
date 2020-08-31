@@ -1647,11 +1647,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
+            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
             if (!string.Equals(lhs.Filename, rhs.Filename)) return false;
             if (!string.Equals(lhs.AnimationEvent, rhs.AnimationEvent)) return false;
-            if (!lhs.RelatedIdles.SequenceEqual(rhs.RelatedIdles)) return false;
+            if (!lhs.RelatedIdles.SequenceEqualNullable(rhs.RelatedIdles)) return false;
             if (lhs.LoopingSecondsMin != rhs.LoopingSecondsMin) return false;
             if (lhs.LoopingSecondsMax != rhs.LoopingSecondsMax) return false;
             if (lhs.Flags != rhs.Flags) return false;

@@ -877,7 +877,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IANpcSoundDefinitionGetter)lhs, (IANpcSoundDefinitionGetter)rhs)) return false;
             if (!lhs.InheritsSoundsFrom.Equals(rhs.InheritsSoundsFrom)) return false;
             return true;
         }

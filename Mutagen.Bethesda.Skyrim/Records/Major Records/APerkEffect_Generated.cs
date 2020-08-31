@@ -1126,7 +1126,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null || rhs == null) return false;
             if (lhs.Rank != rhs.Rank) return false;
             if (lhs.Priority != rhs.Priority) return false;
-            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
+            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
             if (lhs.PRKEDataTypeState != rhs.PRKEDataTypeState) return false;
             return true;
         }

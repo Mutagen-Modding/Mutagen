@@ -1552,10 +1552,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.Icons, rhs.Icons)) return false;
             if (!string.Equals(lhs.Description, rhs.Description)) return false;
-            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
+            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
             if (!lhs.LoadingScreenNif.Equals(rhs.LoadingScreenNif)) return false;
             if (!lhs.InitialScale.EqualsWithin(rhs.InitialScale)) return false;
             if (!lhs.InitialRotation.Equals(rhs.InitialRotation)) return false;

@@ -1260,9 +1260,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (lhs.NavMeshVersion != rhs.NavMeshVersion) return false;
-            if (!lhs.MapInfos.SequenceEqual(rhs.MapInfos)) return false;
+            if (!lhs.MapInfos.SequenceEqualNullable(rhs.MapInfos)) return false;
             if (!object.Equals(lhs.PreferredPathing, rhs.PreferredPathing)) return false;
             if (!MemorySliceExt.Equal(lhs.NVSI, rhs.NVSI)) return false;
             return true;

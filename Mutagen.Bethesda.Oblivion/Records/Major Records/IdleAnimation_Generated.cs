@@ -1348,11 +1348,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
+            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
             if (lhs.AnimationGroupSection != rhs.AnimationGroupSection) return false;
-            if (!lhs.RelatedIdleAnimations.SequenceEqual(rhs.RelatedIdleAnimations)) return false;
+            if (!lhs.RelatedIdleAnimations.SequenceEqualNullable(rhs.RelatedIdleAnimations)) return false;
             return true;
         }
         

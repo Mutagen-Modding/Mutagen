@@ -1151,8 +1151,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.NavmeshSets.SequenceEqual(rhs.NavmeshSets)) return false;
-            if (!lhs.NavmeshTree.SequenceEqual(rhs.NavmeshTree)) return false;
+            if (!lhs.NavmeshSets.SequenceEqualNullable(rhs.NavmeshSets)) return false;
+            if (!lhs.NavmeshTree.SequenceEqualNullable(rhs.NavmeshTree)) return false;
             return true;
         }
         

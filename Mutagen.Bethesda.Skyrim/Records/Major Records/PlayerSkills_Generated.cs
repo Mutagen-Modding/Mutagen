@@ -1553,8 +1553,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.SkillValues.SequenceEqual(rhs.SkillValues)) return false;
-            if (!lhs.SkillOffsets.SequenceEqual(rhs.SkillOffsets)) return false;
+            if (!lhs.SkillValues.SequenceEqualNullable(rhs.SkillValues)) return false;
+            if (!lhs.SkillOffsets.SequenceEqualNullable(rhs.SkillOffsets)) return false;
             if (lhs.Health != rhs.Health) return false;
             if (lhs.Magicka != rhs.Magicka) return false;
             if (lhs.Stamina != rhs.Stamina) return false;

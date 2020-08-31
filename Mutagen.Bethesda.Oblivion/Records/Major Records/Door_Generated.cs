@@ -1461,7 +1461,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!lhs.Script.Equals(rhs.Script)) return false;
@@ -1469,7 +1469,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!lhs.CloseSound.Equals(rhs.CloseSound)) return false;
             if (!lhs.LoopSound.Equals(rhs.LoopSound)) return false;
             if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.RandomTeleportDestinations.SequenceEqual(rhs.RandomTeleportDestinations)) return false;
+            if (!lhs.RandomTeleportDestinations.SequenceEqualNullable(rhs.RandomTeleportDestinations)) return false;
             return true;
         }
         

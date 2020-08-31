@@ -1390,12 +1390,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!lhs.Relations.SequenceEqual(rhs.Relations)) return false;
+            if (!lhs.Relations.SequenceEqualNullable(rhs.Relations)) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (!lhs.CrimeGoldMultiplier.EqualsWithin(rhs.CrimeGoldMultiplier)) return false;
-            if (!lhs.Ranks.SequenceEqual(rhs.Ranks)) return false;
+            if (!lhs.Ranks.SequenceEqualNullable(rhs.Ranks)) return false;
             return true;
         }
         

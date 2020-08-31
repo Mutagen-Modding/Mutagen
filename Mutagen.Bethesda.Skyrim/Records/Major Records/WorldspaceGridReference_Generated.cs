@@ -1051,7 +1051,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!lhs.GridPosition.Equals(rhs.GridPosition)) return false;
-            if (!lhs.References.SequenceEqual(rhs.References)) return false;
+            if (!lhs.References.SequenceEqualNullable(rhs.References)) return false;
             return true;
         }
         

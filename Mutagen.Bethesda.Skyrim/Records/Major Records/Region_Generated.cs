@@ -1624,10 +1624,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!lhs.MapColor.ColorOnlyEquals(rhs.MapColor)) return false;
             if (!lhs.Worldspace.Equals(rhs.Worldspace)) return false;
-            if (!lhs.RegionAreas.SequenceEqual(rhs.RegionAreas)) return false;
+            if (!lhs.RegionAreas.SequenceEqualNullable(rhs.RegionAreas)) return false;
             if (!object.Equals(lhs.Objects, rhs.Objects)) return false;
             if (!object.Equals(lhs.Weather, rhs.Weather)) return false;
             if (!object.Equals(lhs.Map, rhs.Map)) return false;

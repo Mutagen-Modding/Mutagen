@@ -988,7 +988,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IAPerkEntryPointEffectGetter)lhs, (IAPerkEntryPointEffectGetter)rhs)) return false;
             if (lhs.Modification != rhs.Modification) return false;
             if (!lhs.Value.EqualsWithin(rhs.Value)) return false;
             return true;

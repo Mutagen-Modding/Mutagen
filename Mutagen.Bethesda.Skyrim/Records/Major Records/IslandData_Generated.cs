@@ -1235,8 +1235,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null || rhs == null) return false;
             if (!lhs.Min.Equals(rhs.Min)) return false;
             if (!lhs.Max.Equals(rhs.Max)) return false;
-            if (!lhs.Triangles.SequenceEqual(rhs.Triangles)) return false;
-            if (!lhs.Vertices.SequenceEqual(rhs.Vertices)) return false;
+            if (!lhs.Triangles.SequenceEqualNullable(rhs.Triangles)) return false;
+            if (!lhs.Vertices.SequenceEqualNullable(rhs.Vertices)) return false;
             return true;
         }
         

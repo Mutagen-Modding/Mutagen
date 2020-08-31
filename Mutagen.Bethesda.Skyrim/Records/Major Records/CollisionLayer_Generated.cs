@@ -1329,13 +1329,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Description, rhs.Description)) return false;
             if (lhs.Index != rhs.Index) return false;
             if (!lhs.DebugColor.ColorOnlyEquals(rhs.DebugColor)) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!lhs.CollidesWith.SequenceEqual(rhs.CollidesWith)) return false;
+            if (!lhs.CollidesWith.SequenceEqualNullable(rhs.CollidesWith)) return false;
             return true;
         }
         

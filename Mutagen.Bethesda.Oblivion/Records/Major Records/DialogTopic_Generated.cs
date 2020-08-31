@@ -1703,12 +1703,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!lhs.Quests.SequenceEqual(rhs.Quests)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
+            if (!lhs.Quests.SequenceEqualNullable(rhs.Quests)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (lhs.DialogType != rhs.DialogType) return false;
             if (lhs.Timestamp != rhs.Timestamp) return false;
-            if (!lhs.Items.SequenceEqual(rhs.Items)) return false;
+            if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
             return true;
         }
         

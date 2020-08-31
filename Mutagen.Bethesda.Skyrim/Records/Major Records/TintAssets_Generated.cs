@@ -1231,7 +1231,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!string.Equals(lhs.FileName, rhs.FileName)) return false;
             if (lhs.MaskType != rhs.MaskType) return false;
             if (!lhs.PresetDefault.Equals(rhs.PresetDefault)) return false;
-            if (!lhs.Presets.SequenceEqual(rhs.Presets)) return false;
+            if (!lhs.Presets.SequenceEqualNullable(rhs.Presets)) return false;
             return true;
         }
         

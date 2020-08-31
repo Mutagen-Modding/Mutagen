@@ -2772,7 +2772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
             if (!lhs.Base.Equals(rhs.Base)) return false;
             if (!lhs.EncounterZone.Equals(rhs.EncounterZone)) return false;
@@ -2784,13 +2784,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs.Count != rhs.Count) return false;
             if (!lhs.Radius.EqualsWithin(rhs.Radius)) return false;
             if (!lhs.Health.EqualsWithin(rhs.Health)) return false;
-            if (!lhs.LinkedReferences.SequenceEqual(rhs.LinkedReferences)) return false;
+            if (!lhs.LinkedReferences.SequenceEqualNullable(rhs.LinkedReferences)) return false;
             if (!object.Equals(lhs.ActivateParents, rhs.ActivateParents)) return false;
             if (!object.Equals(lhs.LinkedReferenceColor, rhs.LinkedReferenceColor)) return false;
             if (!lhs.PersistentLocation.Equals(rhs.PersistentLocation)) return false;
             if (!lhs.LocationReference.Equals(rhs.LocationReference)) return false;
             if (lhs.IgnoredBySandbox != rhs.IgnoredBySandbox) return false;
-            if (!lhs.LocationRefTypes.SequenceEqual(rhs.LocationRefTypes)) return false;
+            if (!lhs.LocationRefTypes.SequenceEqualNullable(rhs.LocationRefTypes)) return false;
             if (!lhs.HeadTrackingWeight.EqualsWithin(rhs.HeadTrackingWeight)) return false;
             if (!lhs.Horse.Equals(rhs.Horse)) return false;
             if (!lhs.FavorCost.EqualsWithin(rhs.FavorCost)) return false;

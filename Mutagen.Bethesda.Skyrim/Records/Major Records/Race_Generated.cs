@@ -6088,13 +6088,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!string.Equals(lhs.Description, rhs.Description)) return false;
-            if (!lhs.ActorEffect.SequenceEqual(rhs.ActorEffect)) return false;
+            if (!lhs.ActorEffect.SequenceEqualNullable(rhs.ActorEffect)) return false;
             if (!lhs.Skin.Equals(rhs.Skin)) return false;
             if (!object.Equals(lhs.BodyTemplate, rhs.BodyTemplate)) return false;
-            if (!lhs.Keywords.SequenceEqual(rhs.Keywords)) return false;
+            if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             if (!object.Equals(lhs.SkillBoost0, rhs.SkillBoost0)) return false;
             if (!object.Equals(lhs.SkillBoost1, rhs.SkillBoost1)) return false;
             if (!object.Equals(lhs.SkillBoost2, rhs.SkillBoost2)) return false;
@@ -6106,7 +6106,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!Equals(lhs.Height, rhs.Height)) return false;
             if (!Equals(lhs.Weight, rhs.Weight)) return false;
             if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.Starting.SequenceEqual(rhs.Starting)) return false;
+            if (!lhs.Starting.SequenceEqualNullable(rhs.Starting)) return false;
             if (!lhs.BaseCarryWeight.EqualsWithin(rhs.BaseCarryWeight)) return false;
             if (!lhs.BaseMass.EqualsWithin(rhs.BaseMass)) return false;
             if (!lhs.AccelerationRate.EqualsWithin(rhs.AccelerationRate)) return false;
@@ -6116,7 +6116,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs.HairBipedObject != rhs.HairBipedObject) return false;
             if (!lhs.InjuredHealthPercent.EqualsWithin(rhs.InjuredHealthPercent)) return false;
             if (lhs.ShieldBipedObject != rhs.ShieldBipedObject) return false;
-            if (!lhs.Regen.SequenceEqual(rhs.Regen)) return false;
+            if (!lhs.Regen.SequenceEqualNullable(rhs.Regen)) return false;
             if (!lhs.UnarmedDamage.EqualsWithin(rhs.UnarmedDamage)) return false;
             if (!lhs.UnarmedReach.EqualsWithin(rhs.UnarmedReach)) return false;
             if (lhs.BodyBipedObject != rhs.BodyBipedObject) return false;
@@ -6126,7 +6126,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.AngularTolerance.EqualsWithin(rhs.AngularTolerance)) return false;
             if (!object.Equals(lhs.MountData, rhs.MountData)) return false;
             if (!Equals(lhs.SkeletalModel, rhs.SkeletalModel)) return false;
-            if (!lhs.MovementTypeNames.SequenceEqual(rhs.MovementTypeNames)) return false;
+            if (!lhs.MovementTypeNames.SequenceEqualNullable(rhs.MovementTypeNames)) return false;
             if (!Equals(lhs.Voices, rhs.Voices)) return false;
             if (!Equals(lhs.DecapitateArmors, rhs.DecapitateArmors)) return false;
             if (!Equals(lhs.DefaultHairColors, rhs.DefaultHairColors)) return false;
@@ -6134,10 +6134,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.FacegenMainClamp.EqualsWithin(rhs.FacegenMainClamp)) return false;
             if (!lhs.FacegenFaceClamp.EqualsWithin(rhs.FacegenFaceClamp)) return false;
             if (!lhs.AttackRace.Equals(rhs.AttackRace)) return false;
-            if (!lhs.Attacks.SequenceEqual(rhs.Attacks)) return false;
+            if (!lhs.Attacks.SequenceEqualNullable(rhs.Attacks)) return false;
             if (!Equals(lhs.BodyData, rhs.BodyData)) return false;
-            if (!lhs.Hairs.SequenceEqual(rhs.Hairs)) return false;
-            if (!lhs.Eyes.SequenceEqual(rhs.Eyes)) return false;
+            if (!lhs.Hairs.SequenceEqualNullable(rhs.Hairs)) return false;
+            if (!lhs.Eyes.SequenceEqualNullable(rhs.Eyes)) return false;
             if (!lhs.BodyPartData.Equals(rhs.BodyPartData)) return false;
             if (!Equals(lhs.BehaviorGraph, rhs.BehaviorGraph)) return false;
             if (!lhs.MaterialType.Equals(rhs.MaterialType)) return false;
@@ -6145,10 +6145,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.DecapitationFX.Equals(rhs.DecapitationFX)) return false;
             if (!lhs.OpenLootSound.Equals(rhs.OpenLootSound)) return false;
             if (!lhs.CloseLootSound.Equals(rhs.CloseLootSound)) return false;
-            if (!lhs.BipedObjectNames.SequenceEqual(rhs.BipedObjectNames)) return false;
-            if (!lhs.MovementTypes.SequenceEqual(rhs.MovementTypes)) return false;
+            if (!lhs.BipedObjectNames.SequenceEqualNullable(rhs.BipedObjectNames)) return false;
+            if (!lhs.MovementTypes.SequenceEqualNullable(rhs.MovementTypes)) return false;
             if (lhs.EquipmentFlags != rhs.EquipmentFlags) return false;
-            if (!lhs.EquipmentSlots.SequenceEqual(rhs.EquipmentSlots)) return false;
+            if (!lhs.EquipmentSlots.SequenceEqualNullable(rhs.EquipmentSlots)) return false;
             if (!lhs.UnarmedEquipSlot.Equals(rhs.UnarmedEquipSlot)) return false;
             if (!object.Equals(lhs.FaceFxPhonemes, rhs.FaceFxPhonemes)) return false;
             if (!lhs.BaseMovementDefaultWalk.Equals(rhs.BaseMovementDefaultWalk)) return false;

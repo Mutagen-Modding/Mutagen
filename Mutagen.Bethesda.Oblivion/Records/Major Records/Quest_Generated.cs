@@ -1612,14 +1612,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
             if (!lhs.Script.Equals(rhs.Script)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
             if (!object.Equals(lhs.Data, rhs.Data)) return false;
-            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
-            if (!lhs.Stages.SequenceEqual(rhs.Stages)) return false;
-            if (!lhs.Targets.SequenceEqual(rhs.Targets)) return false;
+            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            if (!lhs.Stages.SequenceEqualNullable(rhs.Stages)) return false;
+            if (!lhs.Targets.SequenceEqualNullable(rhs.Targets)) return false;
             return true;
         }
         

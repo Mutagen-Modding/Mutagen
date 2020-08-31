@@ -1225,7 +1225,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.Idle.Equals(rhs.Idle)) return false;
             if (!MemorySliceExt.Equal(lhs.SCHR, rhs.SCHR)) return false;
             if (!MemorySliceExt.Equal(lhs.SCTX, rhs.SCTX)) return false;
-            if (!lhs.Topics.SequenceEqual(rhs.Topics)) return false;
+            if (!lhs.Topics.SequenceEqualNullable(rhs.Topics)) return false;
             return true;
         }
         

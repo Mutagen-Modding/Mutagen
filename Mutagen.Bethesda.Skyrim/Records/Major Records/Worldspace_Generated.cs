@@ -3434,8 +3434,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!lhs.LargeReferences.SequenceEqual(rhs.LargeReferences)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
+            if (!lhs.LargeReferences.SequenceEqualNullable(rhs.LargeReferences)) return false;
             if (!object.Equals(lhs.MaxHeight, rhs.MaxHeight)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!lhs.FixedDimensionsCenterCell.Equals(rhs.FixedDimensionsCenterCell)) return false;
@@ -3465,7 +3465,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.TopCell, rhs.TopCell)) return false;
             if (lhs.SubCellsTimestamp != rhs.SubCellsTimestamp) return false;
             if (lhs.SubCellsUnknown != rhs.SubCellsUnknown) return false;
-            if (!lhs.SubCells.SequenceEqual(rhs.SubCells)) return false;
+            if (!lhs.SubCells.SequenceEqualNullable(rhs.SubCells)) return false;
             return true;
         }
         

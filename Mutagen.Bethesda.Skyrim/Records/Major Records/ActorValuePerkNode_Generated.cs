@@ -1436,7 +1436,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.HorizontalPosition.EqualsWithin(rhs.HorizontalPosition)) return false;
             if (!lhs.VerticalPosition.EqualsWithin(rhs.VerticalPosition)) return false;
             if (!lhs.AssociatedSkill.Equals(rhs.AssociatedSkill)) return false;
-            if (!lhs.ConnectionLineToIndices.SequenceEqual(rhs.ConnectionLineToIndices)) return false;
+            if (!lhs.ConnectionLineToIndices.SequenceEqualNullable(rhs.ConnectionLineToIndices)) return false;
             if (lhs.Index != rhs.Index) return false;
             return true;
         }

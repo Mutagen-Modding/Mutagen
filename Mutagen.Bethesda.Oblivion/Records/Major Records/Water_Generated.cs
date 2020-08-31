@@ -1326,7 +1326,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Texture, rhs.Texture)) return false;
             if (lhs.Opacity != rhs.Opacity) return false;
             if (lhs.Flags != rhs.Flags) return false;

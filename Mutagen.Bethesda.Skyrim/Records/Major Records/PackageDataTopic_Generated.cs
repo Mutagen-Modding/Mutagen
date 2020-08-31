@@ -1067,8 +1067,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!lhs.Topics.SequenceEqual(rhs.Topics)) return false;
+            if (!base.Equals((IAPackageDataGetter)lhs, (IAPackageDataGetter)rhs)) return false;
+            if (!lhs.Topics.SequenceEqualNullable(rhs.Topics)) return false;
             if (!MemorySliceExt.Equal(lhs.TPIC, rhs.TPIC)) return false;
             return true;
         }

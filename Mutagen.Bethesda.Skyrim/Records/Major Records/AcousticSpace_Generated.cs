@@ -1141,7 +1141,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
             if (!lhs.AmbientSound.Equals(rhs.AmbientSound)) return false;
             if (!lhs.UseSoundFromRegion.Equals(rhs.UseSoundFromRegion)) return false;

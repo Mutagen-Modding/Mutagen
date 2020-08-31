@@ -1617,15 +1617,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.TextureLowerLayer, rhs.TextureLowerLayer)) return false;
             if (!string.Equals(lhs.TextureUpperLayer, rhs.TextureUpperLayer)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (!lhs.Colors.SequenceEqual(rhs.Colors)) return false;
+            if (!lhs.Colors.SequenceEqualNullable(rhs.Colors)) return false;
             if (!object.Equals(lhs.FogDistance, rhs.FogDistance)) return false;
             if (!object.Equals(lhs.HDRData, rhs.HDRData)) return false;
             if (!object.Equals(lhs.Data, rhs.Data)) return false;
-            if (!lhs.Sounds.SequenceEqual(rhs.Sounds)) return false;
+            if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds)) return false;
             return true;
         }
         

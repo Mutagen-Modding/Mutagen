@@ -1089,7 +1089,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs.Type != rhs.Type) return false;
             if (lhs.LastModified != rhs.LastModified) return false;
             if (lhs.Unknown != rhs.Unknown) return false;
-            if (!lhs.RecordCache.SequenceEqual(rhs.RecordCache)) return false;
+            if (!lhs.RecordCache.SequenceEqualNullable(rhs.RecordCache)) return false;
             return true;
         }
         

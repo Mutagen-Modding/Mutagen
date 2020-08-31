@@ -6,8 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Loqui" Version="1.2.2" />
-    <PackageReference Include="Loqui.Generation" Version="1.4.2" />
+    <PackageReference Include="Loqui" Version="1.5.0" />
+    <PackageReference Include="Loqui.Generation" Version="1.5.0" />
     <PackageReference Include="Noggog.CSharpExt" Version="1.1.4-dev" />
     <PackageReference Include="System.Linq.Async" Version="4.1.1" />
   </ItemGroup>

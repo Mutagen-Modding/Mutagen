@@ -1664,7 +1664,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!lhs.LeftWalk.EqualsWithin(rhs.LeftWalk)) return false;
             if (!lhs.LeftRun.EqualsWithin(rhs.LeftRun)) return false;

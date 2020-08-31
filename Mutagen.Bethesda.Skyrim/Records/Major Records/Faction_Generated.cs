@@ -2134,9 +2134,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!lhs.Relations.SequenceEqual(rhs.Relations)) return false;
+            if (!lhs.Relations.SequenceEqualNullable(rhs.Relations)) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (!lhs.ExteriorJailMarker.Equals(rhs.ExteriorJailMarker)) return false;
             if (!lhs.FollowerWaitMarker.Equals(rhs.FollowerWaitMarker)) return false;
@@ -2145,12 +2145,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.SharedCrimeFactionList.Equals(rhs.SharedCrimeFactionList)) return false;
             if (!lhs.JailOutfit.Equals(rhs.JailOutfit)) return false;
             if (!object.Equals(lhs.CrimeValues, rhs.CrimeValues)) return false;
-            if (!lhs.Ranks.SequenceEqual(rhs.Ranks)) return false;
+            if (!lhs.Ranks.SequenceEqualNullable(rhs.Ranks)) return false;
             if (!lhs.VendorBuySellList.Equals(rhs.VendorBuySellList)) return false;
             if (!lhs.MerchantContainer.Equals(rhs.MerchantContainer)) return false;
             if (!object.Equals(lhs.VendorValues, rhs.VendorValues)) return false;
             if (!object.Equals(lhs.VendorLocation, rhs.VendorLocation)) return false;
-            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
+            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
             return true;
         }
         

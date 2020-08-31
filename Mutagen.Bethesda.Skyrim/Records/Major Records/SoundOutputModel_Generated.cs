@@ -1359,7 +1359,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.Data, rhs.Data)) return false;
             if (!MemorySliceExt.Equal(lhs.FNAM, rhs.FNAM)) return false;
             if (lhs.Type != rhs.Type) return false;

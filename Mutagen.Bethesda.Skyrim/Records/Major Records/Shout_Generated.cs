@@ -1290,11 +1290,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IASpellGetter)lhs, (IASpellGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!lhs.MenuDisplayObject.Equals(rhs.MenuDisplayObject)) return false;
             if (!string.Equals(lhs.Description, rhs.Description)) return false;
-            if (!lhs.WordsOfPower.SequenceEqual(rhs.WordsOfPower)) return false;
+            if (!lhs.WordsOfPower.SequenceEqualNullable(rhs.WordsOfPower)) return false;
             return true;
         }
         

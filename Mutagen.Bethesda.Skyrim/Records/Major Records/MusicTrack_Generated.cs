@@ -1720,16 +1720,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (lhs.Type != rhs.Type) return false;
             if (!lhs.Duration.EqualsWithin(rhs.Duration)) return false;
             if (!lhs.FadeOut.EqualsWithin(rhs.FadeOut)) return false;
             if (!string.Equals(lhs.TrackFilename, rhs.TrackFilename)) return false;
             if (!string.Equals(lhs.FinaleFilename, rhs.FinaleFilename)) return false;
             if (!object.Equals(lhs.LoopData, rhs.LoopData)) return false;
-            if (!lhs.CuePoints.SequenceEqual(rhs.CuePoints)) return false;
-            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
-            if (!lhs.Tracks.SequenceEqual(rhs.Tracks)) return false;
+            if (!lhs.CuePoints.SequenceEqualNullable(rhs.CuePoints)) return false;
+            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            if (!lhs.Tracks.SequenceEqualNullable(rhs.Tracks)) return false;
             return true;
         }
         

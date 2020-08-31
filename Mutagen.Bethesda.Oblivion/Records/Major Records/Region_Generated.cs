@@ -1587,11 +1587,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
             if (!lhs.MapColor.ColorOnlyEquals(rhs.MapColor)) return false;
             if (!lhs.Worldspace.Equals(rhs.Worldspace)) return false;
-            if (!lhs.Areas.SequenceEqual(rhs.Areas)) return false;
+            if (!lhs.Areas.SequenceEqualNullable(rhs.Areas)) return false;
             if (!object.Equals(lhs.Objects, rhs.Objects)) return false;
             if (!object.Equals(lhs.Weather, rhs.Weather)) return false;
             if (!object.Equals(lhs.MapName, rhs.MapName)) return false;

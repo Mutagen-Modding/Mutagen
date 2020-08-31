@@ -1792,9 +1792,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs.Unknown != rhs.Unknown) return false;
             if (!lhs.Point.Equals(rhs.Point)) return false;
             if (lhs.PreferredMergesFlag != rhs.PreferredMergesFlag) return false;
-            if (!lhs.MergedTo.SequenceEqual(rhs.MergedTo)) return false;
-            if (!lhs.PreferredMerges.SequenceEqual(rhs.PreferredMerges)) return false;
-            if (!lhs.LinkedDoors.SequenceEqual(rhs.LinkedDoors)) return false;
+            if (!lhs.MergedTo.SequenceEqualNullable(rhs.MergedTo)) return false;
+            if (!lhs.PreferredMerges.SequenceEqualNullable(rhs.PreferredMerges)) return false;
+            if (!lhs.LinkedDoors.SequenceEqualNullable(rhs.LinkedDoors)) return false;
             if (!object.Equals(lhs.Island, rhs.Island)) return false;
             if (lhs.Unknown2 != rhs.Unknown2) return false;
             if (!lhs.ParentWorldspace.Equals(rhs.ParentWorldspace)) return false;

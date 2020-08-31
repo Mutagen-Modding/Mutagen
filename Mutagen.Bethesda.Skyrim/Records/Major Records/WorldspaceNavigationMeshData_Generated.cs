@@ -992,7 +992,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IANavigationMeshDataGetter)lhs, (IANavigationMeshDataGetter)rhs)) return false;
             if (!lhs.Parent.Equals(rhs.Parent)) return false;
             if (!lhs.Coordinates.Equals(rhs.Coordinates)) return false;
             return true;

@@ -1883,14 +1883,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!MemorySliceExt.Equal(lhs.CNAM, rhs.CNAM)) return false;
             if (!lhs.Category.Equals(rhs.Category)) return false;
             if (!lhs.AlternateSoundFor.Equals(rhs.AlternateSoundFor)) return false;
-            if (!lhs.SoundFiles.SequenceEqual(rhs.SoundFiles)) return false;
+            if (!lhs.SoundFiles.SequenceEqualNullable(rhs.SoundFiles)) return false;
             if (!lhs.OutputModel.Equals(rhs.OutputModel)) return false;
             if (!string.Equals(lhs.String, rhs.String)) return false;
-            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
+            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
             if (!object.Equals(lhs.LoopAndRumble, rhs.LoopAndRumble)) return false;
             if (lhs.PercentFrequencyShift != rhs.PercentFrequencyShift) return false;
             if (lhs.PercentFrequencyVariance != rhs.PercentFrequencyVariance) return false;

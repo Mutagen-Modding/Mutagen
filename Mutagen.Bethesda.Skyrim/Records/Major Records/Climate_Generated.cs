@@ -1670,8 +1670,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!lhs.WeatherTypes.SequenceEqual(rhs.WeatherTypes)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
+            if (!lhs.WeatherTypes.SequenceEqualNullable(rhs.WeatherTypes)) return false;
             if (!string.Equals(lhs.SunTexture, rhs.SunTexture)) return false;
             if (!string.Equals(lhs.SunGlareTexture, rhs.SunGlareTexture)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;

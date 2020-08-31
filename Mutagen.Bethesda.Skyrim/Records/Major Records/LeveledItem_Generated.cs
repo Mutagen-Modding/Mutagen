@@ -1299,12 +1299,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
             if (lhs.ChanceNone != rhs.ChanceNone) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (!lhs.Global.Equals(rhs.Global)) return false;
-            if (!lhs.Entries.SequenceEqual(rhs.Entries)) return false;
+            if (!lhs.Entries.SequenceEqualNullable(rhs.Entries)) return false;
             return true;
         }
         

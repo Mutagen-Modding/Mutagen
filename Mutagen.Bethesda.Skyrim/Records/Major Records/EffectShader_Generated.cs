@@ -6618,7 +6618,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.FillTexture, rhs.FillTexture)) return false;
             if (!string.Equals(lhs.ParticleShaderTexture, rhs.ParticleShaderTexture)) return false;
             if (!string.Equals(lhs.HolesTexture, rhs.HolesTexture)) return false;

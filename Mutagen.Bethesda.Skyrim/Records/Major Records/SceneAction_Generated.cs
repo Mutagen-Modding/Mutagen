@@ -1887,7 +1887,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs.StartPhase != rhs.StartPhase) return false;
             if (lhs.EndPhase != rhs.EndPhase) return false;
             if (!lhs.TimerSeconds.EqualsWithin(rhs.TimerSeconds)) return false;
-            if (!lhs.Packages.SequenceEqual(rhs.Packages)) return false;
+            if (!lhs.Packages.SequenceEqualNullable(rhs.Packages)) return false;
             if (!lhs.Topic.Equals(rhs.Topic)) return false;
             if (lhs.HeadtrackActorID != rhs.HeadtrackActorID) return false;
             if (!lhs.LoopingMax.EqualsWithin(rhs.LoopingMax)) return false;

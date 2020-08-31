@@ -1397,10 +1397,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!lhs.Quest.Equals(rhs.Quest)) return false;
-            if (!lhs.Branches.SequenceEqual(rhs.Branches)) return false;
-            if (!lhs.TNAMs.SequenceEqual(rhs.TNAMs)) return false;
+            if (!lhs.Branches.SequenceEqualNullable(rhs.Branches)) return false;
+            if (!lhs.TNAMs.SequenceEqualNullable(rhs.TNAMs)) return false;
             if (!MemorySliceExt.Equal(lhs.ENAM, rhs.ENAM)) return false;
             if (!MemorySliceExt.Equal(lhs.DNAM, rhs.DNAM)) return false;
             return true;

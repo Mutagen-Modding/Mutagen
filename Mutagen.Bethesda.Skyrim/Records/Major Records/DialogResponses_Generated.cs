@@ -2178,18 +2178,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
             if (!MemorySliceExt.Equal(lhs.DATA, rhs.DATA)) return false;
             if (!object.Equals(lhs.Flags, rhs.Flags)) return false;
             if (!lhs.Topic.Equals(rhs.Topic)) return false;
             if (!lhs.PreviousDialog.Equals(rhs.PreviousDialog)) return false;
             if (lhs.FavorLevel != rhs.FavorLevel) return false;
-            if (!lhs.LinkTo.SequenceEqual(rhs.LinkTo)) return false;
+            if (!lhs.LinkTo.SequenceEqualNullable(rhs.LinkTo)) return false;
             if (!lhs.ResponseData.Equals(rhs.ResponseData)) return false;
-            if (!lhs.Responses.SequenceEqual(rhs.Responses)) return false;
-            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
-            if (!lhs.UnknownData.SequenceEqual(rhs.UnknownData)) return false;
+            if (!lhs.Responses.SequenceEqualNullable(rhs.Responses)) return false;
+            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            if (!lhs.UnknownData.SequenceEqualNullable(rhs.UnknownData)) return false;
             if (!string.Equals(lhs.Prompt, rhs.Prompt)) return false;
             if (!lhs.Speaker.Equals(rhs.Speaker)) return false;
             if (!lhs.WalkAwayTopic.Equals(rhs.WalkAwayTopic)) return false;

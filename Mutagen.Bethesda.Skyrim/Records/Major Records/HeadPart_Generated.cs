@@ -1633,13 +1633,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (lhs.Type != rhs.Type) return false;
-            if (!lhs.ExtraParts.SequenceEqual(rhs.ExtraParts)) return false;
-            if (!lhs.Parts.SequenceEqual(rhs.Parts)) return false;
+            if (!lhs.ExtraParts.SequenceEqualNullable(rhs.ExtraParts)) return false;
+            if (!lhs.Parts.SequenceEqualNullable(rhs.Parts)) return false;
             if (!lhs.TextureSet.Equals(rhs.TextureSet)) return false;
             if (!lhs.Color.Equals(rhs.Color)) return false;
             if (!lhs.ValidRaces.Equals(rhs.ValidRaces)) return false;

@@ -2442,7 +2442,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (lhs.Flags != rhs.Flags) return false;
@@ -2451,13 +2451,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs.Unknown != rhs.Unknown) return false;
             if (lhs.Type != rhs.Type) return false;
             if (lhs.Event != rhs.Event) return false;
-            if (!lhs.TextDisplayGlobals.SequenceEqual(rhs.TextDisplayGlobals)) return false;
+            if (!lhs.TextDisplayGlobals.SequenceEqualNullable(rhs.TextDisplayGlobals)) return false;
             if (!string.Equals(lhs.ObjectWindowFilter, rhs.ObjectWindowFilter)) return false;
-            if (!lhs.DialogConditions.SequenceEqual(rhs.DialogConditions)) return false;
-            if (!lhs.UnusedConditions.SequenceEqual(rhs.UnusedConditions)) return false;
-            if (!lhs.Stages.SequenceEqual(rhs.Stages)) return false;
-            if (!lhs.Objectives.SequenceEqual(rhs.Objectives)) return false;
-            if (!lhs.Aliases.SequenceEqual(rhs.Aliases)) return false;
+            if (!lhs.DialogConditions.SequenceEqualNullable(rhs.DialogConditions)) return false;
+            if (!lhs.UnusedConditions.SequenceEqualNullable(rhs.UnusedConditions)) return false;
+            if (!lhs.Stages.SequenceEqualNullable(rhs.Stages)) return false;
+            if (!lhs.Objectives.SequenceEqualNullable(rhs.Objectives)) return false;
+            if (!lhs.Aliases.SequenceEqualNullable(rhs.Aliases)) return false;
             if (!string.Equals(lhs.Description, rhs.Description)) return false;
             if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
             return true;

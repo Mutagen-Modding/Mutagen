@@ -1386,7 +1386,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
             if (!lhs.Base.Equals(rhs.Base)) return false;
             if (!lhs.Owner.Equals(rhs.Owner)) return false;
             if (lhs.FactionRank != rhs.FactionRank) return false;

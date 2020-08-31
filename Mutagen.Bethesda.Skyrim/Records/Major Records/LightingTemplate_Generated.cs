@@ -2291,7 +2291,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!lhs.AmbientColor.ColorOnlyEquals(rhs.AmbientColor)) return false;
             if (!lhs.DirectionalColor.ColorOnlyEquals(rhs.DirectionalColor)) return false;
             if (!lhs.FogNearColor.ColorOnlyEquals(rhs.FogNearColor)) return false;

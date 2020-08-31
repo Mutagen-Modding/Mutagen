@@ -2906,12 +2906,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IPlaceGetter)lhs, (IPlaceGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (!lhs.Grid.Equals(rhs.Grid)) return false;
             if (!object.Equals(lhs.Lighting, rhs.Lighting)) return false;
-            if (!lhs.Regions.SequenceEqual(rhs.Regions)) return false;
+            if (!lhs.Regions.SequenceEqualNullable(rhs.Regions)) return false;
             if (lhs.MusicType != rhs.MusicType) return false;
             if (!lhs.WaterHeight.EqualsWithin(rhs.WaterHeight)) return false;
             if (!lhs.Climate.Equals(rhs.Climate)) return false;
@@ -2923,11 +2923,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(lhs.Landscape, rhs.Landscape)) return false;
             if (lhs.Timestamp != rhs.Timestamp) return false;
             if (lhs.PersistentTimestamp != rhs.PersistentTimestamp) return false;
-            if (!lhs.Persistent.SequenceEqual(rhs.Persistent)) return false;
+            if (!lhs.Persistent.SequenceEqualNullable(rhs.Persistent)) return false;
             if (lhs.TemporaryTimestamp != rhs.TemporaryTimestamp) return false;
-            if (!lhs.Temporary.SequenceEqual(rhs.Temporary)) return false;
+            if (!lhs.Temporary.SequenceEqualNullable(rhs.Temporary)) return false;
             if (lhs.VisibleWhenDistantTimestamp != rhs.VisibleWhenDistantTimestamp) return false;
-            if (!lhs.VisibleWhenDistant.SequenceEqual(rhs.VisibleWhenDistant)) return false;
+            if (!lhs.VisibleWhenDistant.SequenceEqualNullable(rhs.VisibleWhenDistant)) return false;
             return true;
         }
         

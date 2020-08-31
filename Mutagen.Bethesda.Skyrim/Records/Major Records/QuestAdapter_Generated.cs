@@ -1316,12 +1316,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IAVirtualMachineAdapterGetter)lhs, (IAVirtualMachineAdapterGetter)rhs)) return false;
             if (lhs.Versioning != rhs.Versioning) return false;
             if (lhs.Unknown != rhs.Unknown) return false;
             if (!string.Equals(lhs.FileName, rhs.FileName)) return false;
-            if (!lhs.Fragments.SequenceEqual(rhs.Fragments)) return false;
-            if (!lhs.Aliases.SequenceEqual(rhs.Aliases)) return false;
+            if (!lhs.Fragments.SequenceEqualNullable(rhs.Fragments)) return false;
+            if (!lhs.Aliases.SequenceEqualNullable(rhs.Aliases)) return false;
             return true;
         }
         

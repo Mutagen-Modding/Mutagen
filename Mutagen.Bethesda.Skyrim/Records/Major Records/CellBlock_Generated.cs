@@ -1629,7 +1629,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs.GroupType != rhs.GroupType) return false;
             if (lhs.LastModified != rhs.LastModified) return false;
             if (lhs.Unknown != rhs.Unknown) return false;
-            if (!lhs.SubBlocks.SequenceEqual(rhs.SubBlocks)) return false;
+            if (!lhs.SubBlocks.SequenceEqualNullable(rhs.SubBlocks)) return false;
             return true;
         }
         

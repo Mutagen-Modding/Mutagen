@@ -919,7 +919,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IALocationTargetGetter)lhs, (IALocationTargetGetter)rhs)) return false;
             if (lhs.Type != rhs.Type) return false;
             if (lhs.Data != rhs.Data) return false;
             return true;

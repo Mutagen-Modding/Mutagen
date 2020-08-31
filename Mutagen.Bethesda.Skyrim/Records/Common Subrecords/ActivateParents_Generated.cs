@@ -1049,7 +1049,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.Parents.SequenceEqual(rhs.Parents)) return false;
+            if (!lhs.Parents.SequenceEqualNullable(rhs.Parents)) return false;
             return true;
         }
         

@@ -1325,7 +1325,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!lhs.Owner.Equals(rhs.Owner)) return false;
             if (!lhs.Location.Equals(rhs.Location)) return false;
             if (lhs.Rank != rhs.Rank) return false;

@@ -2420,11 +2420,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!string.Equals(lhs.Description, rhs.Description)) return false;
-            if (!lhs.Spells.SequenceEqual(rhs.Spells)) return false;
-            if (!lhs.Relations.SequenceEqual(rhs.Relations)) return false;
+            if (!lhs.Spells.SequenceEqualNullable(rhs.Spells)) return false;
+            if (!lhs.Relations.SequenceEqualNullable(rhs.Relations)) return false;
             if (!object.Equals(lhs.Data, rhs.Data)) return false;
             if (!Equals(lhs.Voices, rhs.Voices)) return false;
             if (!Equals(lhs.DefaultHair, rhs.DefaultHair)) return false;
@@ -2432,10 +2432,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs.FaceGenMainClamp != rhs.FaceGenMainClamp) return false;
             if (lhs.FaceGenFaceClamp != rhs.FaceGenFaceClamp) return false;
             if (!Equals(lhs.RaceStats, rhs.RaceStats)) return false;
-            if (!lhs.FaceData.SequenceEqual(rhs.FaceData)) return false;
+            if (!lhs.FaceData.SequenceEqualNullable(rhs.FaceData)) return false;
             if (!Equals(lhs.BodyData, rhs.BodyData)) return false;
-            if (!lhs.Hairs.SequenceEqual(rhs.Hairs)) return false;
-            if (!lhs.Eyes.SequenceEqual(rhs.Eyes)) return false;
+            if (!lhs.Hairs.SequenceEqualNullable(rhs.Hairs)) return false;
+            if (!lhs.Eyes.SequenceEqualNullable(rhs.Eyes)) return false;
             if (!object.Equals(lhs.FaceGenData, rhs.FaceGenData)) return false;
             if (lhs.SNAM != rhs.SNAM) return false;
             return true;

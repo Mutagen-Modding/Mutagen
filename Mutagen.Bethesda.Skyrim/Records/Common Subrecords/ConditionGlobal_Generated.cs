@@ -960,7 +960,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IConditionGetter)lhs, (IConditionGetter)rhs)) return false;
             if (!lhs.ComparisonValue.Equals(rhs.ComparisonValue)) return false;
             if (!object.Equals(lhs.Data, rhs.Data)) return false;
             return true;

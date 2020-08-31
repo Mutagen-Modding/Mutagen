@@ -1411,9 +1411,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (lhs.Versioning != rhs.Versioning) return false;
-            if (!lhs.PrimaryAttributes.SequenceEqual(rhs.PrimaryAttributes)) return false;
+            if (!lhs.PrimaryAttributes.SequenceEqualNullable(rhs.PrimaryAttributes)) return false;
             if (lhs.Specialization != rhs.Specialization) return false;
-            if (!lhs.SecondaryAttributes.SequenceEqual(rhs.SecondaryAttributes)) return false;
+            if (!lhs.SecondaryAttributes.SequenceEqualNullable(rhs.SecondaryAttributes)) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (lhs.ClassServices != rhs.ClassServices) return false;
             if (!object.Equals(lhs.Training, rhs.Training)) return false;

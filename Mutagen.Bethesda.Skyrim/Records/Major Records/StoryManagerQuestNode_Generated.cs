@@ -1289,11 +1289,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IAStoryManagerNodeGetter)lhs, (IAStoryManagerNodeGetter)rhs)) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (lhs.MaxConcurrentQuests != rhs.MaxConcurrentQuests) return false;
             if (lhs.MaxNumQuestsToRun != rhs.MaxNumQuestsToRun) return false;
-            if (!lhs.Quests.SequenceEqual(rhs.Quests)) return false;
+            if (!lhs.Quests.SequenceEqualNullable(rhs.Quests)) return false;
             return true;
         }
         

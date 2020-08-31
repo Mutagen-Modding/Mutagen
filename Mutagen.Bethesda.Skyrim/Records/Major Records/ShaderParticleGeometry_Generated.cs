@@ -1653,7 +1653,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!lhs.GravityVelocity.EqualsWithin(rhs.GravityVelocity)) return false;
             if (!lhs.RotationVelocity.EqualsWithin(rhs.RotationVelocity)) return false;
             if (!lhs.ParticleSizeX.EqualsWithin(rhs.ParticleSizeX)) return false;

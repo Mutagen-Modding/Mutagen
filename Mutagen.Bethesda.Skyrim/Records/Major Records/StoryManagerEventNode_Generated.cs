@@ -1131,7 +1131,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IAStoryManagerNodeGetter)lhs, (IAStoryManagerNodeGetter)rhs)) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (!MemorySliceExt.Equal(lhs.XNAM, rhs.XNAM)) return false;
             if (lhs.Type != rhs.Type) return false;

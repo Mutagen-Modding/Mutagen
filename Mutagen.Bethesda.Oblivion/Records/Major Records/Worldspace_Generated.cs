@@ -2360,7 +2360,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IPlaceGetter)lhs, (IPlaceGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!lhs.Parent.Equals(rhs.Parent)) return false;
             if (!lhs.Climate.Equals(rhs.Climate)) return false;
@@ -2375,7 +2375,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(lhs.Road, rhs.Road)) return false;
             if (!object.Equals(lhs.TopCell, rhs.TopCell)) return false;
             if (lhs.SubCellsTimestamp != rhs.SubCellsTimestamp) return false;
-            if (!lhs.SubCells.SequenceEqual(rhs.SubCells)) return false;
+            if (!lhs.SubCells.SequenceEqualNullable(rhs.SubCells)) return false;
             return true;
         }
         

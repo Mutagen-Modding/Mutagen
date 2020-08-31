@@ -3625,7 +3625,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (!object.Equals(lhs.Grid, rhs.Grid)) return false;
@@ -3636,7 +3636,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!MemorySliceExt.Equal(lhs.LNAM, rhs.LNAM)) return false;
             if (!lhs.WaterHeight.EqualsWithin(rhs.WaterHeight)) return false;
             if (!string.Equals(lhs.WaterNoiseTexture, rhs.WaterNoiseTexture)) return false;
-            if (!lhs.Regions.SequenceEqual(rhs.Regions)) return false;
+            if (!lhs.Regions.SequenceEqualNullable(rhs.Regions)) return false;
             if (!lhs.Location.Equals(rhs.Location)) return false;
             if (!MemorySliceExt.Equal(lhs.XWCN, rhs.XWCN)) return false;
             if (!MemorySliceExt.Equal(lhs.XWCS, rhs.XWCS)) return false;
@@ -3651,15 +3651,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.Music.Equals(rhs.Music)) return false;
             if (!lhs.ImageSpace.Equals(rhs.ImageSpace)) return false;
             if (!object.Equals(lhs.Landscape, rhs.Landscape)) return false;
-            if (!lhs.NavigationMeshes.SequenceEqual(rhs.NavigationMeshes)) return false;
+            if (!lhs.NavigationMeshes.SequenceEqualNullable(rhs.NavigationMeshes)) return false;
             if (lhs.Timestamp != rhs.Timestamp) return false;
             if (lhs.UnknownGroupData != rhs.UnknownGroupData) return false;
             if (lhs.PersistentTimestamp != rhs.PersistentTimestamp) return false;
             if (lhs.PersistentUnknownGroupData != rhs.PersistentUnknownGroupData) return false;
-            if (!lhs.Persistent.SequenceEqual(rhs.Persistent)) return false;
+            if (!lhs.Persistent.SequenceEqualNullable(rhs.Persistent)) return false;
             if (lhs.TemporaryTimestamp != rhs.TemporaryTimestamp) return false;
             if (lhs.TemporaryUnknownGroupData != rhs.TemporaryUnknownGroupData) return false;
-            if (!lhs.Temporary.SequenceEqual(rhs.Temporary)) return false;
+            if (!lhs.Temporary.SequenceEqualNullable(rhs.Temporary)) return false;
             return true;
         }
         

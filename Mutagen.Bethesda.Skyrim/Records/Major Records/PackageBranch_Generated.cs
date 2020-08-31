@@ -1674,14 +1674,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!string.Equals(lhs.BranchType, rhs.BranchType)) return false;
-            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
+            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
             if (!object.Equals(lhs.Root, rhs.Root)) return false;
             if (!string.Equals(lhs.ProcedureType, rhs.ProcedureType)) return false;
             if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.DataInputIndices.SequenceEqual(rhs.DataInputIndices)) return false;
+            if (!lhs.DataInputIndices.SequenceEqualNullable(rhs.DataInputIndices)) return false;
             if (!object.Equals(lhs.FlagsOverride, rhs.FlagsOverride)) return false;
             if (!object.Equals(lhs.FlagsOverrideUnused, rhs.FlagsOverrideUnused)) return false;
-            if (!lhs.Unknown.SequenceEqual(rhs.Unknown)) return false;
+            if (!lhs.Unknown.SequenceEqualNullable(rhs.Unknown)) return false;
             return true;
         }
         

@@ -1242,7 +1242,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!lhs.Parent.Equals(rhs.Parent)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!lhs.HavokDisplayColor.ColorOnlyEquals(rhs.HavokDisplayColor)) return false;

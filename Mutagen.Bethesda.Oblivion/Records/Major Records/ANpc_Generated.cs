@@ -910,7 +910,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IANpcSpawnGetter)lhs, (IANpcSpawnGetter)rhs)) return false;
             return true;
         }
         

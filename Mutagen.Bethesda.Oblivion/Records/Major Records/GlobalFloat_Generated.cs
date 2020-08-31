@@ -995,7 +995,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IGlobalGetter)lhs, (IGlobalGetter)rhs)) return false;
             if (!lhs.Data.EqualsWithin(rhs.Data)) return false;
             return true;
         }

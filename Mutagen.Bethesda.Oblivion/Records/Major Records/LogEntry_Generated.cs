@@ -1191,7 +1191,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
+            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
             if (!string.Equals(lhs.Entry, rhs.Entry)) return false;
             if (!object.Equals(lhs.ResultScript, rhs.ResultScript)) return false;
             return true;

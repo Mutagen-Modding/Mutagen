@@ -1827,13 +1827,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.HeadParts.SequenceEqual(rhs.HeadParts)) return false;
+            if (!lhs.HeadParts.SequenceEqualNullable(rhs.HeadParts)) return false;
             if (!object.Equals(lhs.AvailableMorphs, rhs.AvailableMorphs)) return false;
-            if (!lhs.RacePresets.SequenceEqual(rhs.RacePresets)) return false;
-            if (!lhs.AvailableHairColors.SequenceEqual(rhs.AvailableHairColors)) return false;
-            if (!lhs.FaceDetails.SequenceEqual(rhs.FaceDetails)) return false;
+            if (!lhs.RacePresets.SequenceEqualNullable(rhs.RacePresets)) return false;
+            if (!lhs.AvailableHairColors.SequenceEqualNullable(rhs.AvailableHairColors)) return false;
+            if (!lhs.FaceDetails.SequenceEqualNullable(rhs.FaceDetails)) return false;
             if (!lhs.DefaultFaceTexture.Equals(rhs.DefaultFaceTexture)) return false;
-            if (!lhs.TintMasks.SequenceEqual(rhs.TintMasks)) return false;
+            if (!lhs.TintMasks.SequenceEqualNullable(rhs.TintMasks)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             return true;
         }

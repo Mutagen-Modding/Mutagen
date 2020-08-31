@@ -891,7 +891,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IBaseLayerGetter)lhs, (IBaseLayerGetter)rhs)) return false;
             if (!MemorySliceExt.Equal(lhs.AlphaLayerData, rhs.AlphaLayerData)) return false;
             return true;
         }

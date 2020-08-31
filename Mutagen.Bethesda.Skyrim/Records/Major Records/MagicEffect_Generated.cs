@@ -3753,11 +3753,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!lhs.MenuDisplayObject.Equals(rhs.MenuDisplayObject)) return false;
-            if (!lhs.Keywords.SequenceEqual(rhs.Keywords)) return false;
+            if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (!lhs.BaseCost.EqualsWithin(rhs.BaseCost)) return false;
             if (lhs.MagicSkill != rhs.MagicSkill) return false;
@@ -3795,10 +3795,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs.CastingSoundLevel != rhs.CastingSoundLevel) return false;
             if (!lhs.ScriptEffectAIScore.EqualsWithin(rhs.ScriptEffectAIScore)) return false;
             if (!lhs.ScriptEffectAIDelayTime.EqualsWithin(rhs.ScriptEffectAIDelayTime)) return false;
-            if (!lhs.CounterEffects.SequenceEqual(rhs.CounterEffects)) return false;
-            if (!lhs.Sounds.SequenceEqual(rhs.Sounds)) return false;
+            if (!lhs.CounterEffects.SequenceEqualNullable(rhs.CounterEffects)) return false;
+            if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds)) return false;
             if (!string.Equals(lhs.Description, rhs.Description)) return false;
-            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
+            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
             if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }

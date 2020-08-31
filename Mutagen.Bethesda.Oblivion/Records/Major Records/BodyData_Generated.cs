@@ -1068,7 +1068,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (!lhs.BodyParts.SequenceEqual(rhs.BodyParts)) return false;
+            if (!lhs.BodyParts.SequenceEqualNullable(rhs.BodyParts)) return false;
             return true;
         }
         

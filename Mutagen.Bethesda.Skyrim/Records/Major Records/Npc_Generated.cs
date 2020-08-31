@@ -4362,35 +4362,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
             if (!object.Equals(lhs.Configuration, rhs.Configuration)) return false;
-            if (!lhs.Factions.SequenceEqual(rhs.Factions)) return false;
+            if (!lhs.Factions.SequenceEqualNullable(rhs.Factions)) return false;
             if (!lhs.DeathItem.Equals(rhs.DeathItem)) return false;
             if (!lhs.Voice.Equals(rhs.Voice)) return false;
             if (!lhs.Template.Equals(rhs.Template)) return false;
             if (!lhs.Race.Equals(rhs.Race)) return false;
-            if (!lhs.ActorEffect.SequenceEqual(rhs.ActorEffect)) return false;
+            if (!lhs.ActorEffect.SequenceEqualNullable(rhs.ActorEffect)) return false;
             if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
             if (!lhs.WornArmor.Equals(rhs.WornArmor)) return false;
             if (!lhs.FarAwayModel.Equals(rhs.FarAwayModel)) return false;
             if (!lhs.AttackRace.Equals(rhs.AttackRace)) return false;
-            if (!lhs.Attacks.SequenceEqual(rhs.Attacks)) return false;
+            if (!lhs.Attacks.SequenceEqualNullable(rhs.Attacks)) return false;
             if (!lhs.SpectatorOverridePackageList.Equals(rhs.SpectatorOverridePackageList)) return false;
             if (!lhs.ObserveDeadBodyOverridePackageList.Equals(rhs.ObserveDeadBodyOverridePackageList)) return false;
             if (!lhs.GuardWarnOverridePackageList.Equals(rhs.GuardWarnOverridePackageList)) return false;
             if (!lhs.CombatOverridePackageList.Equals(rhs.CombatOverridePackageList)) return false;
-            if (!lhs.Perks.SequenceEqual(rhs.Perks)) return false;
-            if (!lhs.Items.SequenceEqual(rhs.Items)) return false;
+            if (!lhs.Perks.SequenceEqualNullable(rhs.Perks)) return false;
+            if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
             if (!object.Equals(lhs.AIData, rhs.AIData)) return false;
-            if (!lhs.Packages.SequenceEqual(rhs.Packages)) return false;
-            if (!lhs.Keywords.SequenceEqual(rhs.Keywords)) return false;
+            if (!lhs.Packages.SequenceEqualNullable(rhs.Packages)) return false;
+            if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             if (!lhs.Class.Equals(rhs.Class)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!string.Equals(lhs.ShortName, rhs.ShortName)) return false;
             if (!object.Equals(lhs.PlayerSkills, rhs.PlayerSkills)) return false;
-            if (!lhs.HeadParts.SequenceEqual(rhs.HeadParts)) return false;
+            if (!lhs.HeadParts.SequenceEqualNullable(rhs.HeadParts)) return false;
             if (!lhs.HairColor.Equals(rhs.HairColor)) return false;
             if (!lhs.CombatStyle.Equals(rhs.CombatStyle)) return false;
             if (!lhs.GiftFilter.Equals(rhs.GiftFilter)) return false;
@@ -4407,7 +4407,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.TextureLighting.ColorOnlyEquals(rhs.TextureLighting)) return false;
             if (!object.Equals(lhs.FaceMorph, rhs.FaceMorph)) return false;
             if (!object.Equals(lhs.FaceParts, rhs.FaceParts)) return false;
-            if (!lhs.TintLayers.SequenceEqual(rhs.TintLayers)) return false;
+            if (!lhs.TintLayers.SequenceEqualNullable(rhs.TintLayers)) return false;
             return true;
         }
         

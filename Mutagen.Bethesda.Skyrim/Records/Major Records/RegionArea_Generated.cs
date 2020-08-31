@@ -1048,7 +1048,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (lhs.EdgeFallOff != rhs.EdgeFallOff) return false;
-            if (!lhs.RegionPointListData.SequenceEqual(rhs.RegionPointListData)) return false;
+            if (!lhs.RegionPointListData.SequenceEqualNullable(rhs.RegionPointListData)) return false;
             return true;
         }
         

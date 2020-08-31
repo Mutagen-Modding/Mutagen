@@ -1399,14 +1399,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Description, rhs.Description)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!MemoryExtensions.SequenceEqual(lhs.INAM.Span, rhs.INAM.Span)) return false;
             if (!lhs.Quest.Equals(rhs.Quest)) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (lhs.DisplayTime != rhs.DisplayTime) return false;
-            if (!lhs.MenuButtons.SequenceEqual(rhs.MenuButtons)) return false;
+            if (!lhs.MenuButtons.SequenceEqualNullable(rhs.MenuButtons)) return false;
             return true;
         }
         

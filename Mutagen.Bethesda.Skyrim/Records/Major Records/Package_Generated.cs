@@ -2925,7 +2925,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (lhs.Type != rhs.Type) return false;
@@ -2941,16 +2941,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs.ScheduleMinute != rhs.ScheduleMinute) return false;
             if (!MemoryExtensions.SequenceEqual(lhs.Unknown3.Span, rhs.Unknown3.Span)) return false;
             if (lhs.ScheduleDurationInMinutes != rhs.ScheduleDurationInMinutes) return false;
-            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
+            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
             if (lhs.Unknown4 != rhs.Unknown4) return false;
             if (!object.Equals(lhs.IdleAnimations, rhs.IdleAnimations)) return false;
             if (!lhs.CombatStyle.Equals(rhs.CombatStyle)) return false;
             if (!lhs.OwnerQuest.Equals(rhs.OwnerQuest)) return false;
             if (!lhs.PackageTemplate.Equals(rhs.PackageTemplate)) return false;
             if (lhs.DataInputVersion != rhs.DataInputVersion) return false;
-            if (!lhs.Data.SequenceEqual(rhs.Data)) return false;
+            if (!lhs.Data.SequenceEqualNullable(rhs.Data)) return false;
             if (!MemoryExtensions.SequenceEqual(lhs.XnamMarker.Span, rhs.XnamMarker.Span)) return false;
-            if (!lhs.ProcedureTree.SequenceEqual(rhs.ProcedureTree)) return false;
+            if (!lhs.ProcedureTree.SequenceEqualNullable(rhs.ProcedureTree)) return false;
             if (!object.Equals(lhs.OnBegin, rhs.OnBegin)) return false;
             if (!object.Equals(lhs.OnEnd, rhs.OnEnd)) return false;
             if (!object.Equals(lhs.OnChange, rhs.OnChange)) return false;

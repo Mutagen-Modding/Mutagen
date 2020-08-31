@@ -2348,22 +2348,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
             if (!lhs.EncounterZone.Equals(rhs.EncounterZone)) return false;
             if (!object.Equals(lhs.Ownership, rhs.Ownership)) return false;
             if (!lhs.HeadTrackingWeight.EqualsWithin(rhs.HeadTrackingWeight)) return false;
             if (!lhs.FavorCost.EqualsWithin(rhs.FavorCost)) return false;
-            if (!lhs.Reflections.SequenceEqual(rhs.Reflections)) return false;
-            if (!lhs.LinkedReferences.SequenceEqual(rhs.LinkedReferences)) return false;
+            if (!lhs.Reflections.SequenceEqualNullable(rhs.Reflections)) return false;
+            if (!lhs.LinkedReferences.SequenceEqualNullable(rhs.LinkedReferences)) return false;
             if (!object.Equals(lhs.ActivateParents, rhs.ActivateParents)) return false;
             if (!object.Equals(lhs.EnableParent, rhs.EnableParent)) return false;
             if (!lhs.Emittance.Equals(rhs.Emittance)) return false;
             if (!lhs.MultiBoundReference.Equals(rhs.MultiBoundReference)) return false;
             if (!MemorySliceExt.Equal(lhs.IgnoredBySandbox, rhs.IgnoredBySandbox)) return false;
-            if (!lhs.LocationRefTypes.SequenceEqual(rhs.LocationRefTypes)) return false;
+            if (!lhs.LocationRefTypes.SequenceEqualNullable(rhs.LocationRefTypes)) return false;
             if (!lhs.LocationReference.Equals(rhs.LocationReference)) return false;
-            if (!lhs.DistantLodData.SequenceEqual(rhs.DistantLodData)) return false;
+            if (!lhs.DistantLodData.SequenceEqualNullable(rhs.DistantLodData)) return false;
             if (!lhs.Scale.EqualsWithin(rhs.Scale)) return false;
             if (!object.Equals(lhs.Placement, rhs.Placement)) return false;
             return true;

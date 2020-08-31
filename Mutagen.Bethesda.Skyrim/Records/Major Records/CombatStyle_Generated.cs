@@ -1955,7 +1955,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!lhs.OffensiveMult.EqualsWithin(rhs.OffensiveMult)) return false;
             if (!lhs.DefensiveMult.EqualsWithin(rhs.DefensiveMult)) return false;
             if (!lhs.GroupOffensiveMult.EqualsWithin(rhs.GroupOffensiveMult)) return false;

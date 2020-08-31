@@ -1481,12 +1481,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
-            if (!lhs.RelatedPaths.SequenceEqual(rhs.RelatedPaths)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
+            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            if (!lhs.RelatedPaths.SequenceEqualNullable(rhs.RelatedPaths)) return false;
             if (lhs.Zoom != rhs.Zoom) return false;
             if (lhs.ZoomMustHaveCameraShots != rhs.ZoomMustHaveCameraShots) return false;
-            if (!lhs.Shots.SequenceEqual(rhs.Shots)) return false;
+            if (!lhs.Shots.SequenceEqualNullable(rhs.Shots)) return false;
             return true;
         }
         

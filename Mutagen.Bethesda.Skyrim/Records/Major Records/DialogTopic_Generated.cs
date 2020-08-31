@@ -1971,7 +1971,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!lhs.Priority.EqualsWithin(rhs.Priority)) return false;
             if (!lhs.Branch.Equals(rhs.Branch)) return false;
@@ -1982,7 +1982,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs.SubtypeName != rhs.SubtypeName) return false;
             if (lhs.Timestamp != rhs.Timestamp) return false;
             if (lhs.Unknown != rhs.Unknown) return false;
-            if (!lhs.Responses.SequenceEqual(rhs.Responses)) return false;
+            if (!lhs.Responses.SequenceEqualNullable(rhs.Responses)) return false;
             if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }

@@ -1048,7 +1048,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (lhs.EdgeFallOff != rhs.EdgeFallOff) return false;
-            if (!lhs.RegionPoints.SequenceEqual(rhs.RegionPoints)) return false;
+            if (!lhs.RegionPoints.SequenceEqualNullable(rhs.RegionPoints)) return false;
             return true;
         }
         

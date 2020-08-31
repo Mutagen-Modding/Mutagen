@@ -1319,10 +1319,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IANpcSpawnGetter)lhs, (IANpcSpawnGetter)rhs)) return false;
             if (lhs.ChanceNone != rhs.ChanceNone) return false;
             if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.Entries.SequenceEqual(rhs.Entries)) return false;
+            if (!lhs.Entries.SequenceEqualNullable(rhs.Entries)) return false;
             if (!lhs.Script.Equals(rhs.Script)) return false;
             if (!lhs.Template.Equals(rhs.Template)) return false;
             return true;
