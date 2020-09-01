@@ -51,6 +51,7 @@
     <Compile Include="Exceptions\RecordException.cs" />
     <Compile Include="Extensions\EnumerableExt.cs" />
     <Compile Include="Extensions\FormLinkExt.cs" />
+    <Compile Include="Extensions\ModKeyExt.cs" />
     <Compile Include="Extensions\RemoveExt.cs" />
     <Compile Include="Extensions\LoadOrderExt.cs" />
     <Compile Include="Extensions\MutagenEnumExt.cs" />
