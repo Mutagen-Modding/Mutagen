@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         APerkEntryPointEffect,
         IPerkAddActivateChoice,
         ILoquiObjectSetter<PerkAddActivateChoice>,
-        IEquatable<PerkAddActivateChoice>
+        IEquatable<IPerkAddActivateChoiceGetter>
     {
         #region Ctor
         public PerkAddActivateChoice()
@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PerkAddActivateChoiceCommon)((IPerkAddActivateChoiceGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PerkAddActivateChoice? obj)
+        public bool Equals(IPerkAddActivateChoiceGetter? obj)
         {
             return ((PerkAddActivateChoiceCommon)((IPerkAddActivateChoiceGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1586,6 +1586,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPerkAddActivateChoiceGetter rhs)) return false;
+            return ((PerkAddActivateChoiceCommon)((IPerkAddActivateChoiceGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPerkAddActivateChoiceGetter? obj)
+        {
+            return ((PerkAddActivateChoiceCommon)((IPerkAddActivateChoiceGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PerkAddActivateChoiceCommon)((IPerkAddActivateChoiceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

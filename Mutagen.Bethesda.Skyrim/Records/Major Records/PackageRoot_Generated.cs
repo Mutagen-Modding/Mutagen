@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class PackageRoot :
         IPackageRoot,
         ILoquiObjectSetter<PackageRoot>,
-        IEquatable<PackageRoot>
+        IEquatable<IPackageRootGetter>
     {
         #region Ctor
         public PackageRoot()
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PackageRootCommon)((IPackageRootGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PackageRoot? obj)
+        public bool Equals(IPackageRootGetter? obj)
         {
             return ((PackageRootCommon)((IPackageRootGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1236,6 +1236,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPackageRootGetter rhs)) return false;
+            return ((PackageRootCommon)((IPackageRootGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPackageRootGetter? obj)
+        {
+            return ((PackageRootCommon)((IPackageRootGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PackageRootCommon)((IPackageRootGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

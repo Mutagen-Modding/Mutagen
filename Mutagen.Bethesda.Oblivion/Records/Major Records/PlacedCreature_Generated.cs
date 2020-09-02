@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IPlacedCreatureInternal,
         ILoquiObjectSetter<PlacedCreature>,
-        IEquatable<PlacedCreature>
+        IEquatable<IPlacedCreatureGetter>
     {
         #region Ctor
         protected PlacedCreature()
@@ -121,7 +121,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((PlacedCreatureCommon)((IPlacedCreatureGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PlacedCreature? obj)
+        public bool Equals(IPlacedCreatureGetter? obj)
         {
             return ((PlacedCreatureCommon)((IPlacedCreatureGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2175,6 +2175,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPlacedCreatureGetter rhs)) return false;
+            return ((PlacedCreatureCommon)((IPlacedCreatureGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPlacedCreatureGetter? obj)
+        {
+            return ((PlacedCreatureCommon)((IPlacedCreatureGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PlacedCreatureCommon)((IPlacedCreatureGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

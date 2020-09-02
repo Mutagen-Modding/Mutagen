@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class FindMatchingRefFromEvent :
         IFindMatchingRefFromEvent,
         ILoquiObjectSetter<FindMatchingRefFromEvent>,
-        IEquatable<FindMatchingRefFromEvent>
+        IEquatable<IFindMatchingRefFromEventGetter>
     {
         #region Ctor
         public FindMatchingRefFromEvent()
@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((FindMatchingRefFromEventCommon)((IFindMatchingRefFromEventGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(FindMatchingRefFromEvent? obj)
+        public bool Equals(IFindMatchingRefFromEventGetter? obj)
         {
             return ((FindMatchingRefFromEventCommon)((IFindMatchingRefFromEventGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1343,6 +1343,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IFindMatchingRefFromEventGetter rhs)) return false;
+            return ((FindMatchingRefFromEventCommon)((IFindMatchingRefFromEventGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IFindMatchingRefFromEventGetter? obj)
+        {
+            return ((FindMatchingRefFromEventCommon)((IFindMatchingRefFromEventGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((FindMatchingRefFromEventCommon)((IFindMatchingRefFromEventGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

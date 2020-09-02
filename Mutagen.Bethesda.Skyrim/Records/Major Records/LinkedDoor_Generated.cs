@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class LinkedDoor :
         ILinkedDoor,
         ILoquiObjectSetter<LinkedDoor>,
-        IEquatable<LinkedDoor>
+        IEquatable<ILinkedDoorGetter>
     {
         #region Ctor
         public LinkedDoor()
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LinkedDoorCommon)((ILinkedDoorGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LinkedDoor? obj)
+        public bool Equals(ILinkedDoorGetter? obj)
         {
             return ((LinkedDoorCommon)((ILinkedDoorGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1255,6 +1255,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILinkedDoorGetter rhs)) return false;
+            return ((LinkedDoorCommon)((ILinkedDoorGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILinkedDoorGetter? obj)
+        {
+            return ((LinkedDoorCommon)((ILinkedDoorGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LinkedDoorCommon)((ILinkedDoorGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

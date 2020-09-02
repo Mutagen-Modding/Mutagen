@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IRegionInternal,
         ILoquiObjectSetter<Region>,
-        IEquatable<Region>
+        IEquatable<IRegionGetter>
     {
         #region Ctor
         protected Region()
@@ -154,7 +154,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Region? obj)
+        public bool Equals(IRegionGetter? obj)
         {
             return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2485,6 +2485,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IRegionGetter rhs)) return false;
+            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IRegionGetter? obj)
+        {
+            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((RegionCommon)((IRegionGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

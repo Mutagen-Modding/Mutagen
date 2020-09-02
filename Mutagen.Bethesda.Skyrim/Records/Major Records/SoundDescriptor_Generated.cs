@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ISoundDescriptorInternal,
         ILoquiObjectSetter<SoundDescriptor>,
-        IEquatable<SoundDescriptor>
+        IEquatable<ISoundDescriptorGetter>
     {
         #region Ctor
         protected SoundDescriptor()
@@ -151,7 +151,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SoundDescriptorCommon)((ISoundDescriptorGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(SoundDescriptor? obj)
+        public bool Equals(ISoundDescriptorGetter? obj)
         {
             return ((SoundDescriptorCommon)((ISoundDescriptorGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2810,6 +2810,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ISoundDescriptorGetter rhs)) return false;
+            return ((SoundDescriptorCommon)((ISoundDescriptorGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ISoundDescriptorGetter? obj)
+        {
+            return ((SoundDescriptorCommon)((ISoundDescriptorGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((SoundDescriptorCommon)((ISoundDescriptorGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

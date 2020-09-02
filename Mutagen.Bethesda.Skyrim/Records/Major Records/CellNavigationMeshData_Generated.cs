@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         ANavigationMeshData,
         ICellNavigationMeshData,
         ILoquiObjectSetter<CellNavigationMeshData>,
-        IEquatable<CellNavigationMeshData>
+        IEquatable<ICellNavigationMeshDataGetter>
     {
         #region Ctor
         public CellNavigationMeshData()
@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((CellNavigationMeshDataCommon)((ICellNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(CellNavigationMeshData? obj)
+        public bool Equals(ICellNavigationMeshDataGetter? obj)
         {
             return ((CellNavigationMeshDataCommon)((ICellNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1335,6 +1335,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ICellNavigationMeshDataGetter rhs)) return false;
+            return ((CellNavigationMeshDataCommon)((ICellNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ICellNavigationMeshDataGetter? obj)
+        {
+            return ((CellNavigationMeshDataCommon)((ICellNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((CellNavigationMeshDataCommon)((ICellNavigationMeshDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

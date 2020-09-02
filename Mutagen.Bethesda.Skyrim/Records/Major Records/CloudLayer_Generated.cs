@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class CloudLayer :
         ICloudLayer,
         ILoquiObjectSetter<CloudLayer>,
-        IEquatable<CloudLayer>
+        IEquatable<ICloudLayerGetter>
     {
         #region Ctor
         public CloudLayer()
@@ -98,7 +98,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((CloudLayerCommon)((ICloudLayerGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(CloudLayer? obj)
+        public bool Equals(ICloudLayerGetter? obj)
         {
             return ((CloudLayerCommon)((ICloudLayerGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1507,6 +1507,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ICloudLayerGetter rhs)) return false;
+            return ((CloudLayerCommon)((ICloudLayerGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ICloudLayerGetter? obj)
+        {
+            return ((CloudLayerCommon)((ICloudLayerGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((CloudLayerCommon)((ICloudLayerGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

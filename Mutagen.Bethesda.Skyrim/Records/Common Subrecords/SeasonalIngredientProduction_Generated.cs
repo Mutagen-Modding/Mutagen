@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class SeasonalIngredientProduction :
         ISeasonalIngredientProduction,
         ILoquiObjectSetter<SeasonalIngredientProduction>,
-        IEquatable<SeasonalIngredientProduction>
+        IEquatable<ISeasonalIngredientProductionGetter>
     {
         #region Ctor
         public SeasonalIngredientProduction()
@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(SeasonalIngredientProduction? obj)
+        public bool Equals(ISeasonalIngredientProductionGetter? obj)
         {
             return ((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1368,6 +1368,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ISeasonalIngredientProductionGetter rhs)) return false;
+            return ((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ISeasonalIngredientProductionGetter? obj)
+        {
+            return ((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

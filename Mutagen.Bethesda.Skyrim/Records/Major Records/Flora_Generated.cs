@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IFloraInternal,
         ILoquiObjectSetter<Flora>,
-        IEquatable<Flora>
+        IEquatable<IFloraGetter>
     {
         #region Ctor
         protected Flora()
@@ -166,7 +166,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((FloraCommon)((IFloraGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Flora? obj)
+        public bool Equals(IFloraGetter? obj)
         {
             return ((FloraCommon)((IFloraGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2797,6 +2797,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IFloraGetter rhs)) return false;
+            return ((FloraCommon)((IFloraGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IFloraGetter? obj)
+        {
+            return ((FloraCommon)((IFloraGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((FloraCommon)((IFloraGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

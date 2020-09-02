@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public abstract partial class AVirtualMachineAdapter :
         IAVirtualMachineAdapter,
         ILoquiObjectSetter<AVirtualMachineAdapter>,
-        IEquatable<AVirtualMachineAdapter>
+        IEquatable<IAVirtualMachineAdapterGetter>
     {
         #region Ctor
         public AVirtualMachineAdapter()
@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(AVirtualMachineAdapter? obj)
+        public bool Equals(IAVirtualMachineAdapterGetter? obj)
         {
             return ((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1417,6 +1417,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IAVirtualMachineAdapterGetter rhs)) return false;
+            return ((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IAVirtualMachineAdapterGetter? obj)
+        {
+            return ((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

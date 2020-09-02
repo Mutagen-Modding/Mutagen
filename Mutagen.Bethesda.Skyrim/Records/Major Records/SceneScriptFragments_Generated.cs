@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         ScriptFragments,
         ISceneScriptFragments,
         ILoquiObjectSetter<SceneScriptFragments>,
-        IEquatable<SceneScriptFragments>
+        IEquatable<ISceneScriptFragmentsGetter>
     {
         #region Ctor
         public SceneScriptFragments()
@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SceneScriptFragmentsCommon)((ISceneScriptFragmentsGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(SceneScriptFragments? obj)
+        public bool Equals(ISceneScriptFragmentsGetter? obj)
         {
             return ((SceneScriptFragmentsCommon)((ISceneScriptFragmentsGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1357,6 +1357,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ISceneScriptFragmentsGetter rhs)) return false;
+            return ((SceneScriptFragmentsCommon)((ISceneScriptFragmentsGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ISceneScriptFragmentsGetter? obj)
+        {
+            return ((SceneScriptFragmentsCommon)((ISceneScriptFragmentsGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((SceneScriptFragmentsCommon)((ISceneScriptFragmentsGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

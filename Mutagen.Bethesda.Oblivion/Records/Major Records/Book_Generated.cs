@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         AItem,
         IBookInternal,
         ILoquiObjectSetter<Book>,
-        IEquatable<Book>
+        IEquatable<IBookGetter>
     {
         #region Ctor
         protected Book()
@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((BookCommon)((IBookGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Book? obj)
+        public bool Equals(IBookGetter? obj)
         {
             return ((BookCommon)((IBookGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2249,6 +2249,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IBookGetter rhs)) return false;
+            return ((BookCommon)((IBookGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IBookGetter? obj)
+        {
+            return ((BookCommon)((IBookGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((BookCommon)((IBookGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ILandscapeTextureInternal,
         ILoquiObjectSetter<LandscapeTexture>,
-        IEquatable<LandscapeTexture>
+        IEquatable<ILandscapeTextureGetter>
     {
         #region Ctor
         protected LandscapeTexture()
@@ -104,7 +104,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LandscapeTexture? obj)
+        public bool Equals(ILandscapeTextureGetter? obj)
         {
             return ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2166,6 +2166,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILandscapeTextureGetter rhs)) return false;
+            return ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILandscapeTextureGetter? obj)
+        {
+            return ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

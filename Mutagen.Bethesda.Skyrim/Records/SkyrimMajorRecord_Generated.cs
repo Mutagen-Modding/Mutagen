@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         MajorRecord,
         ISkyrimMajorRecordInternal,
         ILoquiObjectSetter<SkyrimMajorRecord>,
-        IEquatable<SkyrimMajorRecord>
+        IEquatable<ISkyrimMajorRecordGetter>
     {
         #region Ctor
         protected SkyrimMajorRecord()
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(SkyrimMajorRecord? obj)
+        public bool Equals(ISkyrimMajorRecordGetter? obj)
         {
             return ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1663,6 +1663,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ISkyrimMajorRecordGetter rhs)) return false;
+            return ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ISkyrimMajorRecordGetter? obj)
+        {
+            return ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

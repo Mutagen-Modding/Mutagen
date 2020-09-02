@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class WeatherImageSpaces :
         IWeatherImageSpaces,
         ILoquiObjectSetter<WeatherImageSpaces>,
-        IEquatable<WeatherImageSpaces>
+        IEquatable<IWeatherImageSpacesGetter>
     {
         #region Ctor
         public WeatherImageSpaces()
@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((WeatherImageSpacesCommon)((IWeatherImageSpacesGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(WeatherImageSpaces? obj)
+        public bool Equals(IWeatherImageSpacesGetter? obj)
         {
             return ((WeatherImageSpacesCommon)((IWeatherImageSpacesGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1408,6 +1408,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IWeatherImageSpacesGetter rhs)) return false;
+            return ((WeatherImageSpacesCommon)((IWeatherImageSpacesGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IWeatherImageSpacesGetter? obj)
+        {
+            return ((WeatherImageSpacesCommon)((IWeatherImageSpacesGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((WeatherImageSpacesCommon)((IWeatherImageSpacesGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

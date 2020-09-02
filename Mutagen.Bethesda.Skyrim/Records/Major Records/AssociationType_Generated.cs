@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IAssociationTypeInternal,
         ILoquiObjectSetter<AssociationType>,
-        IEquatable<AssociationType>
+        IEquatable<IAssociationTypeGetter>
     {
         #region Ctor
         protected AssociationType()
@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((AssociationTypeCommon)((IAssociationTypeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(AssociationType? obj)
+        public bool Equals(IAssociationTypeGetter? obj)
         {
             return ((AssociationTypeCommon)((IAssociationTypeGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1701,6 +1701,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IAssociationTypeGetter rhs)) return false;
+            return ((AssociationTypeCommon)((IAssociationTypeGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IAssociationTypeGetter? obj)
+        {
+            return ((AssociationTypeCommon)((IAssociationTypeGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((AssociationTypeCommon)((IAssociationTypeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IFactionInternal,
         ILoquiObjectSetter<Faction>,
-        IEquatable<Faction>
+        IEquatable<IFactionGetter>
     {
         #region Ctor
         protected Faction()
@@ -106,7 +106,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Faction? obj)
+        public bool Equals(IFactionGetter? obj)
         {
             return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2096,6 +2096,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IFactionGetter rhs)) return false;
+            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IFactionGetter? obj)
+        {
+            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((FactionCommon)((IFactionGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

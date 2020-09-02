@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         ANpc,
         ICreatureInternal,
         ILoquiObjectSetter<Creature>,
-        IEquatable<Creature>
+        IEquatable<ICreatureGetter>
     {
         #region Ctor
         protected Creature()
@@ -271,7 +271,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Creature? obj)
+        public bool Equals(ICreatureGetter? obj)
         {
             return ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -4606,6 +4606,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ICreatureGetter rhs)) return false;
+            return ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ICreatureGetter? obj)
+        {
+            return ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

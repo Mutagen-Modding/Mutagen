@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         ANavigationMeshData,
         IWorldspaceNavigationMeshData,
         ILoquiObjectSetter<WorldspaceNavigationMeshData>,
-        IEquatable<WorldspaceNavigationMeshData>
+        IEquatable<IWorldspaceNavigationMeshDataGetter>
     {
         #region Ctor
         public WorldspaceNavigationMeshData()
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(WorldspaceNavigationMeshData? obj)
+        public bool Equals(IWorldspaceNavigationMeshDataGetter? obj)
         {
             return ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1332,6 +1332,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IWorldspaceNavigationMeshDataGetter rhs)) return false;
+            return ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IWorldspaceNavigationMeshDataGetter? obj)
+        {
+            return ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

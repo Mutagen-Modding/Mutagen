@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class Decal :
         IDecal,
         ILoquiObjectSetter<Decal>,
-        IEquatable<Decal>
+        IEquatable<IDecalGetter>
     {
         #region Ctor
         public Decal()
@@ -94,7 +94,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((DecalCommon)((IDecalGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Decal? obj)
+        public bool Equals(IDecalGetter? obj)
         {
             return ((DecalCommon)((IDecalGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1808,6 +1808,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IDecalGetter rhs)) return false;
+            return ((DecalCommon)((IDecalGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IDecalGetter? obj)
+        {
+            return ((DecalCommon)((IDecalGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((DecalCommon)((IDecalGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

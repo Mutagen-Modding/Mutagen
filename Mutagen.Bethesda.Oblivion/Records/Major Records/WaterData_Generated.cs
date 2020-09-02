@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class WaterData :
         IWaterData,
         ILoquiObjectSetter<WaterData>,
-        IEquatable<WaterData>
+        IEquatable<IWaterDataGetter>
     {
         #region Ctor
         public WaterData()
@@ -142,7 +142,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((WaterDataCommon)((IWaterDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(WaterData? obj)
+        public bool Equals(IWaterDataGetter? obj)
         {
             return ((WaterDataCommon)((IWaterDataGetter)this).CommonInstance()!).Equals(this, obj);
         }

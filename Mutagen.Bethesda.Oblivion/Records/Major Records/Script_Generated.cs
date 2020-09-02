@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IScriptInternal,
         ILoquiObjectSetter<Script>,
-        IEquatable<Script>
+        IEquatable<IScriptGetter>
     {
         #region Ctor
         protected Script()
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ScriptCommon)((IScriptGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Script? obj)
+        public bool Equals(IScriptGetter? obj)
         {
             return ((ScriptCommon)((IScriptGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1520,6 +1520,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IScriptGetter rhs)) return false;
+            return ((ScriptCommon)((IScriptGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IScriptGetter? obj)
+        {
+            return ((ScriptCommon)((IScriptGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ScriptCommon)((IScriptGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class WorldspaceBlock :
         IWorldspaceBlock,
         ILoquiObjectSetter<WorldspaceBlock>,
-        IEquatable<WorldspaceBlock>
+        IEquatable<IWorldspaceBlockGetter>
     {
         #region Ctor
         public WorldspaceBlock()
@@ -90,7 +90,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(WorldspaceBlock? obj)
+        public bool Equals(IWorldspaceBlockGetter? obj)
         {
             return ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2438,6 +2438,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IWorldspaceBlockGetter rhs)) return false;
+            return ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IWorldspaceBlockGetter? obj)
+        {
+            return ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

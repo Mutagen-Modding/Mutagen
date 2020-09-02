@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class WorldspaceSubBlock :
         IWorldspaceSubBlock,
         ILoquiObjectSetter<WorldspaceSubBlock>,
-        IEquatable<WorldspaceSubBlock>
+        IEquatable<IWorldspaceSubBlockGetter>
     {
         #region Ctor
         public WorldspaceSubBlock()
@@ -87,7 +87,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((WorldspaceSubBlockCommon)((IWorldspaceSubBlockGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(WorldspaceSubBlock? obj)
+        public bool Equals(IWorldspaceSubBlockGetter? obj)
         {
             return ((WorldspaceSubBlockCommon)((IWorldspaceSubBlockGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2214,6 +2214,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IWorldspaceSubBlockGetter rhs)) return false;
+            return ((WorldspaceSubBlockCommon)((IWorldspaceSubBlockGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IWorldspaceSubBlockGetter? obj)
+        {
+            return ((WorldspaceSubBlockCommon)((IWorldspaceSubBlockGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((WorldspaceSubBlockCommon)((IWorldspaceSubBlockGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

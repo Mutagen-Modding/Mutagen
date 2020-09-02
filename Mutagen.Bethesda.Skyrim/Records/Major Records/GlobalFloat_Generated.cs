@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         Global,
         IGlobalFloatInternal,
         ILoquiObjectSetter<GlobalFloat>,
-        IEquatable<GlobalFloat>
+        IEquatable<IGlobalFloatGetter>
     {
         #region Ctor
         protected GlobalFloat()
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((GlobalFloatCommon)((IGlobalFloatGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(GlobalFloat? obj)
+        public bool Equals(IGlobalFloatGetter? obj)
         {
             return ((GlobalFloatCommon)((IGlobalFloatGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1570,6 +1570,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IGlobalFloatGetter rhs)) return false;
+            return ((GlobalFloatCommon)((IGlobalFloatGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IGlobalFloatGetter? obj)
+        {
+            return ((GlobalFloatCommon)((IGlobalFloatGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((GlobalFloatCommon)((IGlobalFloatGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Oblivion
         RegionData,
         IRegionObjects,
         ILoquiObjectSetter<RegionObjects>,
-        IEquatable<RegionObjects>
+        IEquatable<IRegionObjectsGetter>
     {
         #region Ctor
         public RegionObjects()
@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((RegionObjectsCommon)((IRegionObjectsGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(RegionObjects? obj)
+        public bool Equals(IRegionObjectsGetter? obj)
         {
             return ((RegionObjectsCommon)((IRegionObjectsGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1439,6 +1439,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IRegionObjectsGetter rhs)) return false;
+            return ((RegionObjectsCommon)((IRegionObjectsGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IRegionObjectsGetter? obj)
+        {
+            return ((RegionObjectsCommon)((IRegionObjectsGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((RegionObjectsCommon)((IRegionObjectsGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

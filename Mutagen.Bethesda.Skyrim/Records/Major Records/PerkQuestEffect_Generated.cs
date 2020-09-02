@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         APerkEffect,
         IPerkQuestEffect,
         ILoquiObjectSetter<PerkQuestEffect>,
-        IEquatable<PerkQuestEffect>
+        IEquatable<IPerkQuestEffectGetter>
     {
         #region Ctor
         public PerkQuestEffect()
@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PerkQuestEffectCommon)((IPerkQuestEffectGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PerkQuestEffect? obj)
+        public bool Equals(IPerkQuestEffectGetter? obj)
         {
             return ((PerkQuestEffectCommon)((IPerkQuestEffectGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1380,6 +1380,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPerkQuestEffectGetter rhs)) return false;
+            return ((PerkQuestEffectCommon)((IPerkQuestEffectGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPerkQuestEffectGetter? obj)
+        {
+            return ((PerkQuestEffectCommon)((IPerkQuestEffectGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PerkQuestEffectCommon)((IPerkQuestEffectGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

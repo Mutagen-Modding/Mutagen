@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         APerkEntryPointEffect,
         IPerkAddLeveledItem,
         ILoquiObjectSetter<PerkAddLeveledItem>,
-        IEquatable<PerkAddLeveledItem>
+        IEquatable<IPerkAddLeveledItemGetter>
     {
         #region Ctor
         public PerkAddLeveledItem()
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PerkAddLeveledItemCommon)((IPerkAddLeveledItemGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PerkAddLeveledItem? obj)
+        public bool Equals(IPerkAddLeveledItemGetter? obj)
         {
             return ((PerkAddLeveledItemCommon)((IPerkAddLeveledItemGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1334,6 +1334,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPerkAddLeveledItemGetter rhs)) return false;
+            return ((PerkAddLeveledItemCommon)((IPerkAddLeveledItemGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPerkAddLeveledItemGetter? obj)
+        {
+            return ((PerkAddLeveledItemCommon)((IPerkAddLeveledItemGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PerkAddLeveledItemCommon)((IPerkAddLeveledItemGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

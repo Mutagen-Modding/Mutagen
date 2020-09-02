@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         MagicEffectArchetype,
         IMagicEffectWerewolfArchetypeInternal,
         ILoquiObjectSetter<MagicEffectWerewolfArchetype>,
-        IEquatable<MagicEffectWerewolfArchetype>
+        IEquatable<IMagicEffectWerewolfArchetypeGetter>
     {
 
         #region To String
@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((MagicEffectWerewolfArchetypeCommon)((IMagicEffectWerewolfArchetypeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(MagicEffectWerewolfArchetype? obj)
+        public bool Equals(IMagicEffectWerewolfArchetypeGetter? obj)
         {
             return ((MagicEffectWerewolfArchetypeCommon)((IMagicEffectWerewolfArchetypeGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1141,6 +1141,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IMagicEffectWerewolfArchetypeGetter rhs)) return false;
+            return ((MagicEffectWerewolfArchetypeCommon)((IMagicEffectWerewolfArchetypeGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IMagicEffectWerewolfArchetypeGetter? obj)
+        {
+            return ((MagicEffectWerewolfArchetypeCommon)((IMagicEffectWerewolfArchetypeGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((MagicEffectWerewolfArchetypeCommon)((IMagicEffectWerewolfArchetypeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

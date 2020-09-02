@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IDialogViewInternal,
         ILoquiObjectSetter<DialogView>,
-        IEquatable<DialogView>
+        IEquatable<IDialogViewGetter>
     {
         #region Ctor
         protected DialogView()
@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(DialogView? obj)
+        public bool Equals(IDialogViewGetter? obj)
         {
             return ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2093,6 +2093,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IDialogViewGetter rhs)) return false;
+            return ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IDialogViewGetter? obj)
+        {
+            return ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

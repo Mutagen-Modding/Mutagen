@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class MapMarker :
         IMapMarker,
         ILoquiObjectSetter<MapMarker>,
-        IEquatable<MapMarker>
+        IEquatable<IMapMarkerGetter>
     {
         #region Ctor
         public MapMarker()
@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((MapMarkerCommon)((IMapMarkerGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(MapMarker? obj)
+        public bool Equals(IMapMarkerGetter? obj)
         {
             return ((MapMarkerCommon)((IMapMarkerGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1560,6 +1560,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IMapMarkerGetter rhs)) return false;
+            return ((MapMarkerCommon)((IMapMarkerGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IMapMarkerGetter? obj)
+        {
+            return ((MapMarkerCommon)((IMapMarkerGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((MapMarkerCommon)((IMapMarkerGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

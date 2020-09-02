@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         GameSetting,
         IGameSettingFloatInternal,
         ILoquiObjectSetter<GameSettingFloat>,
-        IEquatable<GameSettingFloat>
+        IEquatable<IGameSettingFloatGetter>
     {
         #region Ctor
         protected GameSettingFloat()
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((GameSettingFloatCommon)((IGameSettingFloatGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(GameSettingFloat? obj)
+        public bool Equals(IGameSettingFloatGetter? obj)
         {
             return ((GameSettingFloatCommon)((IGameSettingFloatGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1563,6 +1563,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IGameSettingFloatGetter rhs)) return false;
+            return ((GameSettingFloatCommon)((IGameSettingFloatGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IGameSettingFloatGetter? obj)
+        {
+            return ((GameSettingFloatCommon)((IGameSettingFloatGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((GameSettingFloatCommon)((IGameSettingFloatGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

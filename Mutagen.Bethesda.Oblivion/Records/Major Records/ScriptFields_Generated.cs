@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class ScriptFields :
         IScriptFields,
         ILoquiObjectSetter<ScriptFields>,
-        IEquatable<ScriptFields>
+        IEquatable<IScriptFieldsGetter>
     {
         #region Ctor
         public ScriptFields()
@@ -101,7 +101,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ScriptFieldsCommon)((IScriptFieldsGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ScriptFields? obj)
+        public bool Equals(IScriptFieldsGetter? obj)
         {
             return ((ScriptFieldsCommon)((IScriptFieldsGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1960,6 +1960,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IScriptFieldsGetter rhs)) return false;
+            return ((ScriptFieldsCommon)((IScriptFieldsGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IScriptFieldsGetter? obj)
+        {
+            return ((ScriptFieldsCommon)((IScriptFieldsGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ScriptFieldsCommon)((IScriptFieldsGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

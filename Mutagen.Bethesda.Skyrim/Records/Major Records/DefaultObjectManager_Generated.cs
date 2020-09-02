@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IDefaultObjectManagerInternal,
         ILoquiObjectSetter<DefaultObjectManager>,
-        IEquatable<DefaultObjectManager>
+        IEquatable<IDefaultObjectManagerGetter>
     {
         #region Ctor
         protected DefaultObjectManager()
@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((DefaultObjectManagerCommon)((IDefaultObjectManagerGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(DefaultObjectManager? obj)
+        public bool Equals(IDefaultObjectManagerGetter? obj)
         {
             return ((DefaultObjectManagerCommon)((IDefaultObjectManagerGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1639,6 +1639,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IDefaultObjectManagerGetter rhs)) return false;
+            return ((DefaultObjectManagerCommon)((IDefaultObjectManagerGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IDefaultObjectManagerGetter? obj)
+        {
+            return ((DefaultObjectManagerCommon)((IDefaultObjectManagerGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((DefaultObjectManagerCommon)((IDefaultObjectManagerGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class MountData :
         IMountData,
         ILoquiObjectSetter<MountData>,
-        IEquatable<MountData>
+        IEquatable<IMountDataGetter>
     {
         #region Ctor
         public MountData()
@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((MountDataCommon)((IMountDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(MountData? obj)
+        public bool Equals(IMountDataGetter? obj)
         {
             return ((MountDataCommon)((IMountDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1299,6 +1299,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IMountDataGetter rhs)) return false;
+            return ((MountDataCommon)((IMountDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IMountDataGetter? obj)
+        {
+            return ((MountDataCommon)((IMountDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((MountDataCommon)((IMountDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

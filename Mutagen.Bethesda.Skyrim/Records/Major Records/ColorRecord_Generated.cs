@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IColorRecordInternal,
         ILoquiObjectSetter<ColorRecord>,
-        IEquatable<ColorRecord>
+        IEquatable<IColorRecordGetter>
     {
         #region Ctor
         protected ColorRecord()
@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ColorRecordCommon)((IColorRecordGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ColorRecord? obj)
+        public bool Equals(IColorRecordGetter? obj)
         {
             return ((ColorRecordCommon)((IColorRecordGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1641,6 +1641,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IColorRecordGetter rhs)) return false;
+            return ((ColorRecordCommon)((IColorRecordGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IColorRecordGetter? obj)
+        {
+            return ((ColorRecordCommon)((IColorRecordGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ColorRecordCommon)((IColorRecordGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

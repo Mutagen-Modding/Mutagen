@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class LightData :
         ILightData,
         ILoquiObjectSetter<LightData>,
-        IEquatable<LightData>
+        IEquatable<ILightDataGetter>
     {
         #region Ctor
         public LightData()
@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LightDataCommon)((ILightDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LightData? obj)
+        public bool Equals(ILightDataGetter? obj)
         {
             return ((LightDataCommon)((ILightDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1511,6 +1511,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILightDataGetter rhs)) return false;
+            return ((LightDataCommon)((ILightDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILightDataGetter? obj)
+        {
+            return ((LightDataCommon)((ILightDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LightDataCommon)((ILightDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

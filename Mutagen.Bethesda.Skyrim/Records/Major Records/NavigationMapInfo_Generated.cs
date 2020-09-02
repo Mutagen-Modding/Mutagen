@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class NavigationMapInfo :
         INavigationMapInfo,
         ILoquiObjectSetter<NavigationMapInfo>,
-        IEquatable<NavigationMapInfo>
+        IEquatable<INavigationMapInfoGetter>
     {
         #region Ctor
         public NavigationMapInfo()
@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(NavigationMapInfo? obj)
+        public bool Equals(INavigationMapInfoGetter? obj)
         {
             return ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2396,6 +2396,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is INavigationMapInfoGetter rhs)) return false;
+            return ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(INavigationMapInfoGetter? obj)
+        {
+            return ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

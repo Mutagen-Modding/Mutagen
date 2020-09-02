@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IMiscItemInternal,
         ILoquiObjectSetter<MiscItem>,
-        IEquatable<MiscItem>
+        IEquatable<IMiscItemGetter>
     {
         #region Ctor
         protected MiscItem()
@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((MiscItemCommon)((IMiscItemGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(MiscItem? obj)
+        public bool Equals(IMiscItemGetter? obj)
         {
             return ((MiscItemCommon)((IMiscItemGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2766,6 +2766,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IMiscItemGetter rhs)) return false;
+            return ((MiscItemCommon)((IMiscItemGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IMiscItemGetter? obj)
+        {
+            return ((MiscItemCommon)((IMiscItemGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((MiscItemCommon)((IMiscItemGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

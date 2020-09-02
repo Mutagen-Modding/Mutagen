@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ILightingTemplateInternal,
         ILoquiObjectSetter<LightingTemplate>,
-        IEquatable<LightingTemplate>
+        IEquatable<ILightingTemplateGetter>
     {
         #region Ctor
         protected LightingTemplate()
@@ -222,7 +222,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LightingTemplateCommon)((ILightingTemplateGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LightingTemplate? obj)
+        public bool Equals(ILightingTemplateGetter? obj)
         {
             return ((LightingTemplateCommon)((ILightingTemplateGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -3229,6 +3229,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILightingTemplateGetter rhs)) return false;
+            return ((LightingTemplateCommon)((ILightingTemplateGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILightingTemplateGetter? obj)
+        {
+            return ((LightingTemplateCommon)((ILightingTemplateGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LightingTemplateCommon)((ILightingTemplateGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

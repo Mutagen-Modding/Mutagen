@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         OwnerTarget,
         IFactionOwner,
         ILoquiObjectSetter<FactionOwner>,
-        IEquatable<FactionOwner>
+        IEquatable<IFactionOwnerGetter>
     {
         #region Ctor
         public FactionOwner()
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((FactionOwnerCommon)((IFactionOwnerGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(FactionOwner? obj)
+        public bool Equals(IFactionOwnerGetter? obj)
         {
             return ((FactionOwnerCommon)((IFactionOwnerGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1276,6 +1276,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IFactionOwnerGetter rhs)) return false;
+            return ((FactionOwnerCommon)((IFactionOwnerGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IFactionOwnerGetter? obj)
+        {
+            return ((FactionOwnerCommon)((IFactionOwnerGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((FactionOwnerCommon)((IFactionOwnerGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

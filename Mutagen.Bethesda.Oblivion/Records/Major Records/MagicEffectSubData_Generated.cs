@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class MagicEffectSubData :
         IMagicEffectSubData,
         ILoquiObjectSetter<MagicEffectSubData>,
-        IEquatable<MagicEffectSubData>
+        IEquatable<IMagicEffectSubDataGetter>
     {
         #region Ctor
         public MagicEffectSubData()
@@ -91,7 +91,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((MagicEffectSubDataCommon)((IMagicEffectSubDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(MagicEffectSubData? obj)
+        public bool Equals(IMagicEffectSubDataGetter? obj)
         {
             return ((MagicEffectSubDataCommon)((IMagicEffectSubDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1587,6 +1587,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IMagicEffectSubDataGetter rhs)) return false;
+            return ((MagicEffectSubDataCommon)((IMagicEffectSubDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IMagicEffectSubDataGetter? obj)
+        {
+            return ((MagicEffectSubDataCommon)((IMagicEffectSubDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((MagicEffectSubDataCommon)((IMagicEffectSubDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

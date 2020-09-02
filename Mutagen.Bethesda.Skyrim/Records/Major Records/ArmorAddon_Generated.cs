@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IArmorAddonInternal,
         ILoquiObjectSetter<ArmorAddon>,
-        IEquatable<ArmorAddon>
+        IEquatable<IArmorAddonGetter>
     {
         #region Ctor
         protected ArmorAddon()
@@ -142,7 +142,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ArmorAddon? obj)
+        public bool Equals(IArmorAddonGetter? obj)
         {
             return ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -3072,6 +3072,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IArmorAddonGetter rhs)) return false;
+            return ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IArmorAddonGetter? obj)
+        {
+            return ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

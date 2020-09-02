@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class ListGroup<T> :
         IListGroup<T>,
         ILoquiObjectSetter<ListGroup<T>>,
-        IEquatable<ListGroup<T>>
+        IEquatable<IListGroupGetter<T>>
         where T : class, ICellBlock, IBinaryItem
     {
         #region Ctor
@@ -87,7 +87,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ListGroupCommon<T>)((IListGroupGetter<T>)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ListGroup<T>? obj)
+        public bool Equals(IListGroupGetter<T>? obj)
         {
             return ((ListGroupCommon<T>)((IListGroupGetter<T>)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1583,6 +1583,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IListGroupGetter<T> rhs)) return false;
+            return ((ListGroupCommon<T>)((IListGroupGetter<T>)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IListGroupGetter<T>? obj)
+        {
+            return ((ListGroupCommon<T>)((IListGroupGetter<T>)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ListGroupCommon<T>)((IListGroupGetter<T>)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

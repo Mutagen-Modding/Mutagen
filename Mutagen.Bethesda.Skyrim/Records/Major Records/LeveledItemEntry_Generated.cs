@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class LeveledItemEntry :
         ILeveledItemEntry,
         ILoquiObjectSetter<LeveledItemEntry>,
-        IEquatable<LeveledItemEntry>
+        IEquatable<ILeveledItemEntryGetter>
     {
         #region Ctor
         public LeveledItemEntry()
@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LeveledItemEntryCommon)((ILeveledItemEntryGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LeveledItemEntry? obj)
+        public bool Equals(ILeveledItemEntryGetter? obj)
         {
             return ((LeveledItemEntryCommon)((ILeveledItemEntryGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1442,6 +1442,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILeveledItemEntryGetter rhs)) return false;
+            return ((LeveledItemEntryCommon)((ILeveledItemEntryGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILeveledItemEntryGetter? obj)
+        {
+            return ((LeveledItemEntryCommon)((ILeveledItemEntryGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LeveledItemEntryCommon)((ILeveledItemEntryGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

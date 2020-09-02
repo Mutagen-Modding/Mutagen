@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class BaseLayer :
         IBaseLayer,
         ILoquiObjectSetter<BaseLayer>,
-        IEquatable<BaseLayer>
+        IEquatable<IBaseLayerGetter>
     {
         #region Ctor
         public BaseLayer()
@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((BaseLayerCommon)((IBaseLayerGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(BaseLayer? obj)
+        public bool Equals(IBaseLayerGetter? obj)
         {
             return ((BaseLayerCommon)((IBaseLayerGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1306,6 +1306,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IBaseLayerGetter rhs)) return false;
+            return ((BaseLayerCommon)((IBaseLayerGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IBaseLayerGetter? obj)
+        {
+            return ((BaseLayerCommon)((IBaseLayerGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((BaseLayerCommon)((IBaseLayerGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

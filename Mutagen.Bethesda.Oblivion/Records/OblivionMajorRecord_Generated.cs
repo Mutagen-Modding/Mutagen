@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Oblivion
         MajorRecord,
         IOblivionMajorRecordInternal,
         ILoquiObjectSetter<OblivionMajorRecord>,
-        IEquatable<OblivionMajorRecord>
+        IEquatable<IOblivionMajorRecordGetter>
     {
         #region Ctor
         protected OblivionMajorRecord()
@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(OblivionMajorRecord? obj)
+        public bool Equals(IOblivionMajorRecordGetter? obj)
         {
             return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1597,6 +1597,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IOblivionMajorRecordGetter rhs)) return false;
+            return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IOblivionMajorRecordGetter? obj)
+        {
+            return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

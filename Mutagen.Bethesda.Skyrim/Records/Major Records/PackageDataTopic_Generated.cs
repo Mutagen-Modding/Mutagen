@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         APackageData,
         IPackageDataTopic,
         ILoquiObjectSetter<PackageDataTopic>,
-        IEquatable<PackageDataTopic>
+        IEquatable<IPackageDataTopicGetter>
     {
         #region Ctor
         public PackageDataTopic()
@@ -87,7 +87,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PackageDataTopicCommon)((IPackageDataTopicGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PackageDataTopic? obj)
+        public bool Equals(IPackageDataTopicGetter? obj)
         {
             return ((PackageDataTopicCommon)((IPackageDataTopicGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1481,6 +1481,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPackageDataTopicGetter rhs)) return false;
+            return ((PackageDataTopicCommon)((IPackageDataTopicGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPackageDataTopicGetter? obj)
+        {
+            return ((PackageDataTopicCommon)((IPackageDataTopicGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PackageDataTopicCommon)((IPackageDataTopicGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

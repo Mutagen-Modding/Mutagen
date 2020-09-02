@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         APackageTarget,
         IPackageTargetAlias,
         ILoquiObjectSetter<PackageTargetAlias>,
-        IEquatable<PackageTargetAlias>
+        IEquatable<IPackageTargetAliasGetter>
     {
         #region Ctor
         public PackageTargetAlias()
@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PackageTargetAliasCommon)((IPackageTargetAliasGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PackageTargetAlias? obj)
+        public bool Equals(IPackageTargetAliasGetter? obj)
         {
             return ((PackageTargetAliasCommon)((IPackageTargetAliasGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1204,6 +1204,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPackageTargetAliasGetter rhs)) return false;
+            return ((PackageTargetAliasCommon)((IPackageTargetAliasGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPackageTargetAliasGetter? obj)
+        {
+            return ((PackageTargetAliasCommon)((IPackageTargetAliasGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PackageTargetAliasCommon)((IPackageTargetAliasGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

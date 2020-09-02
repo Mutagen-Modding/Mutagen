@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         Place,
         IWorldspaceInternal,
         ILoquiObjectSetter<Worldspace>,
-        IEquatable<Worldspace>
+        IEquatable<IWorldspaceGetter>
     {
         #region Ctor
         protected Worldspace()
@@ -169,7 +169,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Worldspace? obj)
+        public bool Equals(IWorldspaceGetter? obj)
         {
             return ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -3703,6 +3703,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IWorldspaceGetter rhs)) return false;
+            return ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IWorldspaceGetter? obj)
+        {
+            return ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

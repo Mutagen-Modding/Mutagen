@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class Lod :
         ILod,
         ILoquiObjectSetter<Lod>,
-        IEquatable<Lod>
+        IEquatable<ILodGetter>
     {
         #region Ctor
         public Lod()
@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LodCommon)((ILodGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Lod? obj)
+        public bool Equals(ILodGetter? obj)
         {
             return ((LodCommon)((ILodGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1683,6 +1683,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILodGetter rhs)) return false;
+            return ((LodCommon)((ILodGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILodGetter? obj)
+        {
+            return ((LodCommon)((ILodGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LodCommon)((ILodGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

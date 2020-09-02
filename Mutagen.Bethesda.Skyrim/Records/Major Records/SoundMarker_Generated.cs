@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ISoundMarkerInternal,
         ILoquiObjectSetter<SoundMarker>,
-        IEquatable<SoundMarker>
+        IEquatable<ISoundMarkerGetter>
     {
         #region Ctor
         protected SoundMarker()
@@ -95,7 +95,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SoundMarkerCommon)((ISoundMarkerGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(SoundMarker? obj)
+        public bool Equals(ISoundMarkerGetter? obj)
         {
             return ((SoundMarkerCommon)((ISoundMarkerGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1793,6 +1793,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ISoundMarkerGetter rhs)) return false;
+            return ((SoundMarkerCommon)((ISoundMarkerGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ISoundMarkerGetter? obj)
+        {
+            return ((SoundMarkerCommon)((ISoundMarkerGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((SoundMarkerCommon)((ISoundMarkerGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

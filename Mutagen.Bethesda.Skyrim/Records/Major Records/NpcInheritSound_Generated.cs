@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         ANpcSoundDefinition,
         INpcInheritSound,
         ILoquiObjectSetter<NpcInheritSound>,
-        IEquatable<NpcInheritSound>
+        IEquatable<INpcInheritSoundGetter>
     {
         #region Ctor
         public NpcInheritSound()
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((NpcInheritSoundCommon)((INpcInheritSoundGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(NpcInheritSound? obj)
+        public bool Equals(INpcInheritSoundGetter? obj)
         {
             return ((NpcInheritSoundCommon)((INpcInheritSoundGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1267,6 +1267,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is INpcInheritSoundGetter rhs)) return false;
+            return ((NpcInheritSoundCommon)((INpcInheritSoundGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(INpcInheritSoundGetter? obj)
+        {
+            return ((NpcInheritSoundCommon)((INpcInheritSoundGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((NpcInheritSoundCommon)((INpcInheritSoundGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class IndexedScriptFragment :
         IIndexedScriptFragment,
         ILoquiObjectSetter<IndexedScriptFragment>,
-        IEquatable<IndexedScriptFragment>
+        IEquatable<IIndexedScriptFragmentGetter>
     {
         #region Ctor
         public IndexedScriptFragment()
@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((IndexedScriptFragmentCommon)((IIndexedScriptFragmentGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(IndexedScriptFragment? obj)
+        public bool Equals(IIndexedScriptFragmentGetter? obj)
         {
             return ((IndexedScriptFragmentCommon)((IIndexedScriptFragmentGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1431,6 +1431,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IIndexedScriptFragmentGetter rhs)) return false;
+            return ((IndexedScriptFragmentCommon)((IIndexedScriptFragmentGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IIndexedScriptFragmentGetter? obj)
+        {
+            return ((IndexedScriptFragmentCommon)((IIndexedScriptFragmentGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((IndexedScriptFragmentCommon)((IIndexedScriptFragmentGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

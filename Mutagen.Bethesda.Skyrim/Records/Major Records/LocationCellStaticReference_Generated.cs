@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class LocationCellStaticReference :
         ILocationCellStaticReference,
         ILoquiObjectSetter<LocationCellStaticReference>,
-        IEquatable<LocationCellStaticReference>
+        IEquatable<ILocationCellStaticReferenceGetter>
     {
         #region Ctor
         public LocationCellStaticReference()
@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LocationCellStaticReferenceCommon)((ILocationCellStaticReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LocationCellStaticReference? obj)
+        public bool Equals(ILocationCellStaticReferenceGetter? obj)
         {
             return ((LocationCellStaticReferenceCommon)((ILocationCellStaticReferenceGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1394,6 +1394,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILocationCellStaticReferenceGetter rhs)) return false;
+            return ((LocationCellStaticReferenceCommon)((ILocationCellStaticReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILocationCellStaticReferenceGetter? obj)
+        {
+            return ((LocationCellStaticReferenceCommon)((ILocationCellStaticReferenceGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LocationCellStaticReferenceCommon)((ILocationCellStaticReferenceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

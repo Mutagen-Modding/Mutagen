@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class DialogResponseFlags :
         IDialogResponseFlags,
         ILoquiObjectSetter<DialogResponseFlags>,
-        IEquatable<DialogResponseFlags>
+        IEquatable<IDialogResponseFlagsGetter>
     {
         #region Ctor
         public DialogResponseFlags()
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((DialogResponseFlagsCommon)((IDialogResponseFlagsGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(DialogResponseFlags? obj)
+        public bool Equals(IDialogResponseFlagsGetter? obj)
         {
             return ((DialogResponseFlagsCommon)((IDialogResponseFlagsGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1258,6 +1258,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IDialogResponseFlagsGetter rhs)) return false;
+            return ((DialogResponseFlagsCommon)((IDialogResponseFlagsGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IDialogResponseFlagsGetter? obj)
+        {
+            return ((DialogResponseFlagsCommon)((IDialogResponseFlagsGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((DialogResponseFlagsCommon)((IDialogResponseFlagsGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

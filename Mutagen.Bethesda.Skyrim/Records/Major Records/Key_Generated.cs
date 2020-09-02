@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IKeyInternal,
         ILoquiObjectSetter<Key>,
-        IEquatable<Key>
+        IEquatable<IKeyGetter>
     {
         #region Ctor
         protected Key()
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((KeyCommon)((IKeyGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Key? obj)
+        public bool Equals(IKeyGetter? obj)
         {
             return ((KeyCommon)((IKeyGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2754,6 +2754,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IKeyGetter rhs)) return false;
+            return ((KeyCommon)((IKeyGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IKeyGetter? obj)
+        {
+            return ((KeyCommon)((IKeyGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((KeyCommon)((IKeyGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

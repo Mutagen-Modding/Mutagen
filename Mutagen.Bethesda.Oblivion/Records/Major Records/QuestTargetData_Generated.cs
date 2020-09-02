@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class QuestTargetData :
         IQuestTargetData,
         ILoquiObjectSetter<QuestTargetData>,
-        IEquatable<QuestTargetData>
+        IEquatable<IQuestTargetDataGetter>
     {
         #region Ctor
         public QuestTargetData()
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((QuestTargetDataCommon)((IQuestTargetDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(QuestTargetData? obj)
+        public bool Equals(IQuestTargetDataGetter? obj)
         {
             return ((QuestTargetDataCommon)((IQuestTargetDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1270,6 +1270,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IQuestTargetDataGetter rhs)) return false;
+            return ((QuestTargetDataCommon)((IQuestTargetDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IQuestTargetDataGetter? obj)
+        {
+            return ((QuestTargetDataCommon)((IQuestTargetDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((QuestTargetDataCommon)((IQuestTargetDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

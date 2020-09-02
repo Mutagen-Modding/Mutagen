@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         ANpcSpawn,
         IANpcInternal,
         ILoquiObjectSetter<ANpc>,
-        IEquatable<ANpc>
+        IEquatable<IANpcGetter>
     {
         #region Ctor
         protected ANpc()
@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ANpcCommon)((IANpcGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ANpc? obj)
+        public bool Equals(IANpcGetter? obj)
         {
             return ((ANpcCommon)((IANpcGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1343,6 +1343,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IANpcGetter rhs)) return false;
+            return ((ANpcCommon)((IANpcGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IANpcGetter? obj)
+        {
+            return ((ANpcCommon)((IANpcGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ANpcCommon)((IANpcGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

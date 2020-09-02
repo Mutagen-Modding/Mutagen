@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class TintPreset :
         ITintPreset,
         ILoquiObjectSetter<TintPreset>,
-        IEquatable<TintPreset>
+        IEquatable<ITintPresetGetter>
     {
         #region Ctor
         public TintPreset()
@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((TintPresetCommon)((ITintPresetGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(TintPreset? obj)
+        public bool Equals(ITintPresetGetter? obj)
         {
             return ((TintPresetCommon)((ITintPresetGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1432,6 +1432,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ITintPresetGetter rhs)) return false;
+            return ((TintPresetCommon)((ITintPresetGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ITintPresetGetter? obj)
+        {
+            return ((TintPresetCommon)((ITintPresetGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((TintPresetCommon)((ITintPresetGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

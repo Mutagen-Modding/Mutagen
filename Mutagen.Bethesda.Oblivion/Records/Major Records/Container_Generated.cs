@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IContainerInternal,
         ILoquiObjectSetter<Container>,
-        IEquatable<Container>
+        IEquatable<IContainerGetter>
     {
         #region Ctor
         protected Container()
@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Container? obj)
+        public bool Equals(IContainerGetter? obj)
         {
             return ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2212,6 +2212,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IContainerGetter rhs)) return false;
+            return ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IContainerGetter? obj)
+        {
+            return ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

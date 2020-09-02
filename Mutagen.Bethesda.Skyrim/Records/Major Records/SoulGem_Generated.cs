@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ISoulGemInternal,
         ILoquiObjectSetter<SoulGem>,
-        IEquatable<SoulGem>
+        IEquatable<ISoulGemGetter>
     {
         #region Ctor
         protected SoulGem()
@@ -156,7 +156,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SoulGemCommon)((ISoulGemGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(SoulGem? obj)
+        public bool Equals(ISoulGemGetter? obj)
         {
             return ((SoulGemCommon)((ISoulGemGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2883,6 +2883,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ISoulGemGetter rhs)) return false;
+            return ((SoulGemCommon)((ISoulGemGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ISoulGemGetter? obj)
+        {
+            return ((SoulGemCommon)((ISoulGemGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((SoulGemCommon)((ISoulGemGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

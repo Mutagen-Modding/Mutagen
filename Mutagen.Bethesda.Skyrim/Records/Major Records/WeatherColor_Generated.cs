@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class WeatherColor :
         IWeatherColor,
         ILoquiObjectSetter<WeatherColor>,
-        IEquatable<WeatherColor>
+        IEquatable<IWeatherColorGetter>
     {
         #region Ctor
         public WeatherColor()
@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((WeatherColorCommon)((IWeatherColorGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(WeatherColor? obj)
+        public bool Equals(IWeatherColorGetter? obj)
         {
             return ((WeatherColorCommon)((IWeatherColorGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1362,6 +1362,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IWeatherColorGetter rhs)) return false;
+            return ((WeatherColorCommon)((IWeatherColorGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IWeatherColorGetter? obj)
+        {
+            return ((WeatherColorCommon)((IWeatherColorGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((WeatherColorCommon)((IWeatherColorGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

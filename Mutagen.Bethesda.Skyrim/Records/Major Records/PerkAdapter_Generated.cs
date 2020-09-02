@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         AVirtualMachineAdapter,
         IPerkAdapter,
         ILoquiObjectSetter<PerkAdapter>,
-        IEquatable<PerkAdapter>
+        IEquatable<IPerkAdapterGetter>
     {
         #region Ctor
         public PerkAdapter()
@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PerkAdapterCommon)((IPerkAdapterGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PerkAdapter? obj)
+        public bool Equals(IPerkAdapterGetter? obj)
         {
             return ((PerkAdapterCommon)((IPerkAdapterGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1301,6 +1301,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPerkAdapterGetter rhs)) return false;
+            return ((PerkAdapterCommon)((IPerkAdapterGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPerkAdapterGetter? obj)
+        {
+            return ((PerkAdapterCommon)((IPerkAdapterGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PerkAdapterCommon)((IPerkAdapterGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class HeadData :
         IHeadData,
         ILoquiObjectSetter<HeadData>,
-        IEquatable<HeadData>
+        IEquatable<IHeadDataGetter>
     {
         #region Ctor
         public HeadData()
@@ -158,7 +158,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(HeadData? obj)
+        public bool Equals(IHeadDataGetter? obj)
         {
             return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2627,6 +2627,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IHeadDataGetter rhs)) return false;
+            return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IHeadDataGetter? obj)
+        {
+            return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

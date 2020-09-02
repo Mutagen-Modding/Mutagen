@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class BodyData :
         IBodyData,
         ILoquiObjectSetter<BodyData>,
-        IEquatable<BodyData>
+        IEquatable<IBodyDataGetter>
     {
         #region Ctor
         public BodyData()
@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((BodyDataCommon)((IBodyDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(BodyData? obj)
+        public bool Equals(IBodyDataGetter? obj)
         {
             return ((BodyDataCommon)((IBodyDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1507,6 +1507,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IBodyDataGetter rhs)) return false;
+            return ((BodyDataCommon)((IBodyDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IBodyDataGetter? obj)
+        {
+            return ((BodyDataCommon)((IBodyDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((BodyDataCommon)((IBodyDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

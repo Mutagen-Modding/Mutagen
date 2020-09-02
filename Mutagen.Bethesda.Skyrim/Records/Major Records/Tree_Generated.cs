@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ITreeInternal,
         ILoquiObjectSetter<Tree>,
-        IEquatable<Tree>
+        IEquatable<ITreeGetter>
     {
         #region Ctor
         protected Tree()
@@ -142,7 +142,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Tree? obj)
+        public bool Equals(ITreeGetter? obj)
         {
             return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2601,6 +2601,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ITreeGetter rhs)) return false;
+            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ITreeGetter? obj)
+        {
+            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((TreeCommon)((ITreeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

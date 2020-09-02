@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class RaceMovementType :
         IRaceMovementType,
         ILoquiObjectSetter<RaceMovementType>,
-        IEquatable<RaceMovementType>
+        IEquatable<IRaceMovementTypeGetter>
     {
         #region Ctor
         public RaceMovementType()
@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((RaceMovementTypeCommon)((IRaceMovementTypeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(RaceMovementType? obj)
+        public bool Equals(IRaceMovementTypeGetter? obj)
         {
             return ((RaceMovementTypeCommon)((IRaceMovementTypeGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1390,6 +1390,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IRaceMovementTypeGetter rhs)) return false;
+            return ((RaceMovementTypeCommon)((IRaceMovementTypeGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IRaceMovementTypeGetter? obj)
+        {
+            return ((RaceMovementTypeCommon)((IRaceMovementTypeGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((RaceMovementTypeCommon)((IRaceMovementTypeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

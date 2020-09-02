@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class LoadScreenLocation :
         ILoadScreenLocation,
         ILoquiObjectSetter<LoadScreenLocation>,
-        IEquatable<LoadScreenLocation>
+        IEquatable<ILoadScreenLocationGetter>
     {
         #region Ctor
         public LoadScreenLocation()
@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((LoadScreenLocationCommon)((ILoadScreenLocationGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LoadScreenLocation? obj)
+        public bool Equals(ILoadScreenLocationGetter? obj)
         {
             return ((LoadScreenLocationCommon)((ILoadScreenLocationGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1336,6 +1336,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILoadScreenLocationGetter rhs)) return false;
+            return ((LoadScreenLocationCommon)((ILoadScreenLocationGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILoadScreenLocationGetter? obj)
+        {
+            return ((LoadScreenLocationCommon)((ILoadScreenLocationGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LoadScreenLocationCommon)((ILoadScreenLocationGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

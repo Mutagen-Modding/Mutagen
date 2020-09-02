@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class RankPlacement :
         IRankPlacement,
         ILoquiObjectSetter<RankPlacement>,
-        IEquatable<RankPlacement>
+        IEquatable<IRankPlacementGetter>
     {
         #region Ctor
         public RankPlacement()
@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((RankPlacementCommon)((IRankPlacementGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(RankPlacement? obj)
+        public bool Equals(IRankPlacementGetter? obj)
         {
             return ((RankPlacementCommon)((IRankPlacementGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1337,6 +1337,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IRankPlacementGetter rhs)) return false;
+            return ((RankPlacementCommon)((IRankPlacementGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IRankPlacementGetter? obj)
+        {
+            return ((RankPlacementCommon)((IRankPlacementGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((RankPlacementCommon)((IRankPlacementGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

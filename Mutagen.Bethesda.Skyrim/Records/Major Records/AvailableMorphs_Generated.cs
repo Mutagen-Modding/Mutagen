@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class AvailableMorphs :
         IAvailableMorphs,
         ILoquiObjectSetter<AvailableMorphs>,
-        IEquatable<AvailableMorphs>
+        IEquatable<IAvailableMorphsGetter>
     {
         #region Ctor
         public AvailableMorphs()
@@ -105,7 +105,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((AvailableMorphsCommon)((IAvailableMorphsGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(AvailableMorphs? obj)
+        public bool Equals(IAvailableMorphsGetter? obj)
         {
             return ((AvailableMorphsCommon)((IAvailableMorphsGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1614,6 +1614,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IAvailableMorphsGetter rhs)) return false;
+            return ((AvailableMorphsCommon)((IAvailableMorphsGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IAvailableMorphsGetter? obj)
+        {
+            return ((AvailableMorphsCommon)((IAvailableMorphsGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((AvailableMorphsCommon)((IAvailableMorphsGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

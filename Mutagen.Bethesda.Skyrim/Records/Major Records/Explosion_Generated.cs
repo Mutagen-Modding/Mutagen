@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IExplosionInternal,
         ILoquiObjectSetter<Explosion>,
-        IEquatable<Explosion>
+        IEquatable<IExplosionGetter>
     {
         #region Ctor
         protected Explosion()
@@ -192,7 +192,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ExplosionCommon)((IExplosionGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Explosion? obj)
+        public bool Equals(IExplosionGetter? obj)
         {
             return ((ExplosionCommon)((IExplosionGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -3083,6 +3083,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IExplosionGetter rhs)) return false;
+            return ((ExplosionCommon)((IExplosionGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IExplosionGetter? obj)
+        {
+            return ((ExplosionCommon)((IExplosionGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ExplosionCommon)((IExplosionGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

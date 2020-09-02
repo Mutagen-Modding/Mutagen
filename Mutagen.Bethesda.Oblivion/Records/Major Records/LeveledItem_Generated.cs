@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         AItem,
         ILeveledItemInternal,
         ILoquiObjectSetter<LeveledItem>,
-        IEquatable<LeveledItem>
+        IEquatable<ILeveledItemGetter>
     {
         #region Ctor
         protected LeveledItem()
@@ -87,7 +87,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((LeveledItemCommon)((ILeveledItemGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LeveledItem? obj)
+        public bool Equals(ILeveledItemGetter? obj)
         {
             return ((LeveledItemCommon)((ILeveledItemGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1925,6 +1925,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILeveledItemGetter rhs)) return false;
+            return ((LeveledItemCommon)((ILeveledItemGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILeveledItemGetter? obj)
+        {
+            return ((LeveledItemCommon)((ILeveledItemGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LeveledItemCommon)((ILeveledItemGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

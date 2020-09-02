@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IImpactInternal,
         ILoquiObjectSetter<Impact>,
-        IEquatable<Impact>
+        IEquatable<IImpactGetter>
     {
         #region Ctor
         protected Impact()
@@ -137,7 +137,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Impact? obj)
+        public bool Equals(IImpactGetter? obj)
         {
             return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2702,6 +2702,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IImpactGetter rhs)) return false;
+            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IImpactGetter? obj)
+        {
+            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

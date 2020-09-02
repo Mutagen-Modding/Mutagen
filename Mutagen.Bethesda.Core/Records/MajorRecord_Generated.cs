@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda
     public abstract partial class MajorRecord :
         IMajorRecordInternal,
         ILoquiObjectSetter<MajorRecord>,
-        IEquatable<MajorRecord>
+        IEquatable<IMajorRecordGetter>
     {
         #region Ctor
         protected MajorRecord()
@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda
             return ((MajorRecordCommon)((IMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(MajorRecord? obj)
+        public bool Equals(IMajorRecordGetter? obj)
         {
             return ((MajorRecordCommon)((IMajorRecordGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1797,6 +1797,22 @@ namespace Mutagen.Bethesda.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IMajorRecordGetter rhs)) return false;
+            return ((MajorRecordCommon)((IMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IMajorRecordGetter? obj)
+        {
+            return ((MajorRecordCommon)((IMajorRecordGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((MajorRecordCommon)((IMajorRecordGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

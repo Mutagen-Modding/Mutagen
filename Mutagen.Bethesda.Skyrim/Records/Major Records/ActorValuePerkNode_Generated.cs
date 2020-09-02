@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ActorValuePerkNode :
         IActorValuePerkNode,
         ILoquiObjectSetter<ActorValuePerkNode>,
-        IEquatable<ActorValuePerkNode>
+        IEquatable<IActorValuePerkNodeGetter>
     {
         #region Ctor
         public ActorValuePerkNode()
@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ActorValuePerkNode? obj)
+        public bool Equals(IActorValuePerkNodeGetter? obj)
         {
             return ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2040,6 +2040,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IActorValuePerkNodeGetter rhs)) return false;
+            return ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IActorValuePerkNodeGetter? obj)
+        {
+            return ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

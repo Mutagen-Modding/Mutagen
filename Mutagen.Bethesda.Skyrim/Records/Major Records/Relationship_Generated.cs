@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IRelationshipInternal,
         ILoquiObjectSetter<Relationship>,
-        IEquatable<Relationship>
+        IEquatable<IRelationshipGetter>
     {
         #region Ctor
         protected Relationship()
@@ -90,7 +90,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Relationship? obj)
+        public bool Equals(IRelationshipGetter? obj)
         {
             return ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1919,6 +1919,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IRelationshipGetter rhs)) return false;
+            return ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IRelationshipGetter? obj)
+        {
+            return ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

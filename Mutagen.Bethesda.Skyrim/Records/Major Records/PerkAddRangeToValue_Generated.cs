@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         APerkEntryPointEffect,
         IPerkAddRangeToValue,
         ILoquiObjectSetter<PerkAddRangeToValue>,
-        IEquatable<PerkAddRangeToValue>
+        IEquatable<IPerkAddRangeToValueGetter>
     {
         #region Ctor
         public PerkAddRangeToValue()
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PerkAddRangeToValueCommon)((IPerkAddRangeToValueGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PerkAddRangeToValue? obj)
+        public bool Equals(IPerkAddRangeToValueGetter? obj)
         {
             return ((PerkAddRangeToValueCommon)((IPerkAddRangeToValueGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1379,6 +1379,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPerkAddRangeToValueGetter rhs)) return false;
+            return ((PerkAddRangeToValueCommon)((IPerkAddRangeToValueGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPerkAddRangeToValueGetter? obj)
+        {
+            return ((PerkAddRangeToValueCommon)((IPerkAddRangeToValueGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PerkAddRangeToValueCommon)((IPerkAddRangeToValueGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ISoundOutputModelInternal,
         ILoquiObjectSetter<SoundOutputModel>,
-        IEquatable<SoundOutputModel>
+        IEquatable<ISoundOutputModelGetter>
     {
         #region Ctor
         protected SoundOutputModel()
@@ -134,7 +134,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SoundOutputModelCommon)((ISoundOutputModelGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(SoundOutputModel? obj)
+        public bool Equals(ISoundOutputModelGetter? obj)
         {
             return ((SoundOutputModelCommon)((ISoundOutputModelGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2134,6 +2134,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ISoundOutputModelGetter rhs)) return false;
+            return ((SoundOutputModelCommon)((ISoundOutputModelGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ISoundOutputModelGetter? obj)
+        {
+            return ((SoundOutputModelCommon)((ISoundOutputModelGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((SoundOutputModelCommon)((ISoundOutputModelGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

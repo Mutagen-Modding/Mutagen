@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         MagicEffectArchetype,
         IMagicEffectGuideArchetypeInternal,
         ILoquiObjectSetter<MagicEffectGuideArchetype>,
-        IEquatable<MagicEffectGuideArchetype>
+        IEquatable<IMagicEffectGuideArchetypeGetter>
     {
 
         #region To String
@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((MagicEffectGuideArchetypeCommon)((IMagicEffectGuideArchetypeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(MagicEffectGuideArchetype? obj)
+        public bool Equals(IMagicEffectGuideArchetypeGetter? obj)
         {
             return ((MagicEffectGuideArchetypeCommon)((IMagicEffectGuideArchetypeGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1141,6 +1141,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IMagicEffectGuideArchetypeGetter rhs)) return false;
+            return ((MagicEffectGuideArchetypeCommon)((IMagicEffectGuideArchetypeGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IMagicEffectGuideArchetypeGetter? obj)
+        {
+            return ((MagicEffectGuideArchetypeCommon)((IMagicEffectGuideArchetypeGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((MagicEffectGuideArchetypeCommon)((IMagicEffectGuideArchetypeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

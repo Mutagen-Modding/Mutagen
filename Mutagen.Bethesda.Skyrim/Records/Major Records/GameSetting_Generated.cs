@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IGameSettingInternal,
         ILoquiObjectSetter<GameSetting>,
-        IEquatable<GameSetting>
+        IEquatable<IGameSettingGetter>
     {
         #region Ctor
         protected GameSetting()
@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((GameSettingCommon)((IGameSettingGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(GameSetting? obj)
+        public bool Equals(IGameSettingGetter? obj)
         {
             return ((GameSettingCommon)((IGameSettingGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1242,6 +1242,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IGameSettingGetter rhs)) return false;
+            return ((GameSettingCommon)((IGameSettingGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IGameSettingGetter? obj)
+        {
+            return ((GameSettingCommon)((IGameSettingGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((GameSettingCommon)((IGameSettingGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

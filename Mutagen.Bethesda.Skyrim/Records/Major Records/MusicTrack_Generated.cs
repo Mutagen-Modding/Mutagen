@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IMusicTrackInternal,
         ILoquiObjectSetter<MusicTrack>,
-        IEquatable<MusicTrack>
+        IEquatable<IMusicTrackGetter>
     {
         #region Ctor
         protected MusicTrack()
@@ -139,7 +139,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(MusicTrack? obj)
+        public bool Equals(IMusicTrackGetter? obj)
         {
             return ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2619,6 +2619,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IMusicTrackGetter rhs)) return false;
+            return ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IMusicTrackGetter? obj)
+        {
+            return ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

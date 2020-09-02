@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IScrollInternal,
         ILoquiObjectSetter<Scroll>,
-        IEquatable<Scroll>
+        IEquatable<IScrollGetter>
     {
         #region Ctor
         protected Scroll()
@@ -189,7 +189,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ScrollCommon)((IScrollGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Scroll? obj)
+        public bool Equals(IScrollGetter? obj)
         {
             return ((ScrollCommon)((IScrollGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -3645,6 +3645,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IScrollGetter rhs)) return false;
+            return ((ScrollCommon)((IScrollGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IScrollGetter? obj)
+        {
+            return ((ScrollCommon)((IScrollGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ScrollCommon)((IScrollGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

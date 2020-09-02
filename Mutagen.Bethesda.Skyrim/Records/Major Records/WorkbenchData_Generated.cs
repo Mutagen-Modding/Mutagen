@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class WorkbenchData :
         IWorkbenchData,
         ILoquiObjectSetter<WorkbenchData>,
-        IEquatable<WorkbenchData>
+        IEquatable<IWorkbenchDataGetter>
     {
         #region Ctor
         public WorkbenchData()
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((WorkbenchDataCommon)((IWorkbenchDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(WorkbenchData? obj)
+        public bool Equals(IWorkbenchDataGetter? obj)
         {
             return ((WorkbenchDataCommon)((IWorkbenchDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1271,6 +1271,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IWorkbenchDataGetter rhs)) return false;
+            return ((WorkbenchDataCommon)((IWorkbenchDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IWorkbenchDataGetter? obj)
+        {
+            return ((WorkbenchDataCommon)((IWorkbenchDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((WorkbenchDataCommon)((IWorkbenchDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class WeatherVolumetricLighting :
         IWeatherVolumetricLighting,
         ILoquiObjectSetter<WeatherVolumetricLighting>,
-        IEquatable<WeatherVolumetricLighting>
+        IEquatable<IWeatherVolumetricLightingGetter>
     {
         #region Ctor
         public WeatherVolumetricLighting()
@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((WeatherVolumetricLightingCommon)((IWeatherVolumetricLightingGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(WeatherVolumetricLighting? obj)
+        public bool Equals(IWeatherVolumetricLightingGetter? obj)
         {
             return ((WeatherVolumetricLightingCommon)((IWeatherVolumetricLightingGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1408,6 +1408,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IWeatherVolumetricLightingGetter rhs)) return false;
+            return ((WeatherVolumetricLightingCommon)((IWeatherVolumetricLightingGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IWeatherVolumetricLightingGetter? obj)
+        {
+            return ((WeatherVolumetricLightingCommon)((IWeatherVolumetricLightingGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((WeatherVolumetricLightingCommon)((IWeatherVolumetricLightingGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

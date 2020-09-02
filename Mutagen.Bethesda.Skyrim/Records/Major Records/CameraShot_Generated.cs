@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ICameraShotInternal,
         ILoquiObjectSetter<CameraShot>,
-        IEquatable<CameraShot>
+        IEquatable<ICameraShotGetter>
     {
         #region Ctor
         protected CameraShot()
@@ -125,7 +125,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((CameraShotCommon)((ICameraShotGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(CameraShot? obj)
+        public bool Equals(ICameraShotGetter? obj)
         {
             return ((CameraShotCommon)((ICameraShotGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2467,6 +2467,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ICameraShotGetter rhs)) return false;
+            return ((CameraShotCommon)((ICameraShotGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ICameraShotGetter? obj)
+        {
+            return ((CameraShotCommon)((ICameraShotGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((CameraShotCommon)((ICameraShotGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

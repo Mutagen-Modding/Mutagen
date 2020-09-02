@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         AVirtualMachineAdapter,
         ISceneAdapter,
         ILoquiObjectSetter<SceneAdapter>,
-        IEquatable<SceneAdapter>
+        IEquatable<ISceneAdapterGetter>
     {
         #region Ctor
         public SceneAdapter()
@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SceneAdapterCommon)((ISceneAdapterGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(SceneAdapter? obj)
+        public bool Equals(ISceneAdapterGetter? obj)
         {
             return ((SceneAdapterCommon)((ISceneAdapterGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1301,6 +1301,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ISceneAdapterGetter rhs)) return false;
+            return ((SceneAdapterCommon)((ISceneAdapterGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ISceneAdapterGetter? obj)
+        {
+            return ((SceneAdapterCommon)((ISceneAdapterGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((SceneAdapterCommon)((ISceneAdapterGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

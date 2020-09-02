@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         AClothing,
         IClothingInternal,
         ILoquiObjectSetter<Clothing>,
-        IEquatable<Clothing>
+        IEquatable<IClothingGetter>
     {
         #region Ctor
         protected Clothing()
@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ClothingCommon)((IClothingGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Clothing? obj)
+        public bool Equals(IClothingGetter? obj)
         {
             return ((ClothingCommon)((IClothingGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1749,6 +1749,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IClothingGetter rhs)) return false;
+            return ((ClothingCommon)((IClothingGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IClothingGetter? obj)
+        {
+            return ((ClothingCommon)((IClothingGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ClothingCommon)((IClothingGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

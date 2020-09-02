@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         MagicEffectArchetype,
         IMagicEffectSpawnHazardArchetypeInternal,
         ILoquiObjectSetter<MagicEffectSpawnHazardArchetype>,
-        IEquatable<MagicEffectSpawnHazardArchetype>
+        IEquatable<IMagicEffectSpawnHazardArchetypeGetter>
     {
 
         #region To String
@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((MagicEffectSpawnHazardArchetypeCommon)((IMagicEffectSpawnHazardArchetypeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(MagicEffectSpawnHazardArchetype? obj)
+        public bool Equals(IMagicEffectSpawnHazardArchetypeGetter? obj)
         {
             return ((MagicEffectSpawnHazardArchetypeCommon)((IMagicEffectSpawnHazardArchetypeGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1141,6 +1141,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IMagicEffectSpawnHazardArchetypeGetter rhs)) return false;
+            return ((MagicEffectSpawnHazardArchetypeCommon)((IMagicEffectSpawnHazardArchetypeGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IMagicEffectSpawnHazardArchetypeGetter? obj)
+        {
+            return ((MagicEffectSpawnHazardArchetypeCommon)((IMagicEffectSpawnHazardArchetypeGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((MagicEffectSpawnHazardArchetypeCommon)((IMagicEffectSpawnHazardArchetypeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

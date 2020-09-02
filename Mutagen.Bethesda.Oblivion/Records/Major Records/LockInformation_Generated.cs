@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class LockInformation :
         ILockInformation,
         ILoquiObjectSetter<LockInformation>,
-        IEquatable<LockInformation>
+        IEquatable<ILockInformationGetter>
     {
         #region Ctor
         public LockInformation()
@@ -82,7 +82,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((LockInformationCommon)((ILockInformationGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LockInformation? obj)
+        public bool Equals(ILockInformationGetter? obj)
         {
             return ((LockInformationCommon)((ILockInformationGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1400,6 +1400,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILockInformationGetter rhs)) return false;
+            return ((LockInformationCommon)((ILockInformationGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILockInformationGetter? obj)
+        {
+            return ((LockInformationCommon)((ILockInformationGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LockInformationCommon)((ILockInformationGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

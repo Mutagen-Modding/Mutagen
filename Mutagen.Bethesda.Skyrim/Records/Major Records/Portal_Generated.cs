@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class Portal :
         IPortal,
         ILoquiObjectSetter<Portal>,
-        IEquatable<Portal>
+        IEquatable<IPortalGetter>
     {
         #region Ctor
         public Portal()
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PortalCommon)((IPortalGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Portal? obj)
+        public bool Equals(IPortalGetter? obj)
         {
             return ((PortalCommon)((IPortalGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1262,6 +1262,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPortalGetter rhs)) return false;
+            return ((PortalCommon)((IPortalGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPortalGetter? obj)
+        {
+            return ((PortalCommon)((IPortalGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PortalCommon)((IPortalGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

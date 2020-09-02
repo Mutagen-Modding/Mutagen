@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IDualCastDataInternal,
         ILoquiObjectSetter<DualCastData>,
-        IEquatable<DualCastData>
+        IEquatable<IDualCastDataGetter>
     {
         #region Ctor
         protected DualCastData()
@@ -99,7 +99,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((DualCastDataCommon)((IDualCastDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(DualCastData? obj)
+        public bool Equals(IDualCastDataGetter? obj)
         {
             return ((DualCastDataCommon)((IDualCastDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2023,6 +2023,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IDualCastDataGetter rhs)) return false;
+            return ((DualCastDataCommon)((IDualCastDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IDualCastDataGetter? obj)
+        {
+            return ((DualCastDataCommon)((IDualCastDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((DualCastDataCommon)((IDualCastDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

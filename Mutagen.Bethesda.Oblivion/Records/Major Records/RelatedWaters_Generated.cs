@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class RelatedWaters :
         IRelatedWaters,
         ILoquiObjectSetter<RelatedWaters>,
-        IEquatable<RelatedWaters>
+        IEquatable<IRelatedWatersGetter>
     {
         #region Ctor
         public RelatedWaters()
@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((RelatedWatersCommon)((IRelatedWatersGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(RelatedWaters? obj)
+        public bool Equals(IRelatedWatersGetter? obj)
         {
             return ((RelatedWatersCommon)((IRelatedWatersGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1341,6 +1341,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IRelatedWatersGetter rhs)) return false;
+            return ((RelatedWatersCommon)((IRelatedWatersGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IRelatedWatersGetter? obj)
+        {
+            return ((RelatedWatersCommon)((IRelatedWatersGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((RelatedWatersCommon)((IRelatedWatersGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

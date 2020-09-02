@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class SceneActor :
         ISceneActor,
         ILoquiObjectSetter<SceneActor>,
-        IEquatable<SceneActor>
+        IEquatable<ISceneActorGetter>
     {
         #region Ctor
         public SceneActor()
@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SceneActorCommon)((ISceneActorGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(SceneActor? obj)
+        public bool Equals(ISceneActorGetter? obj)
         {
             return ((SceneActorCommon)((ISceneActorGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1399,6 +1399,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ISceneActorGetter rhs)) return false;
+            return ((SceneActorCommon)((ISceneActorGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ISceneActorGetter? obj)
+        {
+            return ((SceneActorCommon)((ISceneActorGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((SceneActorCommon)((ISceneActorGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

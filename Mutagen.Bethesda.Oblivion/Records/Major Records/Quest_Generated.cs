@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IQuestInternal,
         ILoquiObjectSetter<Quest>,
-        IEquatable<Quest>
+        IEquatable<IQuestGetter>
     {
         #region Ctor
         protected Quest()
@@ -131,7 +131,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((QuestCommon)((IQuestGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Quest? obj)
+        public bool Equals(IQuestGetter? obj)
         {
             return ((QuestCommon)((IQuestGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2433,6 +2433,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IQuestGetter rhs)) return false;
+            return ((QuestCommon)((IQuestGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IQuestGetter? obj)
+        {
+            return ((QuestCommon)((IQuestGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((QuestCommon)((IQuestGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

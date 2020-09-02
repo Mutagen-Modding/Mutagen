@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         ANpcSpawn,
         ILeveledCreatureInternal,
         ILoquiObjectSetter<LeveledCreature>,
-        IEquatable<LeveledCreature>
+        IEquatable<ILeveledCreatureGetter>
     {
         #region Ctor
         protected LeveledCreature()
@@ -97,7 +97,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((LeveledCreatureCommon)((ILeveledCreatureGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LeveledCreature? obj)
+        public bool Equals(ILeveledCreatureGetter? obj)
         {
             return ((LeveledCreatureCommon)((ILeveledCreatureGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2048,6 +2048,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILeveledCreatureGetter rhs)) return false;
+            return ((LeveledCreatureCommon)((ILeveledCreatureGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILeveledCreatureGetter? obj)
+        {
+            return ((LeveledCreatureCommon)((ILeveledCreatureGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LeveledCreatureCommon)((ILeveledCreatureGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

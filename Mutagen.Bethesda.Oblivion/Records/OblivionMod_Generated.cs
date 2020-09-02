@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class OblivionMod :
         IOblivionMod,
         ILoquiObjectSetter<OblivionMod>,
-        IEquatable<OblivionMod>
+        IEquatable<IOblivionModGetter>
     {
         #region Ctor
         protected OblivionMod()
@@ -518,7 +518,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((OblivionModCommon)((IOblivionModGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(OblivionMod? obj)
+        public bool Equals(IOblivionModGetter? obj)
         {
             return ((OblivionModCommon)((IOblivionModGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2776,6 +2776,7 @@ namespace Mutagen.Bethesda.Oblivion
         ICache<T, FormKey> IMod.GetGroup<T>() => this.GetGroup<T>();
         void IModGetter.WriteToBinary(string path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
         void IModGetter.WriteToBinaryParallel(string path, BinaryWriteParameters? param) => this.WriteToBinaryParallel(path, param);
+        IMask<bool> IEqualsMask.GetEqualsMask(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => OblivionModMixIn.GetEqualsMask(this, (IOblivionModGetter)rhs, include);
         public override bool CanUseLocalization => false;
         public override bool UsingLocalization
         {
@@ -11821,6 +11822,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IOblivionModGetter rhs)) return false;
+            return ((OblivionModCommon)((IOblivionModGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IOblivionModGetter? obj)
+        {
+            return ((OblivionModCommon)((IOblivionModGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((OblivionModCommon)((IOblivionModGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
+        IMask<bool> IEqualsMask.GetEqualsMask(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => OblivionModMixIn.GetEqualsMask(this, (IOblivionModGetter)rhs, include);
     }
 
 }

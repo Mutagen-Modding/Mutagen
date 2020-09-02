@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class PackageEvent :
         IPackageEvent,
         ILoquiObjectSetter<PackageEvent>,
-        IEquatable<PackageEvent>
+        IEquatable<IPackageEventGetter>
     {
         #region Ctor
         public PackageEvent()
@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PackageEventCommon)((IPackageEventGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PackageEvent? obj)
+        public bool Equals(IPackageEventGetter? obj)
         {
             return ((PackageEventCommon)((IPackageEventGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1988,6 +1988,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPackageEventGetter rhs)) return false;
+            return ((PackageEventCommon)((IPackageEventGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPackageEventGetter? obj)
+        {
+            return ((PackageEventCommon)((IPackageEventGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PackageEventCommon)((IPackageEventGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

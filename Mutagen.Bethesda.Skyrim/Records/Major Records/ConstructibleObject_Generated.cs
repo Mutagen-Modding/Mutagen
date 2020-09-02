@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IConstructibleObjectInternal,
         ILoquiObjectSetter<ConstructibleObject>,
-        IEquatable<ConstructibleObject>
+        IEquatable<IConstructibleObjectGetter>
     {
         #region Ctor
         protected ConstructibleObject()
@@ -106,7 +106,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ConstructibleObject? obj)
+        public bool Equals(IConstructibleObjectGetter? obj)
         {
             return ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2129,6 +2129,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IConstructibleObjectGetter rhs)) return false;
+            return ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IConstructibleObjectGetter? obj)
+        {
+            return ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

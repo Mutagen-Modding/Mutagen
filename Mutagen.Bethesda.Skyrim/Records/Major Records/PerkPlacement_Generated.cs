@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class PerkPlacement :
         IPerkPlacement,
         ILoquiObjectSetter<PerkPlacement>,
-        IEquatable<PerkPlacement>
+        IEquatable<IPerkPlacementGetter>
     {
         #region Ctor
         public PerkPlacement()
@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PerkPlacementCommon)((IPerkPlacementGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PerkPlacement? obj)
+        public bool Equals(IPerkPlacementGetter? obj)
         {
             return ((PerkPlacementCommon)((IPerkPlacementGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1337,6 +1337,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPerkPlacementGetter rhs)) return false;
+            return ((PerkPlacementCommon)((IPerkPlacementGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPerkPlacementGetter? obj)
+        {
+            return ((PerkPlacementCommon)((IPerkPlacementGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PerkPlacementCommon)((IPerkPlacementGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

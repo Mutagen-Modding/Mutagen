@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class WorldspaceParent :
         IWorldspaceParent,
         ILoquiObjectSetter<WorldspaceParent>,
-        IEquatable<WorldspaceParent>
+        IEquatable<IWorldspaceParentGetter>
     {
         #region Ctor
         public WorldspaceParent()
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((WorldspaceParentCommon)((IWorldspaceParentGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(WorldspaceParent? obj)
+        public bool Equals(IWorldspaceParentGetter? obj)
         {
             return ((WorldspaceParentCommon)((IWorldspaceParentGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1327,6 +1327,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IWorldspaceParentGetter rhs)) return false;
+            return ((WorldspaceParentCommon)((IWorldspaceParentGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IWorldspaceParentGetter? obj)
+        {
+            return ((WorldspaceParentCommon)((IWorldspaceParentGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((WorldspaceParentCommon)((IWorldspaceParentGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class Dimensions :
         IDimensions,
         ILoquiObjectSetter<Dimensions>,
-        IEquatable<Dimensions>
+        IEquatable<IDimensionsGetter>
     {
         #region Ctor
         public Dimensions()
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((DimensionsCommon)((IDimensionsGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Dimensions? obj)
+        public bool Equals(IDimensionsGetter? obj)
         {
             return ((DimensionsCommon)((IDimensionsGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1252,6 +1252,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IDimensionsGetter rhs)) return false;
+            return ((DimensionsCommon)((IDimensionsGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IDimensionsGetter? obj)
+        {
+            return ((DimensionsCommon)((IDimensionsGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((DimensionsCommon)((IDimensionsGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

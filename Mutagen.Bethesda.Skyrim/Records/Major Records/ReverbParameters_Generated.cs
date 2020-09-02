@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IReverbParametersInternal,
         ILoquiObjectSetter<ReverbParameters>,
-        IEquatable<ReverbParameters>
+        IEquatable<IReverbParametersGetter>
     {
         #region Ctor
         protected ReverbParameters()
@@ -102,7 +102,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ReverbParametersCommon)((IReverbParametersGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ReverbParameters? obj)
+        public bool Equals(IReverbParametersGetter? obj)
         {
             return ((ReverbParametersCommon)((IReverbParametersGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2257,6 +2257,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IReverbParametersGetter rhs)) return false;
+            return ((ReverbParametersCommon)((IReverbParametersGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IReverbParametersGetter? obj)
+        {
+            return ((ReverbParametersCommon)((IReverbParametersGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ReverbParametersCommon)((IReverbParametersGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

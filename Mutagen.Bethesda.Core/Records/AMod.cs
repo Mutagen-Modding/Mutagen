@@ -4,6 +4,7 @@ using Noggog;
 using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
+using Loqui;
 
 namespace Mutagen.Bethesda
 {
@@ -73,6 +74,7 @@ namespace Mutagen.Bethesda
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<FormKey> formKeys, bool throwIfUnknown) => throw new NotImplementedException();
         void IMajorRecordEnumerable.Remove<TMajor>(TMajor record, bool throwIfUnknown) => throw new NotImplementedException();
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => throw new NotImplementedException();
+        public IMask<bool> GetEqualsMask(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => throw new NotImplementedException();
         #endregion
 
         /// <summary> 

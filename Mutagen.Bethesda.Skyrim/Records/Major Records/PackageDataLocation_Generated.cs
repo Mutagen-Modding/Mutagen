@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         APackageData,
         IPackageDataLocation,
         ILoquiObjectSetter<PackageDataLocation>,
-        IEquatable<PackageDataLocation>
+        IEquatable<IPackageDataLocationGetter>
     {
         #region Ctor
         public PackageDataLocation()
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PackageDataLocationCommon)((IPackageDataLocationGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PackageDataLocation? obj)
+        public bool Equals(IPackageDataLocationGetter? obj)
         {
             return ((PackageDataLocationCommon)((IPackageDataLocationGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1309,6 +1309,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPackageDataLocationGetter rhs)) return false;
+            return ((PackageDataLocationCommon)((IPackageDataLocationGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPackageDataLocationGetter? obj)
+        {
+            return ((PackageDataLocationCommon)((IPackageDataLocationGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PackageDataLocationCommon)((IPackageDataLocationGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

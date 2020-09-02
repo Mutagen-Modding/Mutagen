@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ArmorModel :
         IArmorModel,
         ILoquiObjectSetter<ArmorModel>,
-        IEquatable<ArmorModel>
+        IEquatable<IArmorModelGetter>
     {
         #region Ctor
         public ArmorModel()
@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ArmorModelCommon)((IArmorModelGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ArmorModel? obj)
+        public bool Equals(IArmorModelGetter? obj)
         {
             return ((ArmorModelCommon)((IArmorModelGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1443,6 +1443,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IArmorModelGetter rhs)) return false;
+            return ((ArmorModelCommon)((IArmorModelGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IArmorModelGetter? obj)
+        {
+            return ((ArmorModelCommon)((IArmorModelGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ArmorModelCommon)((IArmorModelGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

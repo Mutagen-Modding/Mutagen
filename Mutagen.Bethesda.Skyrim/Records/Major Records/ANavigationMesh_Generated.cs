@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IANavigationMeshInternal,
         ILoquiObjectSetter<ANavigationMesh>,
-        IEquatable<ANavigationMesh>
+        IEquatable<IANavigationMeshGetter>
     {
         #region Ctor
         protected ANavigationMesh()
@@ -96,7 +96,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ANavigationMeshCommon)((IANavigationMeshGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ANavigationMesh? obj)
+        public bool Equals(IANavigationMeshGetter? obj)
         {
             return ((ANavigationMeshCommon)((IANavigationMeshGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1706,6 +1706,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IANavigationMeshGetter rhs)) return false;
+            return ((ANavigationMeshCommon)((IANavigationMeshGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IANavigationMeshGetter? obj)
+        {
+            return ((ANavigationMeshCommon)((IANavigationMeshGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ANavigationMeshCommon)((IANavigationMeshGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

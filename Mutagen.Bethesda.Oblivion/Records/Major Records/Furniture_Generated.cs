@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IFurnitureInternal,
         ILoquiObjectSetter<Furniture>,
-        IEquatable<Furniture>
+        IEquatable<IFurnitureGetter>
     {
         #region Ctor
         protected Furniture()
@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Furniture? obj)
+        public bool Equals(IFurnitureGetter? obj)
         {
             return ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1782,6 +1782,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IFurnitureGetter rhs)) return false;
+            return ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IFurnitureGetter? obj)
+        {
+            return ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

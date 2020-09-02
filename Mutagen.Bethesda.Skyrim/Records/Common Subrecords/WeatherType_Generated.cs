@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class WeatherType :
         IWeatherType,
         ILoquiObjectSetter<WeatherType>,
-        IEquatable<WeatherType>
+        IEquatable<IWeatherTypeGetter>
     {
         #region Ctor
         public WeatherType()
@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((WeatherTypeCommon)((IWeatherTypeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(WeatherType? obj)
+        public bool Equals(IWeatherTypeGetter? obj)
         {
             return ((WeatherTypeCommon)((IWeatherTypeGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1322,6 +1322,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IWeatherTypeGetter rhs)) return false;
+            return ((WeatherTypeCommon)((IWeatherTypeGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IWeatherTypeGetter? obj)
+        {
+            return ((WeatherTypeCommon)((IWeatherTypeGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((WeatherTypeCommon)((IWeatherTypeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

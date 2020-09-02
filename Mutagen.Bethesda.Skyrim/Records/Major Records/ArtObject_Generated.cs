@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IArtObjectInternal,
         ILoquiObjectSetter<ArtObject>,
-        IEquatable<ArtObject>
+        IEquatable<IArtObjectGetter>
     {
         #region Ctor
         protected ArtObject()
@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ArtObjectCommon)((IArtObjectGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ArtObject? obj)
+        public bool Equals(IArtObjectGetter? obj)
         {
             return ((ArtObjectCommon)((IArtObjectGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1732,6 +1732,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IArtObjectGetter rhs)) return false;
+            return ((ArtObjectCommon)((IArtObjectGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IArtObjectGetter? obj)
+        {
+            return ((ArtObjectCommon)((IArtObjectGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ArtObjectCommon)((IArtObjectGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

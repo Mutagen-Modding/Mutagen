@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda
     public partial class MasterReference :
         IMasterReference,
         ILoquiObjectSetter<MasterReference>,
-        IEquatable<MasterReference>
+        IEquatable<IMasterReferenceGetter>
     {
         #region Ctor
         public MasterReference()
@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda
             return ((MasterReferenceCommon)((IMasterReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(MasterReference? obj)
+        public bool Equals(IMasterReferenceGetter? obj)
         {
             return ((MasterReferenceCommon)((IMasterReferenceGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1308,6 +1308,22 @@ namespace Mutagen.Bethesda.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IMasterReferenceGetter rhs)) return false;
+            return ((MasterReferenceCommon)((IMasterReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IMasterReferenceGetter? obj)
+        {
+            return ((MasterReferenceCommon)((IMasterReferenceGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((MasterReferenceCommon)((IMasterReferenceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

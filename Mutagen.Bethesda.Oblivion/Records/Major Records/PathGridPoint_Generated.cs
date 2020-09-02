@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class PathGridPoint :
         IPathGridPoint,
         ILoquiObjectSetter<PathGridPoint>,
-        IEquatable<PathGridPoint>
+        IEquatable<IPathGridPointGetter>
     {
         #region Ctor
         public PathGridPoint()
@@ -91,7 +91,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((PathGridPointCommon)((IPathGridPointGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PathGridPoint? obj)
+        public bool Equals(IPathGridPointGetter? obj)
         {
             return ((PathGridPointCommon)((IPathGridPointGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1477,6 +1477,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPathGridPointGetter rhs)) return false;
+            return ((PathGridPointCommon)((IPathGridPointGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPathGridPointGetter? obj)
+        {
+            return ((PathGridPointCommon)((IPathGridPointGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PathGridPointCommon)((IPathGridPointGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

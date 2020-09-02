@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IWaterInternal,
         ILoquiObjectSetter<Water>,
-        IEquatable<Water>
+        IEquatable<IWaterGetter>
     {
         #region Ctor
         protected Water()
@@ -110,7 +110,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Water? obj)
+        public bool Equals(IWaterGetter? obj)
         {
             return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2097,6 +2097,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IWaterGetter rhs)) return false;
+            return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IWaterGetter? obj)
+        {
+            return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((WaterCommon)((IWaterGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

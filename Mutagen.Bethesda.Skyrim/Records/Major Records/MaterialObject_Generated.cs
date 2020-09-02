@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IMaterialObjectInternal,
         ILoquiObjectSetter<MaterialObject>,
-        IEquatable<MaterialObject>
+        IEquatable<IMaterialObjectGetter>
     {
         #region Ctor
         protected MaterialObject()
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((MaterialObjectCommon)((IMaterialObjectGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(MaterialObject? obj)
+        public bool Equals(IMaterialObjectGetter? obj)
         {
             return ((MaterialObjectCommon)((IMaterialObjectGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2439,6 +2439,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IMaterialObjectGetter rhs)) return false;
+            return ((MaterialObjectCommon)((IMaterialObjectGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IMaterialObjectGetter? obj)
+        {
+            return ((MaterialObjectCommon)((IMaterialObjectGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((MaterialObjectCommon)((IMaterialObjectGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

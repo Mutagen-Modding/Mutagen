@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ExternalAliasReference :
         IExternalAliasReference,
         ILoquiObjectSetter<ExternalAliasReference>,
-        IEquatable<ExternalAliasReference>
+        IEquatable<IExternalAliasReferenceGetter>
     {
         #region Ctor
         public ExternalAliasReference()
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ExternalAliasReferenceCommon)((IExternalAliasReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ExternalAliasReference? obj)
+        public bool Equals(IExternalAliasReferenceGetter? obj)
         {
             return ((ExternalAliasReferenceCommon)((IExternalAliasReferenceGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1347,6 +1347,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IExternalAliasReferenceGetter rhs)) return false;
+            return ((ExternalAliasReferenceCommon)((IExternalAliasReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IExternalAliasReferenceGetter? obj)
+        {
+            return ((ExternalAliasReferenceCommon)((IExternalAliasReferenceGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ExternalAliasReferenceCommon)((IExternalAliasReferenceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

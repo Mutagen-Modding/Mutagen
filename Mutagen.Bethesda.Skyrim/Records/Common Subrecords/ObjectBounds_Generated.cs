@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ObjectBounds :
         IObjectBounds,
         ILoquiObjectSetter<ObjectBounds>,
-        IEquatable<ObjectBounds>
+        IEquatable<IObjectBoundsGetter>
     {
         #region Ctor
         public ObjectBounds()
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ObjectBoundsCommon)((IObjectBoundsGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ObjectBounds? obj)
+        public bool Equals(IObjectBoundsGetter? obj)
         {
             return ((ObjectBoundsCommon)((IObjectBoundsGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1252,6 +1252,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IObjectBoundsGetter rhs)) return false;
+            return ((ObjectBoundsCommon)((IObjectBoundsGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IObjectBoundsGetter? obj)
+        {
+            return ((ObjectBoundsCommon)((IObjectBoundsGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ObjectBoundsCommon)((IObjectBoundsGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

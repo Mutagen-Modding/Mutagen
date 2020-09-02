@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IActivatorInternal,
         ILoquiObjectSetter<Activator>,
-        IEquatable<Activator>
+        IEquatable<IActivatorGetter>
     {
         #region Ctor
         protected Activator()
@@ -156,7 +156,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ActivatorCommon)((IActivatorGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Activator? obj)
+        public bool Equals(IActivatorGetter? obj)
         {
             return ((ActivatorCommon)((IActivatorGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2838,6 +2838,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IActivatorGetter rhs)) return false;
+            return ((ActivatorCommon)((IActivatorGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IActivatorGetter? obj)
+        {
+            return ((ActivatorCommon)((IActivatorGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ActivatorCommon)((IActivatorGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

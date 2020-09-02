@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IProjectileInternal,
         ILoquiObjectSetter<Projectile>,
-        IEquatable<Projectile>
+        IEquatable<IProjectileGetter>
     {
         #region Ctor
         protected Projectile()
@@ -205,7 +205,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Projectile? obj)
+        public bool Equals(IProjectileGetter? obj)
         {
             return ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -3868,6 +3868,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IProjectileGetter rhs)) return false;
+            return ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IProjectileGetter? obj)
+        {
+            return ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

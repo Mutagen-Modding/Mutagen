@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ActorValueSkill :
         IActorValueSkill,
         ILoquiObjectSetter<ActorValueSkill>,
-        IEquatable<ActorValueSkill>
+        IEquatable<IActorValueSkillGetter>
     {
         #region Ctor
         public ActorValueSkill()
@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ActorValueSkillCommon)((IActorValueSkillGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ActorValueSkill? obj)
+        public bool Equals(IActorValueSkillGetter? obj)
         {
             return ((ActorValueSkillCommon)((IActorValueSkillGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1376,6 +1376,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IActorValueSkillGetter rhs)) return false;
+            return ((ActorValueSkillCommon)((IActorValueSkillGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IActorValueSkillGetter? obj)
+        {
+            return ((ActorValueSkillCommon)((IActorValueSkillGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ActorValueSkillCommon)((IActorValueSkillGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

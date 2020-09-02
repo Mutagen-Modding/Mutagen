@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class WorldspaceLandDefaults :
         IWorldspaceLandDefaults,
         ILoquiObjectSetter<WorldspaceLandDefaults>,
-        IEquatable<WorldspaceLandDefaults>
+        IEquatable<IWorldspaceLandDefaultsGetter>
     {
         #region Ctor
         public WorldspaceLandDefaults()
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((WorldspaceLandDefaultsCommon)((IWorldspaceLandDefaultsGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(WorldspaceLandDefaults? obj)
+        public bool Equals(IWorldspaceLandDefaultsGetter? obj)
         {
             return ((WorldspaceLandDefaultsCommon)((IWorldspaceLandDefaultsGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1252,6 +1252,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IWorldspaceLandDefaultsGetter rhs)) return false;
+            return ((WorldspaceLandDefaultsCommon)((IWorldspaceLandDefaultsGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IWorldspaceLandDefaultsGetter? obj)
+        {
+            return ((WorldspaceLandDefaultsCommon)((IWorldspaceLandDefaultsGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((WorldspaceLandDefaultsCommon)((IWorldspaceLandDefaultsGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

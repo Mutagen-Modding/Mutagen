@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ICameraPathInternal,
         ILoquiObjectSetter<CameraPath>,
-        IEquatable<CameraPath>
+        IEquatable<ICameraPathGetter>
     {
         #region Ctor
         protected CameraPath()
@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((CameraPathCommon)((ICameraPathGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(CameraPath? obj)
+        public bool Equals(ICameraPathGetter? obj)
         {
             return ((CameraPathCommon)((ICameraPathGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2225,6 +2225,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ICameraPathGetter rhs)) return false;
+            return ((CameraPathCommon)((ICameraPathGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ICameraPathGetter? obj)
+        {
+            return ((CameraPathCommon)((ICameraPathGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((CameraPathCommon)((ICameraPathGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

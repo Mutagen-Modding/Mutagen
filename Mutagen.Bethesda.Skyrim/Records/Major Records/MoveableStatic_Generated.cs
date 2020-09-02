@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IMoveableStaticInternal,
         ILoquiObjectSetter<MoveableStatic>,
-        IEquatable<MoveableStatic>
+        IEquatable<IMoveableStaticGetter>
     {
         #region Ctor
         protected MoveableStatic()
@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((MoveableStaticCommon)((IMoveableStaticGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(MoveableStatic? obj)
+        public bool Equals(IMoveableStaticGetter? obj)
         {
             return ((MoveableStaticCommon)((IMoveableStaticGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2053,6 +2053,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IMoveableStaticGetter rhs)) return false;
+            return ((MoveableStaticCommon)((IMoveableStaticGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IMoveableStaticGetter? obj)
+        {
+            return ((MoveableStaticCommon)((IMoveableStaticGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((MoveableStaticCommon)((IMoveableStaticGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

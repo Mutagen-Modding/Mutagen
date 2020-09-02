@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ShoutWord :
         IShoutWord,
         ILoquiObjectSetter<ShoutWord>,
-        IEquatable<ShoutWord>
+        IEquatable<IShoutWordGetter>
     {
         #region Ctor
         public ShoutWord()
@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ShoutWordCommon)((IShoutWordGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ShoutWord? obj)
+        public bool Equals(IShoutWordGetter? obj)
         {
             return ((ShoutWordCommon)((IShoutWordGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1336,6 +1336,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IShoutWordGetter rhs)) return false;
+            return ((ShoutWordCommon)((IShoutWordGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IShoutWordGetter? obj)
+        {
+            return ((ShoutWordCommon)((IShoutWordGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ShoutWordCommon)((IShoutWordGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

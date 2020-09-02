@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class OblivionModHeader :
         IOblivionModHeader,
         ILoquiObjectSetter<OblivionModHeader>,
-        IEquatable<OblivionModHeader>
+        IEquatable<IOblivionModHeaderGetter>
     {
         #region Ctor
         public OblivionModHeader()
@@ -122,7 +122,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((OblivionModHeaderCommon)((IOblivionModHeaderGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(OblivionModHeader? obj)
+        public bool Equals(IOblivionModHeaderGetter? obj)
         {
             return ((OblivionModHeaderCommon)((IOblivionModHeaderGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2047,6 +2047,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IOblivionModHeaderGetter rhs)) return false;
+            return ((OblivionModHeaderCommon)((IOblivionModHeaderGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IOblivionModHeaderGetter? obj)
+        {
+            return ((OblivionModHeaderCommon)((IOblivionModHeaderGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((OblivionModHeaderCommon)((IOblivionModHeaderGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

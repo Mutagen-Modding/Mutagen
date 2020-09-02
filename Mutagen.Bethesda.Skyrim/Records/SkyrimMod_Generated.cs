@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class SkyrimMod :
         ISkyrimMod,
         ILoquiObjectSetter<SkyrimMod>,
-        IEquatable<SkyrimMod>
+        IEquatable<ISkyrimModGetter>
     {
         #region Ctor
         protected SkyrimMod()
@@ -974,7 +974,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SkyrimModCommon)((ISkyrimModGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(SkyrimMod? obj)
+        public bool Equals(ISkyrimModGetter? obj)
         {
             return ((SkyrimModCommon)((ISkyrimModGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -5228,6 +5228,7 @@ namespace Mutagen.Bethesda.Skyrim
         ICache<T, FormKey> IMod.GetGroup<T>() => this.GetGroup<T>();
         void IModGetter.WriteToBinary(string path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
         void IModGetter.WriteToBinaryParallel(string path, BinaryWriteParameters? param) => this.WriteToBinaryParallel(path, param);
+        IMask<bool> IEqualsMask.GetEqualsMask(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => SkyrimModMixIn.GetEqualsMask(this, (ISkyrimModGetter)rhs, include);
         public override bool CanUseLocalization => true;
         public override bool UsingLocalization
         {
@@ -22694,6 +22695,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ISkyrimModGetter rhs)) return false;
+            return ((SkyrimModCommon)((ISkyrimModGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ISkyrimModGetter? obj)
+        {
+            return ((SkyrimModCommon)((ISkyrimModGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((SkyrimModCommon)((ISkyrimModGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
+        IMask<bool> IEqualsMask.GetEqualsMask(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => SkyrimModMixIn.GetEqualsMask(this, (ISkyrimModGetter)rhs, include);
     }
 
 }

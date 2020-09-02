@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class AlternateTexture :
         IAlternateTexture,
         ILoquiObjectSetter<AlternateTexture>,
-        IEquatable<AlternateTexture>
+        IEquatable<IAlternateTextureGetter>
     {
         #region Ctor
         public AlternateTexture()
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((AlternateTextureCommon)((IAlternateTextureGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(AlternateTexture? obj)
+        public bool Equals(IAlternateTextureGetter? obj)
         {
             return ((AlternateTextureCommon)((IAlternateTextureGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1324,6 +1324,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IAlternateTextureGetter rhs)) return false;
+            return ((AlternateTextureCommon)((IAlternateTextureGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IAlternateTextureGetter? obj)
+        {
+            return ((AlternateTextureCommon)((IAlternateTextureGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((AlternateTextureCommon)((IAlternateTextureGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         AStoryManagerNode,
         IStoryManagerBranchNodeInternal,
         ILoquiObjectSetter<StoryManagerBranchNode>,
-        IEquatable<StoryManagerBranchNode>
+        IEquatable<IStoryManagerBranchNodeGetter>
     {
         #region Ctor
         protected StoryManagerBranchNode()
@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((StoryManagerBranchNodeCommon)((IStoryManagerBranchNodeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(StoryManagerBranchNode? obj)
+        public bool Equals(IStoryManagerBranchNodeGetter? obj)
         {
             return ((StoryManagerBranchNodeCommon)((IStoryManagerBranchNodeGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1681,6 +1681,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IStoryManagerBranchNodeGetter rhs)) return false;
+            return ((StoryManagerBranchNodeCommon)((IStoryManagerBranchNodeGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IStoryManagerBranchNodeGetter? obj)
+        {
+            return ((StoryManagerBranchNodeCommon)((IStoryManagerBranchNodeGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((StoryManagerBranchNodeCommon)((IStoryManagerBranchNodeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

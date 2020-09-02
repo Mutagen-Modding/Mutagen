@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         OwnerTarget,
         INoOwner,
         ILoquiObjectSetter<NoOwner>,
-        IEquatable<NoOwner>
+        IEquatable<INoOwnerGetter>
     {
         #region Ctor
         public NoOwner()
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((NoOwnerCommon)((INoOwnerGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(NoOwner? obj)
+        public bool Equals(INoOwnerGetter? obj)
         {
             return ((NoOwnerCommon)((INoOwnerGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1276,6 +1276,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is INoOwnerGetter rhs)) return false;
+            return ((NoOwnerCommon)((INoOwnerGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(INoOwnerGetter? obj)
+        {
+            return ((NoOwnerCommon)((INoOwnerGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((NoOwnerCommon)((INoOwnerGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

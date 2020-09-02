@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         ANpcLevel,
         IPcLevelMult,
         ILoquiObjectSetter<PcLevelMult>,
-        IEquatable<PcLevelMult>
+        IEquatable<IPcLevelMultGetter>
     {
         #region Ctor
         public PcLevelMult()
@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PcLevelMultCommon)((IPcLevelMultGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PcLevelMult? obj)
+        public bool Equals(IPcLevelMultGetter? obj)
         {
             return ((PcLevelMultCommon)((IPcLevelMultGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1208,6 +1208,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPcLevelMultGetter rhs)) return false;
+            return ((PcLevelMultCommon)((IPcLevelMultGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPcLevelMultGetter? obj)
+        {
+            return ((PcLevelMultCommon)((IPcLevelMultGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PcLevelMultCommon)((IPcLevelMultGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

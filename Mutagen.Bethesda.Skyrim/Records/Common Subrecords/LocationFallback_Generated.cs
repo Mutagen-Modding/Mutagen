@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         ALocationTarget,
         ILocationFallback,
         ILoquiObjectSetter<LocationFallback>,
-        IEquatable<LocationFallback>
+        IEquatable<ILocationFallbackGetter>
     {
         #region Ctor
         public LocationFallback()
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LocationFallbackCommon)((ILocationFallbackGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LocationFallback? obj)
+        public bool Equals(ILocationFallbackGetter? obj)
         {
             return ((LocationFallbackCommon)((ILocationFallbackGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1257,6 +1257,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILocationFallbackGetter rhs)) return false;
+            return ((LocationFallbackCommon)((ILocationFallbackGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILocationFallbackGetter? obj)
+        {
+            return ((LocationFallbackCommon)((ILocationFallbackGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LocationFallbackCommon)((ILocationFallbackGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

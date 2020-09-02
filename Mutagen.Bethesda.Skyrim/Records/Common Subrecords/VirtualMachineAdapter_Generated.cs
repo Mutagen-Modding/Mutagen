@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         AVirtualMachineAdapter,
         IVirtualMachineAdapter,
         ILoquiObjectSetter<VirtualMachineAdapter>,
-        IEquatable<VirtualMachineAdapter>
+        IEquatable<IVirtualMachineAdapterGetter>
     {
         #region Ctor
         public VirtualMachineAdapter()
@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(VirtualMachineAdapter? obj)
+        public bool Equals(IVirtualMachineAdapterGetter? obj)
         {
             return ((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1142,6 +1142,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IVirtualMachineAdapterGetter rhs)) return false;
+            return ((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IVirtualMachineAdapterGetter? obj)
+        {
+            return ((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class TintAssets :
         ITintAssets,
         ILoquiObjectSetter<TintAssets>,
-        IEquatable<TintAssets>
+        IEquatable<ITintAssetsGetter>
     {
         #region Ctor
         public TintAssets()
@@ -95,7 +95,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(TintAssets? obj)
+        public bool Equals(ITintAssetsGetter? obj)
         {
             return ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1748,6 +1748,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ITintAssetsGetter rhs)) return false;
+            return ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ITintAssetsGetter? obj)
+        {
+            return ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

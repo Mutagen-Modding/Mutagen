@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class CreateReferenceToObject :
         ICreateReferenceToObject,
         ILoquiObjectSetter<CreateReferenceToObject>,
-        IEquatable<CreateReferenceToObject>
+        IEquatable<ICreateReferenceToObjectGetter>
     {
         #region Ctor
         public CreateReferenceToObject()
@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((CreateReferenceToObjectCommon)((ICreateReferenceToObjectGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(CreateReferenceToObject? obj)
+        public bool Equals(ICreateReferenceToObjectGetter? obj)
         {
             return ((CreateReferenceToObjectCommon)((ICreateReferenceToObjectGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1544,6 +1544,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ICreateReferenceToObjectGetter rhs)) return false;
+            return ((CreateReferenceToObjectCommon)((ICreateReferenceToObjectGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ICreateReferenceToObjectGetter? obj)
+        {
+            return ((CreateReferenceToObjectCommon)((ICreateReferenceToObjectGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((CreateReferenceToObjectCommon)((ICreateReferenceToObjectGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

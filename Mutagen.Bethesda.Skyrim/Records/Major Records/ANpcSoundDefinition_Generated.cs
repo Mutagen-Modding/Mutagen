@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public abstract partial class ANpcSoundDefinition :
         IANpcSoundDefinition,
         ILoquiObjectSetter<ANpcSoundDefinition>,
-        IEquatable<ANpcSoundDefinition>
+        IEquatable<IANpcSoundDefinitionGetter>
     {
         #region Ctor
         public ANpcSoundDefinition()
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ANpcSoundDefinitionCommon)((IANpcSoundDefinitionGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ANpcSoundDefinition? obj)
+        public bool Equals(IANpcSoundDefinitionGetter? obj)
         {
             return ((ANpcSoundDefinitionCommon)((IANpcSoundDefinitionGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1060,6 +1060,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IANpcSoundDefinitionGetter rhs)) return false;
+            return ((ANpcSoundDefinitionCommon)((IANpcSoundDefinitionGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IANpcSoundDefinitionGetter? obj)
+        {
+            return ((ANpcSoundDefinitionCommon)((IANpcSoundDefinitionGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ANpcSoundDefinitionCommon)((IANpcSoundDefinitionGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

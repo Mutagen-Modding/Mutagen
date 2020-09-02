@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ICellInternal,
         ILoquiObjectSetter<Cell>,
-        IEquatable<Cell>
+        IEquatable<ICellGetter>
     {
         #region Ctor
         protected Cell()
@@ -315,7 +315,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((CellCommon)((ICellGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Cell? obj)
+        public bool Equals(ICellGetter? obj)
         {
             return ((CellCommon)((ICellGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -5580,6 +5580,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ICellGetter rhs)) return false;
+            return ((CellCommon)((ICellGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ICellGetter? obj)
+        {
+            return ((CellCommon)((ICellGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((CellCommon)((ICellGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class ScriptMetaSummary :
         IScriptMetaSummary,
         ILoquiObjectSetter<ScriptMetaSummary>,
-        IEquatable<ScriptMetaSummary>
+        IEquatable<IScriptMetaSummaryGetter>
     {
         #region Ctor
         public ScriptMetaSummary()
@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ScriptMetaSummary? obj)
+        public bool Equals(IScriptMetaSummaryGetter? obj)
         {
             return ((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1448,6 +1448,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IScriptMetaSummaryGetter rhs)) return false;
+            return ((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IScriptMetaSummaryGetter? obj)
+        {
+            return ((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

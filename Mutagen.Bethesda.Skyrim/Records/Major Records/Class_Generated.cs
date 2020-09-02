@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IClassInternal,
         ILoquiObjectSetter<Class>,
-        IEquatable<Class>
+        IEquatable<IClassGetter>
     {
         #region Ctor
         protected Class()
@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ClassCommon)((IClassGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Class? obj)
+        public bool Equals(IClassGetter? obj)
         {
             return ((ClassCommon)((IClassGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2532,6 +2532,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IClassGetter rhs)) return false;
+            return ((ClassCommon)((IClassGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IClassGetter? obj)
+        {
+            return ((ClassCommon)((IClassGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ClassCommon)((IClassGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

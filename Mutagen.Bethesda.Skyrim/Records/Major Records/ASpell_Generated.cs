@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IASpellInternal,
         ILoquiObjectSetter<ASpell>,
-        IEquatable<ASpell>
+        IEquatable<IASpellGetter>
     {
         #region Ctor
         protected ASpell()
@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ASpellCommon)((IASpellGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ASpell? obj)
+        public bool Equals(IASpellGetter? obj)
         {
             return ((ASpellCommon)((IASpellGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1259,6 +1259,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IASpellGetter rhs)) return false;
+            return ((ASpellCommon)((IASpellGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IASpellGetter? obj)
+        {
+            return ((ASpellCommon)((IASpellGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ASpellCommon)((IASpellGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

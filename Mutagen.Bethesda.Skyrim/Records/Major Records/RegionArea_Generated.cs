@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class RegionArea :
         IRegionArea,
         ILoquiObjectSetter<RegionArea>,
-        IEquatable<RegionArea>
+        IEquatable<IRegionAreaGetter>
     {
         #region Ctor
         public RegionArea()
@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((RegionAreaCommon)((IRegionAreaGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(RegionArea? obj)
+        public bool Equals(IRegionAreaGetter? obj)
         {
             return ((RegionAreaCommon)((IRegionAreaGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1458,6 +1458,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IRegionAreaGetter rhs)) return false;
+            return ((RegionAreaCommon)((IRegionAreaGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IRegionAreaGetter? obj)
+        {
+            return ((RegionAreaCommon)((IRegionAreaGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((RegionAreaCommon)((IRegionAreaGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

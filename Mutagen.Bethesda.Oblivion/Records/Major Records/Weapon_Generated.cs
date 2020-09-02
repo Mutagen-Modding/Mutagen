@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         AItem,
         IWeaponInternal,
         ILoquiObjectSetter<Weapon>,
-        IEquatable<Weapon>
+        IEquatable<IWeaponGetter>
     {
         #region Ctor
         protected Weapon()
@@ -110,7 +110,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Weapon? obj)
+        public bool Equals(IWeaponGetter? obj)
         {
             return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2164,6 +2164,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IWeaponGetter rhs)) return false;
+            return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IWeaponGetter? obj)
+        {
+            return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IActionRecordInternal,
         ILoquiObjectSetter<ActionRecord>,
-        IEquatable<ActionRecord>
+        IEquatable<IActionRecordGetter>
     {
         #region Ctor
         protected ActionRecord()
@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ActionRecordCommon)((IActionRecordGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ActionRecord? obj)
+        public bool Equals(IActionRecordGetter? obj)
         {
             return ((ActionRecordCommon)((IActionRecordGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1481,6 +1481,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IActionRecordGetter rhs)) return false;
+            return ((ActionRecordCommon)((IActionRecordGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IActionRecordGetter? obj)
+        {
+            return ((ActionRecordCommon)((IActionRecordGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ActionRecordCommon)((IActionRecordGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

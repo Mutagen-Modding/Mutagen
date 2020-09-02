@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IWaterInternal,
         ILoquiObjectSetter<Water>,
-        IEquatable<Water>
+        IEquatable<IWaterGetter>
     {
         #region Ctor
         protected Water()
@@ -345,7 +345,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Water? obj)
+        public bool Equals(IWaterGetter? obj)
         {
             return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -6385,6 +6385,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IWaterGetter rhs)) return false;
+            return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IWaterGetter? obj)
+        {
+            return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((WaterCommon)((IWaterGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

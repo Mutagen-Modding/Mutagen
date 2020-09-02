@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IRaceInternal,
         ILoquiObjectSetter<Race>,
-        IEquatable<Race>
+        IEquatable<IRaceGetter>
     {
         #region Ctor
         protected Race()
@@ -464,7 +464,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Race? obj)
+        public bool Equals(IRaceGetter? obj)
         {
             return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -9164,6 +9164,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IRaceGetter rhs)) return false;
+            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IRaceGetter? obj)
+        {
+            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((RaceCommon)((IRaceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

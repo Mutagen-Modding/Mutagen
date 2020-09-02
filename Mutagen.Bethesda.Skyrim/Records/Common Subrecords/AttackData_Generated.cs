@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class AttackData :
         IAttackData,
         ILoquiObjectSetter<AttackData>,
-        IEquatable<AttackData>
+        IEquatable<IAttackDataGetter>
     {
         #region Ctor
         public AttackData()
@@ -97,7 +97,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(AttackData? obj)
+        public bool Equals(IAttackDataGetter? obj)
         {
             return ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1833,6 +1833,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IAttackDataGetter rhs)) return false;
+            return ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IAttackDataGetter? obj)
+        {
+            return ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

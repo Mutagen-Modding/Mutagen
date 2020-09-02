@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class LocationAliasReference :
         ILocationAliasReference,
         ILoquiObjectSetter<LocationAliasReference>,
-        IEquatable<LocationAliasReference>
+        IEquatable<ILocationAliasReferenceGetter>
     {
         #region Ctor
         public LocationAliasReference()
@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LocationAliasReferenceCommon)((ILocationAliasReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LocationAliasReference? obj)
+        public bool Equals(ILocationAliasReferenceGetter? obj)
         {
             return ((LocationAliasReferenceCommon)((ILocationAliasReferenceGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1434,6 +1434,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILocationAliasReferenceGetter rhs)) return false;
+            return ((LocationAliasReferenceCommon)((ILocationAliasReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILocationAliasReferenceGetter? obj)
+        {
+            return ((LocationAliasReferenceCommon)((ILocationAliasReferenceGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LocationAliasReferenceCommon)((ILocationAliasReferenceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

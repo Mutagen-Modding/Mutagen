@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IIngestibleInternal,
         ILoquiObjectSetter<Ingestible>,
-        IEquatable<Ingestible>
+        IEquatable<IIngestibleGetter>
     {
         #region Ctor
         protected Ingestible()
@@ -179,7 +179,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((IngestibleCommon)((IIngestibleGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Ingestible? obj)
+        public bool Equals(IIngestibleGetter? obj)
         {
             return ((IngestibleCommon)((IIngestibleGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -3305,6 +3305,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IIngestibleGetter rhs)) return false;
+            return ((IngestibleCommon)((IIngestibleGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IIngestibleGetter? obj)
+        {
+            return ((IngestibleCommon)((IIngestibleGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((IngestibleCommon)((IIngestibleGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

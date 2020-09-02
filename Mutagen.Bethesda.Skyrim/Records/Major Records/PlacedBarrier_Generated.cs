@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         APlacedTrap,
         IPlacedBarrierInternal,
         ILoquiObjectSetter<PlacedBarrier>,
-        IEquatable<PlacedBarrier>
+        IEquatable<IPlacedBarrierGetter>
     {
         #region Ctor
         protected PlacedBarrier()
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PlacedBarrierCommon)((IPlacedBarrierGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PlacedBarrier? obj)
+        public bool Equals(IPlacedBarrierGetter? obj)
         {
             return ((PlacedBarrierCommon)((IPlacedBarrierGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1598,6 +1598,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPlacedBarrierGetter rhs)) return false;
+            return ((PlacedBarrierCommon)((IPlacedBarrierGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPlacedBarrierGetter? obj)
+        {
+            return ((PlacedBarrierCommon)((IPlacedBarrierGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PlacedBarrierCommon)((IPlacedBarrierGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class SceneAction :
         ISceneAction,
         ILoquiObjectSetter<SceneAction>,
-        IEquatable<SceneAction>
+        IEquatable<ISceneActionGetter>
     {
         #region Ctor
         public SceneAction()
@@ -165,7 +165,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SceneActionCommon)((ISceneActionGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(SceneAction? obj)
+        public bool Equals(ISceneActionGetter? obj)
         {
             return ((SceneActionCommon)((ISceneActionGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2788,6 +2788,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ISceneActionGetter rhs)) return false;
+            return ((SceneActionCommon)((ISceneActionGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ISceneActionGetter? obj)
+        {
+            return ((SceneActionCommon)((ISceneActionGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((SceneActionCommon)((ISceneActionGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

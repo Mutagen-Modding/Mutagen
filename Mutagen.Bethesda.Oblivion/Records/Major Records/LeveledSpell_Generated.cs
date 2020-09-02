@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         ASpell,
         ILeveledSpellInternal,
         ILoquiObjectSetter<LeveledSpell>,
-        IEquatable<LeveledSpell>
+        IEquatable<ILeveledSpellGetter>
     {
         #region Ctor
         protected LeveledSpell()
@@ -87,7 +87,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((LeveledSpellCommon)((ILeveledSpellGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LeveledSpell? obj)
+        public bool Equals(ILeveledSpellGetter? obj)
         {
             return ((LeveledSpellCommon)((ILeveledSpellGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1880,6 +1880,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILeveledSpellGetter rhs)) return false;
+            return ((LeveledSpellCommon)((ILeveledSpellGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILeveledSpellGetter? obj)
+        {
+            return ((LeveledSpellCommon)((ILeveledSpellGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LeveledSpellCommon)((ILeveledSpellGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

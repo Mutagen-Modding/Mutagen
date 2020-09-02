@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         AStoryManagerNode,
         IStoryManagerQuestNodeInternal,
         ILoquiObjectSetter<StoryManagerQuestNode>,
-        IEquatable<StoryManagerQuestNode>
+        IEquatable<IStoryManagerQuestNodeGetter>
     {
         #region Ctor
         protected StoryManagerQuestNode()
@@ -92,7 +92,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((StoryManagerQuestNodeCommon)((IStoryManagerQuestNodeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(StoryManagerQuestNode? obj)
+        public bool Equals(IStoryManagerQuestNodeGetter? obj)
         {
             return ((StoryManagerQuestNodeCommon)((IStoryManagerQuestNodeGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1993,6 +1993,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IStoryManagerQuestNodeGetter rhs)) return false;
+            return ((StoryManagerQuestNodeCommon)((IStoryManagerQuestNodeGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IStoryManagerQuestNodeGetter? obj)
+        {
+            return ((StoryManagerQuestNodeCommon)((IStoryManagerQuestNodeGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((StoryManagerQuestNodeCommon)((IStoryManagerQuestNodeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

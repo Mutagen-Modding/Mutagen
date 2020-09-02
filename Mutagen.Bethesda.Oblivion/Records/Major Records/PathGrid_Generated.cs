@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IPathGridInternal,
         ILoquiObjectSetter<PathGrid>,
-        IEquatable<PathGrid>
+        IEquatable<IPathGridGetter>
     {
         #region Ctor
         protected PathGrid()
@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((PathGridCommon)((IPathGridGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PathGrid? obj)
+        public bool Equals(IPathGridGetter? obj)
         {
             return ((PathGridCommon)((IPathGridGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2159,6 +2159,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPathGridGetter rhs)) return false;
+            return ((PathGridCommon)((IPathGridGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPathGridGetter? obj)
+        {
+            return ((PathGridCommon)((IPathGridGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PathGridCommon)((IPathGridGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

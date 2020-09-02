@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IIdleAnimationInternal,
         ILoquiObjectSetter<IdleAnimation>,
-        IEquatable<IdleAnimation>
+        IEquatable<IIdleAnimationGetter>
     {
         #region Ctor
         protected IdleAnimation()
@@ -107,7 +107,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(IdleAnimation? obj)
+        public bool Equals(IIdleAnimationGetter? obj)
         {
             return ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2053,6 +2053,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IIdleAnimationGetter rhs)) return false;
+            return ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IIdleAnimationGetter? obj)
+        {
+            return ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

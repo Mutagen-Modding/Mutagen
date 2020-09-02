@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IEnchantmentInternal,
         ILoquiObjectSetter<Enchantment>,
-        IEquatable<Enchantment>
+        IEquatable<IEnchantmentGetter>
     {
         #region Ctor
         protected Enchantment()
@@ -93,7 +93,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((EnchantmentCommon)((IEnchantmentGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Enchantment? obj)
+        public bool Equals(IEnchantmentGetter? obj)
         {
             return ((EnchantmentCommon)((IEnchantmentGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1832,6 +1832,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IEnchantmentGetter rhs)) return false;
+            return ((EnchantmentCommon)((IEnchantmentGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IEnchantmentGetter? obj)
+        {
+            return ((EnchantmentCommon)((IEnchantmentGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((EnchantmentCommon)((IEnchantmentGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

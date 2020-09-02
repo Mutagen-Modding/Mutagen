@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         ALocationTarget,
         ILocationTarget,
         ILoquiObjectSetter<LocationTarget>,
-        IEquatable<LocationTarget>
+        IEquatable<ILocationTargetGetter>
     {
         #region Ctor
         public LocationTarget()
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LocationTargetCommon)((ILocationTargetGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LocationTarget? obj)
+        public bool Equals(ILocationTargetGetter? obj)
         {
             return ((LocationTargetCommon)((ILocationTargetGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1209,6 +1209,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILocationTargetGetter rhs)) return false;
+            return ((LocationTargetCommon)((ILocationTargetGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILocationTargetGetter? obj)
+        {
+            return ((LocationTargetCommon)((ILocationTargetGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LocationTargetCommon)((ILocationTargetGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

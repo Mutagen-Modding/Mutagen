@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         INpcInternal,
         ILoquiObjectSetter<Npc>,
-        IEquatable<Npc>
+        IEquatable<INpcGetter>
     {
         #region Ctor
         protected Npc()
@@ -399,7 +399,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((NpcCommon)((INpcGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Npc? obj)
+        public bool Equals(INpcGetter? obj)
         {
             return ((NpcCommon)((INpcGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -6821,6 +6821,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is INpcGetter rhs)) return false;
+            return ((NpcCommon)((INpcGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(INpcGetter? obj)
+        {
+            return ((NpcCommon)((INpcGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((NpcCommon)((INpcGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

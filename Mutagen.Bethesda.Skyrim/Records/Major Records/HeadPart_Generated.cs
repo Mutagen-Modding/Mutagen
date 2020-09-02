@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IHeadPartInternal,
         ILoquiObjectSetter<HeadPart>,
-        IEquatable<HeadPart>
+        IEquatable<IHeadPartGetter>
     {
         #region Ctor
         protected HeadPart()
@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((HeadPartCommon)((IHeadPartGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(HeadPart? obj)
+        public bool Equals(IHeadPartGetter? obj)
         {
             return ((HeadPartCommon)((IHeadPartGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2483,6 +2483,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IHeadPartGetter rhs)) return false;
+            return ((HeadPartCommon)((IHeadPartGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IHeadPartGetter? obj)
+        {
+            return ((HeadPartCommon)((IHeadPartGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((HeadPartCommon)((IHeadPartGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

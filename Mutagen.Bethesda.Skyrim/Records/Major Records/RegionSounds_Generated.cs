@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         RegionData,
         IRegionSounds,
         ILoquiObjectSetter<RegionSounds>,
-        IEquatable<RegionSounds>
+        IEquatable<IRegionSoundsGetter>
     {
         #region Ctor
         public RegionSounds()
@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((RegionSoundsCommon)((IRegionSoundsGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(RegionSounds? obj)
+        public bool Equals(IRegionSoundsGetter? obj)
         {
             return ((RegionSoundsCommon)((IRegionSoundsGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1541,6 +1541,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IRegionSoundsGetter rhs)) return false;
+            return ((RegionSoundsCommon)((IRegionSoundsGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IRegionSoundsGetter? obj)
+        {
+            return ((RegionSoundsCommon)((IRegionSoundsGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((RegionSoundsCommon)((IRegionSoundsGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

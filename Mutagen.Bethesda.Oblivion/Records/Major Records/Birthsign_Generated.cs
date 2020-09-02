@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IBirthsignInternal,
         ILoquiObjectSetter<Birthsign>,
-        IEquatable<Birthsign>
+        IEquatable<IBirthsignGetter>
     {
         #region Ctor
         protected Birthsign()
@@ -92,7 +92,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((BirthsignCommon)((IBirthsignGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Birthsign? obj)
+        public bool Equals(IBirthsignGetter? obj)
         {
             return ((BirthsignCommon)((IBirthsignGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1872,6 +1872,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IBirthsignGetter rhs)) return false;
+            return ((BirthsignCommon)((IBirthsignGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IBirthsignGetter? obj)
+        {
+            return ((BirthsignCommon)((IBirthsignGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((BirthsignCommon)((IBirthsignGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

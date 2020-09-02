@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class Ownership :
         IOwnership,
         ILoquiObjectSetter<Ownership>,
-        IEquatable<Ownership>
+        IEquatable<IOwnershipGetter>
     {
         #region Ctor
         public Ownership()
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((OwnershipCommon)((IOwnershipGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Ownership? obj)
+        public bool Equals(IOwnershipGetter? obj)
         {
             return ((OwnershipCommon)((IOwnershipGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1347,6 +1347,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IOwnershipGetter rhs)) return false;
+            return ((OwnershipCommon)((IOwnershipGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IOwnershipGetter? obj)
+        {
+            return ((OwnershipCommon)((IOwnershipGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((OwnershipCommon)((IOwnershipGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

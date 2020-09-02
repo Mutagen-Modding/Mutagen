@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IWordOfPowerInternal,
         ILoquiObjectSetter<WordOfPower>,
-        IEquatable<WordOfPower>
+        IEquatable<IWordOfPowerGetter>
     {
         #region Ctor
         protected WordOfPower()
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((WordOfPowerCommon)((IWordOfPowerGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(WordOfPower? obj)
+        public bool Equals(IWordOfPowerGetter? obj)
         {
             return ((WordOfPowerCommon)((IWordOfPowerGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1566,6 +1566,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IWordOfPowerGetter rhs)) return false;
+            return ((WordOfPowerCommon)((IWordOfPowerGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IWordOfPowerGetter? obj)
+        {
+            return ((WordOfPowerCommon)((IWordOfPowerGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((WordOfPowerCommon)((IWordOfPowerGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

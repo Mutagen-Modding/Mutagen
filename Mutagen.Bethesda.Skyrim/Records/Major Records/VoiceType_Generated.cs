@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IVoiceTypeInternal,
         ILoquiObjectSetter<VoiceType>,
-        IEquatable<VoiceType>
+        IEquatable<IVoiceTypeGetter>
     {
         #region Ctor
         protected VoiceType()
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((VoiceTypeCommon)((IVoiceTypeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(VoiceType? obj)
+        public bool Equals(IVoiceTypeGetter? obj)
         {
             return ((VoiceTypeCommon)((IVoiceTypeGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1473,6 +1473,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IVoiceTypeGetter rhs)) return false;
+            return ((VoiceTypeCommon)((IVoiceTypeGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IVoiceTypeGetter? obj)
+        {
+            return ((VoiceTypeCommon)((IVoiceTypeGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((VoiceTypeCommon)((IVoiceTypeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

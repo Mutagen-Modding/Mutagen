@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class Patrol :
         IPatrol,
         ILoquiObjectSetter<Patrol>,
-        IEquatable<Patrol>
+        IEquatable<IPatrolGetter>
     {
         #region Ctor
         public Patrol()
@@ -105,7 +105,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PatrolCommon)((IPatrolGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Patrol? obj)
+        public bool Equals(IPatrolGetter? obj)
         {
             return ((PatrolCommon)((IPatrolGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1788,6 +1788,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPatrolGetter rhs)) return false;
+            return ((PatrolCommon)((IPatrolGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPatrolGetter? obj)
+        {
+            return ((PatrolCommon)((IPatrolGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PatrolCommon)((IPatrolGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

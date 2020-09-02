@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         INavigationMeshInfoMapInternal,
         ILoquiObjectSetter<NavigationMeshInfoMap>,
-        IEquatable<NavigationMeshInfoMap>
+        IEquatable<INavigationMeshInfoMapGetter>
     {
         #region Ctor
         protected NavigationMeshInfoMap()
@@ -104,7 +104,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((NavigationMeshInfoMapCommon)((INavigationMeshInfoMapGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(NavigationMeshInfoMap? obj)
+        public bool Equals(INavigationMeshInfoMapGetter? obj)
         {
             return ((NavigationMeshInfoMapCommon)((INavigationMeshInfoMapGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1937,6 +1937,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is INavigationMeshInfoMapGetter rhs)) return false;
+            return ((NavigationMeshInfoMapCommon)((INavigationMeshInfoMapGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(INavigationMeshInfoMapGetter? obj)
+        {
+            return ((NavigationMeshInfoMapCommon)((INavigationMeshInfoMapGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((NavigationMeshInfoMapCommon)((INavigationMeshInfoMapGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class PerkCondition :
         IPerkCondition,
         ILoquiObjectSetter<PerkCondition>,
-        IEquatable<PerkCondition>
+        IEquatable<IPerkConditionGetter>
     {
         #region Ctor
         public PerkCondition()
@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PerkConditionCommon)((IPerkConditionGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PerkCondition? obj)
+        public bool Equals(IPerkConditionGetter? obj)
         {
             return ((PerkConditionCommon)((IPerkConditionGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1478,6 +1478,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPerkConditionGetter rhs)) return false;
+            return ((PerkConditionCommon)((IPerkConditionGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPerkConditionGetter? obj)
+        {
+            return ((PerkConditionCommon)((IPerkConditionGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PerkConditionCommon)((IPerkConditionGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class PotionData :
         IPotionData,
         ILoquiObjectSetter<PotionData>,
-        IEquatable<PotionData>
+        IEquatable<IPotionDataGetter>
     {
         #region Ctor
         public PotionData()
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((PotionDataCommon)((IPotionDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PotionData? obj)
+        public bool Equals(IPotionDataGetter? obj)
         {
             return ((PotionDataCommon)((IPotionDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1251,6 +1251,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPotionDataGetter rhs)) return false;
+            return ((PotionDataCommon)((IPotionDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPotionDataGetter? obj)
+        {
+            return ((PotionDataCommon)((IPotionDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PotionDataCommon)((IPotionDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

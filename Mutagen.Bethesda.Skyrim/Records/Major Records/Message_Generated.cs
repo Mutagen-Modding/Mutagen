@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IMessageInternal,
         ILoquiObjectSetter<Message>,
-        IEquatable<Message>
+        IEquatable<IMessageGetter>
     {
         #region Ctor
         protected Message()
@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((MessageCommon)((IMessageGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Message? obj)
+        public bool Equals(IMessageGetter? obj)
         {
             return ((MessageCommon)((IMessageGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2125,6 +2125,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IMessageGetter rhs)) return false;
+            return ((MessageCommon)((IMessageGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IMessageGetter? obj)
+        {
+            return ((MessageCommon)((IMessageGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((MessageCommon)((IMessageGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

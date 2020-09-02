@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IPerkInternal,
         ILoquiObjectSetter<Perk>,
-        IEquatable<Perk>
+        IEquatable<IPerkGetter>
     {
         #region Ctor
         protected Perk()
@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PerkCommon)((IPerkGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Perk? obj)
+        public bool Equals(IPerkGetter? obj)
         {
             return ((PerkCommon)((IPerkGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2801,6 +2801,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPerkGetter rhs)) return false;
+            return ((PerkCommon)((IPerkGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPerkGetter? obj)
+        {
+            return ((PerkCommon)((IPerkGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PerkCommon)((IPerkGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

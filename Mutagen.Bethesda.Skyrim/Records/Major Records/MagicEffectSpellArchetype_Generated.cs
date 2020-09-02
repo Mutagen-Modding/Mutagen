@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         MagicEffectArchetype,
         IMagicEffectSpellArchetypeInternal,
         ILoquiObjectSetter<MagicEffectSpellArchetype>,
-        IEquatable<MagicEffectSpellArchetype>
+        IEquatable<IMagicEffectSpellArchetypeGetter>
     {
 
         #region To String
@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((MagicEffectSpellArchetypeCommon)((IMagicEffectSpellArchetypeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(MagicEffectSpellArchetype? obj)
+        public bool Equals(IMagicEffectSpellArchetypeGetter? obj)
         {
             return ((MagicEffectSpellArchetypeCommon)((IMagicEffectSpellArchetypeGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1141,6 +1141,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IMagicEffectSpellArchetypeGetter rhs)) return false;
+            return ((MagicEffectSpellArchetypeCommon)((IMagicEffectSpellArchetypeGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IMagicEffectSpellArchetypeGetter? obj)
+        {
+            return ((MagicEffectSpellArchetypeCommon)((IMagicEffectSpellArchetypeGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((MagicEffectSpellArchetypeCommon)((IMagicEffectSpellArchetypeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ImageSpaceTint :
         IImageSpaceTint,
         ILoquiObjectSetter<ImageSpaceTint>,
-        IEquatable<ImageSpaceTint>
+        IEquatable<IImageSpaceTintGetter>
     {
         #region Ctor
         public ImageSpaceTint()
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ImageSpaceTintCommon)((IImageSpaceTintGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ImageSpaceTint? obj)
+        public bool Equals(IImageSpaceTintGetter? obj)
         {
             return ((ImageSpaceTintCommon)((IImageSpaceTintGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1254,6 +1254,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IImageSpaceTintGetter rhs)) return false;
+            return ((ImageSpaceTintCommon)((IImageSpaceTintGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IImageSpaceTintGetter? obj)
+        {
+            return ((ImageSpaceTintCommon)((IImageSpaceTintGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ImageSpaceTintCommon)((IImageSpaceTintGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

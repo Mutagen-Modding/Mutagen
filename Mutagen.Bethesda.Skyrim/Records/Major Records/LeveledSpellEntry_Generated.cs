@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class LeveledSpellEntry :
         ILeveledSpellEntry,
         ILoquiObjectSetter<LeveledSpellEntry>,
-        IEquatable<LeveledSpellEntry>
+        IEquatable<ILeveledSpellEntryGetter>
     {
         #region Ctor
         public LeveledSpellEntry()
@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LeveledSpellEntryCommon)((ILeveledSpellEntryGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LeveledSpellEntry? obj)
+        public bool Equals(ILeveledSpellEntryGetter? obj)
         {
             return ((LeveledSpellEntryCommon)((ILeveledSpellEntryGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1442,6 +1442,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILeveledSpellEntryGetter rhs)) return false;
+            return ((LeveledSpellEntryCommon)((ILeveledSpellEntryGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILeveledSpellEntryGetter? obj)
+        {
+            return ((LeveledSpellEntryCommon)((ILeveledSpellEntryGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LeveledSpellEntryCommon)((ILeveledSpellEntryGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

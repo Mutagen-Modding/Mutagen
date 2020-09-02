@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ILeveledNpcInternal,
         ILoquiObjectSetter<LeveledNpc>,
-        IEquatable<LeveledNpc>
+        IEquatable<ILeveledNpcGetter>
     {
         #region Ctor
         protected LeveledNpc()
@@ -104,7 +104,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LeveledNpcCommon)((ILeveledNpcGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LeveledNpc? obj)
+        public bool Equals(ILeveledNpcGetter? obj)
         {
             return ((LeveledNpcCommon)((ILeveledNpcGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2126,6 +2126,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILeveledNpcGetter rhs)) return false;
+            return ((LeveledNpcCommon)((ILeveledNpcGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILeveledNpcGetter? obj)
+        {
+            return ((LeveledNpcCommon)((ILeveledNpcGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LeveledNpcCommon)((ILeveledNpcGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

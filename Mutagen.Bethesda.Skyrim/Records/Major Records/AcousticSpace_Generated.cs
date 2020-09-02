@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IAcousticSpaceInternal,
         ILoquiObjectSetter<AcousticSpace>,
-        IEquatable<AcousticSpace>
+        IEquatable<IAcousticSpaceGetter>
     {
         #region Ctor
         protected AcousticSpace()
@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((AcousticSpaceCommon)((IAcousticSpaceGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(AcousticSpace? obj)
+        public bool Equals(IAcousticSpaceGetter? obj)
         {
             return ((AcousticSpaceCommon)((IAcousticSpaceGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1767,6 +1767,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IAcousticSpaceGetter rhs)) return false;
+            return ((AcousticSpaceCommon)((IAcousticSpaceGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IAcousticSpaceGetter? obj)
+        {
+            return ((AcousticSpaceCommon)((IAcousticSpaceGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((AcousticSpaceCommon)((IAcousticSpaceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class EnableParent :
         IEnableParent,
         ILoquiObjectSetter<EnableParent>,
-        IEquatable<EnableParent>
+        IEquatable<IEnableParentGetter>
     {
         #region Ctor
         public EnableParent()
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(EnableParent? obj)
+        public bool Equals(IEnableParentGetter? obj)
         {
             return ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1270,6 +1270,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IEnableParentGetter rhs)) return false;
+            return ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IEnableParentGetter? obj)
+        {
+            return ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

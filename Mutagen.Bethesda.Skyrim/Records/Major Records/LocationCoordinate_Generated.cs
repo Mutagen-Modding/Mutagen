@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class LocationCoordinate :
         ILocationCoordinate,
         ILoquiObjectSetter<LocationCoordinate>,
-        IEquatable<LocationCoordinate>
+        IEquatable<ILocationCoordinateGetter>
     {
         #region Ctor
         public LocationCoordinate()
@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LocationCoordinateCommon)((ILocationCoordinateGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LocationCoordinate? obj)
+        public bool Equals(ILocationCoordinateGetter? obj)
         {
             return ((LocationCoordinateCommon)((ILocationCoordinateGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1392,6 +1392,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILocationCoordinateGetter rhs)) return false;
+            return ((LocationCoordinateCommon)((ILocationCoordinateGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILocationCoordinateGetter? obj)
+        {
+            return ((LocationCoordinateCommon)((ILocationCoordinateGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LocationCoordinateCommon)((ILocationCoordinateGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

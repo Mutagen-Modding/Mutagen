@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IOutfitInternal,
         ILoquiObjectSetter<Outfit>,
-        IEquatable<Outfit>
+        IEquatable<IOutfitGetter>
     {
         #region Ctor
         protected Outfit()
@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((OutfitCommon)((IOutfitGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Outfit? obj)
+        public bool Equals(IOutfitGetter? obj)
         {
             return ((OutfitCommon)((IOutfitGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1630,6 +1630,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IOutfitGetter rhs)) return false;
+            return ((OutfitCommon)((IOutfitGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IOutfitGetter? obj)
+        {
+            return ((OutfitCommon)((IOutfitGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((OutfitCommon)((IOutfitGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

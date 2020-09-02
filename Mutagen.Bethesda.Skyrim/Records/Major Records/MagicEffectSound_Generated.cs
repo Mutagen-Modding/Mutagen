@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class MagicEffectSound :
         IMagicEffectSound,
         ILoquiObjectSetter<MagicEffectSound>,
-        IEquatable<MagicEffectSound>
+        IEquatable<IMagicEffectSoundGetter>
     {
         #region Ctor
         public MagicEffectSound()
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((MagicEffectSoundCommon)((IMagicEffectSoundGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(MagicEffectSound? obj)
+        public bool Equals(IMagicEffectSoundGetter? obj)
         {
             return ((MagicEffectSoundCommon)((IMagicEffectSoundGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1258,6 +1258,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IMagicEffectSoundGetter rhs)) return false;
+            return ((MagicEffectSoundCommon)((IMagicEffectSoundGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IMagicEffectSoundGetter? obj)
+        {
+            return ((MagicEffectSoundCommon)((IMagicEffectSoundGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((MagicEffectSoundCommon)((IMagicEffectSoundGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

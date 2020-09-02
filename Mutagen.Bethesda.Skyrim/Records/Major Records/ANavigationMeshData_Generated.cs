@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public abstract partial class ANavigationMeshData :
         IANavigationMeshData,
         ILoquiObjectSetter<ANavigationMeshData>,
-        IEquatable<ANavigationMeshData>
+        IEquatable<IANavigationMeshDataGetter>
     {
         #region Ctor
         public ANavigationMeshData()
@@ -151,7 +151,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ANavigationMeshDataCommon)((IANavigationMeshDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ANavigationMeshData? obj)
+        public bool Equals(IANavigationMeshDataGetter? obj)
         {
             return ((ANavigationMeshDataCommon)((IANavigationMeshDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2441,6 +2441,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IANavigationMeshDataGetter rhs)) return false;
+            return ((ANavigationMeshDataCommon)((IANavigationMeshDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IANavigationMeshDataGetter? obj)
+        {
+            return ((ANavigationMeshDataCommon)((IANavigationMeshDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ANavigationMeshDataCommon)((IANavigationMeshDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

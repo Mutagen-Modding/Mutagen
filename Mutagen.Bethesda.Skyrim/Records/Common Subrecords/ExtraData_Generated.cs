@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ExtraData :
         IExtraData,
         ILoquiObjectSetter<ExtraData>,
-        IEquatable<ExtraData>
+        IEquatable<IExtraDataGetter>
     {
         #region Ctor
         public ExtraData()
@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ExtraDataCommon)((IExtraDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ExtraData? obj)
+        public bool Equals(IExtraDataGetter? obj)
         {
             return ((ExtraDataCommon)((IExtraDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1314,6 +1314,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IExtraDataGetter rhs)) return false;
+            return ((ExtraDataCommon)((IExtraDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IExtraDataGetter? obj)
+        {
+            return ((ExtraDataCommon)((IExtraDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ExtraDataCommon)((IExtraDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

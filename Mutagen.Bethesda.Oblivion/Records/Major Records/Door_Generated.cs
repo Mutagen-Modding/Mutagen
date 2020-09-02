@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IDoorInternal,
         ILoquiObjectSetter<Door>,
-        IEquatable<Door>
+        IEquatable<IDoorGetter>
     {
         #region Ctor
         protected Door()
@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((DoorCommon)((IDoorGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Door? obj)
+        public bool Equals(IDoorGetter? obj)
         {
             return ((DoorCommon)((IDoorGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2247,6 +2247,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IDoorGetter rhs)) return false;
+            return ((DoorCommon)((IDoorGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IDoorGetter? obj)
+        {
+            return ((DoorCommon)((IDoorGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((DoorCommon)((IDoorGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

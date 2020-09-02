@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class SpellData :
         ISpellData,
         ILoquiObjectSetter<SpellData>,
-        IEquatable<SpellData>
+        IEquatable<ISpellDataGetter>
     {
         #region Ctor
         public SpellData()
@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((SpellDataCommon)((ISpellDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(SpellData? obj)
+        public bool Equals(ISpellDataGetter? obj)
         {
             return ((SpellDataCommon)((ISpellDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1377,6 +1377,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ISpellDataGetter rhs)) return false;
+            return ((SpellDataCommon)((ISpellDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ISpellDataGetter? obj)
+        {
+            return ((SpellDataCommon)((ISpellDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((SpellDataCommon)((ISpellDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

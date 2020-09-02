@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class DestructableData :
         IDestructableData,
         ILoquiObjectSetter<DestructableData>,
-        IEquatable<DestructableData>
+        IEquatable<IDestructableDataGetter>
     {
         #region Ctor
         public DestructableData()
@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((DestructableDataCommon)((IDestructableDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(DestructableData? obj)
+        public bool Equals(IDestructableDataGetter? obj)
         {
             return ((DestructableDataCommon)((IDestructableDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1368,6 +1368,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IDestructableDataGetter rhs)) return false;
+            return ((DestructableDataCommon)((IDestructableDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IDestructableDataGetter? obj)
+        {
+            return ((DestructableDataCommon)((IDestructableDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((DestructableDataCommon)((IDestructableDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

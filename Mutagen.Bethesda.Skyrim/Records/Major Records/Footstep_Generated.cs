@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IFootstepInternal,
         ILoquiObjectSetter<Footstep>,
-        IEquatable<Footstep>
+        IEquatable<IFootstepGetter>
     {
         #region Ctor
         protected Footstep()
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((FootstepCommon)((IFootstepGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Footstep? obj)
+        public bool Equals(IFootstepGetter? obj)
         {
             return ((FootstepCommon)((IFootstepGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1568,6 +1568,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IFootstepGetter rhs)) return false;
+            return ((FootstepCommon)((IFootstepGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IFootstepGetter? obj)
+        {
+            return ((FootstepCommon)((IFootstepGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((FootstepCommon)((IFootstepGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

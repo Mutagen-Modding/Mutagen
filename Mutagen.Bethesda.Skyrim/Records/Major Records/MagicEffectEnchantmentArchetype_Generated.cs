@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         MagicEffectArchetype,
         IMagicEffectEnchantmentArchetypeInternal,
         ILoquiObjectSetter<MagicEffectEnchantmentArchetype>,
-        IEquatable<MagicEffectEnchantmentArchetype>
+        IEquatable<IMagicEffectEnchantmentArchetypeGetter>
     {
 
         #region To String
@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((MagicEffectEnchantmentArchetypeCommon)((IMagicEffectEnchantmentArchetypeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(MagicEffectEnchantmentArchetype? obj)
+        public bool Equals(IMagicEffectEnchantmentArchetypeGetter? obj)
         {
             return ((MagicEffectEnchantmentArchetypeCommon)((IMagicEffectEnchantmentArchetypeGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1141,6 +1141,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IMagicEffectEnchantmentArchetypeGetter rhs)) return false;
+            return ((MagicEffectEnchantmentArchetypeCommon)((IMagicEffectEnchantmentArchetypeGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IMagicEffectEnchantmentArchetypeGetter? obj)
+        {
+            return ((MagicEffectEnchantmentArchetypeCommon)((IMagicEffectEnchantmentArchetypeGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((MagicEffectEnchantmentArchetypeCommon)((IMagicEffectEnchantmentArchetypeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

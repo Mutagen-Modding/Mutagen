@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class WorldspaceGridReference :
         IWorldspaceGridReference,
         ILoquiObjectSetter<WorldspaceGridReference>,
-        IEquatable<WorldspaceGridReference>
+        IEquatable<IWorldspaceGridReferenceGetter>
     {
         #region Ctor
         public WorldspaceGridReference()
@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(WorldspaceGridReference? obj)
+        public bool Equals(IWorldspaceGridReferenceGetter? obj)
         {
             return ((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1410,6 +1410,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IWorldspaceGridReferenceGetter rhs)) return false;
+            return ((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IWorldspaceGridReferenceGetter? obj)
+        {
+            return ((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

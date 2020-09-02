@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class QuestAlias :
         IQuestAlias,
         ILoquiObjectSetter<QuestAlias>,
-        IEquatable<QuestAlias>
+        IEquatable<IQuestAliasGetter>
     {
         #region Ctor
         public QuestAlias()
@@ -266,7 +266,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((QuestAliasCommon)((IQuestAliasGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(QuestAlias? obj)
+        public bool Equals(IQuestAliasGetter? obj)
         {
             return ((QuestAliasCommon)((IQuestAliasGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -4377,6 +4377,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IQuestAliasGetter rhs)) return false;
+            return ((QuestAliasCommon)((IQuestAliasGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IQuestAliasGetter? obj)
+        {
+            return ((QuestAliasCommon)((IQuestAliasGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((QuestAliasCommon)((IQuestAliasGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

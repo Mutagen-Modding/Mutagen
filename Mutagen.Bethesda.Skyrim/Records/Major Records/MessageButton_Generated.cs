@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class MessageButton :
         IMessageButton,
         ILoquiObjectSetter<MessageButton>,
-        IEquatable<MessageButton>
+        IEquatable<IMessageButtonGetter>
     {
         #region Ctor
         public MessageButton()
@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((MessageButtonCommon)((IMessageButtonGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(MessageButton? obj)
+        public bool Equals(IMessageButtonGetter? obj)
         {
             return ((MessageButtonCommon)((IMessageButtonGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1501,6 +1501,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IMessageButtonGetter rhs)) return false;
+            return ((MessageButtonCommon)((IMessageButtonGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IMessageButtonGetter? obj)
+        {
+            return ((MessageButtonCommon)((IMessageButtonGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((MessageButtonCommon)((IMessageButtonGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

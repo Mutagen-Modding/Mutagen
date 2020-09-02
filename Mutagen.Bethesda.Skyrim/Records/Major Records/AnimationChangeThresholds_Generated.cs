@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class AnimationChangeThresholds :
         IAnimationChangeThresholds,
         ILoquiObjectSetter<AnimationChangeThresholds>,
-        IEquatable<AnimationChangeThresholds>
+        IEquatable<IAnimationChangeThresholdsGetter>
     {
         #region Ctor
         public AnimationChangeThresholds()
@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((AnimationChangeThresholdsCommon)((IAnimationChangeThresholdsGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(AnimationChangeThresholds? obj)
+        public bool Equals(IAnimationChangeThresholdsGetter? obj)
         {
             return ((AnimationChangeThresholdsCommon)((IAnimationChangeThresholdsGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1314,6 +1314,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IAnimationChangeThresholdsGetter rhs)) return false;
+            return ((AnimationChangeThresholdsCommon)((IAnimationChangeThresholdsGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IAnimationChangeThresholdsGetter? obj)
+        {
+            return ((AnimationChangeThresholdsCommon)((IAnimationChangeThresholdsGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((AnimationChangeThresholdsCommon)((IAnimationChangeThresholdsGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

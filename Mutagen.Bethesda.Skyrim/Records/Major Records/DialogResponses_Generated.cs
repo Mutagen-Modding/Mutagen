@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IDialogResponsesInternal,
         ILoquiObjectSetter<DialogResponses>,
-        IEquatable<DialogResponses>
+        IEquatable<IDialogResponsesGetter>
     {
         #region Ctor
         protected DialogResponses()
@@ -192,7 +192,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((DialogResponsesCommon)((IDialogResponsesGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(DialogResponses? obj)
+        public bool Equals(IDialogResponsesGetter? obj)
         {
             return ((DialogResponsesCommon)((IDialogResponsesGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -3323,6 +3323,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IDialogResponsesGetter rhs)) return false;
+            return ((DialogResponsesCommon)((IDialogResponsesGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IDialogResponsesGetter? obj)
+        {
+            return ((DialogResponsesCommon)((IDialogResponsesGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((DialogResponsesCommon)((IDialogResponsesGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

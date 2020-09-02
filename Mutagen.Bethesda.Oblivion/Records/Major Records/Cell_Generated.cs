@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         Place,
         ICellInternal,
         ILoquiObjectSetter<Cell>,
-        IEquatable<Cell>
+        IEquatable<ICellGetter>
     {
         #region Ctor
         protected Cell()
@@ -214,7 +214,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((CellCommon)((ICellGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Cell? obj)
+        public bool Equals(ICellGetter? obj)
         {
             return ((CellCommon)((ICellGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -4333,6 +4333,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ICellGetter rhs)) return false;
+            return ((CellCommon)((ICellGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ICellGetter? obj)
+        {
+            return ((CellCommon)((ICellGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((CellCommon)((ICellGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

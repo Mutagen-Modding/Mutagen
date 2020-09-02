@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IDialogBranchInternal,
         ILoquiObjectSetter<DialogBranch>,
-        IEquatable<DialogBranch>
+        IEquatable<IDialogBranchGetter>
     {
         #region Ctor
         protected DialogBranch()
@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((DialogBranchCommon)((IDialogBranchGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(DialogBranch? obj)
+        public bool Equals(IDialogBranchGetter? obj)
         {
             return ((DialogBranchCommon)((IDialogBranchGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1738,6 +1738,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IDialogBranchGetter rhs)) return false;
+            return ((DialogBranchCommon)((IDialogBranchGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IDialogBranchGetter? obj)
+        {
+            return ((DialogBranchCommon)((IDialogBranchGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((DialogBranchCommon)((IDialogBranchGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

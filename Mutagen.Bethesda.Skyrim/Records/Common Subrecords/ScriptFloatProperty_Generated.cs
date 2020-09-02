@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         ScriptProperty,
         IScriptFloatProperty,
         ILoquiObjectSetter<ScriptFloatProperty>,
-        IEquatable<ScriptFloatProperty>
+        IEquatable<IScriptFloatPropertyGetter>
     {
         #region Ctor
         public ScriptFloatProperty()
@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ScriptFloatPropertyCommon)((IScriptFloatPropertyGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ScriptFloatProperty? obj)
+        public bool Equals(IScriptFloatPropertyGetter? obj)
         {
             return ((ScriptFloatPropertyCommon)((IScriptFloatPropertyGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1212,6 +1212,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IScriptFloatPropertyGetter rhs)) return false;
+            return ((ScriptFloatPropertyCommon)((IScriptFloatPropertyGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IScriptFloatPropertyGetter? obj)
+        {
+            return ((ScriptFloatPropertyCommon)((IScriptFloatPropertyGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ScriptFloatPropertyCommon)((IScriptFloatPropertyGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

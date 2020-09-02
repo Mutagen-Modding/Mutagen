@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IWeatherInternal,
         ILoquiObjectSetter<Weather>,
-        IEquatable<Weather>
+        IEquatable<IWeatherGetter>
     {
         #region Ctor
         protected Weather()
@@ -145,7 +145,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((WeatherCommon)((IWeatherGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Weather? obj)
+        public bool Equals(IWeatherGetter? obj)
         {
             return ((WeatherCommon)((IWeatherGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2513,6 +2513,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IWeatherGetter rhs)) return false;
+            return ((WeatherCommon)((IWeatherGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IWeatherGetter? obj)
+        {
+            return ((WeatherCommon)((IWeatherGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((WeatherCommon)((IWeatherGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IEffectShaderInternal,
         ILoquiObjectSetter<EffectShader>,
-        IEquatable<EffectShader>
+        IEquatable<IEffectShaderGetter>
     {
         #region Ctor
         protected EffectShader()
@@ -661,7 +661,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(EffectShader? obj)
+        public bool Equals(IEffectShaderGetter? obj)
         {
             return ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -8835,6 +8835,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IEffectShaderGetter rhs)) return false;
+            return ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IEffectShaderGetter? obj)
+        {
+            return ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

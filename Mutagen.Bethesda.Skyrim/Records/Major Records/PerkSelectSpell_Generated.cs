@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         APerkEntryPointEffect,
         IPerkSelectSpell,
         ILoquiObjectSetter<PerkSelectSpell>,
-        IEquatable<PerkSelectSpell>
+        IEquatable<IPerkSelectSpellGetter>
     {
         #region Ctor
         public PerkSelectSpell()
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PerkSelectSpellCommon)((IPerkSelectSpellGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PerkSelectSpell? obj)
+        public bool Equals(IPerkSelectSpellGetter? obj)
         {
             return ((PerkSelectSpellCommon)((IPerkSelectSpellGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1334,6 +1334,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPerkSelectSpellGetter rhs)) return false;
+            return ((PerkSelectSpellCommon)((IPerkSelectSpellGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPerkSelectSpellGetter? obj)
+        {
+            return ((PerkSelectSpellCommon)((IPerkSelectSpellGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PerkSelectSpellCommon)((IPerkSelectSpellGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ITalkingActivatorInternal,
         ILoquiObjectSetter<TalkingActivator>,
-        IEquatable<TalkingActivator>
+        IEquatable<ITalkingActivatorGetter>
     {
         #region Ctor
         protected TalkingActivator()
@@ -140,7 +140,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((TalkingActivatorCommon)((ITalkingActivatorGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(TalkingActivator? obj)
+        public bool Equals(ITalkingActivatorGetter? obj)
         {
             return ((TalkingActivatorCommon)((ITalkingActivatorGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2579,6 +2579,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ITalkingActivatorGetter rhs)) return false;
+            return ((TalkingActivatorCommon)((ITalkingActivatorGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ITalkingActivatorGetter? obj)
+        {
+            return ((TalkingActivatorCommon)((ITalkingActivatorGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((TalkingActivatorCommon)((ITalkingActivatorGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

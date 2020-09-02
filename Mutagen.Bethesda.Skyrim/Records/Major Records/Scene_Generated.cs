@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ISceneInternal,
         ILoquiObjectSetter<Scene>,
-        IEquatable<Scene>
+        IEquatable<ISceneGetter>
     {
         #region Ctor
         protected Scene()
@@ -178,7 +178,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SceneCommon)((ISceneGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Scene? obj)
+        public bool Equals(ISceneGetter? obj)
         {
             return ((SceneCommon)((ISceneGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -3017,6 +3017,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ISceneGetter rhs)) return false;
+            return ((SceneCommon)((ISceneGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ISceneGetter? obj)
+        {
+            return ((SceneCommon)((ISceneGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((SceneCommon)((ISceneGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

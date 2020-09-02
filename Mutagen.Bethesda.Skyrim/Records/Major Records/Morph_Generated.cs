@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class Morph :
         IMorph,
         ILoquiObjectSetter<Morph>,
-        IEquatable<Morph>
+        IEquatable<IMorphGetter>
     {
         #region Ctor
         public Morph()
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((MorphCommon)((IMorphGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Morph? obj)
+        public bool Equals(IMorphGetter? obj)
         {
             return ((MorphCommon)((IMorphGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1177,6 +1177,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IMorphGetter rhs)) return false;
+            return ((MorphCommon)((IMorphGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IMorphGetter? obj)
+        {
+            return ((MorphCommon)((IMorphGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((MorphCommon)((IMorphGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

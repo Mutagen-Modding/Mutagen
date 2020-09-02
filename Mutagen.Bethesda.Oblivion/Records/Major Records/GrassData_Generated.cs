@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class GrassData :
         IGrassData,
         ILoquiObjectSetter<GrassData>,
-        IEquatable<GrassData>
+        IEquatable<IGrassDataGetter>
     {
         #region Ctor
         public GrassData()
@@ -96,7 +96,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((GrassDataCommon)((IGrassDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(GrassData? obj)
+        public bool Equals(IGrassDataGetter? obj)
         {
             return ((GrassDataCommon)((IGrassDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1862,6 +1862,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IGrassDataGetter rhs)) return false;
+            return ((GrassDataCommon)((IGrassDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IGrassDataGetter? obj)
+        {
+            return ((GrassDataCommon)((IGrassDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((GrassDataCommon)((IGrassDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

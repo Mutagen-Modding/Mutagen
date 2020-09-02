@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class PointToReferenceMapping :
         IPointToReferenceMapping,
         ILoquiObjectSetter<PointToReferenceMapping>,
-        IEquatable<PointToReferenceMapping>
+        IEquatable<IPointToReferenceMappingGetter>
     {
         #region Ctor
         public PointToReferenceMapping()
@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PointToReferenceMapping? obj)
+        public bool Equals(IPointToReferenceMappingGetter? obj)
         {
             return ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1391,6 +1391,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPointToReferenceMappingGetter rhs)) return false;
+            return ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPointToReferenceMappingGetter? obj)
+        {
+            return ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

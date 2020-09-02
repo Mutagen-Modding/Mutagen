@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class CellBlock :
         ICellBlock,
         ILoquiObjectSetter<CellBlock>,
-        IEquatable<CellBlock>
+        IEquatable<ICellBlockGetter>
     {
         #region Ctor
         public CellBlock()
@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((CellBlockCommon)((ICellBlockGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(CellBlock? obj)
+        public bool Equals(ICellBlockGetter? obj)
         {
             return ((CellBlockCommon)((ICellBlockGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2138,6 +2138,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ICellBlockGetter rhs)) return false;
+            return ((CellBlockCommon)((ICellBlockGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ICellBlockGetter? obj)
+        {
+            return ((CellBlockCommon)((ICellBlockGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((CellBlockCommon)((ICellBlockGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

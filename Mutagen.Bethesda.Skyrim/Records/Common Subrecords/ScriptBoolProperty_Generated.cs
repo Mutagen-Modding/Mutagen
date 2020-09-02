@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         ScriptProperty,
         IScriptBoolProperty,
         ILoquiObjectSetter<ScriptBoolProperty>,
-        IEquatable<ScriptBoolProperty>
+        IEquatable<IScriptBoolPropertyGetter>
     {
         #region Ctor
         public ScriptBoolProperty()
@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ScriptBoolPropertyCommon)((IScriptBoolPropertyGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ScriptBoolProperty? obj)
+        public bool Equals(IScriptBoolPropertyGetter? obj)
         {
             return ((ScriptBoolPropertyCommon)((IScriptBoolPropertyGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1210,6 +1210,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IScriptBoolPropertyGetter rhs)) return false;
+            return ((ScriptBoolPropertyCommon)((IScriptBoolPropertyGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IScriptBoolPropertyGetter? obj)
+        {
+            return ((ScriptBoolPropertyCommon)((IScriptBoolPropertyGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ScriptBoolPropertyCommon)((IScriptBoolPropertyGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

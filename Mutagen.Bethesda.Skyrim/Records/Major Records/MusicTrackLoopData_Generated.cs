@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class MusicTrackLoopData :
         IMusicTrackLoopData,
         ILoquiObjectSetter<MusicTrackLoopData>,
-        IEquatable<MusicTrackLoopData>
+        IEquatable<IMusicTrackLoopDataGetter>
     {
         #region Ctor
         public MusicTrackLoopData()
@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((MusicTrackLoopDataCommon)((IMusicTrackLoopDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(MusicTrackLoopData? obj)
+        public bool Equals(IMusicTrackLoopDataGetter? obj)
         {
             return ((MusicTrackLoopDataCommon)((IMusicTrackLoopDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1312,6 +1312,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IMusicTrackLoopDataGetter rhs)) return false;
+            return ((MusicTrackLoopDataCommon)((IMusicTrackLoopDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IMusicTrackLoopDataGetter? obj)
+        {
+            return ((MusicTrackLoopDataCommon)((IMusicTrackLoopDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((MusicTrackLoopDataCommon)((IMusicTrackLoopDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

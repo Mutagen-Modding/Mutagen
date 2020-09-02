@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class NavmeshTriangle :
         INavmeshTriangle,
         ILoquiObjectSetter<NavmeshTriangle>,
-        IEquatable<NavmeshTriangle>
+        IEquatable<INavmeshTriangleGetter>
     {
         #region Ctor
         public NavmeshTriangle()
@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((NavmeshTriangleCommon)((INavmeshTriangleGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(NavmeshTriangle? obj)
+        public bool Equals(INavmeshTriangleGetter? obj)
         {
             return ((NavmeshTriangleCommon)((INavmeshTriangleGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1535,6 +1535,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is INavmeshTriangleGetter rhs)) return false;
+            return ((NavmeshTriangleCommon)((INavmeshTriangleGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(INavmeshTriangleGetter? obj)
+        {
+            return ((NavmeshTriangleCommon)((INavmeshTriangleGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((NavmeshTriangleCommon)((INavmeshTriangleGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

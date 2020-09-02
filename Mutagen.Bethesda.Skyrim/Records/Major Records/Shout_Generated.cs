@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         ASpell,
         IShoutInternal,
         ILoquiObjectSetter<Shout>,
-        IEquatable<Shout>
+        IEquatable<IShoutGetter>
     {
         #region Ctor
         protected Shout()
@@ -92,7 +92,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ShoutCommon)((IShoutGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Shout? obj)
+        public bool Equals(IShoutGetter? obj)
         {
             return ((ShoutCommon)((IShoutGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1998,6 +1998,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IShoutGetter rhs)) return false;
+            return ((ShoutCommon)((IShoutGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IShoutGetter? obj)
+        {
+            return ((ShoutCommon)((IShoutGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ShoutCommon)((IShoutGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

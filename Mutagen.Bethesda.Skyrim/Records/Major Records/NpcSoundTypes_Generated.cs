@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         ANpcSoundDefinition,
         INpcSoundTypes,
         ILoquiObjectSetter<NpcSoundTypes>,
-        IEquatable<NpcSoundTypes>
+        IEquatable<INpcSoundTypesGetter>
     {
         #region Ctor
         public NpcSoundTypes()
@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((NpcSoundTypesCommon)((INpcSoundTypesGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(NpcSoundTypes? obj)
+        public bool Equals(INpcSoundTypesGetter? obj)
         {
             return ((NpcSoundTypesCommon)((INpcSoundTypesGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1413,6 +1413,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is INpcSoundTypesGetter rhs)) return false;
+            return ((NpcSoundTypesCommon)((INpcSoundTypesGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(INpcSoundTypesGetter? obj)
+        {
+            return ((NpcSoundTypesCommon)((INpcSoundTypesGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((NpcSoundTypesCommon)((INpcSoundTypesGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

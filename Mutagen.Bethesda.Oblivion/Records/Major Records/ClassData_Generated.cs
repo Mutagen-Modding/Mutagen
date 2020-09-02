@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class ClassData :
         IClassData,
         ILoquiObjectSetter<ClassData>,
-        IEquatable<ClassData>
+        IEquatable<IClassDataGetter>
     {
         #region Ctor
         public ClassData()
@@ -106,7 +106,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ClassDataCommon)((IClassDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ClassData? obj)
+        public bool Equals(IClassDataGetter? obj)
         {
             return ((ClassDataCommon)((IClassDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1843,6 +1843,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IClassDataGetter rhs)) return false;
+            return ((ClassDataCommon)((IClassDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IClassDataGetter? obj)
+        {
+            return ((ClassDataCommon)((IClassDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ClassDataCommon)((IClassDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         APlacedTrap,
         IPlacedFlameInternal,
         ILoquiObjectSetter<PlacedFlame>,
-        IEquatable<PlacedFlame>
+        IEquatable<IPlacedFlameGetter>
     {
         #region Ctor
         protected PlacedFlame()
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PlacedFlameCommon)((IPlacedFlameGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PlacedFlame? obj)
+        public bool Equals(IPlacedFlameGetter? obj)
         {
             return ((PlacedFlameCommon)((IPlacedFlameGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1598,6 +1598,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPlacedFlameGetter rhs)) return false;
+            return ((PlacedFlameCommon)((IPlacedFlameGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPlacedFlameGetter? obj)
+        {
+            return ((PlacedFlameCommon)((IPlacedFlameGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PlacedFlameCommon)((IPlacedFlameGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

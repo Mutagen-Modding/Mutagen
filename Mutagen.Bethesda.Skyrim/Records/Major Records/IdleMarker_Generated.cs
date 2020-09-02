@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IIdleMarkerInternal,
         ILoquiObjectSetter<IdleMarker>,
-        IEquatable<IdleMarker>
+        IEquatable<IIdleMarkerGetter>
     {
         #region Ctor
         protected IdleMarker()
@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(IdleMarker? obj)
+        public bool Equals(IIdleMarkerGetter? obj)
         {
             return ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2102,6 +2102,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IIdleMarkerGetter rhs)) return false;
+            return ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IIdleMarkerGetter? obj)
+        {
+            return ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class Location :
         ILocation,
         ILoquiObjectSetter<Location>,
-        IEquatable<Location>
+        IEquatable<ILocationGetter>
     {
         #region Ctor
         public Location()
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Location? obj)
+        public bool Equals(ILocationGetter? obj)
         {
             return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1237,6 +1237,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILocationGetter rhs)) return false;
+            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILocationGetter? obj)
+        {
+            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LocationCommon)((ILocationGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class BodyPart :
         IBodyPart,
         ILoquiObjectSetter<BodyPart>,
-        IEquatable<BodyPart>
+        IEquatable<IBodyPartGetter>
     {
         #region Ctor
         public BodyPart()
@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((BodyPartCommon)((IBodyPartGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(BodyPart? obj)
+        public bool Equals(IBodyPartGetter? obj)
         {
             return ((BodyPartCommon)((IBodyPartGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -3514,6 +3514,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IBodyPartGetter rhs)) return false;
+            return ((BodyPartCommon)((IBodyPartGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IBodyPartGetter? obj)
+        {
+            return ((BodyPartCommon)((IBodyPartGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((BodyPartCommon)((IBodyPartGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

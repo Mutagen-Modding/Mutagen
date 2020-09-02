@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         ILandscapeInternal,
         ILoquiObjectSetter<Landscape>,
-        IEquatable<Landscape>
+        IEquatable<ILandscapeGetter>
     {
         #region Ctor
         protected Landscape()
@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Landscape? obj)
+        public bool Equals(ILandscapeGetter? obj)
         {
             return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2256,6 +2256,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILandscapeGetter rhs)) return false;
+            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILandscapeGetter? obj)
+        {
+            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

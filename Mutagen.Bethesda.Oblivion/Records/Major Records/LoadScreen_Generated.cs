@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         ILoadScreenInternal,
         ILoquiObjectSetter<LoadScreen>,
-        IEquatable<LoadScreen>
+        IEquatable<ILoadScreenGetter>
     {
         #region Ctor
         protected LoadScreen()
@@ -87,7 +87,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((LoadScreenCommon)((ILoadScreenGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LoadScreen? obj)
+        public bool Equals(ILoadScreenGetter? obj)
         {
             return ((LoadScreenCommon)((ILoadScreenGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1795,6 +1795,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILoadScreenGetter rhs)) return false;
+            return ((LoadScreenCommon)((ILoadScreenGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILoadScreenGetter? obj)
+        {
+            return ((LoadScreenCommon)((ILoadScreenGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LoadScreenCommon)((ILoadScreenGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

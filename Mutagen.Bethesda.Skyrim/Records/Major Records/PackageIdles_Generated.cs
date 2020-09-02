@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class PackageIdles :
         IPackageIdles,
         ILoquiObjectSetter<PackageIdles>,
-        IEquatable<PackageIdles>
+        IEquatable<IPackageIdlesGetter>
     {
         #region Ctor
         public PackageIdles()
@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PackageIdlesCommon)((IPackageIdlesGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PackageIdles? obj)
+        public bool Equals(IPackageIdlesGetter? obj)
         {
             return ((PackageIdlesCommon)((IPackageIdlesGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1570,6 +1570,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPackageIdlesGetter rhs)) return false;
+            return ((PackageIdlesCommon)((IPackageIdlesGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPackageIdlesGetter? obj)
+        {
+            return ((PackageIdlesCommon)((IPackageIdlesGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PackageIdlesCommon)((IPackageIdlesGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

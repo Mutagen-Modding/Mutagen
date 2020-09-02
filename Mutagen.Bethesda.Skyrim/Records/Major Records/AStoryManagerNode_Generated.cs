@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IAStoryManagerNodeInternal,
         ILoquiObjectSetter<AStoryManagerNode>,
-        IEquatable<AStoryManagerNode>
+        IEquatable<IAStoryManagerNodeGetter>
     {
         #region Ctor
         protected AStoryManagerNode()
@@ -87,7 +87,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(AStoryManagerNode? obj)
+        public bool Equals(IAStoryManagerNodeGetter? obj)
         {
             return ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1740,6 +1740,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IAStoryManagerNodeGetter rhs)) return false;
+            return ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IAStoryManagerNodeGetter? obj)
+        {
+            return ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

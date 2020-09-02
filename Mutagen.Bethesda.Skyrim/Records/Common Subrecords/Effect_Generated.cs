@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class Effect :
         IEffect,
         ILoquiObjectSetter<Effect>,
-        IEquatable<Effect>
+        IEquatable<IEffectGetter>
     {
         #region Ctor
         public Effect()
@@ -91,7 +91,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Effect? obj)
+        public bool Equals(IEffectGetter? obj)
         {
             return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1624,6 +1624,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IEffectGetter rhs)) return false;
+            return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IEffectGetter? obj)
+        {
+            return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((EffectCommon)((IEffectGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

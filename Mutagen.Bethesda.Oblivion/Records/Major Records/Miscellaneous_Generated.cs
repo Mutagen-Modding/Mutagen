@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         AItem,
         IMiscellaneousInternal,
         ILoquiObjectSetter<Miscellaneous>,
-        IEquatable<Miscellaneous>
+        IEquatable<IMiscellaneousGetter>
     {
         #region Ctor
         protected Miscellaneous()
@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((MiscellaneousCommon)((IMiscellaneousGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Miscellaneous? obj)
+        public bool Equals(IMiscellaneousGetter? obj)
         {
             return ((MiscellaneousCommon)((IMiscellaneousGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1998,6 +1998,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IMiscellaneousGetter rhs)) return false;
+            return ((MiscellaneousCommon)((IMiscellaneousGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IMiscellaneousGetter? obj)
+        {
+            return ((MiscellaneousCommon)((IMiscellaneousGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((MiscellaneousCommon)((IMiscellaneousGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

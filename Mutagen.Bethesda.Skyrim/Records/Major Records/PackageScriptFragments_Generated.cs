@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class PackageScriptFragments :
         IPackageScriptFragments,
         ILoquiObjectSetter<PackageScriptFragments>,
-        IEquatable<PackageScriptFragments>
+        IEquatable<IPackageScriptFragmentsGetter>
     {
         #region Ctor
         public PackageScriptFragments()
@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PackageScriptFragmentsCommon)((IPackageScriptFragmentsGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PackageScriptFragments? obj)
+        public bool Equals(IPackageScriptFragmentsGetter? obj)
         {
             return ((PackageScriptFragmentsCommon)((IPackageScriptFragmentsGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1567,6 +1567,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPackageScriptFragmentsGetter rhs)) return false;
+            return ((PackageScriptFragmentsCommon)((IPackageScriptFragmentsGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPackageScriptFragmentsGetter? obj)
+        {
+            return ((PackageScriptFragmentsCommon)((IPackageScriptFragmentsGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PackageScriptFragmentsCommon)((IPackageScriptFragmentsGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

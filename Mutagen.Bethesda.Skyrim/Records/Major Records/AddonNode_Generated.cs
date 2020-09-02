@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IAddonNodeInternal,
         ILoquiObjectSetter<AddonNode>,
-        IEquatable<AddonNode>
+        IEquatable<IAddonNodeGetter>
     {
         #region Ctor
         protected AddonNode()
@@ -96,7 +96,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((AddonNodeCommon)((IAddonNodeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(AddonNode? obj)
+        public bool Equals(IAddonNodeGetter? obj)
         {
             return ((AddonNodeCommon)((IAddonNodeGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2043,6 +2043,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IAddonNodeGetter rhs)) return false;
+            return ((AddonNodeCommon)((IAddonNodeGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IAddonNodeGetter? obj)
+        {
+            return ((AddonNodeCommon)((IAddonNodeGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((AddonNodeCommon)((IAddonNodeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

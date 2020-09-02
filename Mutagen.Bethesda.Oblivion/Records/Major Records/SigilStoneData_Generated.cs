@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class SigilStoneData :
         ISigilStoneData,
         ILoquiObjectSetter<SigilStoneData>,
-        IEquatable<SigilStoneData>
+        IEquatable<ISigilStoneDataGetter>
     {
         #region Ctor
         public SigilStoneData()
@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((SigilStoneDataCommon)((ISigilStoneDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(SigilStoneData? obj)
+        public bool Equals(ISigilStoneDataGetter? obj)
         {
             return ((SigilStoneDataCommon)((ISigilStoneDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1310,6 +1310,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ISigilStoneDataGetter rhs)) return false;
+            return ((SigilStoneDataCommon)((ISigilStoneDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ISigilStoneDataGetter? obj)
+        {
+            return ((SigilStoneDataCommon)((ISigilStoneDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((SigilStoneDataCommon)((ISigilStoneDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

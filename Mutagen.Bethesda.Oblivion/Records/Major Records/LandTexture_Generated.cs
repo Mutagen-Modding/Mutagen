@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         ILandTextureInternal,
         ILoquiObjectSetter<LandTexture>,
-        IEquatable<LandTexture>
+        IEquatable<ILandTextureGetter>
     {
         #region Ctor
         protected LandTexture()
@@ -98,7 +98,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((LandTextureCommon)((ILandTextureGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LandTexture? obj)
+        public bool Equals(ILandTextureGetter? obj)
         {
             return ((LandTextureCommon)((ILandTextureGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1906,6 +1906,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILandTextureGetter rhs)) return false;
+            return ((LandTextureCommon)((ILandTextureGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILandTextureGetter? obj)
+        {
+            return ((LandTextureCommon)((ILandTextureGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LandTextureCommon)((ILandTextureGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

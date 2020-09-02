@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class EntryPoints :
         IEntryPoints,
         ILoquiObjectSetter<EntryPoints>,
-        IEquatable<EntryPoints>
+        IEquatable<IEntryPointsGetter>
     {
         #region Ctor
         public EntryPoints()
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((EntryPointsCommon)((IEntryPointsGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(EntryPoints? obj)
+        public bool Equals(IEntryPointsGetter? obj)
         {
             return ((EntryPointsCommon)((IEntryPointsGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1239,6 +1239,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IEntryPointsGetter rhs)) return false;
+            return ((EntryPointsCommon)((IEntryPointsGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IEntryPointsGetter? obj)
+        {
+            return ((EntryPointsCommon)((IEntryPointsGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((EntryPointsCommon)((IEntryPointsGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

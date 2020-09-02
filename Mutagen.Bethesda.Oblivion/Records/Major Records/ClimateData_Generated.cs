@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class ClimateData :
         IClimateData,
         ILoquiObjectSetter<ClimateData>,
-        IEquatable<ClimateData>
+        IEquatable<IClimateDataGetter>
     {
         #region Ctor
         public ClimateData()
@@ -82,7 +82,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ClimateDataCommon)((IClimateDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ClimateData? obj)
+        public bool Equals(IClimateDataGetter? obj)
         {
             return ((ClimateDataCommon)((IClimateDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1678,6 +1678,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IClimateDataGetter rhs)) return false;
+            return ((ClimateDataCommon)((IClimateDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IClimateDataGetter? obj)
+        {
+            return ((ClimateDataCommon)((IClimateDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ClimateDataCommon)((IClimateDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

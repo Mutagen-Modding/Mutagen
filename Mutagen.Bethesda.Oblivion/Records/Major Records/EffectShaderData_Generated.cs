@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class EffectShaderData :
         IEffectShaderData,
         ILoquiObjectSetter<EffectShaderData>,
-        IEquatable<EffectShaderData>
+        IEquatable<IEffectShaderDataGetter>
     {
         #region Ctor
         public EffectShaderData()
@@ -232,7 +232,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((EffectShaderDataCommon)((IEffectShaderDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(EffectShaderData? obj)
+        public bool Equals(IEffectShaderDataGetter? obj)
         {
             return ((EffectShaderDataCommon)((IEffectShaderDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -4685,6 +4685,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IEffectShaderDataGetter rhs)) return false;
+            return ((EffectShaderDataCommon)((IEffectShaderDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IEffectShaderDataGetter? obj)
+        {
+            return ((EffectShaderDataCommon)((IEffectShaderDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((EffectShaderDataCommon)((IEffectShaderDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class LocalVariable :
         ILocalVariable,
         ILoquiObjectSetter<LocalVariable>,
-        IEquatable<LocalVariable>
+        IEquatable<ILocalVariableGetter>
     {
         #region Ctor
         public LocalVariable()
@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((LocalVariableCommon)((ILocalVariableGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LocalVariable? obj)
+        public bool Equals(ILocalVariableGetter? obj)
         {
             return ((LocalVariableCommon)((ILocalVariableGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1376,6 +1376,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILocalVariableGetter rhs)) return false;
+            return ((LocalVariableCommon)((ILocalVariableGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILocalVariableGetter? obj)
+        {
+            return ((LocalVariableCommon)((ILocalVariableGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LocalVariableCommon)((ILocalVariableGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

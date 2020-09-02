@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class WorldspaceMap :
         IWorldspaceMap,
         ILoquiObjectSetter<WorldspaceMap>,
-        IEquatable<WorldspaceMap>
+        IEquatable<IWorldspaceMapGetter>
     {
         #region Ctor
         public WorldspaceMap()
@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((WorldspaceMapCommon)((IWorldspaceMapGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(WorldspaceMap? obj)
+        public bool Equals(IWorldspaceMapGetter? obj)
         {
             return ((WorldspaceMapCommon)((IWorldspaceMapGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1575,6 +1575,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IWorldspaceMapGetter rhs)) return false;
+            return ((WorldspaceMapCommon)((IWorldspaceMapGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IWorldspaceMapGetter? obj)
+        {
+            return ((WorldspaceMapCommon)((IWorldspaceMapGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((WorldspaceMapCommon)((IWorldspaceMapGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class WeatherSound :
         IWeatherSound,
         ILoquiObjectSetter<WeatherSound>,
-        IEquatable<WeatherSound>
+        IEquatable<IWeatherSoundGetter>
     {
         #region Ctor
         public WeatherSound()
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((WeatherSoundCommon)((IWeatherSoundGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(WeatherSound? obj)
+        public bool Equals(IWeatherSoundGetter? obj)
         {
             return ((WeatherSoundCommon)((IWeatherSoundGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1270,6 +1270,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IWeatherSoundGetter rhs)) return false;
+            return ((WeatherSoundCommon)((IWeatherSoundGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IWeatherSoundGetter? obj)
+        {
+            return ((WeatherSoundCommon)((IWeatherSoundGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((WeatherSoundCommon)((IWeatherSoundGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

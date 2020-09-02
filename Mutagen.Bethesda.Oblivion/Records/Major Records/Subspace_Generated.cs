@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         ISubspaceInternal,
         ILoquiObjectSetter<Subspace>,
-        IEquatable<Subspace>
+        IEquatable<ISubspaceGetter>
     {
         #region Ctor
         protected Subspace()
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((SubspaceCommon)((ISubspaceGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Subspace? obj)
+        public bool Equals(ISubspaceGetter? obj)
         {
             return ((SubspaceCommon)((ISubspaceGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1473,6 +1473,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ISubspaceGetter rhs)) return false;
+            return ((SubspaceCommon)((ISubspaceGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ISubspaceGetter? obj)
+        {
+            return ((SubspaceCommon)((ISubspaceGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((SubspaceCommon)((ISubspaceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

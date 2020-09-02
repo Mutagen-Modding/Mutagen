@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class SkillBoost :
         ISkillBoost,
         ILoquiObjectSetter<SkillBoost>,
-        IEquatable<SkillBoost>
+        IEquatable<ISkillBoostGetter>
     {
         #region Ctor
         public SkillBoost()
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((SkillBoostCommon)((ISkillBoostGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(SkillBoost? obj)
+        public bool Equals(ISkillBoostGetter? obj)
         {
             return ((SkillBoostCommon)((ISkillBoostGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1236,6 +1236,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ISkillBoostGetter rhs)) return false;
+            return ((SkillBoostCommon)((ISkillBoostGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ISkillBoostGetter? obj)
+        {
+            return ((SkillBoostCommon)((ISkillBoostGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((SkillBoostCommon)((ISkillBoostGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ISoundCategoryInternal,
         ILoquiObjectSetter<SoundCategory>,
-        IEquatable<SoundCategory>
+        IEquatable<ISoundCategoryGetter>
     {
         #region Ctor
         protected SoundCategory()
@@ -88,7 +88,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SoundCategoryCommon)((ISoundCategoryGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(SoundCategory? obj)
+        public bool Equals(ISoundCategoryGetter? obj)
         {
             return ((SoundCategoryCommon)((ISoundCategoryGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1838,6 +1838,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ISoundCategoryGetter rhs)) return false;
+            return ((SoundCategoryCommon)((ISoundCategoryGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ISoundCategoryGetter? obj)
+        {
+            return ((SoundCategoryCommon)((ISoundCategoryGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((SoundCategoryCommon)((ISoundCategoryGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

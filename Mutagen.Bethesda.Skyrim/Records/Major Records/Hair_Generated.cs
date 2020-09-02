@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IHairInternal,
         ILoquiObjectSetter<Hair>,
-        IEquatable<Hair>
+        IEquatable<IHairGetter>
     {
         #region Ctor
         protected Hair()
@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((HairCommon)((IHairGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Hair? obj)
+        public bool Equals(IHairGetter? obj)
         {
             return ((HairCommon)((IHairGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1321,6 +1321,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IHairGetter rhs)) return false;
+            return ((HairCommon)((IHairGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IHairGetter? obj)
+        {
+            return ((HairCommon)((IHairGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((HairCommon)((IHairGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

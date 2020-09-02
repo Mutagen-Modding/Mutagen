@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         AItem,
         IPotionInternal,
         ILoquiObjectSetter<Potion>,
-        IEquatable<Potion>
+        IEquatable<IPotionGetter>
     {
         #region Ctor
         protected Potion()
@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((PotionCommon)((IPotionGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Potion? obj)
+        public bool Equals(IPotionGetter? obj)
         {
             return ((PotionCommon)((IPotionGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2298,6 +2298,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPotionGetter rhs)) return false;
+            return ((PotionCommon)((IPotionGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPotionGetter? obj)
+        {
+            return ((PotionCommon)((IPotionGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PotionCommon)((IPotionGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

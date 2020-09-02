@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class Phoneme :
         IPhoneme,
         ILoquiObjectSetter<Phoneme>,
-        IEquatable<Phoneme>
+        IEquatable<IPhonemeGetter>
     {
         #region Ctor
         public Phoneme()
@@ -192,7 +192,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PhonemeCommon)((IPhonemeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Phoneme? obj)
+        public bool Equals(IPhonemeGetter? obj)
         {
             return ((PhonemeCommon)((IPhonemeGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -3620,6 +3620,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPhonemeGetter rhs)) return false;
+            return ((PhonemeCommon)((IPhonemeGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPhonemeGetter? obj)
+        {
+            return ((PhonemeCommon)((IPhonemeGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PhonemeCommon)((IPhonemeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

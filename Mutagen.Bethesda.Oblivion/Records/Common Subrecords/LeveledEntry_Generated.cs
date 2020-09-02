@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class LeveledEntry<T> :
         ILeveledEntry<T>,
         ILoquiObjectSetter<LeveledEntry<T>>,
-        IEquatable<LeveledEntry<T>>
+        IEquatable<ILeveledEntryGetter<T>>
         where T : class, IOblivionMajorRecordInternal, IBinaryItem
     {
         #region Ctor
@@ -82,7 +82,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((LeveledEntryCommon<T>)((ILeveledEntryGetter<T>)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LeveledEntry<T>? obj)
+        public bool Equals(ILeveledEntryGetter<T>? obj)
         {
             return ((LeveledEntryCommon<T>)((ILeveledEntryGetter<T>)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1129,6 +1129,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILeveledEntryGetter<T> rhs)) return false;
+            return ((LeveledEntryCommon<T>)((ILeveledEntryGetter<T>)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILeveledEntryGetter<T>? obj)
+        {
+            return ((LeveledEntryCommon<T>)((ILeveledEntryGetter<T>)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LeveledEntryCommon<T>)((ILeveledEntryGetter<T>)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

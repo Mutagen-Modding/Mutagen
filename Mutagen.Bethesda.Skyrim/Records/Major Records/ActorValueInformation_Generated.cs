@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IActorValueInformationInternal,
         ILoquiObjectSetter<ActorValueInformation>,
-        IEquatable<ActorValueInformation>
+        IEquatable<IActorValueInformationGetter>
     {
         #region Ctor
         protected ActorValueInformation()
@@ -114,7 +114,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ActorValueInformation? obj)
+        public bool Equals(IActorValueInformationGetter? obj)
         {
             return ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2104,6 +2104,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IActorValueInformationGetter rhs)) return false;
+            return ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IActorValueInformationGetter? obj)
+        {
+            return ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

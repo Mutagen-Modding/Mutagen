@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class FacePart :
         IFacePart,
         ILoquiObjectSetter<FacePart>,
-        IEquatable<FacePart>
+        IEquatable<IFacePartGetter>
     {
         #region Ctor
         public FacePart()
@@ -82,7 +82,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((FacePartCommon)((IFacePartGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(FacePart? obj)
+        public bool Equals(IFacePartGetter? obj)
         {
             return ((FacePartCommon)((IFacePartGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1464,6 +1464,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IFacePartGetter rhs)) return false;
+            return ((FacePartCommon)((IFacePartGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IFacePartGetter? obj)
+        {
+            return ((FacePartCommon)((IFacePartGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((FacePartCommon)((IFacePartGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IAlchemicalApparatusInternal,
         ILoquiObjectSetter<AlchemicalApparatus>,
-        IEquatable<AlchemicalApparatus>
+        IEquatable<IAlchemicalApparatusGetter>
     {
         #region Ctor
         protected AlchemicalApparatus()
@@ -146,7 +146,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((AlchemicalApparatusCommon)((IAlchemicalApparatusGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(AlchemicalApparatus? obj)
+        public bool Equals(IAlchemicalApparatusGetter? obj)
         {
             return ((AlchemicalApparatusCommon)((IAlchemicalApparatusGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2689,6 +2689,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IAlchemicalApparatusGetter rhs)) return false;
+            return ((AlchemicalApparatusCommon)((IAlchemicalApparatusGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IAlchemicalApparatusGetter? obj)
+        {
+            return ((AlchemicalApparatusCommon)((IAlchemicalApparatusGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((AlchemicalApparatusCommon)((IAlchemicalApparatusGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IPlacedNpcInternal,
         ILoquiObjectSetter<PlacedNpc>,
-        IEquatable<PlacedNpc>
+        IEquatable<IPlacedNpcGetter>
     {
         #region Ctor
         protected PlacedNpc()
@@ -149,7 +149,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PlacedNpc? obj)
+        public bool Equals(IPlacedNpcGetter? obj)
         {
             return ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2406,6 +2406,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPlacedNpcGetter rhs)) return false;
+            return ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPlacedNpcGetter? obj)
+        {
+            return ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class KeyData :
         IKeyData,
         ILoquiObjectSetter<KeyData>,
-        IEquatable<KeyData>
+        IEquatable<IKeyDataGetter>
     {
         #region Ctor
         public KeyData()
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((KeyDataCommon)((IKeyDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(KeyData? obj)
+        public bool Equals(IKeyDataGetter? obj)
         {
             return ((KeyDataCommon)((IKeyDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1250,6 +1250,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IKeyDataGetter rhs)) return false;
+            return ((KeyDataCommon)((IKeyDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IKeyDataGetter? obj)
+        {
+            return ((KeyDataCommon)((IKeyDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((KeyDataCommon)((IKeyDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

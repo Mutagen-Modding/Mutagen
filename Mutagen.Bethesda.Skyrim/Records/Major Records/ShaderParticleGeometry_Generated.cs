@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IShaderParticleGeometryInternal,
         ILoquiObjectSetter<ShaderParticleGeometry>,
-        IEquatable<ShaderParticleGeometry>
+        IEquatable<IShaderParticleGeometryGetter>
     {
         #region Ctor
         protected ShaderParticleGeometry()
@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ShaderParticleGeometryCommon)((IShaderParticleGeometryGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ShaderParticleGeometry? obj)
+        public bool Equals(IShaderParticleGeometryGetter? obj)
         {
             return ((ShaderParticleGeometryCommon)((IShaderParticleGeometryGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2388,6 +2388,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IShaderParticleGeometryGetter rhs)) return false;
+            return ((ShaderParticleGeometryCommon)((IShaderParticleGeometryGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IShaderParticleGeometryGetter? obj)
+        {
+            return ((ShaderParticleGeometryCommon)((IShaderParticleGeometryGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ShaderParticleGeometryCommon)((IShaderParticleGeometryGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

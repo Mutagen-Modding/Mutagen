@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ICollisionLayerInternal,
         ILoquiObjectSetter<CollisionLayer>,
-        IEquatable<CollisionLayer>
+        IEquatable<ICollisionLayerGetter>
     {
         #region Ctor
         protected CollisionLayer()
@@ -93,7 +93,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(CollisionLayer? obj)
+        public bool Equals(ICollisionLayerGetter? obj)
         {
             return ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2028,6 +2028,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ICollisionLayerGetter rhs)) return false;
+            return ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ICollisionLayerGetter? obj)
+        {
+            return ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

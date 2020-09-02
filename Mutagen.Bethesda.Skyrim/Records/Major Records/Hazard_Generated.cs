@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IHazardInternal,
         ILoquiObjectSetter<Hazard>,
-        IEquatable<Hazard>
+        IEquatable<IHazardGetter>
     {
         #region Ctor
         protected Hazard()
@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((HazardCommon)((IHazardGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Hazard? obj)
+        public bool Equals(IHazardGetter? obj)
         {
             return ((HazardCommon)((IHazardGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2585,6 +2585,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IHazardGetter rhs)) return false;
+            return ((HazardCommon)((IHazardGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IHazardGetter? obj)
+        {
+            return ((HazardCommon)((IHazardGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((HazardCommon)((IHazardGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

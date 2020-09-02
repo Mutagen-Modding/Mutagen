@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         OwnerTarget,
         INpcOwner,
         ILoquiObjectSetter<NpcOwner>,
-        IEquatable<NpcOwner>
+        IEquatable<INpcOwnerGetter>
     {
         #region Ctor
         public NpcOwner()
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((NpcOwnerCommon)((INpcOwnerGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(NpcOwner? obj)
+        public bool Equals(INpcOwnerGetter? obj)
         {
             return ((NpcOwnerCommon)((INpcOwnerGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1276,6 +1276,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is INpcOwnerGetter rhs)) return false;
+            return ((NpcOwnerCommon)((INpcOwnerGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(INpcOwnerGetter? obj)
+        {
+            return ((NpcOwnerCommon)((INpcOwnerGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((NpcOwnerCommon)((INpcOwnerGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

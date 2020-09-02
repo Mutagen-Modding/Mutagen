@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IObjectEffectInternal,
         ILoquiObjectSetter<ObjectEffect>,
-        IEquatable<ObjectEffect>
+        IEquatable<IObjectEffectGetter>
     {
         #region Ctor
         protected ObjectEffect()
@@ -121,7 +121,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ObjectEffect? obj)
+        public bool Equals(IObjectEffectGetter? obj)
         {
             return ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2530,6 +2530,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IObjectEffectGetter rhs)) return false;
+            return ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IObjectEffectGetter? obj)
+        {
+            return ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

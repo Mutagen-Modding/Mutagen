@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         ANpcLevel,
         INpcLevel,
         ILoquiObjectSetter<NpcLevel>,
-        IEquatable<NpcLevel>
+        IEquatable<INpcLevelGetter>
     {
         #region Ctor
         public NpcLevel()
@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((NpcLevelCommon)((INpcLevelGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(NpcLevel? obj)
+        public bool Equals(INpcLevelGetter? obj)
         {
             return ((NpcLevelCommon)((INpcLevelGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1183,6 +1183,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is INpcLevelGetter rhs)) return false;
+            return ((NpcLevelCommon)((INpcLevelGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(INpcLevelGetter? obj)
+        {
+            return ((NpcLevelCommon)((INpcLevelGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((NpcLevelCommon)((INpcLevelGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

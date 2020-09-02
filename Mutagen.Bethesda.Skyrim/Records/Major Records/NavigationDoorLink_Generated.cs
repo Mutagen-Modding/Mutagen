@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class NavigationDoorLink :
         INavigationDoorLink,
         ILoquiObjectSetter<NavigationDoorLink>,
-        IEquatable<NavigationDoorLink>
+        IEquatable<INavigationDoorLinkGetter>
     {
         #region Ctor
         public NavigationDoorLink()
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((NavigationDoorLinkCommon)((INavigationDoorLinkGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(NavigationDoorLink? obj)
+        public bool Equals(INavigationDoorLinkGetter? obj)
         {
             return ((NavigationDoorLinkCommon)((INavigationDoorLinkGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1327,6 +1327,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is INavigationDoorLinkGetter rhs)) return false;
+            return ((NavigationDoorLinkCommon)((INavigationDoorLinkGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(INavigationDoorLinkGetter? obj)
+        {
+            return ((NavigationDoorLinkCommon)((INavigationDoorLinkGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((NavigationDoorLinkCommon)((INavigationDoorLinkGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

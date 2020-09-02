@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         ConditionData,
         IGetEventData,
         ILoquiObjectSetter<GetEventData>,
-        IEquatable<GetEventData>
+        IEquatable<IGetEventDataGetter>
     {
         #region Ctor
         public GetEventData()
@@ -88,7 +88,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((GetEventDataCommon)((IGetEventDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(GetEventData? obj)
+        public bool Equals(IGetEventDataGetter? obj)
         {
             return ((GetEventDataCommon)((IGetEventDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1587,6 +1587,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IGetEventDataGetter rhs)) return false;
+            return ((GetEventDataCommon)((IGetEventDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IGetEventDataGetter? obj)
+        {
+            return ((GetEventDataCommon)((IGetEventDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((GetEventDataCommon)((IGetEventDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class DialogItemData :
         IDialogItemData,
         ILoquiObjectSetter<DialogItemData>,
-        IEquatable<DialogItemData>
+        IEquatable<IDialogItemDataGetter>
     {
         #region Ctor
         public DialogItemData()
@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((DialogItemDataCommon)((IDialogItemDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(DialogItemData? obj)
+        public bool Equals(IDialogItemDataGetter? obj)
         {
             return ((DialogItemDataCommon)((IDialogItemDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1329,6 +1329,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IDialogItemDataGetter rhs)) return false;
+            return ((DialogItemDataCommon)((IDialogItemDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IDialogItemDataGetter? obj)
+        {
+            return ((DialogItemDataCommon)((IDialogItemDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((DialogItemDataCommon)((IDialogItemDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

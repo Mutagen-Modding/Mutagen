@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         Global,
         IGlobalShortInternal,
         ILoquiObjectSetter<GlobalShort>,
-        IEquatable<GlobalShort>
+        IEquatable<IGlobalShortGetter>
     {
         #region Ctor
         protected GlobalShort()
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((GlobalShortCommon)((IGlobalShortGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(GlobalShort? obj)
+        public bool Equals(IGlobalShortGetter? obj)
         {
             return ((GlobalShortCommon)((IGlobalShortGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1586,6 +1586,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IGlobalShortGetter rhs)) return false;
+            return ((GlobalShortCommon)((IGlobalShortGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IGlobalShortGetter? obj)
+        {
+            return ((GlobalShortCommon)((IGlobalShortGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((GlobalShortCommon)((IGlobalShortGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

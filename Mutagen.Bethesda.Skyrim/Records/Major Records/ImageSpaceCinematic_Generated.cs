@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ImageSpaceCinematic :
         IImageSpaceCinematic,
         ILoquiObjectSetter<ImageSpaceCinematic>,
-        IEquatable<ImageSpaceCinematic>
+        IEquatable<IImageSpaceCinematicGetter>
     {
         #region Ctor
         public ImageSpaceCinematic()
@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ImageSpaceCinematicCommon)((IImageSpaceCinematicGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ImageSpaceCinematic? obj)
+        public bool Equals(IImageSpaceCinematicGetter? obj)
         {
             return ((ImageSpaceCinematicCommon)((IImageSpaceCinematicGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1314,6 +1314,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IImageSpaceCinematicGetter rhs)) return false;
+            return ((ImageSpaceCinematicCommon)((IImageSpaceCinematicGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IImageSpaceCinematicGetter? obj)
+        {
+            return ((ImageSpaceCinematicCommon)((IImageSpaceCinematicGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ImageSpaceCinematicCommon)((IImageSpaceCinematicGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         APerkEntryPointEffect,
         IPerkSetText,
         ILoquiObjectSetter<PerkSetText>,
-        IEquatable<PerkSetText>
+        IEquatable<IPerkSetTextGetter>
     {
         #region Ctor
         public PerkSetText()
@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PerkSetTextCommon)((IPerkSetTextGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PerkSetText? obj)
+        public bool Equals(IPerkSetTextGetter? obj)
         {
             return ((PerkSetTextCommon)((IPerkSetTextGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1328,6 +1328,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPerkSetTextGetter rhs)) return false;
+            return ((PerkSetTextCommon)((IPerkSetTextGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPerkSetTextGetter? obj)
+        {
+            return ((PerkSetTextCommon)((IPerkSetTextGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PerkSetTextCommon)((IPerkSetTextGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

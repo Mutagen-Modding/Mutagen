@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IIngredientInternal,
         ILoquiObjectSetter<Ingredient>,
-        IEquatable<Ingredient>
+        IEquatable<IIngredientGetter>
     {
         #region Ctor
         protected Ingredient()
@@ -178,7 +178,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((IngredientCommon)((IIngredientGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Ingredient? obj)
+        public bool Equals(IIngredientGetter? obj)
         {
             return ((IngredientCommon)((IIngredientGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -3261,6 +3261,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IIngredientGetter rhs)) return false;
+            return ((IngredientCommon)((IIngredientGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IIngredientGetter? obj)
+        {
+            return ((IngredientCommon)((IIngredientGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((IngredientCommon)((IIngredientGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

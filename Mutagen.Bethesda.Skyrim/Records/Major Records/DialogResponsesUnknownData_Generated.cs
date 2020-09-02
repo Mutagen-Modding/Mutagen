@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class DialogResponsesUnknownData :
         IDialogResponsesUnknownData,
         ILoquiObjectSetter<DialogResponsesUnknownData>,
-        IEquatable<DialogResponsesUnknownData>
+        IEquatable<IDialogResponsesUnknownDataGetter>
     {
         #region Ctor
         public DialogResponsesUnknownData()
@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(DialogResponsesUnknownData? obj)
+        public bool Equals(IDialogResponsesUnknownDataGetter? obj)
         {
             return ((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1438,6 +1438,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IDialogResponsesUnknownDataGetter rhs)) return false;
+            return ((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IDialogResponsesUnknownDataGetter? obj)
+        {
+            return ((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

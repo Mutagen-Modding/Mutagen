@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class TeleportDestination :
         ITeleportDestination,
         ILoquiObjectSetter<TeleportDestination>,
-        IEquatable<TeleportDestination>
+        IEquatable<ITeleportDestinationGetter>
     {
         #region Ctor
         public TeleportDestination()
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((TeleportDestinationCommon)((ITeleportDestinationGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(TeleportDestination? obj)
+        public bool Equals(ITeleportDestinationGetter? obj)
         {
             return ((TeleportDestinationCommon)((ITeleportDestinationGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1331,6 +1331,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ITeleportDestinationGetter rhs)) return false;
+            return ((TeleportDestinationCommon)((ITeleportDestinationGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ITeleportDestinationGetter? obj)
+        {
+            return ((TeleportDestinationCommon)((ITeleportDestinationGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((TeleportDestinationCommon)((ITeleportDestinationGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IMagicEffectInternal,
         ILoquiObjectSetter<MagicEffect>,
-        IEquatable<MagicEffect>
+        IEquatable<IMagicEffectGetter>
     {
         #region Ctor
         protected MagicEffect()
@@ -294,7 +294,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(MagicEffect? obj)
+        public bool Equals(IMagicEffectGetter? obj)
         {
             return ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -5378,6 +5378,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IMagicEffectGetter rhs)) return false;
+            return ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IMagicEffectGetter? obj)
+        {
+            return ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class PlayerSkills :
         IPlayerSkills,
         ILoquiObjectSetter<PlayerSkills>,
-        IEquatable<PlayerSkills>
+        IEquatable<IPlayerSkillsGetter>
     {
         #region Ctor
         public PlayerSkills()
@@ -107,7 +107,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PlayerSkillsCommon)((IPlayerSkillsGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PlayerSkills? obj)
+        public bool Equals(IPlayerSkillsGetter? obj)
         {
             return ((PlayerSkillsCommon)((IPlayerSkillsGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1954,6 +1954,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPlayerSkillsGetter rhs)) return false;
+            return ((PlayerSkillsCommon)((IPlayerSkillsGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPlayerSkillsGetter? obj)
+        {
+            return ((PlayerSkillsCommon)((IPlayerSkillsGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PlayerSkillsCommon)((IPlayerSkillsGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ILensFlareInternal,
         ILoquiObjectSetter<LensFlare>,
-        IEquatable<LensFlare>
+        IEquatable<ILensFlareGetter>
     {
         #region Ctor
         protected LensFlare()
@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LensFlareCommon)((ILensFlareGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LensFlare? obj)
+        public bool Equals(ILensFlareGetter? obj)
         {
             return ((LensFlareCommon)((ILensFlareGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1321,6 +1321,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILensFlareGetter rhs)) return false;
+            return ((LensFlareCommon)((ILensFlareGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILensFlareGetter? obj)
+        {
+            return ((LensFlareCommon)((ILensFlareGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LensFlareCommon)((ILensFlareGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

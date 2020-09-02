@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class RaceData :
         IRaceData,
         ILoquiObjectSetter<RaceData>,
-        IEquatable<RaceData>
+        IEquatable<IRaceDataGetter>
     {
         #region Ctor
         public RaceData()
@@ -110,7 +110,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((RaceDataCommon)((IRaceDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(RaceData? obj)
+        public bool Equals(IRaceDataGetter? obj)
         {
             return ((RaceDataCommon)((IRaceDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2043,6 +2043,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IRaceDataGetter rhs)) return false;
+            return ((RaceDataCommon)((IRaceDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IRaceDataGetter? obj)
+        {
+            return ((RaceDataCommon)((IRaceDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((RaceDataCommon)((IRaceDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

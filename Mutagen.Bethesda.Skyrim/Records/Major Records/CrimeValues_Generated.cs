@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class CrimeValues :
         ICrimeValues,
         ILoquiObjectSetter<CrimeValues>,
-        IEquatable<CrimeValues>
+        IEquatable<ICrimeValuesGetter>
     {
         #region Ctor
         public CrimeValues()
@@ -93,7 +93,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((CrimeValuesCommon)((ICrimeValuesGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(CrimeValues? obj)
+        public bool Equals(ICrimeValuesGetter? obj)
         {
             return ((CrimeValuesCommon)((ICrimeValuesGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1819,6 +1819,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ICrimeValuesGetter rhs)) return false;
+            return ((CrimeValuesCommon)((ICrimeValuesGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ICrimeValuesGetter? obj)
+        {
+            return ((CrimeValuesCommon)((ICrimeValuesGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((CrimeValuesCommon)((ICrimeValuesGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

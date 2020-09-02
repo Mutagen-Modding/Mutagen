@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class DefaultObject :
         IDefaultObject,
         ILoquiObjectSetter<DefaultObject>,
-        IEquatable<DefaultObject>
+        IEquatable<IDefaultObjectGetter>
     {
         #region Ctor
         public DefaultObject()
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((DefaultObjectCommon)((IDefaultObjectGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(DefaultObject? obj)
+        public bool Equals(IDefaultObjectGetter? obj)
         {
             return ((DefaultObjectCommon)((IDefaultObjectGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1257,6 +1257,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IDefaultObjectGetter rhs)) return false;
+            return ((DefaultObjectCommon)((IDefaultObjectGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IDefaultObjectGetter? obj)
+        {
+            return ((DefaultObjectCommon)((IDefaultObjectGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((DefaultObjectCommon)((IDefaultObjectGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

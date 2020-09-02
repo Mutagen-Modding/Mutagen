@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ILightInternal,
         ILoquiObjectSetter<Light>,
-        IEquatable<Light>
+        IEquatable<ILightGetter>
     {
         #region Ctor
         protected Light()
@@ -165,7 +165,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LightCommon)((ILightGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Light? obj)
+        public bool Equals(ILightGetter? obj)
         {
             return ((LightCommon)((ILightGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -3187,6 +3187,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILightGetter rhs)) return false;
+            return ((LightCommon)((ILightGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILightGetter? obj)
+        {
+            return ((LightCommon)((ILightGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LightCommon)((ILightGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

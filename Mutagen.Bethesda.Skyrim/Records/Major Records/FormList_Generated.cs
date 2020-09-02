@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IFormListInternal,
         ILoquiObjectSetter<FormList>,
-        IEquatable<FormList>
+        IEquatable<IFormListGetter>
     {
         #region Ctor
         protected FormList()
@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((FormListCommon)((IFormListGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(FormList? obj)
+        public bool Equals(IFormListGetter? obj)
         {
             return ((FormListCommon)((IFormListGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1625,6 +1625,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IFormListGetter rhs)) return false;
+            return ((FormListCommon)((IFormListGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IFormListGetter? obj)
+        {
+            return ((FormListCommon)((IFormListGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((FormListCommon)((IFormListGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

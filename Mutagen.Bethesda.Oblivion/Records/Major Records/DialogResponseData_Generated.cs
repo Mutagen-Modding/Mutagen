@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class DialogResponseData :
         IDialogResponseData,
         ILoquiObjectSetter<DialogResponseData>,
-        IEquatable<DialogResponseData>
+        IEquatable<IDialogResponseDataGetter>
     {
         #region Ctor
         public DialogResponseData()
@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((DialogResponseDataCommon)((IDialogResponseDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(DialogResponseData? obj)
+        public bool Equals(IDialogResponseDataGetter? obj)
         {
             return ((DialogResponseDataCommon)((IDialogResponseDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1441,6 +1441,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IDialogResponseDataGetter rhs)) return false;
+            return ((DialogResponseDataCommon)((IDialogResponseDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IDialogResponseDataGetter? obj)
+        {
+            return ((DialogResponseDataCommon)((IDialogResponseDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((DialogResponseDataCommon)((IDialogResponseDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

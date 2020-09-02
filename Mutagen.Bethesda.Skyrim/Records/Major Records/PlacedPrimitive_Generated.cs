@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class PlacedPrimitive :
         IPlacedPrimitive,
         ILoquiObjectSetter<PlacedPrimitive>,
-        IEquatable<PlacedPrimitive>
+        IEquatable<IPlacedPrimitiveGetter>
     {
         #region Ctor
         public PlacedPrimitive()
@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PlacedPrimitiveCommon)((IPlacedPrimitiveGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PlacedPrimitive? obj)
+        public bool Equals(IPlacedPrimitiveGetter? obj)
         {
             return ((PlacedPrimitiveCommon)((IPlacedPrimitiveGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1398,6 +1398,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPlacedPrimitiveGetter rhs)) return false;
+            return ((PlacedPrimitiveCommon)((IPlacedPrimitiveGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPlacedPrimitiveGetter? obj)
+        {
+            return ((PlacedPrimitiveCommon)((IPlacedPrimitiveGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PlacedPrimitiveCommon)((IPlacedPrimitiveGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

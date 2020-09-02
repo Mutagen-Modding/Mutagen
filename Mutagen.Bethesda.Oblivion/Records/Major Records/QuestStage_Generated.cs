@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class QuestStage :
         IQuestStage,
         ILoquiObjectSetter<QuestStage>,
-        IEquatable<QuestStage>
+        IEquatable<IQuestStageGetter>
     {
         #region Ctor
         public QuestStage()
@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(QuestStage? obj)
+        public bool Equals(IQuestStageGetter? obj)
         {
             return ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1474,6 +1474,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IQuestStageGetter rhs)) return false;
+            return ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IQuestStageGetter? obj)
+        {
+            return ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

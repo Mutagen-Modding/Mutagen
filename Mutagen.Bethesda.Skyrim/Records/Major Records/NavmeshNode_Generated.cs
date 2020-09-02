@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class NavmeshNode :
         INavmeshNode,
         ILoquiObjectSetter<NavmeshNode>,
-        IEquatable<NavmeshNode>
+        IEquatable<INavmeshNodeGetter>
     {
         #region Ctor
         public NavmeshNode()
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((NavmeshNodeCommon)((INavmeshNodeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(NavmeshNode? obj)
+        public bool Equals(INavmeshNodeGetter? obj)
         {
             return ((NavmeshNodeCommon)((INavmeshNodeGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1255,6 +1255,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is INavmeshNodeGetter rhs)) return false;
+            return ((NavmeshNodeCommon)((INavmeshNodeGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(INavmeshNodeGetter? obj)
+        {
+            return ((NavmeshNodeCommon)((INavmeshNodeGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((NavmeshNodeCommon)((INavmeshNodeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class CellLighting :
         ICellLighting,
         ILoquiObjectSetter<CellLighting>,
-        IEquatable<CellLighting>
+        IEquatable<ICellLightingGetter>
     {
         #region Ctor
         public CellLighting()
@@ -133,7 +133,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((CellLightingCommon)((ICellLightingGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(CellLighting? obj)
+        public bool Equals(ICellLightingGetter? obj)
         {
             return ((CellLightingCommon)((ICellLightingGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2629,6 +2629,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ICellLightingGetter rhs)) return false;
+            return ((CellLightingCommon)((ICellLightingGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ICellLightingGetter? obj)
+        {
+            return ((CellLightingCommon)((ICellLightingGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((CellLightingCommon)((ICellLightingGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

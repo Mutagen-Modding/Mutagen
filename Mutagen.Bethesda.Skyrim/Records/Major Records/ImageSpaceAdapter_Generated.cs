@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IImageSpaceAdapterInternal,
         ILoquiObjectSetter<ImageSpaceAdapter>,
-        IEquatable<ImageSpaceAdapter>
+        IEquatable<IImageSpaceAdapterGetter>
     {
         #region Ctor
         protected ImageSpaceAdapter()
@@ -851,7 +851,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ImageSpaceAdapter? obj)
+        public bool Equals(IImageSpaceAdapterGetter? obj)
         {
             return ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -14221,6 +14221,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IImageSpaceAdapterGetter rhs)) return false;
+            return ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IImageSpaceAdapterGetter? obj)
+        {
+            return ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IEyeInternal,
         ILoquiObjectSetter<Eye>,
-        IEquatable<Eye>
+        IEquatable<IEyeGetter>
     {
         #region Ctor
         protected Eye()
@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((EyeCommon)((IEyeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Eye? obj)
+        public bool Equals(IEyeGetter? obj)
         {
             return ((EyeCommon)((IEyeGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1646,6 +1646,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IEyeGetter rhs)) return false;
+            return ((EyeCommon)((IEyeGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IEyeGetter? obj)
+        {
+            return ((EyeCommon)((IEyeGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((EyeCommon)((IEyeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

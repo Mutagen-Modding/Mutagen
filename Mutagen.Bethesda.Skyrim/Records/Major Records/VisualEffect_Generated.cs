@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IVisualEffectInternal,
         ILoquiObjectSetter<VisualEffect>,
-        IEquatable<VisualEffect>
+        IEquatable<IVisualEffectGetter>
     {
         #region Ctor
         protected VisualEffect()
@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((VisualEffectCommon)((IVisualEffectGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(VisualEffect? obj)
+        public bool Equals(IVisualEffectGetter? obj)
         {
             return ((VisualEffectCommon)((IVisualEffectGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1703,6 +1703,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IVisualEffectGetter rhs)) return false;
+            return ((VisualEffectCommon)((IVisualEffectGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IVisualEffectGetter? obj)
+        {
+            return ((VisualEffectCommon)((IVisualEffectGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((VisualEffectCommon)((IVisualEffectGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

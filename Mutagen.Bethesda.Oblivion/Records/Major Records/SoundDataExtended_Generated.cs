@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Oblivion
         SoundData,
         ISoundDataExtendedInternal,
         ILoquiObjectSetter<SoundDataExtended>,
-        IEquatable<SoundDataExtended>
+        IEquatable<ISoundDataExtendedInternalGetter>
     {
         #region Ctor
         public SoundDataExtended()
@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((SoundDataExtendedCommon)((ISoundDataExtendedGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(SoundDataExtended? obj)
+        public bool Equals(ISoundDataExtendedInternalGetter? obj)
         {
             return ((SoundDataExtendedCommon)((ISoundDataExtendedGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1445,6 +1445,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ISoundDataExtendedInternalGetter rhs)) return false;
+            return ((SoundDataExtendedCommon)((ISoundDataExtendedGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ISoundDataExtendedInternalGetter? obj)
+        {
+            return ((SoundDataExtendedCommon)((ISoundDataExtendedGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((SoundDataExtendedCommon)((ISoundDataExtendedGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

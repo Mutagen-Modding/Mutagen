@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class ClassTraining :
         IClassTraining,
         ILoquiObjectSetter<ClassTraining>,
-        IEquatable<ClassTraining>
+        IEquatable<IClassTrainingGetter>
     {
         #region Ctor
         public ClassTraining()
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ClassTrainingCommon)((IClassTrainingGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ClassTraining? obj)
+        public bool Equals(IClassTrainingGetter? obj)
         {
             return ((ClassTrainingCommon)((IClassTrainingGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1297,6 +1297,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IClassTrainingGetter rhs)) return false;
+            return ((ClassTrainingCommon)((IClassTrainingGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IClassTrainingGetter? obj)
+        {
+            return ((ClassTrainingCommon)((IClassTrainingGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ClassTrainingCommon)((IClassTrainingGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

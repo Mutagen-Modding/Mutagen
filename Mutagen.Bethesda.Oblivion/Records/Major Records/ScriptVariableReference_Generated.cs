@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Oblivion
         AScriptReference,
         IScriptVariableReference,
         ILoquiObjectSetter<ScriptVariableReference>,
-        IEquatable<ScriptVariableReference>
+        IEquatable<IScriptVariableReferenceGetter>
     {
         #region Ctor
         public ScriptVariableReference()
@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ScriptVariableReferenceCommon)((IScriptVariableReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ScriptVariableReference? obj)
+        public bool Equals(IScriptVariableReferenceGetter? obj)
         {
             return ((ScriptVariableReferenceCommon)((IScriptVariableReferenceGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1247,6 +1247,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IScriptVariableReferenceGetter rhs)) return false;
+            return ((ScriptVariableReferenceCommon)((IScriptVariableReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IScriptVariableReferenceGetter? obj)
+        {
+            return ((ScriptVariableReferenceCommon)((IScriptVariableReferenceGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ScriptVariableReferenceCommon)((IScriptVariableReferenceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

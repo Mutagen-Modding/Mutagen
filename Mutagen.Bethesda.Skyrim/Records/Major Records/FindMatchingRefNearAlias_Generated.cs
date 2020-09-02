@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class FindMatchingRefNearAlias :
         IFindMatchingRefNearAlias,
         ILoquiObjectSetter<FindMatchingRefNearAlias>,
-        IEquatable<FindMatchingRefNearAlias>
+        IEquatable<IFindMatchingRefNearAliasGetter>
     {
         #region Ctor
         public FindMatchingRefNearAlias()
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((FindMatchingRefNearAliasCommon)((IFindMatchingRefNearAliasGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(FindMatchingRefNearAlias? obj)
+        public bool Equals(IFindMatchingRefNearAliasGetter? obj)
         {
             return ((FindMatchingRefNearAliasCommon)((IFindMatchingRefNearAliasGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1354,6 +1354,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IFindMatchingRefNearAliasGetter rhs)) return false;
+            return ((FindMatchingRefNearAliasCommon)((IFindMatchingRefNearAliasGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IFindMatchingRefNearAliasGetter? obj)
+        {
+            return ((FindMatchingRefNearAliasCommon)((IFindMatchingRefNearAliasGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((FindMatchingRefNearAliasCommon)((IFindMatchingRefNearAliasGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

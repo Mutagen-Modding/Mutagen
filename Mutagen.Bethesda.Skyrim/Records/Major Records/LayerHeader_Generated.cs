@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class LayerHeader :
         ILayerHeader,
         ILoquiObjectSetter<LayerHeader>,
-        IEquatable<LayerHeader>
+        IEquatable<ILayerHeaderGetter>
     {
         #region Ctor
         public LayerHeader()
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LayerHeaderCommon)((ILayerHeaderGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LayerHeader? obj)
+        public bool Equals(ILayerHeaderGetter? obj)
         {
             return ((LayerHeaderCommon)((ILayerHeaderGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1330,6 +1330,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILayerHeaderGetter rhs)) return false;
+            return ((LayerHeaderCommon)((ILayerHeaderGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILayerHeaderGetter? obj)
+        {
+            return ((LayerHeaderCommon)((ILayerHeaderGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LayerHeaderCommon)((ILayerHeaderGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

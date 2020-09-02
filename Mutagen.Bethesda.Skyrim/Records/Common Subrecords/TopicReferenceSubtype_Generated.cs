@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         ATopicReference,
         ITopicReferenceSubtype,
         ILoquiObjectSetter<TopicReferenceSubtype>,
-        IEquatable<TopicReferenceSubtype>
+        IEquatable<ITopicReferenceSubtypeGetter>
     {
         #region Ctor
         public TopicReferenceSubtype()
@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((TopicReferenceSubtypeCommon)((ITopicReferenceSubtypeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(TopicReferenceSubtype? obj)
+        public bool Equals(ITopicReferenceSubtypeGetter? obj)
         {
             return ((TopicReferenceSubtypeCommon)((ITopicReferenceSubtypeGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1194,6 +1194,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ITopicReferenceSubtypeGetter rhs)) return false;
+            return ((TopicReferenceSubtypeCommon)((ITopicReferenceSubtypeGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ITopicReferenceSubtypeGetter? obj)
+        {
+            return ((TopicReferenceSubtypeCommon)((ITopicReferenceSubtypeGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((TopicReferenceSubtypeCommon)((ITopicReferenceSubtypeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

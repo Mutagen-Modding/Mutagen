@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class AlchemicalApparatusData :
         IAlchemicalApparatusData,
         ILoquiObjectSetter<AlchemicalApparatusData>,
-        IEquatable<AlchemicalApparatusData>
+        IEquatable<IAlchemicalApparatusDataGetter>
     {
         #region Ctor
         public AlchemicalApparatusData()
@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((AlchemicalApparatusDataCommon)((IAlchemicalApparatusDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(AlchemicalApparatusData? obj)
+        public bool Equals(IAlchemicalApparatusDataGetter? obj)
         {
             return ((AlchemicalApparatusDataCommon)((IAlchemicalApparatusDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1376,6 +1376,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IAlchemicalApparatusDataGetter rhs)) return false;
+            return ((AlchemicalApparatusDataCommon)((IAlchemicalApparatusDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IAlchemicalApparatusDataGetter? obj)
+        {
+            return ((AlchemicalApparatusDataCommon)((IAlchemicalApparatusDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((AlchemicalApparatusDataCommon)((IAlchemicalApparatusDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

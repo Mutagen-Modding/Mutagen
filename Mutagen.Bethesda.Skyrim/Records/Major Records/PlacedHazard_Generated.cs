@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         APlacedTrap,
         IPlacedHazardInternal,
         ILoquiObjectSetter<PlacedHazard>,
-        IEquatable<PlacedHazard>
+        IEquatable<IPlacedHazardGetter>
     {
         #region Ctor
         protected PlacedHazard()
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PlacedHazardCommon)((IPlacedHazardGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PlacedHazard? obj)
+        public bool Equals(IPlacedHazardGetter? obj)
         {
             return ((PlacedHazardCommon)((IPlacedHazardGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1598,6 +1598,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPlacedHazardGetter rhs)) return false;
+            return ((PlacedHazardCommon)((IPlacedHazardGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPlacedHazardGetter? obj)
+        {
+            return ((PlacedHazardCommon)((IPlacedHazardGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PlacedHazardCommon)((IPlacedHazardGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

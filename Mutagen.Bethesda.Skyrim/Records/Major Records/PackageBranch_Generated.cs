@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class PackageBranch :
         IPackageBranch,
         ILoquiObjectSetter<PackageBranch>,
-        IEquatable<PackageBranch>
+        IEquatable<IPackageBranchGetter>
     {
         #region Ctor
         public PackageBranch()
@@ -149,7 +149,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PackageBranchCommon)((IPackageBranchGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PackageBranch? obj)
+        public bool Equals(IPackageBranchGetter? obj)
         {
             return ((PackageBranchCommon)((IPackageBranchGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2427,6 +2427,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPackageBranchGetter rhs)) return false;
+            return ((PackageBranchCommon)((IPackageBranchGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPackageBranchGetter? obj)
+        {
+            return ((PackageBranchCommon)((IPackageBranchGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PackageBranchCommon)((IPackageBranchGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

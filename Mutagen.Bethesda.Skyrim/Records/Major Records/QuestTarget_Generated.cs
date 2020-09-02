@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class QuestTarget :
         IQuestTarget,
         ILoquiObjectSetter<QuestTarget>,
-        IEquatable<QuestTarget>
+        IEquatable<IQuestTargetGetter>
     {
         #region Ctor
         public QuestTarget()
@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(QuestTarget? obj)
+        public bool Equals(IQuestTargetGetter? obj)
         {
             return ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1626,6 +1626,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IQuestTargetGetter rhs)) return false;
+            return ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IQuestTargetGetter? obj)
+        {
+            return ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

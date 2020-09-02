@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         APackageTarget,
         IPackageTargetUnknown,
         ILoquiObjectSetter<PackageTargetUnknown>,
-        IEquatable<PackageTargetUnknown>
+        IEquatable<IPackageTargetUnknownGetter>
     {
         #region Ctor
         public PackageTargetUnknown()
@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PackageTargetUnknownCommon)((IPackageTargetUnknownGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PackageTargetUnknown? obj)
+        public bool Equals(IPackageTargetUnknownGetter? obj)
         {
             return ((PackageTargetUnknownCommon)((IPackageTargetUnknownGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1204,6 +1204,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPackageTargetUnknownGetter rhs)) return false;
+            return ((PackageTargetUnknownCommon)((IPackageTargetUnknownGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPackageTargetUnknownGetter? obj)
+        {
+            return ((PackageTargetUnknownCommon)((IPackageTargetUnknownGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PackageTargetUnknownCommon)((IPackageTargetUnknownGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
