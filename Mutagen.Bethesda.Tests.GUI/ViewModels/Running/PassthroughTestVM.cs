@@ -92,10 +92,12 @@ namespace Mutagen.Bethesda.Tests.GUI
 
         public async Task Run()
         {
+            List<Test> tests = new List<Test>();
+            var passthroughSettings = Settings.Parent.Parent.GetPassthroughSettings();
             var passthrough = PassthroughTest.Factory(new PassthroughTestParams()
             {
                 NicknameSuffix = Settings.Parent.NicknameSuffix,
-                PassthroughSettings = Settings.Parent.Parent.GetPassthroughSettings(),
+                PassthroughSettings = passthroughSettings,
                 Target = new Target()
                 {
                     Do = true,
@@ -103,16 +105,22 @@ namespace Mutagen.Bethesda.Tests.GUI
                 },
                 GameRelease = Settings.Parent.GameRelease,
             });
-            var topTest = passthrough.BinaryPassthroughTest();
-            AddTest(topTest, parent: null);
+            if (passthroughSettings.HasAnyToRun)
+            {
+                tests.Add(AddTest(passthrough.BinaryPassthroughTest()));
+            }
+            if (Settings.Parent.Parent.TestEquals)
+            {
+                tests.Add(AddTest(passthrough.TestEquality()));
+            }
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            await topTest.Start();
+            await Task.WhenAll(tests.Select(t => Task.Run(t.Start)));
             sw.Stop();
             TimeSpent = sw.Elapsed;
         }
 
-        private void AddTest(Test test, TestVM? parent)
+        private Test AddTest(Test test, TestVM? parent = null)
         {
             var vm = new TestVM(this, test, parent);
             Tests.Add(vm);
@@ -120,6 +128,7 @@ namespace Mutagen.Bethesda.Tests.GUI
             {
                 AddTest(child, vm);
             }
+            return test;
         }
     }
 }

@@ -1,3 +1,4 @@
+using Loqui;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Processing;
@@ -266,9 +267,31 @@ namespace Mutagen.Bethesda.Tests
             return processedTest;
         }
 
-        public async Task TestImport(Subject<string> output)
+        public Test TestImport()
         {
-            await ImportBinary(this.FilePath.Path);
+            return TestBattery.RunTest("Test Import", GameRelease, Target, async (output) =>
+            {
+                await ImportBinary(this.FilePath.Path);
+            });
+        }
+
+        public Test TestEquality()
+        {
+            return TestBattery.RunTest("Equals", GameRelease, Target, async (output) =>
+            {
+                var mod = await ImportBinaryOverlay(this.FilePath.Path);
+                var eqMask = mod.GetEqualsMask(mod);
+                if (!eqMask.All(b => b))
+                {
+                    throw new Exception("Mod mask did not equal itself");
+                }
+                System.Console.WriteLine("Equals mask clean.");
+                if (!mod.Equals(mod))
+                {
+                    throw new Exception("Mod did not equal itself");
+                }
+                System.Console.WriteLine("Direct equals matched.");
+            });
         }
 
         public static PassthroughTest Factory(TestingSettings settings, TargetGroup group, Target target)

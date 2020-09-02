@@ -79,15 +79,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (!(obj is ILeveledEntryGetter<T> rhs)) return false;
-            return ((LeveledEntryCommon<T>)((ILeveledEntryGetter<T>)this).CommonInstance()!).Equals(this, rhs);
+            return ((LeveledEntryCommon<T>)((ILeveledEntryGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs);
         }
 
         public bool Equals(ILeveledEntryGetter<T>? obj)
         {
-            return ((LeveledEntryCommon<T>)((ILeveledEntryGetter<T>)this).CommonInstance()!).Equals(this, obj);
+            return ((LeveledEntryCommon<T>)((ILeveledEntryGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((LeveledEntryCommon<T>)((ILeveledEntryGetter<T>)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((LeveledEntryCommon<T>)((ILeveledEntryGetter<T>)this).CommonInstance(typeof(T))!).GetHashCode(this);
 
         #endregion
 
@@ -121,7 +121,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new LeveledEntry<T>();
-            ((LeveledEntrySetterCommon<T>)((ILeveledEntryGetter<T>)ret).CommonSetterInstance()!).CopyInFromBinary(
+            ((LeveledEntrySetterCommon<T>)((ILeveledEntryGetter<T>)ret).CommonSetterInstance(typeof(T))!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -145,7 +145,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IClearable.Clear()
         {
-            ((LeveledEntrySetterCommon<T>)((ILeveledEntryGetter<T>)this).CommonSetterInstance()!).Clear(this);
+            ((LeveledEntrySetterCommon<T>)((ILeveledEntryGetter<T>)this).CommonSetterInstance(typeof(T))!).Clear(this);
         }
 
         internal static LeveledEntry<T> GetNew()
@@ -178,9 +178,9 @@ namespace Mutagen.Bethesda.Oblivion
         where T : class, IOblivionMajorRecordGetter, IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonInstance();
+        object CommonInstance(Type type0);
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object? CommonSetterInstance();
+        object? CommonSetterInstance(Type type0);
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => LeveledEntry_Registration.Instance;
@@ -200,7 +200,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void Clear<T>(this ILeveledEntry<T> item)
             where T : class, IOblivionMajorRecordInternal, IBinaryItem
         {
-            ((LeveledEntrySetterCommon<T>)((ILeveledEntryGetter<T>)item).CommonSetterInstance()!).Clear(item: item);
+            ((LeveledEntrySetterCommon<T>)((ILeveledEntryGetter<T>)item).CommonSetterInstance(typeof(T))!).Clear(item: item);
         }
 
         public static LeveledEntry.Mask<bool> GetEqualsMask<T>(
@@ -209,7 +209,7 @@ namespace Mutagen.Bethesda.Oblivion
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
             where T : class, IOblivionMajorRecordGetter, IBinaryItem
         {
-            return ((LeveledEntryCommon<T>)((ILeveledEntryGetter<T>)item).CommonInstance()!).GetEqualsMask(
+            return ((LeveledEntryCommon<T>)((ILeveledEntryGetter<T>)item).CommonInstance(typeof(T))!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -221,7 +221,7 @@ namespace Mutagen.Bethesda.Oblivion
             LeveledEntry.Mask<bool>? printMask = null)
             where T : class, IOblivionMajorRecordGetter, IBinaryItem
         {
-            return ((LeveledEntryCommon<T>)((ILeveledEntryGetter<T>)item).CommonInstance()!).ToString(
+            return ((LeveledEntryCommon<T>)((ILeveledEntryGetter<T>)item).CommonInstance(typeof(T))!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -234,7 +234,7 @@ namespace Mutagen.Bethesda.Oblivion
             LeveledEntry.Mask<bool>? printMask = null)
             where T : class, IOblivionMajorRecordGetter, IBinaryItem
         {
-            ((LeveledEntryCommon<T>)((ILeveledEntryGetter<T>)item).CommonInstance()!).ToString(
+            ((LeveledEntryCommon<T>)((ILeveledEntryGetter<T>)item).CommonInstance(typeof(T))!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -246,7 +246,7 @@ namespace Mutagen.Bethesda.Oblivion
             ILeveledEntryGetter<T> rhs)
             where T : class, IOblivionMajorRecordGetter, IBinaryItem
         {
-            return ((LeveledEntryCommon<T>)((ILeveledEntryGetter<T>)item).CommonInstance()!).Equals(
+            return ((LeveledEntryCommon<T>)((ILeveledEntryGetter<T>)item).CommonInstance(typeof(T))!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -364,7 +364,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter? recordTypeConverter = null)
             where T : class, IOblivionMajorRecordInternal, IBinaryItem
         {
-            ((LeveledEntrySetterCommon<T>)((ILeveledEntryGetter<T>)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((LeveledEntrySetterCommon<T>)((ILeveledEntryGetter<T>)item).CommonSetterInstance(typeof(T))!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -661,7 +661,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new LeveledEntry.Mask<bool>(false);
-            ((LeveledEntryCommon<T>)((ILeveledEntryGetter<T>)item).CommonInstance()!).FillEqualsMask(
+            ((LeveledEntryCommon<T>)((ILeveledEntryGetter<T>)item).CommonInstance(typeof(T))!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -848,7 +848,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             where TGetter : class, IOblivionMajorRecordGetter, IBinaryItem
             where T_TranslMask : OblivionMajorRecord.TranslationMask, ITranslationMask
         {
-            LeveledEntry<T> ret = (LeveledEntry<T>)((LeveledEntryCommon<TGetter>)((ILeveledEntryGetter<TGetter>)item).CommonInstance()!).GetNew<T>();
+            LeveledEntry<T> ret = (LeveledEntry<T>)((LeveledEntryCommon<TGetter>)((ILeveledEntryGetter<TGetter>)item).CommonInstance(typeof(T))!).GetNew<T>();
             ((LeveledEntrySetterTranslationCommon)((ILeveledEntryGetter<T>)ret).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
                 item: ret,
                 rhs: item,
@@ -868,7 +868,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             where T_TranslMask : OblivionMajorRecord.TranslationMask, ITranslationMask
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            LeveledEntry<T> ret = (LeveledEntry<T>)((LeveledEntryCommon<TGetter>)((ILeveledEntryGetter<TGetter>)item).CommonInstance()!).GetNew<T>();
+            LeveledEntry<T> ret = (LeveledEntry<T>)((LeveledEntryCommon<TGetter>)((ILeveledEntryGetter<TGetter>)item).CommonInstance(typeof(T))!).GetNew<T>();
             ((LeveledEntrySetterTranslationCommon)((ILeveledEntryGetter<T>)ret).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
                 ret,
                 item,
@@ -886,7 +886,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             where T : class, IOblivionMajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, IOblivionMajorRecordGetter, IBinaryItem
         {
-            LeveledEntry<T> ret = (LeveledEntry<T>)((LeveledEntryCommon<TGetter>)((ILeveledEntryGetter<TGetter>)item).CommonInstance()!).GetNew<T>();
+            LeveledEntry<T> ret = (LeveledEntry<T>)((LeveledEntryCommon<TGetter>)((ILeveledEntryGetter<TGetter>)item).CommonInstance(typeof(T))!).GetNew<T>();
             ((LeveledEntrySetterTranslationCommon)((ILeveledEntryGetter<T>)ret).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
                 item: ret,
                 rhs: item,
@@ -910,18 +910,18 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiRegistration ILoquiObject.Registration => LeveledEntry_Registration.Instance;
         public static LeveledEntry_Registration Registration => LeveledEntry_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => LeveledEntryCommon<T>.Instance;
+        protected object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(LeveledEntryCommon<T>.Instance, typeof(T), type0);
         [DebuggerStepThrough]
-        protected object CommonSetterInstance()
+        protected object CommonSetterInstance(Type type0)
         {
-            return LeveledEntrySetterCommon<T>.Instance;
+            return GenericCommonInstanceGetter.Get(LeveledEntrySetterCommon<T>.Instance, typeof(T), type0);
         }
         [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => LeveledEntrySetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object ILeveledEntryGetter<T>.CommonInstance() => this.CommonInstance();
+        object ILeveledEntryGetter<T>.CommonInstance(Type type0) => this.CommonInstance(type0);
         [DebuggerStepThrough]
-        object ILeveledEntryGetter<T>.CommonSetterInstance() => this.CommonSetterInstance();
+        object ILeveledEntryGetter<T>.CommonSetterInstance(Type type0) => this.CommonSetterInstance(type0);
         [DebuggerStepThrough]
         object ILeveledEntryGetter<T>.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
@@ -1037,13 +1037,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ILoquiRegistration ILoquiObject.Registration => LeveledEntry_Registration.Instance;
         public static LeveledEntry_Registration Registration => LeveledEntry_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => LeveledEntryCommon<T>.Instance;
+        protected object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(LeveledEntryCommon<T>.Instance, typeof(T), type0);
         [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => LeveledEntrySetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object ILeveledEntryGetter<T>.CommonInstance() => this.CommonInstance();
+        object ILeveledEntryGetter<T>.CommonInstance(Type type0) => this.CommonInstance(type0);
         [DebuggerStepThrough]
-        object? ILeveledEntryGetter<T>.CommonSetterInstance() => null;
+        object? ILeveledEntryGetter<T>.CommonSetterInstance(Type type0) => null;
         [DebuggerStepThrough]
         object ILeveledEntryGetter<T>.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
@@ -1136,15 +1136,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override bool Equals(object? obj)
         {
             if (!(obj is ILeveledEntryGetter<T> rhs)) return false;
-            return ((LeveledEntryCommon<T>)((ILeveledEntryGetter<T>)this).CommonInstance()!).Equals(this, rhs);
+            return ((LeveledEntryCommon<T>)((ILeveledEntryGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs);
         }
 
         public bool Equals(ILeveledEntryGetter<T>? obj)
         {
-            return ((LeveledEntryCommon<T>)((ILeveledEntryGetter<T>)this).CommonInstance()!).Equals(this, obj);
+            return ((LeveledEntryCommon<T>)((ILeveledEntryGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((LeveledEntryCommon<T>)((ILeveledEntryGetter<T>)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((LeveledEntryCommon<T>)((ILeveledEntryGetter<T>)this).CommonInstance(typeof(T))!).GetHashCode(this);
 
         #endregion
 
