@@ -922,7 +922,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Quest = object.Equals(item.Quest, rhs.Quest);
+            ret.Quest = item.Quest.Equals(rhs.Quest);
             ret.Stage = item.Stage == rhs.Stage;
             ret.Unknown = MemoryExtensions.SequenceEqual(item.Unknown.Span, rhs.Unknown.Span);
             base.FillEqualsMask(item, rhs, ret, include);

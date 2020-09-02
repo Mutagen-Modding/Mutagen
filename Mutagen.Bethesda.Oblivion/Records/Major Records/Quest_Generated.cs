@@ -1423,7 +1423,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Script = object.Equals(item.Script, rhs.Script);
+            ret.Script = item.Script.Equals(rhs.Script);
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.Icon = string.Equals(item.Icon, rhs.Icon);
             ret.Data = EqualsMaskHelper.EqualsHelper(

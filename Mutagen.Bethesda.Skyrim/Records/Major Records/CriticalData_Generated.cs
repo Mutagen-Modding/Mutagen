@@ -1171,7 +1171,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Flags = item.Flags == rhs.Flags;
             ret.Unused2 = MemoryExtensions.SequenceEqual(item.Unused2.Span, rhs.Unused2.Span);
             ret.Unused3 = item.Unused3 == rhs.Unused3;
-            ret.Effect = object.Equals(item.Effect, rhs.Effect);
+            ret.Effect = item.Effect.Equals(rhs.Effect);
             ret.Unused4 = item.Unused4 == rhs.Unused4;
         }
         

@@ -1185,7 +1185,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.NodeIndex = item.NodeIndex == rhs.NodeIndex;
-            ret.Sound = object.Equals(item.Sound, rhs.Sound);
+            ret.Sound = item.Sound.Equals(rhs.Sound);
             ret.MasterParticleSystemCap = item.MasterParticleSystemCap == rhs.MasterParticleSystemCap;
             ret.AlwaysLoaded = item.AlwaysLoaded == rhs.AlwaysLoaded;
             ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;

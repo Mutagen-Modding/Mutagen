@@ -1404,7 +1404,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.Icon = string.Equals(item.Icon, rhs.Icon);
             ret.MapColor = item.MapColor.ColorOnlyEquals(rhs.MapColor);
-            ret.Worldspace = object.Equals(item.Worldspace, rhs.Worldspace);
+            ret.Worldspace = item.Worldspace.Equals(rhs.Worldspace);
             ret.Areas = item.Areas.CollectionEqualsHelper(
                 rhs.Areas,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),

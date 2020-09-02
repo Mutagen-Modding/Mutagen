@@ -1065,7 +1065,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (rhs == null) return;
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.Parent = object.Equals(item.Parent, rhs.Parent);
+            ret.Parent = item.Parent.Equals(rhs.Parent);
             ret.StaticVolumeMultiplier = item.StaticVolumeMultiplier.EqualsWithin(rhs.StaticVolumeMultiplier);
             ret.DefaultMenuVolume = item.DefaultMenuVolume.EqualsWithin(rhs.DefaultMenuVolume);
             base.FillEqualsMask(item, rhs, ret, include);

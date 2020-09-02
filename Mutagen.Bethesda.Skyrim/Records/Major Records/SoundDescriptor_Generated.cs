@@ -1675,13 +1675,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.CNAM = MemorySliceExt.Equal(item.CNAM, rhs.CNAM);
-            ret.Category = object.Equals(item.Category, rhs.Category);
-            ret.AlternateSoundFor = object.Equals(item.AlternateSoundFor, rhs.AlternateSoundFor);
+            ret.Category = item.Category.Equals(rhs.Category);
+            ret.AlternateSoundFor = item.AlternateSoundFor.Equals(rhs.AlternateSoundFor);
             ret.SoundFiles = item.SoundFiles.CollectionEqualsHelper(
                 rhs.SoundFiles,
                 (l, r) => string.Equals(l, r),
                 include);
-            ret.OutputModel = object.Equals(item.OutputModel, rhs.OutputModel);
+            ret.OutputModel = item.OutputModel.Equals(rhs.OutputModel);
             ret.String = string.Equals(item.String, rhs.String);
             ret.Conditions = item.Conditions.CollectionEqualsHelper(
                 rhs.Conditions,

@@ -2132,9 +2132,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Name = string.Equals(item.Name, rhs.Name);
-            ret.Parent = object.Equals(item.Parent, rhs.Parent);
-            ret.Climate = object.Equals(item.Climate, rhs.Climate);
-            ret.Water = object.Equals(item.Water, rhs.Water);
+            ret.Parent = item.Parent.Equals(rhs.Parent);
+            ret.Climate = item.Climate.Equals(rhs.Climate);
+            ret.Water = item.Water.Equals(rhs.Water);
             ret.Icon = string.Equals(item.Icon, rhs.Icon);
             ret.MapData = EqualsMaskHelper.EqualsHelper(
                 item.MapData,

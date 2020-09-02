@@ -1036,8 +1036,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Parent = object.Equals(item.Parent, rhs.Parent);
-            ret.PreviousSibling = object.Equals(item.PreviousSibling, rhs.PreviousSibling);
+            ret.Parent = item.Parent.Equals(rhs.Parent);
+            ret.PreviousSibling = item.PreviousSibling.Equals(rhs.PreviousSibling);
             ret.Conditions = item.Conditions.CollectionEqualsHelper(
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),

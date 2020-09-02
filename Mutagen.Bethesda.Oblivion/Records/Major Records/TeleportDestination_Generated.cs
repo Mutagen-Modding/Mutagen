@@ -927,7 +927,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Destination = object.Equals(item.Destination, rhs.Destination);
+            ret.Destination = item.Destination.Equals(rhs.Destination);
             ret.Position = item.Position.Equals(rhs.Position);
             ret.Rotation = item.Rotation.Equals(rhs.Rotation);
         }

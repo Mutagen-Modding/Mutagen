@@ -1021,7 +1021,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Object = object.Equals(item.Object, rhs.Object);
+            ret.Object = item.Object.Equals(rhs.Object);
             ret.AliasIndex = item.AliasIndex == rhs.AliasIndex;
             ret.Create = item.Create == rhs.Create;
             ret.Level = item.Level == rhs.Level;

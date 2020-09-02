@@ -1237,10 +1237,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Base = object.Equals(item.Base, rhs.Base);
-            ret.Owner = object.Equals(item.Owner, rhs.Owner);
+            ret.Base = item.Base.Equals(rhs.Base);
+            ret.Owner = item.Owner.Equals(rhs.Owner);
             ret.FactionRank = item.FactionRank == rhs.FactionRank;
-            ret.GlobalVariable = object.Equals(item.GlobalVariable, rhs.GlobalVariable);
+            ret.GlobalVariable = item.GlobalVariable.Equals(rhs.GlobalVariable);
             ret.EnableParent = EqualsMaskHelper.EqualsHelper(
                 item.EnableParent,
                 rhs.EnableParent,

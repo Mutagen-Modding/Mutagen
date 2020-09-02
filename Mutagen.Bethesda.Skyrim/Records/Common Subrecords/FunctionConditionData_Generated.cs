@@ -1276,10 +1276,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (rhs == null) return;
             ret.Function = item.Function == rhs.Function;
             ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
-            ret.ParameterOneRecord = object.Equals(item.ParameterOneRecord, rhs.ParameterOneRecord);
+            ret.ParameterOneRecord = item.ParameterOneRecord.Equals(rhs.ParameterOneRecord);
             ret.ParameterOneNumber = item.ParameterOneNumber == rhs.ParameterOneNumber;
             ret.ParameterOneString = string.Equals(item.ParameterOneString, rhs.ParameterOneString);
-            ret.ParameterTwoRecord = object.Equals(item.ParameterTwoRecord, rhs.ParameterTwoRecord);
+            ret.ParameterTwoRecord = item.ParameterTwoRecord.Equals(rhs.ParameterTwoRecord);
             ret.ParameterTwoNumber = item.ParameterTwoNumber == rhs.ParameterTwoNumber;
             ret.ParameterTwoString = string.Equals(item.ParameterTwoString, rhs.ParameterTwoString);
             ret.Unknown3 = item.Unknown3 == rhs.Unknown3;

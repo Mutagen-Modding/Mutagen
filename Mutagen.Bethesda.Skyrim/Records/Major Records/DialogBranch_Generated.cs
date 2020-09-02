@@ -1013,10 +1013,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Quest = object.Equals(item.Quest, rhs.Quest);
+            ret.Quest = item.Quest.Equals(rhs.Quest);
             ret.TNAM = item.TNAM == rhs.TNAM;
             ret.Flags = item.Flags == rhs.Flags;
-            ret.StartingTopic = object.Equals(item.StartingTopic, rhs.StartingTopic);
+            ret.StartingTopic = item.StartingTopic.Equals(rhs.StartingTopic);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         

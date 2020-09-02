@@ -1185,7 +1185,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Opacity = item.Opacity == rhs.Opacity;
             ret.Flags = item.Flags == rhs.Flags;
             ret.MaterialID = string.Equals(item.MaterialID, rhs.MaterialID);
-            ret.Sound = object.Equals(item.Sound, rhs.Sound);
+            ret.Sound = item.Sound.Equals(rhs.Sound);
             ret.Data = EqualsMaskHelper.EqualsHelper(
                 item.Data,
                 rhs.Data,

@@ -39,6 +39,8 @@ namespace Mutagen.Bethesda
         /// </summary>
         public bool IsNull => this.FormKey.IsNull;
 
+        FormKey? IFormLinkNullable.FormKey => this.FormKey;
+
         /// <summary>
         /// Default constructor that creates a link to the target FormKey
         /// </summary>
@@ -83,7 +85,7 @@ namespace Mutagen.Bethesda
         /// <returns>True if object is ILinkGetter and FormKeys match</returns>
         public override bool Equals(object obj)
         {
-            if (!(obj is ILink<TMajor> rhs)) return false;
+            if (!(obj is IFormLink<TMajor> rhs)) return false;
             return this.Equals(rhs);
         }
 

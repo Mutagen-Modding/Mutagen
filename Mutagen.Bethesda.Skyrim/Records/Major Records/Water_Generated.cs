@@ -4115,10 +4115,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Opacity = item.Opacity == rhs.Opacity;
             ret.Flags = item.Flags == rhs.Flags;
             ret.MNAM = MemorySliceExt.Equal(item.MNAM, rhs.MNAM);
-            ret.Material = object.Equals(item.Material, rhs.Material);
-            ret.OpenSound = object.Equals(item.OpenSound, rhs.OpenSound);
-            ret.Spell = object.Equals(item.Spell, rhs.Spell);
-            ret.ImageSpace = object.Equals(item.ImageSpace, rhs.ImageSpace);
+            ret.Material = item.Material.Equals(rhs.Material);
+            ret.OpenSound = item.OpenSound.Equals(rhs.OpenSound);
+            ret.Spell = item.Spell.Equals(rhs.Spell);
+            ret.ImageSpace = item.ImageSpace.Equals(rhs.ImageSpace);
             ret.DamagePerSecond = item.DamagePerSecond == rhs.DamagePerSecond;
             ret.Unknown = MemoryExtensions.SequenceEqual(item.Unknown.Span, rhs.Unknown.Span);
             ret.SpecularSunPower = item.SpecularSunPower.EqualsWithin(rhs.SpecularSunPower);

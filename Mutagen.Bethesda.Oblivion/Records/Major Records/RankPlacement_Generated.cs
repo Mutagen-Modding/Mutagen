@@ -935,7 +935,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Faction = object.Equals(item.Faction, rhs.Faction);
+            ret.Faction = item.Faction.Equals(rhs.Faction);
             ret.Rank = item.Rank == rhs.Rank;
             ret.Unused = MemoryExtensions.SequenceEqual(item.Unused.Span, rhs.Unused.Span);
         }

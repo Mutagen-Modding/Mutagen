@@ -1757,14 +1757,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Destructible,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.PickUpSound = object.Equals(item.PickUpSound, rhs.PickUpSound);
-            ret.PutDownSound = object.Equals(item.PutDownSound, rhs.PutDownSound);
+            ret.PickUpSound = item.PickUpSound.Equals(rhs.PickUpSound);
+            ret.PutDownSound = item.PutDownSound.Equals(rhs.PutDownSound);
             ret.Description = string.Equals(item.Description, rhs.Description);
             ret.Keywords = item.Keywords.CollectionEqualsHelper(
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.Projectile = object.Equals(item.Projectile, rhs.Projectile);
+            ret.Projectile = item.Projectile.Equals(rhs.Projectile);
             ret.Flags = item.Flags == rhs.Flags;
             ret.Damage = item.Damage.EqualsWithin(rhs.Damage);
             ret.Value = item.Value == rhs.Value;

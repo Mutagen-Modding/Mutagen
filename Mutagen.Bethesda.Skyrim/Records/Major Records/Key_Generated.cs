@@ -1581,8 +1581,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Destructible,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.PickUpSound = object.Equals(item.PickUpSound, rhs.PickUpSound);
-            ret.PutDownSound = object.Equals(item.PutDownSound, rhs.PutDownSound);
+            ret.PickUpSound = item.PickUpSound.Equals(rhs.PickUpSound);
+            ret.PutDownSound = item.PutDownSound.Equals(rhs.PutDownSound);
             ret.Keywords = item.Keywords.CollectionEqualsHelper(
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),

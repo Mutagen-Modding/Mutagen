@@ -2067,7 +2067,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Base = object.Equals(item.Base, rhs.Base);
+            ret.Base = item.Base.Equals(rhs.Base);
             ret.XPCIFluff = MemorySliceExt.Equal(item.XPCIFluff, rhs.XPCIFluff);
             ret.FULLFluff = MemorySliceExt.Equal(item.FULLFluff, rhs.FULLFluff);
             ret.TeleportDestination = EqualsMaskHelper.EqualsHelper(
@@ -2080,15 +2080,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Lock,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Owner = object.Equals(item.Owner, rhs.Owner);
+            ret.Owner = item.Owner.Equals(rhs.Owner);
             ret.FactionRank = item.FactionRank == rhs.FactionRank;
-            ret.GlobalVariable = object.Equals(item.GlobalVariable, rhs.GlobalVariable);
+            ret.GlobalVariable = item.GlobalVariable.Equals(rhs.GlobalVariable);
             ret.EnableParent = EqualsMaskHelper.EqualsHelper(
                 item.EnableParent,
                 rhs.EnableParent,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Target = object.Equals(item.Target, rhs.Target);
+            ret.Target = item.Target.Equals(rhs.Target);
             ret.SpeedTreeSeed = item.SpeedTreeSeed == rhs.SpeedTreeSeed;
             ret.DistantLODData = EqualsMaskHelper.EqualsHelper(
                 item.DistantLODData,
@@ -2098,7 +2098,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Charge = item.Charge.EqualsWithin(rhs.Charge);
             ret.Health = item.Health == rhs.Health;
             ret.LevelModifier = item.LevelModifier == rhs.LevelModifier;
-            ret.XRTM = object.Equals(item.XRTM, rhs.XRTM);
+            ret.XRTM = item.XRTM.Equals(rhs.XRTM);
             ret.ActionFlags = item.ActionFlags == rhs.ActionFlags;
             ret.Count = item.Count == rhs.Count;
             ret.MapMarker = EqualsMaskHelper.EqualsHelper(
@@ -2109,7 +2109,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.OpenByDefault = item.OpenByDefault == rhs.OpenByDefault;
             ret.RagdollData = MemorySliceExt.Equal(item.RagdollData, rhs.RagdollData);
             ret.Scale = item.Scale.EqualsWithin(rhs.Scale);
-            ret.ContainedSoul = object.Equals(item.ContainedSoul, rhs.ContainedSoul);
+            ret.ContainedSoul = item.ContainedSoul.Equals(rhs.ContainedSoul);
             ret.Location = EqualsMaskHelper.EqualsHelper(
                 item.Location,
                 rhs.Location,

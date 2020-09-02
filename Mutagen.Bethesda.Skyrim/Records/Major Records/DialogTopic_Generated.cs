@@ -1797,8 +1797,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (rhs == null) return;
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.Priority = item.Priority.EqualsWithin(rhs.Priority);
-            ret.Branch = object.Equals(item.Branch, rhs.Branch);
-            ret.Quest = object.Equals(item.Quest, rhs.Quest);
+            ret.Branch = item.Branch.Equals(rhs.Branch);
+            ret.Quest = item.Quest.Equals(rhs.Quest);
             ret.TopicFlags = item.TopicFlags == rhs.TopicFlags;
             ret.Category = item.Category == rhs.Category;
             ret.Subtype = item.Subtype == rhs.Subtype;

@@ -1032,8 +1032,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Script = object.Equals(item.Script, rhs.Script);
-            ret.Sound = object.Equals(item.Sound, rhs.Sound);
+            ret.Script = item.Script.Equals(rhs.Script);
+            ret.Sound = item.Sound.Equals(rhs.Sound);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         

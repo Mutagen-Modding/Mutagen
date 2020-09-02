@@ -877,7 +877,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.Unknown = item.Unknown == rhs.Unknown;
-            ret.Door = object.Equals(item.Door, rhs.Door);
+            ret.Door = item.Door.Equals(rhs.Door);
         }
         
         public string ToString(

@@ -1722,13 +1722,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 include);
             ret.PNAM = MemorySliceExt.Equal(item.PNAM, rhs.PNAM);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.InteractionKeyword = object.Equals(item.InteractionKeyword, rhs.InteractionKeyword);
+            ret.InteractionKeyword = item.InteractionKeyword.Equals(rhs.InteractionKeyword);
             ret.WorkbenchData = EqualsMaskHelper.EqualsHelper(
                 item.WorkbenchData,
                 rhs.WorkbenchData,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.AssociatedSpell = object.Equals(item.AssociatedSpell, rhs.AssociatedSpell);
+            ret.AssociatedSpell = item.AssociatedSpell.Equals(rhs.AssociatedSpell);
             ret.Markers = item.Markers.CollectionEqualsHelper(
                 rhs.Markers,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),

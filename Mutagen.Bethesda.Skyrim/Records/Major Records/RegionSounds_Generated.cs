@@ -960,7 +960,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Music = object.Equals(item.Music, rhs.Music);
+            ret.Music = item.Music.Equals(rhs.Music);
             ret.Sounds = item.Sounds.CollectionEqualsHelper(
                 rhs.Sounds,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),

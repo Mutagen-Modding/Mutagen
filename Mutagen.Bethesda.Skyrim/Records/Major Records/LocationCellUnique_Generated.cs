@@ -926,9 +926,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Actor = object.Equals(item.Actor, rhs.Actor);
-            ret.Ref = object.Equals(item.Ref, rhs.Ref);
-            ret.Location = object.Equals(item.Location, rhs.Location);
+            ret.Actor = item.Actor.Equals(rhs.Actor);
+            ret.Ref = item.Ref.Equals(rhs.Ref);
+            ret.Location = item.Location.Equals(rhs.Location);
         }
         
         public string ToString(

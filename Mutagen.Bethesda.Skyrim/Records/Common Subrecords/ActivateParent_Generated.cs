@@ -881,7 +881,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Reference = object.Equals(item.Reference, rhs.Reference);
+            ret.Reference = item.Reference.Equals(rhs.Reference);
             ret.Delay = item.Delay.EqualsWithin(rhs.Delay);
         }
         

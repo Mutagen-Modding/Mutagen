@@ -1388,7 +1388,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.LoadingScreenNif = object.Equals(item.LoadingScreenNif, rhs.LoadingScreenNif);
+            ret.LoadingScreenNif = item.LoadingScreenNif.Equals(rhs.LoadingScreenNif);
             ret.InitialScale = item.InitialScale.EqualsWithin(rhs.InitialScale);
             ret.InitialRotation = item.InitialRotation.Equals(rhs.InitialRotation);
             ret.RotationOffsetConstraints = EqualsMaskHelper.EqualsHelper(

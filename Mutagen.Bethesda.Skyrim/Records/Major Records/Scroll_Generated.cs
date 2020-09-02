@@ -2176,8 +2176,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.MenuDisplayObject = object.Equals(item.MenuDisplayObject, rhs.MenuDisplayObject);
-            ret.EquipmentType = object.Equals(item.EquipmentType, rhs.EquipmentType);
+            ret.MenuDisplayObject = item.MenuDisplayObject.Equals(rhs.MenuDisplayObject);
+            ret.EquipmentType = item.EquipmentType.Equals(rhs.EquipmentType);
             ret.Description = string.Equals(item.Description, rhs.Description);
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
@@ -2189,8 +2189,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Destructible,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.PickUpSound = object.Equals(item.PickUpSound, rhs.PickUpSound);
-            ret.PutDownSound = object.Equals(item.PutDownSound, rhs.PutDownSound);
+            ret.PickUpSound = item.PickUpSound.Equals(rhs.PickUpSound);
+            ret.PutDownSound = item.PutDownSound.Equals(rhs.PutDownSound);
             ret.Value = item.Value == rhs.Value;
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
             ret.BaseCost = item.BaseCost == rhs.BaseCost;
@@ -2201,7 +2201,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.TargetType = item.TargetType == rhs.TargetType;
             ret.CastDuration = item.CastDuration.EqualsWithin(rhs.CastDuration);
             ret.Range = item.Range.EqualsWithin(rhs.Range);
-            ret.HalfCostPerk = object.Equals(item.HalfCostPerk, rhs.HalfCostPerk);
+            ret.HalfCostPerk = item.HalfCostPerk.Equals(rhs.HalfCostPerk);
             ret.Effects = item.Effects.CollectionEqualsHelper(
                 rhs.Effects,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),

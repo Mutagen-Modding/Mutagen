@@ -933,7 +933,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.IdleAnimation = object.Equals(item.IdleAnimation, rhs.IdleAnimation);
+            ret.IdleAnimation = item.IdleAnimation.Equals(rhs.IdleAnimation);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         

@@ -1894,12 +1894,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.ExteriorJailMarker = object.Equals(item.ExteriorJailMarker, rhs.ExteriorJailMarker);
-            ret.FollowerWaitMarker = object.Equals(item.FollowerWaitMarker, rhs.FollowerWaitMarker);
-            ret.StolenGoodsContainer = object.Equals(item.StolenGoodsContainer, rhs.StolenGoodsContainer);
-            ret.PlayerInventoryContainer = object.Equals(item.PlayerInventoryContainer, rhs.PlayerInventoryContainer);
-            ret.SharedCrimeFactionList = object.Equals(item.SharedCrimeFactionList, rhs.SharedCrimeFactionList);
-            ret.JailOutfit = object.Equals(item.JailOutfit, rhs.JailOutfit);
+            ret.ExteriorJailMarker = item.ExteriorJailMarker.Equals(rhs.ExteriorJailMarker);
+            ret.FollowerWaitMarker = item.FollowerWaitMarker.Equals(rhs.FollowerWaitMarker);
+            ret.StolenGoodsContainer = item.StolenGoodsContainer.Equals(rhs.StolenGoodsContainer);
+            ret.PlayerInventoryContainer = item.PlayerInventoryContainer.Equals(rhs.PlayerInventoryContainer);
+            ret.SharedCrimeFactionList = item.SharedCrimeFactionList.Equals(rhs.SharedCrimeFactionList);
+            ret.JailOutfit = item.JailOutfit.Equals(rhs.JailOutfit);
             ret.CrimeValues = EqualsMaskHelper.EqualsHelper(
                 item.CrimeValues,
                 rhs.CrimeValues,
@@ -1909,8 +1909,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Ranks,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.VendorBuySellList = object.Equals(item.VendorBuySellList, rhs.VendorBuySellList);
-            ret.MerchantContainer = object.Equals(item.MerchantContainer, rhs.MerchantContainer);
+            ret.VendorBuySellList = item.VendorBuySellList.Equals(rhs.VendorBuySellList);
+            ret.MerchantContainer = item.MerchantContainer.Equals(rhs.MerchantContainer);
             ret.VendorValues = EqualsMaskHelper.EqualsHelper(
                 item.VendorValues,
                 rhs.VendorValues,

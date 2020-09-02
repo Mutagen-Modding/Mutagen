@@ -1110,12 +1110,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Parent = object.Equals(item.Parent, rhs.Parent);
+            ret.Parent = item.Parent.Equals(rhs.Parent);
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.HavokDisplayColor = item.HavokDisplayColor.ColorOnlyEquals(rhs.HavokDisplayColor);
             ret.Buoyancy = item.Buoyancy.EqualsWithin(rhs.Buoyancy);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.HavokImpactDataSet = object.Equals(item.HavokImpactDataSet, rhs.HavokImpactDataSet);
+            ret.HavokImpactDataSet = item.HavokImpactDataSet.Equals(rhs.HavokImpactDataSet);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         

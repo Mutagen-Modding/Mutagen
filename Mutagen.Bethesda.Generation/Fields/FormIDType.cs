@@ -15,13 +15,13 @@ namespace Mutagen.Bethesda.Generation
         public override void GenerateForEquals(FileGeneration fg, Accessor accessor, Accessor rhsAccessor)
         {
             if (!this.IntegrateField) return;
-            fg.AppendLine($"if ({accessor}.FormKey != {rhsAccessor}.FormKey) return false;");
+            fg.AppendLine($"if (!{accessor}.Equals({rhsAccessor})) return false;");
         }
 
         public override void GenerateForEqualsMask(FileGeneration fg, Accessor accessor, Accessor rhsAccessor, string retAccessor)
         {
             if (!this.IntegrateField) return;
-            fg.AppendLine($"{retAccessor} = object.Equals({accessor}, {rhsAccessor});");
+            fg.AppendLine($"{retAccessor} = {accessor}.Equals({rhsAccessor});");
         }
     }
 }

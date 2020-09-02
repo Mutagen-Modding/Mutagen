@@ -889,7 +889,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Parent = object.Equals(item.Parent, rhs.Parent);
+            ret.Parent = item.Parent.Equals(rhs.Parent);
             ret.Coordinates = item.Coordinates.Equals(rhs.Coordinates);
             base.FillEqualsMask(item, rhs, ret, include);
         }

@@ -927,7 +927,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Texture = object.Equals(item.Texture, rhs.Texture);
+            ret.Texture = item.Texture.Equals(rhs.Texture);
             ret.Quadrant = item.Quadrant == rhs.Quadrant;
             ret.LayerNumber = item.LayerNumber == rhs.LayerNumber;
         }

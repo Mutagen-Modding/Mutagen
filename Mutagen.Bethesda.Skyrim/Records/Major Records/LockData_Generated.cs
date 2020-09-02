@@ -1037,7 +1037,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (rhs == null) return;
             ret.Level = item.Level == rhs.Level;
             ret.Unused = MemoryExtensions.SequenceEqual(item.Unused.Span, rhs.Unused.Span);
-            ret.Key = object.Equals(item.Key, rhs.Key);
+            ret.Key = item.Key.Equals(rhs.Key);
             ret.Flags = item.Flags == rhs.Flags;
             ret.Unused2 = MemoryExtensions.SequenceEqual(item.Unused2.Span, rhs.Unused2.Span);
         }

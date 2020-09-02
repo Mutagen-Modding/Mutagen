@@ -923,7 +923,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.Unknown = item.Unknown == rhs.Unknown;
-            ret.Mesh = object.Equals(item.Mesh, rhs.Mesh);
+            ret.Mesh = item.Mesh.Equals(rhs.Mesh);
             ret.TriangleIndex = item.TriangleIndex == rhs.TriangleIndex;
         }
         

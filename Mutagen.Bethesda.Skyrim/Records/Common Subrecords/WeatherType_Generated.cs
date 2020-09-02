@@ -924,9 +924,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Weather = object.Equals(item.Weather, rhs.Weather);
+            ret.Weather = item.Weather.Equals(rhs.Weather);
             ret.Chance = item.Chance == rhs.Chance;
-            ret.Global = object.Equals(item.Global, rhs.Global);
+            ret.Global = item.Global.Equals(rhs.Global);
         }
         
         public string ToString(

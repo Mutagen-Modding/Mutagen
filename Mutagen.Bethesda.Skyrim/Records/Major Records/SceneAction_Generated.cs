@@ -1716,7 +1716,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Packages,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.Topic = object.Equals(item.Topic, rhs.Topic);
+            ret.Topic = item.Topic.Equals(rhs.Topic);
             ret.HeadtrackActorID = item.HeadtrackActorID == rhs.HeadtrackActorID;
             ret.LoopingMax = item.LoopingMax.EqualsWithin(rhs.LoopingMax);
             ret.LoopingMin = item.LoopingMin.EqualsWithin(rhs.LoopingMin);

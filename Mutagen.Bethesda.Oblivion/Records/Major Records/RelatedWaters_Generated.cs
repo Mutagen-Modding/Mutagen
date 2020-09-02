@@ -931,9 +931,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.RelatedWaterDaytime = object.Equals(item.RelatedWaterDaytime, rhs.RelatedWaterDaytime);
-            ret.RelatedWaterNighttime = object.Equals(item.RelatedWaterNighttime, rhs.RelatedWaterNighttime);
-            ret.RelatedWaterUnderwater = object.Equals(item.RelatedWaterUnderwater, rhs.RelatedWaterUnderwater);
+            ret.RelatedWaterDaytime = item.RelatedWaterDaytime.Equals(rhs.RelatedWaterDaytime);
+            ret.RelatedWaterNighttime = item.RelatedWaterNighttime.Equals(rhs.RelatedWaterNighttime);
+            ret.RelatedWaterUnderwater = item.RelatedWaterUnderwater.Equals(rhs.RelatedWaterUnderwater);
         }
         
         public string ToString(

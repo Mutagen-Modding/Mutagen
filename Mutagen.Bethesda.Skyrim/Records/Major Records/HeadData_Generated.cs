@@ -1658,7 +1658,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.FaceDetails,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.DefaultFaceTexture = object.Equals(item.DefaultFaceTexture, rhs.DefaultFaceTexture);
+            ret.DefaultFaceTexture = item.DefaultFaceTexture.Equals(rhs.DefaultFaceTexture);
             ret.TintMasks = item.TintMasks.CollectionEqualsHelper(
                 rhs.TintMasks,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),

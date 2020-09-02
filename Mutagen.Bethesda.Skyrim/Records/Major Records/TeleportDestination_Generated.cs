@@ -975,7 +975,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Door = object.Equals(item.Door, rhs.Door);
+            ret.Door = item.Door.Equals(rhs.Door);
             ret.Position = item.Position.Equals(rhs.Position);
             ret.Rotation = item.Rotation.Equals(rhs.Rotation);
             ret.Flags = item.Flags == rhs.Flags;

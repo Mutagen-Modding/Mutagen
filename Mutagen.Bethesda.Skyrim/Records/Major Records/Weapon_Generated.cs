@@ -2562,18 +2562,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Icons,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.ObjectEffect = object.Equals(item.ObjectEffect, rhs.ObjectEffect);
+            ret.ObjectEffect = item.ObjectEffect.Equals(rhs.ObjectEffect);
             ret.EnchantmentAmount = item.EnchantmentAmount == rhs.EnchantmentAmount;
             ret.Destructible = EqualsMaskHelper.EqualsHelper(
                 item.Destructible,
                 rhs.Destructible,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.EquipmentType = object.Equals(item.EquipmentType, rhs.EquipmentType);
-            ret.BlockBashImpact = object.Equals(item.BlockBashImpact, rhs.BlockBashImpact);
-            ret.AlternateBlockMaterial = object.Equals(item.AlternateBlockMaterial, rhs.AlternateBlockMaterial);
-            ret.PickUpSound = object.Equals(item.PickUpSound, rhs.PickUpSound);
-            ret.PutDownSound = object.Equals(item.PutDownSound, rhs.PutDownSound);
+            ret.EquipmentType = item.EquipmentType.Equals(rhs.EquipmentType);
+            ret.BlockBashImpact = item.BlockBashImpact.Equals(rhs.BlockBashImpact);
+            ret.AlternateBlockMaterial = item.AlternateBlockMaterial.Equals(rhs.AlternateBlockMaterial);
+            ret.PickUpSound = item.PickUpSound.Equals(rhs.PickUpSound);
+            ret.PutDownSound = item.PutDownSound.Equals(rhs.PutDownSound);
             ret.Keywords = item.Keywords.CollectionEqualsHelper(
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
@@ -2585,15 +2585,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Unused = MemorySliceExt.Equal(item.Unused, rhs.Unused);
-            ret.ImpactDataSet = object.Equals(item.ImpactDataSet, rhs.ImpactDataSet);
-            ret.FirstPersonModel = object.Equals(item.FirstPersonModel, rhs.FirstPersonModel);
-            ret.AttackSound = object.Equals(item.AttackSound, rhs.AttackSound);
-            ret.AttackSound2D = object.Equals(item.AttackSound2D, rhs.AttackSound2D);
-            ret.AttackLoopSound = object.Equals(item.AttackLoopSound, rhs.AttackLoopSound);
-            ret.AttackFailSound = object.Equals(item.AttackFailSound, rhs.AttackFailSound);
-            ret.IdleSound = object.Equals(item.IdleSound, rhs.IdleSound);
-            ret.EquipSound = object.Equals(item.EquipSound, rhs.EquipSound);
-            ret.UnequipSound = object.Equals(item.UnequipSound, rhs.UnequipSound);
+            ret.ImpactDataSet = item.ImpactDataSet.Equals(rhs.ImpactDataSet);
+            ret.FirstPersonModel = item.FirstPersonModel.Equals(rhs.FirstPersonModel);
+            ret.AttackSound = item.AttackSound.Equals(rhs.AttackSound);
+            ret.AttackSound2D = item.AttackSound2D.Equals(rhs.AttackSound2D);
+            ret.AttackLoopSound = item.AttackLoopSound.Equals(rhs.AttackLoopSound);
+            ret.AttackFailSound = item.AttackFailSound.Equals(rhs.AttackFailSound);
+            ret.IdleSound = item.IdleSound.Equals(rhs.IdleSound);
+            ret.EquipSound = item.EquipSound.Equals(rhs.EquipSound);
+            ret.UnequipSound = item.UnequipSound.Equals(rhs.UnequipSound);
             ret.BasicStats = EqualsMaskHelper.EqualsHelper(
                 item.BasicStats,
                 rhs.BasicStats,
@@ -2610,7 +2610,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.DetectionSoundLevel = item.DetectionSoundLevel == rhs.DetectionSoundLevel;
-            ret.Template = object.Equals(item.Template, rhs.Template);
+            ret.Template = item.Template.Equals(rhs.Template);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         

@@ -1935,14 +1935,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Flags,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Topic = object.Equals(item.Topic, rhs.Topic);
-            ret.PreviousDialog = object.Equals(item.PreviousDialog, rhs.PreviousDialog);
+            ret.Topic = item.Topic.Equals(rhs.Topic);
+            ret.PreviousDialog = item.PreviousDialog.Equals(rhs.PreviousDialog);
             ret.FavorLevel = item.FavorLevel == rhs.FavorLevel;
             ret.LinkTo = item.LinkTo.CollectionEqualsHelper(
                 rhs.LinkTo,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.ResponseData = object.Equals(item.ResponseData, rhs.ResponseData);
+            ret.ResponseData = item.ResponseData.Equals(rhs.ResponseData);
             ret.Responses = item.Responses.CollectionEqualsHelper(
                 rhs.Responses,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1956,9 +1956,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.Prompt = string.Equals(item.Prompt, rhs.Prompt);
-            ret.Speaker = object.Equals(item.Speaker, rhs.Speaker);
-            ret.WalkAwayTopic = object.Equals(item.WalkAwayTopic, rhs.WalkAwayTopic);
-            ret.AudioOutputOverride = object.Equals(item.AudioOutputOverride, rhs.AudioOutputOverride);
+            ret.Speaker = item.Speaker.Equals(rhs.Speaker);
+            ret.WalkAwayTopic = item.WalkAwayTopic.Equals(rhs.WalkAwayTopic);
+            ret.AudioOutputOverride = item.AudioOutputOverride.Equals(rhs.AudioOutputOverride);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         

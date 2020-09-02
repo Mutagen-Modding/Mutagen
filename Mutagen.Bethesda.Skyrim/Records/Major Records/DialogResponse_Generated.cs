@@ -1460,14 +1460,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.ResponseNumber = item.ResponseNumber == rhs.ResponseNumber;
             ret.Unknown2 = MemoryExtensions.SequenceEqual(item.Unknown2.Span, rhs.Unknown2.Span);
-            ret.Sound = object.Equals(item.Sound, rhs.Sound);
+            ret.Sound = item.Sound.Equals(rhs.Sound);
             ret.Flags = item.Flags == rhs.Flags;
             ret.Unknown3 = MemoryExtensions.SequenceEqual(item.Unknown3.Span, rhs.Unknown3.Span);
             ret.Text = string.Equals(item.Text, rhs.Text);
             ret.ScriptNotes = string.Equals(item.ScriptNotes, rhs.ScriptNotes);
             ret.Edits = string.Equals(item.Edits, rhs.Edits);
-            ret.SpeakerIdleAnimation = object.Equals(item.SpeakerIdleAnimation, rhs.SpeakerIdleAnimation);
-            ret.ListenerIdleAnimation = object.Equals(item.ListenerIdleAnimation, rhs.ListenerIdleAnimation);
+            ret.SpeakerIdleAnimation = item.SpeakerIdleAnimation.Equals(rhs.SpeakerIdleAnimation);
+            ret.ListenerIdleAnimation = item.ListenerIdleAnimation.Equals(rhs.ListenerIdleAnimation);
             ret.TRDTDataTypeState = item.TRDTDataTypeState == rhs.TRDTDataTypeState;
         }
         

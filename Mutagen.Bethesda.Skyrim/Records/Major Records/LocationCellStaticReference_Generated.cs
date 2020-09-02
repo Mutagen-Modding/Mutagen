@@ -972,9 +972,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.LocationRefType = object.Equals(item.LocationRefType, rhs.LocationRefType);
-            ret.Marker = object.Equals(item.Marker, rhs.Marker);
-            ret.Location = object.Equals(item.Location, rhs.Location);
+            ret.LocationRefType = item.LocationRefType.Equals(rhs.LocationRefType);
+            ret.Marker = item.Marker.Equals(rhs.Marker);
+            ret.Location = item.Location.Equals(rhs.Location);
             ret.Grid = item.Grid.Equals(rhs.Grid);
         }
         

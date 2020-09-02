@@ -961,7 +961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Location = object.Equals(item.Location, rhs.Location);
+            ret.Location = item.Location.Equals(rhs.Location);
             ret.Coordinates = item.Coordinates.CollectionEqualsHelper(
                 rhs.Coordinates,
                 (l, r) => l.Equals(r),

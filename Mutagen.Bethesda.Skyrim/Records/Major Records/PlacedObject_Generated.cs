@@ -4368,7 +4368,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.VirtualMachineAdapter,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Base = object.Equals(item.Base, rhs.Base);
+            ret.Base = item.Base.Equals(rhs.Base);
             ret.BoundHalfExtents = item.BoundHalfExtents.Equals(rhs.BoundHalfExtents);
             ret.Primitive = EqualsMaskHelper.EqualsHelper(
                 item.Primitive,
@@ -4391,8 +4391,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Unknown = item.Unknown == rhs.Unknown;
-            ret.LightingTemplate = object.Equals(item.LightingTemplate, rhs.LightingTemplate);
-            ret.ImageSpace = object.Equals(item.ImageSpace, rhs.ImageSpace);
+            ret.LightingTemplate = item.LightingTemplate.Equals(rhs.LightingTemplate);
+            ret.ImageSpace = item.ImageSpace.Equals(rhs.ImageSpace);
             ret.LinkedRooms = item.LinkedRooms.CollectionEqualsHelper(
                 rhs.LinkedRooms,
                 (l, r) => object.Equals(l, r),
@@ -4409,7 +4409,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.LitWater,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.Emittance = object.Equals(item.Emittance, rhs.Emittance);
+            ret.Emittance = item.Emittance.Equals(rhs.Emittance);
             ret.LightData = EqualsMaskHelper.EqualsHelper(
                 item.LightData,
                 rhs.LightData,
@@ -4425,8 +4425,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.TeleportDestination,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.TeleportMessageBox = object.Equals(item.TeleportMessageBox, rhs.TeleportMessageBox);
-            ret.MultiboundReference = object.Equals(item.MultiboundReference, rhs.MultiboundReference);
+            ret.TeleportMessageBox = item.TeleportMessageBox.Equals(rhs.TeleportMessageBox);
+            ret.MultiboundReference = item.MultiboundReference.Equals(rhs.MultiboundReference);
             ret.XWCN = MemorySliceExt.Equal(item.XWCN, rhs.XWCN);
             ret.XWCS = MemorySliceExt.Equal(item.XWCS, rhs.XWCS);
             ret.WaterVelocity = EqualsMaskHelper.EqualsHelper(
@@ -4435,26 +4435,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.XCVL = MemorySliceExt.Equal(item.XCVL, rhs.XCVL);
-            ret.XCZR = object.Equals(item.XCZR, rhs.XCZR);
+            ret.XCZR = item.XCZR.Equals(rhs.XCZR);
             ret.XCZA = MemorySliceExt.Equal(item.XCZA, rhs.XCZA);
-            ret.XCZC = object.Equals(item.XCZC, rhs.XCZC);
+            ret.XCZC = item.XCZC.Equals(rhs.XCZC);
             ret.Scale = item.Scale.EqualsWithin(rhs.Scale);
-            ret.SpawnContainer = object.Equals(item.SpawnContainer, rhs.SpawnContainer);
+            ret.SpawnContainer = item.SpawnContainer.Equals(rhs.SpawnContainer);
             ret.ActivateParents = EqualsMaskHelper.EqualsHelper(
                 item.ActivateParents,
                 rhs.ActivateParents,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.LeveledItemBaseObject = object.Equals(item.LeveledItemBaseObject, rhs.LeveledItemBaseObject);
+            ret.LeveledItemBaseObject = item.LeveledItemBaseObject.Equals(rhs.LeveledItemBaseObject);
             ret.LevelModifier = item.LevelModifier == rhs.LevelModifier;
-            ret.PersistentLocation = object.Equals(item.PersistentLocation, rhs.PersistentLocation);
+            ret.PersistentLocation = item.PersistentLocation.Equals(rhs.PersistentLocation);
             ret.CollisionLayer = item.CollisionLayer == rhs.CollisionLayer;
             ret.Lock = EqualsMaskHelper.EqualsHelper(
                 item.Lock,
                 rhs.Lock,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.EncounterZone = object.Equals(item.EncounterZone, rhs.EncounterZone);
+            ret.EncounterZone = item.EncounterZone.Equals(rhs.EncounterZone);
             ret.NavigationDoorLink = EqualsMaskHelper.EqualsHelper(
                 item.NavigationDoorLink,
                 rhs.NavigationDoorLink,
@@ -4472,7 +4472,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 include);
             ret.ItemCount = item.ItemCount == rhs.ItemCount;
             ret.Charge = item.Charge.EqualsWithin(rhs.Charge);
-            ret.LocationReference = object.Equals(item.LocationReference, rhs.LocationReference);
+            ret.LocationReference = item.LocationReference.Equals(rhs.LocationReference);
             ret.EnableParent = EqualsMaskHelper.EqualsHelper(
                 item.EnableParent,
                 rhs.EnableParent,
@@ -4496,7 +4496,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.MapMarker,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.AttachRef = object.Equals(item.AttachRef, rhs.AttachRef);
+            ret.AttachRef = item.AttachRef.Equals(rhs.AttachRef);
             ret.DistantLodData = MemorySliceExt.Equal(item.DistantLodData, rhs.DistantLodData);
             ret.Placement = EqualsMaskHelper.EqualsHelper(
                 item.Placement,

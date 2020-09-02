@@ -2460,8 +2460,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.VirtualMachineAdapter,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Base = object.Equals(item.Base, rhs.Base);
-            ret.EncounterZone = object.Equals(item.EncounterZone, rhs.EncounterZone);
+            ret.Base = item.Base.Equals(rhs.Base);
+            ret.EncounterZone = item.EncounterZone.Equals(rhs.EncounterZone);
             ret.RagdollData = MemorySliceExt.Equal(item.RagdollData, rhs.RagdollData);
             ret.RagdollBipedData = MemorySliceExt.Equal(item.RagdollBipedData, rhs.RagdollBipedData);
             ret.Patrol = EqualsMaskHelper.EqualsHelper(
@@ -2470,7 +2470,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.LevelModifier = item.LevelModifier == rhs.LevelModifier;
-            ret.MerchantContainer = object.Equals(item.MerchantContainer, rhs.MerchantContainer);
+            ret.MerchantContainer = item.MerchantContainer.Equals(rhs.MerchantContainer);
             ret.Count = item.Count == rhs.Count;
             ret.Radius = item.Radius.EqualsWithin(rhs.Radius);
             ret.Health = item.Health.EqualsWithin(rhs.Health);
@@ -2488,15 +2488,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.LinkedReferenceColor,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.PersistentLocation = object.Equals(item.PersistentLocation, rhs.PersistentLocation);
-            ret.LocationReference = object.Equals(item.LocationReference, rhs.LocationReference);
+            ret.PersistentLocation = item.PersistentLocation.Equals(rhs.PersistentLocation);
+            ret.LocationReference = item.LocationReference.Equals(rhs.LocationReference);
             ret.IgnoredBySandbox = item.IgnoredBySandbox == rhs.IgnoredBySandbox;
             ret.LocationRefTypes = item.LocationRefTypes.CollectionEqualsHelper(
                 rhs.LocationRefTypes,
                 (l, r) => object.Equals(l, r),
                 include);
             ret.HeadTrackingWeight = item.HeadTrackingWeight.EqualsWithin(rhs.HeadTrackingWeight);
-            ret.Horse = object.Equals(item.Horse, rhs.Horse);
+            ret.Horse = item.Horse.Equals(rhs.Horse);
             ret.FavorCost = item.FavorCost.EqualsWithin(rhs.FavorCost);
             ret.EnableParent = EqualsMaskHelper.EqualsHelper(
                 item.EnableParent,
@@ -2508,8 +2508,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Ownership,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Emittance = object.Equals(item.Emittance, rhs.Emittance);
-            ret.MultiboundReference = object.Equals(item.MultiboundReference, rhs.MultiboundReference);
+            ret.Emittance = item.Emittance.Equals(rhs.Emittance);
+            ret.MultiboundReference = item.MultiboundReference.Equals(rhs.MultiboundReference);
             ret.IgnoredBySandbox2 = item.IgnoredBySandbox2 == rhs.IgnoredBySandbox2;
             ret.Scale = item.Scale.EqualsWithin(rhs.Scale);
             ret.Placement = EqualsMaskHelper.EqualsHelper(

@@ -4371,8 +4371,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.ANAM = MemorySliceExt.Equal(item.ANAM, rhs.ANAM);
             ret.BNAM = MemorySliceExt.Equal(item.BNAM, rhs.BNAM);
             ret.LNAM = MemorySliceExt.Equal(item.LNAM, rhs.LNAM);
-            ret.Precipitation = object.Equals(item.Precipitation, rhs.Precipitation);
-            ret.VisualEffect = object.Equals(item.VisualEffect, rhs.VisualEffect);
+            ret.Precipitation = item.Precipitation.Equals(rhs.Precipitation);
+            ret.VisualEffect = item.VisualEffect.Equals(rhs.VisualEffect);
             ret.ONAM = MemorySliceExt.Equal(item.ONAM, rhs.ONAM);
             ret.Clouds = item.Clouds.SpanEqualsHelper(
                 rhs.Clouds,
@@ -4449,7 +4449,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Aurora,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.SunGlareLensFlare = object.Equals(item.SunGlareLensFlare, rhs.SunGlareLensFlare);
+            ret.SunGlareLensFlare = item.SunGlareLensFlare.Equals(rhs.SunGlareLensFlare);
             ret.NAM0DataTypeState = item.NAM0DataTypeState == rhs.NAM0DataTypeState;
             ret.FNAMDataTypeState = item.FNAMDataTypeState == rhs.FNAMDataTypeState;
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;

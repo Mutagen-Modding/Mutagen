@@ -1216,7 +1216,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.ChanceNone = item.ChanceNone == rhs.ChanceNone;
             ret.Flags = item.Flags == rhs.Flags;
-            ret.Global = object.Equals(item.Global, rhs.Global);
+            ret.Global = item.Global.Equals(rhs.Global);
             ret.Entries = item.Entries.CollectionEqualsHelper(
                 rhs.Entries,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),

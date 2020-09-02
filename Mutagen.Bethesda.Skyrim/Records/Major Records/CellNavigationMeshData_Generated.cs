@@ -891,8 +891,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.UnusedWorldspaceParent = object.Equals(item.UnusedWorldspaceParent, rhs.UnusedWorldspaceParent);
-            ret.Parent = object.Equals(item.Parent, rhs.Parent);
+            ret.UnusedWorldspaceParent = item.UnusedWorldspaceParent.Equals(rhs.UnusedWorldspaceParent);
+            ret.Parent = item.Parent.Equals(rhs.Parent);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         

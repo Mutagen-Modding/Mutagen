@@ -883,7 +883,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Item = object.Equals(item.Item, rhs.Item);
+            ret.Item = item.Item.Equals(rhs.Item);
             ret.Count = item.Count == rhs.Count;
         }
         

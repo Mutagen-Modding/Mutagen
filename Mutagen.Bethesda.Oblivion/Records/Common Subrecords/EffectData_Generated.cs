@@ -1065,7 +1065,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.MagicEffect = object.Equals(item.MagicEffect, rhs.MagicEffect);
+            ret.MagicEffect = item.MagicEffect.Equals(rhs.MagicEffect);
             ret.Magnitude = item.Magnitude == rhs.Magnitude;
             ret.Area = item.Area == rhs.Area;
             ret.Duration = item.Duration == rhs.Duration;

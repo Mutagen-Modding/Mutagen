@@ -1307,10 +1307,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Script = object.Equals(item.Script, rhs.Script);
-            ret.OpenSound = object.Equals(item.OpenSound, rhs.OpenSound);
-            ret.CloseSound = object.Equals(item.CloseSound, rhs.CloseSound);
-            ret.LoopSound = object.Equals(item.LoopSound, rhs.LoopSound);
+            ret.Script = item.Script.Equals(rhs.Script);
+            ret.OpenSound = item.OpenSound.Equals(rhs.OpenSound);
+            ret.CloseSound = item.CloseSound.Equals(rhs.CloseSound);
+            ret.LoopSound = item.LoopSound.Equals(rhs.LoopSound);
             ret.Flags = item.Flags == rhs.Flags;
             ret.RandomTeleportDestinations = item.RandomTeleportDestinations.CollectionEqualsHelper(
                 rhs.RandomTeleportDestinations,

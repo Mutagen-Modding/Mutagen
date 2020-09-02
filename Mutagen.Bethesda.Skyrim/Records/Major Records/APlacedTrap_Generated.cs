@@ -2071,7 +2071,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.VirtualMachineAdapter,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.EncounterZone = object.Equals(item.EncounterZone, rhs.EncounterZone);
+            ret.EncounterZone = item.EncounterZone.Equals(rhs.EncounterZone);
             ret.Ownership = EqualsMaskHelper.EqualsHelper(
                 item.Ownership,
                 rhs.Ownership,
@@ -2097,14 +2097,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.EnableParent,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Emittance = object.Equals(item.Emittance, rhs.Emittance);
-            ret.MultiBoundReference = object.Equals(item.MultiBoundReference, rhs.MultiBoundReference);
+            ret.Emittance = item.Emittance.Equals(rhs.Emittance);
+            ret.MultiBoundReference = item.MultiBoundReference.Equals(rhs.MultiBoundReference);
             ret.IgnoredBySandbox = MemorySliceExt.Equal(item.IgnoredBySandbox, rhs.IgnoredBySandbox);
             ret.LocationRefTypes = item.LocationRefTypes.CollectionEqualsHelper(
                 rhs.LocationRefTypes,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.LocationReference = object.Equals(item.LocationReference, rhs.LocationReference);
+            ret.LocationReference = item.LocationReference.Equals(rhs.LocationReference);
             ret.DistantLodData = item.DistantLodData.CollectionEqualsHelper(
                 rhs.DistantLodData,
                 (l, r) => l.EqualsWithin(r),

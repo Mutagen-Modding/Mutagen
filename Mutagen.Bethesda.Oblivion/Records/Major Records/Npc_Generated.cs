@@ -2548,13 +2548,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Factions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.DeathItem = object.Equals(item.DeathItem, rhs.DeathItem);
-            ret.Race = object.Equals(item.Race, rhs.Race);
+            ret.DeathItem = item.DeathItem.Equals(rhs.DeathItem);
+            ret.Race = item.Race.Equals(rhs.Race);
             ret.Spells = item.Spells.CollectionEqualsHelper(
                 rhs.Spells,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.Script = object.Equals(item.Script, rhs.Script);
+            ret.Script = item.Script.Equals(rhs.Script);
             ret.Items = item.Items.CollectionEqualsHelper(
                 rhs.Items,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -2572,20 +2572,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Animations,
                 (l, r) => string.Equals(l, r),
                 include);
-            ret.Class = object.Equals(item.Class, rhs.Class);
+            ret.Class = item.Class.Equals(rhs.Class);
             ret.Stats = EqualsMaskHelper.EqualsHelper(
                 item.Stats,
                 rhs.Stats,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Hair = object.Equals(item.Hair, rhs.Hair);
+            ret.Hair = item.Hair.Equals(rhs.Hair);
             ret.HairLength = item.HairLength.EqualsWithin(rhs.HairLength);
             ret.Eyes = item.Eyes.CollectionEqualsHelper(
                 rhs.Eyes,
                 (l, r) => object.Equals(l, r),
                 include);
             ret.HairColor = item.HairColor.ColorOnlyEquals(rhs.HairColor);
-            ret.CombatStyle = object.Equals(item.CombatStyle, rhs.CombatStyle);
+            ret.CombatStyle = item.CombatStyle.Equals(rhs.CombatStyle);
             ret.FaceGenGeometrySymmetric = MemorySliceExt.Equal(item.FaceGenGeometrySymmetric, rhs.FaceGenGeometrySymmetric);
             ret.FaceGenGeometryAsymmetric = MemorySliceExt.Equal(item.FaceGenGeometryAsymmetric, rhs.FaceGenGeometryAsymmetric);
             ret.FaceGenTextureSymmetric = MemorySliceExt.Equal(item.FaceGenTextureSymmetric, rhs.FaceGenTextureSymmetric);

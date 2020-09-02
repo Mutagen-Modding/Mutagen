@@ -1663,8 +1663,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Destructible,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.PickUpSound = object.Equals(item.PickUpSound, rhs.PickUpSound);
-            ret.PutDownSound = object.Equals(item.PutDownSound, rhs.PutDownSound);
+            ret.PickUpSound = item.PickUpSound.Equals(rhs.PickUpSound);
+            ret.PutDownSound = item.PutDownSound.Equals(rhs.PutDownSound);
             ret.Keywords = item.Keywords.CollectionEqualsHelper(
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
@@ -1673,7 +1673,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
             ret.ContainedSoul = item.ContainedSoul == rhs.ContainedSoul;
             ret.MaximumCapacity = item.MaximumCapacity == rhs.MaximumCapacity;
-            ret.LinkedTo = object.Equals(item.LinkedTo, rhs.LinkedTo);
+            ret.LinkedTo = item.LinkedTo.Equals(rhs.LinkedTo);
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }

@@ -1619,12 +1619,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (l, r) => object.Equals(l, r),
                 include);
             ret.MarkerColor = item.MarkerColor.ColorOnlyEquals(rhs.MarkerColor);
-            ret.LoopingSound = object.Equals(item.LoopingSound, rhs.LoopingSound);
-            ret.ActivationSound = object.Equals(item.ActivationSound, rhs.ActivationSound);
-            ret.WaterType = object.Equals(item.WaterType, rhs.WaterType);
+            ret.LoopingSound = item.LoopingSound.Equals(rhs.LoopingSound);
+            ret.ActivationSound = item.ActivationSound.Equals(rhs.ActivationSound);
+            ret.WaterType = item.WaterType.Equals(rhs.WaterType);
             ret.ActivateTextOverride = string.Equals(item.ActivateTextOverride, rhs.ActivateTextOverride);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.InteractionKeyword = object.Equals(item.InteractionKeyword, rhs.InteractionKeyword);
+            ret.InteractionKeyword = item.InteractionKeyword.Equals(rhs.InteractionKeyword);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         

@@ -2560,9 +2560,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.Flags = item.Flags == rhs.Flags;
             ret.AliasIndexToForceIntoWhenFilled = item.AliasIndexToForceIntoWhenFilled == rhs.AliasIndexToForceIntoWhenFilled;
-            ret.SpecificLocation = object.Equals(item.SpecificLocation, rhs.SpecificLocation);
-            ret.ForcedReference = object.Equals(item.ForcedReference, rhs.ForcedReference);
-            ret.UniqueActor = object.Equals(item.UniqueActor, rhs.UniqueActor);
+            ret.SpecificLocation = item.SpecificLocation.Equals(rhs.SpecificLocation);
+            ret.ForcedReference = item.ForcedReference.Equals(rhs.ForcedReference);
+            ret.UniqueActor = item.UniqueActor.Equals(rhs.UniqueActor);
             ret.Location = EqualsMaskHelper.EqualsHelper(
                 item.Location,
                 rhs.Location,
@@ -2600,11 +2600,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Items,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.SpectatorOverridePackageList = object.Equals(item.SpectatorOverridePackageList, rhs.SpectatorOverridePackageList);
-            ret.ObserveDeadBodyOverridePackageList = object.Equals(item.ObserveDeadBodyOverridePackageList, rhs.ObserveDeadBodyOverridePackageList);
-            ret.GuardWarnOverridePackageList = object.Equals(item.GuardWarnOverridePackageList, rhs.GuardWarnOverridePackageList);
-            ret.CombatOverridePackageList = object.Equals(item.CombatOverridePackageList, rhs.CombatOverridePackageList);
-            ret.DisplayName = object.Equals(item.DisplayName, rhs.DisplayName);
+            ret.SpectatorOverridePackageList = item.SpectatorOverridePackageList.Equals(rhs.SpectatorOverridePackageList);
+            ret.ObserveDeadBodyOverridePackageList = item.ObserveDeadBodyOverridePackageList.Equals(rhs.ObserveDeadBodyOverridePackageList);
+            ret.GuardWarnOverridePackageList = item.GuardWarnOverridePackageList.Equals(rhs.GuardWarnOverridePackageList);
+            ret.CombatOverridePackageList = item.CombatOverridePackageList.Equals(rhs.CombatOverridePackageList);
+            ret.DisplayName = item.DisplayName.Equals(rhs.DisplayName);
             ret.Spells = item.Spells.CollectionEqualsHelper(
                 rhs.Spells,
                 (l, r) => object.Equals(l, r),
@@ -2617,7 +2617,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.PackageData,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.VoiceTypes = object.Equals(item.VoiceTypes, rhs.VoiceTypes);
+            ret.VoiceTypes = item.VoiceTypes.Equals(rhs.VoiceTypes);
         }
         
         public string ToString(

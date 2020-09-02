@@ -1516,7 +1516,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.MinTime = item.MinTime.EqualsWithin(rhs.MinTime);
             ret.TargetPercentBetweenActors = item.TargetPercentBetweenActors.EqualsWithin(rhs.TargetPercentBetweenActors);
             ret.NearTargetDistance = item.NearTargetDistance.EqualsWithin(rhs.NearTargetDistance);
-            ret.ImageSpaceModifier = object.Equals(item.ImageSpaceModifier, rhs.ImageSpaceModifier);
+            ret.ImageSpaceModifier = item.ImageSpaceModifier.Equals(rhs.ImageSpaceModifier);
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }

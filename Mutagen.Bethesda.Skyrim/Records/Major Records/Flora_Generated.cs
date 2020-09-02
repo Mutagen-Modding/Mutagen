@@ -1582,8 +1582,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.PNAM = MemorySliceExt.Equal(item.PNAM, rhs.PNAM);
             ret.ActivateTextOverride = string.Equals(item.ActivateTextOverride, rhs.ActivateTextOverride);
             ret.FNAM = MemorySliceExt.Equal(item.FNAM, rhs.FNAM);
-            ret.Ingredient = object.Equals(item.Ingredient, rhs.Ingredient);
-            ret.HarvestSound = object.Equals(item.HarvestSound, rhs.HarvestSound);
+            ret.Ingredient = item.Ingredient.Equals(rhs.Ingredient);
+            ret.HarvestSound = item.HarvestSound.Equals(rhs.HarvestSound);
             ret.Production = EqualsMaskHelper.EqualsHelper(
                 item.Production,
                 rhs.Production,

@@ -877,7 +877,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.Use = item.Use == rhs.Use;
-            ret.Object = object.Equals(item.Object, rhs.Object);
+            ret.Object = item.Object.Equals(rhs.Object);
         }
         
         public string ToString(

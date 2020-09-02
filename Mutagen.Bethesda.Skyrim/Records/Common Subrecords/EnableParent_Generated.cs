@@ -987,7 +987,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
-            ret.Reference = object.Equals(item.Reference, rhs.Reference);
+            ret.Reference = item.Reference.Equals(rhs.Reference);
             ret.Flags = item.Flags == rhs.Flags;
             ret.Unknown = MemoryExtensions.SequenceEqual(item.Unknown.Span, rhs.Unknown.Span);
         }

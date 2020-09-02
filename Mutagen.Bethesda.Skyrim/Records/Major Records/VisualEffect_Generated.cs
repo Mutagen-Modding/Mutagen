@@ -1013,8 +1013,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.EffectArt = object.Equals(item.EffectArt, rhs.EffectArt);
-            ret.Shader = object.Equals(item.Shader, rhs.Shader);
+            ret.EffectArt = item.EffectArt.Equals(rhs.EffectArt);
+            ret.Shader = item.Shader.Equals(rhs.Shader);
             ret.Flags = item.Flags == rhs.Flags;
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);

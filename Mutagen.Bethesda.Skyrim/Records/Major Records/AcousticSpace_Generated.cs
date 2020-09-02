@@ -1024,9 +1024,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
-            ret.AmbientSound = object.Equals(item.AmbientSound, rhs.AmbientSound);
-            ret.UseSoundFromRegion = object.Equals(item.UseSoundFromRegion, rhs.UseSoundFromRegion);
-            ret.EnvironmentType = object.Equals(item.EnvironmentType, rhs.EnvironmentType);
+            ret.AmbientSound = item.AmbientSound.Equals(rhs.AmbientSound);
+            ret.UseSoundFromRegion = item.UseSoundFromRegion.Equals(rhs.UseSoundFromRegion);
+            ret.EnvironmentType = item.EnvironmentType.Equals(rhs.EnvironmentType);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         

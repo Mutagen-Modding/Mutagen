@@ -1472,9 +1472,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (l, r) => object.Equals(l, r),
                 include);
             ret.PNAM = item.PNAM == rhs.PNAM;
-            ret.LoopingSound = object.Equals(item.LoopingSound, rhs.LoopingSound);
+            ret.LoopingSound = item.LoopingSound.Equals(rhs.LoopingSound);
             ret.FNAM = item.FNAM == rhs.FNAM;
-            ret.VoiceType = object.Equals(item.VoiceType, rhs.VoiceType);
+            ret.VoiceType = item.VoiceType.Equals(rhs.VoiceType);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         

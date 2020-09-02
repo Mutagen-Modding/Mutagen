@@ -1177,7 +1177,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.LoopingSound = object.Equals(item.LoopingSound, rhs.LoopingSound);
+            ret.LoopingSound = item.LoopingSound.Equals(rhs.LoopingSound);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         

@@ -945,7 +945,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.SCHR = MemorySliceExt.Equal(item.SCHR, rhs.SCHR);
-            ret.QNAM = object.Equals(item.QNAM, rhs.QNAM);
+            ret.QNAM = item.QNAM.Equals(rhs.QNAM);
             ret.NEXT = item.NEXT == rhs.NEXT;
         }
         

@@ -1166,12 +1166,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Parent = object.Equals(item.Parent, rhs.Parent);
-            ret.Child = object.Equals(item.Child, rhs.Child);
+            ret.Parent = item.Parent.Equals(rhs.Parent);
+            ret.Child = item.Child.Equals(rhs.Child);
             ret.Rank = item.Rank == rhs.Rank;
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.Flags = item.Flags == rhs.Flags;
-            ret.AssociationType = object.Equals(item.AssociationType, rhs.AssociationType);
+            ret.AssociationType = item.AssociationType.Equals(rhs.AssociationType);
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }

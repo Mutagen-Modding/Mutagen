@@ -1040,7 +1040,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.BaseEffect = object.Equals(item.BaseEffect, rhs.BaseEffect);
+            ret.BaseEffect = item.BaseEffect.Equals(rhs.BaseEffect);
             ret.Data = EqualsMaskHelper.EqualsHelper(
                 item.Data,
                 rhs.Data,

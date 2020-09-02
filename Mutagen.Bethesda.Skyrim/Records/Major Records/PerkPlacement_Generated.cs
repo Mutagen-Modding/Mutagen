@@ -935,7 +935,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Perk = object.Equals(item.Perk, rhs.Perk);
+            ret.Perk = item.Perk.Equals(rhs.Perk);
             ret.Rank = item.Rank == rhs.Rank;
             ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff.Span, rhs.Fluff.Span);
         }

@@ -941,8 +941,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.AliasIndex = item.AliasIndex == rhs.AliasIndex;
-            ret.Keyword = object.Equals(item.Keyword, rhs.Keyword);
-            ret.RefType = object.Equals(item.RefType, rhs.RefType);
+            ret.Keyword = item.Keyword.Equals(rhs.Keyword);
+            ret.RefType = item.RefType.Equals(rhs.RefType);
         }
         
         public string ToString(

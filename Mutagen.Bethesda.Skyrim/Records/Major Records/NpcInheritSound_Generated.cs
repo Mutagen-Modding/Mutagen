@@ -803,7 +803,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.InheritsSoundsFrom = object.Equals(item.InheritsSoundsFrom, rhs.InheritsSoundsFrom);
+            ret.InheritsSoundsFrom = item.InheritsSoundsFrom.Equals(rhs.InheritsSoundsFrom);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         

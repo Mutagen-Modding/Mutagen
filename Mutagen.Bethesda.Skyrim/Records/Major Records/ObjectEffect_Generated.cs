@@ -1542,8 +1542,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.TargetType = item.TargetType == rhs.TargetType;
             ret.EnchantType = item.EnchantType == rhs.EnchantType;
             ret.ChargeTime = item.ChargeTime.EqualsWithin(rhs.ChargeTime);
-            ret.BaseEnchantment = object.Equals(item.BaseEnchantment, rhs.BaseEnchantment);
-            ret.WornRestrictions = object.Equals(item.WornRestrictions, rhs.WornRestrictions);
+            ret.BaseEnchantment = item.BaseEnchantment.Equals(rhs.BaseEnchantment);
+            ret.WornRestrictions = item.WornRestrictions.Equals(rhs.WornRestrictions);
             ret.Effects = item.Effects.CollectionEqualsHelper(
                 rhs.Effects,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),

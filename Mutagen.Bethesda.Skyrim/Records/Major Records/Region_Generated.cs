@@ -1434,7 +1434,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.MapColor = item.MapColor.ColorOnlyEquals(rhs.MapColor);
-            ret.Worldspace = object.Equals(item.Worldspace, rhs.Worldspace);
+            ret.Worldspace = item.Worldspace.Equals(rhs.Worldspace);
             ret.RegionAreas = item.RegionAreas.CollectionEqualsHelper(
                 rhs.RegionAreas,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),

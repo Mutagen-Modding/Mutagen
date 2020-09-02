@@ -3268,7 +3268,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 include);
             ret.OcclusionData = MemorySliceExt.Equal(item.OcclusionData, rhs.OcclusionData);
             ret.MaxHeightData = MemorySliceExt.Equal(item.MaxHeightData, rhs.MaxHeightData);
-            ret.LightingTemplate = object.Equals(item.LightingTemplate, rhs.LightingTemplate);
+            ret.LightingTemplate = item.LightingTemplate.Equals(rhs.LightingTemplate);
             ret.LNAM = MemorySliceExt.Equal(item.LNAM, rhs.LNAM);
             ret.WaterHeight = item.WaterHeight.EqualsWithin(rhs.WaterHeight);
             ret.WaterNoiseTexture = string.Equals(item.WaterNoiseTexture, rhs.WaterNoiseTexture);
@@ -3276,7 +3276,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Regions,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.Location = object.Equals(item.Location, rhs.Location);
+            ret.Location = item.Location.Equals(rhs.Location);
             ret.XWCN = MemorySliceExt.Equal(item.XWCN, rhs.XWCN);
             ret.XWCS = MemorySliceExt.Equal(item.XWCS, rhs.XWCS);
             ret.WaterVelocity = EqualsMaskHelper.EqualsHelper(
@@ -3284,19 +3284,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.WaterVelocity,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Water = object.Equals(item.Water, rhs.Water);
+            ret.Water = item.Water.Equals(rhs.Water);
             ret.Ownership = EqualsMaskHelper.EqualsHelper(
                 item.Ownership,
                 rhs.Ownership,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.LockList = object.Equals(item.LockList, rhs.LockList);
+            ret.LockList = item.LockList.Equals(rhs.LockList);
             ret.WaterEnvironmentMap = string.Equals(item.WaterEnvironmentMap, rhs.WaterEnvironmentMap);
-            ret.SkyAndWeatherFromRegion = object.Equals(item.SkyAndWeatherFromRegion, rhs.SkyAndWeatherFromRegion);
-            ret.AcousticSpace = object.Equals(item.AcousticSpace, rhs.AcousticSpace);
-            ret.EncounterZone = object.Equals(item.EncounterZone, rhs.EncounterZone);
-            ret.Music = object.Equals(item.Music, rhs.Music);
-            ret.ImageSpace = object.Equals(item.ImageSpace, rhs.ImageSpace);
+            ret.SkyAndWeatherFromRegion = item.SkyAndWeatherFromRegion.Equals(rhs.SkyAndWeatherFromRegion);
+            ret.AcousticSpace = item.AcousticSpace.Equals(rhs.AcousticSpace);
+            ret.EncounterZone = item.EncounterZone.Equals(rhs.EncounterZone);
+            ret.Music = item.Music.Equals(rhs.Music);
+            ret.ImageSpace = item.ImageSpace.Equals(rhs.ImageSpace);
             ret.Landscape = EqualsMaskHelper.EqualsHelper(
                 item.Landscape,
                 rhs.Landscape,

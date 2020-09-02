@@ -983,7 +983,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.LockLevel = item.LockLevel == rhs.LockLevel;
             ret.Unused = MemoryExtensions.SequenceEqual(item.Unused.Span, rhs.Unused.Span);
-            ret.Key = object.Equals(item.Key, rhs.Key);
+            ret.Key = item.Key.Equals(rhs.Key);
             ret.Flags = item.Flags == rhs.Flags;
         }
         

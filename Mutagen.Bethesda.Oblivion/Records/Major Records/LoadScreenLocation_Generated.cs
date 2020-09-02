@@ -929,8 +929,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Direct = object.Equals(item.Direct, rhs.Direct);
-            ret.Indirect = object.Equals(item.Indirect, rhs.Indirect);
+            ret.Direct = item.Direct.Equals(rhs.Direct);
+            ret.Indirect = item.Indirect.Equals(rhs.Indirect);
             ret.GridPoint = item.GridPoint.Equals(rhs.GridPoint);
         }
         

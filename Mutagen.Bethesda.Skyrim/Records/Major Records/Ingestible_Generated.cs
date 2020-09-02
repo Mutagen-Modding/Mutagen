@@ -1938,15 +1938,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Icons,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.PickUpSound = object.Equals(item.PickUpSound, rhs.PickUpSound);
-            ret.PutDownSound = object.Equals(item.PutDownSound, rhs.PutDownSound);
-            ret.EquipmentType = object.Equals(item.EquipmentType, rhs.EquipmentType);
+            ret.PickUpSound = item.PickUpSound.Equals(rhs.PickUpSound);
+            ret.PutDownSound = item.PutDownSound.Equals(rhs.PutDownSound);
+            ret.EquipmentType = item.EquipmentType.Equals(rhs.EquipmentType);
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
             ret.Value = item.Value == rhs.Value;
             ret.Flags = item.Flags == rhs.Flags;
-            ret.Addiction = object.Equals(item.Addiction, rhs.Addiction);
+            ret.Addiction = item.Addiction.Equals(rhs.Addiction);
             ret.AddictionChance = item.AddictionChance.EqualsWithin(rhs.AddictionChance);
-            ret.ConsumeSound = object.Equals(item.ConsumeSound, rhs.ConsumeSound);
+            ret.ConsumeSound = item.ConsumeSound.Equals(rhs.ConsumeSound);
             ret.Effects = item.Effects.CollectionEqualsHelper(
                 rhs.Effects,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),

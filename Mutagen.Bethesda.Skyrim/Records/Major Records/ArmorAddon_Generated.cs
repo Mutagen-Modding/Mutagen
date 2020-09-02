@@ -1767,7 +1767,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.BodyTemplate,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Race = object.Equals(item.Race, rhs.Race);
+            ret.Race = item.Race.Equals(rhs.Race);
             ret.Priority = new GenderedItem<bool>(
                 male: item.Priority.Male == rhs.Priority.Male,
                 female: item.Priority.Female == rhs.Priority.Female);
@@ -1802,8 +1802,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.AdditionalRaces,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.FootstepSound = object.Equals(item.FootstepSound, rhs.FootstepSound);
-            ret.ArtObject = object.Equals(item.ArtObject, rhs.ArtObject);
+            ret.FootstepSound = item.FootstepSound.Equals(rhs.FootstepSound);
+            ret.ArtObject = item.ArtObject.Equals(rhs.ArtObject);
             ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }

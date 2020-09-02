@@ -906,7 +906,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.MovementType = object.Equals(item.MovementType, rhs.MovementType);
+            ret.MovementType = item.MovementType.Equals(rhs.MovementType);
             ret.Overrides = EqualsMaskHelper.EqualsHelper(
                 item.Overrides,
                 rhs.Overrides,

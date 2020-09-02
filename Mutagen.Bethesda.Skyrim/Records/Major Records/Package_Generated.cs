@@ -2627,9 +2627,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.IdleAnimations,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.CombatStyle = object.Equals(item.CombatStyle, rhs.CombatStyle);
-            ret.OwnerQuest = object.Equals(item.OwnerQuest, rhs.OwnerQuest);
-            ret.PackageTemplate = object.Equals(item.PackageTemplate, rhs.PackageTemplate);
+            ret.CombatStyle = item.CombatStyle.Equals(rhs.CombatStyle);
+            ret.OwnerQuest = item.OwnerQuest.Equals(rhs.OwnerQuest);
+            ret.PackageTemplate = item.PackageTemplate.Equals(rhs.PackageTemplate);
             ret.DataInputVersion = item.DataInputVersion == rhs.DataInputVersion;
             ret.Data = EqualsMaskHelper.DictEqualsHelper(
                 lhs: item.Data,

@@ -1523,8 +1523,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 include);
             ret.Flags = item.Flags == rhs.Flags;
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
-            ret.OpenSound = object.Equals(item.OpenSound, rhs.OpenSound);
-            ret.CloseSound = object.Equals(item.CloseSound, rhs.CloseSound);
+            ret.OpenSound = item.OpenSound.Equals(rhs.OpenSound);
+            ret.CloseSound = item.CloseSound.Equals(rhs.CloseSound);
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }

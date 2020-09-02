@@ -979,10 +979,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Sunrise = object.Equals(item.Sunrise, rhs.Sunrise);
-            ret.Day = object.Equals(item.Day, rhs.Day);
-            ret.Sunset = object.Equals(item.Sunset, rhs.Sunset);
-            ret.Night = object.Equals(item.Night, rhs.Night);
+            ret.Sunrise = item.Sunrise.Equals(rhs.Sunrise);
+            ret.Day = item.Day.Equals(rhs.Day);
+            ret.Sunset = item.Sunset.Equals(rhs.Sunset);
+            ret.Night = item.Night.Equals(rhs.Night);
         }
         
         public string ToString(

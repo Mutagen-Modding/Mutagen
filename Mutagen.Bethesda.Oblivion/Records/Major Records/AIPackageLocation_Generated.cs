@@ -928,7 +928,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Type = item.Type == rhs.Type;
-            ret.LocationReference = object.Equals(item.LocationReference, rhs.LocationReference);
+            ret.LocationReference = item.LocationReference.Equals(rhs.LocationReference);
             ret.Radius = item.Radius.EqualsWithin(rhs.Radius);
         }
         

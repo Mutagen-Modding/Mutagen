@@ -876,7 +876,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Weather = object.Equals(item.Weather, rhs.Weather);
+            ret.Weather = item.Weather.Equals(rhs.Weather);
             ret.Chance = item.Chance == rhs.Chance;
         }
         

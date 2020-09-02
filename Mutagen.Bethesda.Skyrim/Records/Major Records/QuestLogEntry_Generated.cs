@@ -1247,7 +1247,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.Entry = string.Equals(item.Entry, rhs.Entry);
-            ret.NextQuest = object.Equals(item.NextQuest, rhs.NextQuest);
+            ret.NextQuest = item.NextQuest.Equals(rhs.NextQuest);
             ret.SCHR = MemorySliceExt.Equal(item.SCHR, rhs.SCHR);
             ret.SCTX = MemorySliceExt.Equal(item.SCTX, rhs.SCTX);
             ret.QNAM = MemorySliceExt.Equal(item.QNAM, rhs.QNAM);

@@ -1028,9 +1028,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
-            ret.Script = object.Equals(item.Script, rhs.Script);
+            ret.Script = item.Script.Equals(rhs.Script);
             ret.MagicSchool = item.MagicSchool == rhs.MagicSchool;
-            ret.VisualEffect = object.Equals(item.VisualEffect, rhs.VisualEffect);
+            ret.VisualEffect = item.VisualEffect.Equals(rhs.VisualEffect);
             ret.Flags = item.Flags == rhs.Flags;
         }
         

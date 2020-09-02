@@ -1206,7 +1206,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Icon = string.Equals(item.Icon, rhs.Icon);
-            ret.Script = object.Equals(item.Script, rhs.Script);
+            ret.Script = item.Script.Equals(rhs.Script);
             ret.Data = EqualsMaskHelper.EqualsHelper(
                 item.Data,
                 rhs.Data,

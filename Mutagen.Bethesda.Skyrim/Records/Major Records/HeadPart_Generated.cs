@@ -1465,9 +1465,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Parts,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.TextureSet = object.Equals(item.TextureSet, rhs.TextureSet);
-            ret.Color = object.Equals(item.Color, rhs.Color);
-            ret.ValidRaces = object.Equals(item.ValidRaces, rhs.ValidRaces);
+            ret.TextureSet = item.TextureSet.Equals(rhs.TextureSet);
+            ret.Color = item.Color.Equals(rhs.Color);
+            ret.ValidRaces = item.ValidRaces.Equals(rhs.ValidRaces);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         

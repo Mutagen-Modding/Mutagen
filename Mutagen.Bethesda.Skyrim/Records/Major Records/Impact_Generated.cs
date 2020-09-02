@@ -1622,11 +1622,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Decal,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.TextureSet = object.Equals(item.TextureSet, rhs.TextureSet);
-            ret.SecondaryTextureSet = object.Equals(item.SecondaryTextureSet, rhs.SecondaryTextureSet);
-            ret.Sound1 = object.Equals(item.Sound1, rhs.Sound1);
-            ret.Sound2 = object.Equals(item.Sound2, rhs.Sound2);
-            ret.Hazard = object.Equals(item.Hazard, rhs.Hazard);
+            ret.TextureSet = item.TextureSet.Equals(rhs.TextureSet);
+            ret.SecondaryTextureSet = item.SecondaryTextureSet.Equals(rhs.SecondaryTextureSet);
+            ret.Sound1 = item.Sound1.Equals(rhs.Sound1);
+            ret.Sound2 = item.Sound2.Equals(rhs.Sound2);
+            ret.Hazard = item.Hazard.Equals(rhs.Hazard);
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }

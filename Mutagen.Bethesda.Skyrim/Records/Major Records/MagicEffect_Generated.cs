@@ -3354,7 +3354,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Name = string.Equals(item.Name, rhs.Name);
-            ret.MenuDisplayObject = object.Equals(item.MenuDisplayObject, rhs.MenuDisplayObject);
+            ret.MenuDisplayObject = item.MenuDisplayObject.Equals(rhs.MenuDisplayObject);
             ret.Keywords = item.Keywords.CollectionEqualsHelper(
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
@@ -3365,10 +3365,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.ResistValue = item.ResistValue == rhs.ResistValue;
             ret.CounterEffectCount = item.CounterEffectCount == rhs.CounterEffectCount;
             ret.Unknown1 = item.Unknown1 == rhs.Unknown1;
-            ret.CastingLight = object.Equals(item.CastingLight, rhs.CastingLight);
+            ret.CastingLight = item.CastingLight.Equals(rhs.CastingLight);
             ret.TaperWeight = item.TaperWeight.EqualsWithin(rhs.TaperWeight);
-            ret.HitShader = object.Equals(item.HitShader, rhs.HitShader);
-            ret.EnchantShader = object.Equals(item.EnchantShader, rhs.EnchantShader);
+            ret.HitShader = item.HitShader.Equals(rhs.HitShader);
+            ret.EnchantShader = item.EnchantShader.Equals(rhs.EnchantShader);
             ret.MinimumSkillLevel = item.MinimumSkillLevel == rhs.MinimumSkillLevel;
             ret.SpellmakingArea = item.SpellmakingArea == rhs.SpellmakingArea;
             ret.SpellmakingCastingTime = item.SpellmakingCastingTime.EqualsWithin(rhs.SpellmakingCastingTime);
@@ -3376,23 +3376,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.TaperDuration = item.TaperDuration.EqualsWithin(rhs.TaperDuration);
             ret.SecondActorValueWeight = item.SecondActorValueWeight.EqualsWithin(rhs.SecondActorValueWeight);
             ret.Archetype = MaskItemExt.Factory(item.Archetype.GetEqualsMask(rhs.Archetype, include), include);
-            ret.Projectile = object.Equals(item.Projectile, rhs.Projectile);
-            ret.Explosion = object.Equals(item.Explosion, rhs.Explosion);
+            ret.Projectile = item.Projectile.Equals(rhs.Projectile);
+            ret.Explosion = item.Explosion.Equals(rhs.Explosion);
             ret.CastType = item.CastType == rhs.CastType;
             ret.TargetType = item.TargetType == rhs.TargetType;
             ret.SecondActorValue = item.SecondActorValue == rhs.SecondActorValue;
-            ret.CastingArt = object.Equals(item.CastingArt, rhs.CastingArt);
-            ret.HitEffectArt = object.Equals(item.HitEffectArt, rhs.HitEffectArt);
-            ret.ImpactData = object.Equals(item.ImpactData, rhs.ImpactData);
+            ret.CastingArt = item.CastingArt.Equals(rhs.CastingArt);
+            ret.HitEffectArt = item.HitEffectArt.Equals(rhs.HitEffectArt);
+            ret.ImpactData = item.ImpactData.Equals(rhs.ImpactData);
             ret.SkillUsageMultiplier = item.SkillUsageMultiplier.EqualsWithin(rhs.SkillUsageMultiplier);
-            ret.DualCastArt = object.Equals(item.DualCastArt, rhs.DualCastArt);
+            ret.DualCastArt = item.DualCastArt.Equals(rhs.DualCastArt);
             ret.DualCastScale = item.DualCastScale.EqualsWithin(rhs.DualCastScale);
-            ret.EnchantArt = object.Equals(item.EnchantArt, rhs.EnchantArt);
-            ret.Unknown2 = object.Equals(item.Unknown2, rhs.Unknown2);
-            ret.Unknown3 = object.Equals(item.Unknown3, rhs.Unknown3);
-            ret.EquipAbility = object.Equals(item.EquipAbility, rhs.EquipAbility);
-            ret.ImageSpaceModifier = object.Equals(item.ImageSpaceModifier, rhs.ImageSpaceModifier);
-            ret.PerkToApply = object.Equals(item.PerkToApply, rhs.PerkToApply);
+            ret.EnchantArt = item.EnchantArt.Equals(rhs.EnchantArt);
+            ret.Unknown2 = item.Unknown2.Equals(rhs.Unknown2);
+            ret.Unknown3 = item.Unknown3.Equals(rhs.Unknown3);
+            ret.EquipAbility = item.EquipAbility.Equals(rhs.EquipAbility);
+            ret.ImageSpaceModifier = item.ImageSpaceModifier.Equals(rhs.ImageSpaceModifier);
+            ret.PerkToApply = item.PerkToApply.Equals(rhs.PerkToApply);
             ret.CastingSoundLevel = item.CastingSoundLevel == rhs.CastingSoundLevel;
             ret.ScriptEffectAIScore = item.ScriptEffectAIScore.EqualsWithin(rhs.ScriptEffectAIScore);
             ret.ScriptEffectAIDelayTime = item.ScriptEffectAIDelayTime.EqualsWithin(rhs.ScriptEffectAIDelayTime);

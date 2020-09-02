@@ -1093,8 +1093,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Script = object.Equals(item.Script, rhs.Script);
-            ret.Ingredient = object.Equals(item.Ingredient, rhs.Ingredient);
+            ret.Script = item.Script.Equals(rhs.Script);
+            ret.Ingredient = item.Ingredient.Equals(rhs.Ingredient);
             ret.SeasonalIngredientProduction = EqualsMaskHelper.EqualsHelper(
                 item.SeasonalIngredientProduction,
                 rhs.SeasonalIngredientProduction,

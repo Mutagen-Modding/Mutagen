@@ -1216,11 +1216,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
-            ret.Projectile = object.Equals(item.Projectile, rhs.Projectile);
-            ret.Explosion = object.Equals(item.Explosion, rhs.Explosion);
-            ret.EffectShader = object.Equals(item.EffectShader, rhs.EffectShader);
-            ret.HitEffectArt = object.Equals(item.HitEffectArt, rhs.HitEffectArt);
-            ret.ImpactDataSet = object.Equals(item.ImpactDataSet, rhs.ImpactDataSet);
+            ret.Projectile = item.Projectile.Equals(rhs.Projectile);
+            ret.Explosion = item.Explosion.Equals(rhs.Explosion);
+            ret.EffectShader = item.EffectShader.Equals(rhs.EffectShader);
+            ret.HitEffectArt = item.HitEffectArt.Equals(rhs.HitEffectArt);
+            ret.ImpactDataSet = item.ImpactDataSet.Equals(rhs.ImpactDataSet);
             ret.InheritScale = item.InheritScale == rhs.InheritScale;
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);

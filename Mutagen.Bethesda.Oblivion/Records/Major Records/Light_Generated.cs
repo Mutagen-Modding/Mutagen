@@ -1204,7 +1204,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Script = object.Equals(item.Script, rhs.Script);
+            ret.Script = item.Script.Equals(rhs.Script);
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.Icon = string.Equals(item.Icon, rhs.Icon);
             ret.Data = EqualsMaskHelper.EqualsHelper(
@@ -1213,7 +1213,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Fade = item.Fade.EqualsWithin(rhs.Fade);
-            ret.Sound = object.Equals(item.Sound, rhs.Sound);
+            ret.Sound = item.Sound.Equals(rhs.Sound);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         

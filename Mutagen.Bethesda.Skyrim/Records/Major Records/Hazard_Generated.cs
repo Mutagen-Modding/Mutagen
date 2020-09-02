@@ -1563,17 +1563,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.ImageSpaceModifier = object.Equals(item.ImageSpaceModifier, rhs.ImageSpaceModifier);
+            ret.ImageSpaceModifier = item.ImageSpaceModifier.Equals(rhs.ImageSpaceModifier);
             ret.Limit = item.Limit == rhs.Limit;
             ret.Radius = item.Radius.EqualsWithin(rhs.Radius);
             ret.Lifetime = item.Lifetime.EqualsWithin(rhs.Lifetime);
             ret.ImageSpaceRadius = item.ImageSpaceRadius.EqualsWithin(rhs.ImageSpaceRadius);
             ret.TargetInterval = item.TargetInterval.EqualsWithin(rhs.TargetInterval);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.Spell = object.Equals(item.Spell, rhs.Spell);
-            ret.Light = object.Equals(item.Light, rhs.Light);
-            ret.ImpactDataSet = object.Equals(item.ImpactDataSet, rhs.ImpactDataSet);
-            ret.Sound = object.Equals(item.Sound, rhs.Sound);
+            ret.Spell = item.Spell.Equals(rhs.Spell);
+            ret.Light = item.Light.Equals(rhs.Light);
+            ret.ImpactDataSet = item.ImpactDataSet.Equals(rhs.ImpactDataSet);
+            ret.Sound = item.Sound.Equals(rhs.Sound);
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }

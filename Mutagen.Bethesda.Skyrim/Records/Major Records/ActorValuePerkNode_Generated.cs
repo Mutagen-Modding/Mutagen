@@ -1306,13 +1306,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Perk = object.Equals(item.Perk, rhs.Perk);
+            ret.Perk = item.Perk.Equals(rhs.Perk);
             ret.FNAM = MemorySliceExt.Equal(item.FNAM, rhs.FNAM);
             ret.PerkGridX = item.PerkGridX == rhs.PerkGridX;
             ret.PerkGridY = item.PerkGridY == rhs.PerkGridY;
             ret.HorizontalPosition = item.HorizontalPosition.EqualsWithin(rhs.HorizontalPosition);
             ret.VerticalPosition = item.VerticalPosition.EqualsWithin(rhs.VerticalPosition);
-            ret.AssociatedSkill = object.Equals(item.AssociatedSkill, rhs.AssociatedSkill);
+            ret.AssociatedSkill = item.AssociatedSkill.Equals(rhs.AssociatedSkill);
             ret.ConnectionLineToIndices = item.ConnectionLineToIndices.CollectionEqualsHelper(
                 rhs.ConnectionLineToIndices,
                 (l, r) => l == r,

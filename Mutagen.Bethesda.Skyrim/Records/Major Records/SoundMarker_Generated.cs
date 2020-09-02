@@ -1042,7 +1042,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.FNAM = MemorySliceExt.Equal(item.FNAM, rhs.FNAM);
             ret.SNDD = MemorySliceExt.Equal(item.SNDD, rhs.SNDD);
-            ret.SoundDescriptor = object.Equals(item.SoundDescriptor, rhs.SoundDescriptor);
+            ret.SoundDescriptor = item.SoundDescriptor.Equals(rhs.SoundDescriptor);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         

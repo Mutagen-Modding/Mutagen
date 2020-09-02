@@ -678,7 +678,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.Level = item.Level == rhs.Level;
             ret.Unknown = item.Unknown == rhs.Unknown;
-            ret.Reference = object.Equals(item.Reference, rhs.Reference);
+            ret.Reference = item.Reference.Equals(rhs.Reference);
             ret.Count = item.Count == rhs.Count;
             ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
         }

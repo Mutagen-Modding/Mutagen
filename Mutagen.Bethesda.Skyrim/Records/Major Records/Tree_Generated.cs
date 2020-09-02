@@ -1526,8 +1526,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Ingredient = object.Equals(item.Ingredient, rhs.Ingredient);
-            ret.HarvestSound = object.Equals(item.HarvestSound, rhs.HarvestSound);
+            ret.Ingredient = item.Ingredient.Equals(rhs.Ingredient);
+            ret.HarvestSound = item.HarvestSound.Equals(rhs.HarvestSound);
             ret.Production = EqualsMaskHelper.EqualsHelper(
                 item.Production,
                 rhs.Production,

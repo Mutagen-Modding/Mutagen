@@ -940,7 +940,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Color = object.Equals(item.Color, rhs.Color);
+            ret.Color = item.Color.Equals(rhs.Color);
             ret.DefaultValue = item.DefaultValue.EqualsWithin(rhs.DefaultValue);
             ret.Index = item.Index == rhs.Index;
         }

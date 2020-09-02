@@ -875,7 +875,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.ComparisonValue = object.Equals(item.ComparisonValue, rhs.ComparisonValue);
+            ret.ComparisonValue = item.ComparisonValue.Equals(rhs.ComparisonValue);
             ret.Data = MaskItemExt.Factory(item.Data.GetEqualsMask(rhs.Data, include), include);
             base.FillEqualsMask(item, rhs, ret, include);
         }

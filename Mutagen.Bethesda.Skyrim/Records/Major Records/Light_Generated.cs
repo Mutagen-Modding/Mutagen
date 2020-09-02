@@ -1930,7 +1930,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Value = item.Value == rhs.Value;
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
             ret.FadeValue = item.FadeValue.EqualsWithin(rhs.FadeValue);
-            ret.Sound = object.Equals(item.Sound, rhs.Sound);
+            ret.Sound = item.Sound.Equals(rhs.Sound);
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }

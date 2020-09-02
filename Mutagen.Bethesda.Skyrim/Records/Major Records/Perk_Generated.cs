@@ -1669,7 +1669,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.NumRanks = item.NumRanks == rhs.NumRanks;
             ret.Playable = item.Playable == rhs.Playable;
             ret.Hidden = item.Hidden == rhs.Hidden;
-            ret.NextPerk = object.Equals(item.NextPerk, rhs.NextPerk);
+            ret.NextPerk = item.NextPerk.Equals(rhs.NextPerk);
             ret.Effects = item.Effects.CollectionEqualsHelper(
                 rhs.Effects,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),

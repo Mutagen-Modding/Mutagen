@@ -1452,8 +1452,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Name = string.Equals(item.Name, rhs.Name);
-            ret.Script = object.Equals(item.Script, rhs.Script);
-            ret.Enchantment = object.Equals(item.Enchantment, rhs.Enchantment);
+            ret.Script = item.Script.Equals(rhs.Script);
+            ret.Enchantment = item.Enchantment.Equals(rhs.Enchantment);
             ret.EnchantmentPoints = item.EnchantmentPoints == rhs.EnchantmentPoints;
             ret.ClothingFlags = EqualsMaskHelper.EqualsHelper(
                 item.ClothingFlags,

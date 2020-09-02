@@ -1123,7 +1123,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.IdleTime = item.IdleTime.EqualsWithin(rhs.IdleTime);
-            ret.Idle = object.Equals(item.Idle, rhs.Idle);
+            ret.Idle = item.Idle.Equals(rhs.Idle);
             ret.SCHR = MemorySliceExt.Equal(item.SCHR, rhs.SCHR);
             ret.SCTX = MemorySliceExt.Equal(item.SCTX, rhs.SCTX);
             ret.Topics = item.Topics.CollectionEqualsHelper(

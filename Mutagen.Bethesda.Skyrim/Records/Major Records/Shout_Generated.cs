@@ -1133,7 +1133,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.Name = string.Equals(item.Name, rhs.Name);
-            ret.MenuDisplayObject = object.Equals(item.MenuDisplayObject, rhs.MenuDisplayObject);
+            ret.MenuDisplayObject = item.MenuDisplayObject.Equals(rhs.MenuDisplayObject);
             ret.Description = string.Equals(item.Description, rhs.Description);
             ret.WordsOfPower = item.WordsOfPower.CollectionEqualsHelper(
                 rhs.WordsOfPower,

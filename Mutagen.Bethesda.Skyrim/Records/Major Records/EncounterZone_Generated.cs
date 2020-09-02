@@ -1192,8 +1192,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Owner = object.Equals(item.Owner, rhs.Owner);
-            ret.Location = object.Equals(item.Location, rhs.Location);
+            ret.Owner = item.Owner.Equals(rhs.Owner);
+            ret.Location = item.Location.Equals(rhs.Location);
             ret.Rank = item.Rank == rhs.Rank;
             ret.MinLevel = item.MinLevel == rhs.MinLevel;
             ret.Flags = item.Flags == rhs.Flags;

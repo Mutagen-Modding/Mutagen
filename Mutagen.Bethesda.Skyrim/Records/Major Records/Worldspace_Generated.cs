@@ -3112,17 +3112,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 include);
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.FixedDimensionsCenterCell = item.FixedDimensionsCenterCell.Equals(rhs.FixedDimensionsCenterCell);
-            ret.InteriorLighting = object.Equals(item.InteriorLighting, rhs.InteriorLighting);
-            ret.EncounterZone = object.Equals(item.EncounterZone, rhs.EncounterZone);
-            ret.Location = object.Equals(item.Location, rhs.Location);
+            ret.InteriorLighting = item.InteriorLighting.Equals(rhs.InteriorLighting);
+            ret.EncounterZone = item.EncounterZone.Equals(rhs.EncounterZone);
+            ret.Location = item.Location.Equals(rhs.Location);
             ret.Parent = EqualsMaskHelper.EqualsHelper(
                 item.Parent,
                 rhs.Parent,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Climate = object.Equals(item.Climate, rhs.Climate);
-            ret.Water = object.Equals(item.Water, rhs.Water);
-            ret.LodWater = object.Equals(item.LodWater, rhs.LodWater);
+            ret.Climate = item.Climate.Equals(rhs.Climate);
+            ret.Water = item.Water.Equals(rhs.Water);
+            ret.LodWater = item.LodWater.Equals(rhs.LodWater);
             ret.LodWaterHeight = item.LodWaterHeight.EqualsWithin(rhs.LodWaterHeight);
             ret.LandDefaults = EqualsMaskHelper.EqualsHelper(
                 item.LandDefaults,
@@ -3148,7 +3148,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.ObjectBounds,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Music = object.Equals(item.Music, rhs.Music);
+            ret.Music = item.Music.Equals(rhs.Music);
             ret.CanopyShadow = string.Equals(item.CanopyShadow, rhs.CanopyShadow);
             ret.WaterNoiseTexture = string.Equals(item.WaterNoiseTexture, rhs.WaterNoiseTexture);
             ret.HdLodDiffuseTexture = string.Equals(item.HdLodDiffuseTexture, rhs.HdLodDiffuseTexture);

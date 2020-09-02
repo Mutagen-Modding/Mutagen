@@ -1286,8 +1286,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.TextureSet = object.Equals(item.TextureSet, rhs.TextureSet);
-            ret.MaterialType = object.Equals(item.MaterialType, rhs.MaterialType);
+            ret.TextureSet = item.TextureSet.Equals(rhs.TextureSet);
+            ret.MaterialType = item.MaterialType.Equals(rhs.MaterialType);
             ret.HavokFriction = item.HavokFriction == rhs.HavokFriction;
             ret.HavokRestitution = item.HavokRestitution == rhs.HavokRestitution;
             ret.TextureSpecularExponent = item.TextureSpecularExponent == rhs.TextureSpecularExponent;

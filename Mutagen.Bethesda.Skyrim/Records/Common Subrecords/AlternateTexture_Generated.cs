@@ -923,7 +923,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.Name = string.Equals(item.Name, rhs.Name);
-            ret.NewTexture = object.Equals(item.NewTexture, rhs.NewTexture);
+            ret.NewTexture = item.NewTexture.Equals(rhs.NewTexture);
             ret.Index = item.Index == rhs.Index;
         }
         

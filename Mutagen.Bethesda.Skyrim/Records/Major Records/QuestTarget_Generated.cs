@@ -1064,7 +1064,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Target = object.Equals(item.Target, rhs.Target);
+            ret.Target = item.Target.Equals(rhs.Target);
             ret.Flags = item.Flags == rhs.Flags;
             ret.Conditions = item.Conditions.CollectionEqualsHelper(
                 rhs.Conditions,

@@ -2624,8 +2624,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Factions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.DeathItem = object.Equals(item.DeathItem, rhs.DeathItem);
-            ret.Script = object.Equals(item.Script, rhs.Script);
+            ret.DeathItem = item.DeathItem.Equals(rhs.DeathItem);
+            ret.Script = item.Script.Equals(rhs.Script);
             ret.AIData = EqualsMaskHelper.EqualsHelper(
                 item.AIData,
                 rhs.AIData,
@@ -2645,13 +2645,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.AttackReach = item.AttackReach == rhs.AttackReach;
-            ret.CombatStyle = object.Equals(item.CombatStyle, rhs.CombatStyle);
+            ret.CombatStyle = item.CombatStyle.Equals(rhs.CombatStyle);
             ret.TurningSpeed = item.TurningSpeed.EqualsWithin(rhs.TurningSpeed);
             ret.BaseScale = item.BaseScale.EqualsWithin(rhs.BaseScale);
             ret.FootWeight = item.FootWeight.EqualsWithin(rhs.FootWeight);
             ret.BloodSpray = string.Equals(item.BloodSpray, rhs.BloodSpray);
             ret.BloodDecal = string.Equals(item.BloodDecal, rhs.BloodDecal);
-            ret.InheritsSoundFrom = object.Equals(item.InheritsSoundFrom, rhs.InheritsSoundFrom);
+            ret.InheritsSoundFrom = item.InheritsSoundFrom.Equals(rhs.InheritsSoundFrom);
             ret.Sounds = item.Sounds.CollectionEqualsHelper(
                 rhs.Sounds,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),

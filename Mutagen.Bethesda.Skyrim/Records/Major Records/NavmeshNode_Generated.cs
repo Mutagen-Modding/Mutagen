@@ -876,7 +876,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.NavMesh = object.Equals(item.NavMesh, rhs.NavMesh);
+            ret.NavMesh = item.NavMesh.Equals(rhs.NavMesh);
             ret.NodeIndex = item.NodeIndex == rhs.NodeIndex;
         }
         

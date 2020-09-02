@@ -1130,7 +1130,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Index = item.Index == rhs.Index;
             ret.FileName = string.Equals(item.FileName, rhs.FileName);
             ret.MaskType = item.MaskType == rhs.MaskType;
-            ret.PresetDefault = object.Equals(item.PresetDefault, rhs.PresetDefault);
+            ret.PresetDefault = item.PresetDefault.Equals(rhs.PresetDefault);
             ret.Presets = item.Presets.CollectionEqualsHelper(
                 rhs.Presets,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),

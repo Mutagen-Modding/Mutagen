@@ -6051,7 +6051,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.ParticleInitialRotationDegreePlusMinus = item.ParticleInitialRotationDegreePlusMinus.EqualsWithin(rhs.ParticleInitialRotationDegreePlusMinus);
             ret.ParticleRotationSpeedDegreePerSec = item.ParticleRotationSpeedDegreePerSec.EqualsWithin(rhs.ParticleRotationSpeedDegreePerSec);
             ret.ParticleRotationSpeedDegreePerSecPlusMinus = item.ParticleRotationSpeedDegreePerSecPlusMinus.EqualsWithin(rhs.ParticleRotationSpeedDegreePerSecPlusMinus);
-            ret.AddonModels = object.Equals(item.AddonModels, rhs.AddonModels);
+            ret.AddonModels = item.AddonModels.Equals(rhs.AddonModels);
             ret.HolesStartTime = item.HolesStartTime.EqualsWithin(rhs.HolesStartTime);
             ret.HolesEndTime = item.HolesEndTime.EqualsWithin(rhs.HolesEndTime);
             ret.HolesStartValue = item.HolesStartValue.EqualsWithin(rhs.HolesStartValue);
@@ -6067,7 +6067,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.AddonModelsScaleEnd = item.AddonModelsScaleEnd.EqualsWithin(rhs.AddonModelsScaleEnd);
             ret.AddonModelsScaleInTime = item.AddonModelsScaleInTime.EqualsWithin(rhs.AddonModelsScaleInTime);
             ret.AddonModelsScaleOutTime = item.AddonModelsScaleOutTime.EqualsWithin(rhs.AddonModelsScaleOutTime);
-            ret.AmbientSound = object.Equals(item.AmbientSound, rhs.AmbientSound);
+            ret.AmbientSound = item.AmbientSound.Equals(rhs.AmbientSound);
             ret.FillColorKey2 = item.FillColorKey2.ColorOnlyEquals(rhs.FillColorKey2);
             ret.FillColorKey3 = item.FillColorKey3.ColorOnlyEquals(rhs.FillColorKey3);
             ret.FillColorKey1Scale = item.FillColorKey1Scale.EqualsWithin(rhs.FillColorKey1Scale);

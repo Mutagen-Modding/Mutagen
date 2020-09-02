@@ -1760,7 +1760,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Unused2,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Quest = object.Equals(item.Quest, rhs.Quest);
+            ret.Quest = item.Quest.Equals(rhs.Quest);
             ret.LastActionIndex = item.LastActionIndex == rhs.LastActionIndex;
             ret.VNAM = MemorySliceExt.Equal(item.VNAM, rhs.VNAM);
             ret.Conditions = item.Conditions.CollectionEqualsHelper(

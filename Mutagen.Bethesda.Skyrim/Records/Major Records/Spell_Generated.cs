@@ -1828,8 +1828,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.MenuDisplayObject = object.Equals(item.MenuDisplayObject, rhs.MenuDisplayObject);
-            ret.EquipmentType = object.Equals(item.EquipmentType, rhs.EquipmentType);
+            ret.MenuDisplayObject = item.MenuDisplayObject.Equals(rhs.MenuDisplayObject);
+            ret.EquipmentType = item.EquipmentType.Equals(rhs.EquipmentType);
             ret.Description = string.Equals(item.Description, rhs.Description);
             ret.BaseCost = item.BaseCost == rhs.BaseCost;
             ret.Flags = item.Flags == rhs.Flags;
@@ -1839,7 +1839,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.TargetType = item.TargetType == rhs.TargetType;
             ret.CastDuration = item.CastDuration.EqualsWithin(rhs.CastDuration);
             ret.Range = item.Range.EqualsWithin(rhs.Range);
-            ret.HalfCostPerk = object.Equals(item.HalfCostPerk, rhs.HalfCostPerk);
+            ret.HalfCostPerk = item.HalfCostPerk.Equals(rhs.HalfCostPerk);
             ret.Effects = item.Effects.CollectionEqualsHelper(
                 rhs.Effects,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),

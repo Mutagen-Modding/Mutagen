@@ -2610,11 +2610,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 include);
             ret.MusicType = item.MusicType == rhs.MusicType;
             ret.WaterHeight = item.WaterHeight.EqualsWithin(rhs.WaterHeight);
-            ret.Climate = object.Equals(item.Climate, rhs.Climate);
-            ret.Water = object.Equals(item.Water, rhs.Water);
-            ret.Owner = object.Equals(item.Owner, rhs.Owner);
+            ret.Climate = item.Climate.Equals(rhs.Climate);
+            ret.Water = item.Water.Equals(rhs.Water);
+            ret.Owner = item.Owner.Equals(rhs.Owner);
             ret.FactionRank = item.FactionRank == rhs.FactionRank;
-            ret.GlobalVariable = object.Equals(item.GlobalVariable, rhs.GlobalVariable);
+            ret.GlobalVariable = item.GlobalVariable.Equals(rhs.GlobalVariable);
             ret.PathGrid = EqualsMaskHelper.EqualsHelper(
                 item.PathGrid,
                 rhs.PathGrid,

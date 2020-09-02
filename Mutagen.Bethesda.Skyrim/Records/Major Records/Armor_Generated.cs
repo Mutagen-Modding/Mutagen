@@ -2201,7 +2201,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 include);
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.Name = string.Equals(item.Name, rhs.Name);
-            ret.ObjectEffect = object.Equals(item.ObjectEffect, rhs.ObjectEffect);
+            ret.ObjectEffect = item.ObjectEffect.Equals(rhs.ObjectEffect);
             ret.EnchantmentAmount = item.EnchantmentAmount == rhs.EnchantmentAmount;
             ret.WorldModel = GenderedItem.EqualityMaskHelper(
                 lhs: item.WorldModel,
@@ -2218,13 +2218,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Destructible,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.PickUpSound = object.Equals(item.PickUpSound, rhs.PickUpSound);
-            ret.PutDownSound = object.Equals(item.PutDownSound, rhs.PutDownSound);
+            ret.PickUpSound = item.PickUpSound.Equals(rhs.PickUpSound);
+            ret.PutDownSound = item.PutDownSound.Equals(rhs.PutDownSound);
             ret.RagdollConstraintTemplate = string.Equals(item.RagdollConstraintTemplate, rhs.RagdollConstraintTemplate);
-            ret.EquipmentType = object.Equals(item.EquipmentType, rhs.EquipmentType);
-            ret.BashImpactDataSet = object.Equals(item.BashImpactDataSet, rhs.BashImpactDataSet);
-            ret.AlternateBlockMaterial = object.Equals(item.AlternateBlockMaterial, rhs.AlternateBlockMaterial);
-            ret.Race = object.Equals(item.Race, rhs.Race);
+            ret.EquipmentType = item.EquipmentType.Equals(rhs.EquipmentType);
+            ret.BashImpactDataSet = item.BashImpactDataSet.Equals(rhs.BashImpactDataSet);
+            ret.AlternateBlockMaterial = item.AlternateBlockMaterial.Equals(rhs.AlternateBlockMaterial);
+            ret.Race = item.Race.Equals(rhs.Race);
             ret.Keywords = item.Keywords.CollectionEqualsHelper(
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
@@ -2237,7 +2237,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Value = item.Value == rhs.Value;
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
             ret.ArmorRating = item.ArmorRating.EqualsWithin(rhs.ArmorRating);
-            ret.TemplateArmor = object.Equals(item.TemplateArmor, rhs.TemplateArmor);
+            ret.TemplateArmor = item.TemplateArmor.Equals(rhs.TemplateArmor);
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }

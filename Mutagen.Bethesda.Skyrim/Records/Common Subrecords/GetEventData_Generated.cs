@@ -1089,9 +1089,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
             ret.EventFunction = item.EventFunction == rhs.EventFunction;
             ret.EventMember = item.EventMember == rhs.EventMember;
-            ret.Parameter3 = object.Equals(item.Parameter3, rhs.Parameter3);
+            ret.Parameter3 = item.Parameter3.Equals(rhs.Parameter3);
             ret.RunOnType = item.RunOnType == rhs.RunOnType;
-            ret.Reference = object.Equals(item.Reference, rhs.Reference);
+            ret.Reference = item.Reference.Equals(rhs.Reference);
             ret.Unknown3 = item.Unknown3 == rhs.Unknown3;
             base.FillEqualsMask(item, rhs, ret, include);
         }

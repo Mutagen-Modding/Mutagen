@@ -1855,14 +1855,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.ObjectEffect = object.Equals(item.ObjectEffect, rhs.ObjectEffect);
-            ret.ImageSpaceModifier = object.Equals(item.ImageSpaceModifier, rhs.ImageSpaceModifier);
-            ret.Light = object.Equals(item.Light, rhs.Light);
-            ret.Sound1 = object.Equals(item.Sound1, rhs.Sound1);
-            ret.Sound2 = object.Equals(item.Sound2, rhs.Sound2);
-            ret.ImpactDataSet = object.Equals(item.ImpactDataSet, rhs.ImpactDataSet);
-            ret.PlacedObject = object.Equals(item.PlacedObject, rhs.PlacedObject);
-            ret.SpawnProjectile = object.Equals(item.SpawnProjectile, rhs.SpawnProjectile);
+            ret.ObjectEffect = item.ObjectEffect.Equals(rhs.ObjectEffect);
+            ret.ImageSpaceModifier = item.ImageSpaceModifier.Equals(rhs.ImageSpaceModifier);
+            ret.Light = item.Light.Equals(rhs.Light);
+            ret.Sound1 = item.Sound1.Equals(rhs.Sound1);
+            ret.Sound2 = item.Sound2.Equals(rhs.Sound2);
+            ret.ImpactDataSet = item.ImpactDataSet.Equals(rhs.ImpactDataSet);
+            ret.PlacedObject = item.PlacedObject.Equals(rhs.PlacedObject);
+            ret.SpawnProjectile = item.SpawnProjectile.Equals(rhs.SpawnProjectile);
             ret.Force = item.Force.EqualsWithin(rhs.Force);
             ret.Damage = item.Damage.EqualsWithin(rhs.Damage);
             ret.Radius = item.Radius.EqualsWithin(rhs.Radius);

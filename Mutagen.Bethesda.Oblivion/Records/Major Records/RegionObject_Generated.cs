@@ -1574,7 +1574,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Object = object.Equals(item.Object, rhs.Object);
+            ret.Object = item.Object.Equals(rhs.Object);
             ret.ParentIndex = item.ParentIndex == rhs.ParentIndex;
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.Density = item.Density.EqualsWithin(rhs.Density);

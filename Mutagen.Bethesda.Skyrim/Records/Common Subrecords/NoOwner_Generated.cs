@@ -854,7 +854,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.RawOwnerData = item.RawOwnerData == rhs.RawOwnerData;
-            ret.Global = object.Equals(item.Global, rhs.Global);
+            ret.Global = item.Global.Equals(rhs.Global);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         

@@ -5399,7 +5399,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.ActorEffect,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.Skin = object.Equals(item.Skin, rhs.Skin);
+            ret.Skin = item.Skin.Equals(rhs.Skin);
             ret.BodyTemplate = EqualsMaskHelper.EqualsHelper(
                 item.BodyTemplate,
                 rhs.BodyTemplate,
@@ -5474,7 +5474,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.NumberOfTintsInList = item.NumberOfTintsInList == rhs.NumberOfTintsInList;
             ret.FacegenMainClamp = item.FacegenMainClamp.EqualsWithin(rhs.FacegenMainClamp);
             ret.FacegenFaceClamp = item.FacegenFaceClamp.EqualsWithin(rhs.FacegenFaceClamp);
-            ret.AttackRace = object.Equals(item.AttackRace, rhs.AttackRace);
+            ret.AttackRace = item.AttackRace.Equals(rhs.AttackRace);
             ret.Attacks = item.Attacks.CollectionEqualsHelper(
                 rhs.Attacks,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -5492,17 +5492,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Eyes,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.BodyPartData = object.Equals(item.BodyPartData, rhs.BodyPartData);
+            ret.BodyPartData = item.BodyPartData.Equals(rhs.BodyPartData);
             ret.BehaviorGraph = GenderedItem.EqualityMaskHelper(
                 lhs: item.BehaviorGraph,
                 rhs: rhs.BehaviorGraph,
                 maskGetter: (l, r, i) => EqualsMaskHelper.EqualsHelper(l, r, (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl), i),
                 include: include);
-            ret.MaterialType = object.Equals(item.MaterialType, rhs.MaterialType);
-            ret.ImpactDataSet = object.Equals(item.ImpactDataSet, rhs.ImpactDataSet);
-            ret.DecapitationFX = object.Equals(item.DecapitationFX, rhs.DecapitationFX);
-            ret.OpenLootSound = object.Equals(item.OpenLootSound, rhs.OpenLootSound);
-            ret.CloseLootSound = object.Equals(item.CloseLootSound, rhs.CloseLootSound);
+            ret.MaterialType = item.MaterialType.Equals(rhs.MaterialType);
+            ret.ImpactDataSet = item.ImpactDataSet.Equals(rhs.ImpactDataSet);
+            ret.DecapitationFX = item.DecapitationFX.Equals(rhs.DecapitationFX);
+            ret.OpenLootSound = item.OpenLootSound.Equals(rhs.OpenLootSound);
+            ret.CloseLootSound = item.CloseLootSound.Equals(rhs.CloseLootSound);
             ret.BipedObjectNames = EqualsMaskHelper.DictEqualsHelper(
                 lhs: item.BipedObjectNames,
                 rhs: rhs.BipedObjectNames,
@@ -5516,21 +5516,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.EquipmentSlots,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.UnarmedEquipSlot = object.Equals(item.UnarmedEquipSlot, rhs.UnarmedEquipSlot);
+            ret.UnarmedEquipSlot = item.UnarmedEquipSlot.Equals(rhs.UnarmedEquipSlot);
             ret.FaceFxPhonemes = MaskItemExt.Factory(item.FaceFxPhonemes.GetEqualsMask(rhs.FaceFxPhonemes, include), include);
-            ret.BaseMovementDefaultWalk = object.Equals(item.BaseMovementDefaultWalk, rhs.BaseMovementDefaultWalk);
-            ret.BaseMovementDefaultRun = object.Equals(item.BaseMovementDefaultRun, rhs.BaseMovementDefaultRun);
-            ret.BaseMovementDefaultSwim = object.Equals(item.BaseMovementDefaultSwim, rhs.BaseMovementDefaultSwim);
-            ret.BaseMovementDefaultFly = object.Equals(item.BaseMovementDefaultFly, rhs.BaseMovementDefaultFly);
-            ret.BaseMovementDefaultSneak = object.Equals(item.BaseMovementDefaultSneak, rhs.BaseMovementDefaultSneak);
-            ret.BaseMovementDefaultSprint = object.Equals(item.BaseMovementDefaultSprint, rhs.BaseMovementDefaultSprint);
+            ret.BaseMovementDefaultWalk = item.BaseMovementDefaultWalk.Equals(rhs.BaseMovementDefaultWalk);
+            ret.BaseMovementDefaultRun = item.BaseMovementDefaultRun.Equals(rhs.BaseMovementDefaultRun);
+            ret.BaseMovementDefaultSwim = item.BaseMovementDefaultSwim.Equals(rhs.BaseMovementDefaultSwim);
+            ret.BaseMovementDefaultFly = item.BaseMovementDefaultFly.Equals(rhs.BaseMovementDefaultFly);
+            ret.BaseMovementDefaultSneak = item.BaseMovementDefaultSneak.Equals(rhs.BaseMovementDefaultSneak);
+            ret.BaseMovementDefaultSprint = item.BaseMovementDefaultSprint.Equals(rhs.BaseMovementDefaultSprint);
             ret.HeadData = GenderedItem.EqualityMaskHelper(
                 lhs: item.HeadData,
                 rhs: rhs.HeadData,
                 maskGetter: (l, r, i) => EqualsMaskHelper.EqualsHelper(l, r, (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl), i),
                 include: include);
-            ret.MorphRace = object.Equals(item.MorphRace, rhs.MorphRace);
-            ret.ArmorRace = object.Equals(item.ArmorRace, rhs.ArmorRace);
+            ret.MorphRace = item.MorphRace.Equals(rhs.MorphRace);
+            ret.ArmorRace = item.ArmorRace.Equals(rhs.ArmorRace);
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }

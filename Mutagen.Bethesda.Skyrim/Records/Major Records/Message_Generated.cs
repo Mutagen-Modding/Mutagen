@@ -1250,7 +1250,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Description = string.Equals(item.Description, rhs.Description);
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.INAM = MemoryExtensions.SequenceEqual(item.INAM.Span, rhs.INAM.Span);
-            ret.Quest = object.Equals(item.Quest, rhs.Quest);
+            ret.Quest = item.Quest.Equals(rhs.Quest);
             ret.Flags = item.Flags == rhs.Flags;
             ret.DisplayTime = item.DisplayTime == rhs.DisplayTime;
             ret.MenuButtons = item.MenuButtons.CollectionEqualsHelper(

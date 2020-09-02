@@ -853,7 +853,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Npc = object.Equals(item.Npc, rhs.Npc);
+            ret.Npc = item.Npc.Equals(rhs.Npc);
             ret.RawVariableData = item.RawVariableData == rhs.RawVariableData;
             base.FillEqualsMask(item, rhs, ret, include);
         }

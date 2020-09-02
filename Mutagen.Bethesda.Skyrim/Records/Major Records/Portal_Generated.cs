@@ -878,8 +878,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Origin = object.Equals(item.Origin, rhs.Origin);
-            ret.Destination = object.Equals(item.Destination, rhs.Destination);
+            ret.Origin = item.Origin.Equals(rhs.Origin);
+            ret.Destination = item.Destination.Equals(rhs.Destination);
         }
         
         public string ToString(

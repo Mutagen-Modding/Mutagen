@@ -1617,7 +1617,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.NavigationMesh = object.Equals(item.NavigationMesh, rhs.NavigationMesh);
+            ret.NavigationMesh = item.NavigationMesh.Equals(rhs.NavigationMesh);
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.Point = item.Point.Equals(rhs.Point);
             ret.PreferredMergesFlag = item.PreferredMergesFlag == rhs.PreferredMergesFlag;
@@ -1639,9 +1639,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
-            ret.ParentWorldspace = object.Equals(item.ParentWorldspace, rhs.ParentWorldspace);
+            ret.ParentWorldspace = item.ParentWorldspace.Equals(rhs.ParentWorldspace);
             ret.ParentWorldspaceCoord = item.ParentWorldspaceCoord.Equals(rhs.ParentWorldspaceCoord);
-            ret.ParentCell = object.Equals(item.ParentCell, rhs.ParentCell);
+            ret.ParentCell = item.ParentCell.Equals(rhs.ParentCell);
         }
         
         public string ToString(

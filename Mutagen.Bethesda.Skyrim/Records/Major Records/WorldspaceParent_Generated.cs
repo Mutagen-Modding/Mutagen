@@ -879,7 +879,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Worldspace = object.Equals(item.Worldspace, rhs.Worldspace);
+            ret.Worldspace = item.Worldspace.Equals(rhs.Worldspace);
             ret.Flags = item.Flags == rhs.Flags;
         }
         

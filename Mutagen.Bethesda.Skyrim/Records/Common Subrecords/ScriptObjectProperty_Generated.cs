@@ -905,7 +905,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Object = object.Equals(item.Object, rhs.Object);
+            ret.Object = item.Object.Equals(rhs.Object);
             ret.Alias = item.Alias == rhs.Alias;
             ret.Unused = item.Unused == rhs.Unused;
             base.FillEqualsMask(item, rhs, ret, include);

@@ -892,7 +892,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.Number = item.Number == rhs.Number;
-            ret.Head = object.Equals(item.Head, rhs.Head);
+            ret.Head = item.Head.Equals(rhs.Head);
         }
         
         public string ToString(

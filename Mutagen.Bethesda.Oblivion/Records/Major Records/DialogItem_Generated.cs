@@ -1695,8 +1695,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Data,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Quest = object.Equals(item.Quest, rhs.Quest);
-            ret.PreviousTopic = object.Equals(item.PreviousTopic, rhs.PreviousTopic);
+            ret.Quest = item.Quest.Equals(rhs.Quest);
+            ret.PreviousTopic = item.PreviousTopic.Equals(rhs.PreviousTopic);
             ret.Topics = item.Topics.CollectionEqualsHelper(
                 rhs.Topics,
                 (l, r) => object.Equals(l, r),

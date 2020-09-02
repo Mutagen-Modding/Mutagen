@@ -935,8 +935,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
-            ret.KeywordOrReference = object.Equals(item.KeywordOrReference, rhs.KeywordOrReference);
-            ret.Reference = object.Equals(item.Reference, rhs.Reference);
+            ret.KeywordOrReference = item.KeywordOrReference.Equals(rhs.KeywordOrReference);
+            ret.Reference = item.Reference.Equals(rhs.Reference);
         }
         
         public string ToString(

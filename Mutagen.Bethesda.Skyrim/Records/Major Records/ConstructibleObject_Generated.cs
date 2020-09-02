@@ -1239,8 +1239,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.CreatedObject = object.Equals(item.CreatedObject, rhs.CreatedObject);
-            ret.WorkbenchKeyword = object.Equals(item.WorkbenchKeyword, rhs.WorkbenchKeyword);
+            ret.CreatedObject = item.CreatedObject.Equals(rhs.CreatedObject);
+            ret.WorkbenchKeyword = item.WorkbenchKeyword.Equals(rhs.WorkbenchKeyword);
             ret.CreatedObjectCount = item.CreatedObjectCount == rhs.CreatedObjectCount;
             base.FillEqualsMask(item, rhs, ret, include);
         }

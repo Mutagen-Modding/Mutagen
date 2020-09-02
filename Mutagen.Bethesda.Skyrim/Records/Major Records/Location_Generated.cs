@@ -3513,12 +3513,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.ParentLocation = object.Equals(item.ParentLocation, rhs.ParentLocation);
-            ret.Music = object.Equals(item.Music, rhs.Music);
-            ret.UnreportedCrimeFaction = object.Equals(item.UnreportedCrimeFaction, rhs.UnreportedCrimeFaction);
-            ret.WorldLocationMarkerRef = object.Equals(item.WorldLocationMarkerRef, rhs.WorldLocationMarkerRef);
+            ret.ParentLocation = item.ParentLocation.Equals(rhs.ParentLocation);
+            ret.Music = item.Music.Equals(rhs.Music);
+            ret.UnreportedCrimeFaction = item.UnreportedCrimeFaction.Equals(rhs.UnreportedCrimeFaction);
+            ret.WorldLocationMarkerRef = item.WorldLocationMarkerRef.Equals(rhs.WorldLocationMarkerRef);
             ret.WorldLocationRadius = item.WorldLocationRadius.EqualsWithin(rhs.WorldLocationRadius);
-            ret.HorseMarkerRef = object.Equals(item.HorseMarkerRef, rhs.HorseMarkerRef);
+            ret.HorseMarkerRef = item.HorseMarkerRef.Equals(rhs.HorseMarkerRef);
             ret.Color = item.Color.ColorOnlyEquals(rhs.Color);
             base.FillEqualsMask(item, rhs, ret, include);
         }

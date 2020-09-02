@@ -1326,9 +1326,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.MagicSchool = item.MagicSchool == rhs.MagicSchool;
             ret.Resistance = item.Resistance == rhs.Resistance;
             ret.CounterEffectCount = item.CounterEffectCount == rhs.CounterEffectCount;
-            ret.Light = object.Equals(item.Light, rhs.Light);
+            ret.Light = item.Light.Equals(rhs.Light);
             ret.ProjectileSpeed = item.ProjectileSpeed.EqualsWithin(rhs.ProjectileSpeed);
-            ret.EffectShader = object.Equals(item.EffectShader, rhs.EffectShader);
+            ret.EffectShader = item.EffectShader.Equals(rhs.EffectShader);
             ret.SubData = EqualsMaskHelper.EqualsHelper(
                 item.SubData,
                 rhs.SubData,

@@ -933,7 +933,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
-            ret.Water = object.Equals(item.Water, rhs.Water);
+            ret.Water = item.Water.Equals(rhs.Water);
             ret.Type = item.Type == rhs.Type;
         }
         

@@ -1273,7 +1273,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.MaxAngle = item.MaxAngle.EqualsWithin(rhs.MaxAngle);
-            ret.Material = object.Equals(item.Material, rhs.Material);
+            ret.Material = item.Material.Equals(rhs.Material);
             ret.Flags = item.Flags == rhs.Flags;
             ret.Unused = MemoryExtensions.SequenceEqual(item.Unused.Span, rhs.Unused.Span);
             ret.Lod = EqualsMaskHelper.EqualsHelper(

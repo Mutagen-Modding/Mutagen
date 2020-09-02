@@ -1006,7 +1006,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.DisabledEntryPoints,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.MarkerKeyword = object.Equals(item.MarkerKeyword, rhs.MarkerKeyword);
+            ret.MarkerKeyword = item.MarkerKeyword.Equals(rhs.MarkerKeyword);
             ret.EntryPoints = EqualsMaskHelper.EqualsHelper(
                 item.EntryPoints,
                 rhs.EntryPoints,
