@@ -6328,11 +6328,41 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.SkeletalModel.TryGet(out var SkeletalModelItem))
+            {
+                foreach (var item in SkeletalModelItem.NotNull().WhereCastable<ISimpleModelGetter, ILinkedFormKeyContainerGetter> ()
+                    .SelectMany((f) => f.LinkFormKeys))
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.Voices.Select(f => f.FormKey))
+            {
+                yield return item;
+            }
+            if (obj.DecapitateArmors.TryGet(out var DecapitateArmorsItem))
+            {
+                foreach (var item in DecapitateArmorsItem.Select(f => f.FormKey))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.DefaultHairColors.TryGet(out var DefaultHairColorsItem))
+            {
+                foreach (var item in DefaultHairColorsItem.Select(f => f.FormKey))
+                {
+                    yield return item;
+                }
+            }
             if (obj.AttackRace.FormKey.TryGet(out var AttackRaceKey))
             {
                 yield return AttackRaceKey;
             }
             foreach (var item in obj.Attacks.SelectMany(f => f.LinkFormKeys))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.BodyData.NotNull().SelectMany(f => f.LinkFormKeys))
             {
                 yield return item;
             }
@@ -6353,6 +6383,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (obj.BodyPartData.FormKey.TryGet(out var BodyPartDataKey))
             {
                 yield return BodyPartDataKey;
+            }
+            foreach (var item in obj.BehaviorGraph.NotNull().SelectMany(f => f.LinkFormKeys))
+            {
+                yield return item;
             }
             if (obj.MaterialType.FormKey.TryGet(out var MaterialTypeKey))
             {
@@ -6409,6 +6443,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (obj.BaseMovementDefaultSprint.FormKey.TryGet(out var BaseMovementDefaultSprintKey))
             {
                 yield return BaseMovementDefaultSprintKey;
+            }
+            if (obj.HeadData.TryGet(out var HeadDataItem))
+            {
+                foreach (var item in HeadDataItem.NotNull().SelectMany(f => f.LinkFormKeys))
+                {
+                    yield return item;
+                }
             }
             if (obj.MorphRace.FormKey.TryGet(out var MorphRaceKey))
             {

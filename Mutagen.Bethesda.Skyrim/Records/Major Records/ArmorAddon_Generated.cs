@@ -2091,6 +2091,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return RaceKey;
             }
+            if (obj.WorldModel.TryGet(out var WorldModelItem))
+            {
+                foreach (var item in WorldModelItem.NotNull().SelectMany(f => f.LinkFormKeys))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.FirstPersonModel.TryGet(out var FirstPersonModelItem))
+            {
+                foreach (var item in FirstPersonModelItem.NotNull().SelectMany(f => f.LinkFormKeys))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.SkinTexture.TryGet(out var SkinTextureItem))
+            {
+                foreach (var item in SkinTextureItem.Select(f => f.FormKey).NotNull())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.TextureSwapList.TryGet(out var TextureSwapListItem))
+            {
+                foreach (var item in TextureSwapListItem.Select(f => f.FormKey).NotNull())
+                {
+                    yield return item;
+                }
+            }
             foreach (var item in obj.AdditionalRaces.Select(f => f.FormKey))
             {
                 yield return item;

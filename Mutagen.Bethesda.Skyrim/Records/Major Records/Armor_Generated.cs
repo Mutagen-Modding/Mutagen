@@ -2601,6 +2601,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return ObjectEffectKey;
             }
+            if (obj.WorldModel.TryGet(out var WorldModelItem))
+            {
+                foreach (var item in WorldModelItem.NotNull().SelectMany(f => f.LinkFormKeys))
+                {
+                    yield return item;
+                }
+            }
             if (obj.Destructible.TryGet(out var DestructibleItems))
             {
                 foreach (var item in DestructibleItems.LinkFormKeys)

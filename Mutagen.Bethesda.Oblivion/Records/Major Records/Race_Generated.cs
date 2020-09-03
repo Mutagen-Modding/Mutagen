@@ -2552,6 +2552,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
+            if (obj.Voices.TryGet(out var VoicesItem))
+            {
+                foreach (var item in VoicesItem.Select(f => f.FormKey))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.DefaultHair.TryGet(out var DefaultHairItem))
+            {
+                foreach (var item in DefaultHairItem.Select(f => f.FormKey))
+                {
+                    yield return item;
+                }
+            }
             if (obj.Hairs.TryGet(out var HairsItem))
             {
                 foreach (var item in HairsItem.Select(f => f.FormKey))
