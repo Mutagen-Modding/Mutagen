@@ -42,6 +42,12 @@ namespace Mutagen.Bethesda
             this.EDID = edid;
         }
 
+        public override bool Equals(object obj)
+        {
+            if (!(obj is IEDIDLink<TMajor> rhs)) return false;
+            return this.Equals(rhs);
+        }
+
         /// <summary>
         /// Compares equality of two links.
         /// </summary>

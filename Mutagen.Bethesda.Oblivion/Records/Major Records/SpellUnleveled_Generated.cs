@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         Spell,
         ISpellUnleveledInternal,
         ILoquiObjectSetter<SpellUnleveled>,
-        IEquatable<SpellUnleveled>
+        IEquatable<ISpellUnleveledGetter>
     {
         #region Ctor
         protected SpellUnleveled()
@@ -88,7 +88,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((SpellUnleveledCommon)((ISpellUnleveledGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(SpellUnleveled? obj)
+        public bool Equals(ISpellUnleveledGetter? obj)
         {
             return ((SpellUnleveledCommon)((ISpellUnleveledGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1215,9 +1215,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISpellGetter)lhs, (ISpellGetter)rhs)) return false;
             if (!object.Equals(lhs.Data, rhs.Data)) return false;
-            if (!lhs.Effects.SequenceEqual(rhs.Effects)) return false;
+            if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
             return true;
         }
         
@@ -1929,6 +1929,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ISpellUnleveledGetter rhs)) return false;
+            return ((SpellUnleveledCommon)((ISpellUnleveledGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ISpellUnleveledGetter? obj)
+        {
+            return ((SpellUnleveledCommon)((ISpellUnleveledGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((SpellUnleveledCommon)((ISpellUnleveledGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

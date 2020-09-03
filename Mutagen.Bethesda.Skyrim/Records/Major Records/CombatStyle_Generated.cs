@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ICombatStyleInternal,
         ILoquiObjectSetter<CombatStyle>,
-        IEquatable<CombatStyle>
+        IEquatable<ICombatStyleGetter>
     {
         #region Ctor
         protected CombatStyle()
@@ -232,7 +232,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(CombatStyle? obj)
+        public bool Equals(ICombatStyleGetter? obj)
         {
             return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1955,7 +1955,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!lhs.OffensiveMult.EqualsWithin(rhs.OffensiveMult)) return false;
             if (!lhs.DefensiveMult.EqualsWithin(rhs.DefensiveMult)) return false;
             if (!lhs.GroupOffensiveMult.EqualsWithin(rhs.GroupOffensiveMult)) return false;
@@ -2895,6 +2895,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ICombatStyleGetter rhs)) return false;
+            return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ICombatStyleGetter? obj)
+        {
+            return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

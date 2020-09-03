@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IHairInternal,
         ILoquiObjectSetter<Hair>,
-        IEquatable<Hair>
+        IEquatable<IHairGetter>
     {
         #region Ctor
         protected Hair()
@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((HairCommon)((IHairGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Hair? obj)
+        public bool Equals(IHairGetter? obj)
         {
             return ((HairCommon)((IHairGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1142,7 +1142,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
@@ -1772,6 +1772,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IHairGetter rhs)) return false;
+            return ((HairCommon)((IHairGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IHairGetter? obj)
+        {
+            return ((HairCommon)((IHairGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((HairCommon)((IHairGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

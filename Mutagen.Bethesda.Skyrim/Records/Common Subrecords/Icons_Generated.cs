@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class Icons :
         IIcons,
         ILoquiObjectSetter<Icons>,
-        IEquatable<Icons>
+        IEquatable<IIconsGetter>
     {
         #region Ctor
         public Icons()
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((IconsCommon)((IIconsGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Icons? obj)
+        public bool Equals(IIconsGetter? obj)
         {
             return ((IconsCommon)((IIconsGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1321,6 +1321,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IIconsGetter rhs)) return false;
+            return ((IconsCommon)((IIconsGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IIconsGetter? obj)
+        {
+            return ((IconsCommon)((IIconsGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((IconsCommon)((IIconsGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

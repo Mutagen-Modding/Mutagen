@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ILeveledItemInternal,
         ILoquiObjectSetter<LeveledItem>,
-        IEquatable<LeveledItem>
+        IEquatable<ILeveledItemGetter>
     {
         #region Ctor
         protected LeveledItem()
@@ -93,7 +93,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LeveledItemCommon)((ILeveledItemGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LeveledItem? obj)
+        public bool Equals(ILeveledItemGetter? obj)
         {
             return ((LeveledItemCommon)((ILeveledItemGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1161,7 +1161,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.ChanceNone = item.ChanceNone == rhs.ChanceNone;
             ret.Flags = item.Flags == rhs.Flags;
-            ret.Global = object.Equals(item.Global, rhs.Global);
+            ret.Global = item.Global.Equals(rhs.Global);
             ret.Entries = item.Entries.CollectionEqualsHelper(
                 rhs.Entries,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1299,12 +1299,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
             if (lhs.ChanceNone != rhs.ChanceNone) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (!lhs.Global.Equals(rhs.Global)) return false;
-            if (!lhs.Entries.SequenceEqual(rhs.Entries)) return false;
+            if (!lhs.Entries.SequenceEqualNullable(rhs.Entries)) return false;
             return true;
         }
         
@@ -2000,6 +2000,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILeveledItemGetter rhs)) return false;
+            return ((LeveledItemCommon)((ILeveledItemGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILeveledItemGetter? obj)
+        {
+            return ((LeveledItemCommon)((ILeveledItemGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LeveledItemCommon)((ILeveledItemGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

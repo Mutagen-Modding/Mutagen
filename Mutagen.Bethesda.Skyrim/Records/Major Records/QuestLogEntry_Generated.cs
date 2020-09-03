@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class QuestLogEntry :
         IQuestLogEntry,
         ILoquiObjectSetter<QuestLogEntry>,
-        IEquatable<QuestLogEntry>
+        IEquatable<IQuestLogEntryGetter>
     {
         #region Ctor
         public QuestLogEntry()
@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((QuestLogEntryCommon)((IQuestLogEntryGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(QuestLogEntry? obj)
+        public bool Equals(IQuestLogEntryGetter? obj)
         {
             return ((QuestLogEntryCommon)((IQuestLogEntryGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1247,7 +1247,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.Entry = string.Equals(item.Entry, rhs.Entry);
-            ret.NextQuest = object.Equals(item.NextQuest, rhs.NextQuest);
+            ret.NextQuest = item.NextQuest.Equals(rhs.NextQuest);
             ret.SCHR = MemorySliceExt.Equal(item.SCHR, rhs.SCHR);
             ret.SCTX = MemorySliceExt.Equal(item.SCTX, rhs.SCTX);
             ret.QNAM = MemorySliceExt.Equal(item.QNAM, rhs.QNAM);
@@ -1354,7 +1354,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
+            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
             if (!string.Equals(lhs.Entry, rhs.Entry)) return false;
             if (!lhs.NextQuest.Equals(rhs.NextQuest)) return false;
             if (!MemorySliceExt.Equal(lhs.SCHR, rhs.SCHR)) return false;
@@ -1968,6 +1968,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IQuestLogEntryGetter rhs)) return false;
+            return ((QuestLogEntryCommon)((IQuestLogEntryGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IQuestLogEntryGetter? obj)
+        {
+            return ((QuestLogEntryCommon)((IQuestLogEntryGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((QuestLogEntryCommon)((IQuestLogEntryGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

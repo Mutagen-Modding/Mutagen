@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class DistantLODData :
         IDistantLODData,
         ILoquiObjectSetter<DistantLODData>,
-        IEquatable<DistantLODData>
+        IEquatable<IDistantLODDataGetter>
     {
         #region Ctor
         public DistantLODData()
@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((DistantLODDataCommon)((IDistantLODDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(DistantLODData? obj)
+        public bool Equals(IDistantLODDataGetter? obj)
         {
             return ((DistantLODDataCommon)((IDistantLODDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1314,6 +1314,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IDistantLODDataGetter rhs)) return false;
+            return ((DistantLODDataCommon)((IDistantLODDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IDistantLODDataGetter? obj)
+        {
+            return ((DistantLODDataCommon)((IDistantLODDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((DistantLODDataCommon)((IDistantLODDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

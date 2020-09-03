@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IDualCastDataInternal,
         ILoquiObjectSetter<DualCastData>,
-        IEquatable<DualCastData>
+        IEquatable<IDualCastDataGetter>
     {
         #region Ctor
         protected DualCastData()
@@ -99,7 +99,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((DualCastDataCommon)((IDualCastDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(DualCastData? obj)
+        public bool Equals(IDualCastDataGetter? obj)
         {
             return ((DualCastDataCommon)((IDualCastDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1216,11 +1216,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
-            ret.Projectile = object.Equals(item.Projectile, rhs.Projectile);
-            ret.Explosion = object.Equals(item.Explosion, rhs.Explosion);
-            ret.EffectShader = object.Equals(item.EffectShader, rhs.EffectShader);
-            ret.HitEffectArt = object.Equals(item.HitEffectArt, rhs.HitEffectArt);
-            ret.ImpactDataSet = object.Equals(item.ImpactDataSet, rhs.ImpactDataSet);
+            ret.Projectile = item.Projectile.Equals(rhs.Projectile);
+            ret.Explosion = item.Explosion.Equals(rhs.Explosion);
+            ret.EffectShader = item.EffectShader.Equals(rhs.EffectShader);
+            ret.HitEffectArt = item.HitEffectArt.Equals(rhs.HitEffectArt);
+            ret.ImpactDataSet = item.ImpactDataSet.Equals(rhs.ImpactDataSet);
             ret.InheritScale = item.InheritScale == rhs.InheritScale;
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
@@ -1353,7 +1353,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
             if (!lhs.Projectile.Equals(rhs.Projectile)) return false;
             if (!lhs.Explosion.Equals(rhs.Explosion)) return false;
@@ -2023,6 +2023,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IDualCastDataGetter rhs)) return false;
+            return ((DualCastDataCommon)((IDualCastDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IDualCastDataGetter? obj)
+        {
+            return ((DualCastDataCommon)((IDualCastDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((DualCastDataCommon)((IDualCastDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

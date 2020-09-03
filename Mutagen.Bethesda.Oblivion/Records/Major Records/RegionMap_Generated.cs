@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Oblivion
         RegionData,
         IRegionMap,
         ILoquiObjectSetter<RegionMap>,
-        IEquatable<RegionMap>
+        IEquatable<IRegionMapGetter>
     {
         #region Ctor
         public RegionMap()
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((RegionMapCommon)((IRegionMapGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(RegionMap? obj)
+        public bool Equals(IRegionMapGetter? obj)
         {
             return ((RegionMapCommon)((IRegionMapGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -881,7 +881,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IRegionDataGetter)lhs, (IRegionDataGetter)rhs)) return false;
             if (!string.Equals(lhs.Map, rhs.Map)) return false;
             return true;
         }
@@ -1281,6 +1281,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IRegionMapGetter rhs)) return false;
+            return ((RegionMapCommon)((IRegionMapGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IRegionMapGetter? obj)
+        {
+            return ((RegionMapCommon)((IRegionMapGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((RegionMapCommon)((IRegionMapGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

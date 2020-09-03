@@ -186,7 +186,7 @@ namespace Mutagen.Bethesda.Generation
                             }
                         }
                     }
-                    else if (field is ContainerType cont)
+                    else if (field is WrapperType cont)
                     {
                         var access = $"obj.{field.Name}";
                         if (field.Nullable)
@@ -198,16 +198,17 @@ namespace Mutagen.Bethesda.Generation
                         if (cont.SubTypeGeneration is LoquiType contLoqui
                             && await HasLinks(contLoqui, includeBaseClass: true) != LinkCase.No)
                         {
+                            string filterNulls = cont is GenderedType && ((GenderedType)cont).ItemNullable ? ".NotNull()" : null;
                             var linktype = await HasLinks(contLoqui, includeBaseClass: true);
                             if (linktype != LinkCase.No)
                             {
                                 switch (linktype)
                                 {
                                     case LinkCase.Yes:
-                                        subFg.AppendLine($"foreach (var item in {access}.SelectMany(f => f.{nameof(ILinkedFormKeyContainerGetter.LinkFormKeys)}))");
+                                        subFg.AppendLine($"foreach (var item in {access}{filterNulls}.SelectMany(f => f.{nameof(ILinkedFormKeyContainerGetter.LinkFormKeys)}))");
                                         break;
                                     case LinkCase.Maybe:
-                                        subFg.AppendLine($"foreach (var item in {access}.WhereCastable<{contLoqui.TypeName(getter: true)}, {nameof(ILinkedFormKeyContainerGetter)}> ()");
+                                        subFg.AppendLine($"foreach (var item in {access}{filterNulls}.WhereCastable<{contLoqui.TypeName(getter: true)}, {nameof(ILinkedFormKeyContainerGetter)}> ()");
                                         using (new DepthWrapper(subFg))
                                         {
                                             subFg.AppendLine($".SelectMany((f) => f.{nameof(ILinkedFormKeyContainerGetter.LinkFormKeys)}))");
@@ -221,7 +222,8 @@ namespace Mutagen.Bethesda.Generation
                         else if (cont.SubTypeGeneration is FormLinkType formIDType
                             && formIDType.FormIDType == FormLinkType.FormIDTypeEnum.Normal)
                         {
-                            subFg.AppendLine($"foreach (var item in {access}.Select(f => f.FormKey))");
+                            string filterNulls = cont is GenderedType && ((GenderedType)cont).ItemNullable ? ".NotNull()" : null;
+                            subFg.AppendLine($"foreach (var item in {access}.Select(f => f.FormKey){filterNulls})");
                         }
                         else
                         {

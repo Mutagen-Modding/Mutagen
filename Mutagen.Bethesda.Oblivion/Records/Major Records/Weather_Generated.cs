@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IWeatherInternal,
         ILoquiObjectSetter<Weather>,
-        IEquatable<Weather>
+        IEquatable<IWeatherGetter>
     {
         #region Ctor
         protected Weather()
@@ -145,7 +145,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((WeatherCommon)((IWeatherGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Weather? obj)
+        public bool Equals(IWeatherGetter? obj)
         {
             return ((WeatherCommon)((IWeatherGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1617,15 +1617,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.TextureLowerLayer, rhs.TextureLowerLayer)) return false;
             if (!string.Equals(lhs.TextureUpperLayer, rhs.TextureUpperLayer)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (!lhs.Colors.SequenceEqual(rhs.Colors)) return false;
+            if (!lhs.Colors.SequenceEqualNullable(rhs.Colors)) return false;
             if (!object.Equals(lhs.FogDistance, rhs.FogDistance)) return false;
             if (!object.Equals(lhs.HDRData, rhs.HDRData)) return false;
             if (!object.Equals(lhs.Data, rhs.Data)) return false;
-            if (!lhs.Sounds.SequenceEqual(rhs.Sounds)) return false;
+            if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds)) return false;
             return true;
         }
         
@@ -2513,6 +2513,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IWeatherGetter rhs)) return false;
+            return ((WeatherCommon)((IWeatherGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IWeatherGetter? obj)
+        {
+            return ((WeatherCommon)((IWeatherGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((WeatherCommon)((IWeatherGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

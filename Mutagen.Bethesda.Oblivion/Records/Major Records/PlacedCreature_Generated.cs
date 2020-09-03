@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IPlacedCreatureInternal,
         ILoquiObjectSetter<PlacedCreature>,
-        IEquatable<PlacedCreature>
+        IEquatable<IPlacedCreatureGetter>
     {
         #region Ctor
         protected PlacedCreature()
@@ -121,7 +121,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((PlacedCreatureCommon)((IPlacedCreatureGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PlacedCreature? obj)
+        public bool Equals(IPlacedCreatureGetter? obj)
         {
             return ((PlacedCreatureCommon)((IPlacedCreatureGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1237,10 +1237,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Base = object.Equals(item.Base, rhs.Base);
-            ret.Owner = object.Equals(item.Owner, rhs.Owner);
+            ret.Base = item.Base.Equals(rhs.Base);
+            ret.Owner = item.Owner.Equals(rhs.Owner);
             ret.FactionRank = item.FactionRank == rhs.FactionRank;
-            ret.GlobalVariable = object.Equals(item.GlobalVariable, rhs.GlobalVariable);
+            ret.GlobalVariable = item.GlobalVariable.Equals(rhs.GlobalVariable);
             ret.EnableParent = EqualsMaskHelper.EqualsHelper(
                 item.EnableParent,
                 rhs.EnableParent,
@@ -1386,7 +1386,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
             if (!lhs.Base.Equals(rhs.Base)) return false;
             if (!lhs.Owner.Equals(rhs.Owner)) return false;
             if (lhs.FactionRank != rhs.FactionRank) return false;
@@ -2175,6 +2175,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPlacedCreatureGetter rhs)) return false;
+            return ((PlacedCreatureCommon)((IPlacedCreatureGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPlacedCreatureGetter? obj)
+        {
+            return ((PlacedCreatureCommon)((IPlacedCreatureGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PlacedCreatureCommon)((IPlacedCreatureGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

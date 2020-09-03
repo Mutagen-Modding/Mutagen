@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class QuestFragmentAlias :
         IQuestFragmentAlias,
         ILoquiObjectSetter<QuestFragmentAlias>,
-        IEquatable<QuestFragmentAlias>
+        IEquatable<IQuestFragmentAliasGetter>
     {
         #region Ctor
         public QuestFragmentAlias()
@@ -47,11 +47,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Version
         public readonly static Int16 _Version_Default = 5;
-        public Int16 Version { get; set; } = default;
+        public Int16 Version { get; set; } = _Version_Default;
         #endregion
         #region ObjectFormat
         public readonly static UInt16 _ObjectFormat_Default = 2;
-        public UInt16 ObjectFormat { get; set; } = default;
+        public UInt16 ObjectFormat { get; set; } = _ObjectFormat_Default;
         #endregion
         #region Scripts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -88,7 +88,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(QuestFragmentAlias? obj)
+        public bool Equals(IQuestFragmentAliasGetter? obj)
         {
             return ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1161,7 +1161,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.Property, rhs.Property)) return false;
             if (lhs.Version != rhs.Version) return false;
             if (lhs.ObjectFormat != rhs.ObjectFormat) return false;
-            if (!lhs.Scripts.SequenceEqual(rhs.Scripts)) return false;
+            if (!lhs.Scripts.SequenceEqualNullable(rhs.Scripts)) return false;
             return true;
         }
         
@@ -1583,6 +1583,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IQuestFragmentAliasGetter rhs)) return false;
+            return ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IQuestFragmentAliasGetter? obj)
+        {
+            return ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

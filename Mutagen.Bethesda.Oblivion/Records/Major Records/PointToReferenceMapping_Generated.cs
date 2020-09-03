@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class PointToReferenceMapping :
         IPointToReferenceMapping,
         ILoquiObjectSetter<PointToReferenceMapping>,
-        IEquatable<PointToReferenceMapping>
+        IEquatable<IPointToReferenceMappingGetter>
     {
         #region Ctor
         public PointToReferenceMapping()
@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PointToReferenceMapping? obj)
+        public bool Equals(IPointToReferenceMappingGetter? obj)
         {
             return ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -966,7 +966,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Reference = object.Equals(item.Reference, rhs.Reference);
+            ret.Reference = item.Reference.Equals(rhs.Reference);
             ret.Points = item.Points.CollectionEqualsHelper(
                 rhs.Points,
                 (l, r) => l == r,
@@ -1049,7 +1049,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!lhs.Reference.Equals(rhs.Reference)) return false;
-            if (!lhs.Points.SequenceEqual(rhs.Points)) return false;
+            if (!lhs.Points.SequenceEqualNullable(rhs.Points)) return false;
             return true;
         }
         
@@ -1391,6 +1391,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPointToReferenceMappingGetter rhs)) return false;
+            return ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPointToReferenceMappingGetter? obj)
+        {
+            return ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

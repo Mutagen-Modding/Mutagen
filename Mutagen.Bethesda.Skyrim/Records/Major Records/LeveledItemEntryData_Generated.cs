@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class LeveledItemEntryData :
         ILeveledItemEntryData,
         ILoquiObjectSetter<LeveledItemEntryData>,
-        IEquatable<LeveledItemEntryData>
+        IEquatable<ILeveledItemEntryDataGetter>
     {
         #region Ctor
         public LeveledItemEntryData()
@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LeveledItemEntryDataCommon)((ILeveledItemEntryDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LeveledItemEntryData? obj)
+        public bool Equals(ILeveledItemEntryDataGetter? obj)
         {
             return ((LeveledItemEntryDataCommon)((ILeveledItemEntryDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1021,7 +1021,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (rhs == null) return;
             ret.Level = item.Level == rhs.Level;
             ret.Unknown = item.Unknown == rhs.Unknown;
-            ret.Reference = object.Equals(item.Reference, rhs.Reference);
+            ret.Reference = item.Reference.Equals(rhs.Reference);
             ret.Count = item.Count == rhs.Count;
             ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
         }
@@ -1447,6 +1447,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILeveledItemEntryDataGetter rhs)) return false;
+            return ((LeveledItemEntryDataCommon)((ILeveledItemEntryDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILeveledItemEntryDataGetter? obj)
+        {
+            return ((LeveledItemEntryDataCommon)((ILeveledItemEntryDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LeveledItemEntryDataCommon)((ILeveledItemEntryDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

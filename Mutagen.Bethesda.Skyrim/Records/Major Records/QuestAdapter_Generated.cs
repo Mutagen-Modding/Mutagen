@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         AVirtualMachineAdapter,
         IQuestAdapter,
         ILoquiObjectSetter<QuestAdapter>,
-        IEquatable<QuestAdapter>
+        IEquatable<IQuestAdapterGetter>
     {
         #region Ctor
         public QuestAdapter()
@@ -99,7 +99,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((QuestAdapterCommon)((IQuestAdapterGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(QuestAdapter? obj)
+        public bool Equals(IQuestAdapterGetter? obj)
         {
             return ((QuestAdapterCommon)((IQuestAdapterGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1316,12 +1316,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IAVirtualMachineAdapterGetter)lhs, (IAVirtualMachineAdapterGetter)rhs)) return false;
             if (lhs.Versioning != rhs.Versioning) return false;
             if (lhs.Unknown != rhs.Unknown) return false;
             if (!string.Equals(lhs.FileName, rhs.FileName)) return false;
-            if (!lhs.Fragments.SequenceEqual(rhs.Fragments)) return false;
-            if (!lhs.Aliases.SequenceEqual(rhs.Aliases)) return false;
+            if (!lhs.Fragments.SequenceEqualNullable(rhs.Fragments)) return false;
+            if (!lhs.Aliases.SequenceEqualNullable(rhs.Aliases)) return false;
             return true;
         }
         
@@ -1854,6 +1854,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IQuestAdapterGetter rhs)) return false;
+            return ((QuestAdapterCommon)((IQuestAdapterGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IQuestAdapterGetter? obj)
+        {
+            return ((QuestAdapterCommon)((IQuestAdapterGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((QuestAdapterCommon)((IQuestAdapterGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

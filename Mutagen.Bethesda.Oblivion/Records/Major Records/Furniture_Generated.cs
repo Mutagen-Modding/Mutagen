@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IFurnitureInternal,
         ILoquiObjectSetter<Furniture>,
-        IEquatable<Furniture>
+        IEquatable<IFurnitureGetter>
     {
         #region Ctor
         protected Furniture()
@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Furniture? obj)
+        public bool Equals(IFurnitureGetter? obj)
         {
             return ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1032,7 +1032,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Script = object.Equals(item.Script, rhs.Script);
+            ret.Script = item.Script.Equals(rhs.Script);
             ret.MarkerFlags = item.MarkerFlags == rhs.MarkerFlags;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -1149,7 +1149,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!lhs.Script.Equals(rhs.Script)) return false;
@@ -1782,6 +1782,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IFurnitureGetter rhs)) return false;
+            return ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IFurnitureGetter? obj)
+        {
+            return ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

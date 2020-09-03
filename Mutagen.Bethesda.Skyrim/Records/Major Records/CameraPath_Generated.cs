@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ICameraPathInternal,
         ILoquiObjectSetter<CameraPath>,
-        IEquatable<CameraPath>
+        IEquatable<ICameraPathGetter>
     {
         #region Ctor
         protected CameraPath()
@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((CameraPathCommon)((ICameraPathGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(CameraPath? obj)
+        public bool Equals(ICameraPathGetter? obj)
         {
             return ((CameraPathCommon)((ICameraPathGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1481,12 +1481,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
-            if (!lhs.RelatedPaths.SequenceEqual(rhs.RelatedPaths)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
+            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            if (!lhs.RelatedPaths.SequenceEqualNullable(rhs.RelatedPaths)) return false;
             if (lhs.Zoom != rhs.Zoom) return false;
             if (lhs.ZoomMustHaveCameraShots != rhs.ZoomMustHaveCameraShots) return false;
-            if (!lhs.Shots.SequenceEqual(rhs.Shots)) return false;
+            if (!lhs.Shots.SequenceEqualNullable(rhs.Shots)) return false;
             return true;
         }
         
@@ -2225,6 +2225,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ICameraPathGetter rhs)) return false;
+            return ((CameraPathCommon)((ICameraPathGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ICameraPathGetter? obj)
+        {
+            return ((CameraPathCommon)((ICameraPathGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((CameraPathCommon)((ICameraPathGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

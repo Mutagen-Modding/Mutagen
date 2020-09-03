@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class PackageEvent :
         IPackageEvent,
         ILoquiObjectSetter<PackageEvent>,
-        IEquatable<PackageEvent>
+        IEquatable<IPackageEventGetter>
     {
         #region Ctor
         public PackageEvent()
@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PackageEventCommon)((IPackageEventGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PackageEvent? obj)
+        public bool Equals(IPackageEventGetter? obj)
         {
             return ((PackageEventCommon)((IPackageEventGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1253,7 +1253,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Idle = object.Equals(item.Idle, rhs.Idle);
+            ret.Idle = item.Idle.Equals(rhs.Idle);
             ret.SCHR = MemorySliceExt.Equal(item.SCHR, rhs.SCHR);
             ret.SCDA = MemorySliceExt.Equal(item.SCDA, rhs.SCDA);
             ret.SCTX = MemorySliceExt.Equal(item.SCTX, rhs.SCTX);
@@ -1371,7 +1371,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!MemorySliceExt.Equal(lhs.SCTX, rhs.SCTX)) return false;
             if (!MemorySliceExt.Equal(lhs.QNAM, rhs.QNAM)) return false;
             if (!MemorySliceExt.Equal(lhs.TNAM, rhs.TNAM)) return false;
-            if (!lhs.Topics.SequenceEqual(rhs.Topics)) return false;
+            if (!lhs.Topics.SequenceEqualNullable(rhs.Topics)) return false;
             return true;
         }
         
@@ -1988,6 +1988,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPackageEventGetter rhs)) return false;
+            return ((PackageEventCommon)((IPackageEventGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPackageEventGetter? obj)
+        {
+            return ((PackageEventCommon)((IPackageEventGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PackageEventCommon)((IPackageEventGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

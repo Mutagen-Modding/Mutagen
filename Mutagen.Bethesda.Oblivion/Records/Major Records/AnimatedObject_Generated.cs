@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IAnimatedObjectInternal,
         ILoquiObjectSetter<AnimatedObject>,
-        IEquatable<AnimatedObject>
+        IEquatable<IAnimatedObjectGetter>
     {
         #region Ctor
         protected AnimatedObject()
@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((AnimatedObjectCommon)((IAnimatedObjectGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(AnimatedObject? obj)
+        public bool Equals(IAnimatedObjectGetter? obj)
         {
             return ((AnimatedObjectCommon)((IAnimatedObjectGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -933,7 +933,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.IdleAnimation = object.Equals(item.IdleAnimation, rhs.IdleAnimation);
+            ret.IdleAnimation = item.IdleAnimation.Equals(rhs.IdleAnimation);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1039,7 +1039,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!lhs.IdleAnimation.Equals(rhs.IdleAnimation)) return false;
             return true;
@@ -1613,6 +1613,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IAnimatedObjectGetter rhs)) return false;
+            return ((AnimatedObjectCommon)((IAnimatedObjectGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IAnimatedObjectGetter? obj)
+        {
+            return ((AnimatedObjectCommon)((IAnimatedObjectGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((AnimatedObjectCommon)((IAnimatedObjectGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ILandscapeTextureInternal,
         ILoquiObjectSetter<LandscapeTexture>,
-        IEquatable<LandscapeTexture>
+        IEquatable<ILandscapeTextureGetter>
     {
         #region Ctor
         protected LandscapeTexture()
@@ -104,7 +104,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LandscapeTexture? obj)
+        public bool Equals(ILandscapeTextureGetter? obj)
         {
             return ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1286,8 +1286,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.TextureSet = object.Equals(item.TextureSet, rhs.TextureSet);
-            ret.MaterialType = object.Equals(item.MaterialType, rhs.MaterialType);
+            ret.TextureSet = item.TextureSet.Equals(rhs.TextureSet);
+            ret.MaterialType = item.MaterialType.Equals(rhs.MaterialType);
             ret.HavokFriction = item.HavokFriction == rhs.HavokFriction;
             ret.HavokRestitution = item.HavokRestitution == rhs.HavokRestitution;
             ret.TextureSpecularExponent = item.TextureSpecularExponent == rhs.TextureSpecularExponent;
@@ -1442,13 +1442,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!lhs.TextureSet.Equals(rhs.TextureSet)) return false;
             if (!lhs.MaterialType.Equals(rhs.MaterialType)) return false;
             if (lhs.HavokFriction != rhs.HavokFriction) return false;
             if (lhs.HavokRestitution != rhs.HavokRestitution) return false;
             if (lhs.TextureSpecularExponent != rhs.TextureSpecularExponent) return false;
-            if (!lhs.Grasses.SequenceEqual(rhs.Grasses)) return false;
+            if (!lhs.Grasses.SequenceEqualNullable(rhs.Grasses)) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (lhs.HNAMDataTypeState != rhs.HNAMDataTypeState) return false;
             return true;
@@ -2166,6 +2166,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILandscapeTextureGetter rhs)) return false;
+            return ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILandscapeTextureGetter? obj)
+        {
+            return ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LandscapeTextureCommon)((ILandscapeTextureGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

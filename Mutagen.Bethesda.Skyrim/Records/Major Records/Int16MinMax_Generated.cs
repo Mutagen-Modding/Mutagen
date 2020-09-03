@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class Int16MinMax :
         IInt16MinMax,
         ILoquiObjectSetter<Int16MinMax>,
-        IEquatable<Int16MinMax>
+        IEquatable<IInt16MinMaxGetter>
     {
         #region Ctor
         public Int16MinMax()
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((Int16MinMaxCommon)((IInt16MinMaxGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Int16MinMax? obj)
+        public bool Equals(IInt16MinMaxGetter? obj)
         {
             return ((Int16MinMaxCommon)((IInt16MinMaxGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1233,6 +1233,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IInt16MinMaxGetter rhs)) return false;
+            return ((Int16MinMaxCommon)((IInt16MinMaxGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IInt16MinMaxGetter? obj)
+        {
+            return ((Int16MinMaxCommon)((IInt16MinMaxGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((Int16MinMaxCommon)((IInt16MinMaxGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class QuestObjectiveTarget :
         IQuestObjectiveTarget,
         ILoquiObjectSetter<QuestObjectiveTarget>,
-        IEquatable<QuestObjectiveTarget>
+        IEquatable<IQuestObjectiveTargetGetter>
     {
         #region Ctor
         public QuestObjectiveTarget()
@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((QuestObjectiveTargetCommon)((IQuestObjectiveTargetGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(QuestObjectiveTarget? obj)
+        public bool Equals(IQuestObjectiveTargetGetter? obj)
         {
             return ((QuestObjectiveTargetCommon)((IQuestObjectiveTargetGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1156,7 +1156,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null || rhs == null) return false;
             if (lhs.AliasIndex != rhs.AliasIndex) return false;
             if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
+            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
             if (lhs.QSTADataTypeState != rhs.QSTADataTypeState) return false;
             return true;
         }
@@ -1619,6 +1619,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IQuestObjectiveTargetGetter rhs)) return false;
+            return ((QuestObjectiveTargetCommon)((IQuestObjectiveTargetGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IQuestObjectiveTargetGetter? obj)
+        {
+            return ((QuestObjectiveTargetCommon)((IQuestObjectiveTargetGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((QuestObjectiveTargetCommon)((IQuestObjectiveTargetGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

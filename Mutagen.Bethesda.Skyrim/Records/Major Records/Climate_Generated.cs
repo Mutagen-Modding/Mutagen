@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IClimateInternal,
         ILoquiObjectSetter<Climate>,
-        IEquatable<Climate>
+        IEquatable<IClimateGetter>
     {
         #region Ctor
         protected Climate()
@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ClimateCommon)((IClimateGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Climate? obj)
+        public bool Equals(IClimateGetter? obj)
         {
             return ((ClimateCommon)((IClimateGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1670,8 +1670,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!lhs.WeatherTypes.SequenceEqual(rhs.WeatherTypes)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
+            if (!lhs.WeatherTypes.SequenceEqualNullable(rhs.WeatherTypes)) return false;
             if (!string.Equals(lhs.SunTexture, rhs.SunTexture)) return false;
             if (!string.Equals(lhs.SunGlareTexture, rhs.SunGlareTexture)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
@@ -2497,6 +2497,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IClimateGetter rhs)) return false;
+            return ((ClimateCommon)((IClimateGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IClimateGetter? obj)
+        {
+            return ((ClimateCommon)((IClimateGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ClimateCommon)((IClimateGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

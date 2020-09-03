@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class Placement :
         IPlacement,
         ILoquiObjectSetter<Placement>,
-        IEquatable<Placement>
+        IEquatable<IPlacementGetter>
     {
         #region Ctor
         public Placement()
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PlacementCommon)((IPlacementGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Placement? obj)
+        public bool Equals(IPlacementGetter? obj)
         {
             return ((PlacementCommon)((IPlacementGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1254,6 +1254,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPlacementGetter rhs)) return false;
+            return ((PlacementCommon)((IPlacementGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPlacementGetter? obj)
+        {
+            return ((PlacementCommon)((IPlacementGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PlacementCommon)((IPlacementGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         APerkEntryPointEffect,
         IPerkModifyActorValue,
         ILoquiObjectSetter<PerkModifyActorValue>,
-        IEquatable<PerkModifyActorValue>
+        IEquatable<IPerkModifyActorValueGetter>
     {
         #region Ctor
         public PerkModifyActorValue()
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PerkModifyActorValueCommon)((IPerkModifyActorValueGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PerkModifyActorValue? obj)
+        public bool Equals(IPerkModifyActorValueGetter? obj)
         {
             return ((PerkModifyActorValueCommon)((IPerkModifyActorValueGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1039,7 +1039,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IAPerkEntryPointEffectGetter)lhs, (IAPerkEntryPointEffectGetter)rhs)) return false;
             if (lhs.ActorValue != rhs.ActorValue) return false;
             if (!lhs.Value.EqualsWithin(rhs.Value)) return false;
             if (lhs.Modification != rhs.Modification) return false;
@@ -1443,6 +1443,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPerkModifyActorValueGetter rhs)) return false;
+            return ((PerkModifyActorValueCommon)((IPerkModifyActorValueGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPerkModifyActorValueGetter? obj)
+        {
+            return ((PerkModifyActorValueCommon)((IPerkModifyActorValueGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PerkModifyActorValueCommon)((IPerkModifyActorValueGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

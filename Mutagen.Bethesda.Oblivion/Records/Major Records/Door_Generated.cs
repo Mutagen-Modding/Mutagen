@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IDoorInternal,
         ILoquiObjectSetter<Door>,
-        IEquatable<Door>
+        IEquatable<IDoorGetter>
     {
         #region Ctor
         protected Door()
@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((DoorCommon)((IDoorGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Door? obj)
+        public bool Equals(IDoorGetter? obj)
         {
             return ((DoorCommon)((IDoorGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1307,10 +1307,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Script = object.Equals(item.Script, rhs.Script);
-            ret.OpenSound = object.Equals(item.OpenSound, rhs.OpenSound);
-            ret.CloseSound = object.Equals(item.CloseSound, rhs.CloseSound);
-            ret.LoopSound = object.Equals(item.LoopSound, rhs.LoopSound);
+            ret.Script = item.Script.Equals(rhs.Script);
+            ret.OpenSound = item.OpenSound.Equals(rhs.OpenSound);
+            ret.CloseSound = item.CloseSound.Equals(rhs.CloseSound);
+            ret.LoopSound = item.LoopSound.Equals(rhs.LoopSound);
             ret.Flags = item.Flags == rhs.Flags;
             ret.RandomTeleportDestinations = item.RandomTeleportDestinations.CollectionEqualsHelper(
                 rhs.RandomTeleportDestinations,
@@ -1461,7 +1461,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!lhs.Script.Equals(rhs.Script)) return false;
@@ -1469,7 +1469,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!lhs.CloseSound.Equals(rhs.CloseSound)) return false;
             if (!lhs.LoopSound.Equals(rhs.LoopSound)) return false;
             if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.RandomTeleportDestinations.SequenceEqual(rhs.RandomTeleportDestinations)) return false;
+            if (!lhs.RandomTeleportDestinations.SequenceEqualNullable(rhs.RandomTeleportDestinations)) return false;
             return true;
         }
         
@@ -2247,6 +2247,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IDoorGetter rhs)) return false;
+            return ((DoorCommon)((IDoorGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IDoorGetter? obj)
+        {
+            return ((DoorCommon)((IDoorGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((DoorCommon)((IDoorGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

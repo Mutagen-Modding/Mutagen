@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class AttackData :
         IAttackData,
         ILoquiObjectSetter<AttackData>,
-        IEquatable<AttackData>
+        IEquatable<IAttackDataGetter>
     {
         #region Ctor
         public AttackData()
@@ -97,7 +97,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(AttackData? obj)
+        public bool Equals(IAttackDataGetter? obj)
         {
             return ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1299,12 +1299,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (rhs == null) return;
             ret.DamageMult = item.DamageMult.EqualsWithin(rhs.DamageMult);
             ret.Chance = item.Chance.EqualsWithin(rhs.Chance);
-            ret.Spell = object.Equals(item.Spell, rhs.Spell);
+            ret.Spell = item.Spell.Equals(rhs.Spell);
             ret.Flags = item.Flags == rhs.Flags;
             ret.AttackAngle = item.AttackAngle.EqualsWithin(rhs.AttackAngle);
             ret.StrikeAngle = item.StrikeAngle.EqualsWithin(rhs.StrikeAngle);
             ret.Stagger = item.Stagger.EqualsWithin(rhs.Stagger);
-            ret.AttackType = object.Equals(item.AttackType, rhs.AttackType);
+            ret.AttackType = item.AttackType.Equals(rhs.AttackType);
             ret.Knockdown = item.Knockdown.EqualsWithin(rhs.Knockdown);
             ret.RecoveryTime = item.RecoveryTime.EqualsWithin(rhs.RecoveryTime);
             ret.StaminaMult = item.StaminaMult.EqualsWithin(rhs.StaminaMult);
@@ -1833,6 +1833,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IAttackDataGetter rhs)) return false;
+            return ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IAttackDataGetter? obj)
+        {
+            return ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

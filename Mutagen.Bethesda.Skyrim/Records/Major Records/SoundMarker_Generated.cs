@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ISoundMarkerInternal,
         ILoquiObjectSetter<SoundMarker>,
-        IEquatable<SoundMarker>
+        IEquatable<ISoundMarkerGetter>
     {
         #region Ctor
         protected SoundMarker()
@@ -95,7 +95,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SoundMarkerCommon)((ISoundMarkerGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(SoundMarker? obj)
+        public bool Equals(ISoundMarkerGetter? obj)
         {
             return ((SoundMarkerCommon)((ISoundMarkerGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1042,7 +1042,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.FNAM = MemorySliceExt.Equal(item.FNAM, rhs.FNAM);
             ret.SNDD = MemorySliceExt.Equal(item.SNDD, rhs.SNDD);
-            ret.SoundDescriptor = object.Equals(item.SoundDescriptor, rhs.SoundDescriptor);
+            ret.SoundDescriptor = item.SoundDescriptor.Equals(rhs.SoundDescriptor);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1159,7 +1159,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
             if (!MemorySliceExt.Equal(lhs.FNAM, rhs.FNAM)) return false;
             if (!MemorySliceExt.Equal(lhs.SNDD, rhs.SNDD)) return false;
@@ -1793,6 +1793,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ISoundMarkerGetter rhs)) return false;
+            return ((SoundMarkerCommon)((ISoundMarkerGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ISoundMarkerGetter? obj)
+        {
+            return ((SoundMarkerCommon)((ISoundMarkerGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((SoundMarkerCommon)((ISoundMarkerGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

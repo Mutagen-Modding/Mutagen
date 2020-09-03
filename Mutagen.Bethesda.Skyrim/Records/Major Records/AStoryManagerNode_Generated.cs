@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IAStoryManagerNodeInternal,
         ILoquiObjectSetter<AStoryManagerNode>,
-        IEquatable<AStoryManagerNode>
+        IEquatable<IAStoryManagerNodeGetter>
     {
         #region Ctor
         protected AStoryManagerNode()
@@ -87,7 +87,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(AStoryManagerNode? obj)
+        public bool Equals(IAStoryManagerNodeGetter? obj)
         {
             return ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1036,8 +1036,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Parent = object.Equals(item.Parent, rhs.Parent);
-            ret.PreviousSibling = object.Equals(item.PreviousSibling, rhs.PreviousSibling);
+            ret.Parent = item.Parent.Equals(rhs.Parent);
+            ret.PreviousSibling = item.PreviousSibling.Equals(rhs.PreviousSibling);
             ret.Conditions = item.Conditions.CollectionEqualsHelper(
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1166,10 +1166,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!lhs.Parent.Equals(rhs.Parent)) return false;
             if (!lhs.PreviousSibling.Equals(rhs.PreviousSibling)) return false;
-            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
+            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
             return true;
         }
         
@@ -1740,6 +1740,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IAStoryManagerNodeGetter rhs)) return false;
+            return ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IAStoryManagerNodeGetter? obj)
+        {
+            return ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

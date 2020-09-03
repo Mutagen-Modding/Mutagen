@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         AItem,
         IAClothingInternal,
         ILoquiObjectSetter<AClothing>,
-        IEquatable<AClothing>
+        IEquatable<IAClothingGetter>
     {
         #region Ctor
         protected AClothing()
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((AClothingCommon)((IAClothingGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(AClothing? obj)
+        public bool Equals(IAClothingGetter? obj)
         {
             return ((AClothingCommon)((IAClothingGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1452,8 +1452,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Name = string.Equals(item.Name, rhs.Name);
-            ret.Script = object.Equals(item.Script, rhs.Script);
-            ret.Enchantment = object.Equals(item.Enchantment, rhs.Enchantment);
+            ret.Script = item.Script.Equals(rhs.Script);
+            ret.Enchantment = item.Enchantment.Equals(rhs.Enchantment);
             ret.EnchantmentPoints = item.EnchantmentPoints == rhs.EnchantmentPoints;
             ret.ClothingFlags = EqualsMaskHelper.EqualsHelper(
                 item.ClothingFlags,
@@ -1650,7 +1650,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IAItemGetter)lhs, (IAItemGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!lhs.Script.Equals(rhs.Script)) return false;
             if (!lhs.Enchantment.Equals(rhs.Enchantment)) return false;
@@ -2590,6 +2590,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IAClothingGetter rhs)) return false;
+            return ((AClothingCommon)((IAClothingGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IAClothingGetter? obj)
+        {
+            return ((AClothingCommon)((IAClothingGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((AClothingCommon)((IAClothingGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

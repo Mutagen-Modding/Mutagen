@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class Group<T> :
         IGroup<T>,
         ILoquiObjectSetter<Group<T>>,
-        IEquatable<Group<T>>
+        IEquatable<IGroupGetter<T>>
         where T : class, IOblivionMajorRecordInternal, IBinaryItem
     {
         #region Ctor
@@ -81,15 +81,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object? obj)
         {
             if (!(obj is IGroupGetter<T> rhs)) return false;
-            return ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance()!).Equals(this, rhs);
+            return ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs);
         }
 
-        public bool Equals(Group<T>? obj)
+        public bool Equals(IGroupGetter<T>? obj)
         {
-            return ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance()!).Equals(this, obj);
+            return ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance(typeof(T))!).GetHashCode(this);
 
         #endregion
 
@@ -104,7 +104,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
-        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<T, TMajor>();
+        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<T, TMajor>(throwIfUnknown);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type, throwIfUnknown);
         [DebuggerStepThrough]
@@ -113,6 +113,28 @@ namespace Mutagen.Bethesda.Oblivion
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<T, TMajor>();
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys) => this.Remove(formKeys);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => this.Remove(formKeys);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(FormKey formKey, Type type, bool throwIfUnknown) => this.Remove(formKey, type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys, Type type, bool throwIfUnknown) => this.Remove(formKeys, type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys, Type type, bool throwIfUnknown) => this.Remove(formKeys, type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(FormKey formKey, bool throwIfUnknown) => this.Remove<T, TMajor>(formKey, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(HashSet<FormKey> formKeys, bool throwIfUnknown) => this.Remove<T, TMajor>(formKeys, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<FormKey> formKeys, bool throwIfUnknown) => this.Remove<T, TMajor>(formKeys, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(TMajor record, bool throwIfUnknown) => this.Remove<T, TMajor>(record, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<T, TMajor>(records, throwIfUnknown);
         #endregion
 
         #region Binary Translation
@@ -135,7 +157,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new Group<T>();
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)ret).CommonSetterInstance()!).CopyInFromBinary(
+            ((GroupSetterCommon<T>)((IGroupGetter<T>)ret).CommonSetterInstance(typeof(T))!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -159,7 +181,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IClearable.Clear()
         {
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)this).CommonSetterInstance()!).Clear(this);
+            ((GroupSetterCommon<T>)((IGroupGetter<T>)this).CommonSetterInstance(typeof(T))!).Clear(this);
         }
 
         internal static Group<T> GetNew()
@@ -192,9 +214,9 @@ namespace Mutagen.Bethesda.Oblivion
         where T : class, IOblivionMajorRecordGetter, IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonInstance();
+        object CommonInstance(Type type0);
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object? CommonSetterInstance();
+        object? CommonSetterInstance(Type type0);
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => Group_Registration.Instance;
@@ -212,7 +234,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void Clear<T>(this IGroup<T> item)
             where T : class, IOblivionMajorRecordInternal, IBinaryItem
         {
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)item).CommonSetterInstance()!).Clear(item: item);
+            ((GroupSetterCommon<T>)((IGroupGetter<T>)item).CommonSetterInstance(typeof(T))!).Clear(item: item);
         }
 
         public static Group.Mask<bool> GetEqualsMask<T>(
@@ -221,7 +243,7 @@ namespace Mutagen.Bethesda.Oblivion
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
             where T : class, IOblivionMajorRecordGetter, IBinaryItem
         {
-            return ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance()!).GetEqualsMask(
+            return ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance(typeof(T))!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -233,7 +255,7 @@ namespace Mutagen.Bethesda.Oblivion
             Group.Mask<bool>? printMask = null)
             where T : class, IOblivionMajorRecordGetter, IBinaryItem
         {
-            return ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance()!).ToString(
+            return ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance(typeof(T))!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -246,7 +268,7 @@ namespace Mutagen.Bethesda.Oblivion
             Group.Mask<bool>? printMask = null)
             where T : class, IOblivionMajorRecordGetter, IBinaryItem
         {
-            ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance()!).ToString(
+            ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance(typeof(T))!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -258,7 +280,7 @@ namespace Mutagen.Bethesda.Oblivion
             IGroupGetter<T> rhs)
             where T : class, IOblivionMajorRecordGetter, IBinaryItem
         {
-            return ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance()!).Equals(
+            return ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance(typeof(T))!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -374,18 +396,20 @@ namespace Mutagen.Bethesda.Oblivion
         public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords<T>(this IGroupGetter<T> obj)
             where T : class, IOblivionMajorRecordGetter, IBinaryItem
         {
-            return ((GroupCommon<T>)((IGroupGetter<T>)obj).CommonInstance()!).EnumerateMajorRecords(obj: obj);
+            return ((GroupCommon<T>)((IGroupGetter<T>)obj).CommonInstance(typeof(T))!).EnumerateMajorRecords(obj: obj);
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<TMajor> EnumerateMajorRecords<T, TMajor>(this IGroupGetter<T> obj)
+        public static IEnumerable<TMajor> EnumerateMajorRecords<T, TMajor>(
+            this IGroupGetter<T> obj,
+            bool throwIfUnknown = true)
             where T : class, IOblivionMajorRecordGetter, IBinaryItem
             where TMajor : class, IMajorRecordCommonGetter
         {
-            return ((GroupCommon<T>)((IGroupGetter<T>)obj).CommonInstance()!).EnumerateMajorRecords(
+            return ((GroupCommon<T>)((IGroupGetter<T>)obj).CommonInstance(typeof(T))!).EnumerateMajorRecords(
                 obj: obj,
                 type: typeof(TMajor),
-                throwIfUnknown: true)
+                throwIfUnknown: throwIfUnknown)
                 .Select(m => (TMajor)m);
         }
 
@@ -396,7 +420,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool throwIfUnknown = true)
             where T : class, IOblivionMajorRecordGetter, IBinaryItem
         {
-            return ((GroupCommon<T>)((IGroupGetter<T>)obj).CommonInstance()!).EnumerateMajorRecords(
+            return ((GroupCommon<T>)((IGroupGetter<T>)obj).CommonInstance(typeof(T))!).EnumerateMajorRecords(
                 obj: obj,
                 type: type,
                 throwIfUnknown: throwIfUnknown)
@@ -407,7 +431,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords<T>(this IGroup<T> obj)
             where T : class, IOblivionMajorRecordInternal, IBinaryItem
         {
-            return ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance()!).EnumerateMajorRecords(obj: obj);
+            return ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).EnumerateMajorRecords(obj: obj);
         }
 
         [DebuggerStepThrough]
@@ -415,7 +439,7 @@ namespace Mutagen.Bethesda.Oblivion
             where T : class, IOblivionMajorRecordInternal, IBinaryItem
             where TMajor : class, IMajorRecordCommon
         {
-            return ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance()!).EnumerateMajorRecords(
+            return ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).EnumerateMajorRecords(
                 obj: obj,
                 type: typeof(TMajor),
                 throwIfUnknown: true)
@@ -429,11 +453,172 @@ namespace Mutagen.Bethesda.Oblivion
             bool throwIfUnknown = true)
             where T : class, IOblivionMajorRecordInternal, IBinaryItem
         {
-            return ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance()!).EnumerateMajorRecords(
+            return ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).EnumerateMajorRecords(
                 obj: obj,
                 type: type,
                 throwIfUnknown: throwIfUnknown)
                 .Select(m => (IMajorRecordCommon)m);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<T>(
+            this IGroup<T> obj,
+            FormKey key)
+            where T : class, IOblivionMajorRecordInternal, IBinaryItem
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+                obj: obj,
+                keys: keys);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<T>(
+            this IGroup<T> obj,
+            IEnumerable<FormKey> keys)
+            where T : class, IOblivionMajorRecordInternal, IBinaryItem
+        {
+            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+                obj: obj,
+                keys: keys.ToHashSet());
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<T>(
+            this IGroup<T> obj,
+            HashSet<FormKey> keys)
+            where T : class, IOblivionMajorRecordInternal, IBinaryItem
+        {
+            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+                obj: obj,
+                keys: keys);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<T>(
+            this IGroup<T> obj,
+            FormKey key,
+            Type type,
+            bool throwIfUnknown = true)
+            where T : class, IOblivionMajorRecordInternal, IBinaryItem
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+                obj: obj,
+                keys: keys,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<T>(
+            this IGroup<T> obj,
+            IEnumerable<FormKey> keys,
+            Type type,
+            bool throwIfUnknown = true)
+            where T : class, IOblivionMajorRecordInternal, IBinaryItem
+        {
+            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+                obj: obj,
+                keys: keys.ToHashSet(),
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<T>(
+            this IGroup<T> obj,
+            HashSet<FormKey> keys,
+            Type type,
+            bool throwIfUnknown = true)
+            where T : class, IOblivionMajorRecordInternal, IBinaryItem
+        {
+            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+                obj: obj,
+                keys: keys,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<T, TMajor>(
+            this IGroup<T> obj,
+            TMajor record,
+            bool throwIfUnknown = true)
+            where T : class, IOblivionMajorRecordInternal, IBinaryItem
+            where TMajor : IMajorRecordCommonGetter
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(record.FormKey);
+            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+                obj: obj,
+                keys: keys,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<T, TMajor>(
+            this IGroup<T> obj,
+            IEnumerable<TMajor> records,
+            bool throwIfUnknown = true)
+            where T : class, IOblivionMajorRecordInternal, IBinaryItem
+            where TMajor : IMajorRecordCommonGetter
+        {
+            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+                obj: obj,
+                keys: records.Select(m => m.FormKey).ToHashSet(),
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<T, TMajor>(
+            this IGroup<T> obj,
+            FormKey key,
+            bool throwIfUnknown = true)
+            where T : class, IOblivionMajorRecordInternal, IBinaryItem
+            where TMajor : IMajorRecordCommonGetter
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+                obj: obj,
+                keys: keys,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<T, TMajor>(
+            this IGroup<T> obj,
+            IEnumerable<FormKey> keys,
+            bool throwIfUnknown = true)
+            where T : class, IOblivionMajorRecordInternal, IBinaryItem
+            where TMajor : IMajorRecordCommonGetter
+        {
+            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+                obj: obj,
+                keys: keys.ToHashSet(),
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<T, TMajor>(
+            this IGroup<T> obj,
+            HashSet<FormKey> keys,
+            bool throwIfUnknown = true)
+            where T : class, IOblivionMajorRecordInternal, IBinaryItem
+            where TMajor : IMajorRecordCommonGetter
+        {
+            ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
+                obj: obj,
+                keys: keys,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
         }
 
         #endregion
@@ -445,7 +630,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter? recordTypeConverter = null)
             where T : class, IOblivionMajorRecordInternal, IBinaryItem
         {
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((GroupSetterCommon<T>)((IGroupGetter<T>)item).CommonSetterInstance(typeof(T))!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -706,6 +891,45 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
+        public void Remove(
+            IGroup<T> obj,
+            HashSet<FormKey> keys)
+        {
+            obj.RecordCache.Remove(keys);
+        }
+        
+        public void Remove(
+            IGroup<T> obj,
+            HashSet<FormKey> keys,
+            Type type,
+            bool throwIfUnknown)
+        {
+            switch (type.Name)
+            {
+                case "IMajorRecordCommon":
+                case "IMajorRecord":
+                case "MajorRecord":
+                case "IOblivionMajorRecord":
+                case "OblivionMajorRecord":
+                case "IMajorRecordGetter":
+                case "IMajorRecordCommonGetter":
+                case "IOblivionMajorRecordGetter":
+                    if (!Group_Registration.SetterType.IsAssignableFrom(obj.GetType())) return;
+                    this.Remove(obj, keys);
+                    break;
+                default:
+                    if (type.IsAssignableFrom(typeof(T)))
+                    {
+                        obj.RecordCache.Remove(keys);
+                    }
+                    foreach (var item in obj.RecordCache.Items)
+                    {
+                        item.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+            }
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -736,7 +960,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Group.Mask<bool>(false);
-            ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance()!).FillEqualsMask(
+            ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance(typeof(T))!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -841,7 +1065,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null || rhs == null) return false;
             if (lhs.Type != rhs.Type) return false;
             if (lhs.LastModified != rhs.LastModified) return false;
-            if (!lhs.RecordCache.SequenceEqual(rhs.RecordCache)) return false;
+            if (!lhs.RecordCache.SequenceEqualNullable(rhs.RecordCache)) return false;
             return true;
         }
         
@@ -914,9 +1138,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     yield break;
                 default:
+                    var assignable = type.IsAssignableFrom(typeof(T));
                     foreach (var item in obj.RecordCache.Items)
                     {
-                        if (type.IsAssignableFrom(typeof(T)))
+                        if (assignable)
                         {
                             yield return item;
                         }
@@ -987,7 +1212,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             where TGetter : class, IOblivionMajorRecordGetter, IBinaryItem
             where T_TranslMask : OblivionMajorRecord.TranslationMask, ITranslationMask
         {
-            Group<T> ret = (Group<T>)((GroupCommon<TGetter>)((IGroupGetter<TGetter>)item).CommonInstance()!).GetNew<T>();
+            Group<T> ret = (Group<T>)((GroupCommon<TGetter>)((IGroupGetter<TGetter>)item).CommonInstance(typeof(T))!).GetNew<T>();
             ((GroupSetterTranslationCommon)((IGroupGetter<T>)ret).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
                 item: ret,
                 rhs: item,
@@ -1007,7 +1232,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             where T_TranslMask : OblivionMajorRecord.TranslationMask, ITranslationMask
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            Group<T> ret = (Group<T>)((GroupCommon<TGetter>)((IGroupGetter<TGetter>)item).CommonInstance()!).GetNew<T>();
+            Group<T> ret = (Group<T>)((GroupCommon<TGetter>)((IGroupGetter<TGetter>)item).CommonInstance(typeof(T))!).GetNew<T>();
             ((GroupSetterTranslationCommon)((IGroupGetter<T>)ret).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
                 ret,
                 item,
@@ -1025,7 +1250,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             where T : class, IOblivionMajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, IOblivionMajorRecordGetter, IBinaryItem
         {
-            Group<T> ret = (Group<T>)((GroupCommon<TGetter>)((IGroupGetter<TGetter>)item).CommonInstance()!).GetNew<T>();
+            Group<T> ret = (Group<T>)((GroupCommon<TGetter>)((IGroupGetter<TGetter>)item).CommonInstance(typeof(T))!).GetNew<T>();
             ((GroupSetterTranslationCommon)((IGroupGetter<T>)ret).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
                 item: ret,
                 rhs: item,
@@ -1049,18 +1274,18 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiRegistration ILoquiObject.Registration => Group_Registration.Instance;
         public static Group_Registration Registration => Group_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => GroupCommon<T>.Instance;
+        protected object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(GroupCommon<T>.Instance, typeof(T), type0);
         [DebuggerStepThrough]
-        protected object CommonSetterInstance()
+        protected object CommonSetterInstance(Type type0)
         {
-            return GroupSetterCommon<T>.Instance;
+            return GenericCommonInstanceGetter.Get(GroupSetterCommon<T>.Instance, typeof(T), type0);
         }
         [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => GroupSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IGroupGetter<T>.CommonInstance() => this.CommonInstance();
+        object IGroupGetter<T>.CommonInstance(Type type0) => this.CommonInstance(type0);
         [DebuggerStepThrough]
-        object IGroupGetter<T>.CommonSetterInstance() => this.CommonSetterInstance();
+        object IGroupGetter<T>.CommonSetterInstance(Type type0) => this.CommonSetterInstance(type0);
         [DebuggerStepThrough]
         object IGroupGetter<T>.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
@@ -1240,13 +1465,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         ILoquiRegistration ILoquiObject.Registration => Group_Registration.Instance;
         public static Group_Registration Registration => Group_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => GroupCommon<T>.Instance;
+        protected object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(GroupCommon<T>.Instance, typeof(T), type0);
         [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => GroupSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IGroupGetter<T>.CommonInstance() => this.CommonInstance();
+        object IGroupGetter<T>.CommonInstance(Type type0) => this.CommonInstance(type0);
         [DebuggerStepThrough]
-        object? IGroupGetter<T>.CommonSetterInstance() => null;
+        object? IGroupGetter<T>.CommonSetterInstance(Type type0) => null;
         [DebuggerStepThrough]
         object IGroupGetter<T>.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
@@ -1261,7 +1486,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
-        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<T, TMajor>();
+        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<T, TMajor>(throwIfUnknown);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type, throwIfUnknown);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1362,6 +1587,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IGroupGetter<T> rhs)) return false;
+            return ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs);
+        }
+
+        public bool Equals(IGroupGetter<T>? obj)
+        {
+            return ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance(typeof(T))!).GetHashCode(this);
 
         #endregion
 

@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ILightInternal,
         ILoquiObjectSetter<Light>,
-        IEquatable<Light>
+        IEquatable<ILightGetter>
     {
         #region Ctor
         protected Light()
@@ -165,7 +165,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LightCommon)((ILightGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Light? obj)
+        public bool Equals(ILightGetter? obj)
         {
             return ((LightCommon)((ILightGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1930,7 +1930,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Value = item.Value == rhs.Value;
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
             ret.FadeValue = item.FadeValue.EqualsWithin(rhs.FadeValue);
-            ret.Sound = object.Equals(item.Sound, rhs.Sound);
+            ret.Sound = item.Sound.Equals(rhs.Sound);
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -2119,7 +2119,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
@@ -3187,6 +3187,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILightGetter rhs)) return false;
+            return ((LightCommon)((ILightGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILightGetter? obj)
+        {
+            return ((LightCommon)((ILightGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LightCommon)((ILightGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         BookTeachTarget,
         IBookSkill,
         ILoquiObjectSetter<BookSkill>,
-        IEquatable<BookSkill>
+        IEquatable<IBookSkillGetter>
     {
         #region Ctor
         public BookSkill()
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((BookSkillCommon)((IBookSkillGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(BookSkill? obj)
+        public bool Equals(IBookSkillGetter? obj)
         {
             return ((BookSkillCommon)((IBookSkillGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -864,7 +864,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IBookTeachTargetGetter)lhs, (IBookTeachTargetGetter)rhs)) return false;
             if (lhs.Skill != rhs.Skill) return false;
             return true;
         }
@@ -1207,6 +1207,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IBookSkillGetter rhs)) return false;
+            return ((BookSkillCommon)((IBookSkillGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IBookSkillGetter? obj)
+        {
+            return ((BookSkillCommon)((IBookSkillGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((BookSkillCommon)((IBookSkillGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

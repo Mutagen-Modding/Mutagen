@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IContainerInternal,
         ILoquiObjectSetter<Container>,
-        IEquatable<Container>
+        IEquatable<IContainerGetter>
     {
         #region Ctor
         protected Container()
@@ -139,7 +139,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Container? obj)
+        public bool Equals(IContainerGetter? obj)
         {
             return ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1523,8 +1523,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 include);
             ret.Flags = item.Flags == rhs.Flags;
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
-            ret.OpenSound = object.Equals(item.OpenSound, rhs.OpenSound);
-            ret.CloseSound = object.Equals(item.CloseSound, rhs.CloseSound);
+            ret.OpenSound = item.OpenSound.Equals(rhs.OpenSound);
+            ret.CloseSound = item.CloseSound.Equals(rhs.CloseSound);
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -1687,12 +1687,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (!lhs.Items.SequenceEqual(rhs.Items)) return false;
+            if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
             if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
@@ -2647,6 +2647,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IContainerGetter rhs)) return false;
+            return ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IContainerGetter? obj)
+        {
+            return ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

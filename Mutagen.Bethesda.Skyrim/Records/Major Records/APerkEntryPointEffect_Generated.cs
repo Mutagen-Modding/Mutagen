@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         APerkEffect,
         IAPerkEntryPointEffect,
         ILoquiObjectSetter<APerkEntryPointEffect>,
-        IEquatable<APerkEntryPointEffect>
+        IEquatable<IAPerkEntryPointEffectGetter>
     {
         #region Ctor
         public APerkEntryPointEffect()
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((APerkEntryPointEffectCommon)((IAPerkEntryPointEffectGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(APerkEntryPointEffect? obj)
+        public bool Equals(IAPerkEntryPointEffectGetter? obj)
         {
             return ((APerkEntryPointEffectCommon)((IAPerkEntryPointEffectGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -923,7 +923,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IAPerkEffectGetter)lhs, (IAPerkEffectGetter)rhs)) return false;
             if (lhs.EntryPoint != rhs.EntryPoint) return false;
             if (lhs.PerkConditionTabCount != rhs.PerkConditionTabCount) return false;
             return true;
@@ -1343,6 +1343,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IAPerkEntryPointEffectGetter rhs)) return false;
+            return ((APerkEntryPointEffectCommon)((IAPerkEntryPointEffectGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IAPerkEntryPointEffectGetter? obj)
+        {
+            return ((APerkEntryPointEffectCommon)((IAPerkEntryPointEffectGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((APerkEntryPointEffectCommon)((IAPerkEntryPointEffectGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

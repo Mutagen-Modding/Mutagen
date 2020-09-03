@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ILocationInternal,
         ILoquiObjectSetter<Location>,
-        IEquatable<Location>
+        IEquatable<ILocationGetter>
     {
         #region Ctor
         protected Location()
@@ -342,7 +342,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Location? obj)
+        public bool Equals(ILocationGetter? obj)
         {
             return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -3513,12 +3513,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.ParentLocation = object.Equals(item.ParentLocation, rhs.ParentLocation);
-            ret.Music = object.Equals(item.Music, rhs.Music);
-            ret.UnreportedCrimeFaction = object.Equals(item.UnreportedCrimeFaction, rhs.UnreportedCrimeFaction);
-            ret.WorldLocationMarkerRef = object.Equals(item.WorldLocationMarkerRef, rhs.WorldLocationMarkerRef);
+            ret.ParentLocation = item.ParentLocation.Equals(rhs.ParentLocation);
+            ret.Music = item.Music.Equals(rhs.Music);
+            ret.UnreportedCrimeFaction = item.UnreportedCrimeFaction.Equals(rhs.UnreportedCrimeFaction);
+            ret.WorldLocationMarkerRef = item.WorldLocationMarkerRef.Equals(rhs.WorldLocationMarkerRef);
             ret.WorldLocationRadius = item.WorldLocationRadius.EqualsWithin(rhs.WorldLocationRadius);
-            ret.HorseMarkerRef = object.Equals(item.HorseMarkerRef, rhs.HorseMarkerRef);
+            ret.HorseMarkerRef = item.HorseMarkerRef.Equals(rhs.HorseMarkerRef);
             ret.Color = item.Color.ColorOnlyEquals(rhs.Color);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -3973,25 +3973,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!lhs.ActorCellPersistentReferences.SequenceEqual(rhs.ActorCellPersistentReferences)) return false;
-            if (!lhs.LocationCellPersistentReferences.SequenceEqual(rhs.LocationCellPersistentReferences)) return false;
-            if (!lhs.ReferenceCellPersistentReferences.SequenceEqual(rhs.ReferenceCellPersistentReferences)) return false;
-            if (!lhs.ActorCellUniques.SequenceEqual(rhs.ActorCellUniques)) return false;
-            if (!lhs.LocationCellUniques.SequenceEqual(rhs.LocationCellUniques)) return false;
-            if (!lhs.ReferenceCellUnique.SequenceEqual(rhs.ReferenceCellUnique)) return false;
-            if (!lhs.ActorCellStaticReferences.SequenceEqual(rhs.ActorCellStaticReferences)) return false;
-            if (!lhs.LocationCellStaticReferences.SequenceEqual(rhs.LocationCellStaticReferences)) return false;
-            if (!lhs.ReferenceCellStaticReferences.SequenceEqual(rhs.ReferenceCellStaticReferences)) return false;
-            if (!lhs.ActorCellEncounterCell.SequenceEqual(rhs.ActorCellEncounterCell)) return false;
-            if (!lhs.LocationCellEncounterCell.SequenceEqual(rhs.LocationCellEncounterCell)) return false;
-            if (!lhs.ReferenceCellEncounterCell.SequenceEqual(rhs.ReferenceCellEncounterCell)) return false;
-            if (!lhs.ActorCellMarkerReference.SequenceEqual(rhs.ActorCellMarkerReference)) return false;
-            if (!lhs.LocationCellMarkerReference.SequenceEqual(rhs.LocationCellMarkerReference)) return false;
-            if (!lhs.ActorCellEnablePoint.SequenceEqual(rhs.ActorCellEnablePoint)) return false;
-            if (!lhs.LocationCellEnablePoint.SequenceEqual(rhs.LocationCellEnablePoint)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
+            if (!lhs.ActorCellPersistentReferences.SequenceEqualNullable(rhs.ActorCellPersistentReferences)) return false;
+            if (!lhs.LocationCellPersistentReferences.SequenceEqualNullable(rhs.LocationCellPersistentReferences)) return false;
+            if (!lhs.ReferenceCellPersistentReferences.SequenceEqualNullable(rhs.ReferenceCellPersistentReferences)) return false;
+            if (!lhs.ActorCellUniques.SequenceEqualNullable(rhs.ActorCellUniques)) return false;
+            if (!lhs.LocationCellUniques.SequenceEqualNullable(rhs.LocationCellUniques)) return false;
+            if (!lhs.ReferenceCellUnique.SequenceEqualNullable(rhs.ReferenceCellUnique)) return false;
+            if (!lhs.ActorCellStaticReferences.SequenceEqualNullable(rhs.ActorCellStaticReferences)) return false;
+            if (!lhs.LocationCellStaticReferences.SequenceEqualNullable(rhs.LocationCellStaticReferences)) return false;
+            if (!lhs.ReferenceCellStaticReferences.SequenceEqualNullable(rhs.ReferenceCellStaticReferences)) return false;
+            if (!lhs.ActorCellEncounterCell.SequenceEqualNullable(rhs.ActorCellEncounterCell)) return false;
+            if (!lhs.LocationCellEncounterCell.SequenceEqualNullable(rhs.LocationCellEncounterCell)) return false;
+            if (!lhs.ReferenceCellEncounterCell.SequenceEqualNullable(rhs.ReferenceCellEncounterCell)) return false;
+            if (!lhs.ActorCellMarkerReference.SequenceEqualNullable(rhs.ActorCellMarkerReference)) return false;
+            if (!lhs.LocationCellMarkerReference.SequenceEqualNullable(rhs.LocationCellMarkerReference)) return false;
+            if (!lhs.ActorCellEnablePoint.SequenceEqualNullable(rhs.ActorCellEnablePoint)) return false;
+            if (!lhs.LocationCellEnablePoint.SequenceEqualNullable(rhs.LocationCellEnablePoint)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!lhs.Keywords.SequenceEqual(rhs.Keywords)) return false;
+            if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             if (!lhs.ParentLocation.Equals(rhs.ParentLocation)) return false;
             if (!lhs.Music.Equals(rhs.Music)) return false;
             if (!lhs.UnreportedCrimeFaction.Equals(rhs.UnreportedCrimeFaction)) return false;
@@ -5932,6 +5932,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILocationGetter rhs)) return false;
+            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILocationGetter? obj)
+        {
+            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LocationCommon)((ILocationGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

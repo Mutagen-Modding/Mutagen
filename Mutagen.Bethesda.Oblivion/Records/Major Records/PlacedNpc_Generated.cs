@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IPlacedNpcInternal,
         ILoquiObjectSetter<PlacedNpc>,
-        IEquatable<PlacedNpc>
+        IEquatable<IPlacedNpcGetter>
     {
         #region Ctor
         protected PlacedNpc()
@@ -149,7 +149,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PlacedNpc? obj)
+        public bool Equals(IPlacedNpcGetter? obj)
         {
             return ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1358,7 +1358,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Base = object.Equals(item.Base, rhs.Base);
+            ret.Base = item.Base.Equals(rhs.Base);
             ret.XPCIFluff = MemorySliceExt.Equal(item.XPCIFluff, rhs.XPCIFluff);
             ret.FULLFluff = MemorySliceExt.Equal(item.FULLFluff, rhs.FULLFluff);
             ret.DistantLODData = EqualsMaskHelper.EqualsHelper(
@@ -1371,8 +1371,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.EnableParent,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.MerchantContainer = object.Equals(item.MerchantContainer, rhs.MerchantContainer);
-            ret.Horse = object.Equals(item.Horse, rhs.Horse);
+            ret.MerchantContainer = item.MerchantContainer.Equals(rhs.MerchantContainer);
+            ret.Horse = item.Horse.Equals(rhs.Horse);
             ret.RagdollData = MemorySliceExt.Equal(item.RagdollData, rhs.RagdollData);
             ret.Scale = item.Scale.EqualsWithin(rhs.Scale);
             ret.Location = EqualsMaskHelper.EqualsHelper(
@@ -1523,7 +1523,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
             if (!lhs.Base.Equals(rhs.Base)) return false;
             if (!MemorySliceExt.Equal(lhs.XPCIFluff, rhs.XPCIFluff)) return false;
             if (!MemorySliceExt.Equal(lhs.FULLFluff, rhs.FULLFluff)) return false;
@@ -2406,6 +2406,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPlacedNpcGetter rhs)) return false;
+            return ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPlacedNpcGetter? obj)
+        {
+            return ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

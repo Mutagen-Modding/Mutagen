@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IMagicEffectInternal,
         ILoquiObjectSetter<MagicEffect>,
-        IEquatable<MagicEffect>
+        IEquatable<IMagicEffectGetter>
     {
         #region Ctor
         protected MagicEffect()
@@ -114,7 +114,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(MagicEffect? obj)
+        public bool Equals(IMagicEffectGetter? obj)
         {
             return ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1375,13 +1375,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!string.Equals(lhs.Description, rhs.Description)) return false;
             if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!object.Equals(lhs.Data, rhs.Data)) return false;
-            if (!lhs.CounterEffects.SequenceEqual(rhs.CounterEffects)) return false;
+            if (!lhs.CounterEffects.SequenceEqualNullable(rhs.CounterEffects)) return false;
             return true;
         }
         
@@ -2132,6 +2132,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IMagicEffectGetter rhs)) return false;
+            return ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IMagicEffectGetter? obj)
+        {
+            return ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

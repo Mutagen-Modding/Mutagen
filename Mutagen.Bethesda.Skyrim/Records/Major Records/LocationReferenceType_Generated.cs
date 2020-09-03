@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ILocationReferenceTypeInternal,
         ILoquiObjectSetter<LocationReferenceType>,
-        IEquatable<LocationReferenceType>
+        IEquatable<ILocationReferenceTypeGetter>
     {
         #region Ctor
         protected LocationReferenceType()
@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LocationReferenceType? obj)
+        public bool Equals(ILocationReferenceTypeGetter? obj)
         {
             return ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -968,7 +968,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
             return true;
         }
@@ -1481,6 +1481,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILocationReferenceTypeGetter rhs)) return false;
+            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILocationReferenceTypeGetter? obj)
+        {
+            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

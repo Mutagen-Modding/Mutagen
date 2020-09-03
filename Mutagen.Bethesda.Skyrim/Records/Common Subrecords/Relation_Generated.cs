@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class Relation :
         IRelation,
         ILoquiObjectSetter<Relation>,
-        IEquatable<Relation>
+        IEquatable<IRelationGetter>
     {
         #region Ctor
         public Relation()
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((RelationCommon)((IRelationGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Relation? obj)
+        public bool Equals(IRelationGetter? obj)
         {
             return ((RelationCommon)((IRelationGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -927,7 +927,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Target = object.Equals(item.Target, rhs.Target);
+            ret.Target = item.Target.Equals(rhs.Target);
             ret.Modifier = item.Modifier == rhs.Modifier;
             ret.Reaction = item.Reaction == rhs.Reaction;
         }
@@ -1330,6 +1330,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IRelationGetter rhs)) return false;
+            return ((RelationCommon)((IRelationGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IRelationGetter? obj)
+        {
+            return ((RelationCommon)((IRelationGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((RelationCommon)((IRelationGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

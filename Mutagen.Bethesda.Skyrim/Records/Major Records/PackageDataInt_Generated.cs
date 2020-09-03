@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         APackageData,
         IPackageDataInt,
         ILoquiObjectSetter<PackageDataInt>,
-        IEquatable<PackageDataInt>
+        IEquatable<IPackageDataIntGetter>
     {
         #region Ctor
         public PackageDataInt()
@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PackageDataIntCommon)((IPackageDataIntGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PackageDataInt? obj)
+        public bool Equals(IPackageDataIntGetter? obj)
         {
             return ((PackageDataIntCommon)((IPackageDataIntGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -891,7 +891,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IAPackageDataGetter)lhs, (IAPackageDataGetter)rhs)) return false;
             if (lhs.Data != rhs.Data) return false;
             return true;
         }
@@ -1219,6 +1219,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPackageDataIntGetter rhs)) return false;
+            return ((PackageDataIntCommon)((IPackageDataIntGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPackageDataIntGetter? obj)
+        {
+            return ((PackageDataIntCommon)((IPackageDataIntGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PackageDataIntCommon)((IPackageDataIntGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

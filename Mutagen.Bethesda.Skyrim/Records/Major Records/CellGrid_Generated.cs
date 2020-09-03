@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class CellGrid :
         ICellGrid,
         ILoquiObjectSetter<CellGrid>,
-        IEquatable<CellGrid>
+        IEquatable<ICellGridGetter>
     {
         #region Ctor
         public CellGrid()
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((CellGridCommon)((ICellGridGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(CellGrid? obj)
+        public bool Equals(ICellGridGetter? obj)
         {
             return ((CellGridCommon)((ICellGridGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1253,6 +1253,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ICellGridGetter rhs)) return false;
+            return ((CellGridCommon)((ICellGridGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ICellGridGetter? obj)
+        {
+            return ((CellGridCommon)((ICellGridGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((CellGridCommon)((ICellGridGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

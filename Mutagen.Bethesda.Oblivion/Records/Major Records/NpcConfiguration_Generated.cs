@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class NpcConfiguration :
         INpcConfiguration,
         ILoquiObjectSetter<NpcConfiguration>,
-        IEquatable<NpcConfiguration>
+        IEquatable<INpcConfigurationGetter>
     {
         #region Ctor
         public NpcConfiguration()
@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((NpcConfigurationCommon)((INpcConfigurationGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(NpcConfiguration? obj)
+        public bool Equals(INpcConfigurationGetter? obj)
         {
             return ((NpcConfigurationCommon)((INpcConfigurationGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1551,6 +1551,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is INpcConfigurationGetter rhs)) return false;
+            return ((NpcConfigurationCommon)((INpcConfigurationGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(INpcConfigurationGetter? obj)
+        {
+            return ((NpcConfigurationCommon)((INpcConfigurationGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((NpcConfigurationCommon)((INpcConfigurationGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

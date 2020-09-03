@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IFootstepSetInternal,
         ILoquiObjectSetter<FootstepSet>,
-        IEquatable<FootstepSet>
+        IEquatable<IFootstepSetGetter>
     {
         #region Ctor
         protected FootstepSet()
@@ -133,7 +133,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(FootstepSet? obj)
+        public bool Equals(IFootstepSetGetter? obj)
         {
             return ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1679,12 +1679,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!lhs.WalkForwardFootsteps.SequenceEqual(rhs.WalkForwardFootsteps)) return false;
-            if (!lhs.RunForwardFootsteps.SequenceEqual(rhs.RunForwardFootsteps)) return false;
-            if (!lhs.WalkForwardAlternateFootsteps.SequenceEqual(rhs.WalkForwardAlternateFootsteps)) return false;
-            if (!lhs.RunForwardAlternateFootsteps.SequenceEqual(rhs.RunForwardAlternateFootsteps)) return false;
-            if (!lhs.WalkForwardAlternateFootsteps2.SequenceEqual(rhs.WalkForwardAlternateFootsteps2)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
+            if (!lhs.WalkForwardFootsteps.SequenceEqualNullable(rhs.WalkForwardFootsteps)) return false;
+            if (!lhs.RunForwardFootsteps.SequenceEqualNullable(rhs.RunForwardFootsteps)) return false;
+            if (!lhs.WalkForwardAlternateFootsteps.SequenceEqualNullable(rhs.WalkForwardAlternateFootsteps)) return false;
+            if (!lhs.RunForwardAlternateFootsteps.SequenceEqualNullable(rhs.RunForwardAlternateFootsteps)) return false;
+            if (!lhs.WalkForwardAlternateFootsteps2.SequenceEqualNullable(rhs.WalkForwardAlternateFootsteps2)) return false;
             return true;
         }
         
@@ -2341,6 +2341,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IFootstepSetGetter rhs)) return false;
+            return ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IFootstepSetGetter? obj)
+        {
+            return ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

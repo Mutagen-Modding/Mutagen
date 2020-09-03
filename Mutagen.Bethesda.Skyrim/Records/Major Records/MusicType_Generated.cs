@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IMusicTypeInternal,
         ILoquiObjectSetter<MusicType>,
-        IEquatable<MusicType>
+        IEquatable<IMusicTypeGetter>
     {
         #region Ctor
         protected MusicType()
@@ -96,7 +96,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((MusicTypeCommon)((IMusicTypeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(MusicType? obj)
+        public bool Equals(IMusicTypeGetter? obj)
         {
             return ((MusicTypeCommon)((IMusicTypeGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1250,11 +1250,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (!object.Equals(lhs.Data, rhs.Data)) return false;
             if (!lhs.FadeDuration.EqualsWithin(rhs.FadeDuration)) return false;
-            if (!lhs.Tracks.SequenceEqual(rhs.Tracks)) return false;
+            if (!lhs.Tracks.SequenceEqualNullable(rhs.Tracks)) return false;
             return true;
         }
         
@@ -1914,6 +1914,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IMusicTypeGetter rhs)) return false;
+            return ((MusicTypeCommon)((IMusicTypeGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IMusicTypeGetter? obj)
+        {
+            return ((MusicTypeCommon)((IMusicTypeGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((MusicTypeCommon)((IMusicTypeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

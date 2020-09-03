@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         AVirtualMachineAdapter,
         IDialogResponsesAdapter,
         ILoquiObjectSetter<DialogResponsesAdapter>,
-        IEquatable<DialogResponsesAdapter>
+        IEquatable<IDialogResponsesAdapterGetter>
     {
         #region Ctor
         public DialogResponsesAdapter()
@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((DialogResponsesAdapterCommon)((IDialogResponsesAdapterGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(DialogResponsesAdapter? obj)
+        public bool Equals(IDialogResponsesAdapterGetter? obj)
         {
             return ((DialogResponsesAdapterCommon)((IDialogResponsesAdapterGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -911,7 +911,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IAVirtualMachineAdapterGetter)lhs, (IAVirtualMachineAdapterGetter)rhs)) return false;
             if (!object.Equals(lhs.ScriptFragments, rhs.ScriptFragments)) return false;
             return true;
         }
@@ -1301,6 +1301,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IDialogResponsesAdapterGetter rhs)) return false;
+            return ((DialogResponsesAdapterCommon)((IDialogResponsesAdapterGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IDialogResponsesAdapterGetter? obj)
+        {
+            return ((DialogResponsesAdapterCommon)((IDialogResponsesAdapterGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((DialogResponsesAdapterCommon)((IDialogResponsesAdapterGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

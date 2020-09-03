@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class MusicTypeData :
         IMusicTypeData,
         ILoquiObjectSetter<MusicTypeData>,
-        IEquatable<MusicTypeData>
+        IEquatable<IMusicTypeDataGetter>
     {
         #region Ctor
         public MusicTypeData()
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((MusicTypeDataCommon)((IMusicTypeDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(MusicTypeData? obj)
+        public bool Equals(IMusicTypeDataGetter? obj)
         {
             return ((MusicTypeDataCommon)((IMusicTypeDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1255,6 +1255,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IMusicTypeDataGetter rhs)) return false;
+            return ((MusicTypeDataCommon)((IMusicTypeDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IMusicTypeDataGetter? obj)
+        {
+            return ((MusicTypeDataCommon)((IMusicTypeDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((MusicTypeDataCommon)((IMusicTypeDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

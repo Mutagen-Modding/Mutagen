@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class ModStats :
         IModStats,
         ILoquiObjectSetter<ModStats>,
-        IEquatable<ModStats>
+        IEquatable<IModStatsGetter>
     {
         #region Ctor
         public ModStats()
@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ModStatsCommon)((IModStatsGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ModStats? obj)
+        public bool Equals(IModStatsGetter? obj)
         {
             return ((ModStatsCommon)((IModStatsGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1310,6 +1310,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IModStatsGetter rhs)) return false;
+            return ((ModStatsCommon)((IModStatsGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IModStatsGetter? obj)
+        {
+            return ((ModStatsCommon)((IModStatsGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ModStatsCommon)((IModStatsGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

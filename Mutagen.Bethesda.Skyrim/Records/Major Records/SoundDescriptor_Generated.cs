@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ISoundDescriptorInternal,
         ILoquiObjectSetter<SoundDescriptor>,
-        IEquatable<SoundDescriptor>
+        IEquatable<ISoundDescriptorGetter>
     {
         #region Ctor
         protected SoundDescriptor()
@@ -151,7 +151,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SoundDescriptorCommon)((ISoundDescriptorGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(SoundDescriptor? obj)
+        public bool Equals(ISoundDescriptorGetter? obj)
         {
             return ((SoundDescriptorCommon)((ISoundDescriptorGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1675,13 +1675,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.CNAM = MemorySliceExt.Equal(item.CNAM, rhs.CNAM);
-            ret.Category = object.Equals(item.Category, rhs.Category);
-            ret.AlternateSoundFor = object.Equals(item.AlternateSoundFor, rhs.AlternateSoundFor);
+            ret.Category = item.Category.Equals(rhs.Category);
+            ret.AlternateSoundFor = item.AlternateSoundFor.Equals(rhs.AlternateSoundFor);
             ret.SoundFiles = item.SoundFiles.CollectionEqualsHelper(
                 rhs.SoundFiles,
                 (l, r) => string.Equals(l, r),
                 include);
-            ret.OutputModel = object.Equals(item.OutputModel, rhs.OutputModel);
+            ret.OutputModel = item.OutputModel.Equals(rhs.OutputModel);
             ret.String = string.Equals(item.String, rhs.String);
             ret.Conditions = item.Conditions.CollectionEqualsHelper(
                 rhs.Conditions,
@@ -1883,14 +1883,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!MemorySliceExt.Equal(lhs.CNAM, rhs.CNAM)) return false;
             if (!lhs.Category.Equals(rhs.Category)) return false;
             if (!lhs.AlternateSoundFor.Equals(rhs.AlternateSoundFor)) return false;
-            if (!lhs.SoundFiles.SequenceEqual(rhs.SoundFiles)) return false;
+            if (!lhs.SoundFiles.SequenceEqualNullable(rhs.SoundFiles)) return false;
             if (!lhs.OutputModel.Equals(rhs.OutputModel)) return false;
             if (!string.Equals(lhs.String, rhs.String)) return false;
-            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
+            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
             if (!object.Equals(lhs.LoopAndRumble, rhs.LoopAndRumble)) return false;
             if (lhs.PercentFrequencyShift != rhs.PercentFrequencyShift) return false;
             if (lhs.PercentFrequencyVariance != rhs.PercentFrequencyVariance) return false;
@@ -2810,6 +2810,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ISoundDescriptorGetter rhs)) return false;
+            return ((SoundDescriptorCommon)((ISoundDescriptorGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ISoundDescriptorGetter? obj)
+        {
+            return ((SoundDescriptorCommon)((ISoundDescriptorGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((SoundDescriptorCommon)((ISoundDescriptorGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IEncounterZoneInternal,
         ILoquiObjectSetter<EncounterZone>,
-        IEquatable<EncounterZone>
+        IEquatable<IEncounterZoneGetter>
     {
         #region Ctor
         protected EncounterZone()
@@ -128,7 +128,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((EncounterZoneCommon)((IEncounterZoneGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(EncounterZone? obj)
+        public bool Equals(IEncounterZoneGetter? obj)
         {
             return ((EncounterZoneCommon)((IEncounterZoneGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1192,8 +1192,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Owner = object.Equals(item.Owner, rhs.Owner);
-            ret.Location = object.Equals(item.Location, rhs.Location);
+            ret.Owner = item.Owner.Equals(rhs.Owner);
+            ret.Location = item.Location.Equals(rhs.Location);
             ret.Rank = item.Rank == rhs.Rank;
             ret.MinLevel = item.MinLevel == rhs.MinLevel;
             ret.Flags = item.Flags == rhs.Flags;
@@ -1325,7 +1325,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!lhs.Owner.Equals(rhs.Owner)) return false;
             if (!lhs.Location.Equals(rhs.Location)) return false;
             if (lhs.Rank != rhs.Rank) return false;
@@ -1949,6 +1949,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IEncounterZoneGetter rhs)) return false;
+            return ((EncounterZoneCommon)((IEncounterZoneGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IEncounterZoneGetter? obj)
+        {
+            return ((EncounterZoneCommon)((IEncounterZoneGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((EncounterZoneCommon)((IEncounterZoneGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

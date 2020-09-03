@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class SceneAction :
         ISceneAction,
         ILoquiObjectSetter<SceneAction>,
-        IEquatable<SceneAction>
+        IEquatable<ISceneActionGetter>
     {
         #region Ctor
         public SceneAction()
@@ -165,7 +165,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SceneActionCommon)((ISceneActionGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(SceneAction? obj)
+        public bool Equals(ISceneActionGetter? obj)
         {
             return ((SceneActionCommon)((ISceneActionGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1716,7 +1716,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Packages,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.Topic = object.Equals(item.Topic, rhs.Topic);
+            ret.Topic = item.Topic.Equals(rhs.Topic);
             ret.HeadtrackActorID = item.HeadtrackActorID == rhs.HeadtrackActorID;
             ret.LoopingMax = item.LoopingMax.EqualsWithin(rhs.LoopingMax);
             ret.LoopingMin = item.LoopingMin.EqualsWithin(rhs.LoopingMin);
@@ -1887,7 +1887,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs.StartPhase != rhs.StartPhase) return false;
             if (lhs.EndPhase != rhs.EndPhase) return false;
             if (!lhs.TimerSeconds.EqualsWithin(rhs.TimerSeconds)) return false;
-            if (!lhs.Packages.SequenceEqual(rhs.Packages)) return false;
+            if (!lhs.Packages.SequenceEqualNullable(rhs.Packages)) return false;
             if (!lhs.Topic.Equals(rhs.Topic)) return false;
             if (lhs.HeadtrackActorID != rhs.HeadtrackActorID) return false;
             if (!lhs.LoopingMax.EqualsWithin(rhs.LoopingMax)) return false;
@@ -2788,6 +2788,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ISceneActionGetter rhs)) return false;
+            return ((SceneActionCommon)((ISceneActionGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ISceneActionGetter? obj)
+        {
+            return ((SceneActionCommon)((ISceneActionGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((SceneActionCommon)((ISceneActionGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

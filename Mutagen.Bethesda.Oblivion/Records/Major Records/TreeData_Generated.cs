@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class TreeData :
         ITreeData,
         ILoquiObjectSetter<TreeData>,
-        IEquatable<TreeData>
+        IEquatable<ITreeDataGetter>
     {
         #region Ctor
         public TreeData()
@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((TreeDataCommon)((ITreeDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(TreeData? obj)
+        public bool Equals(ITreeDataGetter? obj)
         {
             return ((TreeDataCommon)((ITreeDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1622,6 +1622,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ITreeDataGetter rhs)) return false;
+            return ((TreeDataCommon)((ITreeDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ITreeDataGetter? obj)
+        {
+            return ((TreeDataCommon)((ITreeDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((TreeDataCommon)((ITreeDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

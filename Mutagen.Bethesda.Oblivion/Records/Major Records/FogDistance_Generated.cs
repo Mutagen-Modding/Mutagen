@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class FogDistance :
         IFogDistance,
         ILoquiObjectSetter<FogDistance>,
-        IEquatable<FogDistance>
+        IEquatable<IFogDistanceGetter>
     {
         #region Ctor
         public FogDistance()
@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((FogDistanceCommon)((IFogDistanceGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(FogDistance? obj)
+        public bool Equals(IFogDistanceGetter? obj)
         {
             return ((FogDistanceCommon)((IFogDistanceGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1376,6 +1376,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IFogDistanceGetter rhs)) return false;
+            return ((FogDistanceCommon)((IFogDistanceGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IFogDistanceGetter? obj)
+        {
+            return ((FogDistanceCommon)((IFogDistanceGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((FogDistanceCommon)((IFogDistanceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

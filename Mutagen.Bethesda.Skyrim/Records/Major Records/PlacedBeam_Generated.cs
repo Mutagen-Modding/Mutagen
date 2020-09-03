@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         APlacedTrap,
         IPlacedBeamInternal,
         ILoquiObjectSetter<PlacedBeam>,
-        IEquatable<PlacedBeam>
+        IEquatable<IPlacedBeamGetter>
     {
         #region Ctor
         protected PlacedBeam()
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PlacedBeamCommon)((IPlacedBeamGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PlacedBeam? obj)
+        public bool Equals(IPlacedBeamGetter? obj)
         {
             return ((PlacedBeamCommon)((IPlacedBeamGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -936,7 +936,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Projectile = object.Equals(item.Projectile, rhs.Projectile);
+            ret.Projectile = item.Projectile.Equals(rhs.Projectile);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1094,7 +1094,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IAPlacedTrapGetter)lhs, (IAPlacedTrapGetter)rhs)) return false;
             if (!lhs.Projectile.Equals(rhs.Projectile)) return false;
             return true;
         }
@@ -1598,6 +1598,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPlacedBeamGetter rhs)) return false;
+            return ((PlacedBeamCommon)((IPlacedBeamGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPlacedBeamGetter? obj)
+        {
+            return ((PlacedBeamCommon)((IPlacedBeamGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PlacedBeamCommon)((IPlacedBeamGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

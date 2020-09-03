@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IWeaponInternal,
         ILoquiObjectSetter<Weapon>,
-        IEquatable<Weapon>
+        IEquatable<IWeaponGetter>
     {
         #region Ctor
         protected Weapon()
@@ -281,7 +281,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Weapon? obj)
+        public bool Equals(IWeaponGetter? obj)
         {
             return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2562,18 +2562,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Icons,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.ObjectEffect = object.Equals(item.ObjectEffect, rhs.ObjectEffect);
+            ret.ObjectEffect = item.ObjectEffect.Equals(rhs.ObjectEffect);
             ret.EnchantmentAmount = item.EnchantmentAmount == rhs.EnchantmentAmount;
             ret.Destructible = EqualsMaskHelper.EqualsHelper(
                 item.Destructible,
                 rhs.Destructible,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.EquipmentType = object.Equals(item.EquipmentType, rhs.EquipmentType);
-            ret.BlockBashImpact = object.Equals(item.BlockBashImpact, rhs.BlockBashImpact);
-            ret.AlternateBlockMaterial = object.Equals(item.AlternateBlockMaterial, rhs.AlternateBlockMaterial);
-            ret.PickUpSound = object.Equals(item.PickUpSound, rhs.PickUpSound);
-            ret.PutDownSound = object.Equals(item.PutDownSound, rhs.PutDownSound);
+            ret.EquipmentType = item.EquipmentType.Equals(rhs.EquipmentType);
+            ret.BlockBashImpact = item.BlockBashImpact.Equals(rhs.BlockBashImpact);
+            ret.AlternateBlockMaterial = item.AlternateBlockMaterial.Equals(rhs.AlternateBlockMaterial);
+            ret.PickUpSound = item.PickUpSound.Equals(rhs.PickUpSound);
+            ret.PutDownSound = item.PutDownSound.Equals(rhs.PutDownSound);
             ret.Keywords = item.Keywords.CollectionEqualsHelper(
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
@@ -2585,15 +2585,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Unused = MemorySliceExt.Equal(item.Unused, rhs.Unused);
-            ret.ImpactDataSet = object.Equals(item.ImpactDataSet, rhs.ImpactDataSet);
-            ret.FirstPersonModel = object.Equals(item.FirstPersonModel, rhs.FirstPersonModel);
-            ret.AttackSound = object.Equals(item.AttackSound, rhs.AttackSound);
-            ret.AttackSound2D = object.Equals(item.AttackSound2D, rhs.AttackSound2D);
-            ret.AttackLoopSound = object.Equals(item.AttackLoopSound, rhs.AttackLoopSound);
-            ret.AttackFailSound = object.Equals(item.AttackFailSound, rhs.AttackFailSound);
-            ret.IdleSound = object.Equals(item.IdleSound, rhs.IdleSound);
-            ret.EquipSound = object.Equals(item.EquipSound, rhs.EquipSound);
-            ret.UnequipSound = object.Equals(item.UnequipSound, rhs.UnequipSound);
+            ret.ImpactDataSet = item.ImpactDataSet.Equals(rhs.ImpactDataSet);
+            ret.FirstPersonModel = item.FirstPersonModel.Equals(rhs.FirstPersonModel);
+            ret.AttackSound = item.AttackSound.Equals(rhs.AttackSound);
+            ret.AttackSound2D = item.AttackSound2D.Equals(rhs.AttackSound2D);
+            ret.AttackLoopSound = item.AttackLoopSound.Equals(rhs.AttackLoopSound);
+            ret.AttackFailSound = item.AttackFailSound.Equals(rhs.AttackFailSound);
+            ret.IdleSound = item.IdleSound.Equals(rhs.IdleSound);
+            ret.EquipSound = item.EquipSound.Equals(rhs.EquipSound);
+            ret.UnequipSound = item.UnequipSound.Equals(rhs.UnequipSound);
             ret.BasicStats = EqualsMaskHelper.EqualsHelper(
                 item.BasicStats,
                 rhs.BasicStats,
@@ -2610,7 +2610,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.DetectionSoundLevel = item.DetectionSoundLevel == rhs.DetectionSoundLevel;
-            ret.Template = object.Equals(item.Template, rhs.Template);
+            ret.Template = item.Template.Equals(rhs.Template);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2861,7 +2861,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
@@ -2875,7 +2875,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.AlternateBlockMaterial.Equals(rhs.AlternateBlockMaterial)) return false;
             if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
             if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
-            if (!lhs.Keywords.SequenceEqual(rhs.Keywords)) return false;
+            if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             if (!string.Equals(lhs.Description, rhs.Description)) return false;
             if (!object.Equals(lhs.ScopeModel, rhs.ScopeModel)) return false;
             if (!MemorySliceExt.Equal(lhs.Unused, rhs.Unused)) return false;
@@ -4587,6 +4587,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IWeaponGetter rhs)) return false;
+            return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IWeaponGetter? obj)
+        {
+            return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

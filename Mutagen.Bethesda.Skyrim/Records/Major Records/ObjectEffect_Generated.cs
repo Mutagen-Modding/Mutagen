@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IObjectEffectInternal,
         ILoquiObjectSetter<ObjectEffect>,
-        IEquatable<ObjectEffect>
+        IEquatable<IObjectEffectGetter>
     {
         #region Ctor
         protected ObjectEffect()
@@ -121,7 +121,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ObjectEffect? obj)
+        public bool Equals(IObjectEffectGetter? obj)
         {
             return ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1542,8 +1542,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.TargetType = item.TargetType == rhs.TargetType;
             ret.EnchantType = item.EnchantType == rhs.EnchantType;
             ret.ChargeTime = item.ChargeTime.EqualsWithin(rhs.ChargeTime);
-            ret.BaseEnchantment = object.Equals(item.BaseEnchantment, rhs.BaseEnchantment);
-            ret.WornRestrictions = object.Equals(item.WornRestrictions, rhs.WornRestrictions);
+            ret.BaseEnchantment = item.BaseEnchantment.Equals(rhs.BaseEnchantment);
+            ret.WornRestrictions = item.WornRestrictions.Equals(rhs.WornRestrictions);
             ret.Effects = item.Effects.CollectionEqualsHelper(
                 rhs.Effects,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1714,7 +1714,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (lhs.EnchantmentCost != rhs.EnchantmentCost) return false;
@@ -1726,7 +1726,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.ChargeTime.EqualsWithin(rhs.ChargeTime)) return false;
             if (!lhs.BaseEnchantment.Equals(rhs.BaseEnchantment)) return false;
             if (!lhs.WornRestrictions.Equals(rhs.WornRestrictions)) return false;
-            if (!lhs.Effects.SequenceEqual(rhs.Effects)) return false;
+            if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
             if (lhs.ENITDataTypeState != rhs.ENITDataTypeState) return false;
             return true;
         }
@@ -2530,6 +2530,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IObjectEffectGetter rhs)) return false;
+            return ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IObjectEffectGetter? obj)
+        {
+            return ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

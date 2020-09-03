@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class CombatStyleCloseRange :
         ICombatStyleCloseRange,
         ILoquiObjectSetter<CombatStyleCloseRange>,
-        IEquatable<CombatStyleCloseRange>
+        IEquatable<ICombatStyleCloseRangeGetter>
     {
         #region Ctor
         public CombatStyleCloseRange()
@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((CombatStyleCloseRangeCommon)((ICombatStyleCloseRangeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(CombatStyleCloseRange? obj)
+        public bool Equals(ICombatStyleCloseRangeGetter? obj)
         {
             return ((CombatStyleCloseRangeCommon)((ICombatStyleCloseRangeGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1451,6 +1451,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ICombatStyleCloseRangeGetter rhs)) return false;
+            return ((CombatStyleCloseRangeCommon)((ICombatStyleCloseRangeGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ICombatStyleCloseRangeGetter? obj)
+        {
+            return ((CombatStyleCloseRangeCommon)((ICombatStyleCloseRangeGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((CombatStyleCloseRangeCommon)((ICombatStyleCloseRangeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

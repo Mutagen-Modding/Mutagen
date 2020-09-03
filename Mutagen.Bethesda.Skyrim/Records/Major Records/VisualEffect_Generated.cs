@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IVisualEffectInternal,
         ILoquiObjectSetter<VisualEffect>,
-        IEquatable<VisualEffect>
+        IEquatable<IVisualEffectGetter>
     {
         #region Ctor
         protected VisualEffect()
@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((VisualEffectCommon)((IVisualEffectGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(VisualEffect? obj)
+        public bool Equals(IVisualEffectGetter? obj)
         {
             return ((VisualEffectCommon)((IVisualEffectGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1013,8 +1013,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.EffectArt = object.Equals(item.EffectArt, rhs.EffectArt);
-            ret.Shader = object.Equals(item.Shader, rhs.Shader);
+            ret.EffectArt = item.EffectArt.Equals(rhs.EffectArt);
+            ret.Shader = item.Shader.Equals(rhs.Shader);
             ret.Flags = item.Flags == rhs.Flags;
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
@@ -1131,7 +1131,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!lhs.EffectArt.Equals(rhs.EffectArt)) return false;
             if (!lhs.Shader.Equals(rhs.Shader)) return false;
             if (lhs.Flags != rhs.Flags) return false;
@@ -1703,6 +1703,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IVisualEffectGetter rhs)) return false;
+            return ((VisualEffectCommon)((IVisualEffectGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IVisualEffectGetter? obj)
+        {
+            return ((VisualEffectCommon)((IVisualEffectGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((VisualEffectCommon)((IVisualEffectGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

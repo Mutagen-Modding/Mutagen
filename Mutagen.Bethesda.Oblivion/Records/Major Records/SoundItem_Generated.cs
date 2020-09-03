@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class SoundItem :
         ISoundItem,
         ILoquiObjectSetter<SoundItem>,
-        IEquatable<SoundItem>
+        IEquatable<ISoundItemGetter>
     {
         #region Ctor
         public SoundItem()
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((SoundItemCommon)((ISoundItemGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(SoundItem? obj)
+        public bool Equals(ISoundItemGetter? obj)
         {
             return ((SoundItemCommon)((ISoundItemGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -891,7 +891,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Sound = object.Equals(item.Sound, rhs.Sound);
+            ret.Sound = item.Sound.Equals(rhs.Sound);
             ret.Chance = item.Chance == rhs.Chance;
         }
         
@@ -1347,6 +1347,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ISoundItemGetter rhs)) return false;
+            return ((SoundItemCommon)((ISoundItemGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ISoundItemGetter? obj)
+        {
+            return ((SoundItemCommon)((ISoundItemGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((SoundItemCommon)((ISoundItemGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

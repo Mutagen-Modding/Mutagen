@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         APerkEffect,
         IPerkQuestEffect,
         ILoquiObjectSetter<PerkQuestEffect>,
-        IEquatable<PerkQuestEffect>
+        IEquatable<IPerkQuestEffectGetter>
     {
         #region Ctor
         public PerkQuestEffect()
@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PerkQuestEffectCommon)((IPerkQuestEffectGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PerkQuestEffect? obj)
+        public bool Equals(IPerkQuestEffectGetter? obj)
         {
             return ((PerkQuestEffectCommon)((IPerkQuestEffectGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -922,7 +922,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Quest = object.Equals(item.Quest, rhs.Quest);
+            ret.Quest = item.Quest.Equals(rhs.Quest);
             ret.Stage = item.Stage == rhs.Stage;
             ret.Unknown = MemoryExtensions.SequenceEqual(item.Unknown.Span, rhs.Unknown.Span);
             base.FillEqualsMask(item, rhs, ret, include);
@@ -1014,7 +1014,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IAPerkEffectGetter)lhs, (IAPerkEffectGetter)rhs)) return false;
             if (!lhs.Quest.Equals(rhs.Quest)) return false;
             if (lhs.Stage != rhs.Stage) return false;
             if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
@@ -1380,6 +1380,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPerkQuestEffectGetter rhs)) return false;
+            return ((PerkQuestEffectCommon)((IPerkQuestEffectGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPerkQuestEffectGetter? obj)
+        {
+            return ((PerkQuestEffectCommon)((IPerkQuestEffectGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PerkQuestEffectCommon)((IPerkQuestEffectGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

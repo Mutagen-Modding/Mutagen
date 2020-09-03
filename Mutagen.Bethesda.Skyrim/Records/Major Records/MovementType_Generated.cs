@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IMovementTypeInternal,
         ILoquiObjectSetter<MovementType>,
-        IEquatable<MovementType>
+        IEquatable<IMovementTypeGetter>
     {
         #region Ctor
         protected MovementType()
@@ -125,7 +125,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((MovementTypeCommon)((IMovementTypeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(MovementType? obj)
+        public bool Equals(IMovementTypeGetter? obj)
         {
             return ((MovementTypeCommon)((IMovementTypeGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1664,7 +1664,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!lhs.LeftWalk.EqualsWithin(rhs.LeftWalk)) return false;
             if (!lhs.LeftRun.EqualsWithin(rhs.LeftRun)) return false;
@@ -2441,6 +2441,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IMovementTypeGetter rhs)) return false;
+            return ((MovementTypeCommon)((IMovementTypeGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IMovementTypeGetter? obj)
+        {
+            return ((MovementTypeCommon)((IMovementTypeGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((MovementTypeCommon)((IMovementTypeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

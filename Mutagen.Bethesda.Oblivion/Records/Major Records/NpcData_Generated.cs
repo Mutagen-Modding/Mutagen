@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class NpcData :
         INpcData,
         ILoquiObjectSetter<NpcData>,
-        IEquatable<NpcData>
+        IEquatable<INpcDataGetter>
     {
         #region Ctor
         public NpcData()
@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((NpcDataCommon)((INpcDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(NpcData? obj)
+        public bool Equals(INpcDataGetter? obj)
         {
             return ((NpcDataCommon)((INpcDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2928,6 +2928,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is INpcDataGetter rhs)) return false;
+            return ((NpcDataCommon)((INpcDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(INpcDataGetter? obj)
+        {
+            return ((NpcDataCommon)((INpcDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((NpcDataCommon)((INpcDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

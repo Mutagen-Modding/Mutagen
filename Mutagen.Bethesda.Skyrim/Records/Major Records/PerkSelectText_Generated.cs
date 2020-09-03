@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         APerkEntryPointEffect,
         IPerkSelectText,
         ILoquiObjectSetter<PerkSelectText>,
-        IEquatable<PerkSelectText>
+        IEquatable<IPerkSelectTextGetter>
     {
         #region Ctor
         public PerkSelectText()
@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PerkSelectTextCommon)((IPerkSelectTextGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PerkSelectText? obj)
+        public bool Equals(IPerkSelectTextGetter? obj)
         {
             return ((PerkSelectTextCommon)((IPerkSelectTextGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -937,7 +937,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IAPerkEntryPointEffectGetter)lhs, (IAPerkEntryPointEffectGetter)rhs)) return false;
             if (!string.Equals(lhs.Text, rhs.Text)) return false;
             return true;
         }
@@ -1326,6 +1326,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPerkSelectTextGetter rhs)) return false;
+            return ((PerkSelectTextCommon)((IPerkSelectTextGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPerkSelectTextGetter? obj)
+        {
+            return ((PerkSelectTextCommon)((IPerkSelectTextGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PerkSelectTextCommon)((IPerkSelectTextGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

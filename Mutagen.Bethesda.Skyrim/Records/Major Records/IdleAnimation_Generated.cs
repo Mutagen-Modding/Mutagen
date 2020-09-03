@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IIdleAnimationInternal,
         ILoquiObjectSetter<IdleAnimation>,
-        IEquatable<IdleAnimation>
+        IEquatable<IIdleAnimationGetter>
     {
         #region Ctor
         protected IdleAnimation()
@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(IdleAnimation? obj)
+        public bool Equals(IIdleAnimationGetter? obj)
         {
             return ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1647,11 +1647,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
+            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
             if (!string.Equals(lhs.Filename, rhs.Filename)) return false;
             if (!string.Equals(lhs.AnimationEvent, rhs.AnimationEvent)) return false;
-            if (!lhs.RelatedIdles.SequenceEqual(rhs.RelatedIdles)) return false;
+            if (!lhs.RelatedIdles.SequenceEqualNullable(rhs.RelatedIdles)) return false;
             if (lhs.LoopingSecondsMin != rhs.LoopingSecondsMin) return false;
             if (lhs.LoopingSecondsMax != rhs.LoopingSecondsMax) return false;
             if (lhs.Flags != rhs.Flags) return false;
@@ -2430,6 +2430,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IIdleAnimationGetter rhs)) return false;
+            return ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IIdleAnimationGetter? obj)
+        {
+            return ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

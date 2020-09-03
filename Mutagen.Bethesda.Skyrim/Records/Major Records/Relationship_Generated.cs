@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IRelationshipInternal,
         ILoquiObjectSetter<Relationship>,
-        IEquatable<Relationship>
+        IEquatable<IRelationshipGetter>
     {
         #region Ctor
         protected Relationship()
@@ -90,7 +90,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Relationship? obj)
+        public bool Equals(IRelationshipGetter? obj)
         {
             return ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1166,12 +1166,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Parent = object.Equals(item.Parent, rhs.Parent);
-            ret.Child = object.Equals(item.Child, rhs.Child);
+            ret.Parent = item.Parent.Equals(rhs.Parent);
+            ret.Child = item.Child.Equals(rhs.Child);
             ret.Rank = item.Rank == rhs.Rank;
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.Flags = item.Flags == rhs.Flags;
-            ret.AssociationType = object.Equals(item.AssociationType, rhs.AssociationType);
+            ret.AssociationType = item.AssociationType.Equals(rhs.AssociationType);
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -1299,7 +1299,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!lhs.Parent.Equals(rhs.Parent)) return false;
             if (!lhs.Child.Equals(rhs.Child)) return false;
             if (lhs.Rank != rhs.Rank) return false;
@@ -1919,6 +1919,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IRelationshipGetter rhs)) return false;
+            return ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IRelationshipGetter? obj)
+        {
+            return ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

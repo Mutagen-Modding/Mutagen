@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class Bounding :
         IBounding,
         ILoquiObjectSetter<Bounding>,
-        IEquatable<Bounding>
+        IEquatable<IBoundingGetter>
     {
         #region Ctor
         public Bounding()
@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((BoundingCommon)((IBoundingGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Bounding? obj)
+        public bool Equals(IBoundingGetter? obj)
         {
             return ((BoundingCommon)((IBoundingGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1547,6 +1547,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IBoundingGetter rhs)) return false;
+            return ((BoundingCommon)((IBoundingGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IBoundingGetter? obj)
+        {
+            return ((BoundingCommon)((IBoundingGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((BoundingCommon)((IBoundingGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

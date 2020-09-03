@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IEffectShaderInternal,
         ILoquiObjectSetter<EffectShader>,
-        IEquatable<EffectShader>
+        IEquatable<IEffectShaderGetter>
     {
         #region Ctor
         protected EffectShader()
@@ -73,15 +73,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MembraneSourceBlendMode
         public readonly static EffectShader.BlendMode _MembraneSourceBlendMode_Default = BlendMode.Zero;
-        public EffectShader.BlendMode MembraneSourceBlendMode { get; set; } = default;
+        public EffectShader.BlendMode MembraneSourceBlendMode { get; set; } = _MembraneSourceBlendMode_Default;
         #endregion
         #region MembraneBlendOperation
         public readonly static EffectShader.BlendOperation _MembraneBlendOperation_Default = BlendOperation.Add;
-        public EffectShader.BlendOperation MembraneBlendOperation { get; set; } = default;
+        public EffectShader.BlendOperation MembraneBlendOperation { get; set; } = _MembraneBlendOperation_Default;
         #endregion
         #region MembraneZTest
         public readonly static EffectShader.ZTest _MembraneZTest_Default = ZTest.Normal;
-        public EffectShader.ZTest MembraneZTest { get; set; } = default;
+        public EffectShader.ZTest MembraneZTest { get; set; } = _MembraneZTest_Default;
         #endregion
         #region FillColorKey1
         public Color FillColorKey1 { get; set; } = default;
@@ -142,23 +142,23 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MembraneDestBlendMode
         public readonly static EffectShader.BlendMode _MembraneDestBlendMode_Default = BlendMode.Zero;
-        public EffectShader.BlendMode MembraneDestBlendMode { get; set; } = default;
+        public EffectShader.BlendMode MembraneDestBlendMode { get; set; } = _MembraneDestBlendMode_Default;
         #endregion
         #region ParticleSourceBlendMode
         public readonly static EffectShader.BlendMode _ParticleSourceBlendMode_Default = BlendMode.Zero;
-        public EffectShader.BlendMode ParticleSourceBlendMode { get; set; } = default;
+        public EffectShader.BlendMode ParticleSourceBlendMode { get; set; } = _ParticleSourceBlendMode_Default;
         #endregion
         #region ParticleBlendOperation
         public readonly static EffectShader.BlendOperation _ParticleBlendOperation_Default = BlendOperation.Add;
-        public EffectShader.BlendOperation ParticleBlendOperation { get; set; } = default;
+        public EffectShader.BlendOperation ParticleBlendOperation { get; set; } = _ParticleBlendOperation_Default;
         #endregion
         #region ParticleZTest
         public readonly static EffectShader.ZTest _ParticleZTest_Default = ZTest.Normal;
-        public EffectShader.ZTest ParticleZTest { get; set; } = default;
+        public EffectShader.ZTest ParticleZTest { get; set; } = _ParticleZTest_Default;
         #endregion
         #region ParticleDestBlendMode
         public readonly static EffectShader.BlendMode _ParticleDestBlendMode_Default = BlendMode.Zero;
-        public EffectShader.BlendMode ParticleDestBlendMode { get; set; } = default;
+        public EffectShader.BlendMode ParticleDestBlendMode { get; set; } = _ParticleDestBlendMode_Default;
         #endregion
         #region ParticleBirthRampUpTime
         public Single ParticleBirthRampUpTime { get; set; } = default;
@@ -661,7 +661,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(EffectShader? obj)
+        public bool Equals(IEffectShaderGetter? obj)
         {
             return ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -6051,7 +6051,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.ParticleInitialRotationDegreePlusMinus = item.ParticleInitialRotationDegreePlusMinus.EqualsWithin(rhs.ParticleInitialRotationDegreePlusMinus);
             ret.ParticleRotationSpeedDegreePerSec = item.ParticleRotationSpeedDegreePerSec.EqualsWithin(rhs.ParticleRotationSpeedDegreePerSec);
             ret.ParticleRotationSpeedDegreePerSecPlusMinus = item.ParticleRotationSpeedDegreePerSecPlusMinus.EqualsWithin(rhs.ParticleRotationSpeedDegreePerSecPlusMinus);
-            ret.AddonModels = object.Equals(item.AddonModels, rhs.AddonModels);
+            ret.AddonModels = item.AddonModels.Equals(rhs.AddonModels);
             ret.HolesStartTime = item.HolesStartTime.EqualsWithin(rhs.HolesStartTime);
             ret.HolesEndTime = item.HolesEndTime.EqualsWithin(rhs.HolesEndTime);
             ret.HolesStartValue = item.HolesStartValue.EqualsWithin(rhs.HolesStartValue);
@@ -6067,7 +6067,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.AddonModelsScaleEnd = item.AddonModelsScaleEnd.EqualsWithin(rhs.AddonModelsScaleEnd);
             ret.AddonModelsScaleInTime = item.AddonModelsScaleInTime.EqualsWithin(rhs.AddonModelsScaleInTime);
             ret.AddonModelsScaleOutTime = item.AddonModelsScaleOutTime.EqualsWithin(rhs.AddonModelsScaleOutTime);
-            ret.AmbientSound = object.Equals(item.AmbientSound, rhs.AmbientSound);
+            ret.AmbientSound = item.AmbientSound.Equals(rhs.AmbientSound);
             ret.FillColorKey2 = item.FillColorKey2.ColorOnlyEquals(rhs.FillColorKey2);
             ret.FillColorKey3 = item.FillColorKey3.ColorOnlyEquals(rhs.FillColorKey3);
             ret.FillColorKey1Scale = item.FillColorKey1Scale.EqualsWithin(rhs.FillColorKey1Scale);
@@ -6618,7 +6618,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.FillTexture, rhs.FillTexture)) return false;
             if (!string.Equals(lhs.ParticleShaderTexture, rhs.ParticleShaderTexture)) return false;
             if (!string.Equals(lhs.HolesTexture, rhs.HolesTexture)) return false;
@@ -8835,6 +8835,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IEffectShaderGetter rhs)) return false;
+            return ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IEffectShaderGetter? obj)
+        {
+            return ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

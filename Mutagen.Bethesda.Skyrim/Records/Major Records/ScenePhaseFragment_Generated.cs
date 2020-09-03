@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ScenePhaseFragment :
         IScenePhaseFragment,
         ILoquiObjectSetter<ScenePhaseFragment>,
-        IEquatable<ScenePhaseFragment>
+        IEquatable<IScenePhaseFragmentGetter>
     {
         #region Ctor
         public ScenePhaseFragment()
@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ScenePhaseFragmentCommon)((IScenePhaseFragmentGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ScenePhaseFragment? obj)
+        public bool Equals(IScenePhaseFragmentGetter? obj)
         {
             return ((ScenePhaseFragmentCommon)((IScenePhaseFragmentGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1434,6 +1434,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IScenePhaseFragmentGetter rhs)) return false;
+            return ((ScenePhaseFragmentCommon)((IScenePhaseFragmentGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IScenePhaseFragmentGetter? obj)
+        {
+            return ((ScenePhaseFragmentCommon)((IScenePhaseFragmentGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ScenePhaseFragmentCommon)((IScenePhaseFragmentGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

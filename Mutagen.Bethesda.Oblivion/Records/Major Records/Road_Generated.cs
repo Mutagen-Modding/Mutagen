@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IRoadInternal,
         ILoquiObjectSetter<Road>,
-        IEquatable<Road>
+        IEquatable<IRoadGetter>
     {
         #region Ctor
         protected Road()
@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((RoadCommon)((IRoadGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Road? obj)
+        public bool Equals(IRoadGetter? obj)
         {
             return ((RoadCommon)((IRoadGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1061,8 +1061,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!lhs.Points.SequenceEqual(rhs.Points)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
+            if (!lhs.Points.SequenceEqualNullable(rhs.Points)) return false;
             return true;
         }
         
@@ -1625,6 +1625,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IRoadGetter rhs)) return false;
+            return ((RoadCommon)((IRoadGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IRoadGetter? obj)
+        {
+            return ((RoadCommon)((IRoadGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((RoadCommon)((IRoadGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

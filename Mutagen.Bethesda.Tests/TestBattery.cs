@@ -80,10 +80,7 @@ namespace Mutagen.Bethesda.Tests
                 Do = true,
                 Path = "Oblivion.esm"
             };
-            var passthroughTests = (settings.PassthroughSettings?.TestNormal ?? false)
-                || (settings.PassthroughSettings?.TestBinaryOverlay ?? false)
-                || (settings.PassthroughSettings?.TestCopyIn ?? false)
-                || (settings.PassthroughSettings?.TestFolder ?? false);
+            var passthroughTests = settings.PassthroughSettings?.HasAnyToRun ?? false;
             foreach (var targetGroup in settings.TargetGroups)
             {
                 if (!targetGroup.Do) continue;
@@ -97,7 +94,11 @@ namespace Mutagen.Bethesda.Tests
                     }
                     if (settings.PassthroughSettings?.TestImport ?? false)
                     {
-                        yield return RunTest("Test Import", targetGroup.GameRelease, target, passthroughTest.TestImport);
+                        yield return passthroughTest.TestImport();
+                    }
+                    if (settings.TestEquality)
+                    {
+                        yield return passthroughTest.TestEquality();
                     }
                 }
             }
@@ -119,10 +120,6 @@ namespace Mutagen.Bethesda.Tests
             {
                 yield return RunTest("Record Enumerations", (o) => OtherTests.RecordEnumerations(settings, oblivPassthrough));
             }
-            //if (settings.TestLocators)
-            //{
-            //    yield return await RunTest("Data Folder Locator", target, () => OtherTests.BaseGroupIterator(target, settings.DataFolderLocations));
-            //}
         }
     }
 }

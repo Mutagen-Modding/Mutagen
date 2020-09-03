@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IImageSpaceAdapterInternal,
         ILoquiObjectSetter<ImageSpaceAdapter>,
-        IEquatable<ImageSpaceAdapter>
+        IEquatable<IImageSpaceAdapterGetter>
     {
         #region Ctor
         protected ImageSpaceAdapter()
@@ -851,7 +851,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ImageSpaceAdapter? obj)
+        public bool Equals(IImageSpaceAdapterGetter? obj)
         {
             return ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -9748,67 +9748,67 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (!lhs.Duration.EqualsWithin(rhs.Duration)) return false;
             if (lhs.RadialBlurFlags != rhs.RadialBlurFlags) return false;
             if (!lhs.RadialBlurCenter.Equals(rhs.RadialBlurCenter)) return false;
             if (lhs.DepthOfFieldFlags != rhs.DepthOfFieldFlags) return false;
-            if (!lhs.BlurRadius.SequenceEqual(rhs.BlurRadius)) return false;
-            if (!lhs.DoubleVisionStrength.SequenceEqual(rhs.DoubleVisionStrength)) return false;
-            if (!lhs.TintColor.SequenceEqual(rhs.TintColor)) return false;
-            if (!lhs.FadeColor.SequenceEqual(rhs.FadeColor)) return false;
-            if (!lhs.RadialBlurStrength.SequenceEqual(rhs.RadialBlurStrength)) return false;
-            if (!lhs.RadialBlurRampUp.SequenceEqual(rhs.RadialBlurRampUp)) return false;
-            if (!lhs.RadialBlurStart.SequenceEqual(rhs.RadialBlurStart)) return false;
-            if (!lhs.RadialBlurRampDown.SequenceEqual(rhs.RadialBlurRampDown)) return false;
-            if (!lhs.RadialBlurDownStart.SequenceEqual(rhs.RadialBlurDownStart)) return false;
-            if (!lhs.DepthOfFieldStrength.SequenceEqual(rhs.DepthOfFieldStrength)) return false;
-            if (!lhs.DepthOfFieldDistance.SequenceEqual(rhs.DepthOfFieldDistance)) return false;
-            if (!lhs.DepthOfFieldRange.SequenceEqual(rhs.DepthOfFieldRange)) return false;
-            if (!lhs.MotionBlurStrength.SequenceEqual(rhs.MotionBlurStrength)) return false;
-            if (!lhs.HdrEyeAdaptSpeedMult.SequenceEqual(rhs.HdrEyeAdaptSpeedMult)) return false;
-            if (!lhs.HdrEyeAdaptSpeedAdd.SequenceEqual(rhs.HdrEyeAdaptSpeedAdd)) return false;
-            if (!lhs.HdrBloomBlurRadiusMult.SequenceEqual(rhs.HdrBloomBlurRadiusMult)) return false;
-            if (!lhs.HdrBloomBlurRadiusAdd.SequenceEqual(rhs.HdrBloomBlurRadiusAdd)) return false;
-            if (!lhs.HdrBloomThresholdMult.SequenceEqual(rhs.HdrBloomThresholdMult)) return false;
-            if (!lhs.HdrBloomThresholdAdd.SequenceEqual(rhs.HdrBloomThresholdAdd)) return false;
-            if (!lhs.HdrBloomScaleMult.SequenceEqual(rhs.HdrBloomScaleMult)) return false;
-            if (!lhs.HdrBloomScaleAdd.SequenceEqual(rhs.HdrBloomScaleAdd)) return false;
-            if (!lhs.HdrTargetLumMinMult.SequenceEqual(rhs.HdrTargetLumMinMult)) return false;
-            if (!lhs.HdrTargetLumMinAdd.SequenceEqual(rhs.HdrTargetLumMinAdd)) return false;
-            if (!lhs.HdrTargetLumMaxMult.SequenceEqual(rhs.HdrTargetLumMaxMult)) return false;
-            if (!lhs.HdrTargetLumMaxAdd.SequenceEqual(rhs.HdrTargetLumMaxAdd)) return false;
-            if (!lhs.HdrSunlightScaleMult.SequenceEqual(rhs.HdrSunlightScaleMult)) return false;
-            if (!lhs.HdrSunlightScaleAdd.SequenceEqual(rhs.HdrSunlightScaleAdd)) return false;
-            if (!lhs.HdrSkyScaleMult.SequenceEqual(rhs.HdrSkyScaleMult)) return false;
-            if (!lhs.HdrSkyScaleAdd.SequenceEqual(rhs.HdrSkyScaleAdd)) return false;
-            if (!lhs.Unknown08.SequenceEqual(rhs.Unknown08)) return false;
-            if (!lhs.Unknown48.SequenceEqual(rhs.Unknown48)) return false;
-            if (!lhs.Unknown09.SequenceEqual(rhs.Unknown09)) return false;
-            if (!lhs.Unknown49.SequenceEqual(rhs.Unknown49)) return false;
-            if (!lhs.Unknown0A.SequenceEqual(rhs.Unknown0A)) return false;
-            if (!lhs.Unknown4A.SequenceEqual(rhs.Unknown4A)) return false;
-            if (!lhs.Unknown0B.SequenceEqual(rhs.Unknown0B)) return false;
-            if (!lhs.Unknown4B.SequenceEqual(rhs.Unknown4B)) return false;
-            if (!lhs.Unknown0C.SequenceEqual(rhs.Unknown0C)) return false;
-            if (!lhs.Unknown4C.SequenceEqual(rhs.Unknown4C)) return false;
-            if (!lhs.Unknown0D.SequenceEqual(rhs.Unknown0D)) return false;
-            if (!lhs.Unknown4D.SequenceEqual(rhs.Unknown4D)) return false;
-            if (!lhs.Unknown0E.SequenceEqual(rhs.Unknown0E)) return false;
-            if (!lhs.Unknown4E.SequenceEqual(rhs.Unknown4E)) return false;
-            if (!lhs.Unknown0F.SequenceEqual(rhs.Unknown0F)) return false;
-            if (!lhs.Unknown4F.SequenceEqual(rhs.Unknown4F)) return false;
-            if (!lhs.Unknown10.SequenceEqual(rhs.Unknown10)) return false;
-            if (!lhs.Unknown50.SequenceEqual(rhs.Unknown50)) return false;
-            if (!lhs.CinematicSaturationMult.SequenceEqual(rhs.CinematicSaturationMult)) return false;
-            if (!lhs.CinematicSaturationAdd.SequenceEqual(rhs.CinematicSaturationAdd)) return false;
-            if (!lhs.CinematicBrightnessMult.SequenceEqual(rhs.CinematicBrightnessMult)) return false;
-            if (!lhs.CinematicBrightnessAdd.SequenceEqual(rhs.CinematicBrightnessAdd)) return false;
-            if (!lhs.CinematicContrastMult.SequenceEqual(rhs.CinematicContrastMult)) return false;
-            if (!lhs.CinematicContrastAdd.SequenceEqual(rhs.CinematicContrastAdd)) return false;
-            if (!lhs.Unknown14.SequenceEqual(rhs.Unknown14)) return false;
-            if (!lhs.Unknown54.SequenceEqual(rhs.Unknown54)) return false;
+            if (!lhs.BlurRadius.SequenceEqualNullable(rhs.BlurRadius)) return false;
+            if (!lhs.DoubleVisionStrength.SequenceEqualNullable(rhs.DoubleVisionStrength)) return false;
+            if (!lhs.TintColor.SequenceEqualNullable(rhs.TintColor)) return false;
+            if (!lhs.FadeColor.SequenceEqualNullable(rhs.FadeColor)) return false;
+            if (!lhs.RadialBlurStrength.SequenceEqualNullable(rhs.RadialBlurStrength)) return false;
+            if (!lhs.RadialBlurRampUp.SequenceEqualNullable(rhs.RadialBlurRampUp)) return false;
+            if (!lhs.RadialBlurStart.SequenceEqualNullable(rhs.RadialBlurStart)) return false;
+            if (!lhs.RadialBlurRampDown.SequenceEqualNullable(rhs.RadialBlurRampDown)) return false;
+            if (!lhs.RadialBlurDownStart.SequenceEqualNullable(rhs.RadialBlurDownStart)) return false;
+            if (!lhs.DepthOfFieldStrength.SequenceEqualNullable(rhs.DepthOfFieldStrength)) return false;
+            if (!lhs.DepthOfFieldDistance.SequenceEqualNullable(rhs.DepthOfFieldDistance)) return false;
+            if (!lhs.DepthOfFieldRange.SequenceEqualNullable(rhs.DepthOfFieldRange)) return false;
+            if (!lhs.MotionBlurStrength.SequenceEqualNullable(rhs.MotionBlurStrength)) return false;
+            if (!lhs.HdrEyeAdaptSpeedMult.SequenceEqualNullable(rhs.HdrEyeAdaptSpeedMult)) return false;
+            if (!lhs.HdrEyeAdaptSpeedAdd.SequenceEqualNullable(rhs.HdrEyeAdaptSpeedAdd)) return false;
+            if (!lhs.HdrBloomBlurRadiusMult.SequenceEqualNullable(rhs.HdrBloomBlurRadiusMult)) return false;
+            if (!lhs.HdrBloomBlurRadiusAdd.SequenceEqualNullable(rhs.HdrBloomBlurRadiusAdd)) return false;
+            if (!lhs.HdrBloomThresholdMult.SequenceEqualNullable(rhs.HdrBloomThresholdMult)) return false;
+            if (!lhs.HdrBloomThresholdAdd.SequenceEqualNullable(rhs.HdrBloomThresholdAdd)) return false;
+            if (!lhs.HdrBloomScaleMult.SequenceEqualNullable(rhs.HdrBloomScaleMult)) return false;
+            if (!lhs.HdrBloomScaleAdd.SequenceEqualNullable(rhs.HdrBloomScaleAdd)) return false;
+            if (!lhs.HdrTargetLumMinMult.SequenceEqualNullable(rhs.HdrTargetLumMinMult)) return false;
+            if (!lhs.HdrTargetLumMinAdd.SequenceEqualNullable(rhs.HdrTargetLumMinAdd)) return false;
+            if (!lhs.HdrTargetLumMaxMult.SequenceEqualNullable(rhs.HdrTargetLumMaxMult)) return false;
+            if (!lhs.HdrTargetLumMaxAdd.SequenceEqualNullable(rhs.HdrTargetLumMaxAdd)) return false;
+            if (!lhs.HdrSunlightScaleMult.SequenceEqualNullable(rhs.HdrSunlightScaleMult)) return false;
+            if (!lhs.HdrSunlightScaleAdd.SequenceEqualNullable(rhs.HdrSunlightScaleAdd)) return false;
+            if (!lhs.HdrSkyScaleMult.SequenceEqualNullable(rhs.HdrSkyScaleMult)) return false;
+            if (!lhs.HdrSkyScaleAdd.SequenceEqualNullable(rhs.HdrSkyScaleAdd)) return false;
+            if (!lhs.Unknown08.SequenceEqualNullable(rhs.Unknown08)) return false;
+            if (!lhs.Unknown48.SequenceEqualNullable(rhs.Unknown48)) return false;
+            if (!lhs.Unknown09.SequenceEqualNullable(rhs.Unknown09)) return false;
+            if (!lhs.Unknown49.SequenceEqualNullable(rhs.Unknown49)) return false;
+            if (!lhs.Unknown0A.SequenceEqualNullable(rhs.Unknown0A)) return false;
+            if (!lhs.Unknown4A.SequenceEqualNullable(rhs.Unknown4A)) return false;
+            if (!lhs.Unknown0B.SequenceEqualNullable(rhs.Unknown0B)) return false;
+            if (!lhs.Unknown4B.SequenceEqualNullable(rhs.Unknown4B)) return false;
+            if (!lhs.Unknown0C.SequenceEqualNullable(rhs.Unknown0C)) return false;
+            if (!lhs.Unknown4C.SequenceEqualNullable(rhs.Unknown4C)) return false;
+            if (!lhs.Unknown0D.SequenceEqualNullable(rhs.Unknown0D)) return false;
+            if (!lhs.Unknown4D.SequenceEqualNullable(rhs.Unknown4D)) return false;
+            if (!lhs.Unknown0E.SequenceEqualNullable(rhs.Unknown0E)) return false;
+            if (!lhs.Unknown4E.SequenceEqualNullable(rhs.Unknown4E)) return false;
+            if (!lhs.Unknown0F.SequenceEqualNullable(rhs.Unknown0F)) return false;
+            if (!lhs.Unknown4F.SequenceEqualNullable(rhs.Unknown4F)) return false;
+            if (!lhs.Unknown10.SequenceEqualNullable(rhs.Unknown10)) return false;
+            if (!lhs.Unknown50.SequenceEqualNullable(rhs.Unknown50)) return false;
+            if (!lhs.CinematicSaturationMult.SequenceEqualNullable(rhs.CinematicSaturationMult)) return false;
+            if (!lhs.CinematicSaturationAdd.SequenceEqualNullable(rhs.CinematicSaturationAdd)) return false;
+            if (!lhs.CinematicBrightnessMult.SequenceEqualNullable(rhs.CinematicBrightnessMult)) return false;
+            if (!lhs.CinematicBrightnessAdd.SequenceEqualNullable(rhs.CinematicBrightnessAdd)) return false;
+            if (!lhs.CinematicContrastMult.SequenceEqualNullable(rhs.CinematicContrastMult)) return false;
+            if (!lhs.CinematicContrastAdd.SequenceEqualNullable(rhs.CinematicContrastAdd)) return false;
+            if (!lhs.Unknown14.SequenceEqualNullable(rhs.Unknown14)) return false;
+            if (!lhs.Unknown54.SequenceEqualNullable(rhs.Unknown54)) return false;
             if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
             return true;
         }
@@ -14221,6 +14221,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IImageSpaceAdapterGetter rhs)) return false;
+            return ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IImageSpaceAdapterGetter? obj)
+        {
+            return ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

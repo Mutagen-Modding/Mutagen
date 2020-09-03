@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class LinkedReferenceColor :
         ILinkedReferenceColor,
         ILoquiObjectSetter<LinkedReferenceColor>,
-        IEquatable<LinkedReferenceColor>
+        IEquatable<ILinkedReferenceColorGetter>
     {
         #region Ctor
         public LinkedReferenceColor()
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LinkedReferenceColorCommon)((ILinkedReferenceColorGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LinkedReferenceColor? obj)
+        public bool Equals(ILinkedReferenceColorGetter? obj)
         {
             return ((LinkedReferenceColorCommon)((ILinkedReferenceColorGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1253,6 +1253,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILinkedReferenceColorGetter rhs)) return false;
+            return ((LinkedReferenceColorCommon)((ILinkedReferenceColorGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILinkedReferenceColorGetter? obj)
+        {
+            return ((LinkedReferenceColorCommon)((ILinkedReferenceColorGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LinkedReferenceColorCommon)((ILinkedReferenceColorGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

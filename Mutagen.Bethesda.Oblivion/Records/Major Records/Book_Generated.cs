@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         AItem,
         IBookInternal,
         ILoquiObjectSetter<Book>,
-        IEquatable<Book>
+        IEquatable<IBookGetter>
     {
         #region Ctor
         protected Book()
@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((BookCommon)((IBookGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Book? obj)
+        public bool Equals(IBookGetter? obj)
         {
             return ((BookCommon)((IBookGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1254,8 +1254,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Icon = string.Equals(item.Icon, rhs.Icon);
-            ret.Script = object.Equals(item.Script, rhs.Script);
-            ret.Enchantment = object.Equals(item.Enchantment, rhs.Enchantment);
+            ret.Script = item.Script.Equals(rhs.Script);
+            ret.Enchantment = item.Enchantment.Equals(rhs.Enchantment);
             ret.EnchantmentPoints = item.EnchantmentPoints == rhs.EnchantmentPoints;
             ret.Description = string.Equals(item.Description, rhs.Description);
             ret.Data = EqualsMaskHelper.EqualsHelper(
@@ -1416,7 +1416,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IAItemGetter)lhs, (IAItemGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
@@ -2249,6 +2249,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IBookGetter rhs)) return false;
+            return ((BookCommon)((IBookGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IBookGetter? obj)
+        {
+            return ((BookCommon)((IBookGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((BookCommon)((IBookGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

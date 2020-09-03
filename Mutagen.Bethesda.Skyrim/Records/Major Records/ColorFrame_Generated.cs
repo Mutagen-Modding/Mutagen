@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ColorFrame :
         IColorFrame,
         ILoquiObjectSetter<ColorFrame>,
-        IEquatable<ColorFrame>
+        IEquatable<IColorFrameGetter>
     {
         #region Ctor
         public ColorFrame()
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ColorFrameCommon)((IColorFrameGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ColorFrame? obj)
+        public bool Equals(IColorFrameGetter? obj)
         {
             return ((ColorFrameCommon)((IColorFrameGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1239,6 +1239,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IColorFrameGetter rhs)) return false;
+            return ((ColorFrameCommon)((IColorFrameGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IColorFrameGetter? obj)
+        {
+            return ((ColorFrameCommon)((IColorFrameGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ColorFrameCommon)((IColorFrameGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

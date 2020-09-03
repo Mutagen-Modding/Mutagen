@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IRaceInternal,
         ILoquiObjectSetter<Race>,
-        IEquatable<Race>
+        IEquatable<IRaceGetter>
     {
         #region Ctor
         protected Race()
@@ -169,18 +169,18 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HeadBipedObject
         public readonly static BipedObject _HeadBipedObject_Default = BipedObject.None;
-        public BipedObject HeadBipedObject { get; set; } = default;
+        public BipedObject HeadBipedObject { get; set; } = _HeadBipedObject_Default;
         #endregion
         #region HairBipedObject
         public readonly static BipedObject _HairBipedObject_Default = BipedObject.None;
-        public BipedObject HairBipedObject { get; set; } = default;
+        public BipedObject HairBipedObject { get; set; } = _HairBipedObject_Default;
         #endregion
         #region InjuredHealthPercent
         public Single InjuredHealthPercent { get; set; } = default;
         #endregion
         #region ShieldBipedObject
         public readonly static BipedObject _ShieldBipedObject_Default = BipedObject.None;
-        public BipedObject ShieldBipedObject { get; set; } = default;
+        public BipedObject ShieldBipedObject { get; set; } = _ShieldBipedObject_Default;
         #endregion
         #region Regen
         private readonly Dictionary<BasicStat, Single> _Regen = new Dictionary<BasicStat, Single>();
@@ -199,7 +199,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region BodyBipedObject
         public readonly static BipedObject _BodyBipedObject_Default = BipedObject.None;
-        public BipedObject BodyBipedObject { get; set; } = default;
+        public BipedObject BodyBipedObject { get; set; } = _BodyBipedObject_Default;
         #endregion
         #region AimAngleTolerance
         public Single AimAngleTolerance { get; set; } = default;
@@ -464,7 +464,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Race? obj)
+        public bool Equals(IRaceGetter? obj)
         {
             return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -5399,7 +5399,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.ActorEffect,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.Skin = object.Equals(item.Skin, rhs.Skin);
+            ret.Skin = item.Skin.Equals(rhs.Skin);
             ret.BodyTemplate = EqualsMaskHelper.EqualsHelper(
                 item.BodyTemplate,
                 rhs.BodyTemplate,
@@ -5474,7 +5474,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.NumberOfTintsInList = item.NumberOfTintsInList == rhs.NumberOfTintsInList;
             ret.FacegenMainClamp = item.FacegenMainClamp.EqualsWithin(rhs.FacegenMainClamp);
             ret.FacegenFaceClamp = item.FacegenFaceClamp.EqualsWithin(rhs.FacegenFaceClamp);
-            ret.AttackRace = object.Equals(item.AttackRace, rhs.AttackRace);
+            ret.AttackRace = item.AttackRace.Equals(rhs.AttackRace);
             ret.Attacks = item.Attacks.CollectionEqualsHelper(
                 rhs.Attacks,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -5492,17 +5492,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Eyes,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.BodyPartData = object.Equals(item.BodyPartData, rhs.BodyPartData);
+            ret.BodyPartData = item.BodyPartData.Equals(rhs.BodyPartData);
             ret.BehaviorGraph = GenderedItem.EqualityMaskHelper(
                 lhs: item.BehaviorGraph,
                 rhs: rhs.BehaviorGraph,
                 maskGetter: (l, r, i) => EqualsMaskHelper.EqualsHelper(l, r, (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl), i),
                 include: include);
-            ret.MaterialType = object.Equals(item.MaterialType, rhs.MaterialType);
-            ret.ImpactDataSet = object.Equals(item.ImpactDataSet, rhs.ImpactDataSet);
-            ret.DecapitationFX = object.Equals(item.DecapitationFX, rhs.DecapitationFX);
-            ret.OpenLootSound = object.Equals(item.OpenLootSound, rhs.OpenLootSound);
-            ret.CloseLootSound = object.Equals(item.CloseLootSound, rhs.CloseLootSound);
+            ret.MaterialType = item.MaterialType.Equals(rhs.MaterialType);
+            ret.ImpactDataSet = item.ImpactDataSet.Equals(rhs.ImpactDataSet);
+            ret.DecapitationFX = item.DecapitationFX.Equals(rhs.DecapitationFX);
+            ret.OpenLootSound = item.OpenLootSound.Equals(rhs.OpenLootSound);
+            ret.CloseLootSound = item.CloseLootSound.Equals(rhs.CloseLootSound);
             ret.BipedObjectNames = EqualsMaskHelper.DictEqualsHelper(
                 lhs: item.BipedObjectNames,
                 rhs: rhs.BipedObjectNames,
@@ -5516,21 +5516,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.EquipmentSlots,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.UnarmedEquipSlot = object.Equals(item.UnarmedEquipSlot, rhs.UnarmedEquipSlot);
+            ret.UnarmedEquipSlot = item.UnarmedEquipSlot.Equals(rhs.UnarmedEquipSlot);
             ret.FaceFxPhonemes = MaskItemExt.Factory(item.FaceFxPhonemes.GetEqualsMask(rhs.FaceFxPhonemes, include), include);
-            ret.BaseMovementDefaultWalk = object.Equals(item.BaseMovementDefaultWalk, rhs.BaseMovementDefaultWalk);
-            ret.BaseMovementDefaultRun = object.Equals(item.BaseMovementDefaultRun, rhs.BaseMovementDefaultRun);
-            ret.BaseMovementDefaultSwim = object.Equals(item.BaseMovementDefaultSwim, rhs.BaseMovementDefaultSwim);
-            ret.BaseMovementDefaultFly = object.Equals(item.BaseMovementDefaultFly, rhs.BaseMovementDefaultFly);
-            ret.BaseMovementDefaultSneak = object.Equals(item.BaseMovementDefaultSneak, rhs.BaseMovementDefaultSneak);
-            ret.BaseMovementDefaultSprint = object.Equals(item.BaseMovementDefaultSprint, rhs.BaseMovementDefaultSprint);
+            ret.BaseMovementDefaultWalk = item.BaseMovementDefaultWalk.Equals(rhs.BaseMovementDefaultWalk);
+            ret.BaseMovementDefaultRun = item.BaseMovementDefaultRun.Equals(rhs.BaseMovementDefaultRun);
+            ret.BaseMovementDefaultSwim = item.BaseMovementDefaultSwim.Equals(rhs.BaseMovementDefaultSwim);
+            ret.BaseMovementDefaultFly = item.BaseMovementDefaultFly.Equals(rhs.BaseMovementDefaultFly);
+            ret.BaseMovementDefaultSneak = item.BaseMovementDefaultSneak.Equals(rhs.BaseMovementDefaultSneak);
+            ret.BaseMovementDefaultSprint = item.BaseMovementDefaultSprint.Equals(rhs.BaseMovementDefaultSprint);
             ret.HeadData = GenderedItem.EqualityMaskHelper(
                 lhs: item.HeadData,
                 rhs: rhs.HeadData,
                 maskGetter: (l, r, i) => EqualsMaskHelper.EqualsHelper(l, r, (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl), i),
                 include: include);
-            ret.MorphRace = object.Equals(item.MorphRace, rhs.MorphRace);
-            ret.ArmorRace = object.Equals(item.ArmorRace, rhs.ArmorRace);
+            ret.MorphRace = item.MorphRace.Equals(rhs.MorphRace);
+            ret.ArmorRace = item.ArmorRace.Equals(rhs.ArmorRace);
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -6088,13 +6088,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!string.Equals(lhs.Description, rhs.Description)) return false;
-            if (!lhs.ActorEffect.SequenceEqual(rhs.ActorEffect)) return false;
+            if (!lhs.ActorEffect.SequenceEqualNullable(rhs.ActorEffect)) return false;
             if (!lhs.Skin.Equals(rhs.Skin)) return false;
             if (!object.Equals(lhs.BodyTemplate, rhs.BodyTemplate)) return false;
-            if (!lhs.Keywords.SequenceEqual(rhs.Keywords)) return false;
+            if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             if (!object.Equals(lhs.SkillBoost0, rhs.SkillBoost0)) return false;
             if (!object.Equals(lhs.SkillBoost1, rhs.SkillBoost1)) return false;
             if (!object.Equals(lhs.SkillBoost2, rhs.SkillBoost2)) return false;
@@ -6106,7 +6106,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!Equals(lhs.Height, rhs.Height)) return false;
             if (!Equals(lhs.Weight, rhs.Weight)) return false;
             if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.Starting.SequenceEqual(rhs.Starting)) return false;
+            if (!lhs.Starting.SequenceEqualNullable(rhs.Starting)) return false;
             if (!lhs.BaseCarryWeight.EqualsWithin(rhs.BaseCarryWeight)) return false;
             if (!lhs.BaseMass.EqualsWithin(rhs.BaseMass)) return false;
             if (!lhs.AccelerationRate.EqualsWithin(rhs.AccelerationRate)) return false;
@@ -6116,7 +6116,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs.HairBipedObject != rhs.HairBipedObject) return false;
             if (!lhs.InjuredHealthPercent.EqualsWithin(rhs.InjuredHealthPercent)) return false;
             if (lhs.ShieldBipedObject != rhs.ShieldBipedObject) return false;
-            if (!lhs.Regen.SequenceEqual(rhs.Regen)) return false;
+            if (!lhs.Regen.SequenceEqualNullable(rhs.Regen)) return false;
             if (!lhs.UnarmedDamage.EqualsWithin(rhs.UnarmedDamage)) return false;
             if (!lhs.UnarmedReach.EqualsWithin(rhs.UnarmedReach)) return false;
             if (lhs.BodyBipedObject != rhs.BodyBipedObject) return false;
@@ -6126,7 +6126,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.AngularTolerance.EqualsWithin(rhs.AngularTolerance)) return false;
             if (!object.Equals(lhs.MountData, rhs.MountData)) return false;
             if (!Equals(lhs.SkeletalModel, rhs.SkeletalModel)) return false;
-            if (!lhs.MovementTypeNames.SequenceEqual(rhs.MovementTypeNames)) return false;
+            if (!lhs.MovementTypeNames.SequenceEqualNullable(rhs.MovementTypeNames)) return false;
             if (!Equals(lhs.Voices, rhs.Voices)) return false;
             if (!Equals(lhs.DecapitateArmors, rhs.DecapitateArmors)) return false;
             if (!Equals(lhs.DefaultHairColors, rhs.DefaultHairColors)) return false;
@@ -6134,10 +6134,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.FacegenMainClamp.EqualsWithin(rhs.FacegenMainClamp)) return false;
             if (!lhs.FacegenFaceClamp.EqualsWithin(rhs.FacegenFaceClamp)) return false;
             if (!lhs.AttackRace.Equals(rhs.AttackRace)) return false;
-            if (!lhs.Attacks.SequenceEqual(rhs.Attacks)) return false;
+            if (!lhs.Attacks.SequenceEqualNullable(rhs.Attacks)) return false;
             if (!Equals(lhs.BodyData, rhs.BodyData)) return false;
-            if (!lhs.Hairs.SequenceEqual(rhs.Hairs)) return false;
-            if (!lhs.Eyes.SequenceEqual(rhs.Eyes)) return false;
+            if (!lhs.Hairs.SequenceEqualNullable(rhs.Hairs)) return false;
+            if (!lhs.Eyes.SequenceEqualNullable(rhs.Eyes)) return false;
             if (!lhs.BodyPartData.Equals(rhs.BodyPartData)) return false;
             if (!Equals(lhs.BehaviorGraph, rhs.BehaviorGraph)) return false;
             if (!lhs.MaterialType.Equals(rhs.MaterialType)) return false;
@@ -6145,10 +6145,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.DecapitationFX.Equals(rhs.DecapitationFX)) return false;
             if (!lhs.OpenLootSound.Equals(rhs.OpenLootSound)) return false;
             if (!lhs.CloseLootSound.Equals(rhs.CloseLootSound)) return false;
-            if (!lhs.BipedObjectNames.SequenceEqual(rhs.BipedObjectNames)) return false;
-            if (!lhs.MovementTypes.SequenceEqual(rhs.MovementTypes)) return false;
+            if (!lhs.BipedObjectNames.SequenceEqualNullable(rhs.BipedObjectNames)) return false;
+            if (!lhs.MovementTypes.SequenceEqualNullable(rhs.MovementTypes)) return false;
             if (lhs.EquipmentFlags != rhs.EquipmentFlags) return false;
-            if (!lhs.EquipmentSlots.SequenceEqual(rhs.EquipmentSlots)) return false;
+            if (!lhs.EquipmentSlots.SequenceEqualNullable(rhs.EquipmentSlots)) return false;
             if (!lhs.UnarmedEquipSlot.Equals(rhs.UnarmedEquipSlot)) return false;
             if (!object.Equals(lhs.FaceFxPhonemes, rhs.FaceFxPhonemes)) return false;
             if (!lhs.BaseMovementDefaultWalk.Equals(rhs.BaseMovementDefaultWalk)) return false;
@@ -6328,11 +6328,41 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.SkeletalModel.TryGet(out var SkeletalModelItem))
+            {
+                foreach (var item in SkeletalModelItem.NotNull().WhereCastable<ISimpleModelGetter, ILinkedFormKeyContainerGetter> ()
+                    .SelectMany((f) => f.LinkFormKeys))
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.Voices.Select(f => f.FormKey))
+            {
+                yield return item;
+            }
+            if (obj.DecapitateArmors.TryGet(out var DecapitateArmorsItem))
+            {
+                foreach (var item in DecapitateArmorsItem.Select(f => f.FormKey))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.DefaultHairColors.TryGet(out var DefaultHairColorsItem))
+            {
+                foreach (var item in DefaultHairColorsItem.Select(f => f.FormKey))
+                {
+                    yield return item;
+                }
+            }
             if (obj.AttackRace.FormKey.TryGet(out var AttackRaceKey))
             {
                 yield return AttackRaceKey;
             }
             foreach (var item in obj.Attacks.SelectMany(f => f.LinkFormKeys))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.BodyData.NotNull().SelectMany(f => f.LinkFormKeys))
             {
                 yield return item;
             }
@@ -6353,6 +6383,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (obj.BodyPartData.FormKey.TryGet(out var BodyPartDataKey))
             {
                 yield return BodyPartDataKey;
+            }
+            foreach (var item in obj.BehaviorGraph.NotNull().SelectMany(f => f.LinkFormKeys))
+            {
+                yield return item;
             }
             if (obj.MaterialType.FormKey.TryGet(out var MaterialTypeKey))
             {
@@ -6409,6 +6443,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (obj.BaseMovementDefaultSprint.FormKey.TryGet(out var BaseMovementDefaultSprintKey))
             {
                 yield return BaseMovementDefaultSprintKey;
+            }
+            if (obj.HeadData.TryGet(out var HeadDataItem))
+            {
+                foreach (var item in HeadDataItem.NotNull().SelectMany(f => f.LinkFormKeys))
+                {
+                    yield return item;
+                }
             }
             if (obj.MorphRace.FormKey.TryGet(out var MorphRaceKey))
             {
@@ -9164,6 +9205,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IRaceGetter rhs)) return false;
+            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IRaceGetter? obj)
+        {
+            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((RaceCommon)((IRaceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

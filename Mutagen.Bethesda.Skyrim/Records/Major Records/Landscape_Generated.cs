@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ILandscapeInternal,
         ILoquiObjectSetter<Landscape>,
-        IEquatable<Landscape>
+        IEquatable<ILandscapeGetter>
     {
         #region Ctor
         protected Landscape()
@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Landscape? obj)
+        public bool Equals(ILandscapeGetter? obj)
         {
             return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1468,13 +1468,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!MemorySliceExt.Equal(lhs.DATA, rhs.DATA)) return false;
             if (!MemorySliceExt.Equal(lhs.VertexNormals, rhs.VertexNormals)) return false;
             if (!MemorySliceExt.Equal(lhs.VertexHeightMap, rhs.VertexHeightMap)) return false;
             if (!MemorySliceExt.Equal(lhs.VertexColors, rhs.VertexColors)) return false;
-            if (!lhs.Layers.SequenceEqual(rhs.Layers)) return false;
-            if (!lhs.Textures.SequenceEqual(rhs.Textures)) return false;
+            if (!lhs.Layers.SequenceEqualNullable(rhs.Layers)) return false;
+            if (!lhs.Textures.SequenceEqualNullable(rhs.Textures)) return false;
             return true;
         }
         
@@ -2259,6 +2259,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILandscapeGetter rhs)) return false;
+            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILandscapeGetter? obj)
+        {
+            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

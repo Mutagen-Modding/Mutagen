@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class BodyPart :
         IBodyPart,
         ILoquiObjectSetter<BodyPart>,
-        IEquatable<BodyPart>
+        IEquatable<IBodyPartGetter>
     {
         #region Ctor
         public BodyPart()
@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((BodyPartCommon)((IBodyPartGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(BodyPart? obj)
+        public bool Equals(IBodyPartGetter? obj)
         {
             return ((BodyPartCommon)((IBodyPartGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2344,18 +2344,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.ToHitChance = item.ToHitChance == rhs.ToHitChance;
             ret.ExplodableExplosionChance = item.ExplodableExplosionChance == rhs.ExplodableExplosionChance;
             ret.ExplodableDebrisCount = item.ExplodableDebrisCount == rhs.ExplodableDebrisCount;
-            ret.ExplodableDebris = object.Equals(item.ExplodableDebris, rhs.ExplodableDebris);
-            ret.ExplodableExplosion = object.Equals(item.ExplodableExplosion, rhs.ExplodableExplosion);
+            ret.ExplodableDebris = item.ExplodableDebris.Equals(rhs.ExplodableDebris);
+            ret.ExplodableExplosion = item.ExplodableExplosion.Equals(rhs.ExplodableExplosion);
             ret.TrackingMaxAngle = item.TrackingMaxAngle.EqualsWithin(rhs.TrackingMaxAngle);
             ret.ExplodableDebrisScale = item.ExplodableDebrisScale.EqualsWithin(rhs.ExplodableDebrisScale);
             ret.SeverableDebrisCount = item.SeverableDebrisCount == rhs.SeverableDebrisCount;
-            ret.SeverableDebris = object.Equals(item.SeverableDebris, rhs.SeverableDebris);
-            ret.SeverableExplosion = object.Equals(item.SeverableExplosion, rhs.SeverableExplosion);
+            ret.SeverableDebris = item.SeverableDebris.Equals(rhs.SeverableDebris);
+            ret.SeverableExplosion = item.SeverableExplosion.Equals(rhs.SeverableExplosion);
             ret.SeverableDebrisScale = item.SeverableDebrisScale.EqualsWithin(rhs.SeverableDebrisScale);
             ret.GorePositioning = item.GorePositioning.Equals(rhs.GorePositioning);
             ret.GoreRotation = item.GoreRotation.Equals(rhs.GoreRotation);
-            ret.SeverableImpactData = object.Equals(item.SeverableImpactData, rhs.SeverableImpactData);
-            ret.ExplodableImpactData = object.Equals(item.ExplodableImpactData, rhs.ExplodableImpactData);
+            ret.SeverableImpactData = item.SeverableImpactData.Equals(rhs.SeverableImpactData);
+            ret.ExplodableImpactData = item.ExplodableImpactData.Equals(rhs.ExplodableImpactData);
             ret.SeverableDecalCount = item.SeverableDecalCount == rhs.SeverableDecalCount;
             ret.ExplodableDecalCount = item.ExplodableDecalCount == rhs.ExplodableDecalCount;
             ret.Unknown = item.Unknown == rhs.Unknown;
@@ -3514,6 +3514,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IBodyPartGetter rhs)) return false;
+            return ((BodyPartCommon)((IBodyPartGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IBodyPartGetter? obj)
+        {
+            return ((BodyPartCommon)((IBodyPartGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((BodyPartCommon)((IBodyPartGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

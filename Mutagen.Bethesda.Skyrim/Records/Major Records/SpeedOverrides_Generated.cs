@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class SpeedOverrides :
         ISpeedOverrides,
         ILoquiObjectSetter<SpeedOverrides>,
-        IEquatable<SpeedOverrides>
+        IEquatable<ISpeedOverridesGetter>
     {
         #region Ctor
         public SpeedOverrides()
@@ -93,7 +93,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SpeedOverridesCommon)((ISpeedOverridesGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(SpeedOverrides? obj)
+        public bool Equals(ISpeedOverridesGetter? obj)
         {
             return ((SpeedOverridesCommon)((ISpeedOverridesGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1810,6 +1810,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ISpeedOverridesGetter rhs)) return false;
+            return ((SpeedOverridesCommon)((ISpeedOverridesGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ISpeedOverridesGetter? obj)
+        {
+            return ((SpeedOverridesCommon)((ISpeedOverridesGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((SpeedOverridesCommon)((ISpeedOverridesGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

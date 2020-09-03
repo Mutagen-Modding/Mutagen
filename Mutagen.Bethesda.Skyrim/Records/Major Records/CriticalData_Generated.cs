@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class CriticalData :
         ICriticalData,
         ILoquiObjectSetter<CriticalData>,
-        IEquatable<CriticalData>
+        IEquatable<ICriticalDataGetter>
     {
         #region Ctor
         public CriticalData()
@@ -94,7 +94,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((CriticalDataCommon)((ICriticalDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(CriticalData? obj)
+        public bool Equals(ICriticalDataGetter? obj)
         {
             return ((CriticalDataCommon)((ICriticalDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1171,7 +1171,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Flags = item.Flags == rhs.Flags;
             ret.Unused2 = MemoryExtensions.SequenceEqual(item.Unused2.Span, rhs.Unused2.Span);
             ret.Unused3 = item.Unused3 == rhs.Unused3;
-            ret.Effect = object.Equals(item.Effect, rhs.Effect);
+            ret.Effect = item.Effect.Equals(rhs.Effect);
             ret.Unused4 = item.Unused4 == rhs.Unused4;
         }
         
@@ -1660,6 +1660,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ICriticalDataGetter rhs)) return false;
+            return ((CriticalDataCommon)((ICriticalDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ICriticalDataGetter? obj)
+        {
+            return ((CriticalDataCommon)((ICriticalDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((CriticalDataCommon)((ICriticalDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

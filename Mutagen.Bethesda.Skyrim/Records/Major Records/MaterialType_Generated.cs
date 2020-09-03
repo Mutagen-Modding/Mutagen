@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IMaterialTypeInternal,
         ILoquiObjectSetter<MaterialType>,
-        IEquatable<MaterialType>
+        IEquatable<IMaterialTypeGetter>
     {
         #region Ctor
         protected MaterialType()
@@ -94,7 +94,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((MaterialTypeCommon)((IMaterialTypeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(MaterialType? obj)
+        public bool Equals(IMaterialTypeGetter? obj)
         {
             return ((MaterialTypeCommon)((IMaterialTypeGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1110,12 +1110,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Parent = object.Equals(item.Parent, rhs.Parent);
+            ret.Parent = item.Parent.Equals(rhs.Parent);
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.HavokDisplayColor = item.HavokDisplayColor.ColorOnlyEquals(rhs.HavokDisplayColor);
             ret.Buoyancy = item.Buoyancy.EqualsWithin(rhs.Buoyancy);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.HavokImpactDataSet = object.Equals(item.HavokImpactDataSet, rhs.HavokImpactDataSet);
+            ret.HavokImpactDataSet = item.HavokImpactDataSet.Equals(rhs.HavokImpactDataSet);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1242,7 +1242,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!lhs.Parent.Equals(rhs.Parent)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!lhs.HavokDisplayColor.ColorOnlyEquals(rhs.HavokDisplayColor)) return false;
@@ -1910,6 +1910,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IMaterialTypeGetter rhs)) return false;
+            return ((MaterialTypeCommon)((IMaterialTypeGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IMaterialTypeGetter? obj)
+        {
+            return ((MaterialTypeCommon)((IMaterialTypeGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((MaterialTypeCommon)((IMaterialTypeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

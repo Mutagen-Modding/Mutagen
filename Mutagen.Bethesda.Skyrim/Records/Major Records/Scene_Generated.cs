@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ISceneInternal,
         ILoquiObjectSetter<Scene>,
-        IEquatable<Scene>
+        IEquatable<ISceneGetter>
     {
         #region Ctor
         protected Scene()
@@ -178,7 +178,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SceneCommon)((ISceneGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Scene? obj)
+        public bool Equals(ISceneGetter? obj)
         {
             return ((SceneCommon)((ISceneGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1760,7 +1760,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Unused2,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Quest = object.Equals(item.Quest, rhs.Quest);
+            ret.Quest = item.Quest.Equals(rhs.Quest);
             ret.LastActionIndex = item.LastActionIndex == rhs.LastActionIndex;
             ret.VNAM = MemorySliceExt.Equal(item.VNAM, rhs.VNAM);
             ret.Conditions = item.Conditions.CollectionEqualsHelper(
@@ -1971,18 +1971,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
             if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.Phases.SequenceEqual(rhs.Phases)) return false;
-            if (!lhs.Actors.SequenceEqual(rhs.Actors)) return false;
-            if (!lhs.Actions.SequenceEqual(rhs.Actions)) return false;
+            if (!lhs.Phases.SequenceEqualNullable(rhs.Phases)) return false;
+            if (!lhs.Actors.SequenceEqualNullable(rhs.Actors)) return false;
+            if (!lhs.Actions.SequenceEqualNullable(rhs.Actions)) return false;
             if (!object.Equals(lhs.Unused, rhs.Unused)) return false;
             if (!object.Equals(lhs.Unused2, rhs.Unused2)) return false;
             if (!lhs.Quest.Equals(rhs.Quest)) return false;
             if (lhs.LastActionIndex != rhs.LastActionIndex) return false;
             if (!MemorySliceExt.Equal(lhs.VNAM, rhs.VNAM)) return false;
-            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
+            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
             return true;
         }
         
@@ -3017,6 +3017,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ISceneGetter rhs)) return false;
+            return ((SceneCommon)((ISceneGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ISceneGetter? obj)
+        {
+            return ((SceneCommon)((ISceneGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((SceneCommon)((ISceneGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

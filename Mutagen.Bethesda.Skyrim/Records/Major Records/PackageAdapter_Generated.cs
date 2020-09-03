@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         AVirtualMachineAdapter,
         IPackageAdapter,
         ILoquiObjectSetter<PackageAdapter>,
-        IEquatable<PackageAdapter>
+        IEquatable<IPackageAdapterGetter>
     {
         #region Ctor
         public PackageAdapter()
@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PackageAdapterCommon)((IPackageAdapterGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PackageAdapter? obj)
+        public bool Equals(IPackageAdapterGetter? obj)
         {
             return ((PackageAdapterCommon)((IPackageAdapterGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -911,7 +911,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IAVirtualMachineAdapterGetter)lhs, (IAVirtualMachineAdapterGetter)rhs)) return false;
             if (!object.Equals(lhs.ScriptFragments, rhs.ScriptFragments)) return false;
             return true;
         }
@@ -1301,6 +1301,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPackageAdapterGetter rhs)) return false;
+            return ((PackageAdapterCommon)((IPackageAdapterGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPackageAdapterGetter? obj)
+        {
+            return ((PackageAdapterCommon)((IPackageAdapterGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PackageAdapterCommon)((IPackageAdapterGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

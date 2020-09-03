@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class NpcFaceMorph :
         INpcFaceMorph,
         ILoquiObjectSetter<NpcFaceMorph>,
-        IEquatable<NpcFaceMorph>
+        IEquatable<INpcFaceMorphGetter>
     {
         #region Ctor
         public NpcFaceMorph()
@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((NpcFaceMorphCommon)((INpcFaceMorphGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(NpcFaceMorph? obj)
+        public bool Equals(INpcFaceMorphGetter? obj)
         {
             return ((NpcFaceMorphCommon)((INpcFaceMorphGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2306,6 +2306,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is INpcFaceMorphGetter rhs)) return false;
+            return ((NpcFaceMorphCommon)((INpcFaceMorphGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(INpcFaceMorphGetter? obj)
+        {
+            return ((NpcFaceMorphCommon)((INpcFaceMorphGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((NpcFaceMorphCommon)((INpcFaceMorphGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

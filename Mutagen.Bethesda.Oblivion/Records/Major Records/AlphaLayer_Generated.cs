@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Oblivion
         BaseLayer,
         IAlphaLayer,
         ILoquiObjectSetter<AlphaLayer>,
-        IEquatable<AlphaLayer>
+        IEquatable<IAlphaLayerGetter>
     {
         #region Ctor
         public AlphaLayer()
@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((AlphaLayerCommon)((IAlphaLayerGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(AlphaLayer? obj)
+        public bool Equals(IAlphaLayerGetter? obj)
         {
             return ((AlphaLayerCommon)((IAlphaLayerGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -891,7 +891,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IBaseLayerGetter)lhs, (IBaseLayerGetter)rhs)) return false;
             if (!MemorySliceExt.Equal(lhs.AlphaLayerData, rhs.AlphaLayerData)) return false;
             return true;
         }
@@ -1291,6 +1291,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IAlphaLayerGetter rhs)) return false;
+            return ((AlphaLayerCommon)((IAlphaLayerGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IAlphaLayerGetter? obj)
+        {
+            return ((AlphaLayerCommon)((IAlphaLayerGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((AlphaLayerCommon)((IAlphaLayerGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

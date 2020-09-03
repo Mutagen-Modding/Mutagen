@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class SoundLoopAndRumble :
         ISoundLoopAndRumble,
         ILoquiObjectSetter<SoundLoopAndRumble>,
-        IEquatable<SoundLoopAndRumble>
+        IEquatable<ISoundLoopAndRumbleGetter>
     {
         #region Ctor
         public SoundLoopAndRumble()
@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SoundLoopAndRumbleCommon)((ISoundLoopAndRumbleGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(SoundLoopAndRumble? obj)
+        public bool Equals(ISoundLoopAndRumbleGetter? obj)
         {
             return ((SoundLoopAndRumbleCommon)((ISoundLoopAndRumbleGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1371,6 +1371,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ISoundLoopAndRumbleGetter rhs)) return false;
+            return ((SoundLoopAndRumbleCommon)((ISoundLoopAndRumbleGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ISoundLoopAndRumbleGetter? obj)
+        {
+            return ((SoundLoopAndRumbleCommon)((ISoundLoopAndRumbleGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((SoundLoopAndRumbleCommon)((ISoundLoopAndRumbleGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

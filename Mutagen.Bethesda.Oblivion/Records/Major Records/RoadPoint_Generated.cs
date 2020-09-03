@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class RoadPoint :
         IRoadPoint,
         ILoquiObjectSetter<RoadPoint>,
-        IEquatable<RoadPoint>
+        IEquatable<IRoadPointGetter>
     {
         #region Ctor
         public RoadPoint()
@@ -88,7 +88,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((RoadPointCommon)((IRoadPointGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(RoadPoint? obj)
+        public bool Equals(IRoadPointGetter? obj)
         {
             return ((RoadPointCommon)((IRoadPointGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1091,7 +1091,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null || rhs == null) return false;
             if (!lhs.Point.Equals(rhs.Point)) return false;
             if (!MemoryExtensions.SequenceEqual(lhs.NumConnectionsFluffBytes.Span, rhs.NumConnectionsFluffBytes.Span)) return false;
-            if (!lhs.Connections.SequenceEqual(rhs.Connections)) return false;
+            if (!lhs.Connections.SequenceEqualNullable(rhs.Connections)) return false;
             return true;
         }
         
@@ -1430,6 +1430,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IRoadPointGetter rhs)) return false;
+            return ((RoadPointCommon)((IRoadPointGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IRoadPointGetter? obj)
+        {
+            return ((RoadPointCommon)((IRoadPointGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((RoadPointCommon)((IRoadPointGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

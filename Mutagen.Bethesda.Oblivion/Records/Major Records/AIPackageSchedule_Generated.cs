@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class AIPackageSchedule :
         IAIPackageSchedule,
         ILoquiObjectSetter<AIPackageSchedule>,
-        IEquatable<AIPackageSchedule>
+        IEquatable<IAIPackageScheduleGetter>
     {
         #region Ctor
         public AIPackageSchedule()
@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(AIPackageSchedule? obj)
+        public bool Equals(IAIPackageScheduleGetter? obj)
         {
             return ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1434,6 +1434,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IAIPackageScheduleGetter rhs)) return false;
+            return ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IAIPackageScheduleGetter? obj)
+        {
+            return ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

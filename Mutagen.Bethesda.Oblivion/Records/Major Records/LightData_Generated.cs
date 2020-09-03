@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class LightData :
         ILightData,
         ILoquiObjectSetter<LightData>,
-        IEquatable<LightData>
+        IEquatable<ILightDataGetter>
     {
         #region Ctor
         public LightData()
@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Time
         public readonly static Int32 _Time_Default = -1;
-        public Int32 Time { get; set; } = default;
+        public Int32 Time { get; set; } = _Time_Default;
         #endregion
         #region Radius
         public UInt32 Radius { get; set; } = default;
@@ -58,11 +58,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region FalloffExponent
         public readonly static Single _FalloffExponent_Default = 1;
-        public Single FalloffExponent { get; set; } = default;
+        public Single FalloffExponent { get; set; } = _FalloffExponent_Default;
         #endregion
         #region FOV
         public readonly static Single _FOV_Default = 90;
-        public Single FOV { get; set; } = default;
+        public Single FOV { get; set; } = _FOV_Default;
         #endregion
         #region Value
         public UInt32 Value { get; set; } = default;
@@ -91,7 +91,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((LightDataCommon)((ILightDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LightData? obj)
+        public bool Equals(ILightDataGetter? obj)
         {
             return ((LightDataCommon)((ILightDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1698,6 +1698,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILightDataGetter rhs)) return false;
+            return ((LightDataCommon)((ILightDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILightDataGetter? obj)
+        {
+            return ((LightDataCommon)((ILightDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LightDataCommon)((ILightDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

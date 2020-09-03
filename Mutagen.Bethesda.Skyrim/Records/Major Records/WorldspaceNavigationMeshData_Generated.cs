@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         ANavigationMeshData,
         IWorldspaceNavigationMeshData,
         ILoquiObjectSetter<WorldspaceNavigationMeshData>,
-        IEquatable<WorldspaceNavigationMeshData>
+        IEquatable<IWorldspaceNavigationMeshDataGetter>
     {
         #region Ctor
         public WorldspaceNavigationMeshData()
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(WorldspaceNavigationMeshData? obj)
+        public bool Equals(IWorldspaceNavigationMeshDataGetter? obj)
         {
             return ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -889,7 +889,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Parent = object.Equals(item.Parent, rhs.Parent);
+            ret.Parent = item.Parent.Equals(rhs.Parent);
             ret.Coordinates = item.Coordinates.Equals(rhs.Coordinates);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -992,7 +992,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IANavigationMeshDataGetter)lhs, (IANavigationMeshDataGetter)rhs)) return false;
             if (!lhs.Parent.Equals(rhs.Parent)) return false;
             if (!lhs.Coordinates.Equals(rhs.Coordinates)) return false;
             return true;
@@ -1332,6 +1332,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IWorldspaceNavigationMeshDataGetter rhs)) return false;
+            return ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IWorldspaceNavigationMeshDataGetter? obj)
+        {
+            return ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

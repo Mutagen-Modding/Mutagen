@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class DoorTriangle :
         IDoorTriangle,
         ILoquiObjectSetter<DoorTriangle>,
-        IEquatable<DoorTriangle>
+        IEquatable<IDoorTriangleGetter>
     {
         #region Ctor
         public DoorTriangle()
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((DoorTriangleCommon)((IDoorTriangleGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(DoorTriangle? obj)
+        public bool Equals(IDoorTriangleGetter? obj)
         {
             return ((DoorTriangleCommon)((IDoorTriangleGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -924,7 +924,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (rhs == null) return;
             ret.TriangleBeforeDoor = item.TriangleBeforeDoor == rhs.TriangleBeforeDoor;
             ret.Unknown = item.Unknown == rhs.Unknown;
-            ret.Door = object.Equals(item.Door, rhs.Door);
+            ret.Door = item.Door.Equals(rhs.Door);
         }
         
         public string ToString(
@@ -1315,6 +1315,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IDoorTriangleGetter rhs)) return false;
+            return ((DoorTriangleCommon)((IDoorTriangleGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IDoorTriangleGetter? obj)
+        {
+            return ((DoorTriangleCommon)((IDoorTriangleGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((DoorTriangleCommon)((IDoorTriangleGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

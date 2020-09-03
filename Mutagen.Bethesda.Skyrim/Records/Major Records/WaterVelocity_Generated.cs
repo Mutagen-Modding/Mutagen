@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class WaterVelocity :
         IWaterVelocity,
         ILoquiObjectSetter<WaterVelocity>,
-        IEquatable<WaterVelocity>
+        IEquatable<IWaterVelocityGetter>
     {
         #region Ctor
         public WaterVelocity()
@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((WaterVelocityCommon)((IWaterVelocityGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(WaterVelocity? obj)
+        public bool Equals(IWaterVelocityGetter? obj)
         {
             return ((WaterVelocityCommon)((IWaterVelocityGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1382,6 +1382,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IWaterVelocityGetter rhs)) return false;
+            return ((WaterVelocityCommon)((IWaterVelocityGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IWaterVelocityGetter? obj)
+        {
+            return ((WaterVelocityCommon)((IWaterVelocityGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((WaterVelocityCommon)((IWaterVelocityGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

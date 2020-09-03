@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IImageSpaceInternal,
         ILoquiObjectSetter<ImageSpace>,
-        IEquatable<ImageSpace>
+        IEquatable<IImageSpaceGetter>
     {
         #region Ctor
         protected ImageSpace()
@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ImageSpaceCommon)((IImageSpaceGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ImageSpace? obj)
+        public bool Equals(IImageSpaceGetter? obj)
         {
             return ((ImageSpaceCommon)((IImageSpaceGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1256,7 +1256,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!MemorySliceExt.Equal(lhs.ENAM, rhs.ENAM)) return false;
             if (!object.Equals(lhs.Hdr, rhs.Hdr)) return false;
             if (!object.Equals(lhs.Cinematic, rhs.Cinematic)) return false;
@@ -1984,6 +1984,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IImageSpaceGetter rhs)) return false;
+            return ((ImageSpaceCommon)((IImageSpaceGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IImageSpaceGetter? obj)
+        {
+            return ((ImageSpaceCommon)((IImageSpaceGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ImageSpaceCommon)((IImageSpaceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

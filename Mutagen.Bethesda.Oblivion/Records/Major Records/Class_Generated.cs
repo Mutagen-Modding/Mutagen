@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IClassInternal,
         ILoquiObjectSetter<Class>,
-        IEquatable<Class>
+        IEquatable<IClassGetter>
     {
         #region Ctor
         protected Class()
@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ClassCommon)((IClassGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Class? obj)
+        public bool Equals(IClassGetter? obj)
         {
             return ((ClassCommon)((IClassGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1142,7 +1142,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!string.Equals(lhs.Description, rhs.Description)) return false;
             if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
@@ -1772,6 +1772,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IClassGetter rhs)) return false;
+            return ((ClassCommon)((IClassGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IClassGetter? obj)
+        {
+            return ((ClassCommon)((IClassGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ClassCommon)((IClassGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class ClassData :
         IClassData,
         ILoquiObjectSetter<ClassData>,
-        IEquatable<ClassData>
+        IEquatable<IClassDataGetter>
     {
         #region Ctor
         public ClassData()
@@ -106,7 +106,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ClassDataCommon)((IClassDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ClassData? obj)
+        public bool Equals(IClassDataGetter? obj)
         {
             return ((ClassDataCommon)((IClassDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1411,9 +1411,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (lhs.Versioning != rhs.Versioning) return false;
-            if (!lhs.PrimaryAttributes.SequenceEqual(rhs.PrimaryAttributes)) return false;
+            if (!lhs.PrimaryAttributes.SequenceEqualNullable(rhs.PrimaryAttributes)) return false;
             if (lhs.Specialization != rhs.Specialization) return false;
-            if (!lhs.SecondaryAttributes.SequenceEqual(rhs.SecondaryAttributes)) return false;
+            if (!lhs.SecondaryAttributes.SequenceEqualNullable(rhs.SecondaryAttributes)) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (lhs.ClassServices != rhs.ClassServices) return false;
             if (!object.Equals(lhs.Training, rhs.Training)) return false;
@@ -1843,6 +1843,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IClassDataGetter rhs)) return false;
+            return ((ClassDataCommon)((IClassDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IClassDataGetter? obj)
+        {
+            return ((ClassDataCommon)((IClassDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ClassDataCommon)((IClassDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

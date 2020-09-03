@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IRaceInternal,
         ILoquiObjectSetter<Race>,
-        IEquatable<Race>
+        IEquatable<IRaceGetter>
     {
         #region Ctor
         protected Race()
@@ -201,7 +201,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Race? obj)
+        public bool Equals(IRaceGetter? obj)
         {
             return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2420,11 +2420,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!string.Equals(lhs.Description, rhs.Description)) return false;
-            if (!lhs.Spells.SequenceEqual(rhs.Spells)) return false;
-            if (!lhs.Relations.SequenceEqual(rhs.Relations)) return false;
+            if (!lhs.Spells.SequenceEqualNullable(rhs.Spells)) return false;
+            if (!lhs.Relations.SequenceEqualNullable(rhs.Relations)) return false;
             if (!object.Equals(lhs.Data, rhs.Data)) return false;
             if (!Equals(lhs.Voices, rhs.Voices)) return false;
             if (!Equals(lhs.DefaultHair, rhs.DefaultHair)) return false;
@@ -2432,10 +2432,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs.FaceGenMainClamp != rhs.FaceGenMainClamp) return false;
             if (lhs.FaceGenFaceClamp != rhs.FaceGenFaceClamp) return false;
             if (!Equals(lhs.RaceStats, rhs.RaceStats)) return false;
-            if (!lhs.FaceData.SequenceEqual(rhs.FaceData)) return false;
+            if (!lhs.FaceData.SequenceEqualNullable(rhs.FaceData)) return false;
             if (!Equals(lhs.BodyData, rhs.BodyData)) return false;
-            if (!lhs.Hairs.SequenceEqual(rhs.Hairs)) return false;
-            if (!lhs.Eyes.SequenceEqual(rhs.Eyes)) return false;
+            if (!lhs.Hairs.SequenceEqualNullable(rhs.Hairs)) return false;
+            if (!lhs.Eyes.SequenceEqualNullable(rhs.Eyes)) return false;
             if (!object.Equals(lhs.FaceGenData, rhs.FaceGenData)) return false;
             if (lhs.SNAM != rhs.SNAM) return false;
             return true;
@@ -2551,6 +2551,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             foreach (var item in obj.Relations.SelectMany(f => f.LinkFormKeys))
             {
                 yield return item;
+            }
+            if (obj.Voices.TryGet(out var VoicesItem))
+            {
+                foreach (var item in VoicesItem.Select(f => f.FormKey))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.DefaultHair.TryGet(out var DefaultHairItem))
+            {
+                foreach (var item in DefaultHairItem.Select(f => f.FormKey))
+                {
+                    yield return item;
+                }
             }
             if (obj.Hairs.TryGet(out var HairsItem))
             {
@@ -3740,6 +3754,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IRaceGetter rhs)) return false;
+            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IRaceGetter? obj)
+        {
+            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((RaceCommon)((IRaceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

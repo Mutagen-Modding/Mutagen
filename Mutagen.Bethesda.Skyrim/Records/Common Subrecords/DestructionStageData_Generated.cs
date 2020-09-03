@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class DestructionStageData :
         IDestructionStageData,
         ILoquiObjectSetter<DestructionStageData>,
-        IEquatable<DestructionStageData>
+        IEquatable<IDestructionStageDataGetter>
     {
         #region Ctor
         public DestructionStageData()
@@ -88,7 +88,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((DestructionStageDataCommon)((IDestructionStageDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(DestructionStageData? obj)
+        public bool Equals(IDestructionStageDataGetter? obj)
         {
             return ((DestructionStageDataCommon)((IDestructionStageDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1164,8 +1164,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.ModelDamageStage = item.ModelDamageStage == rhs.ModelDamageStage;
             ret.Flags = item.Flags == rhs.Flags;
             ret.SelfDamagePerSecond = item.SelfDamagePerSecond == rhs.SelfDamagePerSecond;
-            ret.Explosion = object.Equals(item.Explosion, rhs.Explosion);
-            ret.Debris = object.Equals(item.Debris, rhs.Debris);
+            ret.Explosion = item.Explosion.Equals(rhs.Explosion);
+            ret.Debris = item.Debris.Equals(rhs.Debris);
             ret.DebrisCount = item.DebrisCount == rhs.DebrisCount;
         }
         
@@ -1637,6 +1637,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IDestructionStageDataGetter rhs)) return false;
+            return ((DestructionStageDataCommon)((IDestructionStageDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IDestructionStageDataGetter? obj)
+        {
+            return ((DestructionStageDataCommon)((IDestructionStageDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((DestructionStageDataCommon)((IDestructionStageDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

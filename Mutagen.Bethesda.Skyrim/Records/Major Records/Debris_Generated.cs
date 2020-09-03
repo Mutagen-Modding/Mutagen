@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IDebrisInternal,
         ILoquiObjectSetter<Debris>,
-        IEquatable<Debris>
+        IEquatable<IDebrisGetter>
     {
         #region Ctor
         protected Debris()
@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((DebrisCommon)((IDebrisGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Debris? obj)
+        public bool Equals(IDebrisGetter? obj)
         {
             return ((DebrisCommon)((IDebrisGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1065,8 +1065,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!lhs.Models.SequenceEqual(rhs.Models)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
+            if (!lhs.Models.SequenceEqualNullable(rhs.Models)) return false;
             return true;
         }
         
@@ -1607,6 +1607,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IDebrisGetter rhs)) return false;
+            return ((DebrisCommon)((IDebrisGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IDebrisGetter? obj)
+        {
+            return ((DebrisCommon)((IDebrisGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((DebrisCommon)((IDebrisGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

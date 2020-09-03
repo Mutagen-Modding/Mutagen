@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class OblivionModHeader :
         IOblivionModHeader,
         ILoquiObjectSetter<OblivionModHeader>,
-        IEquatable<OblivionModHeader>
+        IEquatable<IOblivionModHeaderGetter>
     {
         #region Ctor
         public OblivionModHeader()
@@ -122,7 +122,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((OblivionModHeaderCommon)((IOblivionModHeaderGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(OblivionModHeader? obj)
+        public bool Equals(IOblivionModHeaderGetter? obj)
         {
             return ((OblivionModHeaderCommon)((IOblivionModHeaderGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1442,7 +1442,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!MemorySliceExt.Equal(lhs.Deleted, rhs.Deleted)) return false;
             if (!string.Equals(lhs.Author, rhs.Author)) return false;
             if (!string.Equals(lhs.Description, rhs.Description)) return false;
-            if (!lhs.MasterReferences.SequenceEqual(rhs.MasterReferences)) return false;
+            if (!lhs.MasterReferences.SequenceEqualNullable(rhs.MasterReferences)) return false;
             return true;
         }
         
@@ -2047,6 +2047,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IOblivionModHeaderGetter rhs)) return false;
+            return ((OblivionModHeaderCommon)((IOblivionModHeaderGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IOblivionModHeaderGetter? obj)
+        {
+            return ((OblivionModHeaderCommon)((IOblivionModHeaderGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((OblivionModHeaderCommon)((IOblivionModHeaderGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

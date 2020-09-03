@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IContainerInternal,
         ILoquiObjectSetter<Container>,
-        IEquatable<Container>
+        IEquatable<IContainerGetter>
     {
         #region Ctor
         protected Container()
@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Container? obj)
+        public bool Equals(IContainerGetter? obj)
         {
             return ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1274,7 +1274,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Script = object.Equals(item.Script, rhs.Script);
+            ret.Script = item.Script.Equals(rhs.Script);
             ret.Items = item.Items.CollectionEqualsHelper(
                 rhs.Items,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1284,8 +1284,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Data,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.OpenSound = object.Equals(item.OpenSound, rhs.OpenSound);
-            ret.CloseSound = object.Equals(item.CloseSound, rhs.CloseSound);
+            ret.OpenSound = item.OpenSound.Equals(rhs.OpenSound);
+            ret.CloseSound = item.CloseSound.Equals(rhs.CloseSound);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1427,11 +1427,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!lhs.Script.Equals(rhs.Script)) return false;
-            if (!lhs.Items.SequenceEqual(rhs.Items)) return false;
+            if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
             if (!object.Equals(lhs.Data, rhs.Data)) return false;
             if (!lhs.OpenSound.Equals(rhs.OpenSound)) return false;
             if (!lhs.CloseSound.Equals(rhs.CloseSound)) return false;
@@ -2212,6 +2212,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IContainerGetter rhs)) return false;
+            return ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IContainerGetter? obj)
+        {
+            return ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

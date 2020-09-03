@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IImpactDataSetInternal,
         ILoquiObjectSetter<ImpactDataSet>,
-        IEquatable<ImpactDataSet>
+        IEquatable<IImpactDataSetGetter>
     {
         #region Ctor
         protected ImpactDataSet()
@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ImpactDataSetCommon)((IImpactDataSetGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ImpactDataSet? obj)
+        public bool Equals(IImpactDataSetGetter? obj)
         {
             return ((ImpactDataSetCommon)((IImpactDataSetGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1073,8 +1073,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!lhs.Impacts.SequenceEqual(rhs.Impacts)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
+            if (!lhs.Impacts.SequenceEqualNullable(rhs.Impacts)) return false;
             return true;
         }
         
@@ -1628,6 +1628,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IImpactDataSetGetter rhs)) return false;
+            return ((ImpactDataSetCommon)((IImpactDataSetGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IImpactDataSetGetter? obj)
+        {
+            return ((ImpactDataSetCommon)((IImpactDataSetGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ImpactDataSetCommon)((IImpactDataSetGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

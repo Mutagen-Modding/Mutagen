@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class TintAssets :
         ITintAssets,
         ILoquiObjectSetter<TintAssets>,
-        IEquatable<TintAssets>
+        IEquatable<ITintAssetsGetter>
     {
         #region Ctor
         public TintAssets()
@@ -95,7 +95,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(TintAssets? obj)
+        public bool Equals(ITintAssetsGetter? obj)
         {
             return ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1130,7 +1130,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Index = item.Index == rhs.Index;
             ret.FileName = string.Equals(item.FileName, rhs.FileName);
             ret.MaskType = item.MaskType == rhs.MaskType;
-            ret.PresetDefault = object.Equals(item.PresetDefault, rhs.PresetDefault);
+            ret.PresetDefault = item.PresetDefault.Equals(rhs.PresetDefault);
             ret.Presets = item.Presets.CollectionEqualsHelper(
                 rhs.Presets,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1231,7 +1231,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!string.Equals(lhs.FileName, rhs.FileName)) return false;
             if (lhs.MaskType != rhs.MaskType) return false;
             if (!lhs.PresetDefault.Equals(rhs.PresetDefault)) return false;
-            if (!lhs.Presets.SequenceEqual(rhs.Presets)) return false;
+            if (!lhs.Presets.SequenceEqualNullable(rhs.Presets)) return false;
             return true;
         }
         
@@ -1748,6 +1748,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ITintAssetsGetter rhs)) return false;
+            return ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ITintAssetsGetter? obj)
+        {
+            return ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         INpcInternal,
         ILoquiObjectSetter<Npc>,
-        IEquatable<Npc>
+        IEquatable<INpcGetter>
     {
         #region Ctor
         protected Npc()
@@ -290,7 +290,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region NAM5
         public readonly static UInt16 _NAM5_Default = 0xFF00;
-        public UInt16 NAM5 { get; set; } = default;
+        public UInt16 NAM5 { get; set; } = _NAM5_Default;
         #endregion
         #region Height
         public Single Height { get; set; } = default;
@@ -399,7 +399,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((NpcCommon)((INpcGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Npc? obj)
+        public bool Equals(INpcGetter? obj)
         {
             return ((NpcCommon)((INpcGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -3860,10 +3860,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Factions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.DeathItem = object.Equals(item.DeathItem, rhs.DeathItem);
-            ret.Voice = object.Equals(item.Voice, rhs.Voice);
-            ret.Template = object.Equals(item.Template, rhs.Template);
-            ret.Race = object.Equals(item.Race, rhs.Race);
+            ret.DeathItem = item.DeathItem.Equals(rhs.DeathItem);
+            ret.Voice = item.Voice.Equals(rhs.Voice);
+            ret.Template = item.Template.Equals(rhs.Template);
+            ret.Race = item.Race.Equals(rhs.Race);
             ret.ActorEffect = item.ActorEffect.CollectionEqualsHelper(
                 rhs.ActorEffect,
                 (l, r) => object.Equals(l, r),
@@ -3873,17 +3873,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Destructible,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.WornArmor = object.Equals(item.WornArmor, rhs.WornArmor);
-            ret.FarAwayModel = object.Equals(item.FarAwayModel, rhs.FarAwayModel);
-            ret.AttackRace = object.Equals(item.AttackRace, rhs.AttackRace);
+            ret.WornArmor = item.WornArmor.Equals(rhs.WornArmor);
+            ret.FarAwayModel = item.FarAwayModel.Equals(rhs.FarAwayModel);
+            ret.AttackRace = item.AttackRace.Equals(rhs.AttackRace);
             ret.Attacks = item.Attacks.CollectionEqualsHelper(
                 rhs.Attacks,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.SpectatorOverridePackageList = object.Equals(item.SpectatorOverridePackageList, rhs.SpectatorOverridePackageList);
-            ret.ObserveDeadBodyOverridePackageList = object.Equals(item.ObserveDeadBodyOverridePackageList, rhs.ObserveDeadBodyOverridePackageList);
-            ret.GuardWarnOverridePackageList = object.Equals(item.GuardWarnOverridePackageList, rhs.GuardWarnOverridePackageList);
-            ret.CombatOverridePackageList = object.Equals(item.CombatOverridePackageList, rhs.CombatOverridePackageList);
+            ret.SpectatorOverridePackageList = item.SpectatorOverridePackageList.Equals(rhs.SpectatorOverridePackageList);
+            ret.ObserveDeadBodyOverridePackageList = item.ObserveDeadBodyOverridePackageList.Equals(rhs.ObserveDeadBodyOverridePackageList);
+            ret.GuardWarnOverridePackageList = item.GuardWarnOverridePackageList.Equals(rhs.GuardWarnOverridePackageList);
+            ret.CombatOverridePackageList = item.CombatOverridePackageList.Equals(rhs.CombatOverridePackageList);
             ret.Perks = item.Perks.CollectionEqualsHelper(
                 rhs.Perks,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -3901,7 +3901,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.Class = object.Equals(item.Class, rhs.Class);
+            ret.Class = item.Class.Equals(rhs.Class);
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.ShortName = string.Equals(item.ShortName, rhs.ShortName);
             ret.PlayerSkills = EqualsMaskHelper.EqualsHelper(
@@ -3913,9 +3913,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.HeadParts,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.HairColor = object.Equals(item.HairColor, rhs.HairColor);
-            ret.CombatStyle = object.Equals(item.CombatStyle, rhs.CombatStyle);
-            ret.GiftFilter = object.Equals(item.GiftFilter, rhs.GiftFilter);
+            ret.HairColor = item.HairColor.Equals(rhs.HairColor);
+            ret.CombatStyle = item.CombatStyle.Equals(rhs.CombatStyle);
+            ret.GiftFilter = item.GiftFilter.Equals(rhs.GiftFilter);
             ret.NAM5 = item.NAM5 == rhs.NAM5;
             ret.Height = item.Height.EqualsWithin(rhs.Height);
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
@@ -3925,11 +3925,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Sound,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.DefaultOutfit = object.Equals(item.DefaultOutfit, rhs.DefaultOutfit);
-            ret.SleepingOutfit = object.Equals(item.SleepingOutfit, rhs.SleepingOutfit);
-            ret.DefaultPackageList = object.Equals(item.DefaultPackageList, rhs.DefaultPackageList);
-            ret.CrimeFaction = object.Equals(item.CrimeFaction, rhs.CrimeFaction);
-            ret.HeadTexture = object.Equals(item.HeadTexture, rhs.HeadTexture);
+            ret.DefaultOutfit = item.DefaultOutfit.Equals(rhs.DefaultOutfit);
+            ret.SleepingOutfit = item.SleepingOutfit.Equals(rhs.SleepingOutfit);
+            ret.DefaultPackageList = item.DefaultPackageList.Equals(rhs.DefaultPackageList);
+            ret.CrimeFaction = item.CrimeFaction.Equals(rhs.CrimeFaction);
+            ret.HeadTexture = item.HeadTexture.Equals(rhs.HeadTexture);
             ret.TextureLighting = item.TextureLighting.ColorOnlyEquals(rhs.TextureLighting);
             ret.FaceMorph = EqualsMaskHelper.EqualsHelper(
                 item.FaceMorph,
@@ -4362,35 +4362,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
             if (!object.Equals(lhs.Configuration, rhs.Configuration)) return false;
-            if (!lhs.Factions.SequenceEqual(rhs.Factions)) return false;
+            if (!lhs.Factions.SequenceEqualNullable(rhs.Factions)) return false;
             if (!lhs.DeathItem.Equals(rhs.DeathItem)) return false;
             if (!lhs.Voice.Equals(rhs.Voice)) return false;
             if (!lhs.Template.Equals(rhs.Template)) return false;
             if (!lhs.Race.Equals(rhs.Race)) return false;
-            if (!lhs.ActorEffect.SequenceEqual(rhs.ActorEffect)) return false;
+            if (!lhs.ActorEffect.SequenceEqualNullable(rhs.ActorEffect)) return false;
             if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
             if (!lhs.WornArmor.Equals(rhs.WornArmor)) return false;
             if (!lhs.FarAwayModel.Equals(rhs.FarAwayModel)) return false;
             if (!lhs.AttackRace.Equals(rhs.AttackRace)) return false;
-            if (!lhs.Attacks.SequenceEqual(rhs.Attacks)) return false;
+            if (!lhs.Attacks.SequenceEqualNullable(rhs.Attacks)) return false;
             if (!lhs.SpectatorOverridePackageList.Equals(rhs.SpectatorOverridePackageList)) return false;
             if (!lhs.ObserveDeadBodyOverridePackageList.Equals(rhs.ObserveDeadBodyOverridePackageList)) return false;
             if (!lhs.GuardWarnOverridePackageList.Equals(rhs.GuardWarnOverridePackageList)) return false;
             if (!lhs.CombatOverridePackageList.Equals(rhs.CombatOverridePackageList)) return false;
-            if (!lhs.Perks.SequenceEqual(rhs.Perks)) return false;
-            if (!lhs.Items.SequenceEqual(rhs.Items)) return false;
+            if (!lhs.Perks.SequenceEqualNullable(rhs.Perks)) return false;
+            if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
             if (!object.Equals(lhs.AIData, rhs.AIData)) return false;
-            if (!lhs.Packages.SequenceEqual(rhs.Packages)) return false;
-            if (!lhs.Keywords.SequenceEqual(rhs.Keywords)) return false;
+            if (!lhs.Packages.SequenceEqualNullable(rhs.Packages)) return false;
+            if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             if (!lhs.Class.Equals(rhs.Class)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!string.Equals(lhs.ShortName, rhs.ShortName)) return false;
             if (!object.Equals(lhs.PlayerSkills, rhs.PlayerSkills)) return false;
-            if (!lhs.HeadParts.SequenceEqual(rhs.HeadParts)) return false;
+            if (!lhs.HeadParts.SequenceEqualNullable(rhs.HeadParts)) return false;
             if (!lhs.HairColor.Equals(rhs.HairColor)) return false;
             if (!lhs.CombatStyle.Equals(rhs.CombatStyle)) return false;
             if (!lhs.GiftFilter.Equals(rhs.GiftFilter)) return false;
@@ -4407,7 +4407,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.TextureLighting.ColorOnlyEquals(rhs.TextureLighting)) return false;
             if (!object.Equals(lhs.FaceMorph, rhs.FaceMorph)) return false;
             if (!object.Equals(lhs.FaceParts, rhs.FaceParts)) return false;
-            if (!lhs.TintLayers.SequenceEqual(rhs.TintLayers)) return false;
+            if (!lhs.TintLayers.SequenceEqualNullable(rhs.TintLayers)) return false;
             return true;
         }
         
@@ -6821,6 +6821,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is INpcGetter rhs)) return false;
+            return ((NpcCommon)((INpcGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(INpcGetter? obj)
+        {
+            return ((NpcCommon)((INpcGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((NpcCommon)((INpcGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

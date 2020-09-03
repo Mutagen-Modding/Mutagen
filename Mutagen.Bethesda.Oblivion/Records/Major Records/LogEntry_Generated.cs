@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class LogEntry :
         ILogEntry,
         ILoquiObjectSetter<LogEntry>,
-        IEquatable<LogEntry>
+        IEquatable<ILogEntryGetter>
     {
         #region Ctor
         public LogEntry()
@@ -96,7 +96,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((LogEntryCommon)((ILogEntryGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LogEntry? obj)
+        public bool Equals(ILogEntryGetter? obj)
         {
             return ((LogEntryCommon)((ILogEntryGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1191,7 +1191,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
+            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
             if (!string.Equals(lhs.Entry, rhs.Entry)) return false;
             if (!object.Equals(lhs.ResultScript, rhs.ResultScript)) return false;
             return true;
@@ -1712,6 +1712,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILogEntryGetter rhs)) return false;
+            return ((LogEntryCommon)((ILogEntryGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILogEntryGetter? obj)
+        {
+            return ((LogEntryCommon)((ILogEntryGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LogEntryCommon)((ILogEntryGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

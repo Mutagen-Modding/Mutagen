@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IHeadPartInternal,
         ILoquiObjectSetter<HeadPart>,
-        IEquatable<HeadPart>
+        IEquatable<IHeadPartGetter>
     {
         #region Ctor
         protected HeadPart()
@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((HeadPartCommon)((IHeadPartGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(HeadPart? obj)
+        public bool Equals(IHeadPartGetter? obj)
         {
             return ((HeadPartCommon)((IHeadPartGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1465,9 +1465,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Parts,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.TextureSet = object.Equals(item.TextureSet, rhs.TextureSet);
-            ret.Color = object.Equals(item.Color, rhs.Color);
-            ret.ValidRaces = object.Equals(item.ValidRaces, rhs.ValidRaces);
+            ret.TextureSet = item.TextureSet.Equals(rhs.TextureSet);
+            ret.Color = item.Color.Equals(rhs.Color);
+            ret.ValidRaces = item.ValidRaces.Equals(rhs.ValidRaces);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1633,13 +1633,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (lhs.Type != rhs.Type) return false;
-            if (!lhs.ExtraParts.SequenceEqual(rhs.ExtraParts)) return false;
-            if (!lhs.Parts.SequenceEqual(rhs.Parts)) return false;
+            if (!lhs.ExtraParts.SequenceEqualNullable(rhs.ExtraParts)) return false;
+            if (!lhs.Parts.SequenceEqualNullable(rhs.Parts)) return false;
             if (!lhs.TextureSet.Equals(rhs.TextureSet)) return false;
             if (!lhs.Color.Equals(rhs.Color)) return false;
             if (!lhs.ValidRaces.Equals(rhs.ValidRaces)) return false;
@@ -2483,6 +2483,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IHeadPartGetter rhs)) return false;
+            return ((HeadPartCommon)((IHeadPartGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IHeadPartGetter? obj)
+        {
+            return ((HeadPartCommon)((IHeadPartGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((HeadPartCommon)((IHeadPartGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

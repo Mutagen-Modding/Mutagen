@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class TintLayer :
         ITintLayer,
         ILoquiObjectSetter<TintLayer>,
-        IEquatable<TintLayer>
+        IEquatable<ITintLayerGetter>
     {
         #region Ctor
         public TintLayer()
@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((TintLayerCommon)((ITintLayerGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(TintLayer? obj)
+        public bool Equals(ITintLayerGetter? obj)
         {
             return ((TintLayerCommon)((ITintLayerGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1506,6 +1506,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ITintLayerGetter rhs)) return false;
+            return ((TintLayerCommon)((ITintLayerGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ITintLayerGetter? obj)
+        {
+            return ((TintLayerCommon)((ITintLayerGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((TintLayerCommon)((ITintLayerGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

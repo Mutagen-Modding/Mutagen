@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         ConditionData,
         IGetEventData,
         ILoquiObjectSetter<GetEventData>,
-        IEquatable<GetEventData>
+        IEquatable<IGetEventDataGetter>
     {
         #region Ctor
         public GetEventData()
@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown3
         public readonly static Int32 _Unknown3_Default = -1;
-        public Int32 Unknown3 { get; set; } = default;
+        public Int32 Unknown3 { get; set; } = _Unknown3_Default;
         #endregion
 
         #region To String
@@ -88,7 +88,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((GetEventDataCommon)((IGetEventDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(GetEventData? obj)
+        public bool Equals(IGetEventDataGetter? obj)
         {
             return ((GetEventDataCommon)((IGetEventDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1089,9 +1089,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
             ret.EventFunction = item.EventFunction == rhs.EventFunction;
             ret.EventMember = item.EventMember == rhs.EventMember;
-            ret.Parameter3 = object.Equals(item.Parameter3, rhs.Parameter3);
+            ret.Parameter3 = item.Parameter3.Equals(rhs.Parameter3);
             ret.RunOnType = item.RunOnType == rhs.RunOnType;
-            ret.Reference = object.Equals(item.Reference, rhs.Reference);
+            ret.Reference = item.Reference.Equals(rhs.Reference);
             ret.Unknown3 = item.Unknown3 == rhs.Unknown3;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -1190,7 +1190,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IConditionDataGetter)lhs, (IConditionDataGetter)rhs)) return false;
             if (lhs.Unknown2 != rhs.Unknown2) return false;
             if (lhs.EventFunction != rhs.EventFunction) return false;
             if (lhs.EventMember != rhs.EventMember) return false;
@@ -1587,6 +1587,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IGetEventDataGetter rhs)) return false;
+            return ((GetEventDataCommon)((IGetEventDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IGetEventDataGetter? obj)
+        {
+            return ((GetEventDataCommon)((IGetEventDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((GetEventDataCommon)((IGetEventDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

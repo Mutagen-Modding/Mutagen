@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         ANpc,
         ICreatureInternal,
         ILoquiObjectSetter<Creature>,
-        IEquatable<Creature>
+        IEquatable<ICreatureGetter>
     {
         #region Ctor
         protected Creature()
@@ -271,7 +271,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Creature? obj)
+        public bool Equals(ICreatureGetter? obj)
         {
             return ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2624,8 +2624,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Factions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.DeathItem = object.Equals(item.DeathItem, rhs.DeathItem);
-            ret.Script = object.Equals(item.Script, rhs.Script);
+            ret.DeathItem = item.DeathItem.Equals(rhs.DeathItem);
+            ret.Script = item.Script.Equals(rhs.Script);
             ret.AIData = EqualsMaskHelper.EqualsHelper(
                 item.AIData,
                 rhs.AIData,
@@ -2645,13 +2645,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.AttackReach = item.AttackReach == rhs.AttackReach;
-            ret.CombatStyle = object.Equals(item.CombatStyle, rhs.CombatStyle);
+            ret.CombatStyle = item.CombatStyle.Equals(rhs.CombatStyle);
             ret.TurningSpeed = item.TurningSpeed.EqualsWithin(rhs.TurningSpeed);
             ret.BaseScale = item.BaseScale.EqualsWithin(rhs.BaseScale);
             ret.FootWeight = item.FootWeight.EqualsWithin(rhs.FootWeight);
             ret.BloodSpray = string.Equals(item.BloodSpray, rhs.BloodSpray);
             ret.BloodDecal = string.Equals(item.BloodDecal, rhs.BloodDecal);
-            ret.InheritsSoundFrom = object.Equals(item.InheritsSoundFrom, rhs.InheritsSoundFrom);
+            ret.InheritsSoundFrom = item.InheritsSoundFrom.Equals(rhs.InheritsSoundFrom);
             ret.Sounds = item.Sounds.CollectionEqualsHelper(
                 rhs.Sounds,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -2994,20 +2994,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IANpcGetter)lhs, (IANpcGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (!lhs.Items.SequenceEqual(rhs.Items)) return false;
-            if (!lhs.Spells.SequenceEqual(rhs.Spells)) return false;
-            if (!lhs.Models.SequenceEqual(rhs.Models)) return false;
+            if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
+            if (!lhs.Spells.SequenceEqualNullable(rhs.Spells)) return false;
+            if (!lhs.Models.SequenceEqualNullable(rhs.Models)) return false;
             if (!MemorySliceExt.Equal(lhs.NIFT, rhs.NIFT)) return false;
             if (!object.Equals(lhs.Configuration, rhs.Configuration)) return false;
-            if (!lhs.Factions.SequenceEqual(rhs.Factions)) return false;
+            if (!lhs.Factions.SequenceEqualNullable(rhs.Factions)) return false;
             if (!lhs.DeathItem.Equals(rhs.DeathItem)) return false;
             if (!lhs.Script.Equals(rhs.Script)) return false;
             if (!object.Equals(lhs.AIData, rhs.AIData)) return false;
-            if (!lhs.AIPackages.SequenceEqual(rhs.AIPackages)) return false;
-            if (!lhs.Animations.SequenceEqual(rhs.Animations)) return false;
+            if (!lhs.AIPackages.SequenceEqualNullable(rhs.AIPackages)) return false;
+            if (!lhs.Animations.SequenceEqualNullable(rhs.Animations)) return false;
             if (!object.Equals(lhs.Data, rhs.Data)) return false;
             if (lhs.AttackReach != rhs.AttackReach) return false;
             if (!lhs.CombatStyle.Equals(rhs.CombatStyle)) return false;
@@ -3017,7 +3017,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!string.Equals(lhs.BloodSpray, rhs.BloodSpray)) return false;
             if (!string.Equals(lhs.BloodDecal, rhs.BloodDecal)) return false;
             if (!lhs.InheritsSoundFrom.Equals(rhs.InheritsSoundFrom)) return false;
-            if (!lhs.Sounds.SequenceEqual(rhs.Sounds)) return false;
+            if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds)) return false;
             return true;
         }
         
@@ -4606,6 +4606,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ICreatureGetter rhs)) return false;
+            return ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ICreatureGetter? obj)
+        {
+            return ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IExplosionInternal,
         ILoquiObjectSetter<Explosion>,
-        IEquatable<Explosion>
+        IEquatable<IExplosionGetter>
     {
         #region Ctor
         protected Explosion()
@@ -192,7 +192,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ExplosionCommon)((IExplosionGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Explosion? obj)
+        public bool Equals(IExplosionGetter? obj)
         {
             return ((ExplosionCommon)((IExplosionGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1855,14 +1855,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.ObjectEffect = object.Equals(item.ObjectEffect, rhs.ObjectEffect);
-            ret.ImageSpaceModifier = object.Equals(item.ImageSpaceModifier, rhs.ImageSpaceModifier);
-            ret.Light = object.Equals(item.Light, rhs.Light);
-            ret.Sound1 = object.Equals(item.Sound1, rhs.Sound1);
-            ret.Sound2 = object.Equals(item.Sound2, rhs.Sound2);
-            ret.ImpactDataSet = object.Equals(item.ImpactDataSet, rhs.ImpactDataSet);
-            ret.PlacedObject = object.Equals(item.PlacedObject, rhs.PlacedObject);
-            ret.SpawnProjectile = object.Equals(item.SpawnProjectile, rhs.SpawnProjectile);
+            ret.ObjectEffect = item.ObjectEffect.Equals(rhs.ObjectEffect);
+            ret.ImageSpaceModifier = item.ImageSpaceModifier.Equals(rhs.ImageSpaceModifier);
+            ret.Light = item.Light.Equals(rhs.Light);
+            ret.Sound1 = item.Sound1.Equals(rhs.Sound1);
+            ret.Sound2 = item.Sound2.Equals(rhs.Sound2);
+            ret.ImpactDataSet = item.ImpactDataSet.Equals(rhs.ImpactDataSet);
+            ret.PlacedObject = item.PlacedObject.Equals(rhs.PlacedObject);
+            ret.SpawnProjectile = item.SpawnProjectile.Equals(rhs.SpawnProjectile);
             ret.Force = item.Force.EqualsWithin(rhs.Force);
             ret.Damage = item.Damage.EqualsWithin(rhs.Damage);
             ret.Radius = item.Radius.EqualsWithin(rhs.Radius);
@@ -2052,7 +2052,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
@@ -3083,6 +3083,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IExplosionGetter rhs)) return false;
+            return ((ExplosionCommon)((IExplosionGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IExplosionGetter? obj)
+        {
+            return ((ExplosionCommon)((IExplosionGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ExplosionCommon)((IExplosionGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

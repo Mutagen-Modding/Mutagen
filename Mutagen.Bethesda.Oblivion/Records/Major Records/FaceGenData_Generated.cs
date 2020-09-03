@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class FaceGenData :
         IFaceGenData,
         ILoquiObjectSetter<FaceGenData>,
-        IEquatable<FaceGenData>
+        IEquatable<IFaceGenDataGetter>
     {
         #region Ctor
         public FaceGenData()
@@ -93,7 +93,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((FaceGenDataCommon)((IFaceGenDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(FaceGenData? obj)
+        public bool Equals(IFaceGenDataGetter? obj)
         {
             return ((FaceGenDataCommon)((IFaceGenDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1454,6 +1454,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IFaceGenDataGetter rhs)) return false;
+            return ((FaceGenDataCommon)((IFaceGenDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IFaceGenDataGetter? obj)
+        {
+            return ((FaceGenDataCommon)((IFaceGenDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((FaceGenDataCommon)((IFaceGenDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

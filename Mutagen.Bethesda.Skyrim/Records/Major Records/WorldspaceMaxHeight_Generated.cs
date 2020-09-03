@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class WorldspaceMaxHeight :
         IWorldspaceMaxHeight,
         ILoquiObjectSetter<WorldspaceMaxHeight>,
-        IEquatable<WorldspaceMaxHeight>
+        IEquatable<IWorldspaceMaxHeightGetter>
     {
         #region Ctor
         public WorldspaceMaxHeight()
@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((WorldspaceMaxHeightCommon)((IWorldspaceMaxHeightGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(WorldspaceMaxHeight? obj)
+        public bool Equals(IWorldspaceMaxHeightGetter? obj)
         {
             return ((WorldspaceMaxHeightCommon)((IWorldspaceMaxHeightGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1324,6 +1324,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IWorldspaceMaxHeightGetter rhs)) return false;
+            return ((WorldspaceMaxHeightCommon)((IWorldspaceMaxHeightGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IWorldspaceMaxHeightGetter? obj)
+        {
+            return ((WorldspaceMaxHeightCommon)((IWorldspaceMaxHeightGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((WorldspaceMaxHeightCommon)((IWorldspaceMaxHeightGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

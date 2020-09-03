@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class IngredientData :
         IIngredientData,
         ILoquiObjectSetter<IngredientData>,
-        IEquatable<IngredientData>
+        IEquatable<IIngredientDataGetter>
     {
         #region Ctor
         public IngredientData()
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((IngredientDataCommon)((IIngredientDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(IngredientData? obj)
+        public bool Equals(IIngredientDataGetter? obj)
         {
             return ((IngredientDataCommon)((IIngredientDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1251,6 +1251,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IIngredientDataGetter rhs)) return false;
+            return ((IngredientDataCommon)((IIngredientDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IIngredientDataGetter? obj)
+        {
+            return ((IngredientDataCommon)((IIngredientDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((IngredientDataCommon)((IIngredientDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

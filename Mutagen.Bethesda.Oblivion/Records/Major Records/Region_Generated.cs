@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IRegionInternal,
         ILoquiObjectSetter<Region>,
-        IEquatable<Region>
+        IEquatable<IRegionGetter>
     {
         #region Ctor
         protected Region()
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Region? obj)
+        public bool Equals(IRegionGetter? obj)
         {
             return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1404,7 +1404,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.Icon = string.Equals(item.Icon, rhs.Icon);
             ret.MapColor = item.MapColor.ColorOnlyEquals(rhs.MapColor);
-            ret.Worldspace = object.Equals(item.Worldspace, rhs.Worldspace);
+            ret.Worldspace = item.Worldspace.Equals(rhs.Worldspace);
             ret.Areas = item.Areas.CollectionEqualsHelper(
                 rhs.Areas,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1587,11 +1587,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
             if (!lhs.MapColor.ColorOnlyEquals(rhs.MapColor)) return false;
             if (!lhs.Worldspace.Equals(rhs.Worldspace)) return false;
-            if (!lhs.Areas.SequenceEqual(rhs.Areas)) return false;
+            if (!lhs.Areas.SequenceEqualNullable(rhs.Areas)) return false;
             if (!object.Equals(lhs.Objects, rhs.Objects)) return false;
             if (!object.Equals(lhs.Weather, rhs.Weather)) return false;
             if (!object.Equals(lhs.MapName, rhs.MapName)) return false;
@@ -2453,6 +2453,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IRegionGetter rhs)) return false;
+            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IRegionGetter? obj)
+        {
+            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((RegionCommon)((IRegionGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

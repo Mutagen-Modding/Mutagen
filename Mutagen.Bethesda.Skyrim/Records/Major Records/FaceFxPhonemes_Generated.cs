@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class FaceFxPhonemes :
         IFaceFxPhonemes,
         ILoquiObjectSetter<FaceFxPhonemes>,
-        IEquatable<FaceFxPhonemes>
+        IEquatable<IFaceFxPhonemesGetter>
     {
         #region Ctor
         public FaceFxPhonemes()
@@ -240,7 +240,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(FaceFxPhonemes? obj)
+        public bool Equals(IFaceFxPhonemesGetter? obj)
         {
             return ((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2803,6 +2803,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IFaceFxPhonemesGetter rhs)) return false;
+            return ((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IFaceFxPhonemesGetter? obj)
+        {
+            return ((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

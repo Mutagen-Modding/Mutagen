@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ImageSpaceDepthOfField :
         IImageSpaceDepthOfField,
         ILoquiObjectSetter<ImageSpaceDepthOfField>,
-        IEquatable<ImageSpaceDepthOfField>
+        IEquatable<IImageSpaceDepthOfFieldGetter>
     {
         #region Ctor
         public ImageSpaceDepthOfField()
@@ -82,7 +82,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ImageSpaceDepthOfFieldCommon)((IImageSpaceDepthOfFieldGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ImageSpaceDepthOfField? obj)
+        public bool Equals(IImageSpaceDepthOfFieldGetter? obj)
         {
             return ((ImageSpaceDepthOfFieldCommon)((IImageSpaceDepthOfFieldGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1620,6 +1620,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IImageSpaceDepthOfFieldGetter rhs)) return false;
+            return ((ImageSpaceDepthOfFieldCommon)((IImageSpaceDepthOfFieldGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IImageSpaceDepthOfFieldGetter? obj)
+        {
+            return ((ImageSpaceDepthOfFieldCommon)((IImageSpaceDepthOfFieldGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ImageSpaceDepthOfFieldCommon)((IImageSpaceDepthOfFieldGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public abstract partial class ANpcLevel :
         IANpcLevel,
         ILoquiObjectSetter<ANpcLevel>,
-        IEquatable<ANpcLevel>
+        IEquatable<IANpcLevelGetter>
     {
         #region Ctor
         public ANpcLevel()
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ANpcLevelCommon)((IANpcLevelGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ANpcLevel? obj)
+        public bool Equals(IANpcLevelGetter? obj)
         {
             return ((ANpcLevelCommon)((IANpcLevelGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1031,6 +1031,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IANpcLevelGetter rhs)) return false;
+            return ((ANpcLevelCommon)((IANpcLevelGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IANpcLevelGetter? obj)
+        {
+            return ((ANpcLevelCommon)((IANpcLevelGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ANpcLevelCommon)((IANpcLevelGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

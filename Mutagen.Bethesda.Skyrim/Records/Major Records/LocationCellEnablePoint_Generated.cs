@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class LocationCellEnablePoint :
         ILocationCellEnablePoint,
         ILoquiObjectSetter<LocationCellEnablePoint>,
-        IEquatable<LocationCellEnablePoint>
+        IEquatable<ILocationCellEnablePointGetter>
     {
         #region Ctor
         public LocationCellEnablePoint()
@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LocationCellEnablePoint? obj)
+        public bool Equals(ILocationCellEnablePointGetter? obj)
         {
             return ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -924,8 +924,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Actor = object.Equals(item.Actor, rhs.Actor);
-            ret.Ref = object.Equals(item.Ref, rhs.Ref);
+            ret.Actor = item.Actor.Equals(rhs.Actor);
+            ret.Ref = item.Ref.Equals(rhs.Ref);
             ret.Grid = item.Grid.Equals(rhs.Grid);
         }
         
@@ -1327,6 +1327,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILocationCellEnablePointGetter rhs)) return false;
+            return ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILocationCellEnablePointGetter? obj)
+        {
+            return ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

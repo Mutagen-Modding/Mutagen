@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class MagicEffectData :
         IMagicEffectData,
         ILoquiObjectSetter<MagicEffectData>,
-        IEquatable<MagicEffectData>
+        IEquatable<IMagicEffectDataGetter>
     {
         #region Ctor
         public MagicEffectData()
@@ -106,7 +106,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((MagicEffectDataCommon)((IMagicEffectDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(MagicEffectData? obj)
+        public bool Equals(IMagicEffectDataGetter? obj)
         {
             return ((MagicEffectDataCommon)((IMagicEffectDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1326,9 +1326,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.MagicSchool = item.MagicSchool == rhs.MagicSchool;
             ret.Resistance = item.Resistance == rhs.Resistance;
             ret.CounterEffectCount = item.CounterEffectCount == rhs.CounterEffectCount;
-            ret.Light = object.Equals(item.Light, rhs.Light);
+            ret.Light = item.Light.Equals(rhs.Light);
             ret.ProjectileSpeed = item.ProjectileSpeed.EqualsWithin(rhs.ProjectileSpeed);
-            ret.EffectShader = object.Equals(item.EffectShader, rhs.EffectShader);
+            ret.EffectShader = item.EffectShader.Equals(rhs.EffectShader);
             ret.SubData = EqualsMaskHelper.EqualsHelper(
                 item.SubData,
                 rhs.SubData,
@@ -1903,6 +1903,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IMagicEffectDataGetter rhs)) return false;
+            return ((MagicEffectDataCommon)((IMagicEffectDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IMagicEffectDataGetter? obj)
+        {
+            return ((MagicEffectDataCommon)((IMagicEffectDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((MagicEffectDataCommon)((IMagicEffectDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

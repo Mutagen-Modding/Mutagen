@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class QuestTarget :
         IQuestTarget,
         ILoquiObjectSetter<QuestTarget>,
-        IEquatable<QuestTarget>
+        IEquatable<IQuestTargetGetter>
     {
         #region Ctor
         public QuestTarget()
@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(QuestTarget? obj)
+        public bool Equals(IQuestTargetGetter? obj)
         {
             return ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1064,7 +1064,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Target = object.Equals(item.Target, rhs.Target);
+            ret.Target = item.Target.Equals(rhs.Target);
             ret.Flags = item.Flags == rhs.Flags;
             ret.Conditions = item.Conditions.CollectionEqualsHelper(
                 rhs.Conditions,
@@ -1158,7 +1158,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null || rhs == null) return false;
             if (!lhs.Target.Equals(rhs.Target)) return false;
             if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
+            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
             if (lhs.QSTADataTypeState != rhs.QSTADataTypeState) return false;
             return true;
         }
@@ -1626,6 +1626,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IQuestTargetGetter rhs)) return false;
+            return ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IQuestTargetGetter? obj)
+        {
+            return ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

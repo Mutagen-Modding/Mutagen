@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         ATopicReference,
         ITopicReference,
         ILoquiObjectSetter<TopicReference>,
-        IEquatable<TopicReference>
+        IEquatable<ITopicReferenceGetter>
     {
         #region Ctor
         public TopicReference()
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((TopicReferenceCommon)((ITopicReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(TopicReference? obj)
+        public bool Equals(ITopicReferenceGetter? obj)
         {
             return ((TopicReferenceCommon)((ITopicReferenceGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -802,7 +802,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Reference = object.Equals(item.Reference, rhs.Reference);
+            ret.Reference = item.Reference.Equals(rhs.Reference);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -876,7 +876,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IATopicReferenceGetter)lhs, (IATopicReferenceGetter)rhs)) return false;
             if (!lhs.Reference.Equals(rhs.Reference)) return false;
             return true;
         }
@@ -1211,6 +1211,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ITopicReferenceGetter rhs)) return false;
+            return ((TopicReferenceCommon)((ITopicReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ITopicReferenceGetter? obj)
+        {
+            return ((TopicReferenceCommon)((ITopicReferenceGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((TopicReferenceCommon)((ITopicReferenceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

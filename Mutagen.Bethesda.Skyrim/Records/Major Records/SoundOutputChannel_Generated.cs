@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class SoundOutputChannel :
         ISoundOutputChannel,
         ILoquiObjectSetter<SoundOutputChannel>,
-        IEquatable<SoundOutputChannel>
+        IEquatable<ISoundOutputChannelGetter>
     {
         #region Ctor
         public SoundOutputChannel()
@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SoundOutputChannelCommon)((ISoundOutputChannelGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(SoundOutputChannel? obj)
+        public bool Equals(ISoundOutputChannelGetter? obj)
         {
             return ((SoundOutputChannelCommon)((ISoundOutputChannelGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1593,6 +1593,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ISoundOutputChannelGetter rhs)) return false;
+            return ((SoundOutputChannelCommon)((ISoundOutputChannelGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ISoundOutputChannelGetter? obj)
+        {
+            return ((SoundOutputChannelCommon)((ISoundOutputChannelGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((SoundOutputChannelCommon)((ISoundOutputChannelGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

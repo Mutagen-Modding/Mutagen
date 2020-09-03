@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ContainerEntry :
         IContainerEntry,
         ILoquiObjectSetter<ContainerEntry>,
-        IEquatable<ContainerEntry>
+        IEquatable<IContainerEntryGetter>
     {
         #region Ctor
         public ContainerEntry()
@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ContainerEntryCommon)((IContainerEntryGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ContainerEntry? obj)
+        public bool Equals(IContainerEntryGetter? obj)
         {
             return ((ContainerEntryCommon)((IContainerEntryGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1408,6 +1408,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IContainerEntryGetter rhs)) return false;
+            return ((ContainerEntryCommon)((IContainerEntryGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IContainerEntryGetter? obj)
+        {
+            return ((ContainerEntryCommon)((IContainerEntryGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ContainerEntryCommon)((IContainerEntryGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

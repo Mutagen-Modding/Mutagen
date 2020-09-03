@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         ILoadScreenInternal,
         ILoquiObjectSetter<LoadScreen>,
-        IEquatable<LoadScreen>
+        IEquatable<ILoadScreenGetter>
     {
         #region Ctor
         protected LoadScreen()
@@ -87,7 +87,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((LoadScreenCommon)((ILoadScreenGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LoadScreen? obj)
+        public bool Equals(ILoadScreenGetter? obj)
         {
             return ((LoadScreenCommon)((ILoadScreenGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1178,10 +1178,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
             if (!string.Equals(lhs.Description, rhs.Description)) return false;
-            if (!lhs.Locations.SequenceEqual(rhs.Locations)) return false;
+            if (!lhs.Locations.SequenceEqualNullable(rhs.Locations)) return false;
             return true;
         }
         
@@ -1795,6 +1795,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILoadScreenGetter rhs)) return false;
+            return ((LoadScreenCommon)((ILoadScreenGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILoadScreenGetter? obj)
+        {
+            return ((LoadScreenCommon)((ILoadScreenGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LoadScreenCommon)((ILoadScreenGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

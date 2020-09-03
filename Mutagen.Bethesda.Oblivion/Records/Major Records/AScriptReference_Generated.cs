@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public abstract partial class AScriptReference :
         IAScriptReference,
         ILoquiObjectSetter<AScriptReference>,
-        IEquatable<AScriptReference>
+        IEquatable<IAScriptReferenceGetter>
     {
         #region Ctor
         public AScriptReference()
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((AScriptReferenceCommon)((IAScriptReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(AScriptReference? obj)
+        public bool Equals(IAScriptReferenceGetter? obj)
         {
             return ((AScriptReferenceCommon)((IAScriptReferenceGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1058,6 +1058,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IAScriptReferenceGetter rhs)) return false;
+            return ((AScriptReferenceCommon)((IAScriptReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IAScriptReferenceGetter? obj)
+        {
+            return ((AScriptReferenceCommon)((IAScriptReferenceGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((AScriptReferenceCommon)((IAScriptReferenceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

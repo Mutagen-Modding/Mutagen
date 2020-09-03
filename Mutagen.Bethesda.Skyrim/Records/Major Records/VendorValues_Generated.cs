@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class VendorValues :
         IVendorValues,
         ILoquiObjectSetter<VendorValues>,
-        IEquatable<VendorValues>
+        IEquatable<IVendorValuesGetter>
     {
         #region Ctor
         public VendorValues()
@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((VendorValuesCommon)((IVendorValuesGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(VendorValues? obj)
+        public bool Equals(IVendorValuesGetter? obj)
         {
             return ((VendorValuesCommon)((IVendorValuesGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1548,6 +1548,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IVendorValuesGetter rhs)) return false;
+            return ((VendorValuesCommon)((IVendorValuesGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IVendorValuesGetter? obj)
+        {
+            return ((VendorValuesCommon)((IVendorValuesGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((VendorValuesCommon)((IVendorValuesGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

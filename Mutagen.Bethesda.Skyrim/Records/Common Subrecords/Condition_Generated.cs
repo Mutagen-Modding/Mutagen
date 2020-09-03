@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public abstract partial class Condition :
         ICondition,
         ILoquiObjectSetter<Condition>,
-        IEquatable<Condition>
+        IEquatable<IConditionGetter>
     {
         #region Ctor
         public Condition()
@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ConditionCommon)((IConditionGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Condition? obj)
+        public bool Equals(IConditionGetter? obj)
         {
             return ((ConditionCommon)((IConditionGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1288,6 +1288,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IConditionGetter rhs)) return false;
+            return ((ConditionCommon)((IConditionGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IConditionGetter? obj)
+        {
+            return ((ConditionCommon)((IConditionGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ConditionCommon)((IConditionGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

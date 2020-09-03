@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IWorldspaceInternal,
         ILoquiObjectSetter<Worldspace>,
-        IEquatable<Worldspace>
+        IEquatable<IWorldspaceGetter>
     {
         #region Ctor
         protected Worldspace()
@@ -278,7 +278,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Worldspace? obj)
+        public bool Equals(IWorldspaceGetter? obj)
         {
             return ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1638,7 +1638,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
-        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
+        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type, throwIfUnknown);
         [DebuggerStepThrough]
@@ -1652,6 +1652,28 @@ namespace Mutagen.Bethesda.Skyrim
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
         }
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys) => this.Remove(formKeys);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => this.Remove(formKeys);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(FormKey formKey, Type type, bool throwIfUnknown) => this.Remove(formKey, type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys, Type type, bool throwIfUnknown) => this.Remove(formKeys, type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys, Type type, bool throwIfUnknown) => this.Remove(formKeys, type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(FormKey formKey, bool throwIfUnknown) => this.Remove<TMajor>(formKey, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(HashSet<FormKey> formKeys, bool throwIfUnknown) => this.Remove<TMajor>(formKeys, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<FormKey> formKeys, bool throwIfUnknown) => this.Remove<TMajor>(formKeys, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(TMajor record, bool throwIfUnknown) => this.Remove<TMajor>(record, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
         #endregion
 
         #region Binary Translation
@@ -1932,13 +1954,15 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IWorldspaceGetter obj)
+        public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(
+            this IWorldspaceGetter obj,
+            bool throwIfUnknown = true)
             where TMajor : class, IMajorRecordCommonGetter
         {
             return ((WorldspaceCommon)((IWorldspaceGetter)obj).CommonInstance()!).EnumerateMajorRecords(
                 obj: obj,
                 type: typeof(TMajor),
-                throwIfUnknown: true)
+                throwIfUnknown: throwIfUnknown)
                 .Select(m => (TMajor)m);
         }
 
@@ -1983,6 +2007,156 @@ namespace Mutagen.Bethesda.Skyrim
                 type: type,
                 throwIfUnknown: throwIfUnknown)
                 .Select(m => (IMajorRecordCommon)m);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IWorldspaceInternal obj,
+            FormKey key)
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((WorldspaceSetterCommon)((IWorldspaceGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IWorldspaceInternal obj,
+            IEnumerable<FormKey> keys)
+        {
+            ((WorldspaceSetterCommon)((IWorldspaceGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys.ToHashSet());
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IWorldspaceInternal obj,
+            HashSet<FormKey> keys)
+        {
+            ((WorldspaceSetterCommon)((IWorldspaceGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IWorldspaceInternal obj,
+            FormKey key,
+            Type type,
+            bool throwIfUnknown = true)
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((WorldspaceSetterCommon)((IWorldspaceGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IWorldspaceInternal obj,
+            IEnumerable<FormKey> keys,
+            Type type,
+            bool throwIfUnknown = true)
+        {
+            ((WorldspaceSetterCommon)((IWorldspaceGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys.ToHashSet(),
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IWorldspaceInternal obj,
+            HashSet<FormKey> keys,
+            Type type,
+            bool throwIfUnknown = true)
+        {
+            ((WorldspaceSetterCommon)((IWorldspaceGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IWorldspaceInternal obj,
+            TMajor record,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordCommonGetter
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(record.FormKey);
+            ((WorldspaceSetterCommon)((IWorldspaceGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IWorldspaceInternal obj,
+            IEnumerable<TMajor> records,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordCommonGetter
+        {
+            ((WorldspaceSetterCommon)((IWorldspaceGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: records.Select(m => m.FormKey).ToHashSet(),
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IWorldspaceInternal obj,
+            FormKey key,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordCommonGetter
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((WorldspaceSetterCommon)((IWorldspaceGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IWorldspaceInternal obj,
+            IEnumerable<FormKey> keys,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordCommonGetter
+        {
+            ((WorldspaceSetterCommon)((IWorldspaceGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys.ToHashSet(),
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IWorldspaceInternal obj,
+            HashSet<FormKey> keys,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordCommonGetter
+        {
+            ((WorldspaceSetterCommon)((IWorldspaceGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
         }
 
         #endregion
@@ -2627,6 +2801,237 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
+        public void Remove(
+            IWorldspaceInternal obj,
+            HashSet<FormKey> keys)
+        {
+            obj.TopCell?.Remove(keys);
+            if (obj.TopCell != null && keys.Contains(obj.TopCell.FormKey))
+            {
+                obj.TopCell = null;
+            }
+            obj.SubCells.ForEach(i => i.Remove(keys));
+            obj.SubCells.RemoveWhere(i => i.Items.Count == 0);
+        }
+        
+        public void Remove(
+            IWorldspaceInternal obj,
+            HashSet<FormKey> keys,
+            Type type,
+            bool throwIfUnknown)
+        {
+            switch (type.Name)
+            {
+                case "IMajorRecordCommon":
+                case "IMajorRecord":
+                case "MajorRecord":
+                case "ISkyrimMajorRecord":
+                case "SkyrimMajorRecord":
+                case "IMajorRecordGetter":
+                case "IMajorRecordCommonGetter":
+                case "ISkyrimMajorRecordGetter":
+                    if (!Worldspace_Registration.SetterType.IsAssignableFrom(obj.GetType())) return;
+                    this.Remove(obj, keys);
+                    break;
+                case "WorldspaceGridReference":
+                case "IWorldspaceGridReferenceGetter":
+                case "IWorldspaceGridReference":
+                    break;
+                case "Cell":
+                case "ICellGetter":
+                case "ICell":
+                case "ICellInternal":
+                    {
+                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        {
+                            TopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "WorldspaceBlock":
+                case "IWorldspaceBlockGetter":
+                case "IWorldspaceBlock":
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "Landscape":
+                case "ILandscapeGetter":
+                case "ILandscape":
+                case "ILandscapeInternal":
+                    {
+                        if (obj.TopCell.TryGet(out var LandscapeTopCellitem))
+                        {
+                            LandscapeTopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "ANavigationMesh":
+                case "IANavigationMeshGetter":
+                case "IANavigationMesh":
+                case "IANavigationMeshInternal":
+                    {
+                        if (obj.TopCell.TryGet(out var ANavigationMeshTopCellitem))
+                        {
+                            ANavigationMeshTopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "PlacedNpc":
+                case "IPlacedNpcGetter":
+                case "IPlacedNpc":
+                case "IPlacedNpcInternal":
+                    {
+                        if (obj.TopCell.TryGet(out var PlacedNpcTopCellitem))
+                        {
+                            PlacedNpcTopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "PlacedObject":
+                case "IPlacedObjectGetter":
+                case "IPlacedObject":
+                case "IPlacedObjectInternal":
+                    {
+                        if (obj.TopCell.TryGet(out var PlacedObjectTopCellitem))
+                        {
+                            PlacedObjectTopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "APlacedTrap":
+                case "IAPlacedTrapGetter":
+                case "IAPlacedTrap":
+                case "IAPlacedTrapInternal":
+                    {
+                        if (obj.TopCell.TryGet(out var APlacedTrapTopCellitem))
+                        {
+                            APlacedTrapTopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "IComplexLocation":
+                case "IComplexLocationGetter":
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "ILocationTargetable":
+                case "ILocationTargetableGetter":
+                    {
+                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        {
+                            TopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "IOwner":
+                case "IOwnerGetter":
+                    {
+                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        {
+                            TopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "ILinkedReference":
+                case "ILinkedReferenceGetter":
+                    {
+                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        {
+                            TopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "IPlaced":
+                case "IPlacedGetter":
+                    {
+                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        {
+                            TopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "IPlacedSimple":
+                case "IPlacedSimpleGetter":
+                    {
+                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        {
+                            TopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "IPlacedThing":
+                case "IPlacedThingGetter":
+                    {
+                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        {
+                            TopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                default:
+                    if (throwIfUnknown)
+                    {
+                        throw new ArgumentException($"Unknown major record type: {type}");
+                    }
+                    else
+                    {
+                        break;
+                    }
+            }
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -2707,17 +3112,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 include);
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.FixedDimensionsCenterCell = item.FixedDimensionsCenterCell.Equals(rhs.FixedDimensionsCenterCell);
-            ret.InteriorLighting = object.Equals(item.InteriorLighting, rhs.InteriorLighting);
-            ret.EncounterZone = object.Equals(item.EncounterZone, rhs.EncounterZone);
-            ret.Location = object.Equals(item.Location, rhs.Location);
+            ret.InteriorLighting = item.InteriorLighting.Equals(rhs.InteriorLighting);
+            ret.EncounterZone = item.EncounterZone.Equals(rhs.EncounterZone);
+            ret.Location = item.Location.Equals(rhs.Location);
             ret.Parent = EqualsMaskHelper.EqualsHelper(
                 item.Parent,
                 rhs.Parent,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Climate = object.Equals(item.Climate, rhs.Climate);
-            ret.Water = object.Equals(item.Water, rhs.Water);
-            ret.LodWater = object.Equals(item.LodWater, rhs.LodWater);
+            ret.Climate = item.Climate.Equals(rhs.Climate);
+            ret.Water = item.Water.Equals(rhs.Water);
+            ret.LodWater = item.LodWater.Equals(rhs.LodWater);
             ret.LodWaterHeight = item.LodWaterHeight.EqualsWithin(rhs.LodWaterHeight);
             ret.LandDefaults = EqualsMaskHelper.EqualsHelper(
                 item.LandDefaults,
@@ -2743,7 +3148,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.ObjectBounds,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Music = object.Equals(item.Music, rhs.Music);
+            ret.Music = item.Music.Equals(rhs.Music);
             ret.CanopyShadow = string.Equals(item.CanopyShadow, rhs.CanopyShadow);
             ret.WaterNoiseTexture = string.Equals(item.WaterNoiseTexture, rhs.WaterNoiseTexture);
             ret.HdLodDiffuseTexture = string.Equals(item.HdLodDiffuseTexture, rhs.HdLodDiffuseTexture);
@@ -3029,8 +3434,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!lhs.LargeReferences.SequenceEqual(rhs.LargeReferences)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
+            if (!lhs.LargeReferences.SequenceEqualNullable(rhs.LargeReferences)) return false;
             if (!object.Equals(lhs.MaxHeight, rhs.MaxHeight)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!lhs.FixedDimensionsCenterCell.Equals(rhs.FixedDimensionsCenterCell)) return false;
@@ -3060,7 +3465,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.TopCell, rhs.TopCell)) return false;
             if (lhs.SubCellsTimestamp != rhs.SubCellsTimestamp) return false;
             if (lhs.SubCellsUnknown != rhs.SubCellsUnknown) return false;
-            if (!lhs.SubCells.SequenceEqual(rhs.SubCells)) return false;
+            if (!lhs.SubCells.SequenceEqualNullable(rhs.SubCells)) return false;
             return true;
         }
         
@@ -4807,7 +5212,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
-        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
+        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type, throwIfUnknown);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -5178,6 +5583,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IWorldspaceGetter rhs)) return false;
+            return ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IWorldspaceGetter? obj)
+        {
+            return ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

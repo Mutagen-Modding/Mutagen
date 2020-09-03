@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IDialogItemInternal,
         ILoquiObjectSetter<DialogItem>,
-        IEquatable<DialogItem>
+        IEquatable<IDialogItemGetter>
     {
         #region Ctor
         protected DialogItem()
@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((DialogItemCommon)((IDialogItemGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(DialogItem? obj)
+        public bool Equals(IDialogItemGetter? obj)
         {
             return ((DialogItemCommon)((IDialogItemGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1695,8 +1695,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Data,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Quest = object.Equals(item.Quest, rhs.Quest);
-            ret.PreviousTopic = object.Equals(item.PreviousTopic, rhs.PreviousTopic);
+            ret.Quest = item.Quest.Equals(rhs.Quest);
+            ret.PreviousTopic = item.PreviousTopic.Equals(rhs.PreviousTopic);
             ret.Topics = item.Topics.CollectionEqualsHelper(
                 rhs.Topics,
                 (l, r) => object.Equals(l, r),
@@ -1921,15 +1921,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.Data, rhs.Data)) return false;
             if (!lhs.Quest.Equals(rhs.Quest)) return false;
             if (!lhs.PreviousTopic.Equals(rhs.PreviousTopic)) return false;
-            if (!lhs.Topics.SequenceEqual(rhs.Topics)) return false;
-            if (!lhs.Responses.SequenceEqual(rhs.Responses)) return false;
-            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
-            if (!lhs.Choices.SequenceEqual(rhs.Choices)) return false;
-            if (!lhs.LinkFrom.SequenceEqual(rhs.LinkFrom)) return false;
+            if (!lhs.Topics.SequenceEqualNullable(rhs.Topics)) return false;
+            if (!lhs.Responses.SequenceEqualNullable(rhs.Responses)) return false;
+            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            if (!lhs.Choices.SequenceEqualNullable(rhs.Choices)) return false;
+            if (!lhs.LinkFrom.SequenceEqualNullable(rhs.LinkFrom)) return false;
             if (!object.Equals(lhs.Script, rhs.Script)) return false;
             return true;
         }
@@ -2881,6 +2881,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IDialogItemGetter rhs)) return false;
+            return ((DialogItemCommon)((IDialogItemGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IDialogItemGetter? obj)
+        {
+            return ((DialogItemCommon)((IDialogItemGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((DialogItemCommon)((IDialogItemGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

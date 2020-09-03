@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class SoulGemData :
         ISoulGemData,
         ILoquiObjectSetter<SoulGemData>,
-        IEquatable<SoulGemData>
+        IEquatable<ISoulGemDataGetter>
     {
         #region Ctor
         public SoulGemData()
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((SoulGemDataCommon)((ISoulGemDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(SoulGemData? obj)
+        public bool Equals(ISoulGemDataGetter? obj)
         {
             return ((SoulGemDataCommon)((ISoulGemDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1250,6 +1250,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ISoulGemDataGetter rhs)) return false;
+            return ((SoulGemDataCommon)((ISoulGemDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ISoulGemDataGetter? obj)
+        {
+            return ((SoulGemDataCommon)((ISoulGemDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((SoulGemDataCommon)((ISoulGemDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

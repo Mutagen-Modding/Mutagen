@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class WeatherSound :
         IWeatherSound,
         ILoquiObjectSetter<WeatherSound>,
-        IEquatable<WeatherSound>
+        IEquatable<IWeatherSoundGetter>
     {
         #region Ctor
         public WeatherSound()
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((WeatherSoundCommon)((IWeatherSoundGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(WeatherSound? obj)
+        public bool Equals(IWeatherSoundGetter? obj)
         {
             return ((WeatherSoundCommon)((IWeatherSoundGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -881,7 +881,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Sound = object.Equals(item.Sound, rhs.Sound);
+            ret.Sound = item.Sound.Equals(rhs.Sound);
             ret.Type = item.Type == rhs.Type;
         }
         
@@ -1270,6 +1270,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IWeatherSoundGetter rhs)) return false;
+            return ((WeatherSoundCommon)((IWeatherSoundGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IWeatherSoundGetter? obj)
+        {
+            return ((WeatherSoundCommon)((IWeatherSoundGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((WeatherSoundCommon)((IWeatherSoundGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

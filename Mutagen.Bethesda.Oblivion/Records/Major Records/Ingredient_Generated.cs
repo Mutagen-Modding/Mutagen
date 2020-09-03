@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         AItem,
         IIngredientInternal,
         ILoquiObjectSetter<Ingredient>,
-        IEquatable<Ingredient>
+        IEquatable<IIngredientGetter>
     {
         #region Ctor
         protected Ingredient()
@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((IngredientCommon)((IIngredientGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Ingredient? obj)
+        public bool Equals(IIngredientGetter? obj)
         {
             return ((IngredientCommon)((IIngredientGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1291,7 +1291,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Icon = string.Equals(item.Icon, rhs.Icon);
-            ret.Script = object.Equals(item.Script, rhs.Script);
+            ret.Script = item.Script.Equals(rhs.Script);
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
             ret.Data = EqualsMaskHelper.EqualsHelper(
                 item.Data,
@@ -1464,14 +1464,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IAItemGetter)lhs, (IAItemGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
             if (!lhs.Script.Equals(rhs.Script)) return false;
             if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
             if (!object.Equals(lhs.Data, rhs.Data)) return false;
-            if (!lhs.Effects.SequenceEqual(rhs.Effects)) return false;
+            if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
             return true;
         }
         
@@ -2298,6 +2298,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IIngredientGetter rhs)) return false;
+            return ((IngredientCommon)((IIngredientGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IIngredientGetter? obj)
+        {
+            return ((IngredientCommon)((IIngredientGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((IngredientCommon)((IIngredientGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class MagicEffectSubData :
         IMagicEffectSubData,
         ILoquiObjectSetter<MagicEffectSubData>,
-        IEquatable<MagicEffectSubData>
+        IEquatable<IMagicEffectSubDataGetter>
     {
         #region Ctor
         public MagicEffectSubData()
@@ -91,7 +91,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((MagicEffectSubDataCommon)((IMagicEffectSubDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(MagicEffectSubData? obj)
+        public bool Equals(IMagicEffectSubDataGetter? obj)
         {
             return ((MagicEffectSubDataCommon)((IMagicEffectSubDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1114,11 +1114,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.EnchantEffect = object.Equals(item.EnchantEffect, rhs.EnchantEffect);
-            ret.CastingSound = object.Equals(item.CastingSound, rhs.CastingSound);
-            ret.BoltSound = object.Equals(item.BoltSound, rhs.BoltSound);
-            ret.HitSound = object.Equals(item.HitSound, rhs.HitSound);
-            ret.AreaSound = object.Equals(item.AreaSound, rhs.AreaSound);
+            ret.EnchantEffect = item.EnchantEffect.Equals(rhs.EnchantEffect);
+            ret.CastingSound = item.CastingSound.Equals(rhs.CastingSound);
+            ret.BoltSound = item.BoltSound.Equals(rhs.BoltSound);
+            ret.HitSound = item.HitSound.Equals(rhs.HitSound);
+            ret.AreaSound = item.AreaSound.Equals(rhs.AreaSound);
             ret.ConstantEffectEnchantmentFactor = item.ConstantEffectEnchantmentFactor.EqualsWithin(rhs.ConstantEffectEnchantmentFactor);
             ret.ConstantEffectBarterFactor = item.ConstantEffectBarterFactor.EqualsWithin(rhs.ConstantEffectBarterFactor);
         }
@@ -1587,6 +1587,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IMagicEffectSubDataGetter rhs)) return false;
+            return ((MagicEffectSubDataCommon)((IMagicEffectSubDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IMagicEffectSubDataGetter? obj)
+        {
+            return ((MagicEffectSubDataCommon)((IMagicEffectSubDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((MagicEffectSubDataCommon)((IMagicEffectSubDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

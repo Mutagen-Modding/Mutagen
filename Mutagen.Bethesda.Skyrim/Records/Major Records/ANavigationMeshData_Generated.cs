@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public abstract partial class ANavigationMeshData :
         IANavigationMeshData,
         ILoquiObjectSetter<ANavigationMeshData>,
-        IEquatable<ANavigationMeshData>
+        IEquatable<IANavigationMeshDataGetter>
     {
         #region Ctor
         public ANavigationMeshData()
@@ -42,11 +42,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region NavmeshVersion
         public readonly static UInt32 _NavmeshVersion_Default = 12;
-        public UInt32 NavmeshVersion { get; set; } = default;
+        public UInt32 NavmeshVersion { get; set; } = _NavmeshVersion_Default;
         #endregion
         #region Magic
         public readonly static UInt32 _Magic_Default = 0xA5E9A03C;
-        public UInt32 Magic { get; set; } = default;
+        public UInt32 Magic { get; set; } = _Magic_Default;
         #endregion
         #region Vertices
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -151,7 +151,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ANavigationMeshDataCommon)((IANavigationMeshDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ANavigationMeshData? obj)
+        public bool Equals(IANavigationMeshDataGetter? obj)
         {
             return ((ANavigationMeshDataCommon)((IANavigationMeshDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1845,10 +1845,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null || rhs == null) return false;
             if (lhs.NavmeshVersion != rhs.NavmeshVersion) return false;
             if (lhs.Magic != rhs.Magic) return false;
-            if (!lhs.Vertices.SequenceEqual(rhs.Vertices)) return false;
-            if (!lhs.Triangles.SequenceEqual(rhs.Triangles)) return false;
-            if (!lhs.EdgeLinks.SequenceEqual(rhs.EdgeLinks)) return false;
-            if (!lhs.DoorTriangles.SequenceEqual(rhs.DoorTriangles)) return false;
+            if (!lhs.Vertices.SequenceEqualNullable(rhs.Vertices)) return false;
+            if (!lhs.Triangles.SequenceEqualNullable(rhs.Triangles)) return false;
+            if (!lhs.EdgeLinks.SequenceEqualNullable(rhs.EdgeLinks)) return false;
+            if (!lhs.DoorTriangles.SequenceEqualNullable(rhs.DoorTriangles)) return false;
             if (lhs.NavmeshGridDivisor != rhs.NavmeshGridDivisor) return false;
             if (!lhs.MaxDistanceX.EqualsWithin(rhs.MaxDistanceX)) return false;
             if (!lhs.MaxDistanceY.EqualsWithin(rhs.MaxDistanceY)) return false;
@@ -2441,6 +2441,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IANavigationMeshDataGetter rhs)) return false;
+            return ((ANavigationMeshDataCommon)((IANavigationMeshDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IANavigationMeshDataGetter? obj)
+        {
+            return ((ANavigationMeshDataCommon)((IANavigationMeshDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ANavigationMeshDataCommon)((IANavigationMeshDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

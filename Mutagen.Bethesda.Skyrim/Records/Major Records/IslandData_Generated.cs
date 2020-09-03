@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class IslandData :
         IIslandData,
         ILoquiObjectSetter<IslandData>,
-        IEquatable<IslandData>
+        IEquatable<IIslandDataGetter>
     {
         #region Ctor
         public IslandData()
@@ -94,7 +94,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((IslandDataCommon)((IIslandDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(IslandData? obj)
+        public bool Equals(IIslandDataGetter? obj)
         {
             return ((IslandDataCommon)((IIslandDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1235,8 +1235,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null || rhs == null) return false;
             if (!lhs.Min.Equals(rhs.Min)) return false;
             if (!lhs.Max.Equals(rhs.Max)) return false;
-            if (!lhs.Triangles.SequenceEqual(rhs.Triangles)) return false;
-            if (!lhs.Vertices.SequenceEqual(rhs.Vertices)) return false;
+            if (!lhs.Triangles.SequenceEqualNullable(rhs.Triangles)) return false;
+            if (!lhs.Vertices.SequenceEqualNullable(rhs.Vertices)) return false;
             return true;
         }
         
@@ -1610,6 +1610,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IIslandDataGetter rhs)) return false;
+            return ((IslandDataCommon)((IIslandDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IIslandDataGetter? obj)
+        {
+            return ((IslandDataCommon)((IIslandDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((IslandDataCommon)((IIslandDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

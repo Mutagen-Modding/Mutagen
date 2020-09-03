@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class TeleportDestination :
         ITeleportDestination,
         ILoquiObjectSetter<TeleportDestination>,
-        IEquatable<TeleportDestination>
+        IEquatable<ITeleportDestinationGetter>
     {
         #region Ctor
         public TeleportDestination()
@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((TeleportDestinationCommon)((ITeleportDestinationGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(TeleportDestination? obj)
+        public bool Equals(ITeleportDestinationGetter? obj)
         {
             return ((TeleportDestinationCommon)((ITeleportDestinationGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -975,7 +975,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Door = object.Equals(item.Door, rhs.Door);
+            ret.Door = item.Door.Equals(rhs.Door);
             ret.Position = item.Position.Equals(rhs.Position);
             ret.Rotation = item.Rotation.Equals(rhs.Rotation);
             ret.Flags = item.Flags == rhs.Flags;
@@ -1396,6 +1396,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ITeleportDestinationGetter rhs)) return false;
+            return ((TeleportDestinationCommon)((ITeleportDestinationGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ITeleportDestinationGetter? obj)
+        {
+            return ((TeleportDestinationCommon)((ITeleportDestinationGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((TeleportDestinationCommon)((ITeleportDestinationGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

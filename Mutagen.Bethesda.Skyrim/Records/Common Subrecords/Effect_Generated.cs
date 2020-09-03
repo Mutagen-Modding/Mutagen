@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class Effect :
         IEffect,
         ILoquiObjectSetter<Effect>,
-        IEquatable<Effect>
+        IEquatable<IEffectGetter>
     {
         #region Ctor
         public Effect()
@@ -91,7 +91,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Effect? obj)
+        public bool Equals(IEffectGetter? obj)
         {
             return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1040,7 +1040,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.BaseEffect = object.Equals(item.BaseEffect, rhs.BaseEffect);
+            ret.BaseEffect = item.BaseEffect.Equals(rhs.BaseEffect);
             ret.Data = EqualsMaskHelper.EqualsHelper(
                 item.Data,
                 rhs.Data,
@@ -1134,7 +1134,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null || rhs == null) return false;
             if (!lhs.BaseEffect.Equals(rhs.BaseEffect)) return false;
             if (!object.Equals(lhs.Data, rhs.Data)) return false;
-            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
+            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
             return true;
         }
         
@@ -1624,6 +1624,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IEffectGetter rhs)) return false;
+            return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IEffectGetter? obj)
+        {
+            return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((EffectCommon)((IEffectGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

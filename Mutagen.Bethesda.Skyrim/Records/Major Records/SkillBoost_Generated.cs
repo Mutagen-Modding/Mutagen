@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class SkillBoost :
         ISkillBoost,
         ILoquiObjectSetter<SkillBoost>,
-        IEquatable<SkillBoost>
+        IEquatable<ISkillBoostGetter>
     {
         #region Ctor
         public SkillBoost()
@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Skill
         public readonly static ActorValue _Skill_Default = ActorValue.None;
-        public ActorValue Skill { get; set; } = default;
+        public ActorValue Skill { get; set; } = _Skill_Default;
         #endregion
         #region Boost
         public SByte Boost { get; set; } = default;
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SkillBoostCommon)((ISkillBoostGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(SkillBoost? obj)
+        public bool Equals(ISkillBoostGetter? obj)
         {
             return ((SkillBoostCommon)((ISkillBoostGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1237,6 +1237,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ISkillBoostGetter rhs)) return false;
+            return ((SkillBoostCommon)((ISkillBoostGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ISkillBoostGetter? obj)
+        {
+            return ((SkillBoostCommon)((ISkillBoostGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((SkillBoostCommon)((ISkillBoostGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

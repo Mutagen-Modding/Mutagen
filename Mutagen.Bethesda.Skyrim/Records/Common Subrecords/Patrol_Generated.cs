@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class Patrol :
         IPatrol,
         ILoquiObjectSetter<Patrol>,
-        IEquatable<Patrol>
+        IEquatable<IPatrolGetter>
     {
         #region Ctor
         public Patrol()
@@ -105,7 +105,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PatrolCommon)((IPatrolGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Patrol? obj)
+        public bool Equals(IPatrolGetter? obj)
         {
             return ((PatrolCommon)((IPatrolGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1123,7 +1123,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.IdleTime = item.IdleTime.EqualsWithin(rhs.IdleTime);
-            ret.Idle = object.Equals(item.Idle, rhs.Idle);
+            ret.Idle = item.Idle.Equals(rhs.Idle);
             ret.SCHR = MemorySliceExt.Equal(item.SCHR, rhs.SCHR);
             ret.SCTX = MemorySliceExt.Equal(item.SCTX, rhs.SCTX);
             ret.Topics = item.Topics.CollectionEqualsHelper(
@@ -1225,7 +1225,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.Idle.Equals(rhs.Idle)) return false;
             if (!MemorySliceExt.Equal(lhs.SCHR, rhs.SCHR)) return false;
             if (!MemorySliceExt.Equal(lhs.SCTX, rhs.SCTX)) return false;
-            if (!lhs.Topics.SequenceEqual(rhs.Topics)) return false;
+            if (!lhs.Topics.SequenceEqualNullable(rhs.Topics)) return false;
             return true;
         }
         
@@ -1788,6 +1788,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPatrolGetter rhs)) return false;
+            return ((PatrolCommon)((IPatrolGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPatrolGetter? obj)
+        {
+            return ((PatrolCommon)((IPatrolGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PatrolCommon)((IPatrolGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

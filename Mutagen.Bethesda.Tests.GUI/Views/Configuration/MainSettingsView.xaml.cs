@@ -29,6 +29,8 @@ namespace Mutagen.Bethesda.Tests.GUI.Views
                     .DisposeWith(disposable);
                 this.BindStrict(this.ViewModel, x => x.TestCopyIn, x => x.TestCopyIn.IsChecked)
                     .DisposeWith(disposable);
+                this.BindStrict(this.ViewModel, x => x.TestEquals, x => x.TestEquals.IsChecked)
+                    .DisposeWith(disposable);
 
                 this.BindStrict(this.ViewModel, x => x.CacheDecompression, x => x.CacheDecompression.IsChecked)
                     .DisposeWith(disposable);

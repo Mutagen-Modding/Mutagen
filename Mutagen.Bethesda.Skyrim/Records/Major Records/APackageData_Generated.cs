@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class APackageData :
         IAPackageData,
         ILoquiObjectSetter<APackageData>,
-        IEquatable<APackageData>
+        IEquatable<IAPackageDataGetter>
     {
         #region Ctor
         public APackageData()
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((APackageDataCommon)((IAPackageDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(APackageData? obj)
+        public bool Equals(IAPackageDataGetter? obj)
         {
             return ((APackageDataCommon)((IAPackageDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1303,6 +1303,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IAPackageDataGetter rhs)) return false;
+            return ((APackageDataCommon)((IAPackageDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IAPackageDataGetter? obj)
+        {
+            return ((APackageDataCommon)((IAPackageDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((APackageDataCommon)((IAPackageDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IEyesInternal,
         ILoquiObjectSetter<Eyes>,
-        IEquatable<Eyes>
+        IEquatable<IEyesGetter>
     {
         #region Ctor
         protected Eyes()
@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((EyesCommon)((IEyesGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Eyes? obj)
+        public bool Equals(IEyesGetter? obj)
         {
             return ((EyesCommon)((IEyesGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1079,7 +1079,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
             if (lhs.Flags != rhs.Flags) return false;
@@ -1649,6 +1649,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IEyesGetter rhs)) return false;
+            return ((EyesCommon)((IEyesGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IEyesGetter? obj)
+        {
+            return ((EyesCommon)((IEyesGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((EyesCommon)((IEyesGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

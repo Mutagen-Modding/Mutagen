@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IActivatorInternal,
         ILoquiObjectSetter<Activator>,
-        IEquatable<Activator>
+        IEquatable<IActivatorGetter>
     {
         #region Ctor
         protected Activator()
@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ActivatorCommon)((IActivatorGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Activator? obj)
+        public bool Equals(IActivatorGetter? obj)
         {
             return ((ActivatorCommon)((IActivatorGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1032,8 +1032,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Script = object.Equals(item.Script, rhs.Script);
-            ret.Sound = object.Equals(item.Sound, rhs.Sound);
+            ret.Script = item.Script.Equals(rhs.Script);
+            ret.Sound = item.Sound.Equals(rhs.Sound);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1148,7 +1148,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!lhs.Script.Equals(rhs.Script)) return false;
@@ -1784,6 +1784,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IActivatorGetter rhs)) return false;
+            return ((ActivatorCommon)((IActivatorGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IActivatorGetter? obj)
+        {
+            return ((ActivatorCommon)((IActivatorGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ActivatorCommon)((IActivatorGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

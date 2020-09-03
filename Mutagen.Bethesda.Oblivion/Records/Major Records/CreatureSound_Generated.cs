@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class CreatureSound :
         ICreatureSound,
         ILoquiObjectSetter<CreatureSound>,
-        IEquatable<CreatureSound>
+        IEquatable<ICreatureSoundGetter>
     {
         #region Ctor
         public CreatureSound()
@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((CreatureSoundCommon)((ICreatureSoundGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(CreatureSound? obj)
+        public bool Equals(ICreatureSoundGetter? obj)
         {
             return ((CreatureSoundCommon)((ICreatureSoundGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1063,7 +1063,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (lhs.SoundType != rhs.SoundType) return false;
-            if (!lhs.Sounds.SequenceEqual(rhs.Sounds)) return false;
+            if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds)) return false;
             return true;
         }
         
@@ -1485,6 +1485,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ICreatureSoundGetter rhs)) return false;
+            return ((CreatureSoundCommon)((ICreatureSoundGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ICreatureSoundGetter? obj)
+        {
+            return ((CreatureSoundCommon)((ICreatureSoundGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((CreatureSoundCommon)((ICreatureSoundGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

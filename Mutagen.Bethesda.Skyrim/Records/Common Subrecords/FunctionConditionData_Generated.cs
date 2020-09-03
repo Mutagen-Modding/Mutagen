@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         ConditionData,
         IFunctionConditionData,
         ILoquiObjectSetter<FunctionConditionData>,
-        IEquatable<FunctionConditionData>
+        IEquatable<IFunctionConditionDataGetter>
     {
         #region Ctor
         public FunctionConditionData()
@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown5
         public readonly static Int32 _Unknown5_Default = -1;
-        public Int32 Unknown5 { get; set; } = default;
+        public Int32 Unknown5 { get; set; } = _Unknown5_Default;
         #endregion
 
         #region To String
@@ -104,7 +104,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(FunctionConditionData? obj)
+        public bool Equals(IFunctionConditionDataGetter? obj)
         {
             return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1276,10 +1276,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (rhs == null) return;
             ret.Function = item.Function == rhs.Function;
             ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
-            ret.ParameterOneRecord = object.Equals(item.ParameterOneRecord, rhs.ParameterOneRecord);
+            ret.ParameterOneRecord = item.ParameterOneRecord.Equals(rhs.ParameterOneRecord);
             ret.ParameterOneNumber = item.ParameterOneNumber == rhs.ParameterOneNumber;
             ret.ParameterOneString = string.Equals(item.ParameterOneString, rhs.ParameterOneString);
-            ret.ParameterTwoRecord = object.Equals(item.ParameterTwoRecord, rhs.ParameterTwoRecord);
+            ret.ParameterTwoRecord = item.ParameterTwoRecord.Equals(rhs.ParameterTwoRecord);
             ret.ParameterTwoNumber = item.ParameterTwoNumber == rhs.ParameterTwoNumber;
             ret.ParameterTwoString = string.Equals(item.ParameterTwoString, rhs.ParameterTwoString);
             ret.Unknown3 = item.Unknown3 == rhs.Unknown3;
@@ -1400,7 +1400,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IConditionDataGetter)lhs, (IConditionDataGetter)rhs)) return false;
             if (lhs.Function != rhs.Function) return false;
             if (lhs.Unknown2 != rhs.Unknown2) return false;
             if (!lhs.ParameterOneRecord.Equals(rhs.ParameterOneRecord)) return false;
@@ -1830,6 +1830,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IFunctionConditionDataGetter rhs)) return false;
+            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IFunctionConditionDataGetter? obj)
+        {
+            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

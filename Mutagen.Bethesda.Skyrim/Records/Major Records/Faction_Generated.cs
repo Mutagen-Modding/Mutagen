@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IFactionInternal,
         ILoquiObjectSetter<Faction>,
-        IEquatable<Faction>
+        IEquatable<IFactionGetter>
     {
         #region Ctor
         protected Faction()
@@ -186,7 +186,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Faction? obj)
+        public bool Equals(IFactionGetter? obj)
         {
             return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1894,12 +1894,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.ExteriorJailMarker = object.Equals(item.ExteriorJailMarker, rhs.ExteriorJailMarker);
-            ret.FollowerWaitMarker = object.Equals(item.FollowerWaitMarker, rhs.FollowerWaitMarker);
-            ret.StolenGoodsContainer = object.Equals(item.StolenGoodsContainer, rhs.StolenGoodsContainer);
-            ret.PlayerInventoryContainer = object.Equals(item.PlayerInventoryContainer, rhs.PlayerInventoryContainer);
-            ret.SharedCrimeFactionList = object.Equals(item.SharedCrimeFactionList, rhs.SharedCrimeFactionList);
-            ret.JailOutfit = object.Equals(item.JailOutfit, rhs.JailOutfit);
+            ret.ExteriorJailMarker = item.ExteriorJailMarker.Equals(rhs.ExteriorJailMarker);
+            ret.FollowerWaitMarker = item.FollowerWaitMarker.Equals(rhs.FollowerWaitMarker);
+            ret.StolenGoodsContainer = item.StolenGoodsContainer.Equals(rhs.StolenGoodsContainer);
+            ret.PlayerInventoryContainer = item.PlayerInventoryContainer.Equals(rhs.PlayerInventoryContainer);
+            ret.SharedCrimeFactionList = item.SharedCrimeFactionList.Equals(rhs.SharedCrimeFactionList);
+            ret.JailOutfit = item.JailOutfit.Equals(rhs.JailOutfit);
             ret.CrimeValues = EqualsMaskHelper.EqualsHelper(
                 item.CrimeValues,
                 rhs.CrimeValues,
@@ -1909,8 +1909,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Ranks,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.VendorBuySellList = object.Equals(item.VendorBuySellList, rhs.VendorBuySellList);
-            ret.MerchantContainer = object.Equals(item.MerchantContainer, rhs.MerchantContainer);
+            ret.VendorBuySellList = item.VendorBuySellList.Equals(rhs.VendorBuySellList);
+            ret.MerchantContainer = item.MerchantContainer.Equals(rhs.MerchantContainer);
             ret.VendorValues = EqualsMaskHelper.EqualsHelper(
                 item.VendorValues,
                 rhs.VendorValues,
@@ -2134,9 +2134,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!lhs.Relations.SequenceEqual(rhs.Relations)) return false;
+            if (!lhs.Relations.SequenceEqualNullable(rhs.Relations)) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (!lhs.ExteriorJailMarker.Equals(rhs.ExteriorJailMarker)) return false;
             if (!lhs.FollowerWaitMarker.Equals(rhs.FollowerWaitMarker)) return false;
@@ -2145,12 +2145,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.SharedCrimeFactionList.Equals(rhs.SharedCrimeFactionList)) return false;
             if (!lhs.JailOutfit.Equals(rhs.JailOutfit)) return false;
             if (!object.Equals(lhs.CrimeValues, rhs.CrimeValues)) return false;
-            if (!lhs.Ranks.SequenceEqual(rhs.Ranks)) return false;
+            if (!lhs.Ranks.SequenceEqualNullable(rhs.Ranks)) return false;
             if (!lhs.VendorBuySellList.Equals(rhs.VendorBuySellList)) return false;
             if (!lhs.MerchantContainer.Equals(rhs.MerchantContainer)) return false;
             if (!object.Equals(lhs.VendorValues, rhs.VendorValues)) return false;
             if (!object.Equals(lhs.VendorLocation, rhs.VendorLocation)) return false;
-            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
+            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
             return true;
         }
         
@@ -3316,6 +3316,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IFactionGetter rhs)) return false;
+            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IFactionGetter? obj)
+        {
+            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((FactionCommon)((IFactionGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

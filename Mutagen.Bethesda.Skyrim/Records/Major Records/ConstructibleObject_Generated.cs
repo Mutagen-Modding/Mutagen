@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IConstructibleObjectInternal,
         ILoquiObjectSetter<ConstructibleObject>,
-        IEquatable<ConstructibleObject>
+        IEquatable<IConstructibleObjectGetter>
     {
         #region Ctor
         protected ConstructibleObject()
@@ -106,7 +106,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ConstructibleObject? obj)
+        public bool Equals(IConstructibleObjectGetter? obj)
         {
             return ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1239,8 +1239,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.CreatedObject = object.Equals(item.CreatedObject, rhs.CreatedObject);
-            ret.WorkbenchKeyword = object.Equals(item.WorkbenchKeyword, rhs.WorkbenchKeyword);
+            ret.CreatedObject = item.CreatedObject.Equals(rhs.CreatedObject);
+            ret.WorkbenchKeyword = item.WorkbenchKeyword.Equals(rhs.WorkbenchKeyword);
             ret.CreatedObjectCount = item.CreatedObjectCount == rhs.CreatedObjectCount;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -1390,9 +1390,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!lhs.Items.SequenceEqual(rhs.Items)) return false;
-            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
+            if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
+            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
             if (!lhs.CreatedObject.Equals(rhs.CreatedObject)) return false;
             if (!lhs.WorkbenchKeyword.Equals(rhs.WorkbenchKeyword)) return false;
             if (lhs.CreatedObjectCount != rhs.CreatedObjectCount) return false;
@@ -2129,6 +2129,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IConstructibleObjectGetter rhs)) return false;
+            return ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IConstructibleObjectGetter? obj)
+        {
+            return ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

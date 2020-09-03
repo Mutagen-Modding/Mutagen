@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class SimpleModel :
         ISimpleModel,
         ILoquiObjectSetter<SimpleModel>,
-        IEquatable<SimpleModel>
+        IEquatable<ISimpleModelGetter>
     {
         #region Ctor
         public SimpleModel()
@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SimpleModelCommon)((ISimpleModelGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(SimpleModel? obj)
+        public bool Equals(ISimpleModelGetter? obj)
         {
             return ((SimpleModelCommon)((ISimpleModelGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1343,6 +1343,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ISimpleModelGetter rhs)) return false;
+            return ((SimpleModelCommon)((ISimpleModelGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ISimpleModelGetter? obj)
+        {
+            return ((SimpleModelCommon)((ISimpleModelGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((SimpleModelCommon)((ISimpleModelGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

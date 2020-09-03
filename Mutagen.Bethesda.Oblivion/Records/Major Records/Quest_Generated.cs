@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IQuestInternal,
         ILoquiObjectSetter<Quest>,
-        IEquatable<Quest>
+        IEquatable<IQuestGetter>
     {
         #region Ctor
         protected Quest()
@@ -131,7 +131,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((QuestCommon)((IQuestGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Quest? obj)
+        public bool Equals(IQuestGetter? obj)
         {
             return ((QuestCommon)((IQuestGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1423,7 +1423,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Script = object.Equals(item.Script, rhs.Script);
+            ret.Script = item.Script.Equals(rhs.Script);
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.Icon = string.Equals(item.Icon, rhs.Icon);
             ret.Data = EqualsMaskHelper.EqualsHelper(
@@ -1612,14 +1612,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
             if (!lhs.Script.Equals(rhs.Script)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
             if (!object.Equals(lhs.Data, rhs.Data)) return false;
-            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
-            if (!lhs.Stages.SequenceEqual(rhs.Stages)) return false;
-            if (!lhs.Targets.SequenceEqual(rhs.Targets)) return false;
+            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            if (!lhs.Stages.SequenceEqualNullable(rhs.Stages)) return false;
+            if (!lhs.Targets.SequenceEqualNullable(rhs.Targets)) return false;
             return true;
         }
         
@@ -2433,6 +2433,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IQuestGetter rhs)) return false;
+            return ((QuestCommon)((IQuestGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IQuestGetter? obj)
+        {
+            return ((QuestCommon)((IQuestGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((QuestCommon)((IQuestGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

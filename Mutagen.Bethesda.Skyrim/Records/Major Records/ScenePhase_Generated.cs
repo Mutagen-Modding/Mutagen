@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ScenePhase :
         IScenePhase,
         ILoquiObjectSetter<ScenePhase>,
-        IEquatable<ScenePhase>
+        IEquatable<IScenePhaseGetter>
     {
         #region Ctor
         public ScenePhase()
@@ -121,7 +121,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ScenePhaseCommon)((IScenePhaseGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ScenePhase? obj)
+        public bool Equals(IScenePhaseGetter? obj)
         {
             return ((ScenePhaseCommon)((IScenePhaseGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1402,8 +1402,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!lhs.StartConditions.SequenceEqual(rhs.StartConditions)) return false;
-            if (!lhs.CompletionConditions.SequenceEqual(rhs.CompletionConditions)) return false;
+            if (!lhs.StartConditions.SequenceEqualNullable(rhs.StartConditions)) return false;
+            if (!lhs.CompletionConditions.SequenceEqualNullable(rhs.CompletionConditions)) return false;
             if (!object.Equals(lhs.Unused, rhs.Unused)) return false;
             if (!object.Equals(lhs.Unused2, rhs.Unused2)) return false;
             if (lhs.EditorWidth != rhs.EditorWidth) return false;
@@ -2096,6 +2096,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IScenePhaseGetter rhs)) return false;
+            return ((ScenePhaseCommon)((IScenePhaseGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IScenePhaseGetter? obj)
+        {
+            return ((ScenePhaseCommon)((IScenePhaseGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ScenePhaseCommon)((IScenePhaseGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

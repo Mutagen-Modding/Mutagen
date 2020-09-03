@@ -1,3 +1,4 @@
+using Loqui;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace Mutagen.Bethesda
     /// <summary>
     /// An interface that Mod objects implement to hook into the common getter systems
     /// </summary>
-    public interface IModGetter : IMajorRecordGetterEnumerable, ILinkedFormKeyContainerGetter, IModKeyed
+    public interface IModGetter : IMajorRecordGetterEnumerable, ILinkedFormKeyContainerGetter, IModKeyed, IEqualsMask
     {
         /// <summary>
         /// The associated game release

@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IStaticInternal,
         ILoquiObjectSetter<Static>,
-        IEquatable<Static>
+        IEquatable<IStaticGetter>
     {
         #region Ctor
         protected Static()
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MaxAngle
         public readonly static Single _MaxAngle_Default = 30;
-        public Single MaxAngle { get; set; } = default;
+        public Single MaxAngle { get; set; } = _MaxAngle_Default;
         public static RangeFloat MaxAngle_Range = new RangeFloat(30f, 120f);
         #endregion
         #region Material
@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((StaticCommon)((IStaticGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Static? obj)
+        public bool Equals(IStaticGetter? obj)
         {
             return ((StaticCommon)((IStaticGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1273,7 +1273,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.MaxAngle = item.MaxAngle.EqualsWithin(rhs.MaxAngle);
-            ret.Material = object.Equals(item.Material, rhs.Material);
+            ret.Material = item.Material.Equals(rhs.Material);
             ret.Flags = item.Flags == rhs.Flags;
             ret.Unused = MemoryExtensions.SequenceEqual(item.Unused.Span, rhs.Unused.Span);
             ret.Lod = EqualsMaskHelper.EqualsHelper(
@@ -1414,7 +1414,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!lhs.MaxAngle.EqualsWithin(rhs.MaxAngle)) return false;
@@ -2170,6 +2170,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IStaticGetter rhs)) return false;
+            return ((StaticCommon)((IStaticGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IStaticGetter? obj)
+        {
+            return ((StaticCommon)((IStaticGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((StaticCommon)((IStaticGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

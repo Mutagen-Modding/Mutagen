@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         ANavigationMeshData,
         ICellNavigationMeshData,
         ILoquiObjectSetter<CellNavigationMeshData>,
-        IEquatable<CellNavigationMeshData>
+        IEquatable<ICellNavigationMeshDataGetter>
     {
         #region Ctor
         public CellNavigationMeshData()
@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((CellNavigationMeshDataCommon)((ICellNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(CellNavigationMeshData? obj)
+        public bool Equals(ICellNavigationMeshDataGetter? obj)
         {
             return ((CellNavigationMeshDataCommon)((ICellNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -891,8 +891,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.UnusedWorldspaceParent = object.Equals(item.UnusedWorldspaceParent, rhs.UnusedWorldspaceParent);
-            ret.Parent = object.Equals(item.Parent, rhs.Parent);
+            ret.UnusedWorldspaceParent = item.UnusedWorldspaceParent.Equals(rhs.UnusedWorldspaceParent);
+            ret.Parent = item.Parent.Equals(rhs.Parent);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -994,7 +994,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IANavigationMeshDataGetter)lhs, (IANavigationMeshDataGetter)rhs)) return false;
             if (!lhs.UnusedWorldspaceParent.Equals(rhs.UnusedWorldspaceParent)) return false;
             if (!lhs.Parent.Equals(rhs.Parent)) return false;
             return true;
@@ -1335,6 +1335,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ICellNavigationMeshDataGetter rhs)) return false;
+            return ((CellNavigationMeshDataCommon)((ICellNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ICellNavigationMeshDataGetter? obj)
+        {
+            return ((CellNavigationMeshDataCommon)((ICellNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((CellNavigationMeshDataCommon)((ICellNavigationMeshDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

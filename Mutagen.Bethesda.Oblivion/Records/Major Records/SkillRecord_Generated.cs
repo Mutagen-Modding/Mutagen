@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         ISkillRecordInternal,
         ILoquiObjectSetter<SkillRecord>,
-        IEquatable<SkillRecord>
+        IEquatable<ISkillRecordGetter>
     {
         #region Ctor
         protected SkillRecord()
@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((SkillRecordCommon)((ISkillRecordGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(SkillRecord? obj)
+        public bool Equals(ISkillRecordGetter? obj)
         {
             return ((SkillRecordCommon)((ISkillRecordGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1356,7 +1356,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
             if (lhs.Skill != rhs.Skill) return false;
             if (!string.Equals(lhs.Description, rhs.Description)) return false;
             if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
@@ -2108,6 +2108,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ISkillRecordGetter rhs)) return false;
+            return ((SkillRecordCommon)((ISkillRecordGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ISkillRecordGetter? obj)
+        {
+            return ((SkillRecordCommon)((ISkillRecordGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((SkillRecordCommon)((ISkillRecordGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class RegionGrass :
         IRegionGrass,
         ILoquiObjectSetter<RegionGrass>,
-        IEquatable<RegionGrass>
+        IEquatable<IRegionGrassGetter>
     {
         #region Ctor
         public RegionGrass()
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((RegionGrassCommon)((IRegionGrassGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(RegionGrass? obj)
+        public bool Equals(IRegionGrassGetter? obj)
         {
             return ((RegionGrassCommon)((IRegionGrassGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -876,7 +876,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Grass = object.Equals(item.Grass, rhs.Grass);
+            ret.Grass = item.Grass.Equals(rhs.Grass);
             ret.Unknown = item.Unknown == rhs.Unknown;
         }
         
@@ -1255,6 +1255,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IRegionGrassGetter rhs)) return false;
+            return ((RegionGrassCommon)((IRegionGrassGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IRegionGrassGetter? obj)
+        {
+            return ((RegionGrassCommon)((IRegionGrassGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((RegionGrassCommon)((IRegionGrassGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ISoundCategoryInternal,
         ILoquiObjectSetter<SoundCategory>,
-        IEquatable<SoundCategory>
+        IEquatable<ISoundCategoryGetter>
     {
         #region Ctor
         protected SoundCategory()
@@ -88,7 +88,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SoundCategoryCommon)((ISoundCategoryGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(SoundCategory? obj)
+        public bool Equals(ISoundCategoryGetter? obj)
         {
             return ((SoundCategoryCommon)((ISoundCategoryGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1065,7 +1065,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (rhs == null) return;
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.Parent = object.Equals(item.Parent, rhs.Parent);
+            ret.Parent = item.Parent.Equals(rhs.Parent);
             ret.StaticVolumeMultiplier = item.StaticVolumeMultiplier.EqualsWithin(rhs.StaticVolumeMultiplier);
             ret.DefaultMenuVolume = item.DefaultMenuVolume.EqualsWithin(rhs.DefaultMenuVolume);
             base.FillEqualsMask(item, rhs, ret, include);
@@ -1190,7 +1190,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (!lhs.Parent.Equals(rhs.Parent)) return false;
@@ -1838,6 +1838,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ISoundCategoryGetter rhs)) return false;
+            return ((SoundCategoryCommon)((ISoundCategoryGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ISoundCategoryGetter? obj)
+        {
+            return ((SoundCategoryCommon)((ISoundCategoryGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((SoundCategoryCommon)((ISoundCategoryGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

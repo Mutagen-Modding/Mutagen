@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class PreferredPathing :
         IPreferredPathing,
         ILoquiObjectSetter<PreferredPathing>,
-        IEquatable<PreferredPathing>
+        IEquatable<IPreferredPathingGetter>
     {
         #region Ctor
         public PreferredPathing()
@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PreferredPathingCommon)((IPreferredPathingGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PreferredPathing? obj)
+        public bool Equals(IPreferredPathingGetter? obj)
         {
             return ((PreferredPathingCommon)((IPreferredPathingGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1151,8 +1151,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.NavmeshSets.SequenceEqual(rhs.NavmeshSets)) return false;
-            if (!lhs.NavmeshTree.SequenceEqual(rhs.NavmeshTree)) return false;
+            if (!lhs.NavmeshSets.SequenceEqualNullable(rhs.NavmeshSets)) return false;
+            if (!lhs.NavmeshTree.SequenceEqualNullable(rhs.NavmeshTree)) return false;
             return true;
         }
         
@@ -1552,6 +1552,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPreferredPathingGetter rhs)) return false;
+            return ((PreferredPathingCommon)((IPreferredPathingGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPreferredPathingGetter? obj)
+        {
+            return ((PreferredPathingCommon)((IPreferredPathingGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PreferredPathingCommon)((IPreferredPathingGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

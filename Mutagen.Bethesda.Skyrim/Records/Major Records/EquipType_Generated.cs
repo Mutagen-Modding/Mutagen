@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IEquipTypeInternal,
         ILoquiObjectSetter<EquipType>,
-        IEquatable<EquipType>
+        IEquatable<IEquipTypeGetter>
     {
         #region Ctor
         protected EquipType()
@@ -82,7 +82,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((EquipTypeCommon)((IEquipTypeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(EquipType? obj)
+        public bool Equals(IEquipTypeGetter? obj)
         {
             return ((EquipTypeCommon)((IEquipTypeGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1127,8 +1127,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!lhs.SlotParents.SequenceEqual(rhs.SlotParents)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
+            if (!lhs.SlotParents.SequenceEqualNullable(rhs.SlotParents)) return false;
             if (lhs.UseAllParents != rhs.UseAllParents) return false;
             return true;
         }
@@ -1716,6 +1716,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IEquipTypeGetter rhs)) return false;
+            return ((EquipTypeCommon)((IEquipTypeGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IEquipTypeGetter? obj)
+        {
+            return ((EquipTypeCommon)((IEquipTypeGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((EquipTypeCommon)((IEquipTypeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

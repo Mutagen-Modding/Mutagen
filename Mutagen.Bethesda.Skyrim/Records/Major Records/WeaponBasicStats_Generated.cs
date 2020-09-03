@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class WeaponBasicStats :
         IWeaponBasicStats,
         ILoquiObjectSetter<WeaponBasicStats>,
-        IEquatable<WeaponBasicStats>
+        IEquatable<IWeaponBasicStatsGetter>
     {
         #region Ctor
         public WeaponBasicStats()
@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(WeaponBasicStats? obj)
+        public bool Equals(IWeaponBasicStatsGetter? obj)
         {
             return ((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1312,6 +1312,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IWeaponBasicStatsGetter rhs)) return false;
+            return ((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IWeaponBasicStatsGetter? obj)
+        {
+            return ((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

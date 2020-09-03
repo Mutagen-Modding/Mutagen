@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IKeywordInternal,
         ILoquiObjectSetter<Keyword>,
-        IEquatable<Keyword>
+        IEquatable<IKeywordGetter>
     {
         #region Ctor
         protected Keyword()
@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Keyword? obj)
+        public bool Equals(IKeywordGetter? obj)
         {
             return ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -968,7 +968,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
             return true;
         }
@@ -1481,6 +1481,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IKeywordGetter rhs)) return false;
+            return ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IKeywordGetter? obj)
+        {
+            return ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class DestructionStage :
         IDestructionStage,
         ILoquiObjectSetter<DestructionStage>,
-        IEquatable<DestructionStage>
+        IEquatable<IDestructionStageGetter>
     {
         #region Ctor
         public DestructionStage()
@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((DestructionStageCommon)((IDestructionStageGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(DestructionStage? obj)
+        public bool Equals(IDestructionStageGetter? obj)
         {
             return ((DestructionStageCommon)((IDestructionStageGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1467,6 +1467,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IDestructionStageGetter rhs)) return false;
+            return ((DestructionStageCommon)((IDestructionStageGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IDestructionStageGetter? obj)
+        {
+            return ((DestructionStageCommon)((IDestructionStageGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((DestructionStageCommon)((IDestructionStageGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class QuestStage :
         IQuestStage,
         ILoquiObjectSetter<QuestStage>,
-        IEquatable<QuestStage>
+        IEquatable<IQuestStageGetter>
     {
         #region Ctor
         public QuestStage()
@@ -87,7 +87,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(QuestStage? obj)
+        public bool Equals(IQuestStageGetter? obj)
         {
             return ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1208,7 +1208,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs.Index != rhs.Index) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (lhs.Unknown != rhs.Unknown) return false;
-            if (!lhs.LogEntries.SequenceEqual(rhs.LogEntries)) return false;
+            if (!lhs.LogEntries.SequenceEqualNullable(rhs.LogEntries)) return false;
             if (lhs.INDXDataTypeState != rhs.INDXDataTypeState) return false;
             return true;
         }
@@ -1680,6 +1680,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IQuestStageGetter rhs)) return false;
+            return ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IQuestStageGetter? obj)
+        {
+            return ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

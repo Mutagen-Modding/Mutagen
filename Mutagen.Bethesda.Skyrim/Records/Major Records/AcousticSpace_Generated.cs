@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IAcousticSpaceInternal,
         ILoquiObjectSetter<AcousticSpace>,
-        IEquatable<AcousticSpace>
+        IEquatable<IAcousticSpaceGetter>
     {
         #region Ctor
         protected AcousticSpace()
@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((AcousticSpaceCommon)((IAcousticSpaceGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(AcousticSpace? obj)
+        public bool Equals(IAcousticSpaceGetter? obj)
         {
             return ((AcousticSpaceCommon)((IAcousticSpaceGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1024,9 +1024,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
-            ret.AmbientSound = object.Equals(item.AmbientSound, rhs.AmbientSound);
-            ret.UseSoundFromRegion = object.Equals(item.UseSoundFromRegion, rhs.UseSoundFromRegion);
-            ret.EnvironmentType = object.Equals(item.EnvironmentType, rhs.EnvironmentType);
+            ret.AmbientSound = item.AmbientSound.Equals(rhs.AmbientSound);
+            ret.UseSoundFromRegion = item.UseSoundFromRegion.Equals(rhs.UseSoundFromRegion);
+            ret.EnvironmentType = item.EnvironmentType.Equals(rhs.EnvironmentType);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1141,7 +1141,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
             if (!lhs.AmbientSound.Equals(rhs.AmbientSound)) return false;
             if (!lhs.UseSoundFromRegion.Equals(rhs.UseSoundFromRegion)) return false;
@@ -1767,6 +1767,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IAcousticSpaceGetter rhs)) return false;
+            return ((AcousticSpaceCommon)((IAcousticSpaceGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IAcousticSpaceGetter? obj)
+        {
+            return ((AcousticSpaceCommon)((IAcousticSpaceGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((AcousticSpaceCommon)((IAcousticSpaceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

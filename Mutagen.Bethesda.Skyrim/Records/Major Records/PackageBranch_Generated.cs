@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class PackageBranch :
         IPackageBranch,
         ILoquiObjectSetter<PackageBranch>,
-        IEquatable<PackageBranch>
+        IEquatable<IPackageBranchGetter>
     {
         #region Ctor
         public PackageBranch()
@@ -149,7 +149,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PackageBranchCommon)((IPackageBranchGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PackageBranch? obj)
+        public bool Equals(IPackageBranchGetter? obj)
         {
             return ((PackageBranchCommon)((IPackageBranchGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1674,14 +1674,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!string.Equals(lhs.BranchType, rhs.BranchType)) return false;
-            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
+            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
             if (!object.Equals(lhs.Root, rhs.Root)) return false;
             if (!string.Equals(lhs.ProcedureType, rhs.ProcedureType)) return false;
             if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.DataInputIndices.SequenceEqual(rhs.DataInputIndices)) return false;
+            if (!lhs.DataInputIndices.SequenceEqualNullable(rhs.DataInputIndices)) return false;
             if (!object.Equals(lhs.FlagsOverride, rhs.FlagsOverride)) return false;
             if (!object.Equals(lhs.FlagsOverrideUnused, rhs.FlagsOverrideUnused)) return false;
-            if (!lhs.Unknown.SequenceEqual(rhs.Unknown)) return false;
+            if (!lhs.Unknown.SequenceEqualNullable(rhs.Unknown)) return false;
             return true;
         }
         
@@ -2427,6 +2427,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPackageBranchGetter rhs)) return false;
+            return ((PackageBranchCommon)((IPackageBranchGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPackageBranchGetter? obj)
+        {
+            return ((PackageBranchCommon)((IPackageBranchGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PackageBranchCommon)((IPackageBranchGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

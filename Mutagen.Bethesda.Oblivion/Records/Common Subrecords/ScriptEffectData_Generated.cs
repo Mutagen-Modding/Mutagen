@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class ScriptEffectData :
         IScriptEffectData,
         ILoquiObjectSetter<ScriptEffectData>,
-        IEquatable<ScriptEffectData>
+        IEquatable<IScriptEffectDataGetter>
     {
         #region Ctor
         public ScriptEffectData()
@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ScriptEffectDataCommon)((IScriptEffectDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ScriptEffectData? obj)
+        public bool Equals(IScriptEffectDataGetter? obj)
         {
             return ((ScriptEffectDataCommon)((IScriptEffectDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1028,9 +1028,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
-            ret.Script = object.Equals(item.Script, rhs.Script);
+            ret.Script = item.Script.Equals(rhs.Script);
             ret.MagicSchool = item.MagicSchool == rhs.MagicSchool;
-            ret.VisualEffect = object.Equals(item.VisualEffect, rhs.VisualEffect);
+            ret.VisualEffect = item.VisualEffect.Equals(rhs.VisualEffect);
             ret.Flags = item.Flags == rhs.Flags;
         }
         
@@ -1488,6 +1488,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IScriptEffectDataGetter rhs)) return false;
+            return ((ScriptEffectDataCommon)((IScriptEffectDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IScriptEffectDataGetter? obj)
+        {
+            return ((ScriptEffectDataCommon)((IScriptEffectDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ScriptEffectDataCommon)((IScriptEffectDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

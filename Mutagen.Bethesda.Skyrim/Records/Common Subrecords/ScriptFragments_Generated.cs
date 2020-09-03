@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ScriptFragments :
         IScriptFragments,
         ILoquiObjectSetter<ScriptFragments>,
-        IEquatable<ScriptFragments>
+        IEquatable<IScriptFragmentsGetter>
     {
         #region Ctor
         public ScriptFragments()
@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ScriptFragmentsCommon)((IScriptFragmentsGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ScriptFragments? obj)
+        public bool Equals(IScriptFragmentsGetter? obj)
         {
             return ((ScriptFragmentsCommon)((IScriptFragmentsGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1465,6 +1465,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IScriptFragmentsGetter rhs)) return false;
+            return ((ScriptFragmentsCommon)((IScriptFragmentsGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IScriptFragmentsGetter? obj)
+        {
+            return ((ScriptFragmentsCommon)((IScriptFragmentsGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ScriptFragmentsCommon)((IScriptFragmentsGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

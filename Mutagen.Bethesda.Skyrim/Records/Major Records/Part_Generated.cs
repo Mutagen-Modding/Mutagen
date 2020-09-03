@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class Part :
         IPart,
         ILoquiObjectSetter<Part>,
-        IEquatable<Part>
+        IEquatable<IPartGetter>
     {
         #region Ctor
         public Part()
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PartCommon)((IPartGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Part? obj)
+        public bool Equals(IPartGetter? obj)
         {
             return ((PartCommon)((IPartGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1334,6 +1334,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPartGetter rhs)) return false;
+            return ((PartCommon)((IPartGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPartGetter? obj)
+        {
+            return ((PartCommon)((IPartGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PartCommon)((IPartGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

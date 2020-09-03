@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Oblivion
         ANpc,
         INpcInternal,
         ILoquiObjectSetter<Npc>,
-        IEquatable<Npc>
+        IEquatable<INpcGetter>
     {
         #region Ctor
         protected Npc()
@@ -281,7 +281,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((NpcCommon)((INpcGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Npc? obj)
+        public bool Equals(INpcGetter? obj)
         {
             return ((NpcCommon)((INpcGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2548,13 +2548,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Factions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.DeathItem = object.Equals(item.DeathItem, rhs.DeathItem);
-            ret.Race = object.Equals(item.Race, rhs.Race);
+            ret.DeathItem = item.DeathItem.Equals(rhs.DeathItem);
+            ret.Race = item.Race.Equals(rhs.Race);
             ret.Spells = item.Spells.CollectionEqualsHelper(
                 rhs.Spells,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.Script = object.Equals(item.Script, rhs.Script);
+            ret.Script = item.Script.Equals(rhs.Script);
             ret.Items = item.Items.CollectionEqualsHelper(
                 rhs.Items,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -2572,20 +2572,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Animations,
                 (l, r) => string.Equals(l, r),
                 include);
-            ret.Class = object.Equals(item.Class, rhs.Class);
+            ret.Class = item.Class.Equals(rhs.Class);
             ret.Stats = EqualsMaskHelper.EqualsHelper(
                 item.Stats,
                 rhs.Stats,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Hair = object.Equals(item.Hair, rhs.Hair);
+            ret.Hair = item.Hair.Equals(rhs.Hair);
             ret.HairLength = item.HairLength.EqualsWithin(rhs.HairLength);
             ret.Eyes = item.Eyes.CollectionEqualsHelper(
                 rhs.Eyes,
                 (l, r) => object.Equals(l, r),
                 include);
             ret.HairColor = item.HairColor.ColorOnlyEquals(rhs.HairColor);
-            ret.CombatStyle = object.Equals(item.CombatStyle, rhs.CombatStyle);
+            ret.CombatStyle = item.CombatStyle.Equals(rhs.CombatStyle);
             ret.FaceGenGeometrySymmetric = MemorySliceExt.Equal(item.FaceGenGeometrySymmetric, rhs.FaceGenGeometrySymmetric);
             ret.FaceGenGeometryAsymmetric = MemorySliceExt.Equal(item.FaceGenGeometryAsymmetric, rhs.FaceGenGeometryAsymmetric);
             ret.FaceGenTextureSymmetric = MemorySliceExt.Equal(item.FaceGenTextureSymmetric, rhs.FaceGenTextureSymmetric);
@@ -2913,24 +2913,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IANpcGetter)lhs, (IANpcGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!object.Equals(lhs.Configuration, rhs.Configuration)) return false;
-            if (!lhs.Factions.SequenceEqual(rhs.Factions)) return false;
+            if (!lhs.Factions.SequenceEqualNullable(rhs.Factions)) return false;
             if (!lhs.DeathItem.Equals(rhs.DeathItem)) return false;
             if (!lhs.Race.Equals(rhs.Race)) return false;
-            if (!lhs.Spells.SequenceEqual(rhs.Spells)) return false;
+            if (!lhs.Spells.SequenceEqualNullable(rhs.Spells)) return false;
             if (!lhs.Script.Equals(rhs.Script)) return false;
-            if (!lhs.Items.SequenceEqual(rhs.Items)) return false;
+            if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
             if (!object.Equals(lhs.AIData, rhs.AIData)) return false;
-            if (!lhs.AIPackages.SequenceEqual(rhs.AIPackages)) return false;
-            if (!lhs.Animations.SequenceEqual(rhs.Animations)) return false;
+            if (!lhs.AIPackages.SequenceEqualNullable(rhs.AIPackages)) return false;
+            if (!lhs.Animations.SequenceEqualNullable(rhs.Animations)) return false;
             if (!lhs.Class.Equals(rhs.Class)) return false;
             if (!object.Equals(lhs.Stats, rhs.Stats)) return false;
             if (!lhs.Hair.Equals(rhs.Hair)) return false;
             if (!lhs.HairLength.EqualsWithin(rhs.HairLength)) return false;
-            if (!lhs.Eyes.SequenceEqual(rhs.Eyes)) return false;
+            if (!lhs.Eyes.SequenceEqualNullable(rhs.Eyes)) return false;
             if (!lhs.HairColor.ColorOnlyEquals(rhs.HairColor)) return false;
             if (!lhs.CombatStyle.Equals(rhs.CombatStyle)) return false;
             if (!MemorySliceExt.Equal(lhs.FaceGenGeometrySymmetric, rhs.FaceGenGeometrySymmetric)) return false;
@@ -4516,6 +4516,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is INpcGetter rhs)) return false;
+            return ((NpcCommon)((INpcGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(INpcGetter? obj)
+        {
+            return ((NpcCommon)((INpcGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((NpcCommon)((INpcGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

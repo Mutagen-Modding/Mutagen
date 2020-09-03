@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class NavigationMapInfo :
         INavigationMapInfo,
         ILoquiObjectSetter<NavigationMapInfo>,
-        IEquatable<NavigationMapInfo>
+        IEquatable<INavigationMapInfoGetter>
     {
         #region Ctor
         public NavigationMapInfo()
@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(NavigationMapInfo? obj)
+        public bool Equals(INavigationMapInfoGetter? obj)
         {
             return ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1617,7 +1617,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.NavigationMesh = object.Equals(item.NavigationMesh, rhs.NavigationMesh);
+            ret.NavigationMesh = item.NavigationMesh.Equals(rhs.NavigationMesh);
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.Point = item.Point.Equals(rhs.Point);
             ret.PreferredMergesFlag = item.PreferredMergesFlag == rhs.PreferredMergesFlag;
@@ -1639,9 +1639,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
-            ret.ParentWorldspace = object.Equals(item.ParentWorldspace, rhs.ParentWorldspace);
+            ret.ParentWorldspace = item.ParentWorldspace.Equals(rhs.ParentWorldspace);
             ret.ParentWorldspaceCoord = item.ParentWorldspaceCoord.Equals(rhs.ParentWorldspaceCoord);
-            ret.ParentCell = object.Equals(item.ParentCell, rhs.ParentCell);
+            ret.ParentCell = item.ParentCell.Equals(rhs.ParentCell);
         }
         
         public string ToString(
@@ -1792,9 +1792,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs.Unknown != rhs.Unknown) return false;
             if (!lhs.Point.Equals(rhs.Point)) return false;
             if (lhs.PreferredMergesFlag != rhs.PreferredMergesFlag) return false;
-            if (!lhs.MergedTo.SequenceEqual(rhs.MergedTo)) return false;
-            if (!lhs.PreferredMerges.SequenceEqual(rhs.PreferredMerges)) return false;
-            if (!lhs.LinkedDoors.SequenceEqual(rhs.LinkedDoors)) return false;
+            if (!lhs.MergedTo.SequenceEqualNullable(rhs.MergedTo)) return false;
+            if (!lhs.PreferredMerges.SequenceEqualNullable(rhs.PreferredMerges)) return false;
+            if (!lhs.LinkedDoors.SequenceEqualNullable(rhs.LinkedDoors)) return false;
             if (!object.Equals(lhs.Island, rhs.Island)) return false;
             if (lhs.Unknown2 != rhs.Unknown2) return false;
             if (!lhs.ParentWorldspace.Equals(rhs.ParentWorldspace)) return false;
@@ -2396,6 +2396,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is INavigationMapInfoGetter rhs)) return false;
+            return ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(INavigationMapInfoGetter? obj)
+        {
+            return ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         MagicEffectArchetype,
         IMagicEffectKeywordArchetypeInternal,
         ILoquiObjectSetter<MagicEffectKeywordArchetype>,
-        IEquatable<MagicEffectKeywordArchetype>
+        IEquatable<IMagicEffectKeywordArchetypeGetter>
     {
 
         #region To String
@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((MagicEffectKeywordArchetypeCommon)((IMagicEffectKeywordArchetypeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(MagicEffectKeywordArchetype? obj)
+        public bool Equals(IMagicEffectKeywordArchetypeGetter? obj)
         {
             return ((MagicEffectKeywordArchetypeCommon)((IMagicEffectKeywordArchetypeGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -812,7 +812,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IMagicEffectArchetypeGetter)lhs, (IMagicEffectArchetypeGetter)rhs)) return false;
             return true;
         }
         
@@ -1141,6 +1141,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IMagicEffectKeywordArchetypeGetter rhs)) return false;
+            return ((MagicEffectKeywordArchetypeCommon)((IMagicEffectKeywordArchetypeGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IMagicEffectKeywordArchetypeGetter? obj)
+        {
+            return ((MagicEffectKeywordArchetypeCommon)((IMagicEffectKeywordArchetypeGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((MagicEffectKeywordArchetypeCommon)((IMagicEffectKeywordArchetypeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

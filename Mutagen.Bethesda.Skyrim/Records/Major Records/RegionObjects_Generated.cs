@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         RegionData,
         IRegionObjects,
         ILoquiObjectSetter<RegionObjects>,
-        IEquatable<RegionObjects>
+        IEquatable<IRegionObjectsGetter>
     {
         #region Ctor
         public RegionObjects()
@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((RegionObjectsCommon)((IRegionObjectsGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(RegionObjects? obj)
+        public bool Equals(IRegionObjectsGetter? obj)
         {
             return ((RegionObjectsCommon)((IRegionObjectsGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1006,8 +1006,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!lhs.Objects.SequenceEqual(rhs.Objects)) return false;
+            if (!base.Equals((IRegionDataGetter)lhs, (IRegionDataGetter)rhs)) return false;
+            if (!lhs.Objects.SequenceEqualNullable(rhs.Objects)) return false;
             return true;
         }
         
@@ -1455,6 +1455,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IRegionObjectsGetter rhs)) return false;
+            return ((RegionObjectsCommon)((IRegionObjectsGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IRegionObjectsGetter? obj)
+        {
+            return ((RegionObjectsCommon)((IRegionObjectsGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((RegionObjectsCommon)((IRegionObjectsGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

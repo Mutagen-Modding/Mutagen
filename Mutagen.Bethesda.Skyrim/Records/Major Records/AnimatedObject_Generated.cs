@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IAnimatedObjectInternal,
         ILoquiObjectSetter<AnimatedObject>,
-        IEquatable<AnimatedObject>
+        IEquatable<IAnimatedObjectGetter>
     {
         #region Ctor
         protected AnimatedObject()
@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((AnimatedObjectCommon)((IAnimatedObjectGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(AnimatedObject? obj)
+        public bool Equals(IAnimatedObjectGetter? obj)
         {
             return ((AnimatedObjectCommon)((IAnimatedObjectGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1047,7 +1047,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!string.Equals(lhs.UnloadEvent, rhs.UnloadEvent)) return false;
             return true;
@@ -1628,6 +1628,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IAnimatedObjectGetter rhs)) return false;
+            return ((AnimatedObjectCommon)((IAnimatedObjectGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IAnimatedObjectGetter? obj)
+        {
+            return ((AnimatedObjectCommon)((IAnimatedObjectGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((AnimatedObjectCommon)((IAnimatedObjectGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class CreatureAIData :
         ICreatureAIData,
         ILoquiObjectSetter<CreatureAIData>,
-        IEquatable<CreatureAIData>
+        IEquatable<ICreatureAIDataGetter>
     {
         #region Ctor
         public CreatureAIData()
@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((CreatureAIDataCommon)((ICreatureAIDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(CreatureAIData? obj)
+        public bool Equals(ICreatureAIDataGetter? obj)
         {
             return ((CreatureAIDataCommon)((ICreatureAIDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1556,6 +1556,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ICreatureAIDataGetter rhs)) return false;
+            return ((CreatureAIDataCommon)((ICreatureAIDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ICreatureAIDataGetter? obj)
+        {
+            return ((CreatureAIDataCommon)((ICreatureAIDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((CreatureAIDataCommon)((ICreatureAIDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         ScriptProperty,
         IScriptStringProperty,
         ILoquiObjectSetter<ScriptStringProperty>,
-        IEquatable<ScriptStringProperty>
+        IEquatable<IScriptStringPropertyGetter>
     {
         #region Ctor
         public ScriptStringProperty()
@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ScriptStringPropertyCommon)((IScriptStringPropertyGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ScriptStringProperty? obj)
+        public bool Equals(IScriptStringPropertyGetter? obj)
         {
             return ((ScriptStringPropertyCommon)((IScriptStringPropertyGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -878,7 +878,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IScriptPropertyGetter)lhs, (IScriptPropertyGetter)rhs)) return false;
             if (!string.Equals(lhs.Data, rhs.Data)) return false;
             return true;
         }
@@ -1219,6 +1219,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IScriptStringPropertyGetter rhs)) return false;
+            return ((ScriptStringPropertyCommon)((IScriptStringPropertyGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IScriptStringPropertyGetter? obj)
+        {
+            return ((ScriptStringPropertyCommon)((IScriptStringPropertyGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ScriptStringPropertyCommon)((IScriptStringPropertyGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

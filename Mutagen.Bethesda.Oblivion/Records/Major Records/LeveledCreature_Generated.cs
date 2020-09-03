@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         ANpcSpawn,
         ILeveledCreatureInternal,
         ILoquiObjectSetter<LeveledCreature>,
-        IEquatable<LeveledCreature>
+        IEquatable<ILeveledCreatureGetter>
     {
         #region Ctor
         protected LeveledCreature()
@@ -97,7 +97,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((LeveledCreatureCommon)((ILeveledCreatureGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LeveledCreature? obj)
+        public bool Equals(ILeveledCreatureGetter? obj)
         {
             return ((LeveledCreatureCommon)((ILeveledCreatureGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1166,8 +1166,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Entries,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.Script = object.Equals(item.Script, rhs.Script);
-            ret.Template = object.Equals(item.Template, rhs.Template);
+            ret.Script = item.Script.Equals(rhs.Script);
+            ret.Template = item.Template.Equals(rhs.Template);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1319,10 +1319,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IANpcSpawnGetter)lhs, (IANpcSpawnGetter)rhs)) return false;
             if (lhs.ChanceNone != rhs.ChanceNone) return false;
             if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.Entries.SequenceEqual(rhs.Entries)) return false;
+            if (!lhs.Entries.SequenceEqualNullable(rhs.Entries)) return false;
             if (!lhs.Script.Equals(rhs.Script)) return false;
             if (!lhs.Template.Equals(rhs.Template)) return false;
             return true;
@@ -2048,6 +2048,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILeveledCreatureGetter rhs)) return false;
+            return ((LeveledCreatureCommon)((ILeveledCreatureGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILeveledCreatureGetter? obj)
+        {
+            return ((LeveledCreatureCommon)((ILeveledCreatureGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LeveledCreatureCommon)((ILeveledCreatureGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

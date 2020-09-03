@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public abstract partial class ALocationTarget :
         IALocationTarget,
         ILoquiObjectSetter<ALocationTarget>,
-        IEquatable<ALocationTarget>
+        IEquatable<IALocationTargetGetter>
     {
         #region Ctor
         public ALocationTarget()
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ALocationTargetCommon)((IALocationTargetGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ALocationTarget? obj)
+        public bool Equals(IALocationTargetGetter? obj)
         {
             return ((ALocationTargetCommon)((IALocationTargetGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1046,6 +1046,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IALocationTargetGetter rhs)) return false;
+            return ((ALocationTargetCommon)((IALocationTargetGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IALocationTargetGetter? obj)
+        {
+            return ((ALocationTargetCommon)((IALocationTargetGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ALocationTargetCommon)((IALocationTargetGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

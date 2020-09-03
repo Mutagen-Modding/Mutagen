@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class EdgeLink :
         IEdgeLink,
         ILoquiObjectSetter<EdgeLink>,
-        IEquatable<EdgeLink>
+        IEquatable<IEdgeLinkGetter>
     {
         #region Ctor
         public EdgeLink()
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((EdgeLinkCommon)((IEdgeLinkGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(EdgeLink? obj)
+        public bool Equals(IEdgeLinkGetter? obj)
         {
             return ((EdgeLinkCommon)((IEdgeLinkGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -923,7 +923,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.Unknown = item.Unknown == rhs.Unknown;
-            ret.Mesh = object.Equals(item.Mesh, rhs.Mesh);
+            ret.Mesh = item.Mesh.Equals(rhs.Mesh);
             ret.TriangleIndex = item.TriangleIndex == rhs.TriangleIndex;
         }
         
@@ -1315,6 +1315,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IEdgeLinkGetter rhs)) return false;
+            return ((EdgeLinkCommon)((IEdgeLinkGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IEdgeLinkGetter? obj)
+        {
+            return ((EdgeLinkCommon)((IEdgeLinkGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((EdgeLinkCommon)((IEdgeLinkGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

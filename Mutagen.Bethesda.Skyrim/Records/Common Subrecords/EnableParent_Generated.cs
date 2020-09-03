@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class EnableParent :
         IEnableParent,
         ILoquiObjectSetter<EnableParent>,
-        IEquatable<EnableParent>
+        IEquatable<IEnableParentGetter>
     {
         #region Ctor
         public EnableParent()
@@ -82,7 +82,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(EnableParent? obj)
+        public bool Equals(IEnableParentGetter? obj)
         {
             return ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -987,7 +987,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
-            ret.Reference = object.Equals(item.Reference, rhs.Reference);
+            ret.Reference = item.Reference.Equals(rhs.Reference);
             ret.Flags = item.Flags == rhs.Flags;
             ret.Unknown = MemoryExtensions.SequenceEqual(item.Unknown.Span, rhs.Unknown.Span);
         }
@@ -1415,6 +1415,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IEnableParentGetter rhs)) return false;
+            return ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IEnableParentGetter? obj)
+        {
+            return ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

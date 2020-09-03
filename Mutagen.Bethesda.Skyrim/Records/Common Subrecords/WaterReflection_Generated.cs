@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class WaterReflection :
         IWaterReflection,
         ILoquiObjectSetter<WaterReflection>,
-        IEquatable<WaterReflection>
+        IEquatable<IWaterReflectionGetter>
     {
         #region Ctor
         public WaterReflection()
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((WaterReflectionCommon)((IWaterReflectionGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(WaterReflection? obj)
+        public bool Equals(IWaterReflectionGetter? obj)
         {
             return ((WaterReflectionCommon)((IWaterReflectionGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -933,7 +933,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
-            ret.Water = object.Equals(item.Water, rhs.Water);
+            ret.Water = item.Water.Equals(rhs.Water);
             ret.Type = item.Type == rhs.Type;
         }
         
@@ -1345,6 +1345,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IWaterReflectionGetter rhs)) return false;
+            return ((WaterReflectionCommon)((IWaterReflectionGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IWaterReflectionGetter? obj)
+        {
+            return ((WaterReflectionCommon)((IWaterReflectionGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((WaterReflectionCommon)((IWaterReflectionGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IWaterInternal,
         ILoquiObjectSetter<Water>,
-        IEquatable<Water>
+        IEquatable<IWaterGetter>
     {
         #region Ctor
         protected Water()
@@ -345,7 +345,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Water? obj)
+        public bool Equals(IWaterGetter? obj)
         {
             return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -4115,10 +4115,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Opacity = item.Opacity == rhs.Opacity;
             ret.Flags = item.Flags == rhs.Flags;
             ret.MNAM = MemorySliceExt.Equal(item.MNAM, rhs.MNAM);
-            ret.Material = object.Equals(item.Material, rhs.Material);
-            ret.OpenSound = object.Equals(item.OpenSound, rhs.OpenSound);
-            ret.Spell = object.Equals(item.Spell, rhs.Spell);
-            ret.ImageSpace = object.Equals(item.ImageSpace, rhs.ImageSpace);
+            ret.Material = item.Material.Equals(rhs.Material);
+            ret.OpenSound = item.OpenSound.Equals(rhs.OpenSound);
+            ret.Spell = item.Spell.Equals(rhs.Spell);
+            ret.ImageSpace = item.ImageSpace.Equals(rhs.ImageSpace);
             ret.DamagePerSecond = item.DamagePerSecond == rhs.DamagePerSecond;
             ret.Unknown = MemoryExtensions.SequenceEqual(item.Unknown.Span, rhs.Unknown.Span);
             ret.SpecularSunPower = item.SpecularSunPower.EqualsWithin(rhs.SpecularSunPower);
@@ -4573,9 +4573,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!lhs.UnusedNoisemaps.SequenceEqual(rhs.UnusedNoisemaps)) return false;
+            if (!lhs.UnusedNoisemaps.SequenceEqualNullable(rhs.UnusedNoisemaps)) return false;
             if (lhs.Opacity != rhs.Opacity) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (!MemorySliceExt.Equal(lhs.MNAM, rhs.MNAM)) return false;
@@ -6385,6 +6385,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IWaterGetter rhs)) return false;
+            return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IWaterGetter? obj)
+        {
+            return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((WaterCommon)((IWaterGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

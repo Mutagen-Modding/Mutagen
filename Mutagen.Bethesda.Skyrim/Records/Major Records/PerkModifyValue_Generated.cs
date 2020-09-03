@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         APerkEntryPointEffect,
         IPerkModifyValue,
         ILoquiObjectSetter<PerkModifyValue>,
-        IEquatable<PerkModifyValue>
+        IEquatable<IPerkModifyValueGetter>
     {
         #region Ctor
         public PerkModifyValue()
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PerkModifyValueCommon)((IPerkModifyValueGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PerkModifyValue? obj)
+        public bool Equals(IPerkModifyValueGetter? obj)
         {
             return ((PerkModifyValueCommon)((IPerkModifyValueGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -988,7 +988,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IAPerkEntryPointEffectGetter)lhs, (IAPerkEntryPointEffectGetter)rhs)) return false;
             if (lhs.Modification != rhs.Modification) return false;
             if (!lhs.Value.EqualsWithin(rhs.Value)) return false;
             return true;
@@ -1450,6 +1450,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPerkModifyValueGetter rhs)) return false;
+            return ((PerkModifyValueCommon)((IPerkModifyValueGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPerkModifyValueGetter? obj)
+        {
+            return ((PerkModifyValueCommon)((IPerkModifyValueGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PerkModifyValueCommon)((IPerkModifyValueGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

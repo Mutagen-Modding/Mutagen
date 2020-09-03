@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class ScriptEffect :
         IScriptEffect,
         ILoquiObjectSetter<ScriptEffect>,
-        IEquatable<ScriptEffect>
+        IEquatable<IScriptEffectGetter>
     {
         #region Ctor
         public ScriptEffect()
@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ScriptEffectCommon)((IScriptEffectGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ScriptEffect? obj)
+        public bool Equals(IScriptEffectGetter? obj)
         {
             return ((ScriptEffectCommon)((IScriptEffectGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1400,6 +1400,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IScriptEffectGetter rhs)) return false;
+            return ((ScriptEffectCommon)((IScriptEffectGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IScriptEffectGetter? obj)
+        {
+            return ((ScriptEffectCommon)((IScriptEffectGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ScriptEffectCommon)((IScriptEffectGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

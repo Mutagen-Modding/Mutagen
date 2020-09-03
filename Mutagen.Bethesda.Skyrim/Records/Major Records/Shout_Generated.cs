@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         ASpell,
         IShoutInternal,
         ILoquiObjectSetter<Shout>,
-        IEquatable<Shout>
+        IEquatable<IShoutGetter>
     {
         #region Ctor
         protected Shout()
@@ -92,7 +92,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ShoutCommon)((IShoutGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Shout? obj)
+        public bool Equals(IShoutGetter? obj)
         {
             return ((ShoutCommon)((IShoutGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1133,7 +1133,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.Name = string.Equals(item.Name, rhs.Name);
-            ret.MenuDisplayObject = object.Equals(item.MenuDisplayObject, rhs.MenuDisplayObject);
+            ret.MenuDisplayObject = item.MenuDisplayObject.Equals(rhs.MenuDisplayObject);
             ret.Description = string.Equals(item.Description, rhs.Description);
             ret.WordsOfPower = item.WordsOfPower.CollectionEqualsHelper(
                 rhs.WordsOfPower,
@@ -1290,11 +1290,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IASpellGetter)lhs, (IASpellGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!lhs.MenuDisplayObject.Equals(rhs.MenuDisplayObject)) return false;
             if (!string.Equals(lhs.Description, rhs.Description)) return false;
-            if (!lhs.WordsOfPower.SequenceEqual(rhs.WordsOfPower)) return false;
+            if (!lhs.WordsOfPower.SequenceEqualNullable(rhs.WordsOfPower)) return false;
             return true;
         }
         
@@ -1998,6 +1998,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IShoutGetter rhs)) return false;
+            return ((ShoutCommon)((IShoutGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IShoutGetter? obj)
+        {
+            return ((ShoutCommon)((IShoutGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ShoutCommon)((IShoutGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         ScriptProperty,
         IScriptIntProperty,
         ILoquiObjectSetter<ScriptIntProperty>,
-        IEquatable<ScriptIntProperty>
+        IEquatable<IScriptIntPropertyGetter>
     {
         #region Ctor
         public ScriptIntProperty()
@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ScriptIntPropertyCommon)((IScriptIntPropertyGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ScriptIntProperty? obj)
+        public bool Equals(IScriptIntPropertyGetter? obj)
         {
             return ((ScriptIntPropertyCommon)((IScriptIntPropertyGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -878,7 +878,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IScriptPropertyGetter)lhs, (IScriptPropertyGetter)rhs)) return false;
             if (lhs.Data != rhs.Data) return false;
             return true;
         }
@@ -1210,6 +1210,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IScriptIntPropertyGetter rhs)) return false;
+            return ((ScriptIntPropertyCommon)((IScriptIntPropertyGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IScriptIntPropertyGetter? obj)
+        {
+            return ((ScriptIntPropertyCommon)((IScriptIntPropertyGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ScriptIntPropertyCommon)((IScriptIntPropertyGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

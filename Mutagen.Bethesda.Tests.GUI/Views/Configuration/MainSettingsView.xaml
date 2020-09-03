@@ -39,6 +39,7 @@
             <CheckBox x:Name="TestOverlay" Content="Overlay" />
             <CheckBox x:Name="TestImport" Content="Import" />
             <CheckBox x:Name="TestCopyIn" Content="CopyIn" />
+            <CheckBox x:Name="TestEquals" Content="Equals" />
         </WrapPanel>
         <TextBlock Grid.Row="2"
             FontSize="{StaticResource HeaderFontSize}"

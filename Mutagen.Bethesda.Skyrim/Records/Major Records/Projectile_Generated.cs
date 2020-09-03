@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IProjectileInternal,
         ILoquiObjectSetter<Projectile>,
-        IEquatable<Projectile>
+        IEquatable<IProjectileGetter>
     {
         #region Ctor
         protected Projectile()
@@ -205,7 +205,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Projectile? obj)
+        public bool Equals(IProjectileGetter? obj)
         {
             return ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2390,25 +2390,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Gravity = item.Gravity.EqualsWithin(rhs.Gravity);
             ret.Speed = item.Speed.EqualsWithin(rhs.Speed);
             ret.Range = item.Range.EqualsWithin(rhs.Range);
-            ret.Light = object.Equals(item.Light, rhs.Light);
-            ret.MuzzleFlash = object.Equals(item.MuzzleFlash, rhs.MuzzleFlash);
+            ret.Light = item.Light.Equals(rhs.Light);
+            ret.MuzzleFlash = item.MuzzleFlash.Equals(rhs.MuzzleFlash);
             ret.TracerChance = item.TracerChance.EqualsWithin(rhs.TracerChance);
             ret.ExplosionAltTriggerProximity = item.ExplosionAltTriggerProximity.EqualsWithin(rhs.ExplosionAltTriggerProximity);
             ret.ExplosionAltTriggerTimer = item.ExplosionAltTriggerTimer.EqualsWithin(rhs.ExplosionAltTriggerTimer);
-            ret.Explosion = object.Equals(item.Explosion, rhs.Explosion);
-            ret.Sound = object.Equals(item.Sound, rhs.Sound);
+            ret.Explosion = item.Explosion.Equals(rhs.Explosion);
+            ret.Sound = item.Sound.Equals(rhs.Sound);
             ret.MuzzleFlashDuration = item.MuzzleFlashDuration.EqualsWithin(rhs.MuzzleFlashDuration);
             ret.FadeDuration = item.FadeDuration.EqualsWithin(rhs.FadeDuration);
             ret.ImpactForce = item.ImpactForce.EqualsWithin(rhs.ImpactForce);
-            ret.CountdownSound = object.Equals(item.CountdownSound, rhs.CountdownSound);
-            ret.DisaleSound = object.Equals(item.DisaleSound, rhs.DisaleSound);
-            ret.DefaultWeaponSource = object.Equals(item.DefaultWeaponSource, rhs.DefaultWeaponSource);
+            ret.CountdownSound = item.CountdownSound.Equals(rhs.CountdownSound);
+            ret.DisaleSound = item.DisaleSound.Equals(rhs.DisaleSound);
+            ret.DefaultWeaponSource = item.DefaultWeaponSource.Equals(rhs.DefaultWeaponSource);
             ret.ConeSpread = item.ConeSpread.EqualsWithin(rhs.ConeSpread);
             ret.CollisionRadius = item.CollisionRadius.EqualsWithin(rhs.CollisionRadius);
             ret.Lifetime = item.Lifetime.EqualsWithin(rhs.Lifetime);
             ret.RelaunchInterval = item.RelaunchInterval.EqualsWithin(rhs.RelaunchInterval);
-            ret.DecalData = object.Equals(item.DecalData, rhs.DecalData);
-            ret.CollisionLayer = object.Equals(item.CollisionLayer, rhs.CollisionLayer);
+            ret.DecalData = item.DecalData.Equals(rhs.DecalData);
+            ret.CollisionLayer = item.CollisionLayer.Equals(rhs.CollisionLayer);
             ret.MuzzleFlashModel = string.Equals(item.MuzzleFlashModel, rhs.MuzzleFlashModel);
             ret.TextureFilesHashes = MemorySliceExt.Equal(item.TextureFilesHashes, rhs.TextureFilesHashes);
             ret.SoundLevel = item.SoundLevel == rhs.SoundLevel;
@@ -2643,7 +2643,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
@@ -3868,6 +3868,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IProjectileGetter rhs)) return false;
+            return ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IProjectileGetter? obj)
+        {
+            return ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -53,6 +53,10 @@ namespace Mutagen.Bethesda.Tests
                 _stateSignal.OnNext(TestState.Running);
                 _output.OnNext("========================================\\");
                 _output.OnNext(Name);
+                if (FilePath.HasValue)
+                {
+                    _output.OnNext(FilePath.Value.ToString());
+                }
                 Stopwatch sw = new Stopwatch();
                 sw.Start();
                 await _toDo(_output);

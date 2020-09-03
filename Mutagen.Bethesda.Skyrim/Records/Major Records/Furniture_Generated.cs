@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IFurnitureInternal,
         ILoquiObjectSetter<Furniture>,
-        IEquatable<Furniture>
+        IEquatable<IFurnitureGetter>
     {
         #region Ctor
         protected Furniture()
@@ -176,7 +176,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Furniture? obj)
+        public bool Equals(IFurnitureGetter? obj)
         {
             return ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1722,13 +1722,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 include);
             ret.PNAM = MemorySliceExt.Equal(item.PNAM, rhs.PNAM);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.InteractionKeyword = object.Equals(item.InteractionKeyword, rhs.InteractionKeyword);
+            ret.InteractionKeyword = item.InteractionKeyword.Equals(rhs.InteractionKeyword);
             ret.WorkbenchData = EqualsMaskHelper.EqualsHelper(
                 item.WorkbenchData,
                 rhs.WorkbenchData,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.AssociatedSpell = object.Equals(item.AssociatedSpell, rhs.AssociatedSpell);
+            ret.AssociatedSpell = item.AssociatedSpell.Equals(rhs.AssociatedSpell);
             ret.Markers = item.Markers.CollectionEqualsHelper(
                 rhs.Markers,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1922,19 +1922,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
-            if (!lhs.Keywords.SequenceEqual(rhs.Keywords)) return false;
+            if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             if (!MemorySliceExt.Equal(lhs.PNAM, rhs.PNAM)) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (!lhs.InteractionKeyword.Equals(rhs.InteractionKeyword)) return false;
             if (!object.Equals(lhs.WorkbenchData, rhs.WorkbenchData)) return false;
             if (!lhs.AssociatedSpell.Equals(rhs.AssociatedSpell)) return false;
-            if (!lhs.Markers.SequenceEqual(rhs.Markers)) return false;
+            if (!lhs.Markers.SequenceEqualNullable(rhs.Markers)) return false;
             if (!string.Equals(lhs.ModelFilename, rhs.ModelFilename)) return false;
             return true;
         }
@@ -3144,6 +3144,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IFurnitureGetter rhs)) return false;
+            return ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IFurnitureGetter? obj)
+        {
+            return ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

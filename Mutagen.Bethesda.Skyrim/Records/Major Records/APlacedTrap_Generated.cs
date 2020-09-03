@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IAPlacedTrapInternal,
         ILoquiObjectSetter<APlacedTrap>,
-        IEquatable<APlacedTrap>
+        IEquatable<IAPlacedTrapGetter>
     {
         #region Ctor
         protected APlacedTrap()
@@ -220,7 +220,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((APlacedTrapCommon)((IAPlacedTrapGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(APlacedTrap? obj)
+        public bool Equals(IAPlacedTrapGetter? obj)
         {
             return ((APlacedTrapCommon)((IAPlacedTrapGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2071,7 +2071,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.VirtualMachineAdapter,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.EncounterZone = object.Equals(item.EncounterZone, rhs.EncounterZone);
+            ret.EncounterZone = item.EncounterZone.Equals(rhs.EncounterZone);
             ret.Ownership = EqualsMaskHelper.EqualsHelper(
                 item.Ownership,
                 rhs.Ownership,
@@ -2097,14 +2097,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.EnableParent,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Emittance = object.Equals(item.Emittance, rhs.Emittance);
-            ret.MultiBoundReference = object.Equals(item.MultiBoundReference, rhs.MultiBoundReference);
+            ret.Emittance = item.Emittance.Equals(rhs.Emittance);
+            ret.MultiBoundReference = item.MultiBoundReference.Equals(rhs.MultiBoundReference);
             ret.IgnoredBySandbox = MemorySliceExt.Equal(item.IgnoredBySandbox, rhs.IgnoredBySandbox);
             ret.LocationRefTypes = item.LocationRefTypes.CollectionEqualsHelper(
                 rhs.LocationRefTypes,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.LocationReference = object.Equals(item.LocationReference, rhs.LocationReference);
+            ret.LocationReference = item.LocationReference.Equals(rhs.LocationReference);
             ret.DistantLodData = item.DistantLodData.CollectionEqualsHelper(
                 rhs.DistantLodData,
                 (l, r) => l.EqualsWithin(r),
@@ -2348,22 +2348,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
             if (!lhs.EncounterZone.Equals(rhs.EncounterZone)) return false;
             if (!object.Equals(lhs.Ownership, rhs.Ownership)) return false;
             if (!lhs.HeadTrackingWeight.EqualsWithin(rhs.HeadTrackingWeight)) return false;
             if (!lhs.FavorCost.EqualsWithin(rhs.FavorCost)) return false;
-            if (!lhs.Reflections.SequenceEqual(rhs.Reflections)) return false;
-            if (!lhs.LinkedReferences.SequenceEqual(rhs.LinkedReferences)) return false;
+            if (!lhs.Reflections.SequenceEqualNullable(rhs.Reflections)) return false;
+            if (!lhs.LinkedReferences.SequenceEqualNullable(rhs.LinkedReferences)) return false;
             if (!object.Equals(lhs.ActivateParents, rhs.ActivateParents)) return false;
             if (!object.Equals(lhs.EnableParent, rhs.EnableParent)) return false;
             if (!lhs.Emittance.Equals(rhs.Emittance)) return false;
             if (!lhs.MultiBoundReference.Equals(rhs.MultiBoundReference)) return false;
             if (!MemorySliceExt.Equal(lhs.IgnoredBySandbox, rhs.IgnoredBySandbox)) return false;
-            if (!lhs.LocationRefTypes.SequenceEqual(rhs.LocationRefTypes)) return false;
+            if (!lhs.LocationRefTypes.SequenceEqualNullable(rhs.LocationRefTypes)) return false;
             if (!lhs.LocationReference.Equals(rhs.LocationReference)) return false;
-            if (!lhs.DistantLodData.SequenceEqual(rhs.DistantLodData)) return false;
+            if (!lhs.DistantLodData.SequenceEqualNullable(rhs.DistantLodData)) return false;
             if (!lhs.Scale.EqualsWithin(rhs.Scale)) return false;
             if (!object.Equals(lhs.Placement, rhs.Placement)) return false;
             return true;
@@ -3616,6 +3616,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IAPlacedTrapGetter rhs)) return false;
+            return ((APlacedTrapCommon)((IAPlacedTrapGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IAPlacedTrapGetter? obj)
+        {
+            return ((APlacedTrapCommon)((IAPlacedTrapGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((APlacedTrapCommon)((IAPlacedTrapGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

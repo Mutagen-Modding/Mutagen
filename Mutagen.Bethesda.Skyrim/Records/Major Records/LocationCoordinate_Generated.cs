@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class LocationCoordinate :
         ILocationCoordinate,
         ILoquiObjectSetter<LocationCoordinate>,
-        IEquatable<LocationCoordinate>
+        IEquatable<ILocationCoordinateGetter>
     {
         #region Ctor
         public LocationCoordinate()
@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LocationCoordinateCommon)((ILocationCoordinateGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LocationCoordinate? obj)
+        public bool Equals(ILocationCoordinateGetter? obj)
         {
             return ((LocationCoordinateCommon)((ILocationCoordinateGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -961,7 +961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Location = object.Equals(item.Location, rhs.Location);
+            ret.Location = item.Location.Equals(rhs.Location);
             ret.Coordinates = item.Coordinates.CollectionEqualsHelper(
                 rhs.Coordinates,
                 (l, r) => l.Equals(r),
@@ -1044,7 +1044,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!lhs.Location.Equals(rhs.Location)) return false;
-            if (!lhs.Coordinates.SequenceEqual(rhs.Coordinates)) return false;
+            if (!lhs.Coordinates.SequenceEqualNullable(rhs.Coordinates)) return false;
             return true;
         }
         
@@ -1392,6 +1392,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILocationCoordinateGetter rhs)) return false;
+            return ((LocationCoordinateCommon)((ILocationCoordinateGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILocationCoordinateGetter? obj)
+        {
+            return ((LocationCoordinateCommon)((ILocationCoordinateGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LocationCoordinateCommon)((ILocationCoordinateGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

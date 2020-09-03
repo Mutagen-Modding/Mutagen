@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class HeadPartReference :
         IHeadPartReference,
         ILoquiObjectSetter<HeadPartReference>,
-        IEquatable<HeadPartReference>
+        IEquatable<IHeadPartReferenceGetter>
     {
         #region Ctor
         public HeadPartReference()
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((HeadPartReferenceCommon)((IHeadPartReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(HeadPartReference? obj)
+        public bool Equals(IHeadPartReferenceGetter? obj)
         {
             return ((HeadPartReferenceCommon)((IHeadPartReferenceGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -892,7 +892,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.Number = item.Number == rhs.Number;
-            ret.Head = object.Equals(item.Head, rhs.Head);
+            ret.Head = item.Head.Equals(rhs.Head);
         }
         
         public string ToString(
@@ -1347,6 +1347,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IHeadPartReferenceGetter rhs)) return false;
+            return ((HeadPartReferenceCommon)((IHeadPartReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IHeadPartReferenceGetter? obj)
+        {
+            return ((HeadPartReferenceCommon)((IHeadPartReferenceGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((HeadPartReferenceCommon)((IHeadPartReferenceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

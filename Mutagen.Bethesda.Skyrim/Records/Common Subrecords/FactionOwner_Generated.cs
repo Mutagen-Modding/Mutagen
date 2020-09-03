@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         OwnerTarget,
         IFactionOwner,
         ILoquiObjectSetter<FactionOwner>,
-        IEquatable<FactionOwner>
+        IEquatable<IFactionOwnerGetter>
     {
         #region Ctor
         public FactionOwner()
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((FactionOwnerCommon)((IFactionOwnerGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(FactionOwner? obj)
+        public bool Equals(IFactionOwnerGetter? obj)
         {
             return ((FactionOwnerCommon)((IFactionOwnerGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -853,7 +853,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Faction = object.Equals(item.Faction, rhs.Faction);
+            ret.Faction = item.Faction.Equals(rhs.Faction);
             ret.RequiredRank = item.RequiredRank == rhs.RequiredRank;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -932,7 +932,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IOwnerTargetGetter)lhs, (IOwnerTargetGetter)rhs)) return false;
             if (!lhs.Faction.Equals(rhs.Faction)) return false;
             if (lhs.RequiredRank != rhs.RequiredRank) return false;
             return true;
@@ -1276,6 +1276,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IFactionOwnerGetter rhs)) return false;
+            return ((FactionOwnerCommon)((IFactionOwnerGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IFactionOwnerGetter? obj)
+        {
+            return ((FactionOwnerCommon)((IFactionOwnerGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((FactionOwnerCommon)((IFactionOwnerGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

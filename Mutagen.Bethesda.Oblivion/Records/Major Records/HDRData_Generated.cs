@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class HDRData :
         IHDRData,
         ILoquiObjectSetter<HDRData>,
-        IEquatable<HDRData>
+        IEquatable<IHDRDataGetter>
     {
         #region Ctor
         public HDRData()
@@ -102,7 +102,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((HDRDataCommon)((IHDRDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(HDRData? obj)
+        public bool Equals(IHDRDataGetter? obj)
         {
             return ((HDRDataCommon)((IHDRDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1996,6 +1996,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IHDRDataGetter rhs)) return false;
+            return ((HDRDataCommon)((IHDRDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IHDRDataGetter? obj)
+        {
+            return ((HDRDataCommon)((IHDRDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((HDRDataCommon)((IHDRDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

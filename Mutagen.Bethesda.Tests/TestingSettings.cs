@@ -12,8 +12,8 @@ namespace Mutagen.Bethesda.Tests
         public bool TestGroupMasks { get; set; }
         public bool TestFlattenedMod { get; set; }
         public bool TestBenchmarks { get; set; }
-        public bool TestLocators { get; set; }
         public bool TestRecordEnumerables { get; set; }
+        public bool TestEquality { get; set; }
         public DataFolderLocations DataFolderLocations { get; set; } = new DataFolderLocations();
         public PassthroughSettings PassthroughSettings { get; set; } = new PassthroughSettings();
         public List<TargetGroup> TargetGroups { get; set; } = new List<TargetGroup>();
@@ -51,6 +51,11 @@ namespace Mutagen.Bethesda.Tests
         public bool TestFolder { get; set; }
         public bool TestCopyIn { get; set; }
         public bool Parallel { get; set; }
+
+        public bool HasAnyToRun => TestNormal
+            || TestBinaryOverlay
+            || TestFolder
+            || TestCopyIn;
     }
 
     public class CacheReuse

@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public abstract partial class APerkEffect :
         IAPerkEffect,
         ILoquiObjectSetter<APerkEffect>,
-        IEquatable<APerkEffect>
+        IEquatable<IAPerkEffectGetter>
     {
         #region Ctor
         public APerkEffect()
@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((APerkEffectCommon)((IAPerkEffectGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(APerkEffect? obj)
+        public bool Equals(IAPerkEffectGetter? obj)
         {
             return ((APerkEffectCommon)((IAPerkEffectGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1126,7 +1126,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null || rhs == null) return false;
             if (lhs.Rank != rhs.Rank) return false;
             if (lhs.Priority != rhs.Priority) return false;
-            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
+            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
             if (lhs.PRKEDataTypeState != rhs.PRKEDataTypeState) return false;
             return true;
         }
@@ -1510,6 +1510,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IAPerkEffectGetter rhs)) return false;
+            return ((APerkEffectCommon)((IAPerkEffectGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IAPerkEffectGetter? obj)
+        {
+            return ((APerkEffectCommon)((IAPerkEffectGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((APerkEffectCommon)((IAPerkEffectGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

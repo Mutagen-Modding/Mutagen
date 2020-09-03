@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IWeatherInternal,
         ILoquiObjectSetter<Weather>,
-        IEquatable<Weather>
+        IEquatable<IWeatherGetter>
     {
         #region Ctor
         protected Weather()
@@ -436,7 +436,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((WeatherCommon)((IWeatherGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Weather? obj)
+        public bool Equals(IWeatherGetter? obj)
         {
             return ((WeatherCommon)((IWeatherGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -4371,8 +4371,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.ANAM = MemorySliceExt.Equal(item.ANAM, rhs.ANAM);
             ret.BNAM = MemorySliceExt.Equal(item.BNAM, rhs.BNAM);
             ret.LNAM = MemorySliceExt.Equal(item.LNAM, rhs.LNAM);
-            ret.Precipitation = object.Equals(item.Precipitation, rhs.Precipitation);
-            ret.VisualEffect = object.Equals(item.VisualEffect, rhs.VisualEffect);
+            ret.Precipitation = item.Precipitation.Equals(rhs.Precipitation);
+            ret.VisualEffect = item.VisualEffect.Equals(rhs.VisualEffect);
             ret.ONAM = MemorySliceExt.Equal(item.ONAM, rhs.ONAM);
             ret.Clouds = item.Clouds.SpanEqualsHelper(
                 rhs.Clouds,
@@ -4449,7 +4449,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Aurora,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.SunGlareLensFlare = object.Equals(item.SunGlareLensFlare, rhs.SunGlareLensFlare);
+            ret.SunGlareLensFlare = item.SunGlareLensFlare.Equals(rhs.SunGlareLensFlare);
             ret.NAM0DataTypeState = item.NAM0DataTypeState == rhs.NAM0DataTypeState;
             ret.FNAMDataTypeState = item.FNAMDataTypeState == rhs.FNAMDataTypeState;
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
@@ -4871,7 +4871,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!MemoryExtensions.SequenceEqual(lhs.CloudTextures.Span, rhs.CloudTextures.Span)) return false;
             if (!MemorySliceExt.Equal(lhs.DNAM, rhs.DNAM)) return false;
             if (!MemorySliceExt.Equal(lhs.CNAM, rhs.CNAM)) return false;
@@ -4881,7 +4881,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.Precipitation.Equals(rhs.Precipitation)) return false;
             if (!lhs.VisualEffect.Equals(rhs.VisualEffect)) return false;
             if (!MemorySliceExt.Equal(lhs.ONAM, rhs.ONAM)) return false;
-            if (!lhs.Clouds.SequenceEqual(rhs.Clouds)) return false;
+            if (!lhs.Clouds.SequenceEqualNullable(rhs.Clouds)) return false;
             if (!object.Equals(lhs.SkyUpperColor, rhs.SkyUpperColor)) return false;
             if (!object.Equals(lhs.FogNearColor, rhs.FogNearColor)) return false;
             if (!object.Equals(lhs.UnknownColor, rhs.UnknownColor)) return false;
@@ -4923,8 +4923,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.VisualEffectEnd.Equals(rhs.VisualEffectEnd)) return false;
             if (!lhs.WindDirection.EqualsWithin(rhs.WindDirection)) return false;
             if (!lhs.WindDirectionRange.EqualsWithin(rhs.WindDirectionRange)) return false;
-            if (!lhs.Sounds.SequenceEqual(rhs.Sounds)) return false;
-            if (!lhs.SkyStatics.SequenceEqual(rhs.SkyStatics)) return false;
+            if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds)) return false;
+            if (!lhs.SkyStatics.SequenceEqualNullable(rhs.SkyStatics)) return false;
             if (!object.Equals(lhs.ImageSpaces, rhs.ImageSpaces)) return false;
             if (!object.Equals(lhs.VolumetricLighting, rhs.VolumetricLighting)) return false;
             if (!object.Equals(lhs.DirectionalAmbientLightingColors, rhs.DirectionalAmbientLightingColors)) return false;
@@ -7482,6 +7482,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IWeatherGetter rhs)) return false;
+            return ((WeatherCommon)((IWeatherGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IWeatherGetter? obj)
+        {
+            return ((WeatherCommon)((IWeatherGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((WeatherCommon)((IWeatherGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

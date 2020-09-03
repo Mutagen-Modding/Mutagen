@@ -1,7 +1,4 @@
-using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Noggog;
-using Noggog.Utility;
 using System;
 using System.Collections.Generic;
 using System.IO;

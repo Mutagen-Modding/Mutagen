@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IMusicTrackInternal,
         ILoquiObjectSetter<MusicTrack>,
-        IEquatable<MusicTrack>
+        IEquatable<IMusicTrackGetter>
     {
         #region Ctor
         protected MusicTrack()
@@ -139,7 +139,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(MusicTrack? obj)
+        public bool Equals(IMusicTrackGetter? obj)
         {
             return ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1720,16 +1720,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (lhs.Type != rhs.Type) return false;
             if (!lhs.Duration.EqualsWithin(rhs.Duration)) return false;
             if (!lhs.FadeOut.EqualsWithin(rhs.FadeOut)) return false;
             if (!string.Equals(lhs.TrackFilename, rhs.TrackFilename)) return false;
             if (!string.Equals(lhs.FinaleFilename, rhs.FinaleFilename)) return false;
             if (!object.Equals(lhs.LoopData, rhs.LoopData)) return false;
-            if (!lhs.CuePoints.SequenceEqual(rhs.CuePoints)) return false;
-            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
-            if (!lhs.Tracks.SequenceEqual(rhs.Tracks)) return false;
+            if (!lhs.CuePoints.SequenceEqualNullable(rhs.CuePoints)) return false;
+            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            if (!lhs.Tracks.SequenceEqualNullable(rhs.Tracks)) return false;
             return true;
         }
         
@@ -2619,6 +2619,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IMusicTrackGetter rhs)) return false;
+            return ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IMusicTrackGetter? obj)
+        {
+            return ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

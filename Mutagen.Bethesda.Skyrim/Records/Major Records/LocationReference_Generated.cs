@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class LocationReference :
         ILocationReference,
         ILoquiObjectSetter<LocationReference>,
-        IEquatable<LocationReference>
+        IEquatable<ILocationReferenceGetter>
     {
         #region Ctor
         public LocationReference()
@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LocationReferenceCommon)((ILocationReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LocationReference? obj)
+        public bool Equals(ILocationReferenceGetter? obj)
         {
             return ((LocationReferenceCommon)((ILocationReferenceGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -924,8 +924,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Actor = object.Equals(item.Actor, rhs.Actor);
-            ret.Location = object.Equals(item.Location, rhs.Location);
+            ret.Actor = item.Actor.Equals(rhs.Actor);
+            ret.Location = item.Location.Equals(rhs.Location);
             ret.Grid = item.Grid.Equals(rhs.Grid);
         }
         
@@ -1327,6 +1327,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ILocationReferenceGetter rhs)) return false;
+            return ((LocationReferenceCommon)((ILocationReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILocationReferenceGetter? obj)
+        {
+            return ((LocationReferenceCommon)((ILocationReferenceGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LocationReferenceCommon)((ILocationReferenceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

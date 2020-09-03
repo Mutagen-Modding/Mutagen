@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class InterCellPoint :
         IInterCellPoint,
         ILoquiObjectSetter<InterCellPoint>,
-        IEquatable<InterCellPoint>
+        IEquatable<IInterCellPointGetter>
     {
         #region Ctor
         public InterCellPoint()
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((InterCellPointCommon)((IInterCellPointGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(InterCellPoint? obj)
+        public bool Equals(IInterCellPointGetter? obj)
         {
             return ((InterCellPointCommon)((IInterCellPointGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1235,6 +1235,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IInterCellPointGetter rhs)) return false;
+            return ((InterCellPointCommon)((IInterCellPointGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IInterCellPointGetter? obj)
+        {
+            return ((InterCellPointCommon)((IInterCellPointGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((InterCellPointCommon)((IInterCellPointGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

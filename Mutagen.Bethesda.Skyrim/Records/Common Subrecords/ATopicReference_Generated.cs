@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public abstract partial class ATopicReference :
         IATopicReference,
         ILoquiObjectSetter<ATopicReference>,
-        IEquatable<ATopicReference>
+        IEquatable<IATopicReferenceGetter>
     {
         #region Ctor
         public ATopicReference()
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ATopicReferenceCommon)((IATopicReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ATopicReference? obj)
+        public bool Equals(IATopicReferenceGetter? obj)
         {
             return ((ATopicReferenceCommon)((IATopicReferenceGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1054,6 +1054,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IATopicReferenceGetter rhs)) return false;
+            return ((ATopicReferenceCommon)((IATopicReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IATopicReferenceGetter? obj)
+        {
+            return ((ATopicReferenceCommon)((IATopicReferenceGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ATopicReferenceCommon)((IATopicReferenceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

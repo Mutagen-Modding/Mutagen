@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         ScriptProperty,
         IScriptStringListProperty,
         ILoquiObjectSetter<ScriptStringListProperty>,
-        IEquatable<ScriptStringListProperty>
+        IEquatable<IScriptStringListPropertyGetter>
     {
         #region Ctor
         public ScriptStringListProperty()
@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ScriptStringListPropertyCommon)((IScriptStringListPropertyGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ScriptStringListProperty? obj)
+        public bool Equals(IScriptStringListPropertyGetter? obj)
         {
             return ((ScriptStringListPropertyCommon)((IScriptStringListPropertyGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -979,8 +979,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!lhs.Data.SequenceEqual(rhs.Data)) return false;
+            if (!base.Equals((IScriptPropertyGetter)lhs, (IScriptPropertyGetter)rhs)) return false;
+            if (!lhs.Data.SequenceEqualNullable(rhs.Data)) return false;
             return true;
         }
         
@@ -1348,6 +1348,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IScriptStringListPropertyGetter rhs)) return false;
+            return ((ScriptStringListPropertyCommon)((IScriptStringListPropertyGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IScriptStringListPropertyGetter? obj)
+        {
+            return ((ScriptStringListPropertyCommon)((IScriptStringListPropertyGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ScriptStringListPropertyCommon)((IScriptStringListPropertyGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

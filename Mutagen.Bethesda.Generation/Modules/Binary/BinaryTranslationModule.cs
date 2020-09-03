@@ -2169,7 +2169,7 @@ namespace Mutagen.Bethesda.Generation
                     await LinkModule.GenerateInterfaceImplementation(obj, fg, getter: true);
                 }
 
-                if (await MajorRecordEnumerationModule.HasMajorRecordsInTree(obj, includeBaseClass: false) != MajorRecordEnumerationModule.Case.No)
+                if (await MajorRecordModule.HasMajorRecordsInTree(obj, includeBaseClass: false) != Case.No)
                 {
                     MajorRecordEnumerationModule.GenerateClassImplementation(obj, fg, onlyGetter: true);
                 }
@@ -3219,6 +3219,13 @@ namespace Mutagen.Bethesda.Generation
                 }
 
                 await obj.GenerateToStringCode(fg);
+
+                obj.GenerateEqualsSection(fg);
+
+                if (obj.GetObjectType() == ObjectType.Mod)
+                {
+                    fg.AppendLine($"IMask<bool> {nameof(IEqualsMask)}.{nameof(IEqualsMask.GetEqualsMask)}(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => {obj.MixInClassName}.GetEqualsMask(this, ({obj.Interface(getter: true, internalInterface: true)})rhs, include);");
+                }
             }
             fg.AppendLine();
         }

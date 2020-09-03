@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IBookInternal,
         ILoquiObjectSetter<Book>,
-        IEquatable<Book>
+        IEquatable<IBookGetter>
     {
         #region Ctor
         protected Book()
@@ -183,7 +183,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((BookCommon)((IBookGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Book? obj)
+        public bool Equals(IBookGetter? obj)
         {
             return ((BookCommon)((IBookGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1916,8 +1916,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Destructible,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.PickUpSound = object.Equals(item.PickUpSound, rhs.PickUpSound);
-            ret.PutDownSound = object.Equals(item.PutDownSound, rhs.PutDownSound);
+            ret.PickUpSound = item.PickUpSound.Equals(rhs.PickUpSound);
+            ret.PutDownSound = item.PutDownSound.Equals(rhs.PutDownSound);
             ret.Keywords = item.Keywords.CollectionEqualsHelper(
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
@@ -1932,7 +1932,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 include);
             ret.Value = item.Value == rhs.Value;
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
-            ret.InventoryArt = object.Equals(item.InventoryArt, rhs.InventoryArt);
+            ret.InventoryArt = item.InventoryArt.Equals(rhs.InventoryArt);
             ret.Description = string.Equals(item.Description, rhs.Description);
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
@@ -2131,7 +2131,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
@@ -2141,7 +2141,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
             if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
             if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
-            if (!lhs.Keywords.SequenceEqual(rhs.Keywords)) return false;
+            if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (lhs.Type != rhs.Type) return false;
             if (lhs.Unused != rhs.Unused) return false;
@@ -3353,6 +3353,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IBookGetter rhs)) return false;
+            return ((BookCommon)((IBookGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IBookGetter? obj)
+        {
+            return ((BookCommon)((IBookGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((BookCommon)((IBookGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

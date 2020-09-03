@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         AItem,
         IAmmunitionInternal,
         ILoquiObjectSetter<Ammunition>,
-        IEquatable<Ammunition>
+        IEquatable<IAmmunitionGetter>
     {
         #region Ctor
         protected Ammunition()
@@ -105,7 +105,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Ammunition? obj)
+        public bool Equals(IAmmunitionGetter? obj)
         {
             return ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1158,7 +1158,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Icon = string.Equals(item.Icon, rhs.Icon);
-            ret.Enchantment = object.Equals(item.Enchantment, rhs.Enchantment);
+            ret.Enchantment = item.Enchantment.Equals(rhs.Enchantment);
             ret.EnchantmentPoints = item.EnchantmentPoints == rhs.EnchantmentPoints;
             ret.Data = EqualsMaskHelper.EqualsHelper(
                 item.Data,
@@ -1309,7 +1309,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IAItemGetter)lhs, (IAItemGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
@@ -2080,6 +2080,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IAmmunitionGetter rhs)) return false;
+            return ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IAmmunitionGetter? obj)
+        {
+            return ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

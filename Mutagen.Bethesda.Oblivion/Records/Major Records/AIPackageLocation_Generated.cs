@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class AIPackageLocation :
         IAIPackageLocation,
         ILoquiObjectSetter<AIPackageLocation>,
-        IEquatable<AIPackageLocation>
+        IEquatable<IAIPackageLocationGetter>
     {
         #region Ctor
         public AIPackageLocation()
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((AIPackageLocationCommon)((IAIPackageLocationGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(AIPackageLocation? obj)
+        public bool Equals(IAIPackageLocationGetter? obj)
         {
             return ((AIPackageLocationCommon)((IAIPackageLocationGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -928,7 +928,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Type = item.Type == rhs.Type;
-            ret.LocationReference = object.Equals(item.LocationReference, rhs.LocationReference);
+            ret.LocationReference = item.LocationReference.Equals(rhs.LocationReference);
             ret.Radius = item.Radius.EqualsWithin(rhs.Radius);
         }
         
@@ -1332,6 +1332,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IAIPackageLocationGetter rhs)) return false;
+            return ((AIPackageLocationCommon)((IAIPackageLocationGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IAIPackageLocationGetter? obj)
+        {
+            return ((AIPackageLocationCommon)((IAIPackageLocationGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((AIPackageLocationCommon)((IAIPackageLocationGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class PerkScriptFlag :
         IPerkScriptFlag,
         ILoquiObjectSetter<PerkScriptFlag>,
-        IEquatable<PerkScriptFlag>
+        IEquatable<IPerkScriptFlagGetter>
     {
         #region Ctor
         public PerkScriptFlag()
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PerkScriptFlagCommon)((IPerkScriptFlagGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PerkScriptFlag? obj)
+        public bool Equals(IPerkScriptFlagGetter? obj)
         {
             return ((PerkScriptFlagCommon)((IPerkScriptFlagGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1251,6 +1251,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPerkScriptFlagGetter rhs)) return false;
+            return ((PerkScriptFlagCommon)((IPerkScriptFlagGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPerkScriptFlagGetter? obj)
+        {
+            return ((PerkScriptFlagCommon)((IPerkScriptFlagGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PerkScriptFlagCommon)((IPerkScriptFlagGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

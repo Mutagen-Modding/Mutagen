@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IPlacedNpcInternal,
         ILoquiObjectSetter<PlacedNpc>,
-        IEquatable<PlacedNpc>
+        IEquatable<IPlacedNpcGetter>
     {
         #region Ctor
         protected PlacedNpc()
@@ -271,7 +271,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PlacedNpc? obj)
+        public bool Equals(IPlacedNpcGetter? obj)
         {
             return ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2460,8 +2460,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.VirtualMachineAdapter,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Base = object.Equals(item.Base, rhs.Base);
-            ret.EncounterZone = object.Equals(item.EncounterZone, rhs.EncounterZone);
+            ret.Base = item.Base.Equals(rhs.Base);
+            ret.EncounterZone = item.EncounterZone.Equals(rhs.EncounterZone);
             ret.RagdollData = MemorySliceExt.Equal(item.RagdollData, rhs.RagdollData);
             ret.RagdollBipedData = MemorySliceExt.Equal(item.RagdollBipedData, rhs.RagdollBipedData);
             ret.Patrol = EqualsMaskHelper.EqualsHelper(
@@ -2470,7 +2470,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.LevelModifier = item.LevelModifier == rhs.LevelModifier;
-            ret.MerchantContainer = object.Equals(item.MerchantContainer, rhs.MerchantContainer);
+            ret.MerchantContainer = item.MerchantContainer.Equals(rhs.MerchantContainer);
             ret.Count = item.Count == rhs.Count;
             ret.Radius = item.Radius.EqualsWithin(rhs.Radius);
             ret.Health = item.Health.EqualsWithin(rhs.Health);
@@ -2488,15 +2488,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.LinkedReferenceColor,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.PersistentLocation = object.Equals(item.PersistentLocation, rhs.PersistentLocation);
-            ret.LocationReference = object.Equals(item.LocationReference, rhs.LocationReference);
+            ret.PersistentLocation = item.PersistentLocation.Equals(rhs.PersistentLocation);
+            ret.LocationReference = item.LocationReference.Equals(rhs.LocationReference);
             ret.IgnoredBySandbox = item.IgnoredBySandbox == rhs.IgnoredBySandbox;
             ret.LocationRefTypes = item.LocationRefTypes.CollectionEqualsHelper(
                 rhs.LocationRefTypes,
                 (l, r) => object.Equals(l, r),
                 include);
             ret.HeadTrackingWeight = item.HeadTrackingWeight.EqualsWithin(rhs.HeadTrackingWeight);
-            ret.Horse = object.Equals(item.Horse, rhs.Horse);
+            ret.Horse = item.Horse.Equals(rhs.Horse);
             ret.FavorCost = item.FavorCost.EqualsWithin(rhs.FavorCost);
             ret.EnableParent = EqualsMaskHelper.EqualsHelper(
                 item.EnableParent,
@@ -2508,8 +2508,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Ownership,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Emittance = object.Equals(item.Emittance, rhs.Emittance);
-            ret.MultiboundReference = object.Equals(item.MultiboundReference, rhs.MultiboundReference);
+            ret.Emittance = item.Emittance.Equals(rhs.Emittance);
+            ret.MultiboundReference = item.MultiboundReference.Equals(rhs.MultiboundReference);
             ret.IgnoredBySandbox2 = item.IgnoredBySandbox2 == rhs.IgnoredBySandbox2;
             ret.Scale = item.Scale.EqualsWithin(rhs.Scale);
             ret.Placement = EqualsMaskHelper.EqualsHelper(
@@ -2772,7 +2772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
             if (!lhs.Base.Equals(rhs.Base)) return false;
             if (!lhs.EncounterZone.Equals(rhs.EncounterZone)) return false;
@@ -2784,13 +2784,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs.Count != rhs.Count) return false;
             if (!lhs.Radius.EqualsWithin(rhs.Radius)) return false;
             if (!lhs.Health.EqualsWithin(rhs.Health)) return false;
-            if (!lhs.LinkedReferences.SequenceEqual(rhs.LinkedReferences)) return false;
+            if (!lhs.LinkedReferences.SequenceEqualNullable(rhs.LinkedReferences)) return false;
             if (!object.Equals(lhs.ActivateParents, rhs.ActivateParents)) return false;
             if (!object.Equals(lhs.LinkedReferenceColor, rhs.LinkedReferenceColor)) return false;
             if (!lhs.PersistentLocation.Equals(rhs.PersistentLocation)) return false;
             if (!lhs.LocationReference.Equals(rhs.LocationReference)) return false;
             if (lhs.IgnoredBySandbox != rhs.IgnoredBySandbox) return false;
-            if (!lhs.LocationRefTypes.SequenceEqual(rhs.LocationRefTypes)) return false;
+            if (!lhs.LocationRefTypes.SequenceEqualNullable(rhs.LocationRefTypes)) return false;
             if (!lhs.HeadTrackingWeight.EqualsWithin(rhs.HeadTrackingWeight)) return false;
             if (!lhs.Horse.Equals(rhs.Horse)) return false;
             if (!lhs.FavorCost.EqualsWithin(rhs.FavorCost)) return false;
@@ -4367,6 +4367,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPlacedNpcGetter rhs)) return false;
+            return ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPlacedNpcGetter? obj)
+        {
+            return ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

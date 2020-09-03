@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IFloraInternal,
         ILoquiObjectSetter<Flora>,
-        IEquatable<Flora>
+        IEquatable<IFloraGetter>
     {
         #region Ctor
         protected Flora()
@@ -166,7 +166,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((FloraCommon)((IFloraGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Flora? obj)
+        public bool Equals(IFloraGetter? obj)
         {
             return ((FloraCommon)((IFloraGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1582,8 +1582,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.PNAM = MemorySliceExt.Equal(item.PNAM, rhs.PNAM);
             ret.ActivateTextOverride = string.Equals(item.ActivateTextOverride, rhs.ActivateTextOverride);
             ret.FNAM = MemorySliceExt.Equal(item.FNAM, rhs.FNAM);
-            ret.Ingredient = object.Equals(item.Ingredient, rhs.Ingredient);
-            ret.HarvestSound = object.Equals(item.HarvestSound, rhs.HarvestSound);
+            ret.Ingredient = item.Ingredient.Equals(rhs.Ingredient);
+            ret.HarvestSound = item.HarvestSound.Equals(rhs.HarvestSound);
             ret.Production = EqualsMaskHelper.EqualsHelper(
                 item.Production,
                 rhs.Production,
@@ -1757,13 +1757,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
-            if (!lhs.Keywords.SequenceEqual(rhs.Keywords)) return false;
+            if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             if (!MemorySliceExt.Equal(lhs.PNAM, rhs.PNAM)) return false;
             if (!string.Equals(lhs.ActivateTextOverride, rhs.ActivateTextOverride)) return false;
             if (!MemorySliceExt.Equal(lhs.FNAM, rhs.FNAM)) return false;
@@ -2797,6 +2797,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IFloraGetter rhs)) return false;
+            return ((FloraCommon)((IFloraGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IFloraGetter? obj)
+        {
+            return ((FloraCommon)((IFloraGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((FloraCommon)((IFloraGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

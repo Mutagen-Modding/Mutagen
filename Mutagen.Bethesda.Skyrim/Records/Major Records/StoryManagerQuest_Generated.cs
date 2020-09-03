@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class StoryManagerQuest :
         IStoryManagerQuest,
         ILoquiObjectSetter<StoryManagerQuest>,
-        IEquatable<StoryManagerQuest>
+        IEquatable<IStoryManagerQuestGetter>
     {
         #region Ctor
         public StoryManagerQuest()
@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(StoryManagerQuest? obj)
+        public bool Equals(IStoryManagerQuestGetter? obj)
         {
             return ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -946,7 +946,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Quest = object.Equals(item.Quest, rhs.Quest);
+            ret.Quest = item.Quest.Equals(rhs.Quest);
             ret.FNAM = MemorySliceExt.Equal(item.FNAM, rhs.FNAM);
             ret.HoursUntilReset = item.HoursUntilReset.EqualsWithin(rhs.HoursUntilReset);
         }
@@ -1445,6 +1445,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IStoryManagerQuestGetter rhs)) return false;
+            return ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IStoryManagerQuestGetter? obj)
+        {
+            return ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

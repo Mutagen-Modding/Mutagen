@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class MapData :
         IMapData,
         ILoquiObjectSetter<MapData>,
-        IEquatable<MapData>
+        IEquatable<IMapDataGetter>
     {
         #region Ctor
         public MapData()
@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((MapDataCommon)((IMapDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(MapData? obj)
+        public bool Equals(IMapDataGetter? obj)
         {
             return ((MapDataCommon)((IMapDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1314,6 +1314,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IMapDataGetter rhs)) return false;
+            return ((MapDataCommon)((IMapDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IMapDataGetter? obj)
+        {
+            return ((MapDataCommon)((IMapDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((MapDataCommon)((IMapDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

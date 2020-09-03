@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class ClothingFlags :
         IClothingFlags,
         ILoquiObjectSetter<ClothingFlags>,
-        IEquatable<ClothingFlags>
+        IEquatable<IClothingFlagsGetter>
     {
         #region Ctor
         public ClothingFlags()
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ClothingFlagsCommon)((IClothingFlagsGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ClothingFlags? obj)
+        public bool Equals(IClothingFlagsGetter? obj)
         {
             return ((ClothingFlagsCommon)((IClothingFlagsGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1254,6 +1254,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IClothingFlagsGetter rhs)) return false;
+            return ((ClothingFlagsCommon)((IClothingFlagsGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IClothingFlagsGetter? obj)
+        {
+            return ((ClothingFlagsCommon)((IClothingFlagsGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ClothingFlagsCommon)((IClothingFlagsGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

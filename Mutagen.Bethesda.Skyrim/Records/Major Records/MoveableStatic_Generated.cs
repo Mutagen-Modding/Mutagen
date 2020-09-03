@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IMoveableStaticInternal,
         ILoquiObjectSetter<MoveableStatic>,
-        IEquatable<MoveableStatic>
+        IEquatable<IMoveableStaticGetter>
     {
         #region Ctor
         protected MoveableStatic()
@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((MoveableStaticCommon)((IMoveableStaticGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(MoveableStatic? obj)
+        public bool Equals(IMoveableStaticGetter? obj)
         {
             return ((MoveableStaticCommon)((IMoveableStaticGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1177,7 +1177,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.LoopingSound = object.Equals(item.LoopingSound, rhs.LoopingSound);
+            ret.LoopingSound = item.LoopingSound.Equals(rhs.LoopingSound);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1303,7 +1303,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
@@ -2053,6 +2053,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IMoveableStaticGetter rhs)) return false;
+            return ((MoveableStaticCommon)((IMoveableStaticGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IMoveableStaticGetter? obj)
+        {
+            return ((MoveableStaticCommon)((IMoveableStaticGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((MoveableStaticCommon)((IMoveableStaticGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

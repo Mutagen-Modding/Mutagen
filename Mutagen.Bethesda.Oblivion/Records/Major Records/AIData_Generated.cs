@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class AIData :
         IAIData,
         ILoquiObjectSetter<AIData>,
-        IEquatable<AIData>
+        IEquatable<IAIDataGetter>
     {
         #region Ctor
         public AIData()
@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((AIDataCommon)((IAIDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(AIData? obj)
+        public bool Equals(IAIDataGetter? obj)
         {
             return ((AIDataCommon)((IAIDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1614,6 +1614,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IAIDataGetter rhs)) return false;
+            return ((AIDataCommon)((IAIDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IAIDataGetter? obj)
+        {
+            return ((AIDataCommon)((IAIDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((AIDataCommon)((IAIDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class AmbientColors :
         IAmbientColors,
         ILoquiObjectSetter<AmbientColors>,
-        IEquatable<AmbientColors>
+        IEquatable<IAmbientColorsGetter>
     {
         #region Ctor
         public AmbientColors()
@@ -88,7 +88,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((AmbientColorsCommon)((IAmbientColorsGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(AmbientColors? obj)
+        public bool Equals(IAmbientColorsGetter? obj)
         {
             return ((AmbientColorsCommon)((IAmbientColorsGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1692,6 +1692,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IAmbientColorsGetter rhs)) return false;
+            return ((AmbientColorsCommon)((IAmbientColorsGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IAmbientColorsGetter? obj)
+        {
+            return ((AmbientColorsCommon)((IAmbientColorsGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((AmbientColorsCommon)((IAmbientColorsGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

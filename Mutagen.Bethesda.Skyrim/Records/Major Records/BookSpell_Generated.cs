@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         BookTeachTarget,
         IBookSpell,
         ILoquiObjectSetter<BookSpell>,
-        IEquatable<BookSpell>
+        IEquatable<IBookSpellGetter>
     {
         #region Ctor
         public BookSpell()
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((BookSpellCommon)((IBookSpellGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(BookSpell? obj)
+        public bool Equals(IBookSpellGetter? obj)
         {
             return ((BookSpellCommon)((IBookSpellGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -800,7 +800,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Spell = object.Equals(item.Spell, rhs.Spell);
+            ret.Spell = item.Spell.Equals(rhs.Spell);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -874,7 +874,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IBookTeachTargetGetter)lhs, (IBookTeachTargetGetter)rhs)) return false;
             if (!lhs.Spell.Equals(rhs.Spell)) return false;
             return true;
         }
@@ -1209,6 +1209,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IBookSpellGetter rhs)) return false;
+            return ((BookSpellCommon)((IBookSpellGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IBookSpellGetter? obj)
+        {
+            return ((BookSpellCommon)((IBookSpellGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((BookSpellCommon)((IBookSpellGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

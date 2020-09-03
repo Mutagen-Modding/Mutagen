@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class DialogResponse :
         IDialogResponse,
         ILoquiObjectSetter<DialogResponse>,
-        IEquatable<DialogResponse>
+        IEquatable<IDialogResponseGetter>
     {
         #region Ctor
         public DialogResponse()
@@ -124,7 +124,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(DialogResponse? obj)
+        public bool Equals(IDialogResponseGetter? obj)
         {
             return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1460,14 +1460,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.ResponseNumber = item.ResponseNumber == rhs.ResponseNumber;
             ret.Unknown2 = MemoryExtensions.SequenceEqual(item.Unknown2.Span, rhs.Unknown2.Span);
-            ret.Sound = object.Equals(item.Sound, rhs.Sound);
+            ret.Sound = item.Sound.Equals(rhs.Sound);
             ret.Flags = item.Flags == rhs.Flags;
             ret.Unknown3 = MemoryExtensions.SequenceEqual(item.Unknown3.Span, rhs.Unknown3.Span);
             ret.Text = string.Equals(item.Text, rhs.Text);
             ret.ScriptNotes = string.Equals(item.ScriptNotes, rhs.ScriptNotes);
             ret.Edits = string.Equals(item.Edits, rhs.Edits);
-            ret.SpeakerIdleAnimation = object.Equals(item.SpeakerIdleAnimation, rhs.SpeakerIdleAnimation);
-            ret.ListenerIdleAnimation = object.Equals(item.ListenerIdleAnimation, rhs.ListenerIdleAnimation);
+            ret.SpeakerIdleAnimation = item.SpeakerIdleAnimation.Equals(rhs.SpeakerIdleAnimation);
+            ret.ListenerIdleAnimation = item.ListenerIdleAnimation.Equals(rhs.ListenerIdleAnimation);
             ret.TRDTDataTypeState = item.TRDTDataTypeState == rhs.TRDTDataTypeState;
         }
         
@@ -2207,6 +2207,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IDialogResponseGetter rhs)) return false;
+            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IDialogResponseGetter? obj)
+        {
+            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

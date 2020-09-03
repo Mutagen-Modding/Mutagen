@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ActorValuePerkNode :
         IActorValuePerkNode,
         ILoquiObjectSetter<ActorValuePerkNode>,
-        IEquatable<ActorValuePerkNode>
+        IEquatable<IActorValuePerkNodeGetter>
     {
         #region Ctor
         public ActorValuePerkNode()
@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ActorValuePerkNode? obj)
+        public bool Equals(IActorValuePerkNodeGetter? obj)
         {
             return ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1306,13 +1306,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Perk = object.Equals(item.Perk, rhs.Perk);
+            ret.Perk = item.Perk.Equals(rhs.Perk);
             ret.FNAM = MemorySliceExt.Equal(item.FNAM, rhs.FNAM);
             ret.PerkGridX = item.PerkGridX == rhs.PerkGridX;
             ret.PerkGridY = item.PerkGridY == rhs.PerkGridY;
             ret.HorizontalPosition = item.HorizontalPosition.EqualsWithin(rhs.HorizontalPosition);
             ret.VerticalPosition = item.VerticalPosition.EqualsWithin(rhs.VerticalPosition);
-            ret.AssociatedSkill = object.Equals(item.AssociatedSkill, rhs.AssociatedSkill);
+            ret.AssociatedSkill = item.AssociatedSkill.Equals(rhs.AssociatedSkill);
             ret.ConnectionLineToIndices = item.ConnectionLineToIndices.CollectionEqualsHelper(
                 rhs.ConnectionLineToIndices,
                 (l, r) => l == r,
@@ -1436,7 +1436,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.HorizontalPosition.EqualsWithin(rhs.HorizontalPosition)) return false;
             if (!lhs.VerticalPosition.EqualsWithin(rhs.VerticalPosition)) return false;
             if (!lhs.AssociatedSkill.Equals(rhs.AssociatedSkill)) return false;
-            if (!lhs.ConnectionLineToIndices.SequenceEqual(rhs.ConnectionLineToIndices)) return false;
+            if (!lhs.ConnectionLineToIndices.SequenceEqualNullable(rhs.ConnectionLineToIndices)) return false;
             if (lhs.Index != rhs.Index) return false;
             return true;
         }
@@ -2040,6 +2040,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IActorValuePerkNodeGetter rhs)) return false;
+            return ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IActorValuePerkNodeGetter? obj)
+        {
+            return ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

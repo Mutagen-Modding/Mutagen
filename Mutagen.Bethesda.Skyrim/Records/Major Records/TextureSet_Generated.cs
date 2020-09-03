@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ITextureSetInternal,
         ILoquiObjectSetter<TextureSet>,
-        IEquatable<TextureSet>
+        IEquatable<ITextureSetGetter>
     {
         #region Ctor
         protected TextureSet()
@@ -124,7 +124,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(TextureSet? obj)
+        public bool Equals(ITextureSetGetter? obj)
         {
             return ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1533,7 +1533,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
             if (!string.Equals(lhs.Diffuse, rhs.Diffuse)) return false;
             if (!string.Equals(lhs.NormalOrGloss, rhs.NormalOrGloss)) return false;
@@ -2391,6 +2391,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ITextureSetGetter rhs)) return false;
+            return ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ITextureSetGetter? obj)
+        {
+            return ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

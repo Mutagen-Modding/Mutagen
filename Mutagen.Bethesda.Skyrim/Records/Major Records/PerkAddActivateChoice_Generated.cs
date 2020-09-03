@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         APerkEntryPointEffect,
         IPerkAddActivateChoice,
         ILoquiObjectSetter<PerkAddActivateChoice>,
-        IEquatable<PerkAddActivateChoice>
+        IEquatable<IPerkAddActivateChoiceGetter>
     {
         #region Ctor
         public PerkAddActivateChoice()
@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PerkAddActivateChoiceCommon)((IPerkAddActivateChoiceGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PerkAddActivateChoice? obj)
+        public bool Equals(IPerkAddActivateChoiceGetter? obj)
         {
             return ((PerkAddActivateChoiceCommon)((IPerkAddActivateChoiceGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -948,7 +948,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Spell = object.Equals(item.Spell, rhs.Spell);
+            ret.Spell = item.Spell.Equals(rhs.Spell);
             ret.ButtonLabel = string.Equals(item.ButtonLabel, rhs.ButtonLabel);
             ret.Flags = MaskItemExt.Factory(item.Flags.GetEqualsMask(rhs.Flags, include), include);
             base.FillEqualsMask(item, rhs, ret, include);
@@ -1062,7 +1062,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IAPerkEntryPointEffectGetter)lhs, (IAPerkEntryPointEffectGetter)rhs)) return false;
             if (!lhs.Spell.Equals(rhs.Spell)) return false;
             if (!string.Equals(lhs.ButtonLabel, rhs.ButtonLabel)) return false;
             if (!object.Equals(lhs.Flags, rhs.Flags)) return false;
@@ -1586,6 +1586,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPerkAddActivateChoiceGetter rhs)) return false;
+            return ((PerkAddActivateChoiceCommon)((IPerkAddActivateChoiceGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPerkAddActivateChoiceGetter? obj)
+        {
+            return ((PerkAddActivateChoiceCommon)((IPerkAddActivateChoiceGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PerkAddActivateChoiceCommon)((IPerkAddActivateChoiceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

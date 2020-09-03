@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         ScriptProperty,
         IScriptIntListProperty,
         ILoquiObjectSetter<ScriptIntListProperty>,
-        IEquatable<ScriptIntListProperty>
+        IEquatable<IScriptIntListPropertyGetter>
     {
         #region Ctor
         public ScriptIntListProperty()
@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ScriptIntListPropertyCommon)((IScriptIntListPropertyGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ScriptIntListProperty? obj)
+        public bool Equals(IScriptIntListPropertyGetter? obj)
         {
             return ((ScriptIntListPropertyCommon)((IScriptIntListPropertyGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -979,8 +979,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!lhs.Data.SequenceEqual(rhs.Data)) return false;
+            if (!base.Equals((IScriptPropertyGetter)lhs, (IScriptPropertyGetter)rhs)) return false;
+            if (!lhs.Data.SequenceEqualNullable(rhs.Data)) return false;
             return true;
         }
         
@@ -1336,6 +1336,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IScriptIntListPropertyGetter rhs)) return false;
+            return ((ScriptIntListPropertyCommon)((IScriptIntListPropertyGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IScriptIntListPropertyGetter? obj)
+        {
+            return ((ScriptIntListPropertyCommon)((IScriptIntListPropertyGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ScriptIntListPropertyCommon)((IScriptIntListPropertyGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

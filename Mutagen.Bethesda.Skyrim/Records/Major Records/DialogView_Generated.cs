@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IDialogViewInternal,
         ILoquiObjectSetter<DialogView>,
-        IEquatable<DialogView>
+        IEquatable<IDialogViewGetter>
     {
         #region Ctor
         protected DialogView()
@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(DialogView? obj)
+        public bool Equals(IDialogViewGetter? obj)
         {
             return ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1238,7 +1238,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Quest = object.Equals(item.Quest, rhs.Quest);
+            ret.Quest = item.Quest.Equals(rhs.Quest);
             ret.Branches = item.Branches.CollectionEqualsHelper(
                 rhs.Branches,
                 (l, r) => object.Equals(l, r),
@@ -1397,10 +1397,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!lhs.Quest.Equals(rhs.Quest)) return false;
-            if (!lhs.Branches.SequenceEqual(rhs.Branches)) return false;
-            if (!lhs.TNAMs.SequenceEqual(rhs.TNAMs)) return false;
+            if (!lhs.Branches.SequenceEqualNullable(rhs.Branches)) return false;
+            if (!lhs.TNAMs.SequenceEqualNullable(rhs.TNAMs)) return false;
             if (!MemorySliceExt.Equal(lhs.ENAM, rhs.ENAM)) return false;
             if (!MemorySliceExt.Equal(lhs.DNAM, rhs.DNAM)) return false;
             return true;
@@ -2093,6 +2093,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IDialogViewGetter rhs)) return false;
+            return ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IDialogViewGetter? obj)
+        {
+            return ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

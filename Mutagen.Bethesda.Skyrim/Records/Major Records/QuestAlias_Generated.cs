@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class QuestAlias :
         IQuestAlias,
         ILoquiObjectSetter<QuestAlias>,
-        IEquatable<QuestAlias>
+        IEquatable<IQuestAliasGetter>
     {
         #region Ctor
         public QuestAlias()
@@ -266,7 +266,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((QuestAliasCommon)((IQuestAliasGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(QuestAlias? obj)
+        public bool Equals(IQuestAliasGetter? obj)
         {
             return ((QuestAliasCommon)((IQuestAliasGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2560,9 +2560,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.Flags = item.Flags == rhs.Flags;
             ret.AliasIndexToForceIntoWhenFilled = item.AliasIndexToForceIntoWhenFilled == rhs.AliasIndexToForceIntoWhenFilled;
-            ret.SpecificLocation = object.Equals(item.SpecificLocation, rhs.SpecificLocation);
-            ret.ForcedReference = object.Equals(item.ForcedReference, rhs.ForcedReference);
-            ret.UniqueActor = object.Equals(item.UniqueActor, rhs.UniqueActor);
+            ret.SpecificLocation = item.SpecificLocation.Equals(rhs.SpecificLocation);
+            ret.ForcedReference = item.ForcedReference.Equals(rhs.ForcedReference);
+            ret.UniqueActor = item.UniqueActor.Equals(rhs.UniqueActor);
             ret.Location = EqualsMaskHelper.EqualsHelper(
                 item.Location,
                 rhs.Location,
@@ -2600,11 +2600,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Items,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.SpectatorOverridePackageList = object.Equals(item.SpectatorOverridePackageList, rhs.SpectatorOverridePackageList);
-            ret.ObserveDeadBodyOverridePackageList = object.Equals(item.ObserveDeadBodyOverridePackageList, rhs.ObserveDeadBodyOverridePackageList);
-            ret.GuardWarnOverridePackageList = object.Equals(item.GuardWarnOverridePackageList, rhs.GuardWarnOverridePackageList);
-            ret.CombatOverridePackageList = object.Equals(item.CombatOverridePackageList, rhs.CombatOverridePackageList);
-            ret.DisplayName = object.Equals(item.DisplayName, rhs.DisplayName);
+            ret.SpectatorOverridePackageList = item.SpectatorOverridePackageList.Equals(rhs.SpectatorOverridePackageList);
+            ret.ObserveDeadBodyOverridePackageList = item.ObserveDeadBodyOverridePackageList.Equals(rhs.ObserveDeadBodyOverridePackageList);
+            ret.GuardWarnOverridePackageList = item.GuardWarnOverridePackageList.Equals(rhs.GuardWarnOverridePackageList);
+            ret.CombatOverridePackageList = item.CombatOverridePackageList.Equals(rhs.CombatOverridePackageList);
+            ret.DisplayName = item.DisplayName.Equals(rhs.DisplayName);
             ret.Spells = item.Spells.CollectionEqualsHelper(
                 rhs.Spells,
                 (l, r) => object.Equals(l, r),
@@ -2617,7 +2617,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.PackageData,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.VoiceTypes = object.Equals(item.VoiceTypes, rhs.VoiceTypes);
+            ret.VoiceTypes = item.VoiceTypes.Equals(rhs.VoiceTypes);
         }
         
         public string ToString(
@@ -2880,17 +2880,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.CreateReferenceToObject, rhs.CreateReferenceToObject)) return false;
             if (!object.Equals(lhs.FindMatchingRefNearAlias, rhs.FindMatchingRefNearAlias)) return false;
             if (!object.Equals(lhs.FindMatchingRefFromEvent, rhs.FindMatchingRefFromEvent)) return false;
-            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
-            if (!lhs.Keywords.SequenceEqual(rhs.Keywords)) return false;
-            if (!lhs.Items.SequenceEqual(rhs.Items)) return false;
+            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
+            if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
             if (!lhs.SpectatorOverridePackageList.Equals(rhs.SpectatorOverridePackageList)) return false;
             if (!lhs.ObserveDeadBodyOverridePackageList.Equals(rhs.ObserveDeadBodyOverridePackageList)) return false;
             if (!lhs.GuardWarnOverridePackageList.Equals(rhs.GuardWarnOverridePackageList)) return false;
             if (!lhs.CombatOverridePackageList.Equals(rhs.CombatOverridePackageList)) return false;
             if (!lhs.DisplayName.Equals(rhs.DisplayName)) return false;
-            if (!lhs.Spells.SequenceEqual(rhs.Spells)) return false;
-            if (!lhs.Factions.SequenceEqual(rhs.Factions)) return false;
-            if (!lhs.PackageData.SequenceEqual(rhs.PackageData)) return false;
+            if (!lhs.Spells.SequenceEqualNullable(rhs.Spells)) return false;
+            if (!lhs.Factions.SequenceEqualNullable(rhs.Factions)) return false;
+            if (!lhs.PackageData.SequenceEqualNullable(rhs.PackageData)) return false;
             if (!lhs.VoiceTypes.Equals(rhs.VoiceTypes)) return false;
             return true;
         }
@@ -4377,6 +4377,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IQuestAliasGetter rhs)) return false;
+            return ((QuestAliasCommon)((IQuestAliasGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IQuestAliasGetter? obj)
+        {
+            return ((QuestAliasCommon)((IQuestAliasGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((QuestAliasCommon)((IQuestAliasGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

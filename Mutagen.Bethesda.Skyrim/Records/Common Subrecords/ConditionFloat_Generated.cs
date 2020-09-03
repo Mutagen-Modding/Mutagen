@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         Condition,
         IConditionFloat,
         ILoquiObjectSetter<ConditionFloat>,
-        IEquatable<ConditionFloat>
+        IEquatable<IConditionFloatGetter>
     {
         #region Ctor
         public ConditionFloat()
@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ConditionFloatCommon)((IConditionFloatGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ConditionFloat? obj)
+        public bool Equals(IConditionFloatGetter? obj)
         {
             return ((ConditionFloatCommon)((IConditionFloatGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -958,7 +958,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IConditionGetter)lhs, (IConditionGetter)rhs)) return false;
             if (!lhs.ComparisonValue.EqualsWithin(rhs.ComparisonValue)) return false;
             if (!object.Equals(lhs.Data, rhs.Data)) return false;
             return true;
@@ -1395,6 +1395,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IConditionFloatGetter rhs)) return false;
+            return ((ConditionFloatCommon)((IConditionFloatGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IConditionFloatGetter? obj)
+        {
+            return ((ConditionFloatCommon)((IConditionFloatGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ConditionFloatCommon)((IConditionFloatGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

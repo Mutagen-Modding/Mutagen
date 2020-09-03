@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class HavokData :
         IHavokData,
         ILoquiObjectSetter<HavokData>,
-        IEquatable<HavokData>
+        IEquatable<IHavokDataGetter>
     {
         #region Ctor
         public HavokData()
@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((HavokDataCommon)((IHavokDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(HavokData? obj)
+        public bool Equals(IHavokDataGetter? obj)
         {
             return ((HavokDataCommon)((IHavokDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1311,6 +1311,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IHavokDataGetter rhs)) return false;
+            return ((HavokDataCommon)((IHavokDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IHavokDataGetter? obj)
+        {
+            return ((HavokDataCommon)((IHavokDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((HavokDataCommon)((IHavokDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

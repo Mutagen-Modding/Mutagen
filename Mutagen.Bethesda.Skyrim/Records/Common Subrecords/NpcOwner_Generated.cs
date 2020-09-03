@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         OwnerTarget,
         INpcOwner,
         ILoquiObjectSetter<NpcOwner>,
-        IEquatable<NpcOwner>
+        IEquatable<INpcOwnerGetter>
     {
         #region Ctor
         public NpcOwner()
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((NpcOwnerCommon)((INpcOwnerGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(NpcOwner? obj)
+        public bool Equals(INpcOwnerGetter? obj)
         {
             return ((NpcOwnerCommon)((INpcOwnerGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -853,7 +853,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Npc = object.Equals(item.Npc, rhs.Npc);
+            ret.Npc = item.Npc.Equals(rhs.Npc);
             ret.RawVariableData = item.RawVariableData == rhs.RawVariableData;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -932,7 +932,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IOwnerTargetGetter)lhs, (IOwnerTargetGetter)rhs)) return false;
             if (!lhs.Npc.Equals(rhs.Npc)) return false;
             if (lhs.RawVariableData != rhs.RawVariableData) return false;
             return true;
@@ -1276,6 +1276,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is INpcOwnerGetter rhs)) return false;
+            return ((NpcOwnerCommon)((INpcOwnerGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(INpcOwnerGetter? obj)
+        {
+            return ((NpcOwnerCommon)((INpcOwnerGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((NpcOwnerCommon)((INpcOwnerGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

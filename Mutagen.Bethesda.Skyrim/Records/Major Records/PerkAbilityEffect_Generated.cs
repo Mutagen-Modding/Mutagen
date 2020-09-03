@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         APerkEffect,
         IPerkAbilityEffect,
         ILoquiObjectSetter<PerkAbilityEffect>,
-        IEquatable<PerkAbilityEffect>
+        IEquatable<IPerkAbilityEffectGetter>
     {
         #region Ctor
         public PerkAbilityEffect()
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PerkAbilityEffect? obj)
+        public bool Equals(IPerkAbilityEffectGetter? obj)
         {
             return ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -822,7 +822,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Ability = object.Equals(item.Ability, rhs.Ability);
+            ret.Ability = item.Ability.Equals(rhs.Ability);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -904,7 +904,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IAPerkEffectGetter)lhs, (IAPerkEffectGetter)rhs)) return false;
             if (!lhs.Ability.Equals(rhs.Ability)) return false;
             return true;
         }
@@ -1250,6 +1250,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPerkAbilityEffectGetter rhs)) return false;
+            return ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPerkAbilityEffectGetter? obj)
+        {
+            return ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

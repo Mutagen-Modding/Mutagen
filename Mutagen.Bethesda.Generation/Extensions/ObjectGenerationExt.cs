@@ -94,6 +94,21 @@ namespace Mutagen.Bethesda.Generation
             return objGen.BaseClassTrail().Any(bo => bo.Name == "MajorRecord");
         }
 
+        public static async Task<bool> IsMajorRecord(this LoquiType loqui)
+        {
+            if (loqui.TargetObjectGeneration != null)
+            {
+                return await IsMajorRecord(loqui.TargetObjectGeneration);
+            }
+            else if (loqui.RefType == LoquiType.LoquiRefType.Interface)
+            {
+                // ToDo  
+                // Quick hack.  Real solution should use reflection to investigate the interface  
+                return true;
+            }
+            return false;
+        }
+
         public static bool IsTopLevelGroup(this ObjectGeneration objGen)
         {
             if (objGen.GetObjectType() != ObjectType.Group) return false;
@@ -106,6 +121,12 @@ namespace Mutagen.Bethesda.Generation
             var objType = objGen.GetObjectData().ObjectType;
             if (objType.HasValue) return objType.Value;
             throw new ArgumentException($"Object {objGen.Name} did not have object type defined.");
+        }
+
+        public static bool IsListGroup(this ObjectGeneration obj)
+        {
+            return obj.GetObjectType() == ObjectType.Group
+                && obj.Name != "Group";
         }
 
         public static string GetTriggeringSource(this ObjectGeneration objGen)
@@ -155,7 +176,7 @@ namespace Mutagen.Bethesda.Generation
             }
             throw new ArgumentException();
         }
-        
+
         public static async Task<LoquiType> GetGroupLoquiTypeLowest(this ObjectGeneration objGen)
         {
             await objGen.LoadingCompleteTask.Task;

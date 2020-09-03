@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ScenePhaseUnusedData :
         IScenePhaseUnusedData,
         ILoquiObjectSetter<ScenePhaseUnusedData>,
-        IEquatable<ScenePhaseUnusedData>
+        IEquatable<IScenePhaseUnusedDataGetter>
     {
         #region Ctor
         public ScenePhaseUnusedData()
@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ScenePhaseUnusedData? obj)
+        public bool Equals(IScenePhaseUnusedDataGetter? obj)
         {
             return ((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1650,6 +1650,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IScenePhaseUnusedDataGetter rhs)) return false;
+            return ((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IScenePhaseUnusedDataGetter? obj)
+        {
+            return ((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ICollisionLayerInternal,
         ILoquiObjectSetter<CollisionLayer>,
-        IEquatable<CollisionLayer>
+        IEquatable<ICollisionLayerGetter>
     {
         #region Ctor
         protected CollisionLayer()
@@ -93,7 +93,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(CollisionLayer? obj)
+        public bool Equals(ICollisionLayerGetter? obj)
         {
             return ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1329,13 +1329,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Description, rhs.Description)) return false;
             if (lhs.Index != rhs.Index) return false;
             if (!lhs.DebugColor.ColorOnlyEquals(rhs.DebugColor)) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!lhs.CollidesWith.SequenceEqual(rhs.CollidesWith)) return false;
+            if (!lhs.CollidesWith.SequenceEqualNullable(rhs.CollidesWith)) return false;
             return true;
         }
         
@@ -2028,6 +2028,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ICollisionLayerGetter rhs)) return false;
+            return ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ICollisionLayerGetter? obj)
+        {
+            return ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

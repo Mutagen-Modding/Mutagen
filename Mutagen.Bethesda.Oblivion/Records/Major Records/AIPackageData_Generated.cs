@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class AIPackageData :
         IAIPackageData,
         ILoquiObjectSetter<AIPackageData>,
-        IEquatable<AIPackageData>
+        IEquatable<IAIPackageDataGetter>
     {
         #region Ctor
         public AIPackageData()
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((AIPackageDataCommon)((IAIPackageDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(AIPackageData? obj)
+        public bool Equals(IAIPackageDataGetter? obj)
         {
             return ((AIPackageDataCommon)((IAIPackageDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1290,6 +1290,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IAIPackageDataGetter rhs)) return false;
+            return ((AIPackageDataCommon)((IAIPackageDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IAIPackageDataGetter? obj)
+        {
+            return ((AIPackageDataCommon)((IAIPackageDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((AIPackageDataCommon)((IAIPackageDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IGlobalInternal,
         ILoquiObjectSetter<Global>,
-        IEquatable<Global>
+        IEquatable<IGlobalGetter>
     {
         #region Ctor
         protected Global()
@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((GlobalCommon)((IGlobalGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Global? obj)
+        public bool Equals(IGlobalGetter? obj)
         {
             return ((GlobalCommon)((IGlobalGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -857,7 +857,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
             return true;
         }
         
@@ -1332,6 +1332,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IGlobalGetter rhs)) return false;
+            return ((GlobalCommon)((IGlobalGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IGlobalGetter? obj)
+        {
+            return ((GlobalCommon)((IGlobalGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((GlobalCommon)((IGlobalGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

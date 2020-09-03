@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class FurnitureMarker :
         IFurnitureMarker,
         ILoquiObjectSetter<FurnitureMarker>,
-        IEquatable<FurnitureMarker>
+        IEquatable<IFurnitureMarkerGetter>
     {
         #region Ctor
         public FurnitureMarker()
@@ -91,7 +91,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((FurnitureMarkerCommon)((IFurnitureMarkerGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(FurnitureMarker? obj)
+        public bool Equals(IFurnitureMarkerGetter? obj)
         {
             return ((FurnitureMarkerCommon)((IFurnitureMarkerGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1006,7 +1006,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.DisabledEntryPoints,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.MarkerKeyword = object.Equals(item.MarkerKeyword, rhs.MarkerKeyword);
+            ret.MarkerKeyword = item.MarkerKeyword.Equals(rhs.MarkerKeyword);
             ret.EntryPoints = EqualsMaskHelper.EqualsHelper(
                 item.EntryPoints,
                 rhs.EntryPoints,
@@ -1483,6 +1483,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IFurnitureMarkerGetter rhs)) return false;
+            return ((FurnitureMarkerCommon)((IFurnitureMarkerGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IFurnitureMarkerGetter? obj)
+        {
+            return ((FurnitureMarkerCommon)((IFurnitureMarkerGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((FurnitureMarkerCommon)((IFurnitureMarkerGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

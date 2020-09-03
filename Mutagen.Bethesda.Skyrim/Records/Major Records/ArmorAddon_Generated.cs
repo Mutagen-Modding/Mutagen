@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IArmorAddonInternal,
         ILoquiObjectSetter<ArmorAddon>,
-        IEquatable<ArmorAddon>
+        IEquatable<IArmorAddonGetter>
     {
         #region Ctor
         protected ArmorAddon()
@@ -142,7 +142,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ArmorAddon? obj)
+        public bool Equals(IArmorAddonGetter? obj)
         {
             return ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1767,7 +1767,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.BodyTemplate,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Race = object.Equals(item.Race, rhs.Race);
+            ret.Race = item.Race.Equals(rhs.Race);
             ret.Priority = new GenderedItem<bool>(
                 male: item.Priority.Male == rhs.Priority.Male,
                 female: item.Priority.Female == rhs.Priority.Female);
@@ -1802,8 +1802,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.AdditionalRaces,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.FootstepSound = object.Equals(item.FootstepSound, rhs.FootstepSound);
-            ret.ArtObject = object.Equals(item.ArtObject, rhs.ArtObject);
+            ret.FootstepSound = item.FootstepSound.Equals(rhs.FootstepSound);
+            ret.ArtObject = item.ArtObject.Equals(rhs.ArtObject);
             ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -1986,7 +1986,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.BodyTemplate, rhs.BodyTemplate)) return false;
             if (!lhs.Race.Equals(rhs.Race)) return false;
             if (!Equals(lhs.Priority, rhs.Priority)) return false;
@@ -1999,7 +1999,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!Equals(lhs.FirstPersonModel, rhs.FirstPersonModel)) return false;
             if (!Equals(lhs.SkinTexture, rhs.SkinTexture)) return false;
             if (!Equals(lhs.TextureSwapList, rhs.TextureSwapList)) return false;
-            if (!lhs.AdditionalRaces.SequenceEqual(rhs.AdditionalRaces)) return false;
+            if (!lhs.AdditionalRaces.SequenceEqualNullable(rhs.AdditionalRaces)) return false;
             if (!lhs.FootstepSound.Equals(rhs.FootstepSound)) return false;
             if (!lhs.ArtObject.Equals(rhs.ArtObject)) return false;
             if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
@@ -2090,6 +2090,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (obj.Race.FormKey.TryGet(out var RaceKey))
             {
                 yield return RaceKey;
+            }
+            if (obj.WorldModel.TryGet(out var WorldModelItem))
+            {
+                foreach (var item in WorldModelItem.NotNull().SelectMany(f => f.LinkFormKeys))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.FirstPersonModel.TryGet(out var FirstPersonModelItem))
+            {
+                foreach (var item in FirstPersonModelItem.NotNull().SelectMany(f => f.LinkFormKeys))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.SkinTexture.TryGet(out var SkinTextureItem))
+            {
+                foreach (var item in SkinTextureItem.Select(f => f.FormKey).NotNull())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.TextureSwapList.TryGet(out var TextureSwapListItem))
+            {
+                foreach (var item in TextureSwapListItem.Select(f => f.FormKey).NotNull())
+                {
+                    yield return item;
+                }
             }
             foreach (var item in obj.AdditionalRaces.Select(f => f.FormKey))
             {
@@ -3072,6 +3100,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IArmorAddonGetter rhs)) return false;
+            return ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IArmorAddonGetter? obj)
+        {
+            return ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

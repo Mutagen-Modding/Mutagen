@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         Condition,
         IConditionGlobal,
         ILoquiObjectSetter<ConditionGlobal>,
-        IEquatable<ConditionGlobal>
+        IEquatable<IConditionGlobalGetter>
     {
         #region Ctor
         public ConditionGlobal()
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ConditionGlobalCommon)((IConditionGlobalGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ConditionGlobal? obj)
+        public bool Equals(IConditionGlobalGetter? obj)
         {
             return ((ConditionGlobalCommon)((IConditionGlobalGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -875,7 +875,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.ComparisonValue = object.Equals(item.ComparisonValue, rhs.ComparisonValue);
+            ret.ComparisonValue = item.ComparisonValue.Equals(rhs.ComparisonValue);
             ret.Data = MaskItemExt.Factory(item.Data.GetEqualsMask(rhs.Data, include), include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -960,7 +960,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IConditionGetter)lhs, (IConditionGetter)rhs)) return false;
             if (!lhs.ComparisonValue.Equals(rhs.ComparisonValue)) return false;
             if (!object.Equals(lhs.Data, rhs.Data)) return false;
             return true;
@@ -1400,6 +1400,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IConditionGlobalGetter rhs)) return false;
+            return ((ConditionGlobalCommon)((IConditionGlobalGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IConditionGlobalGetter? obj)
+        {
+            return ((ConditionGlobalCommon)((IConditionGlobalGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ConditionGlobalCommon)((IConditionGlobalGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

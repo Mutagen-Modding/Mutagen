@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IAlchemicalApparatusInternal,
         ILoquiObjectSetter<AlchemicalApparatus>,
-        IEquatable<AlchemicalApparatus>
+        IEquatable<IAlchemicalApparatusGetter>
     {
         #region Ctor
         protected AlchemicalApparatus()
@@ -146,7 +146,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((AlchemicalApparatusCommon)((IAlchemicalApparatusGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(AlchemicalApparatus? obj)
+        public bool Equals(IAlchemicalApparatusGetter? obj)
         {
             return ((AlchemicalApparatusCommon)((IAlchemicalApparatusGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1537,8 +1537,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Destructible,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.PickUpSound = object.Equals(item.PickUpSound, rhs.PickUpSound);
-            ret.PutDownSound = object.Equals(item.PutDownSound, rhs.PutDownSound);
+            ret.PickUpSound = item.PickUpSound.Equals(rhs.PickUpSound);
+            ret.PutDownSound = item.PutDownSound.Equals(rhs.PutDownSound);
             ret.Quality = item.Quality == rhs.Quality;
             ret.Description = string.Equals(item.Description, rhs.Description);
             ret.Value = item.Value == rhs.Value;
@@ -1701,7 +1701,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
@@ -2689,6 +2689,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IAlchemicalApparatusGetter rhs)) return false;
+            return ((AlchemicalApparatusCommon)((IAlchemicalApparatusGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IAlchemicalApparatusGetter? obj)
+        {
+            return ((AlchemicalApparatusCommon)((IAlchemicalApparatusGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((AlchemicalApparatusCommon)((IAlchemicalApparatusGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

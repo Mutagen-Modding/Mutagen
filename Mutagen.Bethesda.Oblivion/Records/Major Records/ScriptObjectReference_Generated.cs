@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Oblivion
         AScriptReference,
         IScriptObjectReference,
         ILoquiObjectSetter<ScriptObjectReference>,
-        IEquatable<ScriptObjectReference>
+        IEquatable<IScriptObjectReferenceGetter>
     {
         #region Ctor
         public ScriptObjectReference()
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ScriptObjectReferenceCommon)((IScriptObjectReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ScriptObjectReference? obj)
+        public bool Equals(IScriptObjectReferenceGetter? obj)
         {
             return ((ScriptObjectReferenceCommon)((IScriptObjectReferenceGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -803,7 +803,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Reference = object.Equals(item.Reference, rhs.Reference);
+            ret.Reference = item.Reference.Equals(rhs.Reference);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -877,7 +877,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IAScriptReferenceGetter)lhs, (IAScriptReferenceGetter)rhs)) return false;
             if (!lhs.Reference.Equals(rhs.Reference)) return false;
             return true;
         }
@@ -1264,6 +1264,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IScriptObjectReferenceGetter rhs)) return false;
+            return ((ScriptObjectReferenceCommon)((IScriptObjectReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IScriptObjectReferenceGetter? obj)
+        {
+            return ((ScriptObjectReferenceCommon)((IScriptObjectReferenceGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ScriptObjectReferenceCommon)((IScriptObjectReferenceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class CombatStyleAdvanced :
         ICombatStyleAdvanced,
         ILoquiObjectSetter<CombatStyleAdvanced>,
-        IEquatable<CombatStyleAdvanced>
+        IEquatable<ICombatStyleAdvancedGetter>
     {
         #region Ctor
         public CombatStyleAdvanced()
@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(CombatStyleAdvanced? obj)
+        public bool Equals(ICombatStyleAdvancedGetter? obj)
         {
             return ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -2430,6 +2430,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ICombatStyleAdvancedGetter rhs)) return false;
+            return ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ICombatStyleAdvancedGetter? obj)
+        {
+            return ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

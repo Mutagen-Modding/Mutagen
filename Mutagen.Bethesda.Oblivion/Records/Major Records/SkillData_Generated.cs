@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class SkillData :
         ISkillData,
         ILoquiObjectSetter<SkillData>,
-        IEquatable<SkillData>
+        IEquatable<ISkillDataGetter>
     {
         #region Ctor
         public SkillData()
@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((SkillDataCommon)((ISkillDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(SkillData? obj)
+        public bool Equals(ISkillDataGetter? obj)
         {
             return ((SkillDataCommon)((ISkillDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1441,6 +1441,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is ISkillDataGetter rhs)) return false;
+            return ((SkillDataCommon)((ISkillDataGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ISkillDataGetter? obj)
+        {
+            return ((SkillDataCommon)((ISkillDataGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((SkillDataCommon)((ISkillDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

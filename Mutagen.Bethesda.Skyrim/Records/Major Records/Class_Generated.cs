@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IClassInternal,
         ILoquiObjectSetter<Class>,
-        IEquatable<Class>
+        IEquatable<IClassGetter>
     {
         #region Ctor
         protected Class()
@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ClassCommon)((IClassGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Class? obj)
+        public bool Equals(IClassGetter? obj)
         {
             return ((ClassCommon)((IClassGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -1789,17 +1789,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!string.Equals(lhs.Description, rhs.Description)) return false;
             if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
             if (lhs.Unknown != rhs.Unknown) return false;
             if (lhs.Teaches != rhs.Teaches) return false;
             if (lhs.MaxTrainingLevel != rhs.MaxTrainingLevel) return false;
-            if (!lhs.SkillWeights.SequenceEqual(rhs.SkillWeights)) return false;
+            if (!lhs.SkillWeights.SequenceEqualNullable(rhs.SkillWeights)) return false;
             if (!lhs.BleedoutDefault.EqualsWithin(rhs.BleedoutDefault)) return false;
             if (lhs.VoicePoints != rhs.VoicePoints) return false;
-            if (!lhs.StatWeights.SequenceEqual(rhs.StatWeights)) return false;
+            if (!lhs.StatWeights.SequenceEqualNullable(rhs.StatWeights)) return false;
             if (lhs.Unknown2 != rhs.Unknown2) return false;
             if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
@@ -2532,6 +2532,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IClassGetter rhs)) return false;
+            return ((ClassCommon)((IClassGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IClassGetter? obj)
+        {
+            return ((ClassCommon)((IClassGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ClassCommon)((IClassGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

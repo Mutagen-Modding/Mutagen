@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class ItemEntry :
         IItemEntry,
         ILoquiObjectSetter<ItemEntry>,
-        IEquatable<ItemEntry>
+        IEquatable<IItemEntryGetter>
     {
         #region Ctor
         public ItemEntry()
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ItemEntryCommon)((IItemEntryGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ItemEntry? obj)
+        public bool Equals(IItemEntryGetter? obj)
         {
             return ((ItemEntryCommon)((IItemEntryGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -883,7 +883,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Item = object.Equals(item.Item, rhs.Item);
+            ret.Item = item.Item.Equals(rhs.Item);
             ret.Count = item.Count == rhs.Count;
         }
         
@@ -1274,6 +1274,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IItemEntryGetter rhs)) return false;
+            return ((ItemEntryCommon)((IItemEntryGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IItemEntryGetter? obj)
+        {
+            return ((ItemEntryCommon)((IItemEntryGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ItemEntryCommon)((IItemEntryGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

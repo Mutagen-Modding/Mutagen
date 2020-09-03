@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class RelatedWaters :
         IRelatedWaters,
         ILoquiObjectSetter<RelatedWaters>,
-        IEquatable<RelatedWaters>
+        IEquatable<IRelatedWatersGetter>
     {
         #region Ctor
         public RelatedWaters()
@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((RelatedWatersCommon)((IRelatedWatersGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(RelatedWaters? obj)
+        public bool Equals(IRelatedWatersGetter? obj)
         {
             return ((RelatedWatersCommon)((IRelatedWatersGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -931,9 +931,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.RelatedWaterDaytime = object.Equals(item.RelatedWaterDaytime, rhs.RelatedWaterDaytime);
-            ret.RelatedWaterNighttime = object.Equals(item.RelatedWaterNighttime, rhs.RelatedWaterNighttime);
-            ret.RelatedWaterUnderwater = object.Equals(item.RelatedWaterUnderwater, rhs.RelatedWaterUnderwater);
+            ret.RelatedWaterDaytime = item.RelatedWaterDaytime.Equals(rhs.RelatedWaterDaytime);
+            ret.RelatedWaterNighttime = item.RelatedWaterNighttime.Equals(rhs.RelatedWaterNighttime);
+            ret.RelatedWaterUnderwater = item.RelatedWaterUnderwater.Equals(rhs.RelatedWaterUnderwater);
         }
         
         public string ToString(
@@ -1341,6 +1341,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IRelatedWatersGetter rhs)) return false;
+            return ((RelatedWatersCommon)((IRelatedWatersGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IRelatedWatersGetter? obj)
+        {
+            return ((RelatedWatersCommon)((IRelatedWatersGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((RelatedWatersCommon)((IRelatedWatersGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         MagicEffectArchetype,
         IMagicEffectLightArchetypeInternal,
         ILoquiObjectSetter<MagicEffectLightArchetype>,
-        IEquatable<MagicEffectLightArchetype>
+        IEquatable<IMagicEffectLightArchetypeGetter>
     {
 
         #region To String
@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((MagicEffectLightArchetypeCommon)((IMagicEffectLightArchetypeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(MagicEffectLightArchetype? obj)
+        public bool Equals(IMagicEffectLightArchetypeGetter? obj)
         {
             return ((MagicEffectLightArchetypeCommon)((IMagicEffectLightArchetypeGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -812,7 +812,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IMagicEffectArchetypeGetter)lhs, (IMagicEffectArchetypeGetter)rhs)) return false;
             return true;
         }
         
@@ -1141,6 +1141,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IMagicEffectLightArchetypeGetter rhs)) return false;
+            return ((MagicEffectLightArchetypeCommon)((IMagicEffectLightArchetypeGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IMagicEffectLightArchetypeGetter? obj)
+        {
+            return ((MagicEffectLightArchetypeCommon)((IMagicEffectLightArchetypeGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((MagicEffectLightArchetypeCommon)((IMagicEffectLightArchetypeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

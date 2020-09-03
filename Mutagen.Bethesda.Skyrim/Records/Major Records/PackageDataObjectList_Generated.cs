@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         APackageData,
         IPackageDataObjectList,
         ILoquiObjectSetter<PackageDataObjectList>,
-        IEquatable<PackageDataObjectList>
+        IEquatable<IPackageDataObjectListGetter>
     {
         #region Ctor
         public PackageDataObjectList()
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PackageDataObjectListCommon)((IPackageDataObjectListGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PackageDataObjectList? obj)
+        public bool Equals(IPackageDataObjectListGetter? obj)
         {
             return ((PackageDataObjectListCommon)((IPackageDataObjectListGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -894,7 +894,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
+            if (!base.Equals((IAPackageDataGetter)lhs, (IAPackageDataGetter)rhs)) return false;
             if (!lhs.Data.EqualsWithin(rhs.Data)) return false;
             return true;
         }
@@ -1225,6 +1225,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: this,
                 name: name);
         }
+
+        #endregion
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (!(obj is IPackageDataObjectListGetter rhs)) return false;
+            return ((PackageDataObjectListCommon)((IPackageDataObjectListGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPackageDataObjectListGetter? obj)
+        {
+            return ((PackageDataObjectListCommon)((IPackageDataObjectListGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PackageDataObjectListCommon)((IPackageDataObjectListGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
