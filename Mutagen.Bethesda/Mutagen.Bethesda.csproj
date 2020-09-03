@@ -29,8 +29,8 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DotNetZip" Version="1.13.8" />
-    <PackageReference Include="Loqui" Version="1.5.0" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.1.4-dev" />
+    <PackageReference Include="Loqui" Version="1.5.1" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.1.4" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mutagen.Bethesda.Skyrim\Mutagen.Bethesda.Skyrim.csproj" />
