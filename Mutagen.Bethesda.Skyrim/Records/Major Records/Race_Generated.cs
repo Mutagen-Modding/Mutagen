@@ -169,18 +169,18 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HeadBipedObject
         public readonly static BipedObject _HeadBipedObject_Default = BipedObject.None;
-        public BipedObject HeadBipedObject { get; set; } = default;
+        public BipedObject HeadBipedObject { get; set; } = _HeadBipedObject_Default;
         #endregion
         #region HairBipedObject
         public readonly static BipedObject _HairBipedObject_Default = BipedObject.None;
-        public BipedObject HairBipedObject { get; set; } = default;
+        public BipedObject HairBipedObject { get; set; } = _HairBipedObject_Default;
         #endregion
         #region InjuredHealthPercent
         public Single InjuredHealthPercent { get; set; } = default;
         #endregion
         #region ShieldBipedObject
         public readonly static BipedObject _ShieldBipedObject_Default = BipedObject.None;
-        public BipedObject ShieldBipedObject { get; set; } = default;
+        public BipedObject ShieldBipedObject { get; set; } = _ShieldBipedObject_Default;
         #endregion
         #region Regen
         private readonly Dictionary<BasicStat, Single> _Regen = new Dictionary<BasicStat, Single>();
@@ -199,7 +199,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region BodyBipedObject
         public readonly static BipedObject _BodyBipedObject_Default = BipedObject.None;
-        public BipedObject BodyBipedObject { get; set; } = default;
+        public BipedObject BodyBipedObject { get; set; } = _BodyBipedObject_Default;
         #endregion
         #region AimAngleTolerance
         public Single AimAngleTolerance { get; set; } = default;

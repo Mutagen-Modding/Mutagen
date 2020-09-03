@@ -42,11 +42,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region NavmeshVersion
         public readonly static UInt32 _NavmeshVersion_Default = 12;
-        public UInt32 NavmeshVersion { get; set; } = default;
+        public UInt32 NavmeshVersion { get; set; } = _NavmeshVersion_Default;
         #endregion
         #region Magic
         public readonly static UInt32 _Magic_Default = 0xA5E9A03C;
-        public UInt32 Magic { get; set; } = default;
+        public UInt32 Magic { get; set; } = _Magic_Default;
         #endregion
         #region Vertices
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -42,11 +42,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Version
         public readonly static Int16 _Version_Default = 5;
-        public Int16 Version { get; set; } = default;
+        public Int16 Version { get; set; } = _Version_Default;
         #endregion
         #region ObjectFormat
         public readonly static UInt16 _ObjectFormat_Default = 2;
-        public UInt16 ObjectFormat { get; set; } = default;
+        public UInt16 ObjectFormat { get; set; } = _ObjectFormat_Default;
         #endregion
         #region Scripts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown3
         public readonly static Int32 _Unknown3_Default = -1;
-        public Int32 Unknown3 { get; set; } = default;
+        public Int32 Unknown3 { get; set; } = _Unknown3_Default;
         #endregion
 
         #region To String

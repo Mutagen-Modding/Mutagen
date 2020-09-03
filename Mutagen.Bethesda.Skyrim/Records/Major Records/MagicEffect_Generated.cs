@@ -85,11 +85,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MagicSkill
         public readonly static ActorValue _MagicSkill_Default = ActorValue.None;
-        public ActorValue MagicSkill { get; set; } = default;
+        public ActorValue MagicSkill { get; set; } = _MagicSkill_Default;
         #endregion
         #region ResistValue
         public readonly static ActorValue _ResistValue_Default = ActorValue.None;
-        public ActorValue ResistValue { get; set; } = default;
+        public ActorValue ResistValue { get; set; } = _ResistValue_Default;
         #endregion
         #region CounterEffectCount
         public UInt16 CounterEffectCount { get; set; } = default;
@@ -156,7 +156,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region SecondActorValue
         public readonly static ActorValue _SecondActorValue_Default = ActorValue.None;
-        public ActorValue SecondActorValue { get; set; } = default;
+        public ActorValue SecondActorValue { get; set; } = _SecondActorValue_Default;
         #endregion
         #region CastingArt
         public FormLink<ArtObject> CastingArt { get; set; } = new FormLink<ArtObject>();

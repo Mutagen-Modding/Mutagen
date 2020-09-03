@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Skill
         public readonly static ActorValue _Skill_Default = ActorValue.None;
-        public ActorValue Skill { get; set; } = default;
+        public ActorValue Skill { get; set; } = _Skill_Default;
         #endregion
         #region Boost
         public SByte Boost { get; set; } = default;

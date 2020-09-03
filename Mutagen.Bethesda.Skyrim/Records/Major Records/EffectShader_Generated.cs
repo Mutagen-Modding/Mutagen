@@ -73,15 +73,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MembraneSourceBlendMode
         public readonly static EffectShader.BlendMode _MembraneSourceBlendMode_Default = BlendMode.Zero;
-        public EffectShader.BlendMode MembraneSourceBlendMode { get; set; } = default;
+        public EffectShader.BlendMode MembraneSourceBlendMode { get; set; } = _MembraneSourceBlendMode_Default;
         #endregion
         #region MembraneBlendOperation
         public readonly static EffectShader.BlendOperation _MembraneBlendOperation_Default = BlendOperation.Add;
-        public EffectShader.BlendOperation MembraneBlendOperation { get; set; } = default;
+        public EffectShader.BlendOperation MembraneBlendOperation { get; set; } = _MembraneBlendOperation_Default;
         #endregion
         #region MembraneZTest
         public readonly static EffectShader.ZTest _MembraneZTest_Default = ZTest.Normal;
-        public EffectShader.ZTest MembraneZTest { get; set; } = default;
+        public EffectShader.ZTest MembraneZTest { get; set; } = _MembraneZTest_Default;
         #endregion
         #region FillColorKey1
         public Color FillColorKey1 { get; set; } = default;
@@ -142,23 +142,23 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MembraneDestBlendMode
         public readonly static EffectShader.BlendMode _MembraneDestBlendMode_Default = BlendMode.Zero;
-        public EffectShader.BlendMode MembraneDestBlendMode { get; set; } = default;
+        public EffectShader.BlendMode MembraneDestBlendMode { get; set; } = _MembraneDestBlendMode_Default;
         #endregion
         #region ParticleSourceBlendMode
         public readonly static EffectShader.BlendMode _ParticleSourceBlendMode_Default = BlendMode.Zero;
-        public EffectShader.BlendMode ParticleSourceBlendMode { get; set; } = default;
+        public EffectShader.BlendMode ParticleSourceBlendMode { get; set; } = _ParticleSourceBlendMode_Default;
         #endregion
         #region ParticleBlendOperation
         public readonly static EffectShader.BlendOperation _ParticleBlendOperation_Default = BlendOperation.Add;
-        public EffectShader.BlendOperation ParticleBlendOperation { get; set; } = default;
+        public EffectShader.BlendOperation ParticleBlendOperation { get; set; } = _ParticleBlendOperation_Default;
         #endregion
         #region ParticleZTest
         public readonly static EffectShader.ZTest _ParticleZTest_Default = ZTest.Normal;
-        public EffectShader.ZTest ParticleZTest { get; set; } = default;
+        public EffectShader.ZTest ParticleZTest { get; set; } = _ParticleZTest_Default;
         #endregion
         #region ParticleDestBlendMode
         public readonly static EffectShader.BlendMode _ParticleDestBlendMode_Default = BlendMode.Zero;
-        public EffectShader.BlendMode ParticleDestBlendMode { get; set; } = default;
+        public EffectShader.BlendMode ParticleDestBlendMode { get; set; } = _ParticleDestBlendMode_Default;
         #endregion
         #region ParticleBirthRampUpTime
         public Single ParticleBirthRampUpTime { get; set; } = default;

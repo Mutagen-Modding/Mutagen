@@ -290,7 +290,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region NAM5
         public readonly static UInt16 _NAM5_Default = 0xFF00;
-        public UInt16 NAM5 { get; set; } = default;
+        public UInt16 NAM5 { get; set; } = _NAM5_Default;
         #endregion
         #region Height
         public Single Height { get; set; } = default;

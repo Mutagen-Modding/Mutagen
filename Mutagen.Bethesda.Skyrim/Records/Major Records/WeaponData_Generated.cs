@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region AttackAnimation
         public readonly static WeaponData.AttackAnimationType _AttackAnimation_Default = WeaponData.AttackAnimationType.Default;
-        public WeaponData.AttackAnimationType AttackAnimation { get; set; } = default;
+        public WeaponData.AttackAnimationType AttackAnimation { get; set; } = _AttackAnimation_Default;
         #endregion
         #region NumProjectiles
         public Byte NumProjectiles { get; set; } = default;
@@ -129,7 +129,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Resist
         public readonly static ActorValue _Resist_Default = ActorValue.None;
-        public ActorValue Resist { get; set; } = default;
+        public ActorValue Resist { get; set; } = _Resist_Default;
         #endregion
         #region Unknown5
         public Int32 Unknown5 { get; set; } = default;

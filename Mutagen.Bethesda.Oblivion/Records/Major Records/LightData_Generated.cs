@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Time
         public readonly static Int32 _Time_Default = -1;
-        public Int32 Time { get; set; } = default;
+        public Int32 Time { get; set; } = _Time_Default;
         #endregion
         #region Radius
         public UInt32 Radius { get; set; } = default;
@@ -58,11 +58,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region FalloffExponent
         public readonly static Single _FalloffExponent_Default = 1;
-        public Single FalloffExponent { get; set; } = default;
+        public Single FalloffExponent { get; set; } = _FalloffExponent_Default;
         #endregion
         #region FOV
         public readonly static Single _FOV_Default = 90;
-        public Single FOV { get; set; } = default;
+        public Single FOV { get; set; } = _FOV_Default;
         #endregion
         #region Value
         public UInt32 Value { get; set; } = default;
