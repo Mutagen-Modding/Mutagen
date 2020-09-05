@@ -7,7 +7,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <Nullable>disable</Nullable>
-    <Version>0.14.0.0</Version>
+    <Version>0.14.1.0</Version>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>

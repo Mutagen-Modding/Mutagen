@@ -226,12 +226,11 @@ namespace Mutagen.Bethesda.Skyrim
                                 case APerkEntryPointEffect.FunctionType.NegativeAbsoluteValue:
                                     if (!epfd.HasValue
                                         || epf2.HasValue
-                                        || epf3.HasValue
-                                        || !epft.HasValue)
+                                        || epf3.HasValue)
                                     {
                                         throw new ArgumentException($"{nameof(PerkAbsoluteValue)} did not have expected records");
                                     }
-                                    if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.None)
+                                    if (epft.HasValue && epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.None)
                                     {
                                         throw new ArgumentException($"{nameof(PerkAbsoluteValue)} did not have expected parameter type flag: {epft.Value[0]}");
                                     }
