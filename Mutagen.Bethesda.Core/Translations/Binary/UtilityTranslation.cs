@@ -96,13 +96,26 @@ namespace Mutagen.Bethesda
             {
                 var subMeta = targetFrame.GetSubrecord();
                 var finalPos = targetFrame.Position + subMeta.TotalLength;
-                var parsed = fillTyped(
-                    record: record,
-                    frame: targetFrame,
-                    recordParseCount: recordParseCount,
-                    nextRecordType: subMeta.RecordType,
-                    contentLength: subMeta.ContentLength,
-                    recordTypeConverter: recordTypeConverter);
+                ParseResult parsed;
+                try
+                {
+                    parsed = fillTyped(
+                        record: record,
+                        frame: targetFrame,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: subMeta.RecordType,
+                        contentLength: subMeta.ContentLength,
+                        recordTypeConverter: recordTypeConverter);
+                }
+                catch (Exception ex)
+                {
+                    throw new SubrecordException(
+                        subMeta.RecordType, 
+                        record.FormKey, 
+                        modKey: frame.Reader.MetaData.ModKey,
+                        edid: record.EditorID,
+                        innerException: ex);
+                }
                 if (!parsed.KeepParsing) break;
                 if (parsed.DuplicateParseMarker != null)
                 {
