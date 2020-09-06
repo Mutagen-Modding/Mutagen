@@ -190,7 +190,7 @@ namespace Mutagen.Bethesda.Binary
                 }
                 else
                 {
-                    throw new ArgumentException();
+                    break;
                 }
             }
             return new GenderedItem<TItem?>(male, female);
