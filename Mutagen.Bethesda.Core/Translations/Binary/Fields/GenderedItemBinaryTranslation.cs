@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.Binary
                     frame.Position += subHeader.TotalLength;
                     if (!transl(frame, out item))
                     {
-                        throw new ArgumentException();
+                        continue;
                     }
                 }
                 else
@@ -88,7 +88,7 @@ namespace Mutagen.Bethesda.Binary
                     frame.Position += subHeader.HeaderLength;
                     if (!transl(frame.SpawnWithLength(subHeader.ContentLength), out item))
                     {
-                        throw new ArgumentException();
+                        continue;
                     }
                 }
                 if (type == maleMarker)
@@ -131,7 +131,7 @@ namespace Mutagen.Bethesda.Binary
                     frame.Position += subHeader.TotalLength;
                     if (!transl(frame, out item))
                     {
-                        throw new ArgumentException();
+                        continue;
                     }
                 }
                 else
@@ -139,7 +139,7 @@ namespace Mutagen.Bethesda.Binary
                     frame.Position += subHeader.HeaderLength;
                     if (!transl(frame.SpawnWithLength(subHeader.ContentLength), out item))
                     {
-                        throw new ArgumentException();
+                        continue;
                     }
                 }
                 if (type == maleMarker)
@@ -227,7 +227,7 @@ namespace Mutagen.Bethesda.Binary
                     frame.Position += subHeader.TotalLength;
                     if (!transl(frame, out item))
                     {
-                        throw new ArgumentException();
+                        continue;
                     }
                 }
                 else
@@ -235,7 +235,7 @@ namespace Mutagen.Bethesda.Binary
                     frame.Position += subHeader.HeaderLength;
                     if (!transl(frame.SpawnWithLength(subHeader.ContentLength), out item))
                     {
-                        throw new ArgumentException();
+                        continue;
                     }
                 }
                 if (type == maleMarker)
@@ -280,7 +280,7 @@ namespace Mutagen.Bethesda.Binary
                 frame.Position += genderedHeader.TotalLength;
                 if (!transl(frame, out var item, type == maleMarker ? null : femaleRecordConverter))
                 {
-                    throw new ArgumentException();
+                    continue;
                 }
                 if (type == maleMarker)
                 {

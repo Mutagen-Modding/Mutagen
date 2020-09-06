@@ -152,13 +152,10 @@ namespace Mutagen.Bethesda.Skyrim
                                 case APerkEntryPointEffect.FunctionType.SetValue:
                                 case APerkEntryPointEffect.FunctionType.AddValue:
                                 case APerkEntryPointEffect.FunctionType.MultiplyValue:
-                                    if (!epfd.HasValue
-                                        || epf2.HasValue
-                                        || epf3.HasValue
-                                        || !epft.HasValue)
-                                    {
-                                        throw new ArgumentException($"{nameof(PerkModifyValue)} did not have expected records");
-                                    }
+                                    if (epf2.HasValue) throw new ArgumentException($"{nameof(PerkModifyValue)} had EPF2 unexpectedly");
+                                    if (epf3.HasValue) throw new ArgumentException($"{nameof(PerkModifyValue)} had EPF3 unexpectedly");
+                                    if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkModifyValue)} did not have expected EPFT record");
+                                    if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkModifyValue)} did not have expected EPFD record");
                                     if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.Float)
                                     {
                                         throw new ArgumentException($"{nameof(PerkModifyValue)} did not have expected parameter type flag: {epft.Value[0]}");
@@ -176,13 +173,10 @@ namespace Mutagen.Bethesda.Skyrim
                                     };
                                     break;
                                 case APerkEntryPointEffect.FunctionType.AddRangeToValue:
-                                    if (!epfd.HasValue
-                                        || epf2.HasValue
-                                        || epf3.HasValue
-                                        || !epft.HasValue)
-                                    {
-                                        throw new ArgumentException($"{nameof(PerkAddRangeToValue)} did not have expected records");
-                                    }
+                                    if (epf2.HasValue) throw new ArgumentException($"{nameof(PerkAddRangeToValue)} had EPF2 unexpectedly");
+                                    if (epf3.HasValue) throw new ArgumentException($"{nameof(PerkAddRangeToValue)} had EPF3 unexpectedly");
+                                    if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkAddRangeToValue)} did not have expected EPFT record");
+                                    if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkAddRangeToValue)} did not have expected EPFD record");
                                     if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.FloatFloat)
                                     {
                                         throw new ArgumentException($"{nameof(PerkAddRangeToValue)} did not have expected parameter type flag: {epft.Value[0]}");
@@ -197,13 +191,10 @@ namespace Mutagen.Bethesda.Skyrim
                                 case APerkEntryPointEffect.FunctionType.MultiplyActorValueMult:
                                 case APerkEntryPointEffect.FunctionType.MultiplyOnePlusActorValueMult:
                                 case APerkEntryPointEffect.FunctionType.AddActorValueMult:
-                                    if (!epfd.HasValue
-                                        || epf2.HasValue
-                                        || epf3.HasValue
-                                        || !epft.HasValue)
-                                    {
-                                        throw new ArgumentException($"{nameof(PerkModifyActorValue)} did not have expected records");
-                                    }
+                                    if (epf2.HasValue) throw new ArgumentException($"{nameof(PerkModifyActorValue)} had EPF2 unexpectedly");
+                                    if (epf3.HasValue) throw new ArgumentException($"{nameof(PerkModifyActorValue)} had EPF3 unexpectedly");
+                                    if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkModifyActorValue)} did not have expected EPFT record");
+                                    if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkModifyActorValue)} did not have expected EPFD record");
                                     if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.FloatFloat)
                                     {
                                         throw new ArgumentException($"{nameof(PerkModifyActorValue)} did not have expected parameter type flag: {epft.Value[0]}");
@@ -224,12 +215,8 @@ namespace Mutagen.Bethesda.Skyrim
                                     break;
                                 case APerkEntryPointEffect.FunctionType.AbsoluteValue:
                                 case APerkEntryPointEffect.FunctionType.NegativeAbsoluteValue:
-                                    if (!epfd.HasValue
-                                        || epf2.HasValue
-                                        || epf3.HasValue)
-                                    {
-                                        throw new ArgumentException($"{nameof(PerkAbsoluteValue)} did not have expected records");
-                                    }
+                                    if (epf2.HasValue) throw new ArgumentException($"{nameof(PerkAbsoluteValue)} had EPF2 unexpectedly");
+                                    if (epf3.HasValue) throw new ArgumentException($"{nameof(PerkAbsoluteValue)} had EPF3 unexpectedly");
                                     if (epft.HasValue && epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.None)
                                     {
                                         throw new ArgumentException($"{nameof(PerkAbsoluteValue)} did not have expected parameter type flag: {epft.Value[0]}");
@@ -240,13 +227,10 @@ namespace Mutagen.Bethesda.Skyrim
                                     };
                                     break;
                                 case APerkEntryPointEffect.FunctionType.AddLeveledList:
-                                    if (!epfd.HasValue
-                                        || epf2.HasValue
-                                        || epf3.HasValue
-                                        || !epft.HasValue)
-                                    {
-                                        throw new ArgumentException($"{nameof(PerkAddLeveledItem)} did not have expected records");
-                                    }
+                                    if (epf2.HasValue) throw new ArgumentException($"{nameof(PerkAddLeveledItem)} had EPF2 unexpectedly");
+                                    if (epf3.HasValue) throw new ArgumentException($"{nameof(PerkAddLeveledItem)} had EPF3 unexpectedly");
+                                    if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkAddLeveledItem)} did not have expected EPFT record");
+                                    if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkAddLeveledItem)} did not have expected EPFD record");
                                     if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.LeveledItem)
                                     {
                                         throw new ArgumentException($"{nameof(PerkAddLeveledItem)} did not have expected parameter type flag: {epft.Value[0]}");
@@ -257,11 +241,8 @@ namespace Mutagen.Bethesda.Skyrim
                                     };
                                     break;
                                 case APerkEntryPointEffect.FunctionType.AddActivateChoice:
-                                    if (!epf3.HasValue
-                                        || !epft.HasValue)
-                                    {
-                                        throw new ArgumentException($"{nameof(PerkAddActivateChoice)} did not have expected records");
-                                    }
+                                    if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkAddActivateChoice)} did not have expected EPFT record");
+                                    if (!epf3.HasValue) throw new ArgumentException($"{nameof(PerkAddActivateChoice)} did not have expected EPF3 record");
                                     if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.SpellWithStrings)
                                     {
                                         throw new ArgumentException($"{nameof(PerkAddActivateChoice)} did not have expected parameter type flag: {epft.Value[0]}");
@@ -278,13 +259,10 @@ namespace Mutagen.Bethesda.Skyrim
                                     };
                                     break;
                                 case APerkEntryPointEffect.FunctionType.SelectSpell:
-                                    if (!epfd.HasValue
-                                        || epf2.HasValue
-                                        || epf3.HasValue
-                                        || !epft.HasValue)
-                                    {
-                                        throw new ArgumentException($"{nameof(PerkSelectSpell)} did not have expected records");
-                                    }
+                                    if (epf2.HasValue) throw new ArgumentException($"{nameof(PerkSelectSpell)} had EPF2 unexpectedly");
+                                    if (epf3.HasValue) throw new ArgumentException($"{nameof(PerkSelectSpell)} had EPF3 unexpectedly");
+                                    if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkSelectSpell)} did not have expected EPFT record");
+                                    if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkSelectSpell)} did not have expected EPFD record");
                                     if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.Spell)
                                     {
                                         throw new ArgumentException($"{nameof(PerkSelectSpell)} did not have expected parameter type flag: {epft.Value[0]}");
@@ -295,13 +273,10 @@ namespace Mutagen.Bethesda.Skyrim
                                     };
                                     break;
                                 case APerkEntryPointEffect.FunctionType.SelectText:
-                                    if (!epfd.HasValue
-                                        || epf2.HasValue
-                                        || epf3.HasValue
-                                        || !epft.HasValue)
-                                    {
-                                        throw new ArgumentException($"{nameof(PerkSelectText)} did not have expected records");
-                                    }
+                                    if (epf2.HasValue) throw new ArgumentException($"{nameof(PerkSelectText)} had EPF2 unexpectedly");
+                                    if (epf3.HasValue) throw new ArgumentException($"{nameof(PerkSelectText)} had EPF3 unexpectedly");
+                                    if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkSelectText)} did not have expected EPFT record");
+                                    if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkSelectText)} did not have expected EPFD record");
                                     if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.String)
                                     {
                                         throw new ArgumentException($"{nameof(PerkSelectText)} did not have expected parameter type flag: {epft.Value[0]}");
@@ -312,13 +287,10 @@ namespace Mutagen.Bethesda.Skyrim
                                     };
                                     break;
                                 case APerkEntryPointEffect.FunctionType.SetText:
-                                    if (!epfd.HasValue
-                                        || epf2.HasValue
-                                        || epf3.HasValue
-                                        || !epft.HasValue)
-                                    {
-                                        throw new ArgumentException($"{nameof(PerkSetText)} did not have expected records");
-                                    }
+                                    if (epf2.HasValue) throw new ArgumentException($"{nameof(PerkSetText)} had EPF2 unexpectedly");
+                                    if (epf3.HasValue) throw new ArgumentException($"{nameof(PerkSetText)} had EPF3 unexpectedly");
+                                    if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkSetText)} did not have expected EPFT record");
+                                    if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkSetText)} did not have expected EPFD record");
                                     if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.LString)
                                     {
                                         throw new ArgumentException($"{nameof(PerkSetText)} did not have expected parameter type flag: {epft.Value[0]}");

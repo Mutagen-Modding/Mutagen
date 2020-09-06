@@ -8,43 +8,53 @@ namespace Mutagen.Bethesda
     {
         public ModKey? ModKey { get; }
         public FormKey? FormKey { get; }
+        public string? EditorID { get; }
 
-        public RecordException(FormKey? formKey, ModKey? modKey)
+        public RecordException(FormKey? formKey, ModKey? modKey, string? edid)
         {
             FormKey = formKey;
             ModKey = modKey;
+            EditorID = edid;
         }
 
-        public RecordException(FormKey? formKey, ModKey? modKey, string message) : base(message)
+        public RecordException(FormKey? formKey, ModKey? modKey, string? edid, string message)
+            : base(message)
         {
             FormKey = formKey;
             ModKey = modKey;
+            EditorID = edid;
         }
 
-        public RecordException(FormKey? formKey, ModKey? modKey, string message, Exception innerException) : base(message, innerException)
+        public RecordException(FormKey? formKey, ModKey? modKey, string? edid, string message, Exception innerException)
+            : base(message, innerException)
         {
             FormKey = formKey;
             ModKey = modKey;
+            EditorID = edid;
         }
 
-        public RecordException(FormKey? formKey, ModKey? modKey, Exception innerException) : base(innerException.Message, innerException)
+        public RecordException(FormKey? formKey, ModKey? modKey, string? edid, Exception innerException) 
+            : base(innerException.Message, innerException)
         {
             FormKey = formKey;
             ModKey = modKey;
+            EditorID = edid;
         }
 
-        public static RecordException Factory(Exception ex, FormKey? formKey)
+        public static RecordException Factory(Exception ex, FormKey? formKey, string? edid)
         {
             if (ex is RecordException rec)
             {
                 return new RecordException(
                     formKey: formKey,
                     modKey: rec.ModKey,
+                    edid: edid,
                     innerException: rec.InnerException);
             }
             return new RecordException(
                 formKey: formKey,
                 modKey: null,
+                    edid: edid,
                 innerException: ex);
         }
 
@@ -55,17 +65,26 @@ namespace Mutagen.Bethesda
                 return new RecordException(
                     formKey: rec.FormKey,
                     modKey: modKey,
+                    edid: rec.EditorID,
                     innerException: rec.InnerException);
             }
             return new RecordException(
                 formKey: null,
                 modKey: modKey,
+                edid: null,
                 innerException: ex);
         }
 
         public override string ToString()
         {
-            return $"{nameof(RecordException)} {ModKey} => {FormKey}: {this.Message} {this.InnerException}";
+            if (EditorID == null)
+            {
+                return $"{nameof(RecordException)} {ModKey} => {FormKey}: {this.Message} {this.InnerException}";
+            }
+            else
+            {
+                return $"{nameof(RecordException)} {ModKey} => {EditorID} ({FormKey}): {this.Message} {this.InnerException}";
+            }
         }
     }
 }

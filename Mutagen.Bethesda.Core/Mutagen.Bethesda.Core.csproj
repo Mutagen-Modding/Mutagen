@@ -23,7 +23,7 @@
   </ItemGroup>
   <PropertyGroup>
     <PackageId>Mutagen.Bethesda.Core</PackageId>
-    <Version>0.14.1.0</Version>
+    <Version>0.14.2.0</Version>
     <Authors>Noggog</Authors>
     <Company>Mutagen</Company>
     <Product>Mutagen</Product>
@@ -49,6 +49,7 @@
     <Compile Include="Enums\StringsSource.cs" />
     <Compile Include="Exceptions\MissingModException.cs" />
     <Compile Include="Exceptions\RecordException.cs" />
+    <Compile Include="Exceptions\SubrecordException.cs" />
     <Compile Include="Extensions\EnumerableExt.cs" />
     <Compile Include="Extensions\FormLinkExt.cs" />
     <Compile Include="Extensions\ModKeyExt.cs" />
