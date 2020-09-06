@@ -31,17 +31,17 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine("[DebuggerStepThrough]");
             fg.AppendLine($"IEnumerable<{nameof(IMajorRecordCommonGetter)}> {nameof(IMajorRecordGetterEnumerable)}.EnumerateMajorRecords() => this.EnumerateMajorRecords();");
             fg.AppendLine("[DebuggerStepThrough]");
-            fg.AppendLine($"IEnumerable<TMajor> {nameof(IMajorRecordGetterEnumerable)}.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal, "TMajor")}(throwIfUnknown);");
+            fg.AppendLine($"IEnumerable<TMajor> {nameof(IMajorRecordGetterEnumerable)}.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal, "TMajor")}(throwIfUnknown: throwIfUnknown);");
             fg.AppendLine("[DebuggerStepThrough]");
-            fg.AppendLine($"IEnumerable<{nameof(IMajorRecordCommonGetter)}> {nameof(IMajorRecordGetterEnumerable)}.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type, throwIfUnknown);");
+            fg.AppendLine($"IEnumerable<{nameof(IMajorRecordCommonGetter)}> {nameof(IMajorRecordGetterEnumerable)}.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);");
             if (!onlyGetter)
             {
                 fg.AppendLine("[DebuggerStepThrough]");
                 fg.AppendLine($"IEnumerable<{nameof(IMajorRecordCommon)}> {nameof(IMajorRecordEnumerable)}.EnumerateMajorRecords() => this.EnumerateMajorRecords();");
                 fg.AppendLine("[DebuggerStepThrough]");
-                fg.AppendLine($"IEnumerable<TMajor> {nameof(IMajorRecordEnumerable)}.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal, "TMajor")}();");
+                fg.AppendLine($"IEnumerable<TMajor> {nameof(IMajorRecordEnumerable)}.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal, "TMajor")}(throwIfUnknown: throwIfUnknown);");
                 fg.AppendLine("[DebuggerStepThrough]");
-                fg.AppendLine($"IEnumerable<{nameof(IMajorRecordCommon)}> {nameof(IMajorRecordEnumerable)}.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type, throwIfUnknown);");
+                fg.AppendLine($"IEnumerable<{nameof(IMajorRecordCommon)}> {nameof(IMajorRecordEnumerable)}.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);");
             }
         }
 
