@@ -5724,13 +5724,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         type: type,
                         keys: keys);
                     break;
-                case "CellBlock":
-                case "ICellBlockGetter":
-                case "ICellBlock":
-                    obj.Cells.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
                 case "Worldspace":
                 case "IWorldspaceGetter":
                 case "IWorldspace":
@@ -7892,14 +7885,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IRegion":
                 case "IRegionInternal":
                     foreach (var item in obj.Regions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "CellBlock":
-                case "ICellBlockGetter":
-                case "ICellBlock":
-                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }

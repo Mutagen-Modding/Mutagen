@@ -9977,13 +9977,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         type: type,
                         keys: keys);
                     break;
-                case "CellBlock":
-                case "ICellBlockGetter":
-                case "ICellBlock":
-                    obj.Cells.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
                 case "Worldspace":
                 case "IWorldspaceGetter":
                 case "IWorldspace":
@@ -14154,14 +14147,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "INavigationMeshInfoMap":
                 case "INavigationMeshInfoMapInternal":
                     foreach (var item in obj.NavigationMeshInfoMaps.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "CellBlock":
-                case "ICellBlockGetter":
-                case "ICellBlock":
-                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
