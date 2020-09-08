@@ -4232,6 +4232,358 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
+        public IEnumerable<ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+            ICellGetter obj,
+            Type type,
+            bool throwIfUnknown,
+            Func<ISkyrimMod, ICellGetter, ICell> getter)
+        {
+            switch (type.Name)
+            {
+                case "Landscape":
+                case "ILandscapeGetter":
+                case "ILandscape":
+                case "ILandscapeInternal":
+                    {
+                        if (obj.Landscape.TryGet(out var CellLandscapeitem))
+                        {
+                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: CellLandscapeitem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (Landscape)((ILandscapeGetter)r).DeepCopy();
+                                    getter(m, obj).Landscape = copy;
+                                    return copy;
+                                });
+                        }
+                    }
+                    yield break;
+                case "ANavigationMesh":
+                case "IANavigationMeshGetter":
+                case "IANavigationMesh":
+                case "IANavigationMeshInternal":
+                    foreach (var subItem in obj.NavigationMeshes)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: subItem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (ANavigationMesh)((IANavigationMeshGetter)r).DeepCopy();
+                                    getter(m, obj).NavigationMeshes.Add(copy);
+                                    return copy;
+                                });
+                        }
+                    }
+                    yield break;
+                case "IPlacedGetter":
+                case "IPlaced":
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: subItem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    getter(m, obj).Persistent.Add(copy);
+                                    return copy;
+                                });
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: subItem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    getter(m, obj).Temporary.Add(copy);
+                                    return copy;
+                                });
+                        }
+                    }
+                    yield break;
+                case "PlacedNpc":
+                case "IPlacedNpcGetter":
+                case "IPlacedNpc":
+                case "IPlacedNpcInternal":
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: subItem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    getter(m, obj).Persistent.Add(copy);
+                                    return copy;
+                                });
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: subItem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    getter(m, obj).Temporary.Add(copy);
+                                    return copy;
+                                });
+                        }
+                    }
+                    yield break;
+                case "PlacedObject":
+                case "IPlacedObjectGetter":
+                case "IPlacedObject":
+                case "IPlacedObjectInternal":
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: subItem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    getter(m, obj).Persistent.Add(copy);
+                                    return copy;
+                                });
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: subItem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    getter(m, obj).Temporary.Add(copy);
+                                    return copy;
+                                });
+                        }
+                    }
+                    yield break;
+                case "APlacedTrap":
+                case "IAPlacedTrapGetter":
+                case "IAPlacedTrap":
+                case "IAPlacedTrapInternal":
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: subItem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    getter(m, obj).Persistent.Add(copy);
+                                    return copy;
+                                });
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: subItem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    getter(m, obj).Temporary.Add(copy);
+                                    return copy;
+                                });
+                        }
+                    }
+                    yield break;
+                case "ILocationTargetable":
+                case "ILocationTargetableGetter":
+                {
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: subItem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    getter(m, obj).Persistent.Add(copy);
+                                    return copy;
+                                });
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: subItem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    getter(m, obj).Temporary.Add(copy);
+                                    return copy;
+                                });
+                        }
+                    }
+                    yield break;
+                }
+                case "IOwner":
+                case "IOwnerGetter":
+                {
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: subItem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    getter(m, obj).Persistent.Add(copy);
+                                    return copy;
+                                });
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: subItem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    getter(m, obj).Temporary.Add(copy);
+                                    return copy;
+                                });
+                        }
+                    }
+                    yield break;
+                }
+                case "ILinkedReference":
+                case "ILinkedReferenceGetter":
+                {
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: subItem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    getter(m, obj).Persistent.Add(copy);
+                                    return copy;
+                                });
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: subItem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    getter(m, obj).Temporary.Add(copy);
+                                    return copy;
+                                });
+                        }
+                    }
+                    yield break;
+                }
+                case "IPlacedSimple":
+                case "IPlacedSimpleGetter":
+                {
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: subItem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    getter(m, obj).Persistent.Add(copy);
+                                    return copy;
+                                });
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: subItem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    getter(m, obj).Temporary.Add(copy);
+                                    return copy;
+                                });
+                        }
+                    }
+                    yield break;
+                }
+                case "IPlacedThing":
+                case "IPlacedThingGetter":
+                {
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: subItem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    getter(m, obj).Persistent.Add(copy);
+                                    return copy;
+                                });
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: subItem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    getter(m, obj).Temporary.Add(copy);
+                                    return copy;
+                                });
+                        }
+                    }
+                    yield break;
+                }
+                default:
+                    if (throwIfUnknown)
+                    {
+                        throw new ArgumentException($"Unknown major record type: {type}");
+                    }
+                    else
+                    {
+                        yield break;
+                    }
+            }
+        }
+        
         #endregion
         
     }

@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.14.3.0</Version>
+    <Version>0.15.0.0-dev</Version>
     <Authors>Noggog</Authors>
     <Company>Mutagen</Company>
     <Product>Mutagen</Product>
@@ -44,6 +44,7 @@
     <Compile Include="Enums\SoulLevel.cs" />
     <Compile Include="Enums\Specialization.cs" />
     <Compile Include="Enums\Weekday.cs" />
+    <Compile Include="Extensions\ModContextExt.cs" />
     <Compile Include="Records\Common Subrecords\Condition.cs">
       <DependentUpon>Condition.xml</DependentUpon>
     </Compile>
@@ -911,6 +912,7 @@
     </Compile>
     <Compile Include="Interfaces\IOwner_Generated.cs" />
     <Compile Include="Interfaces\IPlaced_Generated.cs" />
+    <Compile Include="WarmupOblivion.cs" />
     <Compile Include="WarmupOblivion_Generated.cs" />
     <Compile Include="Interfaces\LinkInterfaceMapping_Generated.cs" />
     <Compile Include="Records\RecordTypes_Generated.cs" />

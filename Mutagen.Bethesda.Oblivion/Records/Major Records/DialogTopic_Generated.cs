@@ -1862,6 +1862,45 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
+        public IEnumerable<ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+            IDialogTopicGetter obj,
+            Type type,
+            bool throwIfUnknown,
+            Func<IOblivionMod, IDialogTopicGetter, IDialogTopic> getter)
+        {
+            switch (type.Name)
+            {
+                case "DialogItem":
+                case "IDialogItemGetter":
+                case "IDialogItem":
+                case "IDialogItemInternal":
+                    foreach (var subItem in obj.Items)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: subItem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (DialogItem)((IDialogItemGetter)r).DeepCopy();
+                                    getter(m, obj).Items.Add(copy);
+                                    return copy;
+                                });
+                        }
+                    }
+                    yield break;
+                default:
+                    if (throwIfUnknown)
+                    {
+                        throw new ArgumentException($"Unknown major record type: {type}");
+                    }
+                    else
+                    {
+                        yield break;
+                    }
+            }
+        }
+        
         #endregion
         
     }

@@ -2798,6 +2798,329 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
+        public IEnumerable<ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+            IWorldspaceGetter obj,
+            Type type,
+            bool throwIfUnknown,
+            Func<IOblivionMod, IWorldspaceGetter, IWorldspace> getter)
+        {
+            switch (type.Name)
+            {
+                case "Road":
+                case "IRoadGetter":
+                case "IRoad":
+                case "IRoadInternal":
+                    {
+                        if (obj.Road.TryGet(out var WorldspaceRoaditem))
+                        {
+                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: WorldspaceRoaditem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (Road)((IRoadGetter)r).DeepCopy();
+                                    getter(m, obj).Road = copy;
+                                    return copy;
+                                });
+                        }
+                    }
+                    yield break;
+                case "Cell":
+                case "ICellGetter":
+                case "ICell":
+                case "ICellInternal":
+                    {
+                        if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
+                        {
+                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: WorldspaceTopCellitem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
+                                    getter(m, obj).TopCell = copy;
+                                    return copy;
+                                });
+                            foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
+                                obj: WorldspaceTopCellitem,
+                                type: type,
+                                throwIfUnknown: false,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
+                                    getter(m, obj).TopCell = copy;
+                                    return copy;
+                                }))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
+                        type: type,
+                        throwIfUnknown: false,
+                        worldspace: obj,
+                        getter: getter))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "WorldspaceBlock":
+                case "IWorldspaceBlockGetter":
+                case "IWorldspaceBlock":
+                    foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
+                        type: type,
+                        throwIfUnknown: false,
+                        worldspace: obj,
+                        getter: getter))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "PathGrid":
+                case "IPathGridGetter":
+                case "IPathGrid":
+                case "IPathGridInternal":
+                    {
+                        if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
+                        {
+                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: WorldspaceTopCellitem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
+                                    getter(m, obj).TopCell = copy;
+                                    return copy;
+                                });
+                            foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
+                                obj: WorldspaceTopCellitem,
+                                type: type,
+                                throwIfUnknown: false,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
+                                    getter(m, obj).TopCell = copy;
+                                    return copy;
+                                }))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
+                        type: type,
+                        throwIfUnknown: false,
+                        worldspace: obj,
+                        getter: getter))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Landscape":
+                case "ILandscapeGetter":
+                case "ILandscape":
+                case "ILandscapeInternal":
+                    {
+                        if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
+                        {
+                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: WorldspaceTopCellitem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
+                                    getter(m, obj).TopCell = copy;
+                                    return copy;
+                                });
+                            foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
+                                obj: WorldspaceTopCellitem,
+                                type: type,
+                                throwIfUnknown: false,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
+                                    getter(m, obj).TopCell = copy;
+                                    return copy;
+                                }))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
+                        type: type,
+                        throwIfUnknown: false,
+                        worldspace: obj,
+                        getter: getter))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "PlacedCreature":
+                case "IPlacedCreatureGetter":
+                case "IPlacedCreature":
+                case "IPlacedCreatureInternal":
+                    {
+                        if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
+                        {
+                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: WorldspaceTopCellitem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
+                                    getter(m, obj).TopCell = copy;
+                                    return copy;
+                                });
+                            foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
+                                obj: WorldspaceTopCellitem,
+                                type: type,
+                                throwIfUnknown: false,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
+                                    getter(m, obj).TopCell = copy;
+                                    return copy;
+                                }))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
+                        type: type,
+                        throwIfUnknown: false,
+                        worldspace: obj,
+                        getter: getter))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "PlacedNpc":
+                case "IPlacedNpcGetter":
+                case "IPlacedNpc":
+                case "IPlacedNpcInternal":
+                    {
+                        if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
+                        {
+                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: WorldspaceTopCellitem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
+                                    getter(m, obj).TopCell = copy;
+                                    return copy;
+                                });
+                            foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
+                                obj: WorldspaceTopCellitem,
+                                type: type,
+                                throwIfUnknown: false,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
+                                    getter(m, obj).TopCell = copy;
+                                    return copy;
+                                }))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
+                        type: type,
+                        throwIfUnknown: false,
+                        worldspace: obj,
+                        getter: getter))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "PlacedObject":
+                case "IPlacedObjectGetter":
+                case "IPlacedObject":
+                case "IPlacedObjectInternal":
+                    {
+                        if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
+                        {
+                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: WorldspaceTopCellitem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
+                                    getter(m, obj).TopCell = copy;
+                                    return copy;
+                                });
+                            foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
+                                obj: WorldspaceTopCellitem,
+                                type: type,
+                                throwIfUnknown: false,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
+                                    getter(m, obj).TopCell = copy;
+                                    return copy;
+                                }))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
+                        type: type,
+                        throwIfUnknown: false,
+                        worldspace: obj,
+                        getter: getter))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IPlaced":
+                case "IPlacedGetter":
+                {
+                    {
+                        if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
+                        {
+                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: WorldspaceTopCellitem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
+                                    getter(m, obj).TopCell = copy;
+                                    return copy;
+                                });
+                            foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
+                                obj: WorldspaceTopCellitem,
+                                type: type,
+                                throwIfUnknown: false,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
+                                    getter(m, obj).TopCell = copy;
+                                    return copy;
+                                }))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
+                        type: type,
+                        throwIfUnknown: false,
+                        worldspace: obj,
+                        getter: getter))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
+                default:
+                    if (throwIfUnknown)
+                    {
+                        throw new ArgumentException($"Unknown major record type: {type}");
+                    }
+                    else
+                    {
+                        yield break;
+                    }
+            }
+        }
+        
         #endregion
         
     }

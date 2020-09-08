@@ -2145,6 +2145,45 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
+        public IEnumerable<ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+            IDialogTopicGetter obj,
+            Type type,
+            bool throwIfUnknown,
+            Func<ISkyrimMod, IDialogTopicGetter, IDialogTopic> getter)
+        {
+            switch (type.Name)
+            {
+                case "DialogResponses":
+                case "IDialogResponsesGetter":
+                case "IDialogResponses":
+                case "IDialogResponsesInternal":
+                    foreach (var subItem in obj.Responses)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: subItem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (DialogResponses)((IDialogResponsesGetter)r).DeepCopy();
+                                    getter(m, obj).Responses.Add(copy);
+                                    return copy;
+                                });
+                        }
+                    }
+                    yield break;
+                default:
+                    if (throwIfUnknown)
+                    {
+                        throw new ArgumentException($"Unknown major record type: {type}");
+                    }
+                    else
+                    {
+                        yield break;
+                    }
+            }
+        }
+        
         #endregion
         
     }

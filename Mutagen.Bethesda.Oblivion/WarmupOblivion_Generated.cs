@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda.Oblivion
     /// <summary>
     /// A static class to house initialization warmup logic
     /// </summary>
-    public static class WarmupOblivion
+    public static partial class WarmupOblivion
     {
         /// <summary>
         /// Will initialize internals in a more efficient way that avoids reflection.
@@ -25,6 +25,8 @@ namespace Mutagen.Bethesda.Oblivion
                 new ProtocolDefinition_Oblivion());
             Mutagen.Bethesda.Core.LinkInterfaceMapping.AutomaticRegistration = false;
             Mutagen.Bethesda.Core.LinkInterfaceMapping.Register(new Mutagen.Bethesda.Oblivion.Internals.LinkInterfaceMapping());
+            InitCustom();
         }
+        static partial void InitCustom();
     }
 }

@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda.Skyrim
     /// <summary>
     /// A static class to house initialization warmup logic
     /// </summary>
-    public static class WarmupSkyrim
+    public static partial class WarmupSkyrim
     {
         /// <summary>
         /// Will initialize internals in a more efficient way that avoids reflection.
@@ -25,6 +25,8 @@ namespace Mutagen.Bethesda.Skyrim
                 new ProtocolDefinition_Skyrim());
             Mutagen.Bethesda.Core.LinkInterfaceMapping.AutomaticRegistration = false;
             Mutagen.Bethesda.Core.LinkInterfaceMapping.Register(new Mutagen.Bethesda.Skyrim.Internals.LinkInterfaceMapping());
+            InitCustom();
         }
+        static partial void InitCustom();
     }
 }

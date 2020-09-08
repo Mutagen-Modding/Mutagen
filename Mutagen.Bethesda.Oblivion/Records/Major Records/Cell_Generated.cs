@@ -3339,6 +3339,290 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
+        public IEnumerable<ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+            ICellGetter obj,
+            Type type,
+            bool throwIfUnknown,
+            Func<IOblivionMod, ICellGetter, ICell> getter)
+        {
+            switch (type.Name)
+            {
+                case "PathGrid":
+                case "IPathGridGetter":
+                case "IPathGrid":
+                case "IPathGridInternal":
+                    {
+                        if (obj.PathGrid.TryGet(out var CellPathGriditem))
+                        {
+                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: CellPathGriditem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (PathGrid)((IPathGridGetter)r).DeepCopy();
+                                    getter(m, obj).PathGrid = copy;
+                                    return copy;
+                                });
+                        }
+                    }
+                    yield break;
+                case "Landscape":
+                case "ILandscapeGetter":
+                case "ILandscape":
+                case "ILandscapeInternal":
+                    {
+                        if (obj.Landscape.TryGet(out var CellLandscapeitem))
+                        {
+                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: CellLandscapeitem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (Landscape)((ILandscapeGetter)r).DeepCopy();
+                                    getter(m, obj).Landscape = copy;
+                                    return copy;
+                                });
+                        }
+                    }
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: subItem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    getter(m, obj).Persistent.Add(copy);
+                                    return copy;
+                                });
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: subItem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    getter(m, obj).Temporary.Add(copy);
+                                    return copy;
+                                });
+                        }
+                    }
+                    foreach (var subItem in obj.VisibleWhenDistant)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: subItem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    getter(m, obj).VisibleWhenDistant.Add(copy);
+                                    return copy;
+                                });
+                        }
+                    }
+                    yield break;
+                case "IPlacedGetter":
+                case "IPlaced":
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: subItem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    getter(m, obj).Persistent.Add(copy);
+                                    return copy;
+                                });
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: subItem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    getter(m, obj).Temporary.Add(copy);
+                                    return copy;
+                                });
+                        }
+                    }
+                    foreach (var subItem in obj.VisibleWhenDistant)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: subItem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    getter(m, obj).VisibleWhenDistant.Add(copy);
+                                    return copy;
+                                });
+                        }
+                    }
+                    yield break;
+                case "PlacedCreature":
+                case "IPlacedCreatureGetter":
+                case "IPlacedCreature":
+                case "IPlacedCreatureInternal":
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: subItem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    getter(m, obj).Persistent.Add(copy);
+                                    return copy;
+                                });
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: subItem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    getter(m, obj).Temporary.Add(copy);
+                                    return copy;
+                                });
+                        }
+                    }
+                    foreach (var subItem in obj.VisibleWhenDistant)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: subItem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    getter(m, obj).VisibleWhenDistant.Add(copy);
+                                    return copy;
+                                });
+                        }
+                    }
+                    yield break;
+                case "PlacedNpc":
+                case "IPlacedNpcGetter":
+                case "IPlacedNpc":
+                case "IPlacedNpcInternal":
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: subItem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    getter(m, obj).Persistent.Add(copy);
+                                    return copy;
+                                });
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: subItem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    getter(m, obj).Temporary.Add(copy);
+                                    return copy;
+                                });
+                        }
+                    }
+                    foreach (var subItem in obj.VisibleWhenDistant)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: subItem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    getter(m, obj).VisibleWhenDistant.Add(copy);
+                                    return copy;
+                                });
+                        }
+                    }
+                    yield break;
+                case "PlacedObject":
+                case "IPlacedObjectGetter":
+                case "IPlacedObject":
+                case "IPlacedObjectInternal":
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: subItem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    getter(m, obj).Persistent.Add(copy);
+                                    return copy;
+                                });
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: subItem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    getter(m, obj).Temporary.Add(copy);
+                                    return copy;
+                                });
+                        }
+                    }
+                    foreach (var subItem in obj.VisibleWhenDistant)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                record: subItem,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    getter(m, obj).VisibleWhenDistant.Add(copy);
+                                    return copy;
+                                });
+                        }
+                    }
+                    yield break;
+                default:
+                    if (throwIfUnknown)
+                    {
+                        throw new ArgumentException($"Unknown major record type: {type}");
+                    }
+                    else
+                    {
+                        yield break;
+                    }
+            }
+        }
+        
         #endregion
         
     }

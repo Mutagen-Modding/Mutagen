@@ -9,13 +9,13 @@ namespace Mutagen.Bethesda
 {
     public static class OverrideMixIns
     {
-        public static IEnumerable<TMajor> WinningOverrides<TMajor, TMod>(this LoadOrder<TMod> loadOrder)
+        public static IEnumerable<TMajor> WinningOverrides<TMod, TMajor>(this LoadOrder<TMod> loadOrder)
             where TMod : class, IModGetter
             where TMajor : class, IMajorRecordCommonGetter
         {
             return loadOrder.PriorityOrder.WinningOverrides<TMajor>();
         }
-        
+
         public static IEnumerable<IMajorRecordCommonGetter> WinningOverrides<TMod>(this LoadOrder<TMod> loadOrder, Type type)
             where TMod : class, IModGetter
         {
@@ -66,6 +66,78 @@ namespace Mutagen.Bethesda
             }
         }
 
+        public static IEnumerable<ModContext<TMod, TSetter, TGetter>> WinningOverrideContexts<TMod, TModGetter, TSetter, TGetter>(this LoadOrder<TModGetter> loadOrder)
+            where TMod : class, IMod, TModGetter
+            where TModGetter : class, IModGetter, IMajorRecordContextEnumerable<TMod>
+            where TSetter : class, IMajorRecordCommon, TGetter
+            where TGetter : class, IMajorRecordCommonGetter
+        {
+            return loadOrder.PriorityOrder.WinningOverrideContexts<TMod, TModGetter, TSetter, TGetter>();
+        }
+
+        public static IEnumerable<ModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> WinningOverrideContexts<TMod, TModGetter>(this LoadOrder<TModGetter> loadOrder, Type type)
+            where TMod : class, IMod, TModGetter
+            where TModGetter : class, IModGetter, IMajorRecordContextEnumerable<TMod>
+        {
+            return loadOrder.PriorityOrder.WinningOverrideContexts<TMod, TModGetter>(type);
+        }
+
+        public static IEnumerable<ModContext<TMod, TSetter, TGetter>> WinningOverrideContexts<TMod, TModGetter, TSetter, TGetter>(this IEnumerable<IModListing<TModGetter>> priorityOrder)
+            where TMod : class, IMod, TModGetter
+            where TModGetter : class, IModGetter, IMajorRecordContextEnumerable<TMod>
+            where TSetter : class, IMajorRecordCommon, TGetter
+            where TGetter : class, IMajorRecordCommonGetter
+        {
+            return priorityOrder
+                .Select(l => l.Mod)
+                .NotNull()
+                .WinningOverrideContexts<TMod, TModGetter, TSetter, TGetter>();
+        }
+
+        public static IEnumerable<ModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> WinningOverrideContexts<TMod, TModGetter>(this IEnumerable<IModListing<TModGetter>> priorityOrder, Type type)
+            where TMod : class, IMod, TModGetter
+            where TModGetter : class, IModGetter, IMajorRecordContextEnumerable<TMod>
+        {
+            return priorityOrder
+                .Select(l => l.Mod)
+                .NotNull()
+                .WinningOverrideContexts<TMod, TModGetter>(type);
+        }
+
+        public static IEnumerable<ModContext<TMod, TSetter, TGetter>> WinningOverrideContexts<TMod, TModGetter, TSetter, TGetter>(this IEnumerable<TModGetter> priorityOrder)
+            where TMod : class, IMod, TModGetter
+            where TModGetter : class, IModGetter, IMajorRecordContextEnumerable<TMod>
+            where TSetter : class, IMajorRecordCommon, TGetter
+            where TGetter : class, IMajorRecordCommonGetter
+        {
+            var passedRecords = new HashSet<FormKey>();
+            foreach (var mod in priorityOrder)
+            {
+                foreach (var record in mod.EnumerateMajorRecordContexts<TSetter, TGetter>())
+                {
+                    if (!passedRecords.Add(record.Record.FormKey)) continue;
+                    yield return record;
+                }
+            }
+        }
+
+        public static IEnumerable<ModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> WinningOverrideContexts<TMod, TModGetter>(this IEnumerable<TModGetter> priorityOrder, Type type)
+            where TMod : class, IMod, TModGetter
+            where TModGetter : class, IModGetter, IMajorRecordContextEnumerable<TMod>
+        {
+            var passedRecords = new HashSet<FormKey>();
+            foreach (var mod in priorityOrder)
+            {
+                foreach (var record in mod.EnumerateMajorRecordContexts(type))
+                {
+                    if (!passedRecords.Add(record.Record.FormKey)) continue;
+                    yield return record;
+                }
+            }
+        }
+
+        public readonly static Dictionary<Type, object> AddAsOverrideMasks = new Dictionary<Type, object>();
+
         /// <summary>
         /// Takes in an existing record definition, and either returns the existing override definition
         /// from the Group, or copies the given record, inserts it, and then returns it as an override.
@@ -81,7 +153,8 @@ namespace Mutagen.Bethesda
             {
                 return existingMajor;
             }
-            existingMajor = (major.DeepCopy() as TMajor)!;
+            var mask = AddAsOverrideMasks.GetValueOrDefault(typeof(TMajor));
+            existingMajor = (major.DeepCopy(mask as MajorRecord.TranslationMask) as TMajor)!;
             group.RecordCache.Set(existingMajor);
             return existingMajor;
         }
