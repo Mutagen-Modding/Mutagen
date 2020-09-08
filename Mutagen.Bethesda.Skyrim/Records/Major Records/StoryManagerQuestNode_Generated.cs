@@ -532,7 +532,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Flags, null));
                 ret.Add((MaxConcurrentQuests, null));
                 ret.Add((MaxNumQuestsToRun, null));
-                ret.Add((Quests != null || DefaultOn, Quests?.GetCrystal()));
+                ret.Add((Quests == null ? DefaultOn : !Quests.GetCrystal().CopyNothing, Quests?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)

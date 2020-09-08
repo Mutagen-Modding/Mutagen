@@ -1003,13 +1003,13 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((HeadParts != null || DefaultOn, HeadParts?.GetCrystal()));
+                ret.Add((HeadParts == null ? DefaultOn : !HeadParts.GetCrystal().CopyNothing, HeadParts?.GetCrystal()));
                 ret.Add((AvailableMorphs != null || DefaultOn, AvailableMorphs?.GetCrystal()));
                 ret.Add((RacePresets, null));
                 ret.Add((AvailableHairColors, null));
                 ret.Add((FaceDetails, null));
                 ret.Add((DefaultFaceTexture, null));
-                ret.Add((TintMasks != null || DefaultOn, TintMasks?.GetCrystal()));
+                ret.Add((TintMasks == null ? DefaultOn : !TintMasks.GetCrystal().CopyNothing, TintMasks?.GetCrystal()));
                 ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
             }
 

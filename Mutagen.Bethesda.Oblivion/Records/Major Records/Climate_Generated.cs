@@ -579,7 +579,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Weathers != null || DefaultOn, Weathers?.GetCrystal()));
+                ret.Add((Weathers == null ? DefaultOn : !Weathers.GetCrystal().CopyNothing, Weathers?.GetCrystal()));
                 ret.Add((SunTexture, null));
                 ret.Add((SunGlareTexture, null));
                 ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));

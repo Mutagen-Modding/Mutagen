@@ -502,7 +502,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 ret.Add((BaseEffect, null));
                 ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
-                ret.Add((Conditions != null || DefaultOn, Conditions?.GetCrystal()));
+                ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)

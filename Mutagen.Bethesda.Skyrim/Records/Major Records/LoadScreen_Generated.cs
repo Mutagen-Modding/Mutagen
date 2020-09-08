@@ -709,7 +709,7 @@ namespace Mutagen.Bethesda.Skyrim
                 base.GetCrystal(ret);
                 ret.Add((Icons != null || DefaultOn, Icons?.GetCrystal()));
                 ret.Add((Description, null));
-                ret.Add((Conditions != null || DefaultOn, Conditions?.GetCrystal()));
+                ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
                 ret.Add((LoadingScreenNif, null));
                 ret.Add((InitialScale, null));
                 ret.Add((InitialRotation, null));

@@ -637,7 +637,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Name, null));
                 ret.Add((DialogType, null));
                 ret.Add((Timestamp, null));
-                ret.Add((Items != null || DefaultOn, Items?.GetCrystal()));
+                ret.Add((Items == null ? DefaultOn : !Items.GetCrystal().CopyNothing, Items?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)

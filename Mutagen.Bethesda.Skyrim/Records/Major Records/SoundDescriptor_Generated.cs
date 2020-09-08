@@ -938,7 +938,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((SoundFiles, null));
                 ret.Add((OutputModel, null));
                 ret.Add((String, null));
-                ret.Add((Conditions != null || DefaultOn, Conditions?.GetCrystal()));
+                ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
                 ret.Add((LoopAndRumble != null || DefaultOn, LoopAndRumble?.GetCrystal()));
                 ret.Add((PercentFrequencyShift, null));
                 ret.Add((PercentFrequencyVariance, null));

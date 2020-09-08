@@ -3718,7 +3718,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((FacegenMainClamp, null));
                 ret.Add((FacegenFaceClamp, null));
                 ret.Add((AttackRace, null));
-                ret.Add((Attacks != null || DefaultOn, Attacks?.GetCrystal()));
+                ret.Add((Attacks == null ? DefaultOn : !Attacks.GetCrystal().CopyNothing, Attacks?.GetCrystal()));
                 ret.Add((BodyData != null || DefaultOn, null));
                 ret.Add((Hairs, null));
                 ret.Add((Eyes, null));
@@ -3730,7 +3730,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((OpenLootSound, null));
                 ret.Add((CloseLootSound, null));
                 ret.Add((BipedObjectNames, null));
-                ret.Add((MovementTypes != null || DefaultOn, MovementTypes?.GetCrystal()));
+                ret.Add((MovementTypes == null ? DefaultOn : !MovementTypes.GetCrystal().CopyNothing, MovementTypes?.GetCrystal()));
                 ret.Add((EquipmentFlags, null));
                 ret.Add((EquipmentSlots, null));
                 ret.Add((UnarmedEquipSlot, null));

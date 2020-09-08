@@ -454,7 +454,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Stage, null));
-                ret.Add((LogEntries != null || DefaultOn, LogEntries?.GetCrystal()));
+                ret.Add((LogEntries == null ? DefaultOn : !LogEntries.GetCrystal().CopyNothing, LogEntries?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)

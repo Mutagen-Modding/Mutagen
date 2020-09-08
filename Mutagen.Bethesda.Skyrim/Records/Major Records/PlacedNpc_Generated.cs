@@ -1483,7 +1483,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Count, null));
                 ret.Add((Radius, null));
                 ret.Add((Health, null));
-                ret.Add((LinkedReferences != null || DefaultOn, LinkedReferences?.GetCrystal()));
+                ret.Add((LinkedReferences == null ? DefaultOn : !LinkedReferences.GetCrystal().CopyNothing, LinkedReferences?.GetCrystal()));
                 ret.Add((ActivateParents != null || DefaultOn, ActivateParents?.GetCrystal()));
                 ret.Add((LinkedReferenceColor != null || DefaultOn, LinkedReferenceColor?.GetCrystal()));
                 ret.Add((PersistentLocation, null));

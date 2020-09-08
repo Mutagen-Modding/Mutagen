@@ -941,7 +941,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Deleted, null));
                 ret.Add((Author, null));
                 ret.Add((Description, null));
-                ret.Add((MasterReferences != null || DefaultOn, MasterReferences?.GetCrystal()));
+                ret.Add((MasterReferences == null ? DefaultOn : !MasterReferences.GetCrystal().CopyNothing, MasterReferences?.GetCrystal()));
                 ret.Add((OverriddenForms, null));
                 ret.Add((INTV, null));
                 ret.Add((INCC, null));

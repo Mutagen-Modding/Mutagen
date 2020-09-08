@@ -448,7 +448,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 base.GetCrystal(ret);
                 ret.Add((MusicType, null));
-                ret.Add((Sounds != null || DefaultOn, Sounds?.GetCrystal()));
+                ret.Add((Sounds == null ? DefaultOn : !Sounds.GetCrystal().CopyNothing, Sounds?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)

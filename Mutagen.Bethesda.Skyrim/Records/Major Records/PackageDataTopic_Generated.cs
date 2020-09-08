@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Topics != null || DefaultOn, Topics?.GetCrystal()));
+                ret.Add((Topics == null ? DefaultOn : !Topics.GetCrystal().CopyNothing, Topics?.GetCrystal()));
                 ret.Add((TPIC, null));
             }
 

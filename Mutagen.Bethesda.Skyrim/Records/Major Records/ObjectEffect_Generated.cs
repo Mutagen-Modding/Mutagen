@@ -813,7 +813,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((ChargeTime, null));
                 ret.Add((BaseEnchantment, null));
                 ret.Add((WornRestrictions, null));
-                ret.Add((Effects != null || DefaultOn, Effects?.GetCrystal()));
+                ret.Add((Effects == null ? DefaultOn : !Effects.GetCrystal().CopyNothing, Effects?.GetCrystal()));
                 ret.Add((ENITDataTypeState, null));
             }
 

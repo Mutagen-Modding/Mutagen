@@ -1569,7 +1569,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((LargeReferences != null || DefaultOn, LargeReferences?.GetCrystal()));
+                ret.Add((LargeReferences == null ? DefaultOn : !LargeReferences.GetCrystal().CopyNothing, LargeReferences?.GetCrystal()));
                 ret.Add((MaxHeight != null || DefaultOn, MaxHeight?.GetCrystal()));
                 ret.Add((Name, null));
                 ret.Add((FixedDimensionsCenterCell, null));
@@ -1599,7 +1599,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((TopCell != null || DefaultOn, TopCell?.GetCrystal()));
                 ret.Add((SubCellsTimestamp, null));
                 ret.Add((SubCellsUnknown, null));
-                ret.Add((SubCells != null || DefaultOn, SubCells?.GetCrystal()));
+                ret.Add((SubCells == null ? DefaultOn : !SubCells.GetCrystal().CopyNothing, SubCells?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)

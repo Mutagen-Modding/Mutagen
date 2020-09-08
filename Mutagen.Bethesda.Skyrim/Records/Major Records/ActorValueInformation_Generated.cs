@@ -611,7 +611,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Abbreviation, null));
                 ret.Add((CNAM, null));
                 ret.Add((Skill != null || DefaultOn, Skill?.GetCrystal()));
-                ret.Add((PerkTree != null || DefaultOn, PerkTree?.GetCrystal()));
+                ret.Add((PerkTree == null ? DefaultOn : !PerkTree.GetCrystal().CopyNothing, PerkTree?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)

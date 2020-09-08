@@ -473,7 +473,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.GetCrystal(ret);
                 ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
-                ret.Add((Parts != null || DefaultOn, Parts?.GetCrystal()));
+                ret.Add((Parts == null ? DefaultOn : !Parts.GetCrystal().CopyNothing, Parts?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)

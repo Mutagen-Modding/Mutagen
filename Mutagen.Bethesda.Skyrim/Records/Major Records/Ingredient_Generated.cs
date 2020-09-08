@@ -1082,7 +1082,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Weight, null));
                 ret.Add((IngredientValue, null));
                 ret.Add((Flags, null));
-                ret.Add((Effects != null || DefaultOn, Effects?.GetCrystal()));
+                ret.Add((Effects == null ? DefaultOn : !Effects.GetCrystal().CopyNothing, Effects?.GetCrystal()));
                 ret.Add((DATADataTypeState, null));
                 ret.Add((ENITDataTypeState, null));
             }

@@ -781,7 +781,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Flags, null));
                 ret.Add((Type, null));
                 ret.Add((ExtraParts, null));
-                ret.Add((Parts != null || DefaultOn, Parts?.GetCrystal()));
+                ret.Add((Parts == null ? DefaultOn : !Parts.GetCrystal().CopyNothing, Parts?.GetCrystal()));
                 ret.Add((TextureSet, null));
                 ret.Add((Color, null));
                 ret.Add((ValidRaces, null));

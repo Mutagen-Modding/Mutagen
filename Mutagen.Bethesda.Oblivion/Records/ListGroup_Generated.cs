@@ -2009,7 +2009,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret.Add((Type, null));
                 ret.Add((LastModified, null));
-                ret.Add((Records != null || DefaultOn, Records?.GetCrystal()));
+                ret.Add((Records == null ? DefaultOn : !Records.GetCrystal().CopyNothing, Records?.GetCrystal()));
             }
         
             public static implicit operator TranslationMask<T_TranslMask>(bool defaultOn)

@@ -1677,9 +1677,9 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((CreateReferenceToObject != null || DefaultOn, CreateReferenceToObject?.GetCrystal()));
                 ret.Add((FindMatchingRefNearAlias != null || DefaultOn, FindMatchingRefNearAlias?.GetCrystal()));
                 ret.Add((FindMatchingRefFromEvent != null || DefaultOn, FindMatchingRefFromEvent?.GetCrystal()));
-                ret.Add((Conditions != null || DefaultOn, Conditions?.GetCrystal()));
+                ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
                 ret.Add((Keywords, null));
-                ret.Add((Items != null || DefaultOn, Items?.GetCrystal()));
+                ret.Add((Items == null ? DefaultOn : !Items.GetCrystal().CopyNothing, Items?.GetCrystal()));
                 ret.Add((SpectatorOverridePackageList, null));
                 ret.Add((ObserveDeadBodyOverridePackageList, null));
                 ret.Add((GuardWarnOverridePackageList, null));

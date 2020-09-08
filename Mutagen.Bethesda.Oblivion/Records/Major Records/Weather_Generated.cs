@@ -788,11 +788,11 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((TextureLowerLayer, null));
                 ret.Add((TextureUpperLayer, null));
                 ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
-                ret.Add((Colors != null || DefaultOn, Colors?.GetCrystal()));
+                ret.Add((Colors == null ? DefaultOn : !Colors.GetCrystal().CopyNothing, Colors?.GetCrystal()));
                 ret.Add((FogDistance != null || DefaultOn, FogDistance?.GetCrystal()));
                 ret.Add((HDRData != null || DefaultOn, HDRData?.GetCrystal()));
                 ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
-                ret.Add((Sounds != null || DefaultOn, Sounds?.GetCrystal()));
+                ret.Add((Sounds == null ? DefaultOn : !Sounds.GetCrystal().CopyNothing, Sounds?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)

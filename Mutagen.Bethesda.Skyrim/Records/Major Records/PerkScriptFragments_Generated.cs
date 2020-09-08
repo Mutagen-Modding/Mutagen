@@ -485,7 +485,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 ret.Add((Unknown, null));
                 ret.Add((FileName, null));
-                ret.Add((Fragments != null || DefaultOn, Fragments?.GetCrystal()));
+                ret.Add((Fragments == null ? DefaultOn : !Fragments.GetCrystal().CopyNothing, Fragments?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)

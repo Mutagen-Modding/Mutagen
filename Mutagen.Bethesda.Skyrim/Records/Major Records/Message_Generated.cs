@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Quest, null));
                 ret.Add((Flags, null));
                 ret.Add((DisplayTime, null));
-                ret.Add((MenuButtons != null || DefaultOn, MenuButtons?.GetCrystal()));
+                ret.Add((MenuButtons == null ? DefaultOn : !MenuButtons.GetCrystal().CopyNothing, MenuButtons?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)

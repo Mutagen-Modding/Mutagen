@@ -2136,9 +2136,9 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((ScriptEffectAIScore, null));
                 ret.Add((ScriptEffectAIDelayTime, null));
                 ret.Add((CounterEffects, null));
-                ret.Add((Sounds != null || DefaultOn, Sounds?.GetCrystal()));
+                ret.Add((Sounds == null ? DefaultOn : !Sounds.GetCrystal().CopyNothing, Sounds?.GetCrystal()));
                 ret.Add((Description, null));
-                ret.Add((Conditions != null || DefaultOn, Conditions?.GetCrystal()));
+                ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
                 ret.Add((DATADataTypeState, null));
             }
 

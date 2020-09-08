@@ -791,7 +791,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((ObjectBounds != null || DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((Name, null));
                 ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
-                ret.Add((Items != null || DefaultOn, Items?.GetCrystal()));
+                ret.Add((Items == null ? DefaultOn : !Items.GetCrystal().CopyNothing, Items?.GetCrystal()));
                 ret.Add((Destructible != null || DefaultOn, Destructible?.GetCrystal()));
                 ret.Add((Flags, null));
                 ret.Add((Weight, null));

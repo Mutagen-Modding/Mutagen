@@ -547,7 +547,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((GroupType, null));
                 ret.Add((LastModified, null));
                 ret.Add((Unknown, null));
-                ret.Add((Cells != null || DefaultOn, Cells?.GetCrystal()));
+                ret.Add((Cells == null ? DefaultOn : !Cells.GetCrystal().CopyNothing, Cells?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)

@@ -546,7 +546,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Index, null));
                 ret.Add((Flags, null));
                 ret.Add((Unknown, null));
-                ret.Add((LogEntries != null || DefaultOn, LogEntries?.GetCrystal()));
+                ret.Add((LogEntries == null ? DefaultOn : !LogEntries.GetCrystal().CopyNothing, LogEntries?.GetCrystal()));
                 ret.Add((INDXDataTypeState, null));
             }
 

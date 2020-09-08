@@ -1621,12 +1621,12 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Name, null));
                 ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
                 ret.Add((Configuration != null || DefaultOn, Configuration?.GetCrystal()));
-                ret.Add((Factions != null || DefaultOn, Factions?.GetCrystal()));
+                ret.Add((Factions == null ? DefaultOn : !Factions.GetCrystal().CopyNothing, Factions?.GetCrystal()));
                 ret.Add((DeathItem, null));
                 ret.Add((Race, null));
                 ret.Add((Spells, null));
                 ret.Add((Script, null));
-                ret.Add((Items != null || DefaultOn, Items?.GetCrystal()));
+                ret.Add((Items == null ? DefaultOn : !Items.GetCrystal().CopyNothing, Items?.GetCrystal()));
                 ret.Add((AIData != null || DefaultOn, AIData?.GetCrystal()));
                 ret.Add((AIPackages, null));
                 ret.Add((Animations, null));

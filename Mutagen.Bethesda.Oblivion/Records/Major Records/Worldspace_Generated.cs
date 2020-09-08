@@ -930,7 +930,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Road != null || DefaultOn, Road?.GetCrystal()));
                 ret.Add((TopCell != null || DefaultOn, TopCell?.GetCrystal()));
                 ret.Add((SubCellsTimestamp, null));
-                ret.Add((SubCells != null || DefaultOn, SubCells?.GetCrystal()));
+                ret.Add((SubCells == null ? DefaultOn : !SubCells.GetCrystal().CopyNothing, SubCells?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)

@@ -418,7 +418,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((AlternateTextures != null || DefaultOn, AlternateTextures?.GetCrystal()));
+                ret.Add((AlternateTextures == null ? DefaultOn : !AlternateTextures.GetCrystal().CopyNothing, AlternateTextures?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)

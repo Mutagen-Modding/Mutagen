@@ -697,7 +697,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((VertexNormals, null));
                 ret.Add((VertexHeightMap, null));
                 ret.Add((VertexColors, null));
-                ret.Add((Layers != null || DefaultOn, Layers?.GetCrystal()));
+                ret.Add((Layers == null ? DefaultOn : !Layers.GetCrystal().CopyNothing, Layers?.GetCrystal()));
                 ret.Add((Textures, null));
             }
 

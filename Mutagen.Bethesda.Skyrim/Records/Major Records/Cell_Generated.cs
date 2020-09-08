@@ -1843,7 +1843,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Music, null));
                 ret.Add((ImageSpace, null));
                 ret.Add((Landscape != null || DefaultOn, Landscape?.GetCrystal()));
-                ret.Add((NavigationMeshes != null || DefaultOn, NavigationMeshes?.GetCrystal()));
+                ret.Add((NavigationMeshes == null ? DefaultOn : !NavigationMeshes.GetCrystal().CopyNothing, NavigationMeshes?.GetCrystal()));
                 ret.Add((Timestamp, null));
                 ret.Add((UnknownGroupData, null));
                 ret.Add((PersistentTimestamp, null));
