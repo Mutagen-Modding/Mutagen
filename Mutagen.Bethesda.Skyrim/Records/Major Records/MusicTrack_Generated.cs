@@ -865,7 +865,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((FinaleFilename, null));
                 ret.Add((LoopData != null || DefaultOn, LoopData?.GetCrystal()));
                 ret.Add((CuePoints, null));
-                ret.Add((Conditions != null || DefaultOn, Conditions?.GetCrystal()));
+                ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
                 ret.Add((Tracks, null));
             }
 

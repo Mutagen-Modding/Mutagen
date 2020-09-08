@@ -911,14 +911,14 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Name, null));
                 ret.Add((Description, null));
                 ret.Add((Icons != null || DefaultOn, Icons?.GetCrystal()));
-                ret.Add((Conditions != null || DefaultOn, Conditions?.GetCrystal()));
+                ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
                 ret.Add((Trait, null));
                 ret.Add((Level, null));
                 ret.Add((NumRanks, null));
                 ret.Add((Playable, null));
                 ret.Add((Hidden, null));
                 ret.Add((NextPerk, null));
-                ret.Add((Effects != null || DefaultOn, Effects?.GetCrystal()));
+                ret.Add((Effects == null ? DefaultOn : !Effects.GetCrystal().CopyNothing, Effects?.GetCrystal()));
                 ret.Add((DATADataTypeState, null));
             }
 

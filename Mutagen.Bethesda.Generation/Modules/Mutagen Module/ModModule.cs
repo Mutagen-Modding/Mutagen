@@ -688,6 +688,7 @@ namespace Mutagen.Bethesda.Generation
             if (!elems.Any()) return;
             var objData = obj.GetObjectData();
             objData.GameReleaseOptions = elems.Select(el => Enum.Parse<GameRelease>(el.Value)).ToHashSet();
+            obj.Interfaces.Add(LoquiInterfaceDefinitionType.IGetter, $"IMajorRecordContextEnumerable<{obj.Interface(getter: false, internalInterface: true)}>");
         }
 
         public override async Task GenerateInInterface(ObjectGeneration obj, FileGeneration fg, bool internalInterface, bool getter)

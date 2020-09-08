@@ -634,7 +634,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Flags, null));
-                ret.Add((Conditions != null || DefaultOn, Conditions?.GetCrystal()));
+                ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
                 ret.Add((Entry, null));
                 ret.Add((NextQuest, null));
                 ret.Add((SCHR, null));

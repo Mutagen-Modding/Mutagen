@@ -1330,7 +1330,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Name, null));
                 ret.Add((Description, null));
                 ret.Add((Spells, null));
-                ret.Add((Relations != null || DefaultOn, Relations?.GetCrystal()));
+                ret.Add((Relations == null ? DefaultOn : !Relations.GetCrystal().CopyNothing, Relations?.GetCrystal()));
                 ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
                 ret.Add((Voices != null || DefaultOn, null));
                 ret.Add((DefaultHair != null || DefaultOn, null));
@@ -1338,7 +1338,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((FaceGenMainClamp, null));
                 ret.Add((FaceGenFaceClamp, null));
                 ret.Add((RaceStats != null || DefaultOn, null));
-                ret.Add((FaceData != null || DefaultOn, FaceData?.GetCrystal()));
+                ret.Add((FaceData == null ? DefaultOn : !FaceData.GetCrystal().CopyNothing, FaceData?.GetCrystal()));
                 ret.Add((BodyData != null || DefaultOn, null));
                 ret.Add((Hairs, null));
                 ret.Add((Eyes, null));

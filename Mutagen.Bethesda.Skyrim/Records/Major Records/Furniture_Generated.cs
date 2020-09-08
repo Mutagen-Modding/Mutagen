@@ -969,7 +969,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((InteractionKeyword, null));
                 ret.Add((WorkbenchData != null || DefaultOn, WorkbenchData?.GetCrystal()));
                 ret.Add((AssociatedSpell, null));
-                ret.Add((Markers != null || DefaultOn, Markers?.GetCrystal()));
+                ret.Add((Markers == null ? DefaultOn : !Markers.GetCrystal().CopyNothing, Markers?.GetCrystal()));
                 ret.Add((ModelFilename, null));
             }
 

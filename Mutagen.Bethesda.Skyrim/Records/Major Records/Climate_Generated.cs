@@ -777,7 +777,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((WeatherTypes != null || DefaultOn, WeatherTypes?.GetCrystal()));
+                ret.Add((WeatherTypes == null ? DefaultOn : !WeatherTypes.GetCrystal().CopyNothing, WeatherTypes?.GetCrystal()));
                 ret.Add((SunTexture, null));
                 ret.Add((SunGlareTexture, null));
                 ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));

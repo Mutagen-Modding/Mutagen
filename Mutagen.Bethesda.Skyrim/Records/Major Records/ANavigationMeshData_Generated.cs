@@ -1022,9 +1022,9 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((NavmeshVersion, null));
                 ret.Add((Magic, null));
                 ret.Add((Vertices, null));
-                ret.Add((Triangles != null || DefaultOn, Triangles?.GetCrystal()));
-                ret.Add((EdgeLinks != null || DefaultOn, EdgeLinks?.GetCrystal()));
-                ret.Add((DoorTriangles != null || DefaultOn, DoorTriangles?.GetCrystal()));
+                ret.Add((Triangles == null ? DefaultOn : !Triangles.GetCrystal().CopyNothing, Triangles?.GetCrystal()));
+                ret.Add((EdgeLinks == null ? DefaultOn : !EdgeLinks.GetCrystal().CopyNothing, EdgeLinks?.GetCrystal()));
+                ret.Add((DoorTriangles == null ? DefaultOn : !DoorTriangles.GetCrystal().CopyNothing, DoorTriangles?.GetCrystal()));
                 ret.Add((NavmeshGridDivisor, null));
                 ret.Add((MaxDistanceX, null));
                 ret.Add((MaxDistanceY, null));

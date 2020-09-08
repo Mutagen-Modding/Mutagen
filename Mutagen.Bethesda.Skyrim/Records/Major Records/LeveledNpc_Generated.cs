@@ -607,7 +607,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((ChanceNone, null));
                 ret.Add((Flags, null));
                 ret.Add((Global, null));
-                ret.Add((Entries != null || DefaultOn, Entries?.GetCrystal()));
+                ret.Add((Entries == null ? DefaultOn : !Entries.GetCrystal().CopyNothing, Entries?.GetCrystal()));
                 ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
             }
 

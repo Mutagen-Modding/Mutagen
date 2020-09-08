@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests
 {
-    public class OverrideIteration_Tests
+    public class Override_Tests
     {
         [Fact]
         public void WinningOverrides_Typical()
@@ -31,6 +31,21 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.Same(pluginNpc, winningOverrides[pluginNpc.FormKey]);
             Assert.Equal(overrideNpc.FormKey, baseNpc.FormKey);
             Assert.Same(overrideNpc, winningOverrides[baseNpc.FormKey]);
+        }
+
+        [Fact]
+        public void Worldspace_GetOrAddAsOverride_Clean()
+        {
+            WarmupOblivion.Init();
+            var mod = new OblivionMod(Utility.ModKey);
+            var worldspace = mod.Worldspaces.AddNew();
+            var block = worldspace.SubCells.AddReturn(new WorldspaceBlock());
+            var subBlock = block.Items.AddReturn(new WorldspaceSubBlock());
+            var cell = subBlock.Items.AddReturn(new Cell(mod.GetNextFormKey()));
+
+            var mod2 = new OblivionMod(Utility.ModKey2);
+            var worldspaceOverride = mod2.Worldspaces.GetOrAddAsOverride(worldspace);
+            Assert.Empty(worldspaceOverride.SubCells);
         }
     }
 }

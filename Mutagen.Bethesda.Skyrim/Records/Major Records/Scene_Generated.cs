@@ -1046,15 +1046,15 @@ namespace Mutagen.Bethesda.Skyrim
                 base.GetCrystal(ret);
                 ret.Add((VirtualMachineAdapter != null || DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((Flags, null));
-                ret.Add((Phases != null || DefaultOn, Phases?.GetCrystal()));
-                ret.Add((Actors != null || DefaultOn, Actors?.GetCrystal()));
-                ret.Add((Actions != null || DefaultOn, Actions?.GetCrystal()));
+                ret.Add((Phases == null ? DefaultOn : !Phases.GetCrystal().CopyNothing, Phases?.GetCrystal()));
+                ret.Add((Actors == null ? DefaultOn : !Actors.GetCrystal().CopyNothing, Actors?.GetCrystal()));
+                ret.Add((Actions == null ? DefaultOn : !Actions.GetCrystal().CopyNothing, Actions?.GetCrystal()));
                 ret.Add((Unused != null || DefaultOn, Unused?.GetCrystal()));
                 ret.Add((Unused2 != null || DefaultOn, Unused2?.GetCrystal()));
                 ret.Add((Quest, null));
                 ret.Add((LastActionIndex, null));
                 ret.Add((VNAM, null));
-                ret.Add((Conditions != null || DefaultOn, Conditions?.GetCrystal()));
+                ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)

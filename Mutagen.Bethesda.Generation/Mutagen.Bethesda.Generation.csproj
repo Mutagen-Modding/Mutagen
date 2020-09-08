@@ -6,8 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Loqui" Version="1.5.1" />
-    <PackageReference Include="Loqui.Generation" Version="1.5.1" />
+    <PackageReference Include="Loqui" Version="1.5.2" />
+    <PackageReference Include="Loqui.Generation" Version="1.5.2" />
     <PackageReference Include="Noggog.CSharpExt" Version="1.1.4" />
     <PackageReference Include="System.Linq.Async" Version="4.1.1" />
   </ItemGroup>
@@ -19,7 +19,7 @@
   <PropertyGroup>
     <Nullable>disable</Nullable>
     <Description>Skyrim</Description>
-    <Version>0.14.3.0</Version>
+    <Version>0.15.0.0</Version>
   </PropertyGroup>
 
 </Project>

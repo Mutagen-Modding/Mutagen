@@ -543,7 +543,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.GetCrystal(ret);
                 ret.Add((NavMeshVersion, null));
-                ret.Add((MapInfos != null || DefaultOn, MapInfos?.GetCrystal()));
+                ret.Add((MapInfos == null ? DefaultOn : !MapInfos.GetCrystal().CopyNothing, MapInfos?.GetCrystal()));
                 ret.Add((PreferredPathing != null || DefaultOn, PreferredPathing?.GetCrystal()));
                 ret.Add((NVSI, null));
             }

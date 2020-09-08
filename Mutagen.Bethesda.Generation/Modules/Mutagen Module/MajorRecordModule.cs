@@ -1,5 +1,6 @@
 using Loqui;
 using Loqui.Generation;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -269,6 +270,38 @@ namespace Mutagen.Bethesda.Generation
                     }
                 }
             }
+        }
+
+        public static async Task<Dictionary<ObjectGeneration, HashSet<TypeGeneration>>> FindDeepRecords(ObjectGeneration obj)
+        {
+            var deepRecordMapping = new Dictionary<ObjectGeneration, HashSet<TypeGeneration>>();
+            foreach (var field in obj.IterateFields())
+            {
+                if (field is LoquiType loqui)
+                {
+                    var groupType = field as GroupType;
+                    await foreach (var deepObj in MajorRecordModule.IterateMajorRecords(loqui, includeBaseClass: true))
+                    {
+                        if (groupType != null
+                            && groupType.GetGroupTarget() == deepObj)
+                        {
+                            continue;
+                        }
+                        if (loqui.TargetObjectGeneration == deepObj) continue;
+                        deepRecordMapping.GetOrAdd(deepObj).Add(field);
+                    }
+                }
+                else if (field is ContainerType cont)
+                {
+                    if (!(cont.SubTypeGeneration is LoquiType subLoqui)) continue;
+                    await foreach (var deepObj in MajorRecordModule.IterateMajorRecords(subLoqui, includeBaseClass: true))
+                    {
+                        if (subLoqui.TargetObjectGeneration == deepObj) continue;
+                        deepRecordMapping.GetOrAdd(deepObj).Add(field);
+                    }
+                }
+            }
+            return deepRecordMapping;
         }
     }
 }

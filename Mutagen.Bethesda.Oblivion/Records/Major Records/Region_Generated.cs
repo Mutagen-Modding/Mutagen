@@ -750,7 +750,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Icon, null));
                 ret.Add((MapColor, null));
                 ret.Add((Worldspace, null));
-                ret.Add((Areas != null || DefaultOn, Areas?.GetCrystal()));
+                ret.Add((Areas == null ? DefaultOn : !Areas.GetCrystal().CopyNothing, Areas?.GetCrystal()));
                 ret.Add((Objects != null || DefaultOn, Objects?.GetCrystal()));
                 ret.Add((Weather != null || DefaultOn, Weather?.GetCrystal()));
                 ret.Add((MapName != null || DefaultOn, MapName?.GetCrystal()));

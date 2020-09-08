@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda
     /// <summary>
     /// A static class to house initialization warmup logic
     /// </summary>
-    public static class WarmupAll
+    public static partial class WarmupAll
     {
         /// <summary>
         /// Will initialize internals in a more efficient way that avoids reflection.
@@ -22,5 +22,6 @@ namespace Mutagen.Bethesda
             Mutagen.Bethesda.Oblivion.WarmupOblivion.Init();
             Mutagen.Bethesda.Skyrim.WarmupSkyrim.Init();
         }
+        static partial void InitCustom();
     }
 }

@@ -555,7 +555,7 @@ namespace Mutagen.Bethesda.Oblivion
                 base.GetCrystal(ret);
                 ret.Add((ChanceNone, null));
                 ret.Add((Flags, null));
-                ret.Add((Entries != null || DefaultOn, Entries?.GetCrystal()));
+                ret.Add((Entries == null ? DefaultOn : !Entries.GetCrystal().CopyNothing, Entries?.GetCrystal()));
                 ret.Add((Script, null));
                 ret.Add((Template, null));
             }

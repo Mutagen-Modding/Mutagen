@@ -701,7 +701,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Deleted, null));
                 ret.Add((Author, null));
                 ret.Add((Description, null));
-                ret.Add((MasterReferences != null || DefaultOn, MasterReferences?.GetCrystal()));
+                ret.Add((MasterReferences == null ? DefaultOn : !MasterReferences.GetCrystal().CopyNothing, MasterReferences?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)

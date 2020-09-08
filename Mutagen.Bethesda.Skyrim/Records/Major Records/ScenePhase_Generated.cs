@@ -694,8 +694,8 @@ namespace Mutagen.Bethesda.Skyrim
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Name, null));
-                ret.Add((StartConditions != null || DefaultOn, StartConditions?.GetCrystal()));
-                ret.Add((CompletionConditions != null || DefaultOn, CompletionConditions?.GetCrystal()));
+                ret.Add((StartConditions == null ? DefaultOn : !StartConditions.GetCrystal().CopyNothing, StartConditions?.GetCrystal()));
+                ret.Add((CompletionConditions == null ? DefaultOn : !CompletionConditions.GetCrystal().CopyNothing, CompletionConditions?.GetCrystal()));
                 ret.Add((Unused != null || DefaultOn, Unused?.GetCrystal()));
                 ret.Add((Unused2 != null || DefaultOn, Unused2?.GetCrystal()));
                 ret.Add((EditorWidth, null));

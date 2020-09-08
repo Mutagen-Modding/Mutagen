@@ -948,7 +948,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((PreferredMergesFlag, null));
                 ret.Add((MergedTo, null));
                 ret.Add((PreferredMerges, null));
-                ret.Add((LinkedDoors != null || DefaultOn, LinkedDoors?.GetCrystal()));
+                ret.Add((LinkedDoors == null ? DefaultOn : !LinkedDoors.GetCrystal().CopyNothing, LinkedDoors?.GetCrystal()));
                 ret.Add((Island != null || DefaultOn, Island?.GetCrystal()));
                 ret.Add((Unknown2, null));
                 ret.Add((ParentWorldspace, null));

@@ -1612,7 +1612,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((ScheduleMinute, null));
                 ret.Add((Unknown3, null));
                 ret.Add((ScheduleDurationInMinutes, null));
-                ret.Add((Conditions != null || DefaultOn, Conditions?.GetCrystal()));
+                ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
                 ret.Add((Unknown4, null));
                 ret.Add((IdleAnimations != null || DefaultOn, IdleAnimations?.GetCrystal()));
                 ret.Add((CombatStyle, null));
@@ -1621,7 +1621,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((DataInputVersion, null));
                 ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
                 ret.Add((XnamMarker, null));
-                ret.Add((ProcedureTree != null || DefaultOn, ProcedureTree?.GetCrystal()));
+                ret.Add((ProcedureTree == null ? DefaultOn : !ProcedureTree.GetCrystal().CopyNothing, ProcedureTree?.GetCrystal()));
                 ret.Add((OnBegin != null || DefaultOn, OnBegin?.GetCrystal()));
                 ret.Add((OnEnd != null || DefaultOn, OnEnd?.GetCrystal()));
                 ret.Add((OnChange != null || DefaultOn, OnChange?.GetCrystal()));

@@ -1685,12 +1685,12 @@ namespace Mutagen.Bethesda.Oblivion
                 base.GetCrystal(ret);
                 ret.Add((Name, null));
                 ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
-                ret.Add((Items != null || DefaultOn, Items?.GetCrystal()));
+                ret.Add((Items == null ? DefaultOn : !Items.GetCrystal().CopyNothing, Items?.GetCrystal()));
                 ret.Add((Spells, null));
                 ret.Add((Models, null));
                 ret.Add((NIFT, null));
                 ret.Add((Configuration != null || DefaultOn, Configuration?.GetCrystal()));
-                ret.Add((Factions != null || DefaultOn, Factions?.GetCrystal()));
+                ret.Add((Factions == null ? DefaultOn : !Factions.GetCrystal().CopyNothing, Factions?.GetCrystal()));
                 ret.Add((DeathItem, null));
                 ret.Add((Script, null));
                 ret.Add((AIData != null || DefaultOn, AIData?.GetCrystal()));
@@ -1705,7 +1705,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((BloodSpray, null));
                 ret.Add((BloodDecal, null));
                 ret.Add((InheritsSoundFrom, null));
-                ret.Add((Sounds != null || DefaultOn, Sounds?.GetCrystal()));
+                ret.Add((Sounds == null ? DefaultOn : !Sounds.GetCrystal().CopyNothing, Sounds?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)

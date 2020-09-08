@@ -615,7 +615,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
                 ret.Add((Icon, null));
                 ret.Add((Script, null));
-                ret.Add((Effects != null || DefaultOn, Effects?.GetCrystal()));
+                ret.Add((Effects == null ? DefaultOn : !Effects.GetCrystal().CopyNothing, Effects?.GetCrystal()));
                 ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
             }
 

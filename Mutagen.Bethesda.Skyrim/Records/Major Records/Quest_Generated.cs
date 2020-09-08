@@ -1368,11 +1368,11 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Event, null));
                 ret.Add((TextDisplayGlobals, null));
                 ret.Add((ObjectWindowFilter, null));
-                ret.Add((DialogConditions != null || DefaultOn, DialogConditions?.GetCrystal()));
-                ret.Add((UnusedConditions != null || DefaultOn, UnusedConditions?.GetCrystal()));
-                ret.Add((Stages != null || DefaultOn, Stages?.GetCrystal()));
-                ret.Add((Objectives != null || DefaultOn, Objectives?.GetCrystal()));
-                ret.Add((Aliases != null || DefaultOn, Aliases?.GetCrystal()));
+                ret.Add((DialogConditions == null ? DefaultOn : !DialogConditions.GetCrystal().CopyNothing, DialogConditions?.GetCrystal()));
+                ret.Add((UnusedConditions == null ? DefaultOn : !UnusedConditions.GetCrystal().CopyNothing, UnusedConditions?.GetCrystal()));
+                ret.Add((Stages == null ? DefaultOn : !Stages.GetCrystal().CopyNothing, Stages?.GetCrystal()));
+                ret.Add((Objectives == null ? DefaultOn : !Objectives.GetCrystal().CopyNothing, Objectives?.GetCrystal()));
+                ret.Add((Aliases == null ? DefaultOn : !Aliases.GetCrystal().CopyNothing, Aliases?.GetCrystal()));
                 ret.Add((Description, null));
                 ret.Add((DNAMDataTypeState, null));
             }

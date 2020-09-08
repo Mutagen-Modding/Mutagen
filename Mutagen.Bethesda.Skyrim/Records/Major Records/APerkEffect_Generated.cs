@@ -515,7 +515,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 ret.Add((Rank, null));
                 ret.Add((Priority, null));
-                ret.Add((Conditions != null || DefaultOn, Conditions?.GetCrystal()));
+                ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
                 ret.Add((PRKEDataTypeState, null));
             }
 

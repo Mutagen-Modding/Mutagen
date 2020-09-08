@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Type, null));
-                ret.Add((Sounds != null || DefaultOn, Sounds?.GetCrystal()));
+                ret.Add((Sounds == null ? DefaultOn : !Sounds.GetCrystal().CopyNothing, Sounds?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)

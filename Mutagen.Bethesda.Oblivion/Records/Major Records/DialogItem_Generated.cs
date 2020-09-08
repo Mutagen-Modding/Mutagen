@@ -1037,8 +1037,8 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Quest, null));
                 ret.Add((PreviousTopic, null));
                 ret.Add((Topics, null));
-                ret.Add((Responses != null || DefaultOn, Responses?.GetCrystal()));
-                ret.Add((Conditions != null || DefaultOn, Conditions?.GetCrystal()));
+                ret.Add((Responses == null ? DefaultOn : !Responses.GetCrystal().CopyNothing, Responses?.GetCrystal()));
+                ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
                 ret.Add((Choices, null));
                 ret.Add((LinkFrom, null));
                 ret.Add((Script != null || DefaultOn, Script?.GetCrystal()));

@@ -427,7 +427,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Impacts != null || DefaultOn, Impacts?.GetCrystal()));
+                ret.Add((Impacts == null ? DefaultOn : !Impacts.GetCrystal().CopyNothing, Impacts?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)

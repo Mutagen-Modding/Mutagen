@@ -526,7 +526,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Name, null));
                 ret.Add((MenuDisplayObject, null));
                 ret.Add((Description, null));
-                ret.Add((WordsOfPower != null || DefaultOn, WordsOfPower?.GetCrystal()));
+                ret.Add((WordsOfPower == null ? DefaultOn : !WordsOfPower.GetCrystal().CopyNothing, WordsOfPower?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)

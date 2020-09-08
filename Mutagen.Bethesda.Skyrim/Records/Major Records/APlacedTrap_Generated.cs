@@ -1263,8 +1263,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Ownership != null || DefaultOn, Ownership?.GetCrystal()));
                 ret.Add((HeadTrackingWeight, null));
                 ret.Add((FavorCost, null));
-                ret.Add((Reflections != null || DefaultOn, Reflections?.GetCrystal()));
-                ret.Add((LinkedReferences != null || DefaultOn, LinkedReferences?.GetCrystal()));
+                ret.Add((Reflections == null ? DefaultOn : !Reflections.GetCrystal().CopyNothing, Reflections?.GetCrystal()));
+                ret.Add((LinkedReferences == null ? DefaultOn : !LinkedReferences.GetCrystal().CopyNothing, LinkedReferences?.GetCrystal()));
                 ret.Add((ActivateParents != null || DefaultOn, ActivateParents?.GetCrystal()));
                 ret.Add((EnableParent != null || DefaultOn, EnableParent?.GetCrystal()));
                 ret.Add((Emittance, null));

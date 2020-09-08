@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Wabbajack.Common;
 
 namespace Mutagen.Bethesda.Generation
 {
@@ -496,6 +497,7 @@ namespace Mutagen.Bethesda.Generation
                         FileGeneration fieldGen;
                         if (field is LoquiType loqui)
                         {
+                            if (loqui.TargetObjectGeneration.IsListGroup()) continue;
                             var isMajorRecord = loqui.TargetObjectGeneration != null && await loqui.TargetObjectGeneration.IsMajorRecord();
                             if (!isMajorRecord
                                 && await MajorRecordModule.HasMajorRecords(loqui, includeBaseClass: true) == Case.No)
@@ -566,36 +568,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         LinkInterfaceModule.ObjectMappings.TryGetValue(obj.ProtoGen.Protocol, out var interfs);
 
-                        // Find and add "Deep" records 
-                        var deepRecordMapping = new Dictionary<ObjectGeneration, HashSet<TypeGeneration>>();
-                        foreach (var field in obj.IterateFields())
-                        {
-                            if (field is LoquiType loqui)
-                            {
-                                var groupType = field as GroupType;
-                                await foreach (var deepObj in MajorRecordModule.IterateMajorRecords(loqui, includeBaseClass: true))
-                                {
-                                    if (groupType != null
-                                        && groupType.GetGroupTarget() == deepObj)
-                                    {
-                                        continue;
-                                    }
-                                    if (loqui.TargetObjectGeneration == deepObj) continue;
-                                    deepRecordMapping.GetOrAdd(deepObj).Add(field);
-                                }
-                            }
-                            else if (field is ContainerType cont)
-                            {
-                                if (!(cont.SubTypeGeneration is LoquiType subLoqui)) continue;
-                                await foreach (var deepObj in MajorRecordModule.IterateMajorRecords(subLoqui, includeBaseClass: true))
-                                {
-                                    if (subLoqui.TargetObjectGeneration == deepObj) continue;
-                                    deepRecordMapping
-                                        .GetOrAdd(deepObj)
-                                        .Add(field);
-                                }
-                            }
-                        }
+                        var deepRecordMapping = await MajorRecordModule.FindDeepRecords(obj);
                         foreach (var deepRec in deepRecordMapping)
                         {
                             FileGeneration deepFg = generationDict.GetOrAdd(deepRec.Key);

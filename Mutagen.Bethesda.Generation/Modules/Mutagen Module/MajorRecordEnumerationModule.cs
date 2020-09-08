@@ -31,17 +31,17 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine("[DebuggerStepThrough]");
             fg.AppendLine($"IEnumerable<{nameof(IMajorRecordCommonGetter)}> {nameof(IMajorRecordGetterEnumerable)}.EnumerateMajorRecords() => this.EnumerateMajorRecords();");
             fg.AppendLine("[DebuggerStepThrough]");
-            fg.AppendLine($"IEnumerable<TMajor> {nameof(IMajorRecordGetterEnumerable)}.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal, "TMajor")}(throwIfUnknown);");
+            fg.AppendLine($"IEnumerable<TMajor> {nameof(IMajorRecordGetterEnumerable)}.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal, "TMajor")}(throwIfUnknown: throwIfUnknown);");
             fg.AppendLine("[DebuggerStepThrough]");
-            fg.AppendLine($"IEnumerable<{nameof(IMajorRecordCommonGetter)}> {nameof(IMajorRecordGetterEnumerable)}.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type, throwIfUnknown);");
+            fg.AppendLine($"IEnumerable<{nameof(IMajorRecordCommonGetter)}> {nameof(IMajorRecordGetterEnumerable)}.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);");
             if (!onlyGetter)
             {
                 fg.AppendLine("[DebuggerStepThrough]");
                 fg.AppendLine($"IEnumerable<{nameof(IMajorRecordCommon)}> {nameof(IMajorRecordEnumerable)}.EnumerateMajorRecords() => this.EnumerateMajorRecords();");
                 fg.AppendLine("[DebuggerStepThrough]");
-                fg.AppendLine($"IEnumerable<TMajor> {nameof(IMajorRecordEnumerable)}.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal, "TMajor")}();");
+                fg.AppendLine($"IEnumerable<TMajor> {nameof(IMajorRecordEnumerable)}.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal, "TMajor")}(throwIfUnknown: throwIfUnknown);");
                 fg.AppendLine("[DebuggerStepThrough]");
-                fg.AppendLine($"IEnumerable<{nameof(IMajorRecordCommon)}> {nameof(IMajorRecordEnumerable)}.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type, throwIfUnknown);");
+                fg.AppendLine($"IEnumerable<{nameof(IMajorRecordCommon)}> {nameof(IMajorRecordEnumerable)}.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);");
             }
         }
 
@@ -506,6 +506,7 @@ namespace Mutagen.Bethesda.Generation
                             FileGeneration fieldGen;
                             if (field is LoquiType loqui)
                             {
+                                if (loqui.TargetObjectGeneration.IsListGroup()) continue;
                                 var isMajorRecord = loqui.TargetObjectGeneration != null && await loqui.TargetObjectGeneration.IsMajorRecord();
                                 if (!isMajorRecord
                                     && await MajorRecordModule.HasMajorRecords(loqui, includeBaseClass: true) == Case.No)
@@ -558,34 +559,7 @@ namespace Mutagen.Bethesda.Generation
 
                         if (doAdditionlDeepLogic)
                         {
-                            // Find and add "Deep" records 
-                            var deepRecordMapping = new Dictionary<ObjectGeneration, HashSet<TypeGeneration>>();
-                            foreach (var field in obj.IterateFields())
-                            {
-                                if (field is LoquiType loqui)
-                                {
-                                    var groupType = field as GroupType;
-                                    await foreach (var deepObj in MajorRecordModule.IterateMajorRecords(loqui, includeBaseClass: true))
-                                    {
-                                        if (groupType != null
-                                            && groupType.GetGroupTarget() == deepObj)
-                                        {
-                                            continue;
-                                        }
-                                        if (loqui.TargetObjectGeneration == deepObj) continue;
-                                        deepRecordMapping.GetOrAdd(deepObj).Add(field);
-                                    }
-                                }
-                                else if (field is ContainerType cont)
-                                {
-                                    if (!(cont.SubTypeGeneration is LoquiType subLoqui)) continue;
-                                    await foreach (var deepObj in MajorRecordModule.IterateMajorRecords(subLoqui, includeBaseClass: true))
-                                    {
-                                        if (subLoqui.TargetObjectGeneration == deepObj) continue;
-                                        deepRecordMapping.GetOrAdd(deepObj).Add(field);
-                                    }
-                                }
-                            }
+                            var deepRecordMapping = await MajorRecordModule.FindDeepRecords(obj);
                             foreach (var deepRec in deepRecordMapping)
                             {
                                 FileGeneration deepFg = generationDict.GetOrAdd(deepRec.Key);

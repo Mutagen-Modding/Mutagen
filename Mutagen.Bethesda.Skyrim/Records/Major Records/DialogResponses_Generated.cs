@@ -1165,9 +1165,9 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((FavorLevel, null));
                 ret.Add((LinkTo, null));
                 ret.Add((ResponseData, null));
-                ret.Add((Responses != null || DefaultOn, Responses?.GetCrystal()));
-                ret.Add((Conditions != null || DefaultOn, Conditions?.GetCrystal()));
-                ret.Add((UnknownData != null || DefaultOn, UnknownData?.GetCrystal()));
+                ret.Add((Responses == null ? DefaultOn : !Responses.GetCrystal().CopyNothing, Responses?.GetCrystal()));
+                ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
+                ret.Add((UnknownData == null ? DefaultOn : !UnknownData.GetCrystal().CopyNothing, UnknownData?.GetCrystal()));
                 ret.Add((Prompt, null));
                 ret.Add((Speaker, null));
                 ret.Add((WalkAwayTopic, null));

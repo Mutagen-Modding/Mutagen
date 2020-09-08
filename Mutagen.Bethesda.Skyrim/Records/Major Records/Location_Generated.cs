@@ -2528,22 +2528,22 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((ActorCellPersistentReferences != null || DefaultOn, ActorCellPersistentReferences?.GetCrystal()));
-                ret.Add((LocationCellPersistentReferences != null || DefaultOn, LocationCellPersistentReferences?.GetCrystal()));
+                ret.Add((ActorCellPersistentReferences == null ? DefaultOn : !ActorCellPersistentReferences.GetCrystal().CopyNothing, ActorCellPersistentReferences?.GetCrystal()));
+                ret.Add((LocationCellPersistentReferences == null ? DefaultOn : !LocationCellPersistentReferences.GetCrystal().CopyNothing, LocationCellPersistentReferences?.GetCrystal()));
                 ret.Add((ReferenceCellPersistentReferences, null));
-                ret.Add((ActorCellUniques != null || DefaultOn, ActorCellUniques?.GetCrystal()));
-                ret.Add((LocationCellUniques != null || DefaultOn, LocationCellUniques?.GetCrystal()));
+                ret.Add((ActorCellUniques == null ? DefaultOn : !ActorCellUniques.GetCrystal().CopyNothing, ActorCellUniques?.GetCrystal()));
+                ret.Add((LocationCellUniques == null ? DefaultOn : !LocationCellUniques.GetCrystal().CopyNothing, LocationCellUniques?.GetCrystal()));
                 ret.Add((ReferenceCellUnique, null));
-                ret.Add((ActorCellStaticReferences != null || DefaultOn, ActorCellStaticReferences?.GetCrystal()));
-                ret.Add((LocationCellStaticReferences != null || DefaultOn, LocationCellStaticReferences?.GetCrystal()));
+                ret.Add((ActorCellStaticReferences == null ? DefaultOn : !ActorCellStaticReferences.GetCrystal().CopyNothing, ActorCellStaticReferences?.GetCrystal()));
+                ret.Add((LocationCellStaticReferences == null ? DefaultOn : !LocationCellStaticReferences.GetCrystal().CopyNothing, LocationCellStaticReferences?.GetCrystal()));
                 ret.Add((ReferenceCellStaticReferences, null));
-                ret.Add((ActorCellEncounterCell != null || DefaultOn, ActorCellEncounterCell?.GetCrystal()));
-                ret.Add((LocationCellEncounterCell != null || DefaultOn, LocationCellEncounterCell?.GetCrystal()));
-                ret.Add((ReferenceCellEncounterCell != null || DefaultOn, ReferenceCellEncounterCell?.GetCrystal()));
+                ret.Add((ActorCellEncounterCell == null ? DefaultOn : !ActorCellEncounterCell.GetCrystal().CopyNothing, ActorCellEncounterCell?.GetCrystal()));
+                ret.Add((LocationCellEncounterCell == null ? DefaultOn : !LocationCellEncounterCell.GetCrystal().CopyNothing, LocationCellEncounterCell?.GetCrystal()));
+                ret.Add((ReferenceCellEncounterCell == null ? DefaultOn : !ReferenceCellEncounterCell.GetCrystal().CopyNothing, ReferenceCellEncounterCell?.GetCrystal()));
                 ret.Add((ActorCellMarkerReference, null));
                 ret.Add((LocationCellMarkerReference, null));
-                ret.Add((ActorCellEnablePoint != null || DefaultOn, ActorCellEnablePoint?.GetCrystal()));
-                ret.Add((LocationCellEnablePoint != null || DefaultOn, LocationCellEnablePoint?.GetCrystal()));
+                ret.Add((ActorCellEnablePoint == null ? DefaultOn : !ActorCellEnablePoint.GetCrystal().CopyNothing, ActorCellEnablePoint?.GetCrystal()));
+                ret.Add((LocationCellEnablePoint == null ? DefaultOn : !LocationCellEnablePoint.GetCrystal().CopyNothing, LocationCellEnablePoint?.GetCrystal()));
                 ret.Add((Name, null));
                 ret.Add((Keywords, null));
                 ret.Add((ParentLocation, null));

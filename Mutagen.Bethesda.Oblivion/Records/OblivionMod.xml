@@ -13,7 +13,7 @@
       <Group name="Sounds" refName="Sound" />
       <Group name="Skills" refName="SkillRecord" />
       <Group name="MagicEffects" refName="MagicEffect" edidLinked="true" />
-      <Group name="Scripts" refName="Script" customFolder="True" />
+      <Group name="Scripts" refName="Script" />
       <Group name="LandTextures" refName="LandTexture" />
       <Group name="Enchantments" refName="Enchantment" />
       <Group name="Spells" refName="SpellUnleveled" />
@@ -52,7 +52,7 @@
           <GenericSpecification Definition="Oblivion.CellBlock" TypeToSpecify="T" />
         </Direct>
       </Ref>
-      <Group name="Worldspaces" refName="Worldspace" customFolder="True" />
+      <Group name="Worldspaces" refName="Worldspace" />
       <Group name="DialogTopics" refName="DialogTopic" />
       <Group name="Quests" refName="Quest" />
       <Group name="IdleAnimations" refName="IdleAnimation" />

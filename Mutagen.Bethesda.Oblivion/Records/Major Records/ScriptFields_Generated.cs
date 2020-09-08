@@ -642,8 +642,8 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((MetadataSummary != null || DefaultOn, MetadataSummary?.GetCrystal()));
                 ret.Add((CompiledScript, null));
                 ret.Add((SourceCode, null));
-                ret.Add((LocalVariables != null || DefaultOn, LocalVariables?.GetCrystal()));
-                ret.Add((References != null || DefaultOn, References?.GetCrystal()));
+                ret.Add((LocalVariables == null ? DefaultOn : !LocalVariables.GetCrystal().CopyNothing, LocalVariables?.GetCrystal()));
+                ret.Add((References == null ? DefaultOn : !References.GetCrystal().CopyNothing, References?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)

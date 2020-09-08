@@ -2169,6 +2169,11 @@ namespace Mutagen.Bethesda.Generation
                     await LinkModule.GenerateInterfaceImplementation(obj, fg, getter: true);
                 }
 
+                if (obj.GetObjectType() == ObjectType.Mod)
+                {
+                    MajorRecordContextEnumerationModule.GenerateClassImplementation(obj, fg, onlyGetter: true);
+                }
+
                 if (await MajorRecordModule.HasMajorRecordsInTree(obj, includeBaseClass: false) != Case.No)
                 {
                     MajorRecordEnumerationModule.GenerateClassImplementation(obj, fg, onlyGetter: true);

@@ -1113,7 +1113,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.GetCrystal(ret);
                 ret.Add((Name, null));
-                ret.Add((Relations != null || DefaultOn, Relations?.GetCrystal()));
+                ret.Add((Relations == null ? DefaultOn : !Relations.GetCrystal().CopyNothing, Relations?.GetCrystal()));
                 ret.Add((Flags, null));
                 ret.Add((ExteriorJailMarker, null));
                 ret.Add((FollowerWaitMarker, null));
@@ -1122,12 +1122,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((SharedCrimeFactionList, null));
                 ret.Add((JailOutfit, null));
                 ret.Add((CrimeValues != null || DefaultOn, CrimeValues?.GetCrystal()));
-                ret.Add((Ranks != null || DefaultOn, Ranks?.GetCrystal()));
+                ret.Add((Ranks == null ? DefaultOn : !Ranks.GetCrystal().CopyNothing, Ranks?.GetCrystal()));
                 ret.Add((VendorBuySellList, null));
                 ret.Add((MerchantContainer, null));
                 ret.Add((VendorValues != null || DefaultOn, VendorValues?.GetCrystal()));
                 ret.Add((VendorLocation != null || DefaultOn, VendorLocation?.GetCrystal()));
-                ret.Add((Conditions != null || DefaultOn, Conditions?.GetCrystal()));
+                ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)

@@ -18,12 +18,12 @@
   <ItemGroup>
     <PackageReference Include="Compression.BSA" Version="2.2.1.1" />
     <PackageReference Include="DotNetZip" Version="1.13.8" />
-    <PackageReference Include="Loqui" Version="1.5.1" />
+    <PackageReference Include="Loqui" Version="1.5.2" />
     <PackageReference Include="Noggog.CSharpExt" Version="1.1.4" />
   </ItemGroup>
   <PropertyGroup>
     <PackageId>Mutagen.Bethesda.Core</PackageId>
-    <Version>0.14.3.0</Version>
+    <Version>0.15.0.0</Version>
     <Authors>Noggog</Authors>
     <Company>Mutagen</Company>
     <Product>Mutagen</Product>
@@ -61,6 +61,7 @@
     <Compile Include="Interfaces\IGroup.cs" />
     <Compile Include="Interfaces\ILinkInterfaceMapping.cs" />
     <Compile Include="Interfaces\IMajorRecordCommon.cs" />
+    <Compile Include="Interfaces\IMajorRecordContextEnumerable.cs" />
     <Compile Include="Interfaces\IMajorRecordEnumerable.cs" />
     <Compile Include="Interfaces\IMod.cs" />
     <Compile Include="Interfaces\IModHeaderCommon.cs" />
@@ -109,6 +110,7 @@
     <Compile Include="Translations\Binary\ModHeaderWriteLogic.cs" />
     <Compile Include="Translations\Binary\ParseResult.cs" />
     <Compile Include="Translations\XML\TranslatedStringXmlTranslation.cs" />
+    <Compile Include="Structs\ModContext.cs" />
     <Compile Include="Utility\ModInstantiator.cs" />
     <Compile Include="Utility\RecordInfoCache.cs" />
     <Compile Include="Persistance\TextFileFormKeyAllocator.cs" />

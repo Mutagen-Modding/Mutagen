@@ -638,10 +638,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 base.GetCrystal(ret);
                 ret.Add((Name, null));
-                ret.Add((Relations != null || DefaultOn, Relations?.GetCrystal()));
+                ret.Add((Relations == null ? DefaultOn : !Relations.GetCrystal().CopyNothing, Relations?.GetCrystal()));
                 ret.Add((Flags, null));
                 ret.Add((CrimeGoldMultiplier, null));
-                ret.Add((Ranks != null || DefaultOn, Ranks?.GetCrystal()));
+                ret.Add((Ranks == null ? DefaultOn : !Ranks.GetCrystal().CopyNothing, Ranks?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)

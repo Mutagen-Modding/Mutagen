@@ -695,10 +695,10 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((PointToPointConnections != null || DefaultOn, PointToPointConnections?.GetCrystal()));
+                ret.Add((PointToPointConnections == null ? DefaultOn : !PointToPointConnections.GetCrystal().CopyNothing, PointToPointConnections?.GetCrystal()));
                 ret.Add((PGAG, null));
-                ret.Add((InterCellConnections != null || DefaultOn, InterCellConnections?.GetCrystal()));
-                ret.Add((PointToReferenceMappings != null || DefaultOn, PointToReferenceMappings?.GetCrystal()));
+                ret.Add((InterCellConnections == null ? DefaultOn : !InterCellConnections.GetCrystal().CopyNothing, InterCellConnections?.GetCrystal()));
+                ret.Add((PointToReferenceMappings == null ? DefaultOn : !PointToReferenceMappings.GetCrystal().CopyNothing, PointToReferenceMappings?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)

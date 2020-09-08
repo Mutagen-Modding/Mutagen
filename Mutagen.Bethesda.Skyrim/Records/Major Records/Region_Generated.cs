@@ -764,7 +764,7 @@ namespace Mutagen.Bethesda.Skyrim
                 base.GetCrystal(ret);
                 ret.Add((MapColor, null));
                 ret.Add((Worldspace, null));
-                ret.Add((RegionAreas != null || DefaultOn, RegionAreas?.GetCrystal()));
+                ret.Add((RegionAreas == null ? DefaultOn : !RegionAreas.GetCrystal().CopyNothing, RegionAreas?.GetCrystal()));
                 ret.Add((Objects != null || DefaultOn, Objects?.GetCrystal()));
                 ret.Add((Weather != null || DefaultOn, Weather?.GetCrystal()));
                 ret.Add((Map != null || DefaultOn, Map?.GetCrystal()));

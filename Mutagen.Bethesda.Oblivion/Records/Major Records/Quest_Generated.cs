@@ -802,9 +802,9 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Name, null));
                 ret.Add((Icon, null));
                 ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
-                ret.Add((Conditions != null || DefaultOn, Conditions?.GetCrystal()));
-                ret.Add((Stages != null || DefaultOn, Stages?.GetCrystal()));
-                ret.Add((Targets != null || DefaultOn, Targets?.GetCrystal()));
+                ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
+                ret.Add((Stages == null ? DefaultOn : !Stages.GetCrystal().CopyNothing, Stages?.GetCrystal()));
+                ret.Add((Targets == null ? DefaultOn : !Targets.GetCrystal().CopyNothing, Targets?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)

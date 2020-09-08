@@ -2919,7 +2919,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Primitive != null || DefaultOn, Primitive?.GetCrystal()));
                 ret.Add((XORD, null));
                 ret.Add((OcclusionPlane != null || DefaultOn, OcclusionPlane?.GetCrystal()));
-                ret.Add((Portals != null || DefaultOn, Portals?.GetCrystal()));
+                ret.Add((Portals == null ? DefaultOn : !Portals.GetCrystal().CopyNothing, Portals?.GetCrystal()));
                 ret.Add((RoomPortal != null || DefaultOn, RoomPortal?.GetCrystal()));
                 ret.Add((Unknown, null));
                 ret.Add((LightingTemplate, null));
@@ -2929,7 +2929,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((RagdollData, null));
                 ret.Add((RagdollBipedData, null));
                 ret.Add((Radius, null));
-                ret.Add((Reflections != null || DefaultOn, Reflections?.GetCrystal()));
+                ret.Add((Reflections == null ? DefaultOn : !Reflections.GetCrystal().CopyNothing, Reflections?.GetCrystal()));
                 ret.Add((LitWater, null));
                 ret.Add((Emittance, null));
                 ret.Add((LightData != null || DefaultOn, LightData?.GetCrystal()));
@@ -2961,7 +2961,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Charge, null));
                 ret.Add((LocationReference, null));
                 ret.Add((EnableParent != null || DefaultOn, EnableParent?.GetCrystal()));
-                ret.Add((LinkedReferences != null || DefaultOn, LinkedReferences?.GetCrystal()));
+                ret.Add((LinkedReferences == null ? DefaultOn : !LinkedReferences.GetCrystal().CopyNothing, LinkedReferences?.GetCrystal()));
                 ret.Add((Patrol != null || DefaultOn, Patrol?.GetCrystal()));
                 ret.Add((Action, null));
                 ret.Add((HeadTrackingWeight, null));
