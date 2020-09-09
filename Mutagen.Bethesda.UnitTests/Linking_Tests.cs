@@ -1043,7 +1043,7 @@ namespace Mutagen.Bethesda.UnitTests
             effect.EditorID = "NULL";
             EDIDLink<IMagicEffect> link = new EDIDLink<IMagicEffect>(new RecordType("LINK"));
             var package = GetLinkCache(mod);
-            Assert.Null(link.Resolve(package));
+            Assert.Null(link.TryResolve(package).Value);
         }
 
         [Fact]
@@ -1054,7 +1054,7 @@ namespace Mutagen.Bethesda.UnitTests
             effect.EditorID = "LINK";
             var package = GetLinkCache(mod);
             EDIDLink<IMagicEffect> link = new EDIDLink<IMagicEffect>(new RecordType("LINK"));
-            Assert.Same(effect, link.Resolve(package));
+            Assert.Same(effect, link.TryResolve(package).Value);
         }
         #endregion
 

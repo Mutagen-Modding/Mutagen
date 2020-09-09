@@ -31,19 +31,5 @@ namespace Mutagen.Bethesda
     /// </summary>
     public static class IEDIDLinkExt
     {
-        /// <summary>
-        /// Attempts to locate link target in given Link Cache.
-        /// </summary>
-        /// <param name="edidLink">EDIDLink to resolve</param>
-        /// <param name="package">Link Cache to resolve against</param>
-        /// <param name="major">Located record if successful</param>
-        /// <returns>True if link was resolved and a record was retrieved</returns>
-        /// <typeparam name="TMajor">Major Record type to resolve to</typeparam>
-        public static bool TryResolve<TMajor>(this IEDIDLink<TMajor> edidLink, ILinkCache package, out TMajor major)
-            where TMajor : IMajorRecordCommonGetter
-        {
-            major = edidLink.Resolve(package);
-            return major != null;
-        }
     }
 }

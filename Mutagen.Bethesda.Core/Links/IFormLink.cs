@@ -62,6 +62,79 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// Attempts to locate link target in given Link Cache.
         /// </summary>
+        /// <param name="link">Link to resolve</param>
+        /// <param name="package">Link Cache to resolve against</param>
+        /// <param name="majorRecord">Major Record if located</param>
+        /// <returns>True if successful in linking to record</returns>
+        /// <typeparam name="TMajor">Major Record type to resolve to</typeparam>
+        public static bool TryResolve<TMajor>(this IFormLink<TMajor> link, ILinkCache package, [MaybeNullWhen(false)] out TMajor majorRecord)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            return package.TryLookup<TMajor>(link.FormKey, out majorRecord);
+        }
+
+        /// <summary>
+        /// Locates link target in given Link Cache.
+        /// </summary>
+        /// <param name="link">Link to resolve</param>
+        /// <param name="package">Link Cache to resolve against</param>
+        /// <returns>Located Major Record</returns>
+        /// <exception cref="NullReferenceException">If link was not succesful</exception>
+        /// <typeparam name="TMajor">Major Record type to resolve to</typeparam>
+        public static TMajor? Resolve<TMajor>(this IFormLink<TMajor> link, ILinkCache package)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            if (link.TryResolve<TMajor>(package, out var majorRecord))
+            {
+                return majorRecord;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Attempts to locate link target in given Link Cache.
+        /// </summary>
+        /// <param name="link">Link to resolve</param>
+        /// <param name="package">Link Cache to resolve against</param>
+        /// <param name="majorRecord">Major Record if located</param>
+        /// <returns>True if successful in linking to record</returns>
+        /// <typeparam name="TMajor">Major Record type to resolve to</typeparam>
+        public static bool TryResolve<TMajor>(this IFormLinkNullable<TMajor> link, ILinkCache package, [MaybeNullWhen(false)] out TMajor majorRecord)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            if (link.FormKey == null)
+            {
+                majorRecord = default;
+                return false;
+            }
+            return package.TryLookup<TMajor>(link.FormKey.Value, out majorRecord);
+        }
+
+        /// <summary>
+        /// Locates link target in given Link Cache.
+        /// </summary>
+        /// <param name="link">Link to resolve</param>
+        /// <param name="package">Link Cache to resolve against</param>
+        /// <returns>Located Major Record</returns>
+        /// <exception cref="NullReferenceException">If link was not succesful</exception>
+        /// <typeparam name="TMajor">Major Record type to resolve to</typeparam>
+        public static TMajor? Resolve<TMajor>(this IFormLinkNullable<TMajor> link, ILinkCache package)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            if (link.FormKey == null)
+            {
+                return null;
+            }
+            if (link.TryResolve<TMajor>(package, out var majorRecord))
+            {
+                return majorRecord;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Attempts to locate link target in given Link Cache.
+        /// </summary>
         /// <param name="formLink">FormLink to resolve</param>
         /// <param name="package">Link Cache to resolve against</param>
         /// <param name="major">Located record if successful</param>
