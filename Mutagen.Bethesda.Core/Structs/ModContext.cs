@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -25,7 +25,14 @@ namespace Mutagen.Bethesda
 
         public TMajorSetter GetOrAddAsOverride(TMod mod)
         {
-            return _getOrAddAsOverride(mod, Record);
+            try
+            {
+                return _getOrAddAsOverride(mod, Record);
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Factory(ex, Record);
+            }
         }
     }
 }

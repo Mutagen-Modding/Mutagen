@@ -41,20 +41,30 @@ namespace Mutagen.Bethesda
             EditorID = edid;
         }
 
-        public static RecordException Factory(Exception ex, FormKey? formKey, string? edid)
+        public static RecordException Factory(Exception ex, IMajorRecordCommonGetter majorRec)
+        {
+            return Factory(ex, majorRec.FormKey, majorRec.EditorID);
+        }
+
+        public static RecordException Factory(Exception ex, ModKey? modKey, IMajorRecordCommonGetter majorRec)
+        {
+            return Factory(ex, majorRec.FormKey, majorRec.EditorID, modKey);
+        }
+
+        public static RecordException Factory(Exception ex, FormKey? formKey, string? edid, ModKey? modKey = null)
         {
             if (ex is RecordException rec)
             {
                 return new RecordException(
                     formKey: formKey,
-                    modKey: rec.ModKey,
+                    modKey: modKey ?? rec.ModKey,
                     edid: edid,
                     innerException: rec.InnerException);
             }
             return new RecordException(
                 formKey: formKey,
-                modKey: null,
-                    edid: edid,
+                modKey: modKey,
+                edid: edid,
                 innerException: ex);
         }
 
@@ -79,11 +89,11 @@ namespace Mutagen.Bethesda
         {
             if (EditorID == null)
             {
-                return $"{nameof(RecordException)} {ModKey} => {FormKey}: {this.Message} {this.InnerException}";
+                return $"{nameof(RecordException)} {ModKey} => {FormKey}: {this.Message} {this.InnerException}{this.StackTrace}";
             }
             else
             {
-                return $"{nameof(RecordException)} {ModKey} => {EditorID} ({FormKey}): {this.Message} {this.InnerException}";
+                return $"{nameof(RecordException)} {ModKey} => {EditorID} ({FormKey}): {this.Message} {this.InnerException}{this.StackTrace}";
             }
         }
     }

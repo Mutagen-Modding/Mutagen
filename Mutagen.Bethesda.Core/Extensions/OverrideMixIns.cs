@@ -3,6 +3,7 @@ using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using System.Text;
 
 namespace Mutagen.Bethesda
@@ -149,14 +150,21 @@ namespace Mutagen.Bethesda
             where TMajor : class, IMajorRecordInternal, TMajorGetter
             where TMajorGetter : class, IMajorRecordGetter, IBinaryItem
         {
-            if (group.RecordCache.TryGetValue(major.FormKey, out var existingMajor))
+            try
             {
+                if (group.RecordCache.TryGetValue(major.FormKey, out var existingMajor))
+                {
+                    return existingMajor;
+                }
+                var mask = AddAsOverrideMasks.GetValueOrDefault(typeof(TMajor));
+                existingMajor = (major.DeepCopy(mask as MajorRecord.TranslationMask) as TMajor)!;
+                group.RecordCache.Set(existingMajor);
                 return existingMajor;
             }
-            var mask = AddAsOverrideMasks.GetValueOrDefault(typeof(TMajor));
-            existingMajor = (major.DeepCopy(mask as MajorRecord.TranslationMask) as TMajor)!;
-            group.RecordCache.Set(existingMajor);
-            return existingMajor;
+            catch (Exception ex)
+            {
+                throw RecordException.Factory(ex, major.FormKey, major.EditorID);
+            }
         }
     }
 }

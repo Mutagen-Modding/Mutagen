@@ -36,11 +36,11 @@ namespace Mutagen.Bethesda
         {
             if (EditorID == null)
             {
-                return $"{nameof(SubrecordException)} {ModKey} => {FormKey} => {Subrecord}: {this.Message} {this.InnerException}";
+                return $"{nameof(SubrecordException)} {ModKey} => {FormKey} => {Subrecord}: {this.Message} {this.InnerException}{this.StackTrace}";
             }
             else
             {
-                return $"{nameof(SubrecordException)} {ModKey} => {EditorID} ({FormKey}) => {Subrecord}: {this.Message} {this.InnerException}";
+                return $"{nameof(SubrecordException)} {ModKey} => {EditorID} ({FormKey}) => {Subrecord}: {this.Message} {this.InnerException}{this.StackTrace}";
             }
         }
     }
