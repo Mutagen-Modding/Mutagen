@@ -698,123 +698,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "QUEST":
-                    return (ushort)PerkQuestEffect_FieldIndex.Quest;
-                case "STAGE":
-                    return (ushort)PerkQuestEffect_FieldIndex.Stage;
-                case "UNKNOWN":
-                    return (ushort)PerkQuestEffect_FieldIndex.Unknown;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            PerkQuestEffect_FieldIndex enu = (PerkQuestEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case PerkQuestEffect_FieldIndex.Quest:
-                case PerkQuestEffect_FieldIndex.Stage:
-                case PerkQuestEffect_FieldIndex.Unknown:
-                    return false;
-                default:
-                    return APerkEffect_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            PerkQuestEffect_FieldIndex enu = (PerkQuestEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case PerkQuestEffect_FieldIndex.Quest:
-                case PerkQuestEffect_FieldIndex.Stage:
-                case PerkQuestEffect_FieldIndex.Unknown:
-                    return false;
-                default:
-                    return APerkEffect_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            PerkQuestEffect_FieldIndex enu = (PerkQuestEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case PerkQuestEffect_FieldIndex.Quest:
-                case PerkQuestEffect_FieldIndex.Stage:
-                case PerkQuestEffect_FieldIndex.Unknown:
-                    return false;
-                default:
-                    return APerkEffect_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            PerkQuestEffect_FieldIndex enu = (PerkQuestEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case PerkQuestEffect_FieldIndex.Quest:
-                    return "Quest";
-                case PerkQuestEffect_FieldIndex.Stage:
-                    return "Stage";
-                case PerkQuestEffect_FieldIndex.Unknown:
-                    return "Unknown";
-                default:
-                    return APerkEffect_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            PerkQuestEffect_FieldIndex enu = (PerkQuestEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case PerkQuestEffect_FieldIndex.Quest:
-                case PerkQuestEffect_FieldIndex.Stage:
-                case PerkQuestEffect_FieldIndex.Unknown:
-                    return false;
-                default:
-                    return APerkEffect_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            PerkQuestEffect_FieldIndex enu = (PerkQuestEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case PerkQuestEffect_FieldIndex.Quest:
-                case PerkQuestEffect_FieldIndex.Stage:
-                case PerkQuestEffect_FieldIndex.Unknown:
-                    return false;
-                default:
-                    return APerkEffect_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            PerkQuestEffect_FieldIndex enu = (PerkQuestEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case PerkQuestEffect_FieldIndex.Quest:
-                    return typeof(FormLink<Quest>);
-                case PerkQuestEffect_FieldIndex.Stage:
-                    return typeof(Byte);
-                case PerkQuestEffect_FieldIndex.Unknown:
-                    return typeof(MemorySlice<Byte>);
-                default:
-                    return APerkEffect_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.PRKE;
         public static readonly Type BinaryWriteTranslation = typeof(PerkQuestEffectBinaryWriteTranslation);
         #region Interface
@@ -835,14 +718,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

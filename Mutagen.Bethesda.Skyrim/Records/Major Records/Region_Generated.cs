@@ -1119,191 +1119,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "MAPCOLOR":
-                    return (ushort)Region_FieldIndex.MapColor;
-                case "WORLDSPACE":
-                    return (ushort)Region_FieldIndex.Worldspace;
-                case "REGIONAREAS":
-                    return (ushort)Region_FieldIndex.RegionAreas;
-                case "OBJECTS":
-                    return (ushort)Region_FieldIndex.Objects;
-                case "WEATHER":
-                    return (ushort)Region_FieldIndex.Weather;
-                case "MAP":
-                    return (ushort)Region_FieldIndex.Map;
-                case "LAND":
-                    return (ushort)Region_FieldIndex.Land;
-                case "GRASSES":
-                    return (ushort)Region_FieldIndex.Grasses;
-                case "SOUNDS":
-                    return (ushort)Region_FieldIndex.Sounds;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Region_FieldIndex enu = (Region_FieldIndex)index;
-            switch (enu)
-            {
-                case Region_FieldIndex.RegionAreas:
-                    return true;
-                case Region_FieldIndex.MapColor:
-                case Region_FieldIndex.Worldspace:
-                case Region_FieldIndex.Objects:
-                case Region_FieldIndex.Weather:
-                case Region_FieldIndex.Map:
-                case Region_FieldIndex.Land:
-                case Region_FieldIndex.Grasses:
-                case Region_FieldIndex.Sounds:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Region_FieldIndex enu = (Region_FieldIndex)index;
-            switch (enu)
-            {
-                case Region_FieldIndex.RegionAreas:
-                case Region_FieldIndex.Objects:
-                case Region_FieldIndex.Weather:
-                case Region_FieldIndex.Map:
-                case Region_FieldIndex.Land:
-                case Region_FieldIndex.Grasses:
-                case Region_FieldIndex.Sounds:
-                    return true;
-                case Region_FieldIndex.MapColor:
-                case Region_FieldIndex.Worldspace:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Region_FieldIndex enu = (Region_FieldIndex)index;
-            switch (enu)
-            {
-                case Region_FieldIndex.MapColor:
-                case Region_FieldIndex.Worldspace:
-                case Region_FieldIndex.RegionAreas:
-                case Region_FieldIndex.Objects:
-                case Region_FieldIndex.Weather:
-                case Region_FieldIndex.Map:
-                case Region_FieldIndex.Land:
-                case Region_FieldIndex.Grasses:
-                case Region_FieldIndex.Sounds:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Region_FieldIndex enu = (Region_FieldIndex)index;
-            switch (enu)
-            {
-                case Region_FieldIndex.MapColor:
-                    return "MapColor";
-                case Region_FieldIndex.Worldspace:
-                    return "Worldspace";
-                case Region_FieldIndex.RegionAreas:
-                    return "RegionAreas";
-                case Region_FieldIndex.Objects:
-                    return "Objects";
-                case Region_FieldIndex.Weather:
-                    return "Weather";
-                case Region_FieldIndex.Map:
-                    return "Map";
-                case Region_FieldIndex.Land:
-                    return "Land";
-                case Region_FieldIndex.Grasses:
-                    return "Grasses";
-                case Region_FieldIndex.Sounds:
-                    return "Sounds";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Region_FieldIndex enu = (Region_FieldIndex)index;
-            switch (enu)
-            {
-                case Region_FieldIndex.MapColor:
-                case Region_FieldIndex.Worldspace:
-                case Region_FieldIndex.RegionAreas:
-                case Region_FieldIndex.Objects:
-                case Region_FieldIndex.Weather:
-                case Region_FieldIndex.Map:
-                case Region_FieldIndex.Land:
-                case Region_FieldIndex.Grasses:
-                case Region_FieldIndex.Sounds:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Region_FieldIndex enu = (Region_FieldIndex)index;
-            switch (enu)
-            {
-                case Region_FieldIndex.MapColor:
-                case Region_FieldIndex.Worldspace:
-                case Region_FieldIndex.RegionAreas:
-                case Region_FieldIndex.Objects:
-                case Region_FieldIndex.Weather:
-                case Region_FieldIndex.Map:
-                case Region_FieldIndex.Land:
-                case Region_FieldIndex.Grasses:
-                case Region_FieldIndex.Sounds:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Region_FieldIndex enu = (Region_FieldIndex)index;
-            switch (enu)
-            {
-                case Region_FieldIndex.MapColor:
-                    return typeof(Color);
-                case Region_FieldIndex.Worldspace:
-                    return typeof(FormLinkNullable<Worldspace>);
-                case Region_FieldIndex.RegionAreas:
-                    return typeof(IExtendedList<RegionArea>);
-                case Region_FieldIndex.Objects:
-                    return typeof(RegionObjects);
-                case Region_FieldIndex.Weather:
-                    return typeof(RegionWeather);
-                case Region_FieldIndex.Map:
-                    return typeof(RegionMap);
-                case Region_FieldIndex.Land:
-                    return typeof(RegionLand);
-                case Region_FieldIndex.Grasses:
-                    return typeof(RegionGrasses);
-                case Region_FieldIndex.Sounds:
-                    return typeof(RegionSounds);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.REGN;
         public static readonly Type BinaryWriteTranslation = typeof(RegionBinaryWriteTranslation);
         #region Interface
@@ -1324,14 +1139,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

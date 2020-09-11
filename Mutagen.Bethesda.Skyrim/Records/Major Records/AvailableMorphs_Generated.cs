@@ -803,134 +803,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "NOSE":
-                    return (ushort)AvailableMorphs_FieldIndex.Nose;
-                case "BROW":
-                    return (ushort)AvailableMorphs_FieldIndex.Brow;
-                case "EYE":
-                    return (ushort)AvailableMorphs_FieldIndex.Eye;
-                case "LIP":
-                    return (ushort)AvailableMorphs_FieldIndex.Lip;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            AvailableMorphs_FieldIndex enu = (AvailableMorphs_FieldIndex)index;
-            switch (enu)
-            {
-                case AvailableMorphs_FieldIndex.Nose:
-                case AvailableMorphs_FieldIndex.Brow:
-                case AvailableMorphs_FieldIndex.Eye:
-                case AvailableMorphs_FieldIndex.Lip:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            AvailableMorphs_FieldIndex enu = (AvailableMorphs_FieldIndex)index;
-            switch (enu)
-            {
-                case AvailableMorphs_FieldIndex.Nose:
-                case AvailableMorphs_FieldIndex.Brow:
-                case AvailableMorphs_FieldIndex.Eye:
-                case AvailableMorphs_FieldIndex.Lip:
-                    return true;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            AvailableMorphs_FieldIndex enu = (AvailableMorphs_FieldIndex)index;
-            switch (enu)
-            {
-                case AvailableMorphs_FieldIndex.Nose:
-                case AvailableMorphs_FieldIndex.Brow:
-                case AvailableMorphs_FieldIndex.Eye:
-                case AvailableMorphs_FieldIndex.Lip:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            AvailableMorphs_FieldIndex enu = (AvailableMorphs_FieldIndex)index;
-            switch (enu)
-            {
-                case AvailableMorphs_FieldIndex.Nose:
-                    return "Nose";
-                case AvailableMorphs_FieldIndex.Brow:
-                    return "Brow";
-                case AvailableMorphs_FieldIndex.Eye:
-                    return "Eye";
-                case AvailableMorphs_FieldIndex.Lip:
-                    return "Lip";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            AvailableMorphs_FieldIndex enu = (AvailableMorphs_FieldIndex)index;
-            switch (enu)
-            {
-                case AvailableMorphs_FieldIndex.Nose:
-                case AvailableMorphs_FieldIndex.Brow:
-                case AvailableMorphs_FieldIndex.Eye:
-                case AvailableMorphs_FieldIndex.Lip:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            AvailableMorphs_FieldIndex enu = (AvailableMorphs_FieldIndex)index;
-            switch (enu)
-            {
-                case AvailableMorphs_FieldIndex.Nose:
-                case AvailableMorphs_FieldIndex.Brow:
-                case AvailableMorphs_FieldIndex.Eye:
-                case AvailableMorphs_FieldIndex.Lip:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            AvailableMorphs_FieldIndex enu = (AvailableMorphs_FieldIndex)index;
-            switch (enu)
-            {
-                case AvailableMorphs_FieldIndex.Nose:
-                    return typeof(Morph);
-                case AvailableMorphs_FieldIndex.Brow:
-                    return typeof(Morph);
-                case AvailableMorphs_FieldIndex.Eye:
-                    return typeof(Morph);
-                case AvailableMorphs_FieldIndex.Lip:
-                    return typeof(Morph);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.MPAI;
         public static readonly Type BinaryWriteTranslation = typeof(AvailableMorphsBinaryWriteTranslation);
         #region Interface
@@ -951,14 +823,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

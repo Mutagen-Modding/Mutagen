@@ -742,134 +742,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "NOSE":
-                    return (ushort)NpcFaceParts_FieldIndex.Nose;
-                case "UNKNOWN":
-                    return (ushort)NpcFaceParts_FieldIndex.Unknown;
-                case "EYES":
-                    return (ushort)NpcFaceParts_FieldIndex.Eyes;
-                case "MOUTH":
-                    return (ushort)NpcFaceParts_FieldIndex.Mouth;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            NpcFaceParts_FieldIndex enu = (NpcFaceParts_FieldIndex)index;
-            switch (enu)
-            {
-                case NpcFaceParts_FieldIndex.Nose:
-                case NpcFaceParts_FieldIndex.Unknown:
-                case NpcFaceParts_FieldIndex.Eyes:
-                case NpcFaceParts_FieldIndex.Mouth:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            NpcFaceParts_FieldIndex enu = (NpcFaceParts_FieldIndex)index;
-            switch (enu)
-            {
-                case NpcFaceParts_FieldIndex.Nose:
-                case NpcFaceParts_FieldIndex.Unknown:
-                case NpcFaceParts_FieldIndex.Eyes:
-                case NpcFaceParts_FieldIndex.Mouth:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            NpcFaceParts_FieldIndex enu = (NpcFaceParts_FieldIndex)index;
-            switch (enu)
-            {
-                case NpcFaceParts_FieldIndex.Nose:
-                case NpcFaceParts_FieldIndex.Unknown:
-                case NpcFaceParts_FieldIndex.Eyes:
-                case NpcFaceParts_FieldIndex.Mouth:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            NpcFaceParts_FieldIndex enu = (NpcFaceParts_FieldIndex)index;
-            switch (enu)
-            {
-                case NpcFaceParts_FieldIndex.Nose:
-                    return "Nose";
-                case NpcFaceParts_FieldIndex.Unknown:
-                    return "Unknown";
-                case NpcFaceParts_FieldIndex.Eyes:
-                    return "Eyes";
-                case NpcFaceParts_FieldIndex.Mouth:
-                    return "Mouth";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            NpcFaceParts_FieldIndex enu = (NpcFaceParts_FieldIndex)index;
-            switch (enu)
-            {
-                case NpcFaceParts_FieldIndex.Nose:
-                case NpcFaceParts_FieldIndex.Unknown:
-                case NpcFaceParts_FieldIndex.Eyes:
-                case NpcFaceParts_FieldIndex.Mouth:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            NpcFaceParts_FieldIndex enu = (NpcFaceParts_FieldIndex)index;
-            switch (enu)
-            {
-                case NpcFaceParts_FieldIndex.Nose:
-                case NpcFaceParts_FieldIndex.Unknown:
-                case NpcFaceParts_FieldIndex.Eyes:
-                case NpcFaceParts_FieldIndex.Mouth:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            NpcFaceParts_FieldIndex enu = (NpcFaceParts_FieldIndex)index;
-            switch (enu)
-            {
-                case NpcFaceParts_FieldIndex.Nose:
-                    return typeof(UInt32);
-                case NpcFaceParts_FieldIndex.Unknown:
-                    return typeof(UInt32);
-                case NpcFaceParts_FieldIndex.Eyes:
-                    return typeof(UInt32);
-                case NpcFaceParts_FieldIndex.Mouth:
-                    return typeof(UInt32);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.NAMA;
         public static readonly Type BinaryWriteTranslation = typeof(NpcFacePartsBinaryWriteTranslation);
         #region Interface
@@ -890,14 +762,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

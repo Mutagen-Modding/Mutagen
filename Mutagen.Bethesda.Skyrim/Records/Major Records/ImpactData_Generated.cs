@@ -686,112 +686,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "MATERIAL":
-                    return (ushort)ImpactData_FieldIndex.Material;
-                case "IMPACT":
-                    return (ushort)ImpactData_FieldIndex.Impact;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            ImpactData_FieldIndex enu = (ImpactData_FieldIndex)index;
-            switch (enu)
-            {
-                case ImpactData_FieldIndex.Material:
-                case ImpactData_FieldIndex.Impact:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            ImpactData_FieldIndex enu = (ImpactData_FieldIndex)index;
-            switch (enu)
-            {
-                case ImpactData_FieldIndex.Material:
-                case ImpactData_FieldIndex.Impact:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            ImpactData_FieldIndex enu = (ImpactData_FieldIndex)index;
-            switch (enu)
-            {
-                case ImpactData_FieldIndex.Material:
-                case ImpactData_FieldIndex.Impact:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            ImpactData_FieldIndex enu = (ImpactData_FieldIndex)index;
-            switch (enu)
-            {
-                case ImpactData_FieldIndex.Material:
-                    return "Material";
-                case ImpactData_FieldIndex.Impact:
-                    return "Impact";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            ImpactData_FieldIndex enu = (ImpactData_FieldIndex)index;
-            switch (enu)
-            {
-                case ImpactData_FieldIndex.Material:
-                case ImpactData_FieldIndex.Impact:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            ImpactData_FieldIndex enu = (ImpactData_FieldIndex)index;
-            switch (enu)
-            {
-                case ImpactData_FieldIndex.Material:
-                case ImpactData_FieldIndex.Impact:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            ImpactData_FieldIndex enu = (ImpactData_FieldIndex)index;
-            switch (enu)
-            {
-                case ImpactData_FieldIndex.Material:
-                    return typeof(FormLink<MaterialType>);
-                case ImpactData_FieldIndex.Impact:
-                    return typeof(FormLink<Impact>);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.PNAM;
         public static readonly Type BinaryWriteTranslation = typeof(ImpactDataBinaryWriteTranslation);
         #region Interface
@@ -812,14 +706,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

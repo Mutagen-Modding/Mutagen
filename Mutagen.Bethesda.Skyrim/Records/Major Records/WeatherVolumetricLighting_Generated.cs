@@ -758,134 +758,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "SUNRISE":
-                    return (ushort)WeatherVolumetricLighting_FieldIndex.Sunrise;
-                case "DAY":
-                    return (ushort)WeatherVolumetricLighting_FieldIndex.Day;
-                case "SUNSET":
-                    return (ushort)WeatherVolumetricLighting_FieldIndex.Sunset;
-                case "NIGHT":
-                    return (ushort)WeatherVolumetricLighting_FieldIndex.Night;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            WeatherVolumetricLighting_FieldIndex enu = (WeatherVolumetricLighting_FieldIndex)index;
-            switch (enu)
-            {
-                case WeatherVolumetricLighting_FieldIndex.Sunrise:
-                case WeatherVolumetricLighting_FieldIndex.Day:
-                case WeatherVolumetricLighting_FieldIndex.Sunset:
-                case WeatherVolumetricLighting_FieldIndex.Night:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            WeatherVolumetricLighting_FieldIndex enu = (WeatherVolumetricLighting_FieldIndex)index;
-            switch (enu)
-            {
-                case WeatherVolumetricLighting_FieldIndex.Sunrise:
-                case WeatherVolumetricLighting_FieldIndex.Day:
-                case WeatherVolumetricLighting_FieldIndex.Sunset:
-                case WeatherVolumetricLighting_FieldIndex.Night:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            WeatherVolumetricLighting_FieldIndex enu = (WeatherVolumetricLighting_FieldIndex)index;
-            switch (enu)
-            {
-                case WeatherVolumetricLighting_FieldIndex.Sunrise:
-                case WeatherVolumetricLighting_FieldIndex.Day:
-                case WeatherVolumetricLighting_FieldIndex.Sunset:
-                case WeatherVolumetricLighting_FieldIndex.Night:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            WeatherVolumetricLighting_FieldIndex enu = (WeatherVolumetricLighting_FieldIndex)index;
-            switch (enu)
-            {
-                case WeatherVolumetricLighting_FieldIndex.Sunrise:
-                    return "Sunrise";
-                case WeatherVolumetricLighting_FieldIndex.Day:
-                    return "Day";
-                case WeatherVolumetricLighting_FieldIndex.Sunset:
-                    return "Sunset";
-                case WeatherVolumetricLighting_FieldIndex.Night:
-                    return "Night";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            WeatherVolumetricLighting_FieldIndex enu = (WeatherVolumetricLighting_FieldIndex)index;
-            switch (enu)
-            {
-                case WeatherVolumetricLighting_FieldIndex.Sunrise:
-                case WeatherVolumetricLighting_FieldIndex.Day:
-                case WeatherVolumetricLighting_FieldIndex.Sunset:
-                case WeatherVolumetricLighting_FieldIndex.Night:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            WeatherVolumetricLighting_FieldIndex enu = (WeatherVolumetricLighting_FieldIndex)index;
-            switch (enu)
-            {
-                case WeatherVolumetricLighting_FieldIndex.Sunrise:
-                case WeatherVolumetricLighting_FieldIndex.Day:
-                case WeatherVolumetricLighting_FieldIndex.Sunset:
-                case WeatherVolumetricLighting_FieldIndex.Night:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            WeatherVolumetricLighting_FieldIndex enu = (WeatherVolumetricLighting_FieldIndex)index;
-            switch (enu)
-            {
-                case WeatherVolumetricLighting_FieldIndex.Sunrise:
-                    return typeof(FormLink<VolumetricLighting>);
-                case WeatherVolumetricLighting_FieldIndex.Day:
-                    return typeof(FormLink<VolumetricLighting>);
-                case WeatherVolumetricLighting_FieldIndex.Sunset:
-                    return typeof(FormLink<VolumetricLighting>);
-                case WeatherVolumetricLighting_FieldIndex.Night:
-                    return typeof(FormLink<VolumetricLighting>);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.HNAM;
         public static readonly Type BinaryWriteTranslation = typeof(WeatherVolumetricLightingBinaryWriteTranslation);
         #region Interface
@@ -906,14 +778,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

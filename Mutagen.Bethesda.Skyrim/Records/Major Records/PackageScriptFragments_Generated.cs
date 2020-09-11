@@ -818,146 +818,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "UNKNOWN":
-                    return (ushort)PackageScriptFragments_FieldIndex.Unknown;
-                case "FILENAME":
-                    return (ushort)PackageScriptFragments_FieldIndex.FileName;
-                case "ONBEGIN":
-                    return (ushort)PackageScriptFragments_FieldIndex.OnBegin;
-                case "ONEND":
-                    return (ushort)PackageScriptFragments_FieldIndex.OnEnd;
-                case "ONCHANGE":
-                    return (ushort)PackageScriptFragments_FieldIndex.OnChange;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            PackageScriptFragments_FieldIndex enu = (PackageScriptFragments_FieldIndex)index;
-            switch (enu)
-            {
-                case PackageScriptFragments_FieldIndex.Unknown:
-                case PackageScriptFragments_FieldIndex.FileName:
-                case PackageScriptFragments_FieldIndex.OnBegin:
-                case PackageScriptFragments_FieldIndex.OnEnd:
-                case PackageScriptFragments_FieldIndex.OnChange:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            PackageScriptFragments_FieldIndex enu = (PackageScriptFragments_FieldIndex)index;
-            switch (enu)
-            {
-                case PackageScriptFragments_FieldIndex.OnBegin:
-                case PackageScriptFragments_FieldIndex.OnEnd:
-                case PackageScriptFragments_FieldIndex.OnChange:
-                    return true;
-                case PackageScriptFragments_FieldIndex.Unknown:
-                case PackageScriptFragments_FieldIndex.FileName:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            PackageScriptFragments_FieldIndex enu = (PackageScriptFragments_FieldIndex)index;
-            switch (enu)
-            {
-                case PackageScriptFragments_FieldIndex.Unknown:
-                case PackageScriptFragments_FieldIndex.FileName:
-                case PackageScriptFragments_FieldIndex.OnBegin:
-                case PackageScriptFragments_FieldIndex.OnEnd:
-                case PackageScriptFragments_FieldIndex.OnChange:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            PackageScriptFragments_FieldIndex enu = (PackageScriptFragments_FieldIndex)index;
-            switch (enu)
-            {
-                case PackageScriptFragments_FieldIndex.Unknown:
-                    return "Unknown";
-                case PackageScriptFragments_FieldIndex.FileName:
-                    return "FileName";
-                case PackageScriptFragments_FieldIndex.OnBegin:
-                    return "OnBegin";
-                case PackageScriptFragments_FieldIndex.OnEnd:
-                    return "OnEnd";
-                case PackageScriptFragments_FieldIndex.OnChange:
-                    return "OnChange";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            PackageScriptFragments_FieldIndex enu = (PackageScriptFragments_FieldIndex)index;
-            switch (enu)
-            {
-                case PackageScriptFragments_FieldIndex.Unknown:
-                case PackageScriptFragments_FieldIndex.FileName:
-                case PackageScriptFragments_FieldIndex.OnBegin:
-                case PackageScriptFragments_FieldIndex.OnEnd:
-                case PackageScriptFragments_FieldIndex.OnChange:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            PackageScriptFragments_FieldIndex enu = (PackageScriptFragments_FieldIndex)index;
-            switch (enu)
-            {
-                case PackageScriptFragments_FieldIndex.Unknown:
-                case PackageScriptFragments_FieldIndex.FileName:
-                case PackageScriptFragments_FieldIndex.OnBegin:
-                case PackageScriptFragments_FieldIndex.OnEnd:
-                case PackageScriptFragments_FieldIndex.OnChange:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            PackageScriptFragments_FieldIndex enu = (PackageScriptFragments_FieldIndex)index;
-            switch (enu)
-            {
-                case PackageScriptFragments_FieldIndex.Unknown:
-                    return typeof(SByte);
-                case PackageScriptFragments_FieldIndex.FileName:
-                    return typeof(String);
-                case PackageScriptFragments_FieldIndex.OnBegin:
-                    return typeof(ScriptFragment);
-                case PackageScriptFragments_FieldIndex.OnEnd:
-                    return typeof(ScriptFragment);
-                case PackageScriptFragments_FieldIndex.OnChange:
-                    return typeof(ScriptFragment);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly Type BinaryWriteTranslation = typeof(PackageScriptFragmentsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -977,14 +837,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

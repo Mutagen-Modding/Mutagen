@@ -894,168 +894,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "NAME":
-                    return (ushort)SoulGem_FieldIndex.Name;
-                case "MODEL":
-                    return (ushort)SoulGem_FieldIndex.Model;
-                case "ICON":
-                    return (ushort)SoulGem_FieldIndex.Icon;
-                case "SCRIPT":
-                    return (ushort)SoulGem_FieldIndex.Script;
-                case "DATA":
-                    return (ushort)SoulGem_FieldIndex.Data;
-                case "CONTAINEDSOUL":
-                    return (ushort)SoulGem_FieldIndex.ContainedSoul;
-                case "MAXIMUMCAPACITY":
-                    return (ushort)SoulGem_FieldIndex.MaximumCapacity;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
-            switch (enu)
-            {
-                case SoulGem_FieldIndex.Name:
-                case SoulGem_FieldIndex.Model:
-                case SoulGem_FieldIndex.Icon:
-                case SoulGem_FieldIndex.Script:
-                case SoulGem_FieldIndex.Data:
-                case SoulGem_FieldIndex.ContainedSoul:
-                case SoulGem_FieldIndex.MaximumCapacity:
-                    return false;
-                default:
-                    return AItem_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
-            switch (enu)
-            {
-                case SoulGem_FieldIndex.Model:
-                case SoulGem_FieldIndex.Data:
-                    return true;
-                case SoulGem_FieldIndex.Name:
-                case SoulGem_FieldIndex.Icon:
-                case SoulGem_FieldIndex.Script:
-                case SoulGem_FieldIndex.ContainedSoul:
-                case SoulGem_FieldIndex.MaximumCapacity:
-                    return false;
-                default:
-                    return AItem_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
-            switch (enu)
-            {
-                case SoulGem_FieldIndex.Name:
-                case SoulGem_FieldIndex.Model:
-                case SoulGem_FieldIndex.Icon:
-                case SoulGem_FieldIndex.Script:
-                case SoulGem_FieldIndex.Data:
-                case SoulGem_FieldIndex.ContainedSoul:
-                case SoulGem_FieldIndex.MaximumCapacity:
-                    return false;
-                default:
-                    return AItem_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
-            switch (enu)
-            {
-                case SoulGem_FieldIndex.Name:
-                    return "Name";
-                case SoulGem_FieldIndex.Model:
-                    return "Model";
-                case SoulGem_FieldIndex.Icon:
-                    return "Icon";
-                case SoulGem_FieldIndex.Script:
-                    return "Script";
-                case SoulGem_FieldIndex.Data:
-                    return "Data";
-                case SoulGem_FieldIndex.ContainedSoul:
-                    return "ContainedSoul";
-                case SoulGem_FieldIndex.MaximumCapacity:
-                    return "MaximumCapacity";
-                default:
-                    return AItem_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
-            switch (enu)
-            {
-                case SoulGem_FieldIndex.Name:
-                case SoulGem_FieldIndex.Model:
-                case SoulGem_FieldIndex.Icon:
-                case SoulGem_FieldIndex.Script:
-                case SoulGem_FieldIndex.Data:
-                case SoulGem_FieldIndex.ContainedSoul:
-                case SoulGem_FieldIndex.MaximumCapacity:
-                    return false;
-                default:
-                    return AItem_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
-            switch (enu)
-            {
-                case SoulGem_FieldIndex.Name:
-                case SoulGem_FieldIndex.Model:
-                case SoulGem_FieldIndex.Icon:
-                case SoulGem_FieldIndex.Script:
-                case SoulGem_FieldIndex.Data:
-                case SoulGem_FieldIndex.ContainedSoul:
-                case SoulGem_FieldIndex.MaximumCapacity:
-                    return false;
-                default:
-                    return AItem_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
-            switch (enu)
-            {
-                case SoulGem_FieldIndex.Name:
-                    return typeof(String);
-                case SoulGem_FieldIndex.Model:
-                    return typeof(Model);
-                case SoulGem_FieldIndex.Icon:
-                    return typeof(String);
-                case SoulGem_FieldIndex.Script:
-                    return typeof(FormLinkNullable<Script>);
-                case SoulGem_FieldIndex.Data:
-                    return typeof(SoulGemData);
-                case SoulGem_FieldIndex.ContainedSoul:
-                    return typeof(SoulLevel);
-                case SoulGem_FieldIndex.MaximumCapacity:
-                    return typeof(SoulLevel);
-                default:
-                    return AItem_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.SLGM;
         public static readonly Type BinaryWriteTranslation = typeof(SoulGemBinaryWriteTranslation);
         #region Interface
@@ -1076,14 +914,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

@@ -999,180 +999,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "NAME":
-                    return (ushort)Door_FieldIndex.Name;
-                case "MODEL":
-                    return (ushort)Door_FieldIndex.Model;
-                case "SCRIPT":
-                    return (ushort)Door_FieldIndex.Script;
-                case "OPENSOUND":
-                    return (ushort)Door_FieldIndex.OpenSound;
-                case "CLOSESOUND":
-                    return (ushort)Door_FieldIndex.CloseSound;
-                case "LOOPSOUND":
-                    return (ushort)Door_FieldIndex.LoopSound;
-                case "FLAGS":
-                    return (ushort)Door_FieldIndex.Flags;
-                case "RANDOMTELEPORTDESTINATIONS":
-                    return (ushort)Door_FieldIndex.RandomTeleportDestinations;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Door_FieldIndex enu = (Door_FieldIndex)index;
-            switch (enu)
-            {
-                case Door_FieldIndex.RandomTeleportDestinations:
-                    return true;
-                case Door_FieldIndex.Name:
-                case Door_FieldIndex.Model:
-                case Door_FieldIndex.Script:
-                case Door_FieldIndex.OpenSound:
-                case Door_FieldIndex.CloseSound:
-                case Door_FieldIndex.LoopSound:
-                case Door_FieldIndex.Flags:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Door_FieldIndex enu = (Door_FieldIndex)index;
-            switch (enu)
-            {
-                case Door_FieldIndex.Model:
-                    return true;
-                case Door_FieldIndex.Name:
-                case Door_FieldIndex.Script:
-                case Door_FieldIndex.OpenSound:
-                case Door_FieldIndex.CloseSound:
-                case Door_FieldIndex.LoopSound:
-                case Door_FieldIndex.Flags:
-                case Door_FieldIndex.RandomTeleportDestinations:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Door_FieldIndex enu = (Door_FieldIndex)index;
-            switch (enu)
-            {
-                case Door_FieldIndex.Name:
-                case Door_FieldIndex.Model:
-                case Door_FieldIndex.Script:
-                case Door_FieldIndex.OpenSound:
-                case Door_FieldIndex.CloseSound:
-                case Door_FieldIndex.LoopSound:
-                case Door_FieldIndex.Flags:
-                case Door_FieldIndex.RandomTeleportDestinations:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Door_FieldIndex enu = (Door_FieldIndex)index;
-            switch (enu)
-            {
-                case Door_FieldIndex.Name:
-                    return "Name";
-                case Door_FieldIndex.Model:
-                    return "Model";
-                case Door_FieldIndex.Script:
-                    return "Script";
-                case Door_FieldIndex.OpenSound:
-                    return "OpenSound";
-                case Door_FieldIndex.CloseSound:
-                    return "CloseSound";
-                case Door_FieldIndex.LoopSound:
-                    return "LoopSound";
-                case Door_FieldIndex.Flags:
-                    return "Flags";
-                case Door_FieldIndex.RandomTeleportDestinations:
-                    return "RandomTeleportDestinations";
-                default:
-                    return OblivionMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Door_FieldIndex enu = (Door_FieldIndex)index;
-            switch (enu)
-            {
-                case Door_FieldIndex.Name:
-                case Door_FieldIndex.Model:
-                case Door_FieldIndex.Script:
-                case Door_FieldIndex.OpenSound:
-                case Door_FieldIndex.CloseSound:
-                case Door_FieldIndex.LoopSound:
-                case Door_FieldIndex.Flags:
-                case Door_FieldIndex.RandomTeleportDestinations:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Door_FieldIndex enu = (Door_FieldIndex)index;
-            switch (enu)
-            {
-                case Door_FieldIndex.Name:
-                case Door_FieldIndex.Model:
-                case Door_FieldIndex.Script:
-                case Door_FieldIndex.OpenSound:
-                case Door_FieldIndex.CloseSound:
-                case Door_FieldIndex.LoopSound:
-                case Door_FieldIndex.Flags:
-                case Door_FieldIndex.RandomTeleportDestinations:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Door_FieldIndex enu = (Door_FieldIndex)index;
-            switch (enu)
-            {
-                case Door_FieldIndex.Name:
-                    return typeof(String);
-                case Door_FieldIndex.Model:
-                    return typeof(Model);
-                case Door_FieldIndex.Script:
-                    return typeof(FormLinkNullable<Script>);
-                case Door_FieldIndex.OpenSound:
-                    return typeof(FormLinkNullable<Sound>);
-                case Door_FieldIndex.CloseSound:
-                    return typeof(FormLinkNullable<Sound>);
-                case Door_FieldIndex.LoopSound:
-                    return typeof(FormLinkNullable<Sound>);
-                case Door_FieldIndex.Flags:
-                    return typeof(Door.DoorFlag);
-                case Door_FieldIndex.RandomTeleportDestinations:
-                    return typeof(IExtendedList<IFormLink<Place>>);
-                default:
-                    return OblivionMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.DOOR;
         public static readonly Type BinaryWriteTranslation = typeof(DoorBinaryWriteTranslation);
         #region Interface
@@ -1193,14 +1019,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

@@ -719,123 +719,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "WEATHER":
-                    return (ushort)WeatherType_FieldIndex.Weather;
-                case "CHANCE":
-                    return (ushort)WeatherType_FieldIndex.Chance;
-                case "GLOBAL":
-                    return (ushort)WeatherType_FieldIndex.Global;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            WeatherType_FieldIndex enu = (WeatherType_FieldIndex)index;
-            switch (enu)
-            {
-                case WeatherType_FieldIndex.Weather:
-                case WeatherType_FieldIndex.Chance:
-                case WeatherType_FieldIndex.Global:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            WeatherType_FieldIndex enu = (WeatherType_FieldIndex)index;
-            switch (enu)
-            {
-                case WeatherType_FieldIndex.Weather:
-                case WeatherType_FieldIndex.Chance:
-                case WeatherType_FieldIndex.Global:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            WeatherType_FieldIndex enu = (WeatherType_FieldIndex)index;
-            switch (enu)
-            {
-                case WeatherType_FieldIndex.Weather:
-                case WeatherType_FieldIndex.Chance:
-                case WeatherType_FieldIndex.Global:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            WeatherType_FieldIndex enu = (WeatherType_FieldIndex)index;
-            switch (enu)
-            {
-                case WeatherType_FieldIndex.Weather:
-                    return "Weather";
-                case WeatherType_FieldIndex.Chance:
-                    return "Chance";
-                case WeatherType_FieldIndex.Global:
-                    return "Global";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            WeatherType_FieldIndex enu = (WeatherType_FieldIndex)index;
-            switch (enu)
-            {
-                case WeatherType_FieldIndex.Weather:
-                case WeatherType_FieldIndex.Chance:
-                case WeatherType_FieldIndex.Global:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            WeatherType_FieldIndex enu = (WeatherType_FieldIndex)index;
-            switch (enu)
-            {
-                case WeatherType_FieldIndex.Weather:
-                case WeatherType_FieldIndex.Chance:
-                case WeatherType_FieldIndex.Global:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            WeatherType_FieldIndex enu = (WeatherType_FieldIndex)index;
-            switch (enu)
-            {
-                case WeatherType_FieldIndex.Weather:
-                    return typeof(FormLink<Weather>);
-                case WeatherType_FieldIndex.Chance:
-                    return typeof(Int32);
-                case WeatherType_FieldIndex.Global:
-                    return typeof(FormLink<Global>);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly Type BinaryWriteTranslation = typeof(WeatherTypeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -855,14 +738,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

@@ -818,156 +818,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "SETFLAGS":
-                    return (ushort)PackageFlagsOverride_FieldIndex.SetFlags;
-                case "CLEARFLAGS":
-                    return (ushort)PackageFlagsOverride_FieldIndex.ClearFlags;
-                case "SETINTERRUPTFLAGS":
-                    return (ushort)PackageFlagsOverride_FieldIndex.SetInterruptFlags;
-                case "CLEARINTERRUPTFLAGS":
-                    return (ushort)PackageFlagsOverride_FieldIndex.ClearInterruptFlags;
-                case "PREFERREDSPEED":
-                    return (ushort)PackageFlagsOverride_FieldIndex.PreferredSpeed;
-                case "UNKNOWN":
-                    return (ushort)PackageFlagsOverride_FieldIndex.Unknown;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            PackageFlagsOverride_FieldIndex enu = (PackageFlagsOverride_FieldIndex)index;
-            switch (enu)
-            {
-                case PackageFlagsOverride_FieldIndex.SetFlags:
-                case PackageFlagsOverride_FieldIndex.ClearFlags:
-                case PackageFlagsOverride_FieldIndex.SetInterruptFlags:
-                case PackageFlagsOverride_FieldIndex.ClearInterruptFlags:
-                case PackageFlagsOverride_FieldIndex.PreferredSpeed:
-                case PackageFlagsOverride_FieldIndex.Unknown:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            PackageFlagsOverride_FieldIndex enu = (PackageFlagsOverride_FieldIndex)index;
-            switch (enu)
-            {
-                case PackageFlagsOverride_FieldIndex.SetFlags:
-                case PackageFlagsOverride_FieldIndex.ClearFlags:
-                case PackageFlagsOverride_FieldIndex.SetInterruptFlags:
-                case PackageFlagsOverride_FieldIndex.ClearInterruptFlags:
-                case PackageFlagsOverride_FieldIndex.PreferredSpeed:
-                case PackageFlagsOverride_FieldIndex.Unknown:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            PackageFlagsOverride_FieldIndex enu = (PackageFlagsOverride_FieldIndex)index;
-            switch (enu)
-            {
-                case PackageFlagsOverride_FieldIndex.SetFlags:
-                case PackageFlagsOverride_FieldIndex.ClearFlags:
-                case PackageFlagsOverride_FieldIndex.SetInterruptFlags:
-                case PackageFlagsOverride_FieldIndex.ClearInterruptFlags:
-                case PackageFlagsOverride_FieldIndex.PreferredSpeed:
-                case PackageFlagsOverride_FieldIndex.Unknown:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            PackageFlagsOverride_FieldIndex enu = (PackageFlagsOverride_FieldIndex)index;
-            switch (enu)
-            {
-                case PackageFlagsOverride_FieldIndex.SetFlags:
-                    return "SetFlags";
-                case PackageFlagsOverride_FieldIndex.ClearFlags:
-                    return "ClearFlags";
-                case PackageFlagsOverride_FieldIndex.SetInterruptFlags:
-                    return "SetInterruptFlags";
-                case PackageFlagsOverride_FieldIndex.ClearInterruptFlags:
-                    return "ClearInterruptFlags";
-                case PackageFlagsOverride_FieldIndex.PreferredSpeed:
-                    return "PreferredSpeed";
-                case PackageFlagsOverride_FieldIndex.Unknown:
-                    return "Unknown";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            PackageFlagsOverride_FieldIndex enu = (PackageFlagsOverride_FieldIndex)index;
-            switch (enu)
-            {
-                case PackageFlagsOverride_FieldIndex.SetFlags:
-                case PackageFlagsOverride_FieldIndex.ClearFlags:
-                case PackageFlagsOverride_FieldIndex.SetInterruptFlags:
-                case PackageFlagsOverride_FieldIndex.ClearInterruptFlags:
-                case PackageFlagsOverride_FieldIndex.PreferredSpeed:
-                case PackageFlagsOverride_FieldIndex.Unknown:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            PackageFlagsOverride_FieldIndex enu = (PackageFlagsOverride_FieldIndex)index;
-            switch (enu)
-            {
-                case PackageFlagsOverride_FieldIndex.SetFlags:
-                case PackageFlagsOverride_FieldIndex.ClearFlags:
-                case PackageFlagsOverride_FieldIndex.SetInterruptFlags:
-                case PackageFlagsOverride_FieldIndex.ClearInterruptFlags:
-                case PackageFlagsOverride_FieldIndex.PreferredSpeed:
-                case PackageFlagsOverride_FieldIndex.Unknown:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            PackageFlagsOverride_FieldIndex enu = (PackageFlagsOverride_FieldIndex)index;
-            switch (enu)
-            {
-                case PackageFlagsOverride_FieldIndex.SetFlags:
-                    return typeof(Package.Flag);
-                case PackageFlagsOverride_FieldIndex.ClearFlags:
-                    return typeof(Package.Flag);
-                case PackageFlagsOverride_FieldIndex.SetInterruptFlags:
-                    return typeof(Package.InterruptFlag);
-                case PackageFlagsOverride_FieldIndex.ClearInterruptFlags:
-                    return typeof(Package.InterruptFlag);
-                case PackageFlagsOverride_FieldIndex.PreferredSpeed:
-                    return typeof(Package.Speed);
-                case PackageFlagsOverride_FieldIndex.Unknown:
-                    return typeof(MemorySlice<Byte>);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.PFO2;
         public static readonly Type BinaryWriteTranslation = typeof(PackageFlagsOverrideBinaryWriteTranslation);
         #region Interface
@@ -988,14 +838,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

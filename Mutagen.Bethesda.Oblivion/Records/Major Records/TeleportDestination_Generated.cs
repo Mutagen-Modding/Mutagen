@@ -718,123 +718,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "DESTINATION":
-                    return (ushort)TeleportDestination_FieldIndex.Destination;
-                case "POSITION":
-                    return (ushort)TeleportDestination_FieldIndex.Position;
-                case "ROTATION":
-                    return (ushort)TeleportDestination_FieldIndex.Rotation;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
-            switch (enu)
-            {
-                case TeleportDestination_FieldIndex.Destination:
-                case TeleportDestination_FieldIndex.Position:
-                case TeleportDestination_FieldIndex.Rotation:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
-            switch (enu)
-            {
-                case TeleportDestination_FieldIndex.Destination:
-                case TeleportDestination_FieldIndex.Position:
-                case TeleportDestination_FieldIndex.Rotation:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
-            switch (enu)
-            {
-                case TeleportDestination_FieldIndex.Destination:
-                case TeleportDestination_FieldIndex.Position:
-                case TeleportDestination_FieldIndex.Rotation:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
-            switch (enu)
-            {
-                case TeleportDestination_FieldIndex.Destination:
-                    return "Destination";
-                case TeleportDestination_FieldIndex.Position:
-                    return "Position";
-                case TeleportDestination_FieldIndex.Rotation:
-                    return "Rotation";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
-            switch (enu)
-            {
-                case TeleportDestination_FieldIndex.Destination:
-                case TeleportDestination_FieldIndex.Position:
-                case TeleportDestination_FieldIndex.Rotation:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
-            switch (enu)
-            {
-                case TeleportDestination_FieldIndex.Destination:
-                case TeleportDestination_FieldIndex.Position:
-                case TeleportDestination_FieldIndex.Rotation:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
-            switch (enu)
-            {
-                case TeleportDestination_FieldIndex.Destination:
-                    return typeof(FormLink<IPlaced>);
-                case TeleportDestination_FieldIndex.Position:
-                    return typeof(P3Float);
-                case TeleportDestination_FieldIndex.Rotation:
-                    return typeof(P3Float);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.XTEL;
         public static readonly Type BinaryWriteTranslation = typeof(TeleportDestinationBinaryWriteTranslation);
         #region Interface
@@ -855,14 +738,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

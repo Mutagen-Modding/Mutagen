@@ -1029,191 +1029,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "FLAGS":
-                    return (ushort)OblivionModHeader_FieldIndex.Flags;
-                case "FORMID":
-                    return (ushort)OblivionModHeader_FieldIndex.FormID;
-                case "VERSION":
-                    return (ushort)OblivionModHeader_FieldIndex.Version;
-                case "STATS":
-                    return (ushort)OblivionModHeader_FieldIndex.Stats;
-                case "TYPEOFFSETS":
-                    return (ushort)OblivionModHeader_FieldIndex.TypeOffsets;
-                case "DELETED":
-                    return (ushort)OblivionModHeader_FieldIndex.Deleted;
-                case "AUTHOR":
-                    return (ushort)OblivionModHeader_FieldIndex.Author;
-                case "DESCRIPTION":
-                    return (ushort)OblivionModHeader_FieldIndex.Description;
-                case "MASTERREFERENCES":
-                    return (ushort)OblivionModHeader_FieldIndex.MasterReferences;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            OblivionModHeader_FieldIndex enu = (OblivionModHeader_FieldIndex)index;
-            switch (enu)
-            {
-                case OblivionModHeader_FieldIndex.MasterReferences:
-                    return true;
-                case OblivionModHeader_FieldIndex.Flags:
-                case OblivionModHeader_FieldIndex.FormID:
-                case OblivionModHeader_FieldIndex.Version:
-                case OblivionModHeader_FieldIndex.Stats:
-                case OblivionModHeader_FieldIndex.TypeOffsets:
-                case OblivionModHeader_FieldIndex.Deleted:
-                case OblivionModHeader_FieldIndex.Author:
-                case OblivionModHeader_FieldIndex.Description:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            OblivionModHeader_FieldIndex enu = (OblivionModHeader_FieldIndex)index;
-            switch (enu)
-            {
-                case OblivionModHeader_FieldIndex.Stats:
-                case OblivionModHeader_FieldIndex.MasterReferences:
-                    return true;
-                case OblivionModHeader_FieldIndex.Flags:
-                case OblivionModHeader_FieldIndex.FormID:
-                case OblivionModHeader_FieldIndex.Version:
-                case OblivionModHeader_FieldIndex.TypeOffsets:
-                case OblivionModHeader_FieldIndex.Deleted:
-                case OblivionModHeader_FieldIndex.Author:
-                case OblivionModHeader_FieldIndex.Description:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            OblivionModHeader_FieldIndex enu = (OblivionModHeader_FieldIndex)index;
-            switch (enu)
-            {
-                case OblivionModHeader_FieldIndex.Flags:
-                case OblivionModHeader_FieldIndex.FormID:
-                case OblivionModHeader_FieldIndex.Version:
-                case OblivionModHeader_FieldIndex.Stats:
-                case OblivionModHeader_FieldIndex.TypeOffsets:
-                case OblivionModHeader_FieldIndex.Deleted:
-                case OblivionModHeader_FieldIndex.Author:
-                case OblivionModHeader_FieldIndex.Description:
-                case OblivionModHeader_FieldIndex.MasterReferences:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            OblivionModHeader_FieldIndex enu = (OblivionModHeader_FieldIndex)index;
-            switch (enu)
-            {
-                case OblivionModHeader_FieldIndex.Flags:
-                    return "Flags";
-                case OblivionModHeader_FieldIndex.FormID:
-                    return "FormID";
-                case OblivionModHeader_FieldIndex.Version:
-                    return "Version";
-                case OblivionModHeader_FieldIndex.Stats:
-                    return "Stats";
-                case OblivionModHeader_FieldIndex.TypeOffsets:
-                    return "TypeOffsets";
-                case OblivionModHeader_FieldIndex.Deleted:
-                    return "Deleted";
-                case OblivionModHeader_FieldIndex.Author:
-                    return "Author";
-                case OblivionModHeader_FieldIndex.Description:
-                    return "Description";
-                case OblivionModHeader_FieldIndex.MasterReferences:
-                    return "MasterReferences";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            OblivionModHeader_FieldIndex enu = (OblivionModHeader_FieldIndex)index;
-            switch (enu)
-            {
-                case OblivionModHeader_FieldIndex.Flags:
-                case OblivionModHeader_FieldIndex.FormID:
-                case OblivionModHeader_FieldIndex.Version:
-                case OblivionModHeader_FieldIndex.Stats:
-                case OblivionModHeader_FieldIndex.TypeOffsets:
-                case OblivionModHeader_FieldIndex.Deleted:
-                case OblivionModHeader_FieldIndex.Author:
-                case OblivionModHeader_FieldIndex.Description:
-                case OblivionModHeader_FieldIndex.MasterReferences:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            OblivionModHeader_FieldIndex enu = (OblivionModHeader_FieldIndex)index;
-            switch (enu)
-            {
-                case OblivionModHeader_FieldIndex.Flags:
-                case OblivionModHeader_FieldIndex.FormID:
-                case OblivionModHeader_FieldIndex.Version:
-                case OblivionModHeader_FieldIndex.Stats:
-                case OblivionModHeader_FieldIndex.TypeOffsets:
-                case OblivionModHeader_FieldIndex.Deleted:
-                case OblivionModHeader_FieldIndex.Author:
-                case OblivionModHeader_FieldIndex.Description:
-                case OblivionModHeader_FieldIndex.MasterReferences:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            OblivionModHeader_FieldIndex enu = (OblivionModHeader_FieldIndex)index;
-            switch (enu)
-            {
-                case OblivionModHeader_FieldIndex.Flags:
-                    return typeof(OblivionModHeader.HeaderFlag);
-                case OblivionModHeader_FieldIndex.FormID:
-                    return typeof(UInt32);
-                case OblivionModHeader_FieldIndex.Version:
-                    return typeof(Int32);
-                case OblivionModHeader_FieldIndex.Stats:
-                    return typeof(ModStats);
-                case OblivionModHeader_FieldIndex.TypeOffsets:
-                    return typeof(MemorySlice<Byte>);
-                case OblivionModHeader_FieldIndex.Deleted:
-                    return typeof(MemorySlice<Byte>);
-                case OblivionModHeader_FieldIndex.Author:
-                    return typeof(String);
-                case OblivionModHeader_FieldIndex.Description:
-                    return typeof(String);
-                case OblivionModHeader_FieldIndex.MasterReferences:
-                    return typeof(IExtendedList<MasterReference>);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.TES4;
         public static readonly Type BinaryWriteTranslation = typeof(OblivionModHeaderBinaryWriteTranslation);
         #region Interface
@@ -1234,14 +1049,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

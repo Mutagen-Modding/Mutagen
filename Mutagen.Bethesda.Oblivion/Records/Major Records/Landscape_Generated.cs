@@ -1022,158 +1022,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "DATA":
-                    return (ushort)Landscape_FieldIndex.DATA;
-                case "VERTEXNORMALS":
-                    return (ushort)Landscape_FieldIndex.VertexNormals;
-                case "VERTEXHEIGHTMAP":
-                    return (ushort)Landscape_FieldIndex.VertexHeightMap;
-                case "VERTEXCOLORS":
-                    return (ushort)Landscape_FieldIndex.VertexColors;
-                case "LAYERS":
-                    return (ushort)Landscape_FieldIndex.Layers;
-                case "TEXTURES":
-                    return (ushort)Landscape_FieldIndex.Textures;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Landscape_FieldIndex enu = (Landscape_FieldIndex)index;
-            switch (enu)
-            {
-                case Landscape_FieldIndex.Layers:
-                case Landscape_FieldIndex.Textures:
-                    return true;
-                case Landscape_FieldIndex.DATA:
-                case Landscape_FieldIndex.VertexNormals:
-                case Landscape_FieldIndex.VertexHeightMap:
-                case Landscape_FieldIndex.VertexColors:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Landscape_FieldIndex enu = (Landscape_FieldIndex)index;
-            switch (enu)
-            {
-                case Landscape_FieldIndex.Layers:
-                    return true;
-                case Landscape_FieldIndex.DATA:
-                case Landscape_FieldIndex.VertexNormals:
-                case Landscape_FieldIndex.VertexHeightMap:
-                case Landscape_FieldIndex.VertexColors:
-                case Landscape_FieldIndex.Textures:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Landscape_FieldIndex enu = (Landscape_FieldIndex)index;
-            switch (enu)
-            {
-                case Landscape_FieldIndex.DATA:
-                case Landscape_FieldIndex.VertexNormals:
-                case Landscape_FieldIndex.VertexHeightMap:
-                case Landscape_FieldIndex.VertexColors:
-                case Landscape_FieldIndex.Layers:
-                case Landscape_FieldIndex.Textures:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Landscape_FieldIndex enu = (Landscape_FieldIndex)index;
-            switch (enu)
-            {
-                case Landscape_FieldIndex.DATA:
-                    return "DATA";
-                case Landscape_FieldIndex.VertexNormals:
-                    return "VertexNormals";
-                case Landscape_FieldIndex.VertexHeightMap:
-                    return "VertexHeightMap";
-                case Landscape_FieldIndex.VertexColors:
-                    return "VertexColors";
-                case Landscape_FieldIndex.Layers:
-                    return "Layers";
-                case Landscape_FieldIndex.Textures:
-                    return "Textures";
-                default:
-                    return OblivionMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Landscape_FieldIndex enu = (Landscape_FieldIndex)index;
-            switch (enu)
-            {
-                case Landscape_FieldIndex.DATA:
-                case Landscape_FieldIndex.VertexNormals:
-                case Landscape_FieldIndex.VertexHeightMap:
-                case Landscape_FieldIndex.VertexColors:
-                case Landscape_FieldIndex.Layers:
-                case Landscape_FieldIndex.Textures:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Landscape_FieldIndex enu = (Landscape_FieldIndex)index;
-            switch (enu)
-            {
-                case Landscape_FieldIndex.DATA:
-                case Landscape_FieldIndex.VertexNormals:
-                case Landscape_FieldIndex.VertexHeightMap:
-                case Landscape_FieldIndex.VertexColors:
-                case Landscape_FieldIndex.Layers:
-                case Landscape_FieldIndex.Textures:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Landscape_FieldIndex enu = (Landscape_FieldIndex)index;
-            switch (enu)
-            {
-                case Landscape_FieldIndex.DATA:
-                    return typeof(MemorySlice<Byte>);
-                case Landscape_FieldIndex.VertexNormals:
-                    return typeof(MemorySlice<Byte>);
-                case Landscape_FieldIndex.VertexHeightMap:
-                    return typeof(MemorySlice<Byte>);
-                case Landscape_FieldIndex.VertexColors:
-                    return typeof(MemorySlice<Byte>);
-                case Landscape_FieldIndex.Layers:
-                    return typeof(IExtendedList<BaseLayer>);
-                case Landscape_FieldIndex.Textures:
-                    return typeof(IExtendedList<IFormLink<LandTexture>>);
-                default:
-                    return OblivionMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.LAND;
         public static readonly Type BinaryWriteTranslation = typeof(LandscapeBinaryWriteTranslation);
         #region Interface
@@ -1194,14 +1042,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

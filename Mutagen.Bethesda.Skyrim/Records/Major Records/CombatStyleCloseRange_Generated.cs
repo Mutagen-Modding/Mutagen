@@ -781,145 +781,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "VERSIONING":
-                    return (ushort)CombatStyleCloseRange_FieldIndex.Versioning;
-                case "CIRCLEMULT":
-                    return (ushort)CombatStyleCloseRange_FieldIndex.CircleMult;
-                case "FALLBACKMULT":
-                    return (ushort)CombatStyleCloseRange_FieldIndex.FallbackMult;
-                case "FLANKDISTANCE":
-                    return (ushort)CombatStyleCloseRange_FieldIndex.FlankDistance;
-                case "STALKTIME":
-                    return (ushort)CombatStyleCloseRange_FieldIndex.StalkTime;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            CombatStyleCloseRange_FieldIndex enu = (CombatStyleCloseRange_FieldIndex)index;
-            switch (enu)
-            {
-                case CombatStyleCloseRange_FieldIndex.Versioning:
-                case CombatStyleCloseRange_FieldIndex.CircleMult:
-                case CombatStyleCloseRange_FieldIndex.FallbackMult:
-                case CombatStyleCloseRange_FieldIndex.FlankDistance:
-                case CombatStyleCloseRange_FieldIndex.StalkTime:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            CombatStyleCloseRange_FieldIndex enu = (CombatStyleCloseRange_FieldIndex)index;
-            switch (enu)
-            {
-                case CombatStyleCloseRange_FieldIndex.Versioning:
-                case CombatStyleCloseRange_FieldIndex.CircleMult:
-                case CombatStyleCloseRange_FieldIndex.FallbackMult:
-                case CombatStyleCloseRange_FieldIndex.FlankDistance:
-                case CombatStyleCloseRange_FieldIndex.StalkTime:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            CombatStyleCloseRange_FieldIndex enu = (CombatStyleCloseRange_FieldIndex)index;
-            switch (enu)
-            {
-                case CombatStyleCloseRange_FieldIndex.Versioning:
-                case CombatStyleCloseRange_FieldIndex.CircleMult:
-                case CombatStyleCloseRange_FieldIndex.FallbackMult:
-                case CombatStyleCloseRange_FieldIndex.FlankDistance:
-                case CombatStyleCloseRange_FieldIndex.StalkTime:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            CombatStyleCloseRange_FieldIndex enu = (CombatStyleCloseRange_FieldIndex)index;
-            switch (enu)
-            {
-                case CombatStyleCloseRange_FieldIndex.Versioning:
-                    return "Versioning";
-                case CombatStyleCloseRange_FieldIndex.CircleMult:
-                    return "CircleMult";
-                case CombatStyleCloseRange_FieldIndex.FallbackMult:
-                    return "FallbackMult";
-                case CombatStyleCloseRange_FieldIndex.FlankDistance:
-                    return "FlankDistance";
-                case CombatStyleCloseRange_FieldIndex.StalkTime:
-                    return "StalkTime";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            CombatStyleCloseRange_FieldIndex enu = (CombatStyleCloseRange_FieldIndex)index;
-            switch (enu)
-            {
-                case CombatStyleCloseRange_FieldIndex.Versioning:
-                case CombatStyleCloseRange_FieldIndex.CircleMult:
-                case CombatStyleCloseRange_FieldIndex.FallbackMult:
-                case CombatStyleCloseRange_FieldIndex.FlankDistance:
-                case CombatStyleCloseRange_FieldIndex.StalkTime:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            CombatStyleCloseRange_FieldIndex enu = (CombatStyleCloseRange_FieldIndex)index;
-            switch (enu)
-            {
-                case CombatStyleCloseRange_FieldIndex.Versioning:
-                case CombatStyleCloseRange_FieldIndex.CircleMult:
-                case CombatStyleCloseRange_FieldIndex.FallbackMult:
-                case CombatStyleCloseRange_FieldIndex.FlankDistance:
-                case CombatStyleCloseRange_FieldIndex.StalkTime:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            CombatStyleCloseRange_FieldIndex enu = (CombatStyleCloseRange_FieldIndex)index;
-            switch (enu)
-            {
-                case CombatStyleCloseRange_FieldIndex.Versioning:
-                    return typeof(CombatStyleCloseRange.VersioningBreaks);
-                case CombatStyleCloseRange_FieldIndex.CircleMult:
-                    return typeof(Single);
-                case CombatStyleCloseRange_FieldIndex.FallbackMult:
-                    return typeof(Single);
-                case CombatStyleCloseRange_FieldIndex.FlankDistance:
-                    return typeof(Single);
-                case CombatStyleCloseRange_FieldIndex.StalkTime:
-                    return typeof(Single);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.CSCR;
         public static readonly Type BinaryWriteTranslation = typeof(CombatStyleCloseRangeBinaryWriteTranslation);
         #region Interface
@@ -940,14 +801,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

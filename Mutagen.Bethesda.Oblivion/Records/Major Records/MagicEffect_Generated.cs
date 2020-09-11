@@ -940,158 +940,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "NAME":
-                    return (ushort)MagicEffect_FieldIndex.Name;
-                case "DESCRIPTION":
-                    return (ushort)MagicEffect_FieldIndex.Description;
-                case "ICON":
-                    return (ushort)MagicEffect_FieldIndex.Icon;
-                case "MODEL":
-                    return (ushort)MagicEffect_FieldIndex.Model;
-                case "DATA":
-                    return (ushort)MagicEffect_FieldIndex.Data;
-                case "COUNTEREFFECTS":
-                    return (ushort)MagicEffect_FieldIndex.CounterEffects;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffect_FieldIndex.CounterEffects:
-                    return true;
-                case MagicEffect_FieldIndex.Name:
-                case MagicEffect_FieldIndex.Description:
-                case MagicEffect_FieldIndex.Icon:
-                case MagicEffect_FieldIndex.Model:
-                case MagicEffect_FieldIndex.Data:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffect_FieldIndex.Model:
-                case MagicEffect_FieldIndex.Data:
-                    return true;
-                case MagicEffect_FieldIndex.Name:
-                case MagicEffect_FieldIndex.Description:
-                case MagicEffect_FieldIndex.Icon:
-                case MagicEffect_FieldIndex.CounterEffects:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffect_FieldIndex.Name:
-                case MagicEffect_FieldIndex.Description:
-                case MagicEffect_FieldIndex.Icon:
-                case MagicEffect_FieldIndex.Model:
-                case MagicEffect_FieldIndex.Data:
-                case MagicEffect_FieldIndex.CounterEffects:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffect_FieldIndex.Name:
-                    return "Name";
-                case MagicEffect_FieldIndex.Description:
-                    return "Description";
-                case MagicEffect_FieldIndex.Icon:
-                    return "Icon";
-                case MagicEffect_FieldIndex.Model:
-                    return "Model";
-                case MagicEffect_FieldIndex.Data:
-                    return "Data";
-                case MagicEffect_FieldIndex.CounterEffects:
-                    return "CounterEffects";
-                default:
-                    return OblivionMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffect_FieldIndex.Name:
-                case MagicEffect_FieldIndex.Description:
-                case MagicEffect_FieldIndex.Icon:
-                case MagicEffect_FieldIndex.Model:
-                case MagicEffect_FieldIndex.Data:
-                case MagicEffect_FieldIndex.CounterEffects:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffect_FieldIndex.Name:
-                case MagicEffect_FieldIndex.Description:
-                case MagicEffect_FieldIndex.Icon:
-                case MagicEffect_FieldIndex.Model:
-                case MagicEffect_FieldIndex.Data:
-                case MagicEffect_FieldIndex.CounterEffects:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffect_FieldIndex.Name:
-                    return typeof(String);
-                case MagicEffect_FieldIndex.Description:
-                    return typeof(String);
-                case MagicEffect_FieldIndex.Icon:
-                    return typeof(String);
-                case MagicEffect_FieldIndex.Model:
-                    return typeof(Model);
-                case MagicEffect_FieldIndex.Data:
-                    return typeof(MagicEffectData);
-                case MagicEffect_FieldIndex.CounterEffects:
-                    return typeof(IExtendedList<IEDIDLink<MagicEffect>>);
-                default:
-                    return OblivionMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.MGEF;
         public static readonly Type BinaryWriteTranslation = typeof(MagicEffectBinaryWriteTranslation);
         #region Interface
@@ -1112,14 +960,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

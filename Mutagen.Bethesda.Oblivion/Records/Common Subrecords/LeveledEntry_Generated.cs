@@ -432,127 +432,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = typeof(LeveledEntry_Registration<>);
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "LEVEL":
-                    return (ushort)LeveledEntry_FieldIndex.Level;
-                case "UNKNOWN":
-                    return (ushort)LeveledEntry_FieldIndex.Unknown;
-                case "REFERENCE":
-                    return (ushort)LeveledEntry_FieldIndex.Reference;
-                case "COUNT":
-                    return (ushort)LeveledEntry_FieldIndex.Count;
-                case "UNKNOWN2":
-                    return (ushort)LeveledEntry_FieldIndex.Unknown2;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            LeveledEntry_FieldIndex enu = (LeveledEntry_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledEntry_FieldIndex.Level:
-                case LeveledEntry_FieldIndex.Unknown:
-                case LeveledEntry_FieldIndex.Reference:
-                case LeveledEntry_FieldIndex.Count:
-                case LeveledEntry_FieldIndex.Unknown2:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            LeveledEntry_FieldIndex enu = (LeveledEntry_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledEntry_FieldIndex.Level:
-                case LeveledEntry_FieldIndex.Unknown:
-                case LeveledEntry_FieldIndex.Reference:
-                case LeveledEntry_FieldIndex.Count:
-                case LeveledEntry_FieldIndex.Unknown2:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            LeveledEntry_FieldIndex enu = (LeveledEntry_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledEntry_FieldIndex.Level:
-                case LeveledEntry_FieldIndex.Unknown:
-                case LeveledEntry_FieldIndex.Reference:
-                case LeveledEntry_FieldIndex.Count:
-                case LeveledEntry_FieldIndex.Unknown2:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            LeveledEntry_FieldIndex enu = (LeveledEntry_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledEntry_FieldIndex.Level:
-                    return "Level";
-                case LeveledEntry_FieldIndex.Unknown:
-                    return "Unknown";
-                case LeveledEntry_FieldIndex.Reference:
-                    return "Reference";
-                case LeveledEntry_FieldIndex.Count:
-                    return "Count";
-                case LeveledEntry_FieldIndex.Unknown2:
-                    return "Unknown2";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            LeveledEntry_FieldIndex enu = (LeveledEntry_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledEntry_FieldIndex.Level:
-                case LeveledEntry_FieldIndex.Unknown:
-                case LeveledEntry_FieldIndex.Reference:
-                case LeveledEntry_FieldIndex.Count:
-                case LeveledEntry_FieldIndex.Unknown2:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            LeveledEntry_FieldIndex enu = (LeveledEntry_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledEntry_FieldIndex.Level:
-                case LeveledEntry_FieldIndex.Unknown:
-                case LeveledEntry_FieldIndex.Reference:
-                case LeveledEntry_FieldIndex.Count:
-                case LeveledEntry_FieldIndex.Unknown2:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index) => throw new ArgumentException("Cannot get nth type for a generic object here.  Use generic registration instead.");
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.LVLO;
         public static readonly Type BinaryWriteTranslation = typeof(LeveledEntryBinaryWriteTranslation);
         #region Interface
@@ -573,14 +452,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

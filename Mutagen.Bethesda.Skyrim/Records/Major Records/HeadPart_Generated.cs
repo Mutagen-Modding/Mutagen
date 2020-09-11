@@ -1135,191 +1135,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "NAME":
-                    return (ushort)HeadPart_FieldIndex.Name;
-                case "MODEL":
-                    return (ushort)HeadPart_FieldIndex.Model;
-                case "FLAGS":
-                    return (ushort)HeadPart_FieldIndex.Flags;
-                case "TYPE":
-                    return (ushort)HeadPart_FieldIndex.Type;
-                case "EXTRAPARTS":
-                    return (ushort)HeadPart_FieldIndex.ExtraParts;
-                case "PARTS":
-                    return (ushort)HeadPart_FieldIndex.Parts;
-                case "TEXTURESET":
-                    return (ushort)HeadPart_FieldIndex.TextureSet;
-                case "COLOR":
-                    return (ushort)HeadPart_FieldIndex.Color;
-                case "VALIDRACES":
-                    return (ushort)HeadPart_FieldIndex.ValidRaces;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            HeadPart_FieldIndex enu = (HeadPart_FieldIndex)index;
-            switch (enu)
-            {
-                case HeadPart_FieldIndex.ExtraParts:
-                case HeadPart_FieldIndex.Parts:
-                    return true;
-                case HeadPart_FieldIndex.Name:
-                case HeadPart_FieldIndex.Model:
-                case HeadPart_FieldIndex.Flags:
-                case HeadPart_FieldIndex.Type:
-                case HeadPart_FieldIndex.TextureSet:
-                case HeadPart_FieldIndex.Color:
-                case HeadPart_FieldIndex.ValidRaces:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            HeadPart_FieldIndex enu = (HeadPart_FieldIndex)index;
-            switch (enu)
-            {
-                case HeadPart_FieldIndex.Model:
-                case HeadPart_FieldIndex.Parts:
-                    return true;
-                case HeadPart_FieldIndex.Name:
-                case HeadPart_FieldIndex.Flags:
-                case HeadPart_FieldIndex.Type:
-                case HeadPart_FieldIndex.ExtraParts:
-                case HeadPart_FieldIndex.TextureSet:
-                case HeadPart_FieldIndex.Color:
-                case HeadPart_FieldIndex.ValidRaces:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            HeadPart_FieldIndex enu = (HeadPart_FieldIndex)index;
-            switch (enu)
-            {
-                case HeadPart_FieldIndex.Name:
-                case HeadPart_FieldIndex.Model:
-                case HeadPart_FieldIndex.Flags:
-                case HeadPart_FieldIndex.Type:
-                case HeadPart_FieldIndex.ExtraParts:
-                case HeadPart_FieldIndex.Parts:
-                case HeadPart_FieldIndex.TextureSet:
-                case HeadPart_FieldIndex.Color:
-                case HeadPart_FieldIndex.ValidRaces:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            HeadPart_FieldIndex enu = (HeadPart_FieldIndex)index;
-            switch (enu)
-            {
-                case HeadPart_FieldIndex.Name:
-                    return "Name";
-                case HeadPart_FieldIndex.Model:
-                    return "Model";
-                case HeadPart_FieldIndex.Flags:
-                    return "Flags";
-                case HeadPart_FieldIndex.Type:
-                    return "Type";
-                case HeadPart_FieldIndex.ExtraParts:
-                    return "ExtraParts";
-                case HeadPart_FieldIndex.Parts:
-                    return "Parts";
-                case HeadPart_FieldIndex.TextureSet:
-                    return "TextureSet";
-                case HeadPart_FieldIndex.Color:
-                    return "Color";
-                case HeadPart_FieldIndex.ValidRaces:
-                    return "ValidRaces";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            HeadPart_FieldIndex enu = (HeadPart_FieldIndex)index;
-            switch (enu)
-            {
-                case HeadPart_FieldIndex.Name:
-                case HeadPart_FieldIndex.Model:
-                case HeadPart_FieldIndex.Flags:
-                case HeadPart_FieldIndex.Type:
-                case HeadPart_FieldIndex.ExtraParts:
-                case HeadPart_FieldIndex.Parts:
-                case HeadPart_FieldIndex.TextureSet:
-                case HeadPart_FieldIndex.Color:
-                case HeadPart_FieldIndex.ValidRaces:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            HeadPart_FieldIndex enu = (HeadPart_FieldIndex)index;
-            switch (enu)
-            {
-                case HeadPart_FieldIndex.Name:
-                case HeadPart_FieldIndex.Model:
-                case HeadPart_FieldIndex.Flags:
-                case HeadPart_FieldIndex.Type:
-                case HeadPart_FieldIndex.ExtraParts:
-                case HeadPart_FieldIndex.Parts:
-                case HeadPart_FieldIndex.TextureSet:
-                case HeadPart_FieldIndex.Color:
-                case HeadPart_FieldIndex.ValidRaces:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            HeadPart_FieldIndex enu = (HeadPart_FieldIndex)index;
-            switch (enu)
-            {
-                case HeadPart_FieldIndex.Name:
-                    return typeof(TranslatedString);
-                case HeadPart_FieldIndex.Model:
-                    return typeof(Model);
-                case HeadPart_FieldIndex.Flags:
-                    return typeof(HeadPart.Flag);
-                case HeadPart_FieldIndex.Type:
-                    return typeof(HeadPart.TypeEnum);
-                case HeadPart_FieldIndex.ExtraParts:
-                    return typeof(IExtendedList<IFormLink<HeadPart>>);
-                case HeadPart_FieldIndex.Parts:
-                    return typeof(IExtendedList<Part>);
-                case HeadPart_FieldIndex.TextureSet:
-                    return typeof(FormLinkNullable<TextureSet>);
-                case HeadPart_FieldIndex.Color:
-                    return typeof(FormLinkNullable<ColorRecord>);
-                case HeadPart_FieldIndex.ValidRaces:
-                    return typeof(FormLinkNullable<FormList>);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.HDPT;
         public static readonly Type BinaryWriteTranslation = typeof(HeadPartBinaryWriteTranslation);
         #region Interface
@@ -1340,14 +1155,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

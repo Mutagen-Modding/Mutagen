@@ -935,158 +935,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "OBJECTBOUNDS":
-                    return (ushort)LeveledNpc_FieldIndex.ObjectBounds;
-                case "CHANCENONE":
-                    return (ushort)LeveledNpc_FieldIndex.ChanceNone;
-                case "FLAGS":
-                    return (ushort)LeveledNpc_FieldIndex.Flags;
-                case "GLOBAL":
-                    return (ushort)LeveledNpc_FieldIndex.Global;
-                case "ENTRIES":
-                    return (ushort)LeveledNpc_FieldIndex.Entries;
-                case "MODEL":
-                    return (ushort)LeveledNpc_FieldIndex.Model;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            LeveledNpc_FieldIndex enu = (LeveledNpc_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledNpc_FieldIndex.Entries:
-                    return true;
-                case LeveledNpc_FieldIndex.ObjectBounds:
-                case LeveledNpc_FieldIndex.ChanceNone:
-                case LeveledNpc_FieldIndex.Flags:
-                case LeveledNpc_FieldIndex.Global:
-                case LeveledNpc_FieldIndex.Model:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            LeveledNpc_FieldIndex enu = (LeveledNpc_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledNpc_FieldIndex.ObjectBounds:
-                case LeveledNpc_FieldIndex.Entries:
-                case LeveledNpc_FieldIndex.Model:
-                    return true;
-                case LeveledNpc_FieldIndex.ChanceNone:
-                case LeveledNpc_FieldIndex.Flags:
-                case LeveledNpc_FieldIndex.Global:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            LeveledNpc_FieldIndex enu = (LeveledNpc_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledNpc_FieldIndex.ObjectBounds:
-                case LeveledNpc_FieldIndex.ChanceNone:
-                case LeveledNpc_FieldIndex.Flags:
-                case LeveledNpc_FieldIndex.Global:
-                case LeveledNpc_FieldIndex.Entries:
-                case LeveledNpc_FieldIndex.Model:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            LeveledNpc_FieldIndex enu = (LeveledNpc_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledNpc_FieldIndex.ObjectBounds:
-                    return "ObjectBounds";
-                case LeveledNpc_FieldIndex.ChanceNone:
-                    return "ChanceNone";
-                case LeveledNpc_FieldIndex.Flags:
-                    return "Flags";
-                case LeveledNpc_FieldIndex.Global:
-                    return "Global";
-                case LeveledNpc_FieldIndex.Entries:
-                    return "Entries";
-                case LeveledNpc_FieldIndex.Model:
-                    return "Model";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            LeveledNpc_FieldIndex enu = (LeveledNpc_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledNpc_FieldIndex.ObjectBounds:
-                case LeveledNpc_FieldIndex.ChanceNone:
-                case LeveledNpc_FieldIndex.Flags:
-                case LeveledNpc_FieldIndex.Global:
-                case LeveledNpc_FieldIndex.Entries:
-                case LeveledNpc_FieldIndex.Model:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            LeveledNpc_FieldIndex enu = (LeveledNpc_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledNpc_FieldIndex.ObjectBounds:
-                case LeveledNpc_FieldIndex.ChanceNone:
-                case LeveledNpc_FieldIndex.Flags:
-                case LeveledNpc_FieldIndex.Global:
-                case LeveledNpc_FieldIndex.Entries:
-                case LeveledNpc_FieldIndex.Model:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            LeveledNpc_FieldIndex enu = (LeveledNpc_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledNpc_FieldIndex.ObjectBounds:
-                    return typeof(ObjectBounds);
-                case LeveledNpc_FieldIndex.ChanceNone:
-                    return typeof(Byte);
-                case LeveledNpc_FieldIndex.Flags:
-                    return typeof(LeveledNpc.Flag);
-                case LeveledNpc_FieldIndex.Global:
-                    return typeof(FormLinkNullable<Global>);
-                case LeveledNpc_FieldIndex.Entries:
-                    return typeof(IExtendedList<LeveledNpcEntry>);
-                case LeveledNpc_FieldIndex.Model:
-                    return typeof(Model);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.LVLN;
         public static readonly Type BinaryWriteTranslation = typeof(LeveledNpcBinaryWriteTranslation);
         #region Interface
@@ -1107,14 +955,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

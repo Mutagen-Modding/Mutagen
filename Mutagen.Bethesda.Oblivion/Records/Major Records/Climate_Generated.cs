@@ -904,147 +904,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "WEATHERS":
-                    return (ushort)Climate_FieldIndex.Weathers;
-                case "SUNTEXTURE":
-                    return (ushort)Climate_FieldIndex.SunTexture;
-                case "SUNGLARETEXTURE":
-                    return (ushort)Climate_FieldIndex.SunGlareTexture;
-                case "MODEL":
-                    return (ushort)Climate_FieldIndex.Model;
-                case "DATA":
-                    return (ushort)Climate_FieldIndex.Data;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Climate_FieldIndex enu = (Climate_FieldIndex)index;
-            switch (enu)
-            {
-                case Climate_FieldIndex.Weathers:
-                    return true;
-                case Climate_FieldIndex.SunTexture:
-                case Climate_FieldIndex.SunGlareTexture:
-                case Climate_FieldIndex.Model:
-                case Climate_FieldIndex.Data:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Climate_FieldIndex enu = (Climate_FieldIndex)index;
-            switch (enu)
-            {
-                case Climate_FieldIndex.Weathers:
-                case Climate_FieldIndex.Model:
-                case Climate_FieldIndex.Data:
-                    return true;
-                case Climate_FieldIndex.SunTexture:
-                case Climate_FieldIndex.SunGlareTexture:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Climate_FieldIndex enu = (Climate_FieldIndex)index;
-            switch (enu)
-            {
-                case Climate_FieldIndex.Weathers:
-                case Climate_FieldIndex.SunTexture:
-                case Climate_FieldIndex.SunGlareTexture:
-                case Climate_FieldIndex.Model:
-                case Climate_FieldIndex.Data:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Climate_FieldIndex enu = (Climate_FieldIndex)index;
-            switch (enu)
-            {
-                case Climate_FieldIndex.Weathers:
-                    return "Weathers";
-                case Climate_FieldIndex.SunTexture:
-                    return "SunTexture";
-                case Climate_FieldIndex.SunGlareTexture:
-                    return "SunGlareTexture";
-                case Climate_FieldIndex.Model:
-                    return "Model";
-                case Climate_FieldIndex.Data:
-                    return "Data";
-                default:
-                    return OblivionMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Climate_FieldIndex enu = (Climate_FieldIndex)index;
-            switch (enu)
-            {
-                case Climate_FieldIndex.Weathers:
-                case Climate_FieldIndex.SunTexture:
-                case Climate_FieldIndex.SunGlareTexture:
-                case Climate_FieldIndex.Model:
-                case Climate_FieldIndex.Data:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Climate_FieldIndex enu = (Climate_FieldIndex)index;
-            switch (enu)
-            {
-                case Climate_FieldIndex.Weathers:
-                case Climate_FieldIndex.SunTexture:
-                case Climate_FieldIndex.SunGlareTexture:
-                case Climate_FieldIndex.Model:
-                case Climate_FieldIndex.Data:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Climate_FieldIndex enu = (Climate_FieldIndex)index;
-            switch (enu)
-            {
-                case Climate_FieldIndex.Weathers:
-                    return typeof(IExtendedList<WeatherType>);
-                case Climate_FieldIndex.SunTexture:
-                    return typeof(String);
-                case Climate_FieldIndex.SunGlareTexture:
-                    return typeof(String);
-                case Climate_FieldIndex.Model:
-                    return typeof(Model);
-                case Climate_FieldIndex.Data:
-                    return typeof(ClimateData);
-                default:
-                    return OblivionMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.CLMT;
         public static readonly Type BinaryWriteTranslation = typeof(ClimateBinaryWriteTranslation);
         #region Interface
@@ -1065,14 +924,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

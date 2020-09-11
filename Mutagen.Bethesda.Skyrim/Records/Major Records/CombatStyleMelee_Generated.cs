@@ -917,189 +917,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "VERSIONING":
-                    return (ushort)CombatStyleMelee_FieldIndex.Versioning;
-                case "ATTACKSTAGGEREDMULT":
-                    return (ushort)CombatStyleMelee_FieldIndex.AttackStaggeredMult;
-                case "POWERATTACKSTAGGEREDMULT":
-                    return (ushort)CombatStyleMelee_FieldIndex.PowerAttackStaggeredMult;
-                case "POWERATTACKBLOCKINGMULT":
-                    return (ushort)CombatStyleMelee_FieldIndex.PowerAttackBlockingMult;
-                case "BASHMULT":
-                    return (ushort)CombatStyleMelee_FieldIndex.BashMult;
-                case "BASHRECOILMULT":
-                    return (ushort)CombatStyleMelee_FieldIndex.BashRecoilMult;
-                case "BASHATTACKMULT":
-                    return (ushort)CombatStyleMelee_FieldIndex.BashAttackMult;
-                case "BASHPOWERATTACKMULT":
-                    return (ushort)CombatStyleMelee_FieldIndex.BashPowerAttackMult;
-                case "SPECIALATTACKMULT":
-                    return (ushort)CombatStyleMelee_FieldIndex.SpecialAttackMult;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            CombatStyleMelee_FieldIndex enu = (CombatStyleMelee_FieldIndex)index;
-            switch (enu)
-            {
-                case CombatStyleMelee_FieldIndex.Versioning:
-                case CombatStyleMelee_FieldIndex.AttackStaggeredMult:
-                case CombatStyleMelee_FieldIndex.PowerAttackStaggeredMult:
-                case CombatStyleMelee_FieldIndex.PowerAttackBlockingMult:
-                case CombatStyleMelee_FieldIndex.BashMult:
-                case CombatStyleMelee_FieldIndex.BashRecoilMult:
-                case CombatStyleMelee_FieldIndex.BashAttackMult:
-                case CombatStyleMelee_FieldIndex.BashPowerAttackMult:
-                case CombatStyleMelee_FieldIndex.SpecialAttackMult:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            CombatStyleMelee_FieldIndex enu = (CombatStyleMelee_FieldIndex)index;
-            switch (enu)
-            {
-                case CombatStyleMelee_FieldIndex.Versioning:
-                case CombatStyleMelee_FieldIndex.AttackStaggeredMult:
-                case CombatStyleMelee_FieldIndex.PowerAttackStaggeredMult:
-                case CombatStyleMelee_FieldIndex.PowerAttackBlockingMult:
-                case CombatStyleMelee_FieldIndex.BashMult:
-                case CombatStyleMelee_FieldIndex.BashRecoilMult:
-                case CombatStyleMelee_FieldIndex.BashAttackMult:
-                case CombatStyleMelee_FieldIndex.BashPowerAttackMult:
-                case CombatStyleMelee_FieldIndex.SpecialAttackMult:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            CombatStyleMelee_FieldIndex enu = (CombatStyleMelee_FieldIndex)index;
-            switch (enu)
-            {
-                case CombatStyleMelee_FieldIndex.Versioning:
-                case CombatStyleMelee_FieldIndex.AttackStaggeredMult:
-                case CombatStyleMelee_FieldIndex.PowerAttackStaggeredMult:
-                case CombatStyleMelee_FieldIndex.PowerAttackBlockingMult:
-                case CombatStyleMelee_FieldIndex.BashMult:
-                case CombatStyleMelee_FieldIndex.BashRecoilMult:
-                case CombatStyleMelee_FieldIndex.BashAttackMult:
-                case CombatStyleMelee_FieldIndex.BashPowerAttackMult:
-                case CombatStyleMelee_FieldIndex.SpecialAttackMult:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            CombatStyleMelee_FieldIndex enu = (CombatStyleMelee_FieldIndex)index;
-            switch (enu)
-            {
-                case CombatStyleMelee_FieldIndex.Versioning:
-                    return "Versioning";
-                case CombatStyleMelee_FieldIndex.AttackStaggeredMult:
-                    return "AttackStaggeredMult";
-                case CombatStyleMelee_FieldIndex.PowerAttackStaggeredMult:
-                    return "PowerAttackStaggeredMult";
-                case CombatStyleMelee_FieldIndex.PowerAttackBlockingMult:
-                    return "PowerAttackBlockingMult";
-                case CombatStyleMelee_FieldIndex.BashMult:
-                    return "BashMult";
-                case CombatStyleMelee_FieldIndex.BashRecoilMult:
-                    return "BashRecoilMult";
-                case CombatStyleMelee_FieldIndex.BashAttackMult:
-                    return "BashAttackMult";
-                case CombatStyleMelee_FieldIndex.BashPowerAttackMult:
-                    return "BashPowerAttackMult";
-                case CombatStyleMelee_FieldIndex.SpecialAttackMult:
-                    return "SpecialAttackMult";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            CombatStyleMelee_FieldIndex enu = (CombatStyleMelee_FieldIndex)index;
-            switch (enu)
-            {
-                case CombatStyleMelee_FieldIndex.Versioning:
-                case CombatStyleMelee_FieldIndex.AttackStaggeredMult:
-                case CombatStyleMelee_FieldIndex.PowerAttackStaggeredMult:
-                case CombatStyleMelee_FieldIndex.PowerAttackBlockingMult:
-                case CombatStyleMelee_FieldIndex.BashMult:
-                case CombatStyleMelee_FieldIndex.BashRecoilMult:
-                case CombatStyleMelee_FieldIndex.BashAttackMult:
-                case CombatStyleMelee_FieldIndex.BashPowerAttackMult:
-                case CombatStyleMelee_FieldIndex.SpecialAttackMult:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            CombatStyleMelee_FieldIndex enu = (CombatStyleMelee_FieldIndex)index;
-            switch (enu)
-            {
-                case CombatStyleMelee_FieldIndex.Versioning:
-                case CombatStyleMelee_FieldIndex.AttackStaggeredMult:
-                case CombatStyleMelee_FieldIndex.PowerAttackStaggeredMult:
-                case CombatStyleMelee_FieldIndex.PowerAttackBlockingMult:
-                case CombatStyleMelee_FieldIndex.BashMult:
-                case CombatStyleMelee_FieldIndex.BashRecoilMult:
-                case CombatStyleMelee_FieldIndex.BashAttackMult:
-                case CombatStyleMelee_FieldIndex.BashPowerAttackMult:
-                case CombatStyleMelee_FieldIndex.SpecialAttackMult:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            CombatStyleMelee_FieldIndex enu = (CombatStyleMelee_FieldIndex)index;
-            switch (enu)
-            {
-                case CombatStyleMelee_FieldIndex.Versioning:
-                    return typeof(CombatStyleMelee.VersioningBreaks);
-                case CombatStyleMelee_FieldIndex.AttackStaggeredMult:
-                    return typeof(Single);
-                case CombatStyleMelee_FieldIndex.PowerAttackStaggeredMult:
-                    return typeof(Single);
-                case CombatStyleMelee_FieldIndex.PowerAttackBlockingMult:
-                    return typeof(Single);
-                case CombatStyleMelee_FieldIndex.BashMult:
-                    return typeof(Single);
-                case CombatStyleMelee_FieldIndex.BashRecoilMult:
-                    return typeof(Single);
-                case CombatStyleMelee_FieldIndex.BashAttackMult:
-                    return typeof(Single);
-                case CombatStyleMelee_FieldIndex.BashPowerAttackMult:
-                    return typeof(Single);
-                case CombatStyleMelee_FieldIndex.SpecialAttackMult:
-                    return typeof(Single);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.CSME;
         public static readonly Type BinaryWriteTranslation = typeof(CombatStyleMeleeBinaryWriteTranslation);
         #region Interface
@@ -1120,14 +937,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

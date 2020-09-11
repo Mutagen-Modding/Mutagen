@@ -887,157 +887,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "OBJECTBOUNDS":
-                    return (ushort)MoveableStatic_FieldIndex.ObjectBounds;
-                case "NAME":
-                    return (ushort)MoveableStatic_FieldIndex.Name;
-                case "MODEL":
-                    return (ushort)MoveableStatic_FieldIndex.Model;
-                case "DESTRUCTIBLE":
-                    return (ushort)MoveableStatic_FieldIndex.Destructible;
-                case "FLAGS":
-                    return (ushort)MoveableStatic_FieldIndex.Flags;
-                case "LOOPINGSOUND":
-                    return (ushort)MoveableStatic_FieldIndex.LoopingSound;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            MoveableStatic_FieldIndex enu = (MoveableStatic_FieldIndex)index;
-            switch (enu)
-            {
-                case MoveableStatic_FieldIndex.ObjectBounds:
-                case MoveableStatic_FieldIndex.Name:
-                case MoveableStatic_FieldIndex.Model:
-                case MoveableStatic_FieldIndex.Destructible:
-                case MoveableStatic_FieldIndex.Flags:
-                case MoveableStatic_FieldIndex.LoopingSound:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            MoveableStatic_FieldIndex enu = (MoveableStatic_FieldIndex)index;
-            switch (enu)
-            {
-                case MoveableStatic_FieldIndex.ObjectBounds:
-                case MoveableStatic_FieldIndex.Model:
-                case MoveableStatic_FieldIndex.Destructible:
-                    return true;
-                case MoveableStatic_FieldIndex.Name:
-                case MoveableStatic_FieldIndex.Flags:
-                case MoveableStatic_FieldIndex.LoopingSound:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            MoveableStatic_FieldIndex enu = (MoveableStatic_FieldIndex)index;
-            switch (enu)
-            {
-                case MoveableStatic_FieldIndex.ObjectBounds:
-                case MoveableStatic_FieldIndex.Name:
-                case MoveableStatic_FieldIndex.Model:
-                case MoveableStatic_FieldIndex.Destructible:
-                case MoveableStatic_FieldIndex.Flags:
-                case MoveableStatic_FieldIndex.LoopingSound:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            MoveableStatic_FieldIndex enu = (MoveableStatic_FieldIndex)index;
-            switch (enu)
-            {
-                case MoveableStatic_FieldIndex.ObjectBounds:
-                    return "ObjectBounds";
-                case MoveableStatic_FieldIndex.Name:
-                    return "Name";
-                case MoveableStatic_FieldIndex.Model:
-                    return "Model";
-                case MoveableStatic_FieldIndex.Destructible:
-                    return "Destructible";
-                case MoveableStatic_FieldIndex.Flags:
-                    return "Flags";
-                case MoveableStatic_FieldIndex.LoopingSound:
-                    return "LoopingSound";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            MoveableStatic_FieldIndex enu = (MoveableStatic_FieldIndex)index;
-            switch (enu)
-            {
-                case MoveableStatic_FieldIndex.ObjectBounds:
-                case MoveableStatic_FieldIndex.Name:
-                case MoveableStatic_FieldIndex.Model:
-                case MoveableStatic_FieldIndex.Destructible:
-                case MoveableStatic_FieldIndex.Flags:
-                case MoveableStatic_FieldIndex.LoopingSound:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            MoveableStatic_FieldIndex enu = (MoveableStatic_FieldIndex)index;
-            switch (enu)
-            {
-                case MoveableStatic_FieldIndex.ObjectBounds:
-                case MoveableStatic_FieldIndex.Name:
-                case MoveableStatic_FieldIndex.Model:
-                case MoveableStatic_FieldIndex.Destructible:
-                case MoveableStatic_FieldIndex.Flags:
-                case MoveableStatic_FieldIndex.LoopingSound:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            MoveableStatic_FieldIndex enu = (MoveableStatic_FieldIndex)index;
-            switch (enu)
-            {
-                case MoveableStatic_FieldIndex.ObjectBounds:
-                    return typeof(ObjectBounds);
-                case MoveableStatic_FieldIndex.Name:
-                    return typeof(TranslatedString);
-                case MoveableStatic_FieldIndex.Model:
-                    return typeof(Model);
-                case MoveableStatic_FieldIndex.Destructible:
-                    return typeof(Destructible);
-                case MoveableStatic_FieldIndex.Flags:
-                    return typeof(MoveableStatic.Flag);
-                case MoveableStatic_FieldIndex.LoopingSound:
-                    return typeof(FormLinkNullable<SoundDescriptor>);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.MSTT;
         public static readonly Type BinaryWriteTranslation = typeof(MoveableStaticBinaryWriteTranslation);
         #region Interface
@@ -1058,14 +907,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

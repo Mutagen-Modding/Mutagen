@@ -965,147 +965,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "ITEMS":
-                    return (ushort)ConstructibleObject_FieldIndex.Items;
-                case "CONDITIONS":
-                    return (ushort)ConstructibleObject_FieldIndex.Conditions;
-                case "CREATEDOBJECT":
-                    return (ushort)ConstructibleObject_FieldIndex.CreatedObject;
-                case "WORKBENCHKEYWORD":
-                    return (ushort)ConstructibleObject_FieldIndex.WorkbenchKeyword;
-                case "CREATEDOBJECTCOUNT":
-                    return (ushort)ConstructibleObject_FieldIndex.CreatedObjectCount;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            ConstructibleObject_FieldIndex enu = (ConstructibleObject_FieldIndex)index;
-            switch (enu)
-            {
-                case ConstructibleObject_FieldIndex.Items:
-                case ConstructibleObject_FieldIndex.Conditions:
-                    return true;
-                case ConstructibleObject_FieldIndex.CreatedObject:
-                case ConstructibleObject_FieldIndex.WorkbenchKeyword:
-                case ConstructibleObject_FieldIndex.CreatedObjectCount:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            ConstructibleObject_FieldIndex enu = (ConstructibleObject_FieldIndex)index;
-            switch (enu)
-            {
-                case ConstructibleObject_FieldIndex.Items:
-                case ConstructibleObject_FieldIndex.Conditions:
-                    return true;
-                case ConstructibleObject_FieldIndex.CreatedObject:
-                case ConstructibleObject_FieldIndex.WorkbenchKeyword:
-                case ConstructibleObject_FieldIndex.CreatedObjectCount:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            ConstructibleObject_FieldIndex enu = (ConstructibleObject_FieldIndex)index;
-            switch (enu)
-            {
-                case ConstructibleObject_FieldIndex.Items:
-                case ConstructibleObject_FieldIndex.Conditions:
-                case ConstructibleObject_FieldIndex.CreatedObject:
-                case ConstructibleObject_FieldIndex.WorkbenchKeyword:
-                case ConstructibleObject_FieldIndex.CreatedObjectCount:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            ConstructibleObject_FieldIndex enu = (ConstructibleObject_FieldIndex)index;
-            switch (enu)
-            {
-                case ConstructibleObject_FieldIndex.Items:
-                    return "Items";
-                case ConstructibleObject_FieldIndex.Conditions:
-                    return "Conditions";
-                case ConstructibleObject_FieldIndex.CreatedObject:
-                    return "CreatedObject";
-                case ConstructibleObject_FieldIndex.WorkbenchKeyword:
-                    return "WorkbenchKeyword";
-                case ConstructibleObject_FieldIndex.CreatedObjectCount:
-                    return "CreatedObjectCount";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            ConstructibleObject_FieldIndex enu = (ConstructibleObject_FieldIndex)index;
-            switch (enu)
-            {
-                case ConstructibleObject_FieldIndex.Items:
-                case ConstructibleObject_FieldIndex.Conditions:
-                case ConstructibleObject_FieldIndex.CreatedObject:
-                case ConstructibleObject_FieldIndex.WorkbenchKeyword:
-                case ConstructibleObject_FieldIndex.CreatedObjectCount:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            ConstructibleObject_FieldIndex enu = (ConstructibleObject_FieldIndex)index;
-            switch (enu)
-            {
-                case ConstructibleObject_FieldIndex.Items:
-                case ConstructibleObject_FieldIndex.Conditions:
-                case ConstructibleObject_FieldIndex.CreatedObject:
-                case ConstructibleObject_FieldIndex.WorkbenchKeyword:
-                case ConstructibleObject_FieldIndex.CreatedObjectCount:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            ConstructibleObject_FieldIndex enu = (ConstructibleObject_FieldIndex)index;
-            switch (enu)
-            {
-                case ConstructibleObject_FieldIndex.Items:
-                    return typeof(IExtendedList<ContainerEntry>);
-                case ConstructibleObject_FieldIndex.Conditions:
-                    return typeof(IExtendedList<Condition>);
-                case ConstructibleObject_FieldIndex.CreatedObject:
-                    return typeof(FormLinkNullable<SkyrimMajorRecord>);
-                case ConstructibleObject_FieldIndex.WorkbenchKeyword:
-                    return typeof(FormLinkNullable<Keyword>);
-                case ConstructibleObject_FieldIndex.CreatedObjectCount:
-                    return typeof(UInt16);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.COBJ;
         public static readonly Type BinaryWriteTranslation = typeof(ConstructibleObjectBinaryWriteTranslation);
         #region Interface
@@ -1126,14 +985,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

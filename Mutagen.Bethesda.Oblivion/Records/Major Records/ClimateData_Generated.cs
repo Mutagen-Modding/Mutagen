@@ -845,167 +845,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "SUNRISEBEGIN":
-                    return (ushort)ClimateData_FieldIndex.SunriseBegin;
-                case "SUNRISEEND":
-                    return (ushort)ClimateData_FieldIndex.SunriseEnd;
-                case "SUNSETBEGIN":
-                    return (ushort)ClimateData_FieldIndex.SunsetBegin;
-                case "SUNSETEND":
-                    return (ushort)ClimateData_FieldIndex.SunsetEnd;
-                case "VOLATILITY":
-                    return (ushort)ClimateData_FieldIndex.Volatility;
-                case "PHASE":
-                    return (ushort)ClimateData_FieldIndex.Phase;
-                case "PHASELENGTH":
-                    return (ushort)ClimateData_FieldIndex.PhaseLength;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            ClimateData_FieldIndex enu = (ClimateData_FieldIndex)index;
-            switch (enu)
-            {
-                case ClimateData_FieldIndex.SunriseBegin:
-                case ClimateData_FieldIndex.SunriseEnd:
-                case ClimateData_FieldIndex.SunsetBegin:
-                case ClimateData_FieldIndex.SunsetEnd:
-                case ClimateData_FieldIndex.Volatility:
-                case ClimateData_FieldIndex.Phase:
-                case ClimateData_FieldIndex.PhaseLength:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            ClimateData_FieldIndex enu = (ClimateData_FieldIndex)index;
-            switch (enu)
-            {
-                case ClimateData_FieldIndex.SunriseBegin:
-                case ClimateData_FieldIndex.SunriseEnd:
-                case ClimateData_FieldIndex.SunsetBegin:
-                case ClimateData_FieldIndex.SunsetEnd:
-                case ClimateData_FieldIndex.Volatility:
-                case ClimateData_FieldIndex.Phase:
-                case ClimateData_FieldIndex.PhaseLength:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            ClimateData_FieldIndex enu = (ClimateData_FieldIndex)index;
-            switch (enu)
-            {
-                case ClimateData_FieldIndex.SunriseBegin:
-                case ClimateData_FieldIndex.SunriseEnd:
-                case ClimateData_FieldIndex.SunsetBegin:
-                case ClimateData_FieldIndex.SunsetEnd:
-                case ClimateData_FieldIndex.Volatility:
-                case ClimateData_FieldIndex.Phase:
-                case ClimateData_FieldIndex.PhaseLength:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            ClimateData_FieldIndex enu = (ClimateData_FieldIndex)index;
-            switch (enu)
-            {
-                case ClimateData_FieldIndex.SunriseBegin:
-                    return "SunriseBegin";
-                case ClimateData_FieldIndex.SunriseEnd:
-                    return "SunriseEnd";
-                case ClimateData_FieldIndex.SunsetBegin:
-                    return "SunsetBegin";
-                case ClimateData_FieldIndex.SunsetEnd:
-                    return "SunsetEnd";
-                case ClimateData_FieldIndex.Volatility:
-                    return "Volatility";
-                case ClimateData_FieldIndex.Phase:
-                    return "Phase";
-                case ClimateData_FieldIndex.PhaseLength:
-                    return "PhaseLength";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            ClimateData_FieldIndex enu = (ClimateData_FieldIndex)index;
-            switch (enu)
-            {
-                case ClimateData_FieldIndex.SunriseBegin:
-                case ClimateData_FieldIndex.SunriseEnd:
-                case ClimateData_FieldIndex.SunsetBegin:
-                case ClimateData_FieldIndex.SunsetEnd:
-                case ClimateData_FieldIndex.Volatility:
-                case ClimateData_FieldIndex.Phase:
-                case ClimateData_FieldIndex.PhaseLength:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            ClimateData_FieldIndex enu = (ClimateData_FieldIndex)index;
-            switch (enu)
-            {
-                case ClimateData_FieldIndex.SunriseBegin:
-                case ClimateData_FieldIndex.SunriseEnd:
-                case ClimateData_FieldIndex.SunsetBegin:
-                case ClimateData_FieldIndex.SunsetEnd:
-                case ClimateData_FieldIndex.Volatility:
-                case ClimateData_FieldIndex.Phase:
-                case ClimateData_FieldIndex.PhaseLength:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            ClimateData_FieldIndex enu = (ClimateData_FieldIndex)index;
-            switch (enu)
-            {
-                case ClimateData_FieldIndex.SunriseBegin:
-                    return typeof(DateTime);
-                case ClimateData_FieldIndex.SunriseEnd:
-                    return typeof(DateTime);
-                case ClimateData_FieldIndex.SunsetBegin:
-                    return typeof(DateTime);
-                case ClimateData_FieldIndex.SunsetEnd:
-                    return typeof(DateTime);
-                case ClimateData_FieldIndex.Volatility:
-                    return typeof(Byte);
-                case ClimateData_FieldIndex.Phase:
-                    return typeof(Climate.MoonPhase);
-                case ClimateData_FieldIndex.PhaseLength:
-                    return typeof(Byte);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.TNAM;
         public static readonly Type BinaryWriteTranslation = typeof(ClimateDataBinaryWriteTranslation);
         #region Interface
@@ -1026,14 +865,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

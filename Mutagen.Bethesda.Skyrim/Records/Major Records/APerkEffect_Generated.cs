@@ -817,136 +817,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "RANK":
-                    return (ushort)APerkEffect_FieldIndex.Rank;
-                case "PRIORITY":
-                    return (ushort)APerkEffect_FieldIndex.Priority;
-                case "CONDITIONS":
-                    return (ushort)APerkEffect_FieldIndex.Conditions;
-                case "PRKEDATATYPESTATE":
-                    return (ushort)APerkEffect_FieldIndex.PRKEDataTypeState;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            APerkEffect_FieldIndex enu = (APerkEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case APerkEffect_FieldIndex.Conditions:
-                    return true;
-                case APerkEffect_FieldIndex.Rank:
-                case APerkEffect_FieldIndex.Priority:
-                case APerkEffect_FieldIndex.PRKEDataTypeState:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            APerkEffect_FieldIndex enu = (APerkEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case APerkEffect_FieldIndex.Conditions:
-                    return true;
-                case APerkEffect_FieldIndex.Rank:
-                case APerkEffect_FieldIndex.Priority:
-                case APerkEffect_FieldIndex.PRKEDataTypeState:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            APerkEffect_FieldIndex enu = (APerkEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case APerkEffect_FieldIndex.Rank:
-                case APerkEffect_FieldIndex.Priority:
-                case APerkEffect_FieldIndex.Conditions:
-                case APerkEffect_FieldIndex.PRKEDataTypeState:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            APerkEffect_FieldIndex enu = (APerkEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case APerkEffect_FieldIndex.Rank:
-                    return "Rank";
-                case APerkEffect_FieldIndex.Priority:
-                    return "Priority";
-                case APerkEffect_FieldIndex.Conditions:
-                    return "Conditions";
-                case APerkEffect_FieldIndex.PRKEDataTypeState:
-                    return "PRKEDataTypeState";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            APerkEffect_FieldIndex enu = (APerkEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case APerkEffect_FieldIndex.Rank:
-                case APerkEffect_FieldIndex.Priority:
-                case APerkEffect_FieldIndex.Conditions:
-                case APerkEffect_FieldIndex.PRKEDataTypeState:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            APerkEffect_FieldIndex enu = (APerkEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case APerkEffect_FieldIndex.Rank:
-                case APerkEffect_FieldIndex.Priority:
-                case APerkEffect_FieldIndex.Conditions:
-                case APerkEffect_FieldIndex.PRKEDataTypeState:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            APerkEffect_FieldIndex enu = (APerkEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case APerkEffect_FieldIndex.Rank:
-                    return typeof(Byte);
-                case APerkEffect_FieldIndex.Priority:
-                    return typeof(Byte);
-                case APerkEffect_FieldIndex.Conditions:
-                    return typeof(IExtendedList<PerkCondition>);
-                case APerkEffect_FieldIndex.PRKEDataTypeState:
-                    return typeof(APerkEffect.PRKEDataType);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.PRKE;
         public static readonly Type BinaryWriteTranslation = typeof(APerkEffectBinaryWriteTranslation);
         #region Interface
@@ -967,14 +837,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

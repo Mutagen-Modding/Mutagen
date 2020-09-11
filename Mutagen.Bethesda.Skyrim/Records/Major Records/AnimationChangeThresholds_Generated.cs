@@ -708,123 +708,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "DIRECTIONAL":
-                    return (ushort)AnimationChangeThresholds_FieldIndex.Directional;
-                case "MOVEMENTSPEED":
-                    return (ushort)AnimationChangeThresholds_FieldIndex.MovementSpeed;
-                case "ROTATIONSPEED":
-                    return (ushort)AnimationChangeThresholds_FieldIndex.RotationSpeed;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            AnimationChangeThresholds_FieldIndex enu = (AnimationChangeThresholds_FieldIndex)index;
-            switch (enu)
-            {
-                case AnimationChangeThresholds_FieldIndex.Directional:
-                case AnimationChangeThresholds_FieldIndex.MovementSpeed:
-                case AnimationChangeThresholds_FieldIndex.RotationSpeed:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            AnimationChangeThresholds_FieldIndex enu = (AnimationChangeThresholds_FieldIndex)index;
-            switch (enu)
-            {
-                case AnimationChangeThresholds_FieldIndex.Directional:
-                case AnimationChangeThresholds_FieldIndex.MovementSpeed:
-                case AnimationChangeThresholds_FieldIndex.RotationSpeed:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            AnimationChangeThresholds_FieldIndex enu = (AnimationChangeThresholds_FieldIndex)index;
-            switch (enu)
-            {
-                case AnimationChangeThresholds_FieldIndex.Directional:
-                case AnimationChangeThresholds_FieldIndex.MovementSpeed:
-                case AnimationChangeThresholds_FieldIndex.RotationSpeed:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            AnimationChangeThresholds_FieldIndex enu = (AnimationChangeThresholds_FieldIndex)index;
-            switch (enu)
-            {
-                case AnimationChangeThresholds_FieldIndex.Directional:
-                    return "Directional";
-                case AnimationChangeThresholds_FieldIndex.MovementSpeed:
-                    return "MovementSpeed";
-                case AnimationChangeThresholds_FieldIndex.RotationSpeed:
-                    return "RotationSpeed";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            AnimationChangeThresholds_FieldIndex enu = (AnimationChangeThresholds_FieldIndex)index;
-            switch (enu)
-            {
-                case AnimationChangeThresholds_FieldIndex.Directional:
-                case AnimationChangeThresholds_FieldIndex.MovementSpeed:
-                case AnimationChangeThresholds_FieldIndex.RotationSpeed:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            AnimationChangeThresholds_FieldIndex enu = (AnimationChangeThresholds_FieldIndex)index;
-            switch (enu)
-            {
-                case AnimationChangeThresholds_FieldIndex.Directional:
-                case AnimationChangeThresholds_FieldIndex.MovementSpeed:
-                case AnimationChangeThresholds_FieldIndex.RotationSpeed:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            AnimationChangeThresholds_FieldIndex enu = (AnimationChangeThresholds_FieldIndex)index;
-            switch (enu)
-            {
-                case AnimationChangeThresholds_FieldIndex.Directional:
-                    return typeof(Single);
-                case AnimationChangeThresholds_FieldIndex.MovementSpeed:
-                    return typeof(Single);
-                case AnimationChangeThresholds_FieldIndex.RotationSpeed:
-                    return typeof(Single);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.INAM;
         public static readonly Type BinaryWriteTranslation = typeof(AnimationChangeThresholdsBinaryWriteTranslation);
         #region Interface
@@ -845,14 +728,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

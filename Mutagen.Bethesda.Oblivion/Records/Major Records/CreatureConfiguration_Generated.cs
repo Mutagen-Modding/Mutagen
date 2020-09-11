@@ -844,167 +844,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "FLAGS":
-                    return (ushort)CreatureConfiguration_FieldIndex.Flags;
-                case "BASESPELLPOINTS":
-                    return (ushort)CreatureConfiguration_FieldIndex.BaseSpellPoints;
-                case "FATIGUE":
-                    return (ushort)CreatureConfiguration_FieldIndex.Fatigue;
-                case "BARTERGOLD":
-                    return (ushort)CreatureConfiguration_FieldIndex.BarterGold;
-                case "LEVELOFFSET":
-                    return (ushort)CreatureConfiguration_FieldIndex.LevelOffset;
-                case "CALCMIN":
-                    return (ushort)CreatureConfiguration_FieldIndex.CalcMin;
-                case "CALCMAX":
-                    return (ushort)CreatureConfiguration_FieldIndex.CalcMax;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            CreatureConfiguration_FieldIndex enu = (CreatureConfiguration_FieldIndex)index;
-            switch (enu)
-            {
-                case CreatureConfiguration_FieldIndex.Flags:
-                case CreatureConfiguration_FieldIndex.BaseSpellPoints:
-                case CreatureConfiguration_FieldIndex.Fatigue:
-                case CreatureConfiguration_FieldIndex.BarterGold:
-                case CreatureConfiguration_FieldIndex.LevelOffset:
-                case CreatureConfiguration_FieldIndex.CalcMin:
-                case CreatureConfiguration_FieldIndex.CalcMax:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            CreatureConfiguration_FieldIndex enu = (CreatureConfiguration_FieldIndex)index;
-            switch (enu)
-            {
-                case CreatureConfiguration_FieldIndex.Flags:
-                case CreatureConfiguration_FieldIndex.BaseSpellPoints:
-                case CreatureConfiguration_FieldIndex.Fatigue:
-                case CreatureConfiguration_FieldIndex.BarterGold:
-                case CreatureConfiguration_FieldIndex.LevelOffset:
-                case CreatureConfiguration_FieldIndex.CalcMin:
-                case CreatureConfiguration_FieldIndex.CalcMax:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            CreatureConfiguration_FieldIndex enu = (CreatureConfiguration_FieldIndex)index;
-            switch (enu)
-            {
-                case CreatureConfiguration_FieldIndex.Flags:
-                case CreatureConfiguration_FieldIndex.BaseSpellPoints:
-                case CreatureConfiguration_FieldIndex.Fatigue:
-                case CreatureConfiguration_FieldIndex.BarterGold:
-                case CreatureConfiguration_FieldIndex.LevelOffset:
-                case CreatureConfiguration_FieldIndex.CalcMin:
-                case CreatureConfiguration_FieldIndex.CalcMax:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            CreatureConfiguration_FieldIndex enu = (CreatureConfiguration_FieldIndex)index;
-            switch (enu)
-            {
-                case CreatureConfiguration_FieldIndex.Flags:
-                    return "Flags";
-                case CreatureConfiguration_FieldIndex.BaseSpellPoints:
-                    return "BaseSpellPoints";
-                case CreatureConfiguration_FieldIndex.Fatigue:
-                    return "Fatigue";
-                case CreatureConfiguration_FieldIndex.BarterGold:
-                    return "BarterGold";
-                case CreatureConfiguration_FieldIndex.LevelOffset:
-                    return "LevelOffset";
-                case CreatureConfiguration_FieldIndex.CalcMin:
-                    return "CalcMin";
-                case CreatureConfiguration_FieldIndex.CalcMax:
-                    return "CalcMax";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            CreatureConfiguration_FieldIndex enu = (CreatureConfiguration_FieldIndex)index;
-            switch (enu)
-            {
-                case CreatureConfiguration_FieldIndex.Flags:
-                case CreatureConfiguration_FieldIndex.BaseSpellPoints:
-                case CreatureConfiguration_FieldIndex.Fatigue:
-                case CreatureConfiguration_FieldIndex.BarterGold:
-                case CreatureConfiguration_FieldIndex.LevelOffset:
-                case CreatureConfiguration_FieldIndex.CalcMin:
-                case CreatureConfiguration_FieldIndex.CalcMax:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            CreatureConfiguration_FieldIndex enu = (CreatureConfiguration_FieldIndex)index;
-            switch (enu)
-            {
-                case CreatureConfiguration_FieldIndex.Flags:
-                case CreatureConfiguration_FieldIndex.BaseSpellPoints:
-                case CreatureConfiguration_FieldIndex.Fatigue:
-                case CreatureConfiguration_FieldIndex.BarterGold:
-                case CreatureConfiguration_FieldIndex.LevelOffset:
-                case CreatureConfiguration_FieldIndex.CalcMin:
-                case CreatureConfiguration_FieldIndex.CalcMax:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            CreatureConfiguration_FieldIndex enu = (CreatureConfiguration_FieldIndex)index;
-            switch (enu)
-            {
-                case CreatureConfiguration_FieldIndex.Flags:
-                    return typeof(Creature.CreatureFlag);
-                case CreatureConfiguration_FieldIndex.BaseSpellPoints:
-                    return typeof(UInt16);
-                case CreatureConfiguration_FieldIndex.Fatigue:
-                    return typeof(UInt16);
-                case CreatureConfiguration_FieldIndex.BarterGold:
-                    return typeof(UInt16);
-                case CreatureConfiguration_FieldIndex.LevelOffset:
-                    return typeof(Int16);
-                case CreatureConfiguration_FieldIndex.CalcMin:
-                    return typeof(UInt16);
-                case CreatureConfiguration_FieldIndex.CalcMax:
-                    return typeof(UInt16);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.ACBS;
         public static readonly Type BinaryWriteTranslation = typeof(CreatureConfigurationBinaryWriteTranslation);
         #region Interface
@@ -1025,14 +864,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

@@ -708,123 +708,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "MATERIAL":
-                    return (ushort)HavokData_FieldIndex.Material;
-                case "FRICTION":
-                    return (ushort)HavokData_FieldIndex.Friction;
-                case "RESTITUTION":
-                    return (ushort)HavokData_FieldIndex.Restitution;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            HavokData_FieldIndex enu = (HavokData_FieldIndex)index;
-            switch (enu)
-            {
-                case HavokData_FieldIndex.Material:
-                case HavokData_FieldIndex.Friction:
-                case HavokData_FieldIndex.Restitution:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            HavokData_FieldIndex enu = (HavokData_FieldIndex)index;
-            switch (enu)
-            {
-                case HavokData_FieldIndex.Material:
-                case HavokData_FieldIndex.Friction:
-                case HavokData_FieldIndex.Restitution:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            HavokData_FieldIndex enu = (HavokData_FieldIndex)index;
-            switch (enu)
-            {
-                case HavokData_FieldIndex.Material:
-                case HavokData_FieldIndex.Friction:
-                case HavokData_FieldIndex.Restitution:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            HavokData_FieldIndex enu = (HavokData_FieldIndex)index;
-            switch (enu)
-            {
-                case HavokData_FieldIndex.Material:
-                    return "Material";
-                case HavokData_FieldIndex.Friction:
-                    return "Friction";
-                case HavokData_FieldIndex.Restitution:
-                    return "Restitution";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            HavokData_FieldIndex enu = (HavokData_FieldIndex)index;
-            switch (enu)
-            {
-                case HavokData_FieldIndex.Material:
-                case HavokData_FieldIndex.Friction:
-                case HavokData_FieldIndex.Restitution:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            HavokData_FieldIndex enu = (HavokData_FieldIndex)index;
-            switch (enu)
-            {
-                case HavokData_FieldIndex.Material:
-                case HavokData_FieldIndex.Friction:
-                case HavokData_FieldIndex.Restitution:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            HavokData_FieldIndex enu = (HavokData_FieldIndex)index;
-            switch (enu)
-            {
-                case HavokData_FieldIndex.Material:
-                    return typeof(HavokData.MaterialType);
-                case HavokData_FieldIndex.Friction:
-                    return typeof(Byte);
-                case HavokData_FieldIndex.Restitution:
-                    return typeof(Byte);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.HNAM;
         public static readonly Type BinaryWriteTranslation = typeof(HavokDataBinaryWriteTranslation);
         #region Interface
@@ -845,14 +728,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

@@ -684,112 +684,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "RACE":
-                    return (ushort)RaceRelation_FieldIndex.Race;
-                case "MODIFIER":
-                    return (ushort)RaceRelation_FieldIndex.Modifier;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            RaceRelation_FieldIndex enu = (RaceRelation_FieldIndex)index;
-            switch (enu)
-            {
-                case RaceRelation_FieldIndex.Race:
-                case RaceRelation_FieldIndex.Modifier:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            RaceRelation_FieldIndex enu = (RaceRelation_FieldIndex)index;
-            switch (enu)
-            {
-                case RaceRelation_FieldIndex.Race:
-                case RaceRelation_FieldIndex.Modifier:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            RaceRelation_FieldIndex enu = (RaceRelation_FieldIndex)index;
-            switch (enu)
-            {
-                case RaceRelation_FieldIndex.Race:
-                case RaceRelation_FieldIndex.Modifier:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            RaceRelation_FieldIndex enu = (RaceRelation_FieldIndex)index;
-            switch (enu)
-            {
-                case RaceRelation_FieldIndex.Race:
-                    return "Race";
-                case RaceRelation_FieldIndex.Modifier:
-                    return "Modifier";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            RaceRelation_FieldIndex enu = (RaceRelation_FieldIndex)index;
-            switch (enu)
-            {
-                case RaceRelation_FieldIndex.Race:
-                case RaceRelation_FieldIndex.Modifier:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            RaceRelation_FieldIndex enu = (RaceRelation_FieldIndex)index;
-            switch (enu)
-            {
-                case RaceRelation_FieldIndex.Race:
-                case RaceRelation_FieldIndex.Modifier:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            RaceRelation_FieldIndex enu = (RaceRelation_FieldIndex)index;
-            switch (enu)
-            {
-                case RaceRelation_FieldIndex.Race:
-                    return typeof(FormLink<Race>);
-                case RaceRelation_FieldIndex.Modifier:
-                    return typeof(Int32);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.XNAM;
         public static readonly Type BinaryWriteTranslation = typeof(RaceRelationBinaryWriteTranslation);
         #region Interface
@@ -810,14 +704,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

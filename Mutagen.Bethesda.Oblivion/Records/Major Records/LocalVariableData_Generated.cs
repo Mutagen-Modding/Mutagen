@@ -750,134 +750,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "INDEX":
-                    return (ushort)LocalVariableData_FieldIndex.Index;
-                case "UNKNOWN":
-                    return (ushort)LocalVariableData_FieldIndex.Unknown;
-                case "FLAGS":
-                    return (ushort)LocalVariableData_FieldIndex.Flags;
-                case "UNKNOWN2":
-                    return (ushort)LocalVariableData_FieldIndex.Unknown2;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            LocalVariableData_FieldIndex enu = (LocalVariableData_FieldIndex)index;
-            switch (enu)
-            {
-                case LocalVariableData_FieldIndex.Index:
-                case LocalVariableData_FieldIndex.Unknown:
-                case LocalVariableData_FieldIndex.Flags:
-                case LocalVariableData_FieldIndex.Unknown2:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            LocalVariableData_FieldIndex enu = (LocalVariableData_FieldIndex)index;
-            switch (enu)
-            {
-                case LocalVariableData_FieldIndex.Index:
-                case LocalVariableData_FieldIndex.Unknown:
-                case LocalVariableData_FieldIndex.Flags:
-                case LocalVariableData_FieldIndex.Unknown2:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            LocalVariableData_FieldIndex enu = (LocalVariableData_FieldIndex)index;
-            switch (enu)
-            {
-                case LocalVariableData_FieldIndex.Index:
-                case LocalVariableData_FieldIndex.Unknown:
-                case LocalVariableData_FieldIndex.Flags:
-                case LocalVariableData_FieldIndex.Unknown2:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            LocalVariableData_FieldIndex enu = (LocalVariableData_FieldIndex)index;
-            switch (enu)
-            {
-                case LocalVariableData_FieldIndex.Index:
-                    return "Index";
-                case LocalVariableData_FieldIndex.Unknown:
-                    return "Unknown";
-                case LocalVariableData_FieldIndex.Flags:
-                    return "Flags";
-                case LocalVariableData_FieldIndex.Unknown2:
-                    return "Unknown2";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            LocalVariableData_FieldIndex enu = (LocalVariableData_FieldIndex)index;
-            switch (enu)
-            {
-                case LocalVariableData_FieldIndex.Index:
-                case LocalVariableData_FieldIndex.Unknown:
-                case LocalVariableData_FieldIndex.Flags:
-                case LocalVariableData_FieldIndex.Unknown2:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            LocalVariableData_FieldIndex enu = (LocalVariableData_FieldIndex)index;
-            switch (enu)
-            {
-                case LocalVariableData_FieldIndex.Index:
-                case LocalVariableData_FieldIndex.Unknown:
-                case LocalVariableData_FieldIndex.Flags:
-                case LocalVariableData_FieldIndex.Unknown2:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            LocalVariableData_FieldIndex enu = (LocalVariableData_FieldIndex)index;
-            switch (enu)
-            {
-                case LocalVariableData_FieldIndex.Index:
-                    return typeof(Int32);
-                case LocalVariableData_FieldIndex.Unknown:
-                    return typeof(MemorySlice<Byte>);
-                case LocalVariableData_FieldIndex.Flags:
-                    return typeof(Script.LocalVariableFlag);
-                case LocalVariableData_FieldIndex.Unknown2:
-                    return typeof(Int32);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.SLSD;
         public static readonly Type BinaryWriteTranslation = typeof(LocalVariableDataBinaryWriteTranslation);
         #region Interface
@@ -898,14 +770,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

@@ -602,101 +602,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "SPELL":
-                    return (ushort)BookSpell_FieldIndex.Spell;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            BookSpell_FieldIndex enu = (BookSpell_FieldIndex)index;
-            switch (enu)
-            {
-                case BookSpell_FieldIndex.Spell:
-                    return false;
-                default:
-                    return BookTeachTarget_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            BookSpell_FieldIndex enu = (BookSpell_FieldIndex)index;
-            switch (enu)
-            {
-                case BookSpell_FieldIndex.Spell:
-                    return false;
-                default:
-                    return BookTeachTarget_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            BookSpell_FieldIndex enu = (BookSpell_FieldIndex)index;
-            switch (enu)
-            {
-                case BookSpell_FieldIndex.Spell:
-                    return false;
-                default:
-                    return BookTeachTarget_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            BookSpell_FieldIndex enu = (BookSpell_FieldIndex)index;
-            switch (enu)
-            {
-                case BookSpell_FieldIndex.Spell:
-                    return "Spell";
-                default:
-                    return BookTeachTarget_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            BookSpell_FieldIndex enu = (BookSpell_FieldIndex)index;
-            switch (enu)
-            {
-                case BookSpell_FieldIndex.Spell:
-                    return false;
-                default:
-                    return BookTeachTarget_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            BookSpell_FieldIndex enu = (BookSpell_FieldIndex)index;
-            switch (enu)
-            {
-                case BookSpell_FieldIndex.Spell:
-                    return false;
-                default:
-                    return BookTeachTarget_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            BookSpell_FieldIndex enu = (BookSpell_FieldIndex)index;
-            switch (enu)
-            {
-                case BookSpell_FieldIndex.Spell:
-                    return typeof(FormLink<Spell>);
-                default:
-                    return BookTeachTarget_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly Type BinaryWriteTranslation = typeof(BookSpellBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -716,14 +621,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

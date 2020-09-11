@@ -1375,193 +1375,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "DATA":
-                    return (ushort)DialogItem_FieldIndex.Data;
-                case "QUEST":
-                    return (ushort)DialogItem_FieldIndex.Quest;
-                case "PREVIOUSTOPIC":
-                    return (ushort)DialogItem_FieldIndex.PreviousTopic;
-                case "TOPICS":
-                    return (ushort)DialogItem_FieldIndex.Topics;
-                case "RESPONSES":
-                    return (ushort)DialogItem_FieldIndex.Responses;
-                case "CONDITIONS":
-                    return (ushort)DialogItem_FieldIndex.Conditions;
-                case "CHOICES":
-                    return (ushort)DialogItem_FieldIndex.Choices;
-                case "LINKFROM":
-                    return (ushort)DialogItem_FieldIndex.LinkFrom;
-                case "SCRIPT":
-                    return (ushort)DialogItem_FieldIndex.Script;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            DialogItem_FieldIndex enu = (DialogItem_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogItem_FieldIndex.Topics:
-                case DialogItem_FieldIndex.Responses:
-                case DialogItem_FieldIndex.Conditions:
-                case DialogItem_FieldIndex.Choices:
-                case DialogItem_FieldIndex.LinkFrom:
-                    return true;
-                case DialogItem_FieldIndex.Data:
-                case DialogItem_FieldIndex.Quest:
-                case DialogItem_FieldIndex.PreviousTopic:
-                case DialogItem_FieldIndex.Script:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            DialogItem_FieldIndex enu = (DialogItem_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogItem_FieldIndex.Data:
-                case DialogItem_FieldIndex.Responses:
-                case DialogItem_FieldIndex.Conditions:
-                case DialogItem_FieldIndex.Script:
-                    return true;
-                case DialogItem_FieldIndex.Quest:
-                case DialogItem_FieldIndex.PreviousTopic:
-                case DialogItem_FieldIndex.Topics:
-                case DialogItem_FieldIndex.Choices:
-                case DialogItem_FieldIndex.LinkFrom:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            DialogItem_FieldIndex enu = (DialogItem_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogItem_FieldIndex.Script:
-                    return true;
-                case DialogItem_FieldIndex.Data:
-                case DialogItem_FieldIndex.Quest:
-                case DialogItem_FieldIndex.PreviousTopic:
-                case DialogItem_FieldIndex.Topics:
-                case DialogItem_FieldIndex.Responses:
-                case DialogItem_FieldIndex.Conditions:
-                case DialogItem_FieldIndex.Choices:
-                case DialogItem_FieldIndex.LinkFrom:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            DialogItem_FieldIndex enu = (DialogItem_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogItem_FieldIndex.Data:
-                    return "Data";
-                case DialogItem_FieldIndex.Quest:
-                    return "Quest";
-                case DialogItem_FieldIndex.PreviousTopic:
-                    return "PreviousTopic";
-                case DialogItem_FieldIndex.Topics:
-                    return "Topics";
-                case DialogItem_FieldIndex.Responses:
-                    return "Responses";
-                case DialogItem_FieldIndex.Conditions:
-                    return "Conditions";
-                case DialogItem_FieldIndex.Choices:
-                    return "Choices";
-                case DialogItem_FieldIndex.LinkFrom:
-                    return "LinkFrom";
-                case DialogItem_FieldIndex.Script:
-                    return "Script";
-                default:
-                    return OblivionMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            DialogItem_FieldIndex enu = (DialogItem_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogItem_FieldIndex.Data:
-                case DialogItem_FieldIndex.Quest:
-                case DialogItem_FieldIndex.PreviousTopic:
-                case DialogItem_FieldIndex.Topics:
-                case DialogItem_FieldIndex.Responses:
-                case DialogItem_FieldIndex.Conditions:
-                case DialogItem_FieldIndex.Choices:
-                case DialogItem_FieldIndex.LinkFrom:
-                case DialogItem_FieldIndex.Script:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            DialogItem_FieldIndex enu = (DialogItem_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogItem_FieldIndex.Script:
-                    return true;
-                case DialogItem_FieldIndex.Data:
-                case DialogItem_FieldIndex.Quest:
-                case DialogItem_FieldIndex.PreviousTopic:
-                case DialogItem_FieldIndex.Topics:
-                case DialogItem_FieldIndex.Responses:
-                case DialogItem_FieldIndex.Conditions:
-                case DialogItem_FieldIndex.Choices:
-                case DialogItem_FieldIndex.LinkFrom:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            DialogItem_FieldIndex enu = (DialogItem_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogItem_FieldIndex.Data:
-                    return typeof(DialogItemData);
-                case DialogItem_FieldIndex.Quest:
-                    return typeof(FormLinkNullable<Quest>);
-                case DialogItem_FieldIndex.PreviousTopic:
-                    return typeof(FormLinkNullable<DialogItem>);
-                case DialogItem_FieldIndex.Topics:
-                    return typeof(IExtendedList<IFormLink<DialogTopic>>);
-                case DialogItem_FieldIndex.Responses:
-                    return typeof(IExtendedList<DialogResponse>);
-                case DialogItem_FieldIndex.Conditions:
-                    return typeof(IExtendedList<Condition>);
-                case DialogItem_FieldIndex.Choices:
-                    return typeof(IExtendedList<IFormLink<DialogTopic>>);
-                case DialogItem_FieldIndex.LinkFrom:
-                    return typeof(IExtendedList<IFormLink<DialogTopic>>);
-                case DialogItem_FieldIndex.Script:
-                    return typeof(ScriptFields);
-                default:
-                    return OblivionMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.INFO;
         public static readonly Type BinaryWriteTranslation = typeof(DialogItemBinaryWriteTranslation);
         #region Interface
@@ -1582,14 +1395,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

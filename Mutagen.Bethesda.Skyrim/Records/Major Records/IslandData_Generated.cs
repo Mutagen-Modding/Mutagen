@@ -906,135 +906,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "MIN":
-                    return (ushort)IslandData_FieldIndex.Min;
-                case "MAX":
-                    return (ushort)IslandData_FieldIndex.Max;
-                case "TRIANGLES":
-                    return (ushort)IslandData_FieldIndex.Triangles;
-                case "VERTICES":
-                    return (ushort)IslandData_FieldIndex.Vertices;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            IslandData_FieldIndex enu = (IslandData_FieldIndex)index;
-            switch (enu)
-            {
-                case IslandData_FieldIndex.Triangles:
-                case IslandData_FieldIndex.Vertices:
-                    return true;
-                case IslandData_FieldIndex.Min:
-                case IslandData_FieldIndex.Max:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            IslandData_FieldIndex enu = (IslandData_FieldIndex)index;
-            switch (enu)
-            {
-                case IslandData_FieldIndex.Min:
-                case IslandData_FieldIndex.Max:
-                case IslandData_FieldIndex.Triangles:
-                case IslandData_FieldIndex.Vertices:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            IslandData_FieldIndex enu = (IslandData_FieldIndex)index;
-            switch (enu)
-            {
-                case IslandData_FieldIndex.Min:
-                case IslandData_FieldIndex.Max:
-                case IslandData_FieldIndex.Triangles:
-                case IslandData_FieldIndex.Vertices:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            IslandData_FieldIndex enu = (IslandData_FieldIndex)index;
-            switch (enu)
-            {
-                case IslandData_FieldIndex.Min:
-                    return "Min";
-                case IslandData_FieldIndex.Max:
-                    return "Max";
-                case IslandData_FieldIndex.Triangles:
-                    return "Triangles";
-                case IslandData_FieldIndex.Vertices:
-                    return "Vertices";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            IslandData_FieldIndex enu = (IslandData_FieldIndex)index;
-            switch (enu)
-            {
-                case IslandData_FieldIndex.Min:
-                case IslandData_FieldIndex.Max:
-                case IslandData_FieldIndex.Triangles:
-                case IslandData_FieldIndex.Vertices:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            IslandData_FieldIndex enu = (IslandData_FieldIndex)index;
-            switch (enu)
-            {
-                case IslandData_FieldIndex.Min:
-                case IslandData_FieldIndex.Max:
-                case IslandData_FieldIndex.Triangles:
-                case IslandData_FieldIndex.Vertices:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            IslandData_FieldIndex enu = (IslandData_FieldIndex)index;
-            switch (enu)
-            {
-                case IslandData_FieldIndex.Min:
-                    return typeof(P3Float);
-                case IslandData_FieldIndex.Max:
-                    return typeof(P3Float);
-                case IslandData_FieldIndex.Triangles:
-                    return typeof(IExtendedList<P3Int16>);
-                case IslandData_FieldIndex.Vertices:
-                    return typeof(IExtendedList<P3Float>);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly Type BinaryWriteTranslation = typeof(IslandDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1054,14 +925,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

@@ -796,124 +796,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "POINT":
-                    return (ushort)RoadPoint_FieldIndex.Point;
-                case "NUMCONNECTIONSFLUFFBYTES":
-                    return (ushort)RoadPoint_FieldIndex.NumConnectionsFluffBytes;
-                case "CONNECTIONS":
-                    return (ushort)RoadPoint_FieldIndex.Connections;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            RoadPoint_FieldIndex enu = (RoadPoint_FieldIndex)index;
-            switch (enu)
-            {
-                case RoadPoint_FieldIndex.Connections:
-                    return true;
-                case RoadPoint_FieldIndex.Point:
-                case RoadPoint_FieldIndex.NumConnectionsFluffBytes:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            RoadPoint_FieldIndex enu = (RoadPoint_FieldIndex)index;
-            switch (enu)
-            {
-                case RoadPoint_FieldIndex.Point:
-                case RoadPoint_FieldIndex.NumConnectionsFluffBytes:
-                case RoadPoint_FieldIndex.Connections:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            RoadPoint_FieldIndex enu = (RoadPoint_FieldIndex)index;
-            switch (enu)
-            {
-                case RoadPoint_FieldIndex.Point:
-                case RoadPoint_FieldIndex.NumConnectionsFluffBytes:
-                case RoadPoint_FieldIndex.Connections:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            RoadPoint_FieldIndex enu = (RoadPoint_FieldIndex)index;
-            switch (enu)
-            {
-                case RoadPoint_FieldIndex.Point:
-                    return "Point";
-                case RoadPoint_FieldIndex.NumConnectionsFluffBytes:
-                    return "NumConnectionsFluffBytes";
-                case RoadPoint_FieldIndex.Connections:
-                    return "Connections";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            RoadPoint_FieldIndex enu = (RoadPoint_FieldIndex)index;
-            switch (enu)
-            {
-                case RoadPoint_FieldIndex.Point:
-                case RoadPoint_FieldIndex.NumConnectionsFluffBytes:
-                case RoadPoint_FieldIndex.Connections:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            RoadPoint_FieldIndex enu = (RoadPoint_FieldIndex)index;
-            switch (enu)
-            {
-                case RoadPoint_FieldIndex.Point:
-                case RoadPoint_FieldIndex.NumConnectionsFluffBytes:
-                case RoadPoint_FieldIndex.Connections:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            RoadPoint_FieldIndex enu = (RoadPoint_FieldIndex)index;
-            switch (enu)
-            {
-                case RoadPoint_FieldIndex.Point:
-                    return typeof(P3Float);
-                case RoadPoint_FieldIndex.NumConnectionsFluffBytes:
-                    return typeof(MemorySlice<Byte>);
-                case RoadPoint_FieldIndex.Connections:
-                    return typeof(IExtendedList<P3Float>);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly Type BinaryWriteTranslation = typeof(RoadPointBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -933,14 +815,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

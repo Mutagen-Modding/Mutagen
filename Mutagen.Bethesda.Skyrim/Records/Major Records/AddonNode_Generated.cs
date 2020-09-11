@@ -889,168 +889,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "OBJECTBOUNDS":
-                    return (ushort)AddonNode_FieldIndex.ObjectBounds;
-                case "MODEL":
-                    return (ushort)AddonNode_FieldIndex.Model;
-                case "NODEINDEX":
-                    return (ushort)AddonNode_FieldIndex.NodeIndex;
-                case "SOUND":
-                    return (ushort)AddonNode_FieldIndex.Sound;
-                case "MASTERPARTICLESYSTEMCAP":
-                    return (ushort)AddonNode_FieldIndex.MasterParticleSystemCap;
-                case "ALWAYSLOADED":
-                    return (ushort)AddonNode_FieldIndex.AlwaysLoaded;
-                case "DNAMDATATYPESTATE":
-                    return (ushort)AddonNode_FieldIndex.DNAMDataTypeState;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            AddonNode_FieldIndex enu = (AddonNode_FieldIndex)index;
-            switch (enu)
-            {
-                case AddonNode_FieldIndex.ObjectBounds:
-                case AddonNode_FieldIndex.Model:
-                case AddonNode_FieldIndex.NodeIndex:
-                case AddonNode_FieldIndex.Sound:
-                case AddonNode_FieldIndex.MasterParticleSystemCap:
-                case AddonNode_FieldIndex.AlwaysLoaded:
-                case AddonNode_FieldIndex.DNAMDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            AddonNode_FieldIndex enu = (AddonNode_FieldIndex)index;
-            switch (enu)
-            {
-                case AddonNode_FieldIndex.ObjectBounds:
-                case AddonNode_FieldIndex.Model:
-                    return true;
-                case AddonNode_FieldIndex.NodeIndex:
-                case AddonNode_FieldIndex.Sound:
-                case AddonNode_FieldIndex.MasterParticleSystemCap:
-                case AddonNode_FieldIndex.AlwaysLoaded:
-                case AddonNode_FieldIndex.DNAMDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            AddonNode_FieldIndex enu = (AddonNode_FieldIndex)index;
-            switch (enu)
-            {
-                case AddonNode_FieldIndex.ObjectBounds:
-                case AddonNode_FieldIndex.Model:
-                case AddonNode_FieldIndex.NodeIndex:
-                case AddonNode_FieldIndex.Sound:
-                case AddonNode_FieldIndex.MasterParticleSystemCap:
-                case AddonNode_FieldIndex.AlwaysLoaded:
-                case AddonNode_FieldIndex.DNAMDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            AddonNode_FieldIndex enu = (AddonNode_FieldIndex)index;
-            switch (enu)
-            {
-                case AddonNode_FieldIndex.ObjectBounds:
-                    return "ObjectBounds";
-                case AddonNode_FieldIndex.Model:
-                    return "Model";
-                case AddonNode_FieldIndex.NodeIndex:
-                    return "NodeIndex";
-                case AddonNode_FieldIndex.Sound:
-                    return "Sound";
-                case AddonNode_FieldIndex.MasterParticleSystemCap:
-                    return "MasterParticleSystemCap";
-                case AddonNode_FieldIndex.AlwaysLoaded:
-                    return "AlwaysLoaded";
-                case AddonNode_FieldIndex.DNAMDataTypeState:
-                    return "DNAMDataTypeState";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            AddonNode_FieldIndex enu = (AddonNode_FieldIndex)index;
-            switch (enu)
-            {
-                case AddonNode_FieldIndex.ObjectBounds:
-                case AddonNode_FieldIndex.Model:
-                case AddonNode_FieldIndex.NodeIndex:
-                case AddonNode_FieldIndex.Sound:
-                case AddonNode_FieldIndex.MasterParticleSystemCap:
-                case AddonNode_FieldIndex.AlwaysLoaded:
-                case AddonNode_FieldIndex.DNAMDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            AddonNode_FieldIndex enu = (AddonNode_FieldIndex)index;
-            switch (enu)
-            {
-                case AddonNode_FieldIndex.ObjectBounds:
-                case AddonNode_FieldIndex.Model:
-                case AddonNode_FieldIndex.NodeIndex:
-                case AddonNode_FieldIndex.Sound:
-                case AddonNode_FieldIndex.MasterParticleSystemCap:
-                case AddonNode_FieldIndex.AlwaysLoaded:
-                case AddonNode_FieldIndex.DNAMDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            AddonNode_FieldIndex enu = (AddonNode_FieldIndex)index;
-            switch (enu)
-            {
-                case AddonNode_FieldIndex.ObjectBounds:
-                    return typeof(ObjectBounds);
-                case AddonNode_FieldIndex.Model:
-                    return typeof(Model);
-                case AddonNode_FieldIndex.NodeIndex:
-                    return typeof(Int32);
-                case AddonNode_FieldIndex.Sound:
-                    return typeof(FormLinkNullable<SoundDescriptor>);
-                case AddonNode_FieldIndex.MasterParticleSystemCap:
-                    return typeof(UInt16);
-                case AddonNode_FieldIndex.AlwaysLoaded:
-                    return typeof(Boolean);
-                case AddonNode_FieldIndex.DNAMDataTypeState:
-                    return typeof(AddonNode.DNAMDataType);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.ADDN;
         public static readonly Type BinaryWriteTranslation = typeof(AddonNodeBinaryWriteTranslation);
         #region Interface
@@ -1071,14 +909,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

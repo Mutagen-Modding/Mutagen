@@ -978,169 +978,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "NAME":
-                    return (ushort)Container_FieldIndex.Name;
-                case "MODEL":
-                    return (ushort)Container_FieldIndex.Model;
-                case "SCRIPT":
-                    return (ushort)Container_FieldIndex.Script;
-                case "ITEMS":
-                    return (ushort)Container_FieldIndex.Items;
-                case "DATA":
-                    return (ushort)Container_FieldIndex.Data;
-                case "OPENSOUND":
-                    return (ushort)Container_FieldIndex.OpenSound;
-                case "CLOSESOUND":
-                    return (ushort)Container_FieldIndex.CloseSound;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Container_FieldIndex enu = (Container_FieldIndex)index;
-            switch (enu)
-            {
-                case Container_FieldIndex.Items:
-                    return true;
-                case Container_FieldIndex.Name:
-                case Container_FieldIndex.Model:
-                case Container_FieldIndex.Script:
-                case Container_FieldIndex.Data:
-                case Container_FieldIndex.OpenSound:
-                case Container_FieldIndex.CloseSound:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Container_FieldIndex enu = (Container_FieldIndex)index;
-            switch (enu)
-            {
-                case Container_FieldIndex.Model:
-                case Container_FieldIndex.Items:
-                case Container_FieldIndex.Data:
-                    return true;
-                case Container_FieldIndex.Name:
-                case Container_FieldIndex.Script:
-                case Container_FieldIndex.OpenSound:
-                case Container_FieldIndex.CloseSound:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Container_FieldIndex enu = (Container_FieldIndex)index;
-            switch (enu)
-            {
-                case Container_FieldIndex.Name:
-                case Container_FieldIndex.Model:
-                case Container_FieldIndex.Script:
-                case Container_FieldIndex.Items:
-                case Container_FieldIndex.Data:
-                case Container_FieldIndex.OpenSound:
-                case Container_FieldIndex.CloseSound:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Container_FieldIndex enu = (Container_FieldIndex)index;
-            switch (enu)
-            {
-                case Container_FieldIndex.Name:
-                    return "Name";
-                case Container_FieldIndex.Model:
-                    return "Model";
-                case Container_FieldIndex.Script:
-                    return "Script";
-                case Container_FieldIndex.Items:
-                    return "Items";
-                case Container_FieldIndex.Data:
-                    return "Data";
-                case Container_FieldIndex.OpenSound:
-                    return "OpenSound";
-                case Container_FieldIndex.CloseSound:
-                    return "CloseSound";
-                default:
-                    return OblivionMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Container_FieldIndex enu = (Container_FieldIndex)index;
-            switch (enu)
-            {
-                case Container_FieldIndex.Name:
-                case Container_FieldIndex.Model:
-                case Container_FieldIndex.Script:
-                case Container_FieldIndex.Items:
-                case Container_FieldIndex.Data:
-                case Container_FieldIndex.OpenSound:
-                case Container_FieldIndex.CloseSound:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Container_FieldIndex enu = (Container_FieldIndex)index;
-            switch (enu)
-            {
-                case Container_FieldIndex.Name:
-                case Container_FieldIndex.Model:
-                case Container_FieldIndex.Script:
-                case Container_FieldIndex.Items:
-                case Container_FieldIndex.Data:
-                case Container_FieldIndex.OpenSound:
-                case Container_FieldIndex.CloseSound:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Container_FieldIndex enu = (Container_FieldIndex)index;
-            switch (enu)
-            {
-                case Container_FieldIndex.Name:
-                    return typeof(String);
-                case Container_FieldIndex.Model:
-                    return typeof(Model);
-                case Container_FieldIndex.Script:
-                    return typeof(FormLinkNullable<Script>);
-                case Container_FieldIndex.Items:
-                    return typeof(IExtendedList<ContainerItem>);
-                case Container_FieldIndex.Data:
-                    return typeof(ContainerData);
-                case Container_FieldIndex.OpenSound:
-                    return typeof(FormLinkNullable<Sound>);
-                case Container_FieldIndex.CloseSound:
-                    return typeof(FormLinkNullable<Sound>);
-                default:
-                    return OblivionMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.CONT;
         public static readonly Type BinaryWriteTranslation = typeof(ContainerBinaryWriteTranslation);
         #region Interface
@@ -1161,14 +998,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

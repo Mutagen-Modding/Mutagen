@@ -878,147 +878,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "INDEX":
-                    return (ushort)TintAssets_FieldIndex.Index;
-                case "FILENAME":
-                    return (ushort)TintAssets_FieldIndex.FileName;
-                case "MASKTYPE":
-                    return (ushort)TintAssets_FieldIndex.MaskType;
-                case "PRESETDEFAULT":
-                    return (ushort)TintAssets_FieldIndex.PresetDefault;
-                case "PRESETS":
-                    return (ushort)TintAssets_FieldIndex.Presets;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            TintAssets_FieldIndex enu = (TintAssets_FieldIndex)index;
-            switch (enu)
-            {
-                case TintAssets_FieldIndex.Presets:
-                    return true;
-                case TintAssets_FieldIndex.Index:
-                case TintAssets_FieldIndex.FileName:
-                case TintAssets_FieldIndex.MaskType:
-                case TintAssets_FieldIndex.PresetDefault:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            TintAssets_FieldIndex enu = (TintAssets_FieldIndex)index;
-            switch (enu)
-            {
-                case TintAssets_FieldIndex.Presets:
-                    return true;
-                case TintAssets_FieldIndex.Index:
-                case TintAssets_FieldIndex.FileName:
-                case TintAssets_FieldIndex.MaskType:
-                case TintAssets_FieldIndex.PresetDefault:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            TintAssets_FieldIndex enu = (TintAssets_FieldIndex)index;
-            switch (enu)
-            {
-                case TintAssets_FieldIndex.Index:
-                case TintAssets_FieldIndex.FileName:
-                case TintAssets_FieldIndex.MaskType:
-                case TintAssets_FieldIndex.PresetDefault:
-                case TintAssets_FieldIndex.Presets:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            TintAssets_FieldIndex enu = (TintAssets_FieldIndex)index;
-            switch (enu)
-            {
-                case TintAssets_FieldIndex.Index:
-                    return "Index";
-                case TintAssets_FieldIndex.FileName:
-                    return "FileName";
-                case TintAssets_FieldIndex.MaskType:
-                    return "MaskType";
-                case TintAssets_FieldIndex.PresetDefault:
-                    return "PresetDefault";
-                case TintAssets_FieldIndex.Presets:
-                    return "Presets";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            TintAssets_FieldIndex enu = (TintAssets_FieldIndex)index;
-            switch (enu)
-            {
-                case TintAssets_FieldIndex.Index:
-                case TintAssets_FieldIndex.FileName:
-                case TintAssets_FieldIndex.MaskType:
-                case TintAssets_FieldIndex.PresetDefault:
-                case TintAssets_FieldIndex.Presets:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            TintAssets_FieldIndex enu = (TintAssets_FieldIndex)index;
-            switch (enu)
-            {
-                case TintAssets_FieldIndex.Index:
-                case TintAssets_FieldIndex.FileName:
-                case TintAssets_FieldIndex.MaskType:
-                case TintAssets_FieldIndex.PresetDefault:
-                case TintAssets_FieldIndex.Presets:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            TintAssets_FieldIndex enu = (TintAssets_FieldIndex)index;
-            switch (enu)
-            {
-                case TintAssets_FieldIndex.Index:
-                    return typeof(UInt16);
-                case TintAssets_FieldIndex.FileName:
-                    return typeof(String);
-                case TintAssets_FieldIndex.MaskType:
-                    return typeof(TintAssets.TintMaskType);
-                case TintAssets_FieldIndex.PresetDefault:
-                    return typeof(FormLinkNullable<ColorRecord>);
-                case TintAssets_FieldIndex.Presets:
-                    return typeof(IExtendedList<TintPreset>);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1055,14 +914,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

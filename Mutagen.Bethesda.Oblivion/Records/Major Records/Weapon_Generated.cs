@@ -894,168 +894,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "NAME":
-                    return (ushort)Weapon_FieldIndex.Name;
-                case "MODEL":
-                    return (ushort)Weapon_FieldIndex.Model;
-                case "ICON":
-                    return (ushort)Weapon_FieldIndex.Icon;
-                case "SCRIPT":
-                    return (ushort)Weapon_FieldIndex.Script;
-                case "ENCHANTMENT":
-                    return (ushort)Weapon_FieldIndex.Enchantment;
-                case "ENCHANTMENTPOINTS":
-                    return (ushort)Weapon_FieldIndex.EnchantmentPoints;
-                case "DATA":
-                    return (ushort)Weapon_FieldIndex.Data;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Weapon_FieldIndex enu = (Weapon_FieldIndex)index;
-            switch (enu)
-            {
-                case Weapon_FieldIndex.Name:
-                case Weapon_FieldIndex.Model:
-                case Weapon_FieldIndex.Icon:
-                case Weapon_FieldIndex.Script:
-                case Weapon_FieldIndex.Enchantment:
-                case Weapon_FieldIndex.EnchantmentPoints:
-                case Weapon_FieldIndex.Data:
-                    return false;
-                default:
-                    return AItem_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Weapon_FieldIndex enu = (Weapon_FieldIndex)index;
-            switch (enu)
-            {
-                case Weapon_FieldIndex.Model:
-                case Weapon_FieldIndex.Data:
-                    return true;
-                case Weapon_FieldIndex.Name:
-                case Weapon_FieldIndex.Icon:
-                case Weapon_FieldIndex.Script:
-                case Weapon_FieldIndex.Enchantment:
-                case Weapon_FieldIndex.EnchantmentPoints:
-                    return false;
-                default:
-                    return AItem_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Weapon_FieldIndex enu = (Weapon_FieldIndex)index;
-            switch (enu)
-            {
-                case Weapon_FieldIndex.Name:
-                case Weapon_FieldIndex.Model:
-                case Weapon_FieldIndex.Icon:
-                case Weapon_FieldIndex.Script:
-                case Weapon_FieldIndex.Enchantment:
-                case Weapon_FieldIndex.EnchantmentPoints:
-                case Weapon_FieldIndex.Data:
-                    return false;
-                default:
-                    return AItem_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Weapon_FieldIndex enu = (Weapon_FieldIndex)index;
-            switch (enu)
-            {
-                case Weapon_FieldIndex.Name:
-                    return "Name";
-                case Weapon_FieldIndex.Model:
-                    return "Model";
-                case Weapon_FieldIndex.Icon:
-                    return "Icon";
-                case Weapon_FieldIndex.Script:
-                    return "Script";
-                case Weapon_FieldIndex.Enchantment:
-                    return "Enchantment";
-                case Weapon_FieldIndex.EnchantmentPoints:
-                    return "EnchantmentPoints";
-                case Weapon_FieldIndex.Data:
-                    return "Data";
-                default:
-                    return AItem_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Weapon_FieldIndex enu = (Weapon_FieldIndex)index;
-            switch (enu)
-            {
-                case Weapon_FieldIndex.Name:
-                case Weapon_FieldIndex.Model:
-                case Weapon_FieldIndex.Icon:
-                case Weapon_FieldIndex.Script:
-                case Weapon_FieldIndex.Enchantment:
-                case Weapon_FieldIndex.EnchantmentPoints:
-                case Weapon_FieldIndex.Data:
-                    return false;
-                default:
-                    return AItem_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Weapon_FieldIndex enu = (Weapon_FieldIndex)index;
-            switch (enu)
-            {
-                case Weapon_FieldIndex.Name:
-                case Weapon_FieldIndex.Model:
-                case Weapon_FieldIndex.Icon:
-                case Weapon_FieldIndex.Script:
-                case Weapon_FieldIndex.Enchantment:
-                case Weapon_FieldIndex.EnchantmentPoints:
-                case Weapon_FieldIndex.Data:
-                    return false;
-                default:
-                    return AItem_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Weapon_FieldIndex enu = (Weapon_FieldIndex)index;
-            switch (enu)
-            {
-                case Weapon_FieldIndex.Name:
-                    return typeof(String);
-                case Weapon_FieldIndex.Model:
-                    return typeof(Model);
-                case Weapon_FieldIndex.Icon:
-                    return typeof(String);
-                case Weapon_FieldIndex.Script:
-                    return typeof(FormLinkNullable<Script>);
-                case Weapon_FieldIndex.Enchantment:
-                    return typeof(FormLinkNullable<Enchantment>);
-                case Weapon_FieldIndex.EnchantmentPoints:
-                    return typeof(UInt16);
-                case Weapon_FieldIndex.Data:
-                    return typeof(WeaponData);
-                default:
-                    return AItem_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.WEAP;
         public static readonly Type BinaryWriteTranslation = typeof(WeaponBinaryWriteTranslation);
         #region Interface
@@ -1076,14 +914,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

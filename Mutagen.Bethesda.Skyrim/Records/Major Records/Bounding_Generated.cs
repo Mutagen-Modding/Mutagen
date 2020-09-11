@@ -840,167 +840,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "WIDTH":
-                    return (ushort)Bounding_FieldIndex.Width;
-                case "HEIGHT":
-                    return (ushort)Bounding_FieldIndex.Height;
-                case "POSITION":
-                    return (ushort)Bounding_FieldIndex.Position;
-                case "ROTATIONQ1":
-                    return (ushort)Bounding_FieldIndex.RotationQ1;
-                case "ROTATIONQ2":
-                    return (ushort)Bounding_FieldIndex.RotationQ2;
-                case "ROTATIONQ3":
-                    return (ushort)Bounding_FieldIndex.RotationQ3;
-                case "ROTATIONQ4":
-                    return (ushort)Bounding_FieldIndex.RotationQ4;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Bounding_FieldIndex enu = (Bounding_FieldIndex)index;
-            switch (enu)
-            {
-                case Bounding_FieldIndex.Width:
-                case Bounding_FieldIndex.Height:
-                case Bounding_FieldIndex.Position:
-                case Bounding_FieldIndex.RotationQ1:
-                case Bounding_FieldIndex.RotationQ2:
-                case Bounding_FieldIndex.RotationQ3:
-                case Bounding_FieldIndex.RotationQ4:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Bounding_FieldIndex enu = (Bounding_FieldIndex)index;
-            switch (enu)
-            {
-                case Bounding_FieldIndex.Width:
-                case Bounding_FieldIndex.Height:
-                case Bounding_FieldIndex.Position:
-                case Bounding_FieldIndex.RotationQ1:
-                case Bounding_FieldIndex.RotationQ2:
-                case Bounding_FieldIndex.RotationQ3:
-                case Bounding_FieldIndex.RotationQ4:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Bounding_FieldIndex enu = (Bounding_FieldIndex)index;
-            switch (enu)
-            {
-                case Bounding_FieldIndex.Width:
-                case Bounding_FieldIndex.Height:
-                case Bounding_FieldIndex.Position:
-                case Bounding_FieldIndex.RotationQ1:
-                case Bounding_FieldIndex.RotationQ2:
-                case Bounding_FieldIndex.RotationQ3:
-                case Bounding_FieldIndex.RotationQ4:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Bounding_FieldIndex enu = (Bounding_FieldIndex)index;
-            switch (enu)
-            {
-                case Bounding_FieldIndex.Width:
-                    return "Width";
-                case Bounding_FieldIndex.Height:
-                    return "Height";
-                case Bounding_FieldIndex.Position:
-                    return "Position";
-                case Bounding_FieldIndex.RotationQ1:
-                    return "RotationQ1";
-                case Bounding_FieldIndex.RotationQ2:
-                    return "RotationQ2";
-                case Bounding_FieldIndex.RotationQ3:
-                    return "RotationQ3";
-                case Bounding_FieldIndex.RotationQ4:
-                    return "RotationQ4";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Bounding_FieldIndex enu = (Bounding_FieldIndex)index;
-            switch (enu)
-            {
-                case Bounding_FieldIndex.Width:
-                case Bounding_FieldIndex.Height:
-                case Bounding_FieldIndex.Position:
-                case Bounding_FieldIndex.RotationQ1:
-                case Bounding_FieldIndex.RotationQ2:
-                case Bounding_FieldIndex.RotationQ3:
-                case Bounding_FieldIndex.RotationQ4:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Bounding_FieldIndex enu = (Bounding_FieldIndex)index;
-            switch (enu)
-            {
-                case Bounding_FieldIndex.Width:
-                case Bounding_FieldIndex.Height:
-                case Bounding_FieldIndex.Position:
-                case Bounding_FieldIndex.RotationQ1:
-                case Bounding_FieldIndex.RotationQ2:
-                case Bounding_FieldIndex.RotationQ3:
-                case Bounding_FieldIndex.RotationQ4:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Bounding_FieldIndex enu = (Bounding_FieldIndex)index;
-            switch (enu)
-            {
-                case Bounding_FieldIndex.Width:
-                    return typeof(Single);
-                case Bounding_FieldIndex.Height:
-                    return typeof(Single);
-                case Bounding_FieldIndex.Position:
-                    return typeof(P3Float);
-                case Bounding_FieldIndex.RotationQ1:
-                    return typeof(Single);
-                case Bounding_FieldIndex.RotationQ2:
-                    return typeof(Single);
-                case Bounding_FieldIndex.RotationQ3:
-                    return typeof(Single);
-                case Bounding_FieldIndex.RotationQ4:
-                    return typeof(Single);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly Type BinaryWriteTranslation = typeof(BoundingBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1020,14 +859,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

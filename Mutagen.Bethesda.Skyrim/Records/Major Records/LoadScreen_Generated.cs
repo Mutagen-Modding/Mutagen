@@ -1064,191 +1064,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "ICONS":
-                    return (ushort)LoadScreen_FieldIndex.Icons;
-                case "DESCRIPTION":
-                    return (ushort)LoadScreen_FieldIndex.Description;
-                case "CONDITIONS":
-                    return (ushort)LoadScreen_FieldIndex.Conditions;
-                case "LOADINGSCREENNIF":
-                    return (ushort)LoadScreen_FieldIndex.LoadingScreenNif;
-                case "INITIALSCALE":
-                    return (ushort)LoadScreen_FieldIndex.InitialScale;
-                case "INITIALROTATION":
-                    return (ushort)LoadScreen_FieldIndex.InitialRotation;
-                case "ROTATIONOFFSETCONSTRAINTS":
-                    return (ushort)LoadScreen_FieldIndex.RotationOffsetConstraints;
-                case "INITIALTRANSLATIONOFFSET":
-                    return (ushort)LoadScreen_FieldIndex.InitialTranslationOffset;
-                case "CAMERAPATH":
-                    return (ushort)LoadScreen_FieldIndex.CameraPath;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            LoadScreen_FieldIndex enu = (LoadScreen_FieldIndex)index;
-            switch (enu)
-            {
-                case LoadScreen_FieldIndex.Conditions:
-                    return true;
-                case LoadScreen_FieldIndex.Icons:
-                case LoadScreen_FieldIndex.Description:
-                case LoadScreen_FieldIndex.LoadingScreenNif:
-                case LoadScreen_FieldIndex.InitialScale:
-                case LoadScreen_FieldIndex.InitialRotation:
-                case LoadScreen_FieldIndex.RotationOffsetConstraints:
-                case LoadScreen_FieldIndex.InitialTranslationOffset:
-                case LoadScreen_FieldIndex.CameraPath:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            LoadScreen_FieldIndex enu = (LoadScreen_FieldIndex)index;
-            switch (enu)
-            {
-                case LoadScreen_FieldIndex.Icons:
-                case LoadScreen_FieldIndex.Conditions:
-                case LoadScreen_FieldIndex.RotationOffsetConstraints:
-                    return true;
-                case LoadScreen_FieldIndex.Description:
-                case LoadScreen_FieldIndex.LoadingScreenNif:
-                case LoadScreen_FieldIndex.InitialScale:
-                case LoadScreen_FieldIndex.InitialRotation:
-                case LoadScreen_FieldIndex.InitialTranslationOffset:
-                case LoadScreen_FieldIndex.CameraPath:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            LoadScreen_FieldIndex enu = (LoadScreen_FieldIndex)index;
-            switch (enu)
-            {
-                case LoadScreen_FieldIndex.Icons:
-                case LoadScreen_FieldIndex.Description:
-                case LoadScreen_FieldIndex.Conditions:
-                case LoadScreen_FieldIndex.LoadingScreenNif:
-                case LoadScreen_FieldIndex.InitialScale:
-                case LoadScreen_FieldIndex.InitialRotation:
-                case LoadScreen_FieldIndex.RotationOffsetConstraints:
-                case LoadScreen_FieldIndex.InitialTranslationOffset:
-                case LoadScreen_FieldIndex.CameraPath:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            LoadScreen_FieldIndex enu = (LoadScreen_FieldIndex)index;
-            switch (enu)
-            {
-                case LoadScreen_FieldIndex.Icons:
-                    return "Icons";
-                case LoadScreen_FieldIndex.Description:
-                    return "Description";
-                case LoadScreen_FieldIndex.Conditions:
-                    return "Conditions";
-                case LoadScreen_FieldIndex.LoadingScreenNif:
-                    return "LoadingScreenNif";
-                case LoadScreen_FieldIndex.InitialScale:
-                    return "InitialScale";
-                case LoadScreen_FieldIndex.InitialRotation:
-                    return "InitialRotation";
-                case LoadScreen_FieldIndex.RotationOffsetConstraints:
-                    return "RotationOffsetConstraints";
-                case LoadScreen_FieldIndex.InitialTranslationOffset:
-                    return "InitialTranslationOffset";
-                case LoadScreen_FieldIndex.CameraPath:
-                    return "CameraPath";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            LoadScreen_FieldIndex enu = (LoadScreen_FieldIndex)index;
-            switch (enu)
-            {
-                case LoadScreen_FieldIndex.Icons:
-                case LoadScreen_FieldIndex.Description:
-                case LoadScreen_FieldIndex.Conditions:
-                case LoadScreen_FieldIndex.LoadingScreenNif:
-                case LoadScreen_FieldIndex.InitialScale:
-                case LoadScreen_FieldIndex.InitialRotation:
-                case LoadScreen_FieldIndex.RotationOffsetConstraints:
-                case LoadScreen_FieldIndex.InitialTranslationOffset:
-                case LoadScreen_FieldIndex.CameraPath:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            LoadScreen_FieldIndex enu = (LoadScreen_FieldIndex)index;
-            switch (enu)
-            {
-                case LoadScreen_FieldIndex.Icons:
-                case LoadScreen_FieldIndex.Description:
-                case LoadScreen_FieldIndex.Conditions:
-                case LoadScreen_FieldIndex.LoadingScreenNif:
-                case LoadScreen_FieldIndex.InitialScale:
-                case LoadScreen_FieldIndex.InitialRotation:
-                case LoadScreen_FieldIndex.RotationOffsetConstraints:
-                case LoadScreen_FieldIndex.InitialTranslationOffset:
-                case LoadScreen_FieldIndex.CameraPath:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            LoadScreen_FieldIndex enu = (LoadScreen_FieldIndex)index;
-            switch (enu)
-            {
-                case LoadScreen_FieldIndex.Icons:
-                    return typeof(Icons);
-                case LoadScreen_FieldIndex.Description:
-                    return typeof(TranslatedString);
-                case LoadScreen_FieldIndex.Conditions:
-                    return typeof(IExtendedList<Condition>);
-                case LoadScreen_FieldIndex.LoadingScreenNif:
-                    return typeof(FormLink<Static>);
-                case LoadScreen_FieldIndex.InitialScale:
-                    return typeof(Single);
-                case LoadScreen_FieldIndex.InitialRotation:
-                    return typeof(P3Int16);
-                case LoadScreen_FieldIndex.RotationOffsetConstraints:
-                    return typeof(Int16MinMax);
-                case LoadScreen_FieldIndex.InitialTranslationOffset:
-                    return typeof(P3Float);
-                case LoadScreen_FieldIndex.CameraPath:
-                    return typeof(String);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.LSCR;
         public static readonly Type BinaryWriteTranslation = typeof(LoadScreenBinaryWriteTranslation);
         #region Interface
@@ -1269,14 +1084,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

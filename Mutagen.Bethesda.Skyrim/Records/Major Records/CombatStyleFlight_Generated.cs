@@ -920,189 +920,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "VERSIONING":
-                    return (ushort)CombatStyleFlight_FieldIndex.Versioning;
-                case "HOVERCHANCE":
-                    return (ushort)CombatStyleFlight_FieldIndex.HoverChance;
-                case "DIVEBOMBCHANCE":
-                    return (ushort)CombatStyleFlight_FieldIndex.DiveBombChance;
-                case "GROUNDATTACKCHANCE":
-                    return (ushort)CombatStyleFlight_FieldIndex.GroundAttackChance;
-                case "HOVERTIME":
-                    return (ushort)CombatStyleFlight_FieldIndex.HoverTime;
-                case "GROUNDATTACKTIME":
-                    return (ushort)CombatStyleFlight_FieldIndex.GroundAttackTime;
-                case "PERCHATTACKCHANCE":
-                    return (ushort)CombatStyleFlight_FieldIndex.PerchAttackChance;
-                case "PERCHATTACKTIME":
-                    return (ushort)CombatStyleFlight_FieldIndex.PerchAttackTime;
-                case "FLYINGATTACKCHANCE":
-                    return (ushort)CombatStyleFlight_FieldIndex.FlyingAttackChance;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            CombatStyleFlight_FieldIndex enu = (CombatStyleFlight_FieldIndex)index;
-            switch (enu)
-            {
-                case CombatStyleFlight_FieldIndex.Versioning:
-                case CombatStyleFlight_FieldIndex.HoverChance:
-                case CombatStyleFlight_FieldIndex.DiveBombChance:
-                case CombatStyleFlight_FieldIndex.GroundAttackChance:
-                case CombatStyleFlight_FieldIndex.HoverTime:
-                case CombatStyleFlight_FieldIndex.GroundAttackTime:
-                case CombatStyleFlight_FieldIndex.PerchAttackChance:
-                case CombatStyleFlight_FieldIndex.PerchAttackTime:
-                case CombatStyleFlight_FieldIndex.FlyingAttackChance:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            CombatStyleFlight_FieldIndex enu = (CombatStyleFlight_FieldIndex)index;
-            switch (enu)
-            {
-                case CombatStyleFlight_FieldIndex.Versioning:
-                case CombatStyleFlight_FieldIndex.HoverChance:
-                case CombatStyleFlight_FieldIndex.DiveBombChance:
-                case CombatStyleFlight_FieldIndex.GroundAttackChance:
-                case CombatStyleFlight_FieldIndex.HoverTime:
-                case CombatStyleFlight_FieldIndex.GroundAttackTime:
-                case CombatStyleFlight_FieldIndex.PerchAttackChance:
-                case CombatStyleFlight_FieldIndex.PerchAttackTime:
-                case CombatStyleFlight_FieldIndex.FlyingAttackChance:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            CombatStyleFlight_FieldIndex enu = (CombatStyleFlight_FieldIndex)index;
-            switch (enu)
-            {
-                case CombatStyleFlight_FieldIndex.Versioning:
-                case CombatStyleFlight_FieldIndex.HoverChance:
-                case CombatStyleFlight_FieldIndex.DiveBombChance:
-                case CombatStyleFlight_FieldIndex.GroundAttackChance:
-                case CombatStyleFlight_FieldIndex.HoverTime:
-                case CombatStyleFlight_FieldIndex.GroundAttackTime:
-                case CombatStyleFlight_FieldIndex.PerchAttackChance:
-                case CombatStyleFlight_FieldIndex.PerchAttackTime:
-                case CombatStyleFlight_FieldIndex.FlyingAttackChance:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            CombatStyleFlight_FieldIndex enu = (CombatStyleFlight_FieldIndex)index;
-            switch (enu)
-            {
-                case CombatStyleFlight_FieldIndex.Versioning:
-                    return "Versioning";
-                case CombatStyleFlight_FieldIndex.HoverChance:
-                    return "HoverChance";
-                case CombatStyleFlight_FieldIndex.DiveBombChance:
-                    return "DiveBombChance";
-                case CombatStyleFlight_FieldIndex.GroundAttackChance:
-                    return "GroundAttackChance";
-                case CombatStyleFlight_FieldIndex.HoverTime:
-                    return "HoverTime";
-                case CombatStyleFlight_FieldIndex.GroundAttackTime:
-                    return "GroundAttackTime";
-                case CombatStyleFlight_FieldIndex.PerchAttackChance:
-                    return "PerchAttackChance";
-                case CombatStyleFlight_FieldIndex.PerchAttackTime:
-                    return "PerchAttackTime";
-                case CombatStyleFlight_FieldIndex.FlyingAttackChance:
-                    return "FlyingAttackChance";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            CombatStyleFlight_FieldIndex enu = (CombatStyleFlight_FieldIndex)index;
-            switch (enu)
-            {
-                case CombatStyleFlight_FieldIndex.Versioning:
-                case CombatStyleFlight_FieldIndex.HoverChance:
-                case CombatStyleFlight_FieldIndex.DiveBombChance:
-                case CombatStyleFlight_FieldIndex.GroundAttackChance:
-                case CombatStyleFlight_FieldIndex.HoverTime:
-                case CombatStyleFlight_FieldIndex.GroundAttackTime:
-                case CombatStyleFlight_FieldIndex.PerchAttackChance:
-                case CombatStyleFlight_FieldIndex.PerchAttackTime:
-                case CombatStyleFlight_FieldIndex.FlyingAttackChance:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            CombatStyleFlight_FieldIndex enu = (CombatStyleFlight_FieldIndex)index;
-            switch (enu)
-            {
-                case CombatStyleFlight_FieldIndex.Versioning:
-                case CombatStyleFlight_FieldIndex.HoverChance:
-                case CombatStyleFlight_FieldIndex.DiveBombChance:
-                case CombatStyleFlight_FieldIndex.GroundAttackChance:
-                case CombatStyleFlight_FieldIndex.HoverTime:
-                case CombatStyleFlight_FieldIndex.GroundAttackTime:
-                case CombatStyleFlight_FieldIndex.PerchAttackChance:
-                case CombatStyleFlight_FieldIndex.PerchAttackTime:
-                case CombatStyleFlight_FieldIndex.FlyingAttackChance:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            CombatStyleFlight_FieldIndex enu = (CombatStyleFlight_FieldIndex)index;
-            switch (enu)
-            {
-                case CombatStyleFlight_FieldIndex.Versioning:
-                    return typeof(CombatStyleFlight.VersioningBreaks);
-                case CombatStyleFlight_FieldIndex.HoverChance:
-                    return typeof(Single);
-                case CombatStyleFlight_FieldIndex.DiveBombChance:
-                    return typeof(Single);
-                case CombatStyleFlight_FieldIndex.GroundAttackChance:
-                    return typeof(Single);
-                case CombatStyleFlight_FieldIndex.HoverTime:
-                    return typeof(Single);
-                case CombatStyleFlight_FieldIndex.GroundAttackTime:
-                    return typeof(Single);
-                case CombatStyleFlight_FieldIndex.PerchAttackChance:
-                    return typeof(Single);
-                case CombatStyleFlight_FieldIndex.PerchAttackTime:
-                    return typeof(Single);
-                case CombatStyleFlight_FieldIndex.FlyingAttackChance:
-                    return typeof(Single);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.CSFL;
         public static readonly Type BinaryWriteTranslation = typeof(CombatStyleFlightBinaryWriteTranslation);
         #region Interface
@@ -1123,14 +940,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

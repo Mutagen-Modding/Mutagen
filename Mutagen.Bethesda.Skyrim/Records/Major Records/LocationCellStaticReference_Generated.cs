@@ -755,134 +755,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "LOCATIONREFTYPE":
-                    return (ushort)LocationCellStaticReference_FieldIndex.LocationRefType;
-                case "MARKER":
-                    return (ushort)LocationCellStaticReference_FieldIndex.Marker;
-                case "LOCATION":
-                    return (ushort)LocationCellStaticReference_FieldIndex.Location;
-                case "GRID":
-                    return (ushort)LocationCellStaticReference_FieldIndex.Grid;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            LocationCellStaticReference_FieldIndex enu = (LocationCellStaticReference_FieldIndex)index;
-            switch (enu)
-            {
-                case LocationCellStaticReference_FieldIndex.LocationRefType:
-                case LocationCellStaticReference_FieldIndex.Marker:
-                case LocationCellStaticReference_FieldIndex.Location:
-                case LocationCellStaticReference_FieldIndex.Grid:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            LocationCellStaticReference_FieldIndex enu = (LocationCellStaticReference_FieldIndex)index;
-            switch (enu)
-            {
-                case LocationCellStaticReference_FieldIndex.LocationRefType:
-                case LocationCellStaticReference_FieldIndex.Marker:
-                case LocationCellStaticReference_FieldIndex.Location:
-                case LocationCellStaticReference_FieldIndex.Grid:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            LocationCellStaticReference_FieldIndex enu = (LocationCellStaticReference_FieldIndex)index;
-            switch (enu)
-            {
-                case LocationCellStaticReference_FieldIndex.LocationRefType:
-                case LocationCellStaticReference_FieldIndex.Marker:
-                case LocationCellStaticReference_FieldIndex.Location:
-                case LocationCellStaticReference_FieldIndex.Grid:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            LocationCellStaticReference_FieldIndex enu = (LocationCellStaticReference_FieldIndex)index;
-            switch (enu)
-            {
-                case LocationCellStaticReference_FieldIndex.LocationRefType:
-                    return "LocationRefType";
-                case LocationCellStaticReference_FieldIndex.Marker:
-                    return "Marker";
-                case LocationCellStaticReference_FieldIndex.Location:
-                    return "Location";
-                case LocationCellStaticReference_FieldIndex.Grid:
-                    return "Grid";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            LocationCellStaticReference_FieldIndex enu = (LocationCellStaticReference_FieldIndex)index;
-            switch (enu)
-            {
-                case LocationCellStaticReference_FieldIndex.LocationRefType:
-                case LocationCellStaticReference_FieldIndex.Marker:
-                case LocationCellStaticReference_FieldIndex.Location:
-                case LocationCellStaticReference_FieldIndex.Grid:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            LocationCellStaticReference_FieldIndex enu = (LocationCellStaticReference_FieldIndex)index;
-            switch (enu)
-            {
-                case LocationCellStaticReference_FieldIndex.LocationRefType:
-                case LocationCellStaticReference_FieldIndex.Marker:
-                case LocationCellStaticReference_FieldIndex.Location:
-                case LocationCellStaticReference_FieldIndex.Grid:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            LocationCellStaticReference_FieldIndex enu = (LocationCellStaticReference_FieldIndex)index;
-            switch (enu)
-            {
-                case LocationCellStaticReference_FieldIndex.LocationRefType:
-                    return typeof(FormLink<LocationReferenceType>);
-                case LocationCellStaticReference_FieldIndex.Marker:
-                    return typeof(FormLink<ILinkedReference>);
-                case LocationCellStaticReference_FieldIndex.Location:
-                    return typeof(FormLink<IComplexLocation>);
-                case LocationCellStaticReference_FieldIndex.Grid:
-                    return typeof(P2Int16);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly Type BinaryWriteTranslation = typeof(LocationCellStaticReferenceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -902,14 +774,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

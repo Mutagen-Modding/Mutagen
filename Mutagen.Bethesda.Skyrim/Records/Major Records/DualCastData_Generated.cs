@@ -914,179 +914,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "OBJECTBOUNDS":
-                    return (ushort)DualCastData_FieldIndex.ObjectBounds;
-                case "PROJECTILE":
-                    return (ushort)DualCastData_FieldIndex.Projectile;
-                case "EXPLOSION":
-                    return (ushort)DualCastData_FieldIndex.Explosion;
-                case "EFFECTSHADER":
-                    return (ushort)DualCastData_FieldIndex.EffectShader;
-                case "HITEFFECTART":
-                    return (ushort)DualCastData_FieldIndex.HitEffectArt;
-                case "IMPACTDATASET":
-                    return (ushort)DualCastData_FieldIndex.ImpactDataSet;
-                case "INHERITSCALE":
-                    return (ushort)DualCastData_FieldIndex.InheritScale;
-                case "DATADATATYPESTATE":
-                    return (ushort)DualCastData_FieldIndex.DATADataTypeState;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            DualCastData_FieldIndex enu = (DualCastData_FieldIndex)index;
-            switch (enu)
-            {
-                case DualCastData_FieldIndex.ObjectBounds:
-                case DualCastData_FieldIndex.Projectile:
-                case DualCastData_FieldIndex.Explosion:
-                case DualCastData_FieldIndex.EffectShader:
-                case DualCastData_FieldIndex.HitEffectArt:
-                case DualCastData_FieldIndex.ImpactDataSet:
-                case DualCastData_FieldIndex.InheritScale:
-                case DualCastData_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            DualCastData_FieldIndex enu = (DualCastData_FieldIndex)index;
-            switch (enu)
-            {
-                case DualCastData_FieldIndex.ObjectBounds:
-                    return true;
-                case DualCastData_FieldIndex.Projectile:
-                case DualCastData_FieldIndex.Explosion:
-                case DualCastData_FieldIndex.EffectShader:
-                case DualCastData_FieldIndex.HitEffectArt:
-                case DualCastData_FieldIndex.ImpactDataSet:
-                case DualCastData_FieldIndex.InheritScale:
-                case DualCastData_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            DualCastData_FieldIndex enu = (DualCastData_FieldIndex)index;
-            switch (enu)
-            {
-                case DualCastData_FieldIndex.ObjectBounds:
-                case DualCastData_FieldIndex.Projectile:
-                case DualCastData_FieldIndex.Explosion:
-                case DualCastData_FieldIndex.EffectShader:
-                case DualCastData_FieldIndex.HitEffectArt:
-                case DualCastData_FieldIndex.ImpactDataSet:
-                case DualCastData_FieldIndex.InheritScale:
-                case DualCastData_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            DualCastData_FieldIndex enu = (DualCastData_FieldIndex)index;
-            switch (enu)
-            {
-                case DualCastData_FieldIndex.ObjectBounds:
-                    return "ObjectBounds";
-                case DualCastData_FieldIndex.Projectile:
-                    return "Projectile";
-                case DualCastData_FieldIndex.Explosion:
-                    return "Explosion";
-                case DualCastData_FieldIndex.EffectShader:
-                    return "EffectShader";
-                case DualCastData_FieldIndex.HitEffectArt:
-                    return "HitEffectArt";
-                case DualCastData_FieldIndex.ImpactDataSet:
-                    return "ImpactDataSet";
-                case DualCastData_FieldIndex.InheritScale:
-                    return "InheritScale";
-                case DualCastData_FieldIndex.DATADataTypeState:
-                    return "DATADataTypeState";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            DualCastData_FieldIndex enu = (DualCastData_FieldIndex)index;
-            switch (enu)
-            {
-                case DualCastData_FieldIndex.ObjectBounds:
-                case DualCastData_FieldIndex.Projectile:
-                case DualCastData_FieldIndex.Explosion:
-                case DualCastData_FieldIndex.EffectShader:
-                case DualCastData_FieldIndex.HitEffectArt:
-                case DualCastData_FieldIndex.ImpactDataSet:
-                case DualCastData_FieldIndex.InheritScale:
-                case DualCastData_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            DualCastData_FieldIndex enu = (DualCastData_FieldIndex)index;
-            switch (enu)
-            {
-                case DualCastData_FieldIndex.ObjectBounds:
-                case DualCastData_FieldIndex.Projectile:
-                case DualCastData_FieldIndex.Explosion:
-                case DualCastData_FieldIndex.EffectShader:
-                case DualCastData_FieldIndex.HitEffectArt:
-                case DualCastData_FieldIndex.ImpactDataSet:
-                case DualCastData_FieldIndex.InheritScale:
-                case DualCastData_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            DualCastData_FieldIndex enu = (DualCastData_FieldIndex)index;
-            switch (enu)
-            {
-                case DualCastData_FieldIndex.ObjectBounds:
-                    return typeof(ObjectBounds);
-                case DualCastData_FieldIndex.Projectile:
-                    return typeof(FormLink<Projectile>);
-                case DualCastData_FieldIndex.Explosion:
-                    return typeof(FormLink<Explosion>);
-                case DualCastData_FieldIndex.EffectShader:
-                    return typeof(FormLink<EffectShader>);
-                case DualCastData_FieldIndex.HitEffectArt:
-                    return typeof(FormLink<ArtObject>);
-                case DualCastData_FieldIndex.ImpactDataSet:
-                    return typeof(FormLink<ImpactDataSet>);
-                case DualCastData_FieldIndex.InheritScale:
-                    return typeof(DualCastData.InheritScaleType);
-                case DualCastData_FieldIndex.DATADataTypeState:
-                    return typeof(DualCastData.DATADataType);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.DUAL;
         public static readonly Type BinaryWriteTranslation = typeof(DualCastDataBinaryWriteTranslation);
         #region Interface
@@ -1107,14 +934,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

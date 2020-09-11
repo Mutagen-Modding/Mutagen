@@ -770,135 +770,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "OBJECTBOUNDS":
-                    return (ushort)AcousticSpace_FieldIndex.ObjectBounds;
-                case "AMBIENTSOUND":
-                    return (ushort)AcousticSpace_FieldIndex.AmbientSound;
-                case "USESOUNDFROMREGION":
-                    return (ushort)AcousticSpace_FieldIndex.UseSoundFromRegion;
-                case "ENVIRONMENTTYPE":
-                    return (ushort)AcousticSpace_FieldIndex.EnvironmentType;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            AcousticSpace_FieldIndex enu = (AcousticSpace_FieldIndex)index;
-            switch (enu)
-            {
-                case AcousticSpace_FieldIndex.ObjectBounds:
-                case AcousticSpace_FieldIndex.AmbientSound:
-                case AcousticSpace_FieldIndex.UseSoundFromRegion:
-                case AcousticSpace_FieldIndex.EnvironmentType:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            AcousticSpace_FieldIndex enu = (AcousticSpace_FieldIndex)index;
-            switch (enu)
-            {
-                case AcousticSpace_FieldIndex.ObjectBounds:
-                    return true;
-                case AcousticSpace_FieldIndex.AmbientSound:
-                case AcousticSpace_FieldIndex.UseSoundFromRegion:
-                case AcousticSpace_FieldIndex.EnvironmentType:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            AcousticSpace_FieldIndex enu = (AcousticSpace_FieldIndex)index;
-            switch (enu)
-            {
-                case AcousticSpace_FieldIndex.ObjectBounds:
-                case AcousticSpace_FieldIndex.AmbientSound:
-                case AcousticSpace_FieldIndex.UseSoundFromRegion:
-                case AcousticSpace_FieldIndex.EnvironmentType:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            AcousticSpace_FieldIndex enu = (AcousticSpace_FieldIndex)index;
-            switch (enu)
-            {
-                case AcousticSpace_FieldIndex.ObjectBounds:
-                    return "ObjectBounds";
-                case AcousticSpace_FieldIndex.AmbientSound:
-                    return "AmbientSound";
-                case AcousticSpace_FieldIndex.UseSoundFromRegion:
-                    return "UseSoundFromRegion";
-                case AcousticSpace_FieldIndex.EnvironmentType:
-                    return "EnvironmentType";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            AcousticSpace_FieldIndex enu = (AcousticSpace_FieldIndex)index;
-            switch (enu)
-            {
-                case AcousticSpace_FieldIndex.ObjectBounds:
-                case AcousticSpace_FieldIndex.AmbientSound:
-                case AcousticSpace_FieldIndex.UseSoundFromRegion:
-                case AcousticSpace_FieldIndex.EnvironmentType:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            AcousticSpace_FieldIndex enu = (AcousticSpace_FieldIndex)index;
-            switch (enu)
-            {
-                case AcousticSpace_FieldIndex.ObjectBounds:
-                case AcousticSpace_FieldIndex.AmbientSound:
-                case AcousticSpace_FieldIndex.UseSoundFromRegion:
-                case AcousticSpace_FieldIndex.EnvironmentType:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            AcousticSpace_FieldIndex enu = (AcousticSpace_FieldIndex)index;
-            switch (enu)
-            {
-                case AcousticSpace_FieldIndex.ObjectBounds:
-                    return typeof(ObjectBounds);
-                case AcousticSpace_FieldIndex.AmbientSound:
-                    return typeof(FormLinkNullable<SoundDescriptor>);
-                case AcousticSpace_FieldIndex.UseSoundFromRegion:
-                    return typeof(FormLinkNullable<Region>);
-                case AcousticSpace_FieldIndex.EnvironmentType:
-                    return typeof(FormLinkNullable<ReverbParameters>);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.ASPC;
         public static readonly Type BinaryWriteTranslation = typeof(AcousticSpaceBinaryWriteTranslation);
         #region Interface
@@ -919,14 +790,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

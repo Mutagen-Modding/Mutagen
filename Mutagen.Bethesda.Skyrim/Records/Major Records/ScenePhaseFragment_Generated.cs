@@ -772,145 +772,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "FLAGS":
-                    return (ushort)ScenePhaseFragment_FieldIndex.Flags;
-                case "INDEX":
-                    return (ushort)ScenePhaseFragment_FieldIndex.Index;
-                case "UNKNOWN":
-                    return (ushort)ScenePhaseFragment_FieldIndex.Unknown;
-                case "SCRIPTNAME":
-                    return (ushort)ScenePhaseFragment_FieldIndex.ScriptName;
-                case "FRAGMENTNAME":
-                    return (ushort)ScenePhaseFragment_FieldIndex.FragmentName;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            ScenePhaseFragment_FieldIndex enu = (ScenePhaseFragment_FieldIndex)index;
-            switch (enu)
-            {
-                case ScenePhaseFragment_FieldIndex.Flags:
-                case ScenePhaseFragment_FieldIndex.Index:
-                case ScenePhaseFragment_FieldIndex.Unknown:
-                case ScenePhaseFragment_FieldIndex.ScriptName:
-                case ScenePhaseFragment_FieldIndex.FragmentName:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            ScenePhaseFragment_FieldIndex enu = (ScenePhaseFragment_FieldIndex)index;
-            switch (enu)
-            {
-                case ScenePhaseFragment_FieldIndex.Flags:
-                case ScenePhaseFragment_FieldIndex.Index:
-                case ScenePhaseFragment_FieldIndex.Unknown:
-                case ScenePhaseFragment_FieldIndex.ScriptName:
-                case ScenePhaseFragment_FieldIndex.FragmentName:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            ScenePhaseFragment_FieldIndex enu = (ScenePhaseFragment_FieldIndex)index;
-            switch (enu)
-            {
-                case ScenePhaseFragment_FieldIndex.Flags:
-                case ScenePhaseFragment_FieldIndex.Index:
-                case ScenePhaseFragment_FieldIndex.Unknown:
-                case ScenePhaseFragment_FieldIndex.ScriptName:
-                case ScenePhaseFragment_FieldIndex.FragmentName:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            ScenePhaseFragment_FieldIndex enu = (ScenePhaseFragment_FieldIndex)index;
-            switch (enu)
-            {
-                case ScenePhaseFragment_FieldIndex.Flags:
-                    return "Flags";
-                case ScenePhaseFragment_FieldIndex.Index:
-                    return "Index";
-                case ScenePhaseFragment_FieldIndex.Unknown:
-                    return "Unknown";
-                case ScenePhaseFragment_FieldIndex.ScriptName:
-                    return "ScriptName";
-                case ScenePhaseFragment_FieldIndex.FragmentName:
-                    return "FragmentName";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            ScenePhaseFragment_FieldIndex enu = (ScenePhaseFragment_FieldIndex)index;
-            switch (enu)
-            {
-                case ScenePhaseFragment_FieldIndex.Flags:
-                case ScenePhaseFragment_FieldIndex.Index:
-                case ScenePhaseFragment_FieldIndex.Unknown:
-                case ScenePhaseFragment_FieldIndex.ScriptName:
-                case ScenePhaseFragment_FieldIndex.FragmentName:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            ScenePhaseFragment_FieldIndex enu = (ScenePhaseFragment_FieldIndex)index;
-            switch (enu)
-            {
-                case ScenePhaseFragment_FieldIndex.Flags:
-                case ScenePhaseFragment_FieldIndex.Index:
-                case ScenePhaseFragment_FieldIndex.Unknown:
-                case ScenePhaseFragment_FieldIndex.ScriptName:
-                case ScenePhaseFragment_FieldIndex.FragmentName:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            ScenePhaseFragment_FieldIndex enu = (ScenePhaseFragment_FieldIndex)index;
-            switch (enu)
-            {
-                case ScenePhaseFragment_FieldIndex.Flags:
-                    return typeof(ScenePhaseFragment.Flag);
-                case ScenePhaseFragment_FieldIndex.Index:
-                    return typeof(Byte);
-                case ScenePhaseFragment_FieldIndex.Unknown:
-                    return typeof(UInt32);
-                case ScenePhaseFragment_FieldIndex.ScriptName:
-                    return typeof(String);
-                case ScenePhaseFragment_FieldIndex.FragmentName:
-                    return typeof(String);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly Type BinaryWriteTranslation = typeof(ScenePhaseFragmentBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -930,14 +791,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

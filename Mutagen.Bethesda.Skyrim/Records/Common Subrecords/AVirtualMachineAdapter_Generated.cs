@@ -781,125 +781,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "VERSION":
-                    return (ushort)AVirtualMachineAdapter_FieldIndex.Version;
-                case "OBJECTFORMAT":
-                    return (ushort)AVirtualMachineAdapter_FieldIndex.ObjectFormat;
-                case "SCRIPTS":
-                    return (ushort)AVirtualMachineAdapter_FieldIndex.Scripts;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            AVirtualMachineAdapter_FieldIndex enu = (AVirtualMachineAdapter_FieldIndex)index;
-            switch (enu)
-            {
-                case AVirtualMachineAdapter_FieldIndex.Scripts:
-                    return true;
-                case AVirtualMachineAdapter_FieldIndex.Version:
-                case AVirtualMachineAdapter_FieldIndex.ObjectFormat:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            AVirtualMachineAdapter_FieldIndex enu = (AVirtualMachineAdapter_FieldIndex)index;
-            switch (enu)
-            {
-                case AVirtualMachineAdapter_FieldIndex.Scripts:
-                    return true;
-                case AVirtualMachineAdapter_FieldIndex.Version:
-                case AVirtualMachineAdapter_FieldIndex.ObjectFormat:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            AVirtualMachineAdapter_FieldIndex enu = (AVirtualMachineAdapter_FieldIndex)index;
-            switch (enu)
-            {
-                case AVirtualMachineAdapter_FieldIndex.Version:
-                case AVirtualMachineAdapter_FieldIndex.ObjectFormat:
-                case AVirtualMachineAdapter_FieldIndex.Scripts:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            AVirtualMachineAdapter_FieldIndex enu = (AVirtualMachineAdapter_FieldIndex)index;
-            switch (enu)
-            {
-                case AVirtualMachineAdapter_FieldIndex.Version:
-                    return "Version";
-                case AVirtualMachineAdapter_FieldIndex.ObjectFormat:
-                    return "ObjectFormat";
-                case AVirtualMachineAdapter_FieldIndex.Scripts:
-                    return "Scripts";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            AVirtualMachineAdapter_FieldIndex enu = (AVirtualMachineAdapter_FieldIndex)index;
-            switch (enu)
-            {
-                case AVirtualMachineAdapter_FieldIndex.Version:
-                case AVirtualMachineAdapter_FieldIndex.ObjectFormat:
-                case AVirtualMachineAdapter_FieldIndex.Scripts:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            AVirtualMachineAdapter_FieldIndex enu = (AVirtualMachineAdapter_FieldIndex)index;
-            switch (enu)
-            {
-                case AVirtualMachineAdapter_FieldIndex.Version:
-                case AVirtualMachineAdapter_FieldIndex.ObjectFormat:
-                case AVirtualMachineAdapter_FieldIndex.Scripts:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            AVirtualMachineAdapter_FieldIndex enu = (AVirtualMachineAdapter_FieldIndex)index;
-            switch (enu)
-            {
-                case AVirtualMachineAdapter_FieldIndex.Version:
-                    return typeof(Int16);
-                case AVirtualMachineAdapter_FieldIndex.ObjectFormat:
-                    return typeof(UInt16);
-                case AVirtualMachineAdapter_FieldIndex.Scripts:
-                    return typeof(IExtendedList<ScriptEntry>);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.VMAD;
         public static readonly Type BinaryWriteTranslation = typeof(AVirtualMachineAdapterBinaryWriteTranslation);
         #region Interface
@@ -920,14 +801,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

@@ -743,134 +743,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "TYPE":
-                    return (ushort)AlchemicalApparatusData_FieldIndex.Type;
-                case "VALUE":
-                    return (ushort)AlchemicalApparatusData_FieldIndex.Value;
-                case "WEIGHT":
-                    return (ushort)AlchemicalApparatusData_FieldIndex.Weight;
-                case "QUALITY":
-                    return (ushort)AlchemicalApparatusData_FieldIndex.Quality;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            AlchemicalApparatusData_FieldIndex enu = (AlchemicalApparatusData_FieldIndex)index;
-            switch (enu)
-            {
-                case AlchemicalApparatusData_FieldIndex.Type:
-                case AlchemicalApparatusData_FieldIndex.Value:
-                case AlchemicalApparatusData_FieldIndex.Weight:
-                case AlchemicalApparatusData_FieldIndex.Quality:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            AlchemicalApparatusData_FieldIndex enu = (AlchemicalApparatusData_FieldIndex)index;
-            switch (enu)
-            {
-                case AlchemicalApparatusData_FieldIndex.Type:
-                case AlchemicalApparatusData_FieldIndex.Value:
-                case AlchemicalApparatusData_FieldIndex.Weight:
-                case AlchemicalApparatusData_FieldIndex.Quality:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            AlchemicalApparatusData_FieldIndex enu = (AlchemicalApparatusData_FieldIndex)index;
-            switch (enu)
-            {
-                case AlchemicalApparatusData_FieldIndex.Type:
-                case AlchemicalApparatusData_FieldIndex.Value:
-                case AlchemicalApparatusData_FieldIndex.Weight:
-                case AlchemicalApparatusData_FieldIndex.Quality:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            AlchemicalApparatusData_FieldIndex enu = (AlchemicalApparatusData_FieldIndex)index;
-            switch (enu)
-            {
-                case AlchemicalApparatusData_FieldIndex.Type:
-                    return "Type";
-                case AlchemicalApparatusData_FieldIndex.Value:
-                    return "Value";
-                case AlchemicalApparatusData_FieldIndex.Weight:
-                    return "Weight";
-                case AlchemicalApparatusData_FieldIndex.Quality:
-                    return "Quality";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            AlchemicalApparatusData_FieldIndex enu = (AlchemicalApparatusData_FieldIndex)index;
-            switch (enu)
-            {
-                case AlchemicalApparatusData_FieldIndex.Type:
-                case AlchemicalApparatusData_FieldIndex.Value:
-                case AlchemicalApparatusData_FieldIndex.Weight:
-                case AlchemicalApparatusData_FieldIndex.Quality:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            AlchemicalApparatusData_FieldIndex enu = (AlchemicalApparatusData_FieldIndex)index;
-            switch (enu)
-            {
-                case AlchemicalApparatusData_FieldIndex.Type:
-                case AlchemicalApparatusData_FieldIndex.Value:
-                case AlchemicalApparatusData_FieldIndex.Weight:
-                case AlchemicalApparatusData_FieldIndex.Quality:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            AlchemicalApparatusData_FieldIndex enu = (AlchemicalApparatusData_FieldIndex)index;
-            switch (enu)
-            {
-                case AlchemicalApparatusData_FieldIndex.Type:
-                    return typeof(AlchemicalApparatus.ApparatusType);
-                case AlchemicalApparatusData_FieldIndex.Value:
-                    return typeof(UInt32);
-                case AlchemicalApparatusData_FieldIndex.Weight:
-                    return typeof(Single);
-                case AlchemicalApparatusData_FieldIndex.Quality:
-                    return typeof(Single);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.DATA;
         public static readonly Type BinaryWriteTranslation = typeof(AlchemicalApparatusDataBinaryWriteTranslation);
         #region Interface
@@ -891,14 +763,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

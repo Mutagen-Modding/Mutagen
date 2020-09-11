@@ -1025,158 +1025,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "NAME":
-                    return (ushort)ScenePhase_FieldIndex.Name;
-                case "STARTCONDITIONS":
-                    return (ushort)ScenePhase_FieldIndex.StartConditions;
-                case "COMPLETIONCONDITIONS":
-                    return (ushort)ScenePhase_FieldIndex.CompletionConditions;
-                case "UNUSED":
-                    return (ushort)ScenePhase_FieldIndex.Unused;
-                case "UNUSED2":
-                    return (ushort)ScenePhase_FieldIndex.Unused2;
-                case "EDITORWIDTH":
-                    return (ushort)ScenePhase_FieldIndex.EditorWidth;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            ScenePhase_FieldIndex enu = (ScenePhase_FieldIndex)index;
-            switch (enu)
-            {
-                case ScenePhase_FieldIndex.StartConditions:
-                case ScenePhase_FieldIndex.CompletionConditions:
-                    return true;
-                case ScenePhase_FieldIndex.Name:
-                case ScenePhase_FieldIndex.Unused:
-                case ScenePhase_FieldIndex.Unused2:
-                case ScenePhase_FieldIndex.EditorWidth:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            ScenePhase_FieldIndex enu = (ScenePhase_FieldIndex)index;
-            switch (enu)
-            {
-                case ScenePhase_FieldIndex.StartConditions:
-                case ScenePhase_FieldIndex.CompletionConditions:
-                case ScenePhase_FieldIndex.Unused:
-                case ScenePhase_FieldIndex.Unused2:
-                    return true;
-                case ScenePhase_FieldIndex.Name:
-                case ScenePhase_FieldIndex.EditorWidth:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            ScenePhase_FieldIndex enu = (ScenePhase_FieldIndex)index;
-            switch (enu)
-            {
-                case ScenePhase_FieldIndex.Name:
-                case ScenePhase_FieldIndex.StartConditions:
-                case ScenePhase_FieldIndex.CompletionConditions:
-                case ScenePhase_FieldIndex.Unused:
-                case ScenePhase_FieldIndex.Unused2:
-                case ScenePhase_FieldIndex.EditorWidth:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            ScenePhase_FieldIndex enu = (ScenePhase_FieldIndex)index;
-            switch (enu)
-            {
-                case ScenePhase_FieldIndex.Name:
-                    return "Name";
-                case ScenePhase_FieldIndex.StartConditions:
-                    return "StartConditions";
-                case ScenePhase_FieldIndex.CompletionConditions:
-                    return "CompletionConditions";
-                case ScenePhase_FieldIndex.Unused:
-                    return "Unused";
-                case ScenePhase_FieldIndex.Unused2:
-                    return "Unused2";
-                case ScenePhase_FieldIndex.EditorWidth:
-                    return "EditorWidth";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            ScenePhase_FieldIndex enu = (ScenePhase_FieldIndex)index;
-            switch (enu)
-            {
-                case ScenePhase_FieldIndex.Name:
-                case ScenePhase_FieldIndex.StartConditions:
-                case ScenePhase_FieldIndex.CompletionConditions:
-                case ScenePhase_FieldIndex.Unused:
-                case ScenePhase_FieldIndex.Unused2:
-                case ScenePhase_FieldIndex.EditorWidth:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            ScenePhase_FieldIndex enu = (ScenePhase_FieldIndex)index;
-            switch (enu)
-            {
-                case ScenePhase_FieldIndex.Name:
-                case ScenePhase_FieldIndex.StartConditions:
-                case ScenePhase_FieldIndex.CompletionConditions:
-                case ScenePhase_FieldIndex.Unused:
-                case ScenePhase_FieldIndex.Unused2:
-                case ScenePhase_FieldIndex.EditorWidth:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            ScenePhase_FieldIndex enu = (ScenePhase_FieldIndex)index;
-            switch (enu)
-            {
-                case ScenePhase_FieldIndex.Name:
-                    return typeof(String);
-                case ScenePhase_FieldIndex.StartConditions:
-                    return typeof(IExtendedList<Condition>);
-                case ScenePhase_FieldIndex.CompletionConditions:
-                    return typeof(IExtendedList<Condition>);
-                case ScenePhase_FieldIndex.Unused:
-                    return typeof(ScenePhaseUnusedData);
-                case ScenePhase_FieldIndex.Unused2:
-                    return typeof(ScenePhaseUnusedData);
-                case ScenePhase_FieldIndex.EditorWidth:
-                    return typeof(UInt32);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.HNAM;
         public static readonly Type BinaryWriteTranslation = typeof(ScenePhaseBinaryWriteTranslation);
         #region Interface
@@ -1197,14 +1045,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

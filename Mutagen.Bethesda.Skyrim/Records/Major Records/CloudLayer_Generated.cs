@@ -809,146 +809,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "ENABLED":
-                    return (ushort)CloudLayer_FieldIndex.Enabled;
-                case "XSPEED":
-                    return (ushort)CloudLayer_FieldIndex.XSpeed;
-                case "YSPEED":
-                    return (ushort)CloudLayer_FieldIndex.YSpeed;
-                case "COLORS":
-                    return (ushort)CloudLayer_FieldIndex.Colors;
-                case "ALPHAS":
-                    return (ushort)CloudLayer_FieldIndex.Alphas;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            CloudLayer_FieldIndex enu = (CloudLayer_FieldIndex)index;
-            switch (enu)
-            {
-                case CloudLayer_FieldIndex.Enabled:
-                case CloudLayer_FieldIndex.XSpeed:
-                case CloudLayer_FieldIndex.YSpeed:
-                case CloudLayer_FieldIndex.Colors:
-                case CloudLayer_FieldIndex.Alphas:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            CloudLayer_FieldIndex enu = (CloudLayer_FieldIndex)index;
-            switch (enu)
-            {
-                case CloudLayer_FieldIndex.Colors:
-                case CloudLayer_FieldIndex.Alphas:
-                    return true;
-                case CloudLayer_FieldIndex.Enabled:
-                case CloudLayer_FieldIndex.XSpeed:
-                case CloudLayer_FieldIndex.YSpeed:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            CloudLayer_FieldIndex enu = (CloudLayer_FieldIndex)index;
-            switch (enu)
-            {
-                case CloudLayer_FieldIndex.Enabled:
-                case CloudLayer_FieldIndex.XSpeed:
-                case CloudLayer_FieldIndex.YSpeed:
-                case CloudLayer_FieldIndex.Colors:
-                case CloudLayer_FieldIndex.Alphas:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            CloudLayer_FieldIndex enu = (CloudLayer_FieldIndex)index;
-            switch (enu)
-            {
-                case CloudLayer_FieldIndex.Enabled:
-                    return "Enabled";
-                case CloudLayer_FieldIndex.XSpeed:
-                    return "XSpeed";
-                case CloudLayer_FieldIndex.YSpeed:
-                    return "YSpeed";
-                case CloudLayer_FieldIndex.Colors:
-                    return "Colors";
-                case CloudLayer_FieldIndex.Alphas:
-                    return "Alphas";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            CloudLayer_FieldIndex enu = (CloudLayer_FieldIndex)index;
-            switch (enu)
-            {
-                case CloudLayer_FieldIndex.Enabled:
-                case CloudLayer_FieldIndex.XSpeed:
-                case CloudLayer_FieldIndex.YSpeed:
-                case CloudLayer_FieldIndex.Colors:
-                case CloudLayer_FieldIndex.Alphas:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            CloudLayer_FieldIndex enu = (CloudLayer_FieldIndex)index;
-            switch (enu)
-            {
-                case CloudLayer_FieldIndex.Enabled:
-                case CloudLayer_FieldIndex.XSpeed:
-                case CloudLayer_FieldIndex.YSpeed:
-                case CloudLayer_FieldIndex.Colors:
-                case CloudLayer_FieldIndex.Alphas:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            CloudLayer_FieldIndex enu = (CloudLayer_FieldIndex)index;
-            switch (enu)
-            {
-                case CloudLayer_FieldIndex.Enabled:
-                    return typeof(Boolean);
-                case CloudLayer_FieldIndex.XSpeed:
-                    return typeof(Single);
-                case CloudLayer_FieldIndex.YSpeed:
-                    return typeof(Single);
-                case CloudLayer_FieldIndex.Colors:
-                    return typeof(WeatherColor);
-                case CloudLayer_FieldIndex.Alphas:
-                    return typeof(WeatherAlpha);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly Type BinaryWriteTranslation = typeof(CloudLayerBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -968,14 +828,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

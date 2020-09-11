@@ -791,125 +791,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "UNKNOWN":
-                    return (ushort)PerkScriptFragments_FieldIndex.Unknown;
-                case "FILENAME":
-                    return (ushort)PerkScriptFragments_FieldIndex.FileName;
-                case "FRAGMENTS":
-                    return (ushort)PerkScriptFragments_FieldIndex.Fragments;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            PerkScriptFragments_FieldIndex enu = (PerkScriptFragments_FieldIndex)index;
-            switch (enu)
-            {
-                case PerkScriptFragments_FieldIndex.Fragments:
-                    return true;
-                case PerkScriptFragments_FieldIndex.Unknown:
-                case PerkScriptFragments_FieldIndex.FileName:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            PerkScriptFragments_FieldIndex enu = (PerkScriptFragments_FieldIndex)index;
-            switch (enu)
-            {
-                case PerkScriptFragments_FieldIndex.Fragments:
-                    return true;
-                case PerkScriptFragments_FieldIndex.Unknown:
-                case PerkScriptFragments_FieldIndex.FileName:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            PerkScriptFragments_FieldIndex enu = (PerkScriptFragments_FieldIndex)index;
-            switch (enu)
-            {
-                case PerkScriptFragments_FieldIndex.Unknown:
-                case PerkScriptFragments_FieldIndex.FileName:
-                case PerkScriptFragments_FieldIndex.Fragments:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            PerkScriptFragments_FieldIndex enu = (PerkScriptFragments_FieldIndex)index;
-            switch (enu)
-            {
-                case PerkScriptFragments_FieldIndex.Unknown:
-                    return "Unknown";
-                case PerkScriptFragments_FieldIndex.FileName:
-                    return "FileName";
-                case PerkScriptFragments_FieldIndex.Fragments:
-                    return "Fragments";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            PerkScriptFragments_FieldIndex enu = (PerkScriptFragments_FieldIndex)index;
-            switch (enu)
-            {
-                case PerkScriptFragments_FieldIndex.Unknown:
-                case PerkScriptFragments_FieldIndex.FileName:
-                case PerkScriptFragments_FieldIndex.Fragments:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            PerkScriptFragments_FieldIndex enu = (PerkScriptFragments_FieldIndex)index;
-            switch (enu)
-            {
-                case PerkScriptFragments_FieldIndex.Unknown:
-                case PerkScriptFragments_FieldIndex.FileName:
-                case PerkScriptFragments_FieldIndex.Fragments:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            PerkScriptFragments_FieldIndex enu = (PerkScriptFragments_FieldIndex)index;
-            switch (enu)
-            {
-                case PerkScriptFragments_FieldIndex.Unknown:
-                    return typeof(SByte);
-                case PerkScriptFragments_FieldIndex.FileName:
-                    return typeof(String);
-                case PerkScriptFragments_FieldIndex.Fragments:
-                    return typeof(IExtendedList<IndexedScriptFragment>);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly Type BinaryWriteTranslation = typeof(PerkScriptFragmentsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -929,14 +810,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

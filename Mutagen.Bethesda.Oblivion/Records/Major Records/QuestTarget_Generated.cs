@@ -778,113 +778,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "DATA":
-                    return (ushort)QuestTarget_FieldIndex.Data;
-                case "CONDITIONS":
-                    return (ushort)QuestTarget_FieldIndex.Conditions;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            QuestTarget_FieldIndex enu = (QuestTarget_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestTarget_FieldIndex.Conditions:
-                    return true;
-                case QuestTarget_FieldIndex.Data:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            QuestTarget_FieldIndex enu = (QuestTarget_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestTarget_FieldIndex.Data:
-                case QuestTarget_FieldIndex.Conditions:
-                    return true;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            QuestTarget_FieldIndex enu = (QuestTarget_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestTarget_FieldIndex.Data:
-                case QuestTarget_FieldIndex.Conditions:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            QuestTarget_FieldIndex enu = (QuestTarget_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestTarget_FieldIndex.Data:
-                    return "Data";
-                case QuestTarget_FieldIndex.Conditions:
-                    return "Conditions";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            QuestTarget_FieldIndex enu = (QuestTarget_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestTarget_FieldIndex.Data:
-                case QuestTarget_FieldIndex.Conditions:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            QuestTarget_FieldIndex enu = (QuestTarget_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestTarget_FieldIndex.Data:
-                case QuestTarget_FieldIndex.Conditions:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            QuestTarget_FieldIndex enu = (QuestTarget_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestTarget_FieldIndex.Data:
-                    return typeof(QuestTargetData);
-                case QuestTarget_FieldIndex.Conditions:
-                    return typeof(IExtendedList<Condition>);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.QSTA;
         public static readonly Type BinaryWriteTranslation = typeof(QuestTargetBinaryWriteTranslation);
         #region Interface
@@ -905,14 +798,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
