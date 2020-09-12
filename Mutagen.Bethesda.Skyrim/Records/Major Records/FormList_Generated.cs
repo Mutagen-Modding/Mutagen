@@ -44,8 +44,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<ISkyrimMajorRecordGetter>> _Items = new ExtendedList<IFormLink<ISkyrimMajorRecordGetter>>();
-        public IExtendedList<IFormLink<ISkyrimMajorRecordGetter>> Items
+        private ExtendedList<IFormLink<ISkyrimMajorRecordGetter>> _Items = new ExtendedList<IFormLink<ISkyrimMajorRecordGetter>>();
+        public ExtendedList<IFormLink<ISkyrimMajorRecordGetter>> Items
         {
             get => this._Items;
             protected set => this._Items = value;
@@ -526,7 +526,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IFormListInternal>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<IFormLink<ISkyrimMajorRecordGetter>> Items { get; }
+        new ExtendedList<IFormLink<ISkyrimMajorRecordGetter>> Items { get; }
     }
 
     public partial interface IFormListInternal :

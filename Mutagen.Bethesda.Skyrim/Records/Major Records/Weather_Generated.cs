@@ -305,8 +305,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<WeatherSound> _Sounds = new ExtendedList<WeatherSound>();
-        public IExtendedList<WeatherSound> Sounds
+        private ExtendedList<WeatherSound> _Sounds = new ExtendedList<WeatherSound>();
+        public ExtendedList<WeatherSound> Sounds
         {
             get => this._Sounds;
             protected set => this._Sounds = value;
@@ -319,8 +319,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region SkyStatics
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IStaticGetter>> _SkyStatics = new ExtendedList<IFormLink<IStaticGetter>>();
-        public IExtendedList<IFormLink<IStaticGetter>> SkyStatics
+        private ExtendedList<IFormLink<IStaticGetter>> _SkyStatics = new ExtendedList<IFormLink<IStaticGetter>>();
+        public ExtendedList<IFormLink<IStaticGetter>> SkyStatics
         {
             get => this._SkyStatics;
             protected set => this._SkyStatics = value;
@@ -3047,8 +3047,8 @@ namespace Mutagen.Bethesda.Skyrim
         new Percent VisualEffectEnd { get; set; }
         new Single WindDirection { get; set; }
         new Single WindDirectionRange { get; set; }
-        new IExtendedList<WeatherSound> Sounds { get; }
-        new IExtendedList<IFormLink<IStaticGetter>> SkyStatics { get; }
+        new ExtendedList<WeatherSound> Sounds { get; }
+        new ExtendedList<IFormLink<IStaticGetter>> SkyStatics { get; }
         new WeatherImageSpaces? ImageSpaces { get; set; }
         new WeatherVolumetricLighting? VolumetricLighting { get; set; }
         new WeatherAmbientColorSet? DirectionalAmbientLightingColors { get; set; }

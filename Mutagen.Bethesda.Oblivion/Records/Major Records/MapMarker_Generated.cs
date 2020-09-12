@@ -51,8 +51,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Types
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<MapMarker.Type>? _Types;
-        public IExtendedList<MapMarker.Type>? Types
+        private ExtendedList<MapMarker.Type>? _Types;
+        public ExtendedList<MapMarker.Type>? Types
         {
             get => this._Types;
             set => this._Types = value;
@@ -560,7 +560,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new MapMarker.Flag? Flags { get; set; }
         new String? Name { get; set; }
-        new IExtendedList<MapMarker.Type>? Types { get; set; }
+        new ExtendedList<MapMarker.Type>? Types { get; set; }
     }
 
     public partial interface IMapMarkerGetter :

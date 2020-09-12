@@ -45,8 +45,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region LogEntries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<LogEntry> _LogEntries = new ExtendedList<LogEntry>();
-        public IExtendedList<LogEntry> LogEntries
+        private ExtendedList<LogEntry> _LogEntries = new ExtendedList<LogEntry>();
+        public ExtendedList<LogEntry> LogEntries
         {
             get => this._LogEntries;
             protected set => this._LogEntries = value;
@@ -537,7 +537,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkedFormKeyContainer
     {
         new UInt16 Stage { get; set; }
-        new IExtendedList<LogEntry> LogEntries { get; }
+        new ExtendedList<LogEntry> LogEntries { get; }
     }
 
     public partial interface IQuestStageGetter :

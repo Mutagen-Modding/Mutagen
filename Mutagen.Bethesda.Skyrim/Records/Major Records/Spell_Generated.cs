@@ -54,8 +54,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
-        public IExtendedList<IFormLink<IKeywordGetter>>? Keywords
+        private ExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
+        public ExtendedList<IFormLink<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -104,8 +104,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Effect> _Effects = new ExtendedList<Effect>();
-        public IExtendedList<Effect> Effects
+        private ExtendedList<Effect> _Effects = new ExtendedList<Effect>();
+        public ExtendedList<Effect> Effects
         {
             get => this._Effects;
             protected set => this._Effects = value;
@@ -1127,7 +1127,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new ObjectBounds ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
-        new IExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
+        new ExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
         new FormLinkNullable<IStaticGetter> MenuDisplayObject { get; set; }
         new FormLinkNullable<IEquipTypeGetter> EquipmentType { get; set; }
         new TranslatedString Description { get; set; }
@@ -1140,7 +1140,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single CastDuration { get; set; }
         new Single Range { get; set; }
         new FormLink<IPerkGetter> HalfCostPerk { get; set; }
-        new IExtendedList<Effect> Effects { get; }
+        new ExtendedList<Effect> Effects { get; }
         new Spell.SPITDataType SPITDataTypeState { get; set; }
     }
 

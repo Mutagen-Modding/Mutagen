@@ -47,8 +47,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public IExtendedList<Condition> Conditions
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -617,7 +617,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkedFormKeyContainer
     {
         new LogEntry.Flag? Flags { get; set; }
-        new IExtendedList<Condition> Conditions { get; }
+        new ExtendedList<Condition> Conditions { get; }
         new String? Entry { get; set; }
         new ScriptFields? ResultScript { get; set; }
     }

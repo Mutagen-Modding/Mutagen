@@ -55,8 +55,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Targets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<QuestObjectiveTarget> _Targets = new ExtendedList<QuestObjectiveTarget>();
-        public IExtendedList<QuestObjectiveTarget> Targets
+        private ExtendedList<QuestObjectiveTarget> _Targets = new ExtendedList<QuestObjectiveTarget>();
+        public ExtendedList<QuestObjectiveTarget> Targets
         {
             get => this._Targets;
             protected set => this._Targets = value;
@@ -605,7 +605,7 @@ namespace Mutagen.Bethesda.Skyrim
         new UInt16 Index { get; set; }
         new QuestObjective.Flag? Flags { get; set; }
         new TranslatedString? DisplayText { get; set; }
-        new IExtendedList<QuestObjectiveTarget> Targets { get; }
+        new ExtendedList<QuestObjectiveTarget> Targets { get; }
     }
 
     public partial interface IQuestObjectiveGetter :

@@ -50,8 +50,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Scripts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<ScriptEntry> _Scripts = new ExtendedList<ScriptEntry>();
-        public IExtendedList<ScriptEntry> Scripts
+        private ExtendedList<ScriptEntry> _Scripts = new ExtendedList<ScriptEntry>();
+        public ExtendedList<ScriptEntry> Scripts
         {
             get => this._Scripts;
             protected set => this._Scripts = value;
@@ -547,7 +547,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Int16 Version { get; set; }
         new UInt16 ObjectFormat { get; set; }
-        new IExtendedList<ScriptEntry> Scripts { get; }
+        new ExtendedList<ScriptEntry> Scripts { get; }
     }
 
     public partial interface IAVirtualMachineAdapterGetter :

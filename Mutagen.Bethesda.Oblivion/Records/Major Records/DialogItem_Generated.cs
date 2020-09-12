@@ -61,8 +61,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Topics
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IDialogTopicGetter>> _Topics = new ExtendedList<IFormLink<IDialogTopicGetter>>();
-        public IExtendedList<IFormLink<IDialogTopicGetter>> Topics
+        private ExtendedList<IFormLink<IDialogTopicGetter>> _Topics = new ExtendedList<IFormLink<IDialogTopicGetter>>();
+        public ExtendedList<IFormLink<IDialogTopicGetter>> Topics
         {
             get => this._Topics;
             protected set => this._Topics = value;
@@ -75,8 +75,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Responses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<DialogResponse> _Responses = new ExtendedList<DialogResponse>();
-        public IExtendedList<DialogResponse> Responses
+        private ExtendedList<DialogResponse> _Responses = new ExtendedList<DialogResponse>();
+        public ExtendedList<DialogResponse> Responses
         {
             get => this._Responses;
             protected set => this._Responses = value;
@@ -89,8 +89,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public IExtendedList<Condition> Conditions
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -103,8 +103,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Choices
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IDialogTopicGetter>> _Choices = new ExtendedList<IFormLink<IDialogTopicGetter>>();
-        public IExtendedList<IFormLink<IDialogTopicGetter>> Choices
+        private ExtendedList<IFormLink<IDialogTopicGetter>> _Choices = new ExtendedList<IFormLink<IDialogTopicGetter>>();
+        public ExtendedList<IFormLink<IDialogTopicGetter>> Choices
         {
             get => this._Choices;
             protected set => this._Choices = value;
@@ -117,8 +117,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region LinkFrom
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IDialogTopicGetter>> _LinkFrom = new ExtendedList<IFormLink<IDialogTopicGetter>>();
-        public IExtendedList<IFormLink<IDialogTopicGetter>> LinkFrom
+        private ExtendedList<IFormLink<IDialogTopicGetter>> _LinkFrom = new ExtendedList<IFormLink<IDialogTopicGetter>>();
+        public ExtendedList<IFormLink<IDialogTopicGetter>> LinkFrom
         {
             get => this._LinkFrom;
             protected set => this._LinkFrom = value;
@@ -1138,11 +1138,11 @@ namespace Mutagen.Bethesda.Oblivion
         new DialogItemData? Data { get; set; }
         new FormLinkNullable<IQuestGetter> Quest { get; set; }
         new FormLinkNullable<IDialogItemGetter> PreviousTopic { get; set; }
-        new IExtendedList<IFormLink<IDialogTopicGetter>> Topics { get; }
-        new IExtendedList<DialogResponse> Responses { get; }
-        new IExtendedList<Condition> Conditions { get; }
-        new IExtendedList<IFormLink<IDialogTopicGetter>> Choices { get; }
-        new IExtendedList<IFormLink<IDialogTopicGetter>> LinkFrom { get; }
+        new ExtendedList<IFormLink<IDialogTopicGetter>> Topics { get; }
+        new ExtendedList<DialogResponse> Responses { get; }
+        new ExtendedList<Condition> Conditions { get; }
+        new ExtendedList<IFormLink<IDialogTopicGetter>> Choices { get; }
+        new ExtendedList<IFormLink<IDialogTopicGetter>> LinkFrom { get; }
         new ScriptFields Script { get; }
     }
 

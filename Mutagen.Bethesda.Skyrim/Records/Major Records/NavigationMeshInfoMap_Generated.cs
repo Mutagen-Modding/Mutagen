@@ -49,8 +49,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MapInfos
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<NavigationMapInfo> _MapInfos = new ExtendedList<NavigationMapInfo>();
-        public IExtendedList<NavigationMapInfo> MapInfos
+        private ExtendedList<NavigationMapInfo> _MapInfos = new ExtendedList<NavigationMapInfo>();
+        public ExtendedList<NavigationMapInfo> MapInfos
         {
             get => this._MapInfos;
             protected set => this._MapInfos = value;
@@ -644,7 +644,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new UInt32? NavMeshVersion { get; set; }
-        new IExtendedList<NavigationMapInfo> MapInfos { get; }
+        new ExtendedList<NavigationMapInfo> MapInfos { get; }
         new PreferredPathing? PreferredPathing { get; set; }
         new MemorySlice<Byte>? NVSI { get; set; }
     }

@@ -43,8 +43,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Grasses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<RegionGrass>? _Grasses;
-        public IExtendedList<RegionGrass>? Grasses
+        private ExtendedList<RegionGrass>? _Grasses;
+        public ExtendedList<RegionGrass>? Grasses
         {
             get => this._Grasses;
             set => this._Grasses = value;
@@ -498,7 +498,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IRegionGrasses>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<RegionGrass>? Grasses { get; set; }
+        new ExtendedList<RegionGrass>? Grasses { get; set; }
     }
 
     public partial interface IRegionGrassesGetter :

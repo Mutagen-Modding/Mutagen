@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public IExtendedList<Condition> Conditions
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -711,7 +711,7 @@ namespace Mutagen.Bethesda.Oblivion
         new AIPackageLocation? Location { get; set; }
         new AIPackageSchedule? Schedule { get; set; }
         new AIPackageTarget? Target { get; set; }
-        new IExtendedList<Condition> Conditions { get; }
+        new ExtendedList<Condition> Conditions { get; }
     }
 
     public partial interface IAIPackageInternal :

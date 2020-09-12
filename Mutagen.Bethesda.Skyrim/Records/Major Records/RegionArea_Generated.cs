@@ -46,8 +46,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RegionPointListData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<P2Float>? _RegionPointListData;
-        public IExtendedList<P2Float>? RegionPointListData
+        private ExtendedList<P2Float>? _RegionPointListData;
+        public ExtendedList<P2Float>? RegionPointListData
         {
             get => this._RegionPointListData;
             set => this._RegionPointListData = value;
@@ -525,7 +525,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IRegionArea>
     {
         new UInt32? EdgeFallOff { get; set; }
-        new IExtendedList<P2Float>? RegionPointListData { get; set; }
+        new ExtendedList<P2Float>? RegionPointListData { get; set; }
     }
 
     public partial interface IRegionAreaGetter :

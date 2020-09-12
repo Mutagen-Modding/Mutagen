@@ -44,8 +44,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region WalkForwardFootsteps
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IFootstepGetter>> _WalkForwardFootsteps = new ExtendedList<IFormLink<IFootstepGetter>>();
-        public IExtendedList<IFormLink<IFootstepGetter>> WalkForwardFootsteps
+        private ExtendedList<IFormLink<IFootstepGetter>> _WalkForwardFootsteps = new ExtendedList<IFormLink<IFootstepGetter>>();
+        public ExtendedList<IFormLink<IFootstepGetter>> WalkForwardFootsteps
         {
             get => this._WalkForwardFootsteps;
             protected set => this._WalkForwardFootsteps = value;
@@ -58,8 +58,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RunForwardFootsteps
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IFootstepGetter>> _RunForwardFootsteps = new ExtendedList<IFormLink<IFootstepGetter>>();
-        public IExtendedList<IFormLink<IFootstepGetter>> RunForwardFootsteps
+        private ExtendedList<IFormLink<IFootstepGetter>> _RunForwardFootsteps = new ExtendedList<IFormLink<IFootstepGetter>>();
+        public ExtendedList<IFormLink<IFootstepGetter>> RunForwardFootsteps
         {
             get => this._RunForwardFootsteps;
             protected set => this._RunForwardFootsteps = value;
@@ -72,8 +72,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region WalkForwardAlternateFootsteps
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IFootstepGetter>> _WalkForwardAlternateFootsteps = new ExtendedList<IFormLink<IFootstepGetter>>();
-        public IExtendedList<IFormLink<IFootstepGetter>> WalkForwardAlternateFootsteps
+        private ExtendedList<IFormLink<IFootstepGetter>> _WalkForwardAlternateFootsteps = new ExtendedList<IFormLink<IFootstepGetter>>();
+        public ExtendedList<IFormLink<IFootstepGetter>> WalkForwardAlternateFootsteps
         {
             get => this._WalkForwardAlternateFootsteps;
             protected set => this._WalkForwardAlternateFootsteps = value;
@@ -86,8 +86,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RunForwardAlternateFootsteps
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IFootstepGetter>> _RunForwardAlternateFootsteps = new ExtendedList<IFormLink<IFootstepGetter>>();
-        public IExtendedList<IFormLink<IFootstepGetter>> RunForwardAlternateFootsteps
+        private ExtendedList<IFormLink<IFootstepGetter>> _RunForwardAlternateFootsteps = new ExtendedList<IFormLink<IFootstepGetter>>();
+        public ExtendedList<IFormLink<IFootstepGetter>> RunForwardAlternateFootsteps
         {
             get => this._RunForwardAlternateFootsteps;
             protected set => this._RunForwardAlternateFootsteps = value;
@@ -100,8 +100,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region WalkForwardAlternateFootsteps2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IFootstepGetter>> _WalkForwardAlternateFootsteps2 = new ExtendedList<IFormLink<IFootstepGetter>>();
-        public IExtendedList<IFormLink<IFootstepGetter>> WalkForwardAlternateFootsteps2
+        private ExtendedList<IFormLink<IFootstepGetter>> _WalkForwardAlternateFootsteps2 = new ExtendedList<IFormLink<IFootstepGetter>>();
+        public ExtendedList<IFormLink<IFootstepGetter>> WalkForwardAlternateFootsteps2
         {
             get => this._WalkForwardAlternateFootsteps2;
             protected set => this._WalkForwardAlternateFootsteps2 = value;
@@ -983,11 +983,11 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IFootstepSetInternal>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<IFormLink<IFootstepGetter>> WalkForwardFootsteps { get; }
-        new IExtendedList<IFormLink<IFootstepGetter>> RunForwardFootsteps { get; }
-        new IExtendedList<IFormLink<IFootstepGetter>> WalkForwardAlternateFootsteps { get; }
-        new IExtendedList<IFormLink<IFootstepGetter>> RunForwardAlternateFootsteps { get; }
-        new IExtendedList<IFormLink<IFootstepGetter>> WalkForwardAlternateFootsteps2 { get; }
+        new ExtendedList<IFormLink<IFootstepGetter>> WalkForwardFootsteps { get; }
+        new ExtendedList<IFormLink<IFootstepGetter>> RunForwardFootsteps { get; }
+        new ExtendedList<IFormLink<IFootstepGetter>> WalkForwardAlternateFootsteps { get; }
+        new ExtendedList<IFormLink<IFootstepGetter>> RunForwardAlternateFootsteps { get; }
+        new ExtendedList<IFormLink<IFootstepGetter>> WalkForwardAlternateFootsteps2 { get; }
     }
 
     public partial interface IFootstepSetInternal :

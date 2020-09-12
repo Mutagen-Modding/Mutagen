@@ -52,8 +52,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Fragments
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<QuestScriptFragment> _Fragments = new ExtendedList<QuestScriptFragment>();
-        public IExtendedList<QuestScriptFragment> Fragments
+        private ExtendedList<QuestScriptFragment> _Fragments = new ExtendedList<QuestScriptFragment>();
+        public ExtendedList<QuestScriptFragment> Fragments
         {
             get => this._Fragments;
             protected set => this._Fragments = value;
@@ -66,8 +66,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Aliases
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<QuestFragmentAlias> _Aliases = new ExtendedList<QuestFragmentAlias>();
-        public IExtendedList<QuestFragmentAlias> Aliases
+        private ExtendedList<QuestFragmentAlias> _Aliases = new ExtendedList<QuestFragmentAlias>();
+        public ExtendedList<QuestFragmentAlias> Aliases
         {
             get => this._Aliases;
             protected set => this._Aliases = value;
@@ -719,8 +719,8 @@ namespace Mutagen.Bethesda.Skyrim
         new QuestAdapter.VersioningBreaks Versioning { get; set; }
         new Byte Unknown { get; set; }
         new String FileName { get; set; }
-        new IExtendedList<QuestScriptFragment> Fragments { get; }
-        new IExtendedList<QuestFragmentAlias> Aliases { get; }
+        new ExtendedList<QuestScriptFragment> Fragments { get; }
+        new ExtendedList<QuestFragmentAlias> Aliases { get; }
     }
 
     public partial interface IQuestAdapterGetter :

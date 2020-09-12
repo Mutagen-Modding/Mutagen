@@ -43,8 +43,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Single> _Data = new ExtendedList<Single>();
-        public IExtendedList<Single> Data
+        private ExtendedList<Single> _Data = new ExtendedList<Single>();
+        public ExtendedList<Single> Data
         {
             get => this._Data;
             protected set => this._Data = value;
@@ -486,7 +486,7 @@ namespace Mutagen.Bethesda.Skyrim
         IScriptProperty,
         ILoquiObjectSetter<IScriptFloatListProperty>
     {
-        new IExtendedList<Single> Data { get; }
+        new ExtendedList<Single> Data { get; }
     }
 
     public partial interface IScriptFloatListPropertyGetter :

@@ -40,6 +40,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         uint IModHeaderCommon.MinimumCustomFormID => OblivionMod.DefaultInitialNextFormID;
+
+        IExtendedList<MasterReference> IModHeaderCommon.MasterReferences => this.MasterReferences;
     }
 
     public partial interface IOblivionModHeader : IModHeaderCommon

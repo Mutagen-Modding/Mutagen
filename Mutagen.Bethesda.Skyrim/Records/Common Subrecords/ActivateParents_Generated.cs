@@ -45,8 +45,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Parents
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<ActivateParent> _Parents = new ExtendedList<ActivateParent>();
-        public IExtendedList<ActivateParent> Parents
+        private ExtendedList<ActivateParent> _Parents = new ExtendedList<ActivateParent>();
+        public ExtendedList<ActivateParent> Parents
         {
             get => this._Parents;
             protected set => this._Parents = value;
@@ -537,7 +537,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new ActivateParents.Flag Flags { get; set; }
-        new IExtendedList<ActivateParent> Parents { get; }
+        new ExtendedList<ActivateParent> Parents { get; }
     }
 
     public partial interface IActivateParentsGetter :

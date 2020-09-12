@@ -55,8 +55,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Connections
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<P3Float> _Connections = new ExtendedList<P3Float>();
-        public IExtendedList<P3Float> Connections
+        private ExtendedList<P3Float> _Connections = new ExtendedList<P3Float>();
+        public ExtendedList<P3Float> Connections
         {
             get => this._Connections;
             protected set => this._Connections = value;
@@ -563,7 +563,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new P3Float Point { get; set; }
         new MemorySlice<Byte> NumConnectionsFluffBytes { get; set; }
-        new IExtendedList<P3Float> Connections { get; }
+        new ExtendedList<P3Float> Connections { get; }
     }
 
     public partial interface IRoadPointGetter :

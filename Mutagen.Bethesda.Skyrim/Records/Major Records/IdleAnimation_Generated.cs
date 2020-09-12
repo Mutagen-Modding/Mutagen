@@ -44,8 +44,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public IExtendedList<Condition> Conditions
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -68,8 +68,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RelatedIdles
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IIdleRelationGetter>> _RelatedIdles = new ExtendedList<IFormLink<IIdleRelationGetter>>();
-        public IExtendedList<IFormLink<IIdleRelationGetter>> RelatedIdles
+        private ExtendedList<IFormLink<IIdleRelationGetter>> _RelatedIdles = new ExtendedList<IFormLink<IIdleRelationGetter>>();
+        public ExtendedList<IFormLink<IIdleRelationGetter>> RelatedIdles
         {
             get => this._RelatedIdles;
             protected set => this._RelatedIdles = value;
@@ -897,10 +897,10 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IIdleAnimationInternal>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<Condition> Conditions { get; }
+        new ExtendedList<Condition> Conditions { get; }
         new String? Filename { get; set; }
         new String? AnimationEvent { get; set; }
-        new IExtendedList<IFormLink<IIdleRelationGetter>> RelatedIdles { get; }
+        new ExtendedList<IFormLink<IIdleRelationGetter>> RelatedIdles { get; }
         new Byte LoopingSecondsMin { get; set; }
         new Byte LoopingSecondsMax { get; set; }
         new IdleAnimation.Flag Flags { get; set; }

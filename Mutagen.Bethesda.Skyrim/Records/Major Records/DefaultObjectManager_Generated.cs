@@ -44,8 +44,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Objects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<DefaultObject>? _Objects;
-        public IExtendedList<DefaultObject>? Objects
+        private ExtendedList<DefaultObject>? _Objects;
+        public ExtendedList<DefaultObject>? Objects
         {
             get => this._Objects;
             set => this._Objects = value;
@@ -525,7 +525,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IDefaultObjectManagerInternal>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<DefaultObject>? Objects { get; set; }
+        new ExtendedList<DefaultObject>? Objects { get; set; }
     }
 
     public partial interface IDefaultObjectManagerInternal :

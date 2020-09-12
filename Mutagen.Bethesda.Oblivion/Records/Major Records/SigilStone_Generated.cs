@@ -68,8 +68,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Effect> _Effects = new ExtendedList<Effect>();
-        public IExtendedList<Effect> Effects
+        private ExtendedList<Effect> _Effects = new ExtendedList<Effect>();
+        public ExtendedList<Effect> Effects
         {
             get => this._Effects;
             protected set => this._Effects = value;
@@ -717,7 +717,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Model? Model { get; set; }
         new String? Icon { get; set; }
         new FormLinkNullable<IScriptGetter> Script { get; set; }
-        new IExtendedList<Effect> Effects { get; }
+        new ExtendedList<Effect> Effects { get; }
         new SigilStoneData? Data { get; set; }
     }
 

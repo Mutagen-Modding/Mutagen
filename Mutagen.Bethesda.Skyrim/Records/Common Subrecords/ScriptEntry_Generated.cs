@@ -48,8 +48,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Properties
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<ScriptProperty> _Properties = new ExtendedList<ScriptProperty>();
-        public IExtendedList<ScriptProperty> Properties
+        private ExtendedList<ScriptProperty> _Properties = new ExtendedList<ScriptProperty>();
+        public ExtendedList<ScriptProperty> Properties
         {
             get => this._Properties;
             protected set => this._Properties = value;
@@ -568,7 +568,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new String Name { get; set; }
         new ScriptEntry.Flag Flags { get; set; }
-        new IExtendedList<ScriptProperty> Properties { get; }
+        new ExtendedList<ScriptProperty> Properties { get; }
     }
 
     public partial interface IScriptEntryGetter :

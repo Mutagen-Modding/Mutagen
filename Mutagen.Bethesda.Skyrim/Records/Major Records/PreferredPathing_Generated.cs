@@ -42,8 +42,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region NavmeshSets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<NavmeshSet> _NavmeshSets = new ExtendedList<NavmeshSet>();
-        public IExtendedList<NavmeshSet> NavmeshSets
+        private ExtendedList<NavmeshSet> _NavmeshSets = new ExtendedList<NavmeshSet>();
+        public ExtendedList<NavmeshSet> NavmeshSets
         {
             get => this._NavmeshSets;
             protected set => this._NavmeshSets = value;
@@ -56,8 +56,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region NavmeshTree
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<NavmeshNode> _NavmeshTree = new ExtendedList<NavmeshNode>();
-        public IExtendedList<NavmeshNode> NavmeshTree
+        private ExtendedList<NavmeshNode> _NavmeshTree = new ExtendedList<NavmeshNode>();
+        public ExtendedList<NavmeshNode> NavmeshTree
         {
             get => this._NavmeshTree;
             protected set => this._NavmeshTree = value;
@@ -622,8 +622,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPreferredPathing>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<NavmeshSet> NavmeshSets { get; }
-        new IExtendedList<NavmeshNode> NavmeshTree { get; }
+        new ExtendedList<NavmeshSet> NavmeshSets { get; }
+        new ExtendedList<NavmeshNode> NavmeshTree { get; }
     }
 
     public partial interface IPreferredPathingGetter :

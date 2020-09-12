@@ -44,8 +44,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Impacts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<ImpactData> _Impacts = new ExtendedList<ImpactData>();
-        public IExtendedList<ImpactData> Impacts
+        private ExtendedList<ImpactData> _Impacts = new ExtendedList<ImpactData>();
+        public ExtendedList<ImpactData> Impacts
         {
             get => this._Impacts;
             protected set => this._Impacts = value;
@@ -525,7 +525,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IImpactDataSetInternal>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<ImpactData> Impacts { get; }
+        new ExtendedList<ImpactData> Impacts { get; }
     }
 
     public partial interface IImpactDataSetInternal :

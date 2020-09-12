@@ -59,8 +59,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Quests
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<StoryManagerQuest> _Quests = new ExtendedList<StoryManagerQuest>();
-        public IExtendedList<StoryManagerQuest> Quests
+        private ExtendedList<StoryManagerQuest> _Quests = new ExtendedList<StoryManagerQuest>();
+        public ExtendedList<StoryManagerQuest> Quests
         {
             get => this._Quests;
             protected set => this._Quests = value;
@@ -633,7 +633,7 @@ namespace Mutagen.Bethesda.Skyrim
         new StoryManagerQuestNode.QuestFlag? Flags { get; set; }
         new UInt32? MaxConcurrentQuests { get; set; }
         new UInt32? MaxNumQuestsToRun { get; set; }
-        new IExtendedList<StoryManagerQuest> Quests { get; }
+        new ExtendedList<StoryManagerQuest> Quests { get; }
     }
 
     public partial interface IStoryManagerQuestNodeInternal :

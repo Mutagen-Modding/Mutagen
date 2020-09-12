@@ -55,8 +55,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public IExtendedList<Condition> Conditions
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -74,8 +74,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region RelatedIdleAnimations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IIdleAnimationGetter>>? _RelatedIdleAnimations;
-        public IExtendedList<IFormLink<IIdleAnimationGetter>>? RelatedIdleAnimations
+        private ExtendedList<IFormLink<IIdleAnimationGetter>>? _RelatedIdleAnimations;
+        public ExtendedList<IFormLink<IIdleAnimationGetter>>? RelatedIdleAnimations
         {
             get => this._RelatedIdleAnimations;
             set => this._RelatedIdleAnimations = value;
@@ -718,9 +718,9 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkedFormKeyContainer
     {
         new Model? Model { get; set; }
-        new IExtendedList<Condition> Conditions { get; }
+        new ExtendedList<Condition> Conditions { get; }
         new IdleAnimation.AnimationGroupSectionEnum? AnimationGroupSection { get; set; }
-        new IExtendedList<IFormLink<IIdleAnimationGetter>>? RelatedIdleAnimations { get; set; }
+        new ExtendedList<IFormLink<IIdleAnimationGetter>>? RelatedIdleAnimations { get; set; }
     }
 
     public partial interface IIdleAnimationInternal :

@@ -127,8 +127,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public IExtendedList<Condition> Conditions
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -141,8 +141,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
-        public IExtendedList<IFormLink<IKeywordGetter>>? Keywords
+        private ExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
+        public ExtendedList<IFormLink<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -155,8 +155,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<ContainerEntry>? _Items;
-        public IExtendedList<ContainerEntry>? Items
+        private ExtendedList<ContainerEntry>? _Items;
+        public ExtendedList<ContainerEntry>? Items
         {
             get => this._Items;
             set => this._Items = value;
@@ -184,8 +184,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<ISpellGetter>> _Spells = new ExtendedList<IFormLink<ISpellGetter>>();
-        public IExtendedList<IFormLink<ISpellGetter>> Spells
+        private ExtendedList<IFormLink<ISpellGetter>> _Spells = new ExtendedList<IFormLink<ISpellGetter>>();
+        public ExtendedList<IFormLink<ISpellGetter>> Spells
         {
             get => this._Spells;
             protected set => this._Spells = value;
@@ -198,8 +198,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Factions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IFactionGetter>> _Factions = new ExtendedList<IFormLink<IFactionGetter>>();
-        public IExtendedList<IFormLink<IFactionGetter>> Factions
+        private ExtendedList<IFormLink<IFactionGetter>> _Factions = new ExtendedList<IFormLink<IFactionGetter>>();
+        public ExtendedList<IFormLink<IFactionGetter>> Factions
         {
             get => this._Factions;
             protected set => this._Factions = value;
@@ -212,8 +212,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region PackageData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IPackageGetter>> _PackageData = new ExtendedList<IFormLink<IPackageGetter>>();
-        public IExtendedList<IFormLink<IPackageGetter>> PackageData
+        private ExtendedList<IFormLink<IPackageGetter>> _PackageData = new ExtendedList<IFormLink<IPackageGetter>>();
+        public ExtendedList<IFormLink<IPackageGetter>> PackageData
         {
             get => this._PackageData;
             protected set => this._PackageData = value;
@@ -1764,17 +1764,17 @@ namespace Mutagen.Bethesda.Skyrim
         new CreateReferenceToObject? CreateReferenceToObject { get; set; }
         new FindMatchingRefNearAlias? FindMatchingRefNearAlias { get; set; }
         new FindMatchingRefFromEvent? FindMatchingRefFromEvent { get; set; }
-        new IExtendedList<Condition> Conditions { get; }
-        new IExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
-        new IExtendedList<ContainerEntry>? Items { get; set; }
+        new ExtendedList<Condition> Conditions { get; }
+        new ExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
+        new ExtendedList<ContainerEntry>? Items { get; set; }
         new FormLinkNullable<IFormListGetter> SpectatorOverridePackageList { get; set; }
         new FormLinkNullable<IFormListGetter> ObserveDeadBodyOverridePackageList { get; set; }
         new FormLinkNullable<IFormListGetter> GuardWarnOverridePackageList { get; set; }
         new FormLinkNullable<IFormListGetter> CombatOverridePackageList { get; set; }
         new FormLinkNullable<IMessageGetter> DisplayName { get; set; }
-        new IExtendedList<IFormLink<ISpellGetter>> Spells { get; }
-        new IExtendedList<IFormLink<IFactionGetter>> Factions { get; }
-        new IExtendedList<IFormLink<IPackageGetter>> PackageData { get; }
+        new ExtendedList<IFormLink<ISpellGetter>> Spells { get; }
+        new ExtendedList<IFormLink<IFactionGetter>> Factions { get; }
+        new ExtendedList<IFormLink<IPackageGetter>> PackageData { get; }
         new FormLinkNullable<IAliasVoiceTypeGetter> VoiceTypes { get; set; }
     }
 

@@ -79,8 +79,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Reflections
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<WaterReflection> _Reflections = new ExtendedList<WaterReflection>();
-        public IExtendedList<WaterReflection> Reflections
+        private ExtendedList<WaterReflection> _Reflections = new ExtendedList<WaterReflection>();
+        public ExtendedList<WaterReflection> Reflections
         {
             get => this._Reflections;
             protected set => this._Reflections = value;
@@ -93,8 +93,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LinkedReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<LinkedReferences> _LinkedReferences = new ExtendedList<LinkedReferences>();
-        public IExtendedList<LinkedReferences> LinkedReferences
+        private ExtendedList<LinkedReferences> _LinkedReferences = new ExtendedList<LinkedReferences>();
+        public ExtendedList<LinkedReferences> LinkedReferences
         {
             get => this._LinkedReferences;
             protected set => this._LinkedReferences = value;
@@ -146,8 +146,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LocationRefTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<ILocationReferenceTypeGetter>>? _LocationRefTypes;
-        public IExtendedList<IFormLink<ILocationReferenceTypeGetter>>? LocationRefTypes
+        private ExtendedList<IFormLink<ILocationReferenceTypeGetter>>? _LocationRefTypes;
+        public ExtendedList<IFormLink<ILocationReferenceTypeGetter>>? LocationRefTypes
         {
             get => this._LocationRefTypes;
             set => this._LocationRefTypes = value;
@@ -163,8 +163,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region DistantLodData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Single>? _DistantLodData;
-        public IExtendedList<Single>? DistantLodData
+        private ExtendedList<Single>? _DistantLodData;
+        public ExtendedList<Single>? DistantLodData
         {
             get => this._DistantLodData;
             set => this._DistantLodData = value;
@@ -1352,16 +1352,16 @@ namespace Mutagen.Bethesda.Skyrim
         new Ownership? Ownership { get; set; }
         new Single? HeadTrackingWeight { get; set; }
         new Single? FavorCost { get; set; }
-        new IExtendedList<WaterReflection> Reflections { get; }
-        new IExtendedList<LinkedReferences> LinkedReferences { get; }
+        new ExtendedList<WaterReflection> Reflections { get; }
+        new ExtendedList<LinkedReferences> LinkedReferences { get; }
         new ActivateParents? ActivateParents { get; set; }
         new EnableParent? EnableParent { get; set; }
         new FormLinkNullable<IEmittanceGetter> Emittance { get; set; }
         new FormLinkNullable<IPlacedObjectGetter> MultiBoundReference { get; set; }
         new MemorySlice<Byte>? IgnoredBySandbox { get; set; }
-        new IExtendedList<IFormLink<ILocationReferenceTypeGetter>>? LocationRefTypes { get; set; }
+        new ExtendedList<IFormLink<ILocationReferenceTypeGetter>>? LocationRefTypes { get; set; }
         new FormLinkNullable<ILocationRecordGetter> LocationReference { get; set; }
-        new IExtendedList<Single>? DistantLodData { get; set; }
+        new ExtendedList<Single>? DistantLodData { get; set; }
         new Single? Scale { get; set; }
         new Placement? Placement { get; set; }
         #region Mutagen

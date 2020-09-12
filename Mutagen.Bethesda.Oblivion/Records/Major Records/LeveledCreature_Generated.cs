@@ -54,8 +54,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Entries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<LeveledEntry<ANpcSpawn>> _Entries = new ExtendedList<LeveledEntry<ANpcSpawn>>();
-        public IExtendedList<LeveledEntry<ANpcSpawn>> Entries
+        private ExtendedList<LeveledEntry<ANpcSpawn>> _Entries = new ExtendedList<LeveledEntry<ANpcSpawn>>();
+        public ExtendedList<LeveledEntry<ANpcSpawn>> Entries
         {
             get => this._Entries;
             protected set => this._Entries = value;
@@ -653,7 +653,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new Byte? ChanceNone { get; set; }
         new LeveledFlag? Flags { get; set; }
-        new IExtendedList<LeveledEntry<ANpcSpawn>> Entries { get; }
+        new ExtendedList<LeveledEntry<ANpcSpawn>> Entries { get; }
         new FormLinkNullable<IScriptGetter> Script { get; set; }
         new FormLinkNullable<IANpcGetter> Template { get; set; }
     }

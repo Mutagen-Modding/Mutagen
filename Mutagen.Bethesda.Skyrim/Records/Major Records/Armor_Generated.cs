@@ -122,8 +122,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
-        public IExtendedList<IFormLink<IKeywordGetter>>? Keywords
+        private ExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
+        public ExtendedList<IFormLink<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -141,8 +141,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Armature
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IArmorAddonGetter>> _Armature = new ExtendedList<IFormLink<IArmorAddonGetter>>();
-        public IExtendedList<IFormLink<IArmorAddonGetter>> Armature
+        private ExtendedList<IFormLink<IArmorAddonGetter>> _Armature = new ExtendedList<IFormLink<IArmorAddonGetter>>();
+        public ExtendedList<IFormLink<IArmorAddonGetter>> Armature
         {
             get => this._Armature;
             protected set => this._Armature = value;
@@ -1392,9 +1392,9 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<IImpactDataSetGetter> BashImpactDataSet { get; set; }
         new FormLinkNullable<IMaterialTypeGetter> AlternateBlockMaterial { get; set; }
         new FormLinkNullable<IRaceGetter> Race { get; set; }
-        new IExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
+        new ExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
         new TranslatedString? Description { get; set; }
-        new IExtendedList<IFormLink<IArmorAddonGetter>> Armature { get; }
+        new ExtendedList<IFormLink<IArmorAddonGetter>> Armature { get; }
         new UInt32 Value { get; set; }
         new Single Weight { get; set; }
         new Single ArmorRating { get; set; }

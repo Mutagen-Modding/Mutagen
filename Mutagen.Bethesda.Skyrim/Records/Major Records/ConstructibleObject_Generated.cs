@@ -44,8 +44,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<ContainerEntry>? _Items;
-        public IExtendedList<ContainerEntry>? Items
+        private ExtendedList<ContainerEntry>? _Items;
+        public ExtendedList<ContainerEntry>? Items
         {
             get => this._Items;
             set => this._Items = value;
@@ -58,8 +58,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public IExtendedList<Condition> Conditions
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -737,8 +737,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IConstructibleObjectInternal>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<ContainerEntry>? Items { get; set; }
-        new IExtendedList<Condition> Conditions { get; }
+        new ExtendedList<ContainerEntry>? Items { get; set; }
+        new ExtendedList<Condition> Conditions { get; }
         new FormLinkNullable<ISkyrimMajorRecordGetter> CreatedObject { get; set; }
         new FormLinkNullable<IKeywordGetter> WorkbenchKeyword { get; set; }
         new UInt16? CreatedObjectCount { get; set; }

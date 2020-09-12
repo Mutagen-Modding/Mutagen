@@ -120,8 +120,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Regions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IRegionGetter>>? _Regions;
-        public IExtendedList<IFormLink<IRegionGetter>>? Regions
+        private ExtendedList<IFormLink<IRegionGetter>>? _Regions;
+        public ExtendedList<IFormLink<IRegionGetter>>? Regions
         {
             get => this._Regions;
             set => this._Regions = value;
@@ -218,8 +218,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region NavigationMeshes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<ANavigationMesh> _NavigationMeshes = new ExtendedList<ANavigationMesh>();
-        public IExtendedList<ANavigationMesh> NavigationMeshes
+        private ExtendedList<ANavigationMesh> _NavigationMeshes = new ExtendedList<ANavigationMesh>();
+        public ExtendedList<ANavigationMesh> NavigationMeshes
         {
             get => this._NavigationMeshes;
             protected set => this._NavigationMeshes = value;
@@ -244,8 +244,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Persistent
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IPlaced> _Persistent = new ExtendedList<IPlaced>();
-        public IExtendedList<IPlaced> Persistent
+        private ExtendedList<IPlaced> _Persistent = new ExtendedList<IPlaced>();
+        public ExtendedList<IPlaced> Persistent
         {
             get => this._Persistent;
             protected set => this._Persistent = value;
@@ -264,8 +264,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Temporary
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IPlaced> _Temporary = new ExtendedList<IPlaced>();
-        public IExtendedList<IPlaced> Temporary
+        private ExtendedList<IPlaced> _Temporary = new ExtendedList<IPlaced>();
+        public ExtendedList<IPlaced> Temporary
         {
             get => this._Temporary;
             protected set => this._Temporary = value;
@@ -1983,7 +1983,7 @@ namespace Mutagen.Bethesda.Skyrim
         new MemorySlice<Byte>? LNAM { get; set; }
         new Single? WaterHeight { get; set; }
         new String? WaterNoiseTexture { get; set; }
-        new IExtendedList<IFormLink<IRegionGetter>>? Regions { get; set; }
+        new ExtendedList<IFormLink<IRegionGetter>>? Regions { get; set; }
         new FormLinkNullable<ILocationGetter> Location { get; set; }
         new MemorySlice<Byte>? XWCN { get; set; }
         new MemorySlice<Byte>? XWCS { get; set; }
@@ -1998,15 +1998,15 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<IMusicTypeGetter> Music { get; set; }
         new FormLinkNullable<IImageSpaceAdapterGetter> ImageSpace { get; set; }
         new Landscape? Landscape { get; set; }
-        new IExtendedList<ANavigationMesh> NavigationMeshes { get; }
+        new ExtendedList<ANavigationMesh> NavigationMeshes { get; }
         new Int32 Timestamp { get; set; }
         new Int32 UnknownGroupData { get; set; }
         new Int32 PersistentTimestamp { get; set; }
         new Int32 PersistentUnknownGroupData { get; set; }
-        new IExtendedList<IPlaced> Persistent { get; }
+        new ExtendedList<IPlaced> Persistent { get; }
         new Int32 TemporaryTimestamp { get; set; }
         new Int32 TemporaryUnknownGroupData { get; set; }
-        new IExtendedList<IPlaced> Temporary { get; }
+        new ExtendedList<IPlaced> Temporary { get; }
         #region Mutagen
         new Cell.MajorFlag MajorFlags { get; set; }
         #endregion

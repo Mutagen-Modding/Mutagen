@@ -44,8 +44,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Quests
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IQuestGetter>> _Quests = new ExtendedList<IFormLink<IQuestGetter>>();
-        public IExtendedList<IFormLink<IQuestGetter>> Quests
+        private ExtendedList<IFormLink<IQuestGetter>> _Quests = new ExtendedList<IFormLink<IQuestGetter>>();
+        public ExtendedList<IFormLink<IQuestGetter>> Quests
         {
             get => this._Quests;
             protected set => this._Quests = value;
@@ -71,8 +71,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<DialogItem> _Items = new ExtendedList<DialogItem>();
-        public IExtendedList<DialogItem> Items
+        private ExtendedList<DialogItem> _Items = new ExtendedList<DialogItem>();
+        public ExtendedList<DialogItem> Items
         {
             get => this._Items;
             protected set => this._Items = value;
@@ -771,11 +771,11 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IDialogTopicInternal>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<IFormLink<IQuestGetter>> Quests { get; }
+        new ExtendedList<IFormLink<IQuestGetter>> Quests { get; }
         new String? Name { get; set; }
         new DialogType? DialogType { get; set; }
         new Int32 Timestamp { get; set; }
-        new IExtendedList<DialogItem> Items { get; }
+        new ExtendedList<DialogItem> Items { get; }
     }
 
     public partial interface IDialogTopicInternal :

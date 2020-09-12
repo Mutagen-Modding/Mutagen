@@ -53,8 +53,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region BodyParts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<BodyPart> _BodyParts = new ExtendedList<BodyPart>();
-        public IExtendedList<BodyPart> BodyParts
+        private ExtendedList<BodyPart> _BodyParts = new ExtendedList<BodyPart>();
+        public ExtendedList<BodyPart> BodyParts
         {
             get => this._BodyParts;
             protected set => this._BodyParts = value;
@@ -541,7 +541,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IBodyData>
     {
         new Model? Model { get; set; }
-        new IExtendedList<BodyPart> BodyParts { get; }
+        new ExtendedList<BodyPart> BodyParts { get; }
     }
 
     public partial interface IBodyDataGetter :

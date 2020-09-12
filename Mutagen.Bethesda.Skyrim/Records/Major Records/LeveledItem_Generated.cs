@@ -58,8 +58,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Entries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<LeveledItemEntry>? _Entries;
-        public IExtendedList<LeveledItemEntry>? Entries
+        private ExtendedList<LeveledItemEntry>? _Entries;
+        public ExtendedList<LeveledItemEntry>? Entries
         {
             get => this._Entries;
             set => this._Entries = value;
@@ -666,7 +666,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Byte ChanceNone { get; set; }
         new LeveledItem.Flag Flags { get; set; }
         new FormLinkNullable<IGlobalGetter> Global { get; set; }
-        new IExtendedList<LeveledItemEntry>? Entries { get; set; }
+        new ExtendedList<LeveledItemEntry>? Entries { get; set; }
     }
 
     public partial interface ILeveledItemInternal :

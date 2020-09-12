@@ -44,8 +44,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public IExtendedList<Condition> Conditions
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -58,8 +58,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RelatedPaths
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<ICameraPathGetter>> _RelatedPaths = new ExtendedList<IFormLink<ICameraPathGetter>>();
-        public IExtendedList<IFormLink<ICameraPathGetter>> RelatedPaths
+        private ExtendedList<IFormLink<ICameraPathGetter>> _RelatedPaths = new ExtendedList<IFormLink<ICameraPathGetter>>();
+        public ExtendedList<IFormLink<ICameraPathGetter>> RelatedPaths
         {
             get => this._RelatedPaths;
             protected set => this._RelatedPaths = value;
@@ -78,8 +78,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Shots
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<ICameraShotGetter>> _Shots = new ExtendedList<IFormLink<ICameraShotGetter>>();
-        public IExtendedList<IFormLink<ICameraShotGetter>> Shots
+        private ExtendedList<IFormLink<ICameraShotGetter>> _Shots = new ExtendedList<IFormLink<ICameraShotGetter>>();
+        public ExtendedList<IFormLink<ICameraShotGetter>> Shots
         {
             get => this._Shots;
             protected set => this._Shots = value;
@@ -817,11 +817,11 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ICameraPathInternal>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<Condition> Conditions { get; }
-        new IExtendedList<IFormLink<ICameraPathGetter>> RelatedPaths { get; }
+        new ExtendedList<Condition> Conditions { get; }
+        new ExtendedList<IFormLink<ICameraPathGetter>> RelatedPaths { get; }
         new CameraPath.ZoomType Zoom { get; set; }
         new Boolean ZoomMustHaveCameraShots { get; set; }
-        new IExtendedList<IFormLink<ICameraShotGetter>> Shots { get; }
+        new ExtendedList<IFormLink<ICameraShotGetter>> Shots { get; }
     }
 
     public partial interface ICameraPathInternal :

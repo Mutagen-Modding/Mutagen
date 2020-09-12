@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Layers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<BaseLayer> _Layers = new ExtendedList<BaseLayer>();
-        public IExtendedList<BaseLayer> Layers
+        private ExtendedList<BaseLayer> _Layers = new ExtendedList<BaseLayer>();
+        public ExtendedList<BaseLayer> Layers
         {
             get => this._Layers;
             protected set => this._Layers = value;
@@ -102,8 +102,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Textures
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<ILandscapeTextureGetter>>? _Textures;
-        public IExtendedList<IFormLink<ILandscapeTextureGetter>>? Textures
+        private ExtendedList<IFormLink<ILandscapeTextureGetter>>? _Textures;
+        public ExtendedList<IFormLink<ILandscapeTextureGetter>>? Textures
         {
             get => this._Textures;
             set => this._Textures = value;
@@ -800,8 +800,8 @@ namespace Mutagen.Bethesda.Skyrim
         new MemorySlice<Byte>? VertexNormals { get; set; }
         new MemorySlice<Byte>? VertexHeightMap { get; set; }
         new MemorySlice<Byte>? VertexColors { get; set; }
-        new IExtendedList<BaseLayer> Layers { get; }
-        new IExtendedList<IFormLink<ILandscapeTextureGetter>>? Textures { get; set; }
+        new ExtendedList<BaseLayer> Layers { get; }
+        new ExtendedList<IFormLink<ILandscapeTextureGetter>>? Textures { get; set; }
     }
 
     public partial interface ILandscapeInternal :

@@ -42,6 +42,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         uint IModHeaderCommon.MinimumCustomFormID => SkyrimMod.DefaultInitialNextFormID;
+
+        IExtendedList<MasterReference> IModHeaderCommon.MasterReferences => this.MasterReferences;
     }
 
     public partial interface ISkyrimModHeader : IModHeaderCommon

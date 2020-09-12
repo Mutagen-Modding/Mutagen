@@ -91,8 +91,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Packages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IPackageGetter>> _Packages = new ExtendedList<IFormLink<IPackageGetter>>();
-        public IExtendedList<IFormLink<IPackageGetter>> Packages
+        private ExtendedList<IFormLink<IPackageGetter>> _Packages = new ExtendedList<IFormLink<IPackageGetter>>();
+        public ExtendedList<IFormLink<IPackageGetter>> Packages
         {
             get => this._Packages;
             protected set => this._Packages = value;
@@ -1055,7 +1055,7 @@ namespace Mutagen.Bethesda.Skyrim
         new UInt32? StartPhase { get; set; }
         new UInt32? EndPhase { get; set; }
         new Single? TimerSeconds { get; set; }
-        new IExtendedList<IFormLink<IPackageGetter>> Packages { get; }
+        new ExtendedList<IFormLink<IPackageGetter>> Packages { get; }
         new FormLinkNullable<IDialogTopicGetter> Topic { get; set; }
         new Int32? HeadtrackActorID { get; set; }
         new Single? LoopingMax { get; set; }

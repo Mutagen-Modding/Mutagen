@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region RandomTeleportDestinations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IPlaceGetter>> _RandomTeleportDestinations = new ExtendedList<IFormLink<IPlaceGetter>>();
-        public IExtendedList<IFormLink<IPlaceGetter>> RandomTeleportDestinations
+        private ExtendedList<IFormLink<IPlaceGetter>> _RandomTeleportDestinations = new ExtendedList<IFormLink<IPlaceGetter>>();
+        public ExtendedList<IFormLink<IPlaceGetter>> RandomTeleportDestinations
         {
             get => this._RandomTeleportDestinations;
             protected set => this._RandomTeleportDestinations = value;
@@ -765,7 +765,7 @@ namespace Mutagen.Bethesda.Oblivion
         new FormLinkNullable<ISoundGetter> CloseSound { get; set; }
         new FormLinkNullable<ISoundGetter> LoopSound { get; set; }
         new Door.DoorFlag? Flags { get; set; }
-        new IExtendedList<IFormLink<IPlaceGetter>> RandomTeleportDestinations { get; }
+        new ExtendedList<IFormLink<IPlaceGetter>> RandomTeleportDestinations { get; }
     }
 
     public partial interface IDoorInternal :

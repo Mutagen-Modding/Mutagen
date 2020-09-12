@@ -44,8 +44,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Coordinates
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<P2Int16> _Coordinates = new ExtendedList<P2Int16>();
-        public IExtendedList<P2Int16> Coordinates
+        private ExtendedList<P2Int16> _Coordinates = new ExtendedList<P2Int16>();
+        public ExtendedList<P2Int16> Coordinates
         {
             get => this._Coordinates;
             protected set => this._Coordinates = value;
@@ -533,7 +533,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new FormLink<IComplexLocationGetter> Location { get; set; }
-        new IExtendedList<P2Int16> Coordinates { get; }
+        new ExtendedList<P2Int16> Coordinates { get; }
     }
 
     public partial interface ILocationCoordinateGetter :

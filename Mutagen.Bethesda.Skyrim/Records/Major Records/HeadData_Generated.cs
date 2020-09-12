@@ -42,8 +42,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region HeadParts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<HeadPartReference> _HeadParts = new ExtendedList<HeadPartReference>();
-        public IExtendedList<HeadPartReference> HeadParts
+        private ExtendedList<HeadPartReference> _HeadParts = new ExtendedList<HeadPartReference>();
+        public ExtendedList<HeadPartReference> HeadParts
         {
             get => this._HeadParts;
             protected set => this._HeadParts = value;
@@ -67,8 +67,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RacePresets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<INpcGetter>> _RacePresets = new ExtendedList<IFormLink<INpcGetter>>();
-        public IExtendedList<IFormLink<INpcGetter>> RacePresets
+        private ExtendedList<IFormLink<INpcGetter>> _RacePresets = new ExtendedList<IFormLink<INpcGetter>>();
+        public ExtendedList<IFormLink<INpcGetter>> RacePresets
         {
             get => this._RacePresets;
             protected set => this._RacePresets = value;
@@ -81,8 +81,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region AvailableHairColors
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IColorRecordGetter>> _AvailableHairColors = new ExtendedList<IFormLink<IColorRecordGetter>>();
-        public IExtendedList<IFormLink<IColorRecordGetter>> AvailableHairColors
+        private ExtendedList<IFormLink<IColorRecordGetter>> _AvailableHairColors = new ExtendedList<IFormLink<IColorRecordGetter>>();
+        public ExtendedList<IFormLink<IColorRecordGetter>> AvailableHairColors
         {
             get => this._AvailableHairColors;
             protected set => this._AvailableHairColors = value;
@@ -95,8 +95,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region FaceDetails
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<ITextureSetGetter>> _FaceDetails = new ExtendedList<IFormLink<ITextureSetGetter>>();
-        public IExtendedList<IFormLink<ITextureSetGetter>> FaceDetails
+        private ExtendedList<IFormLink<ITextureSetGetter>> _FaceDetails = new ExtendedList<IFormLink<ITextureSetGetter>>();
+        public ExtendedList<IFormLink<ITextureSetGetter>> FaceDetails
         {
             get => this._FaceDetails;
             protected set => this._FaceDetails = value;
@@ -112,8 +112,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region TintMasks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<TintAssets> _TintMasks = new ExtendedList<TintAssets>();
-        public IExtendedList<TintAssets> TintMasks
+        private ExtendedList<TintAssets> _TintMasks = new ExtendedList<TintAssets>();
+        public ExtendedList<TintAssets> TintMasks
         {
             get => this._TintMasks;
             protected set => this._TintMasks = value;
@@ -1090,13 +1090,13 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IHeadData>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<HeadPartReference> HeadParts { get; }
+        new ExtendedList<HeadPartReference> HeadParts { get; }
         new AvailableMorphs? AvailableMorphs { get; set; }
-        new IExtendedList<IFormLink<INpcGetter>> RacePresets { get; }
-        new IExtendedList<IFormLink<IColorRecordGetter>> AvailableHairColors { get; }
-        new IExtendedList<IFormLink<ITextureSetGetter>> FaceDetails { get; }
+        new ExtendedList<IFormLink<INpcGetter>> RacePresets { get; }
+        new ExtendedList<IFormLink<IColorRecordGetter>> AvailableHairColors { get; }
+        new ExtendedList<IFormLink<ITextureSetGetter>> FaceDetails { get; }
         new FormLinkNullable<ITextureSetGetter> DefaultFaceTexture { get; set; }
-        new IExtendedList<TintAssets> TintMasks { get; }
+        new ExtendedList<TintAssets> TintMasks { get; }
         new Model? Model { get; set; }
     }
 

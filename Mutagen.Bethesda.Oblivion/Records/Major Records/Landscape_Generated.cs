@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Layers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<BaseLayer> _Layers = new ExtendedList<BaseLayer>();
-        public IExtendedList<BaseLayer> Layers
+        private ExtendedList<BaseLayer> _Layers = new ExtendedList<BaseLayer>();
+        public ExtendedList<BaseLayer> Layers
         {
             get => this._Layers;
             protected set => this._Layers = value;
@@ -102,8 +102,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Textures
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<ILandTextureGetter>>? _Textures;
-        public IExtendedList<IFormLink<ILandTextureGetter>>? Textures
+        private ExtendedList<IFormLink<ILandTextureGetter>>? _Textures;
+        public ExtendedList<IFormLink<ILandTextureGetter>>? Textures
         {
             get => this._Textures;
             set => this._Textures = value;
@@ -799,8 +799,8 @@ namespace Mutagen.Bethesda.Oblivion
         new MemorySlice<Byte>? VertexNormals { get; set; }
         new MemorySlice<Byte>? VertexHeightMap { get; set; }
         new MemorySlice<Byte>? VertexColors { get; set; }
-        new IExtendedList<BaseLayer> Layers { get; }
-        new IExtendedList<IFormLink<ILandTextureGetter>>? Textures { get; set; }
+        new ExtendedList<BaseLayer> Layers { get; }
+        new ExtendedList<IFormLink<ILandTextureGetter>>? Textures { get; set; }
     }
 
     public partial interface ILandscapeInternal :

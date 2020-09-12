@@ -68,8 +68,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public IExtendedList<Condition> Conditions
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -82,8 +82,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Stages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<QuestStage> _Stages = new ExtendedList<QuestStage>();
-        public IExtendedList<QuestStage> Stages
+        private ExtendedList<QuestStage> _Stages = new ExtendedList<QuestStage>();
+        public ExtendedList<QuestStage> Stages
         {
             get => this._Stages;
             protected set => this._Stages = value;
@@ -96,8 +96,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Targets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<QuestTarget> _Targets = new ExtendedList<QuestTarget>();
-        public IExtendedList<QuestTarget> Targets
+        private ExtendedList<QuestTarget> _Targets = new ExtendedList<QuestTarget>();
+        public ExtendedList<QuestTarget> Targets
         {
             get => this._Targets;
             protected set => this._Targets = value;
@@ -905,9 +905,9 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Name { get; set; }
         new String? Icon { get; set; }
         new QuestData? Data { get; set; }
-        new IExtendedList<Condition> Conditions { get; }
-        new IExtendedList<QuestStage> Stages { get; }
-        new IExtendedList<QuestTarget> Targets { get; }
+        new ExtendedList<Condition> Conditions { get; }
+        new ExtendedList<QuestStage> Stages { get; }
+        new ExtendedList<QuestTarget> Targets { get; }
     }
 
     public partial interface IQuestInternal :

@@ -50,8 +50,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Vertices
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<P3Float> _Vertices = new ExtendedList<P3Float>();
-        public IExtendedList<P3Float> Vertices
+        private ExtendedList<P3Float> _Vertices = new ExtendedList<P3Float>();
+        public ExtendedList<P3Float> Vertices
         {
             get => this._Vertices;
             protected set => this._Vertices = value;
@@ -64,8 +64,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Triangles
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<NavmeshTriangle> _Triangles = new ExtendedList<NavmeshTriangle>();
-        public IExtendedList<NavmeshTriangle> Triangles
+        private ExtendedList<NavmeshTriangle> _Triangles = new ExtendedList<NavmeshTriangle>();
+        public ExtendedList<NavmeshTriangle> Triangles
         {
             get => this._Triangles;
             protected set => this._Triangles = value;
@@ -78,8 +78,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region EdgeLinks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<EdgeLink> _EdgeLinks = new ExtendedList<EdgeLink>();
-        public IExtendedList<EdgeLink> EdgeLinks
+        private ExtendedList<EdgeLink> _EdgeLinks = new ExtendedList<EdgeLink>();
+        public ExtendedList<EdgeLink> EdgeLinks
         {
             get => this._EdgeLinks;
             protected set => this._EdgeLinks = value;
@@ -92,8 +92,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region DoorTriangles
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<DoorTriangle> _DoorTriangles = new ExtendedList<DoorTriangle>();
-        public IExtendedList<DoorTriangle> DoorTriangles
+        private ExtendedList<DoorTriangle> _DoorTriangles = new ExtendedList<DoorTriangle>();
+        public ExtendedList<DoorTriangle> DoorTriangles
         {
             get => this._DoorTriangles;
             protected set => this._DoorTriangles = value;
@@ -1089,10 +1089,10 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new UInt32 NavmeshVersion { get; set; }
         new UInt32 Magic { get; set; }
-        new IExtendedList<P3Float> Vertices { get; }
-        new IExtendedList<NavmeshTriangle> Triangles { get; }
-        new IExtendedList<EdgeLink> EdgeLinks { get; }
-        new IExtendedList<DoorTriangle> DoorTriangles { get; }
+        new ExtendedList<P3Float> Vertices { get; }
+        new ExtendedList<NavmeshTriangle> Triangles { get; }
+        new ExtendedList<EdgeLink> EdgeLinks { get; }
+        new ExtendedList<DoorTriangle> DoorTriangles { get; }
         new UInt32 NavmeshGridDivisor { get; set; }
         new Single MaxDistanceX { get; set; }
         new Single MaxDistanceY { get; set; }

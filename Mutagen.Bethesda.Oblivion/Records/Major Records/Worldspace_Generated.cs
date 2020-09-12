@@ -130,8 +130,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region SubCells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<WorldspaceBlock> _SubCells = new ExtendedList<WorldspaceBlock>();
-        public IExtendedList<WorldspaceBlock> SubCells
+        private ExtendedList<WorldspaceBlock> _SubCells = new ExtendedList<WorldspaceBlock>();
+        public ExtendedList<WorldspaceBlock> SubCells
         {
             get => this._SubCells;
             protected set => this._SubCells = value;
@@ -1072,7 +1072,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Road? Road { get; set; }
         new Cell? TopCell { get; set; }
         new Int32 SubCellsTimestamp { get; set; }
-        new IExtendedList<WorldspaceBlock> SubCells { get; }
+        new ExtendedList<WorldspaceBlock> SubCells { get; }
     }
 
     public partial interface IWorldspaceInternal :

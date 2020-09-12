@@ -41,8 +41,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Navmeshes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IANavigationMeshGetter>> _Navmeshes = new ExtendedList<IFormLink<IANavigationMeshGetter>>();
-        public IExtendedList<IFormLink<IANavigationMeshGetter>> Navmeshes
+        private ExtendedList<IFormLink<IANavigationMeshGetter>> _Navmeshes = new ExtendedList<IFormLink<IANavigationMeshGetter>>();
+        public ExtendedList<IFormLink<IANavigationMeshGetter>> Navmeshes
         {
             get => this._Navmeshes;
             protected set => this._Navmeshes = value;
@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<INavmeshSet>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<IFormLink<IANavigationMeshGetter>> Navmeshes { get; }
+        new ExtendedList<IFormLink<IANavigationMeshGetter>> Navmeshes { get; }
     }
 
     public partial interface INavmeshSetGetter :

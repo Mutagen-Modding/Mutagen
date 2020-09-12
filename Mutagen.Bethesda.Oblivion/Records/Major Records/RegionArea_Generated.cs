@@ -46,8 +46,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region RegionPoints
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<P2Float>? _RegionPoints;
-        public IExtendedList<P2Float>? RegionPoints
+        private ExtendedList<P2Float>? _RegionPoints;
+        public ExtendedList<P2Float>? RegionPoints
         {
             get => this._RegionPoints;
             set => this._RegionPoints = value;
@@ -525,7 +525,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IRegionArea>
     {
         new UInt32? EdgeFallOff { get; set; }
-        new IExtendedList<P2Float>? RegionPoints { get; set; }
+        new ExtendedList<P2Float>? RegionPoints { get; set; }
     }
 
     public partial interface IRegionAreaGetter :

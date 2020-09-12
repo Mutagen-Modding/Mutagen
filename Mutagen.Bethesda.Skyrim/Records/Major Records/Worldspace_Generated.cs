@@ -44,8 +44,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region LargeReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<WorldspaceGridReference> _LargeReferences = new ExtendedList<WorldspaceGridReference>();
-        public IExtendedList<WorldspaceGridReference> LargeReferences
+        private ExtendedList<WorldspaceGridReference> _LargeReferences = new ExtendedList<WorldspaceGridReference>();
+        public ExtendedList<WorldspaceGridReference> LargeReferences
         {
             get => this._LargeReferences;
             protected set => this._LargeReferences = value;
@@ -231,8 +231,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region SubCells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<WorldspaceBlock> _SubCells = new ExtendedList<WorldspaceBlock>();
-        public IExtendedList<WorldspaceBlock> SubCells
+        private ExtendedList<WorldspaceBlock> _SubCells = new ExtendedList<WorldspaceBlock>();
+        public ExtendedList<WorldspaceBlock> SubCells
         {
             get => this._SubCells;
             protected set => this._SubCells = value;
@@ -1725,7 +1725,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IWorldspaceInternal>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<WorldspaceGridReference> LargeReferences { get; }
+        new ExtendedList<WorldspaceGridReference> LargeReferences { get; }
         new WorldspaceMaxHeight? MaxHeight { get; set; }
         new TranslatedString? Name { get; set; }
         new P2Int16? FixedDimensionsCenterCell { get; set; }
@@ -1755,7 +1755,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Cell? TopCell { get; set; }
         new Int32 SubCellsTimestamp { get; set; }
         new Int32 SubCellsUnknown { get; set; }
-        new IExtendedList<WorldspaceBlock> SubCells { get; }
+        new ExtendedList<WorldspaceBlock> SubCells { get; }
         #region Mutagen
         new Worldspace.MajorFlag MajorFlags { get; set; }
         #endregion

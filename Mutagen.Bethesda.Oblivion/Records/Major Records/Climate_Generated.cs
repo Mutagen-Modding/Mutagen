@@ -44,8 +44,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Weathers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<WeatherType>? _Weathers;
-        public IExtendedList<WeatherType>? Weathers
+        private ExtendedList<WeatherType>? _Weathers;
+        public ExtendedList<WeatherType>? Weathers
         {
             get => this._Weathers;
             set => this._Weathers = value;
@@ -681,7 +681,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IClimateInternal>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<WeatherType>? Weathers { get; set; }
+        new ExtendedList<WeatherType>? Weathers { get; set; }
         new String? SunTexture { get; set; }
         new String? SunGlareTexture { get; set; }
         new Model? Model { get; set; }

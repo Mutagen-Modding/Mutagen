@@ -48,8 +48,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<PerkCondition> _Conditions = new ExtendedList<PerkCondition>();
-        public IExtendedList<PerkCondition> Conditions
+        private ExtendedList<PerkCondition> _Conditions = new ExtendedList<PerkCondition>();
+        public ExtendedList<PerkCondition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -580,7 +580,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Byte Rank { get; set; }
         new Byte Priority { get; set; }
-        new IExtendedList<PerkCondition> Conditions { get; }
+        new ExtendedList<PerkCondition> Conditions { get; }
         new APerkEffect.PRKEDataType PRKEDataTypeState { get; set; }
     }
 

@@ -65,8 +65,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Colors
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<WeatherColors>? _Colors;
-        public IExtendedList<WeatherColors>? Colors
+        private ExtendedList<WeatherColors>? _Colors;
+        public ExtendedList<WeatherColors>? Colors
         {
             get => this._Colors;
             set => this._Colors = value;
@@ -112,8 +112,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<WeatherSound> _Sounds = new ExtendedList<WeatherSound>();
-        public IExtendedList<WeatherSound> Sounds
+        private ExtendedList<WeatherSound> _Sounds = new ExtendedList<WeatherSound>();
+        public ExtendedList<WeatherSound> Sounds
         {
             get => this._Sounds;
             protected set => this._Sounds = value;
@@ -893,11 +893,11 @@ namespace Mutagen.Bethesda.Oblivion
         new String? TextureLowerLayer { get; set; }
         new String? TextureUpperLayer { get; set; }
         new Model? Model { get; set; }
-        new IExtendedList<WeatherColors>? Colors { get; set; }
+        new ExtendedList<WeatherColors>? Colors { get; set; }
         new FogDistance? FogDistance { get; set; }
         new HDRData? HDRData { get; set; }
         new WeatherData? Data { get; set; }
-        new IExtendedList<WeatherSound> Sounds { get; }
+        new ExtendedList<WeatherSound> Sounds { get; }
     }
 
     public partial interface IWeatherInternal :

@@ -51,8 +51,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region SubBlocks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<CellSubBlock> _SubBlocks = new ExtendedList<CellSubBlock>();
-        public IExtendedList<CellSubBlock> SubBlocks
+        private ExtendedList<CellSubBlock> _SubBlocks = new ExtendedList<CellSubBlock>();
+        public ExtendedList<CellSubBlock> SubBlocks
         {
             get => this._SubBlocks;
             protected set => this._SubBlocks = value;
@@ -636,7 +636,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Int32 BlockNumber { get; set; }
         new GroupTypeEnum GroupType { get; set; }
         new Int32 LastModified { get; set; }
-        new IExtendedList<CellSubBlock> SubBlocks { get; }
+        new ExtendedList<CellSubBlock> SubBlocks { get; }
     }
 
     public partial interface ICellBlockGetter :

@@ -117,8 +117,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LinkedReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<LinkedReferences> _LinkedReferences = new ExtendedList<LinkedReferences>();
-        public IExtendedList<LinkedReferences> LinkedReferences
+        private ExtendedList<LinkedReferences> _LinkedReferences = new ExtendedList<LinkedReferences>();
+        public ExtendedList<LinkedReferences> LinkedReferences
         {
             get => this._LinkedReferences;
             protected set => this._LinkedReferences = value;
@@ -162,8 +162,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LocationRefTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<ILocationReferenceTypeGetter>>? _LocationRefTypes;
-        public IExtendedList<IFormLink<ILocationReferenceTypeGetter>>? LocationRefTypes
+        private ExtendedList<IFormLink<ILocationReferenceTypeGetter>>? _LocationRefTypes;
+        public ExtendedList<IFormLink<ILocationReferenceTypeGetter>>? LocationRefTypes
         {
             get => this._LocationRefTypes;
             set => this._LocationRefTypes = value;
@@ -1602,13 +1602,13 @@ namespace Mutagen.Bethesda.Skyrim
         new Int32? Count { get; set; }
         new Single? Radius { get; set; }
         new Single? Health { get; set; }
-        new IExtendedList<LinkedReferences> LinkedReferences { get; }
+        new ExtendedList<LinkedReferences> LinkedReferences { get; }
         new ActivateParents? ActivateParents { get; set; }
         new LinkedReferenceColor? LinkedReferenceColor { get; set; }
         new FormLinkNullable<ILocationGetter> PersistentLocation { get; set; }
         new FormLinkNullable<ILocationRecordGetter> LocationReference { get; set; }
         new Boolean IgnoredBySandbox { get; set; }
-        new IExtendedList<IFormLink<ILocationReferenceTypeGetter>>? LocationRefTypes { get; set; }
+        new ExtendedList<IFormLink<ILocationReferenceTypeGetter>>? LocationRefTypes { get; set; }
         new Single? HeadTrackingWeight { get; set; }
         new FormLinkNullable<IPlacedNpcGetter> Horse { get; set; }
         new Single? FavorCost { get; set; }

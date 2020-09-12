@@ -44,8 +44,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Points
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Int16> _Points = new ExtendedList<Int16>();
-        public IExtendedList<Int16> Points
+        private ExtendedList<Int16> _Points = new ExtendedList<Int16>();
+        public ExtendedList<Int16> Points
         {
             get => this._Points;
             protected set => this._Points = value;
@@ -534,7 +534,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkedFormKeyContainer
     {
         new FormLink<IPlacedGetter> Reference { get; set; }
-        new IExtendedList<Int16> Points { get; }
+        new ExtendedList<Int16> Points { get; }
     }
 
     public partial interface IPointToReferenceMappingGetter :

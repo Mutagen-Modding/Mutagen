@@ -63,8 +63,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
-        public IExtendedList<IFormLink<IKeywordGetter>>? Keywords
+        private ExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
+        public ExtendedList<IFormLink<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -193,8 +193,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region CounterEffects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IMagicEffectGetter>> _CounterEffects = new ExtendedList<IFormLink<IMagicEffectGetter>>();
-        public IExtendedList<IFormLink<IMagicEffectGetter>> CounterEffects
+        private ExtendedList<IFormLink<IMagicEffectGetter>> _CounterEffects = new ExtendedList<IFormLink<IMagicEffectGetter>>();
+        public ExtendedList<IFormLink<IMagicEffectGetter>> CounterEffects
         {
             get => this._CounterEffects;
             protected set => this._CounterEffects = value;
@@ -207,8 +207,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<MagicEffectSound>? _Sounds;
-        public IExtendedList<MagicEffectSound>? Sounds
+        private ExtendedList<MagicEffectSound>? _Sounds;
+        public ExtendedList<MagicEffectSound>? Sounds
         {
             get => this._Sounds;
             set => this._Sounds = value;
@@ -226,8 +226,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public IExtendedList<Condition> Conditions
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -2213,7 +2213,7 @@ namespace Mutagen.Bethesda.Skyrim
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new TranslatedString? Name { get; set; }
         new FormLinkNullable<IStaticGetter> MenuDisplayObject { get; set; }
-        new IExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
+        new ExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
         new MagicEffect.Flag Flags { get; set; }
         new Single BaseCost { get; set; }
         new ActorValue MagicSkill { get; set; }
@@ -2251,10 +2251,10 @@ namespace Mutagen.Bethesda.Skyrim
         new SoundLevel CastingSoundLevel { get; set; }
         new Single ScriptEffectAIScore { get; set; }
         new Single ScriptEffectAIDelayTime { get; set; }
-        new IExtendedList<IFormLink<IMagicEffectGetter>> CounterEffects { get; }
-        new IExtendedList<MagicEffectSound>? Sounds { get; set; }
+        new ExtendedList<IFormLink<IMagicEffectGetter>> CounterEffects { get; }
+        new ExtendedList<MagicEffectSound>? Sounds { get; set; }
         new TranslatedString? Description { get; set; }
-        new IExtendedList<Condition> Conditions { get; }
+        new ExtendedList<Condition> Conditions { get; }
         new MagicEffect.DATADataType DATADataTypeState { get; set; }
     }
 

@@ -53,8 +53,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Stages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<DestructionStage> _Stages = new ExtendedList<DestructionStage>();
-        public IExtendedList<DestructionStage> Stages
+        private ExtendedList<DestructionStage> _Stages = new ExtendedList<DestructionStage>();
+        public ExtendedList<DestructionStage> Stages
         {
             get => this._Stages;
             protected set => this._Stages = value;
@@ -551,7 +551,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new DestructableData? Data { get; set; }
-        new IExtendedList<DestructionStage> Stages { get; }
+        new ExtendedList<DestructionStage> Stages { get; }
     }
 
     public partial interface IDestructibleGetter :

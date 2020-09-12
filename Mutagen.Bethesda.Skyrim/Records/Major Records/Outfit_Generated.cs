@@ -44,8 +44,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IOutfitTargetGetter>>? _Items;
-        public IExtendedList<IFormLink<IOutfitTargetGetter>>? Items
+        private ExtendedList<IFormLink<IOutfitTargetGetter>>? _Items;
+        public ExtendedList<IFormLink<IOutfitTargetGetter>>? Items
         {
             get => this._Items;
             set => this._Items = value;
@@ -523,7 +523,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IOutfitInternal>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<IFormLink<IOutfitTargetGetter>>? Items { get; set; }
+        new ExtendedList<IFormLink<IOutfitTargetGetter>>? Items { get; set; }
     }
 
     public partial interface IOutfitInternal :

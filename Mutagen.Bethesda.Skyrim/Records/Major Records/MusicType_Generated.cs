@@ -63,8 +63,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Tracks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IMusicTrackGetter>>? _Tracks;
-        public IExtendedList<IFormLink<IMusicTrackGetter>>? Tracks
+        private ExtendedList<IFormLink<IMusicTrackGetter>>? _Tracks;
+        public ExtendedList<IFormLink<IMusicTrackGetter>>? Tracks
         {
             get => this._Tracks;
             set => this._Tracks = value;
@@ -636,7 +636,7 @@ namespace Mutagen.Bethesda.Skyrim
         new MusicType.Flag Flags { get; set; }
         new MusicTypeData? Data { get; set; }
         new Single? FadeDuration { get; set; }
-        new IExtendedList<IFormLink<IMusicTrackGetter>>? Tracks { get; set; }
+        new ExtendedList<IFormLink<IMusicTrackGetter>>? Tracks { get; set; }
     }
 
     public partial interface IMusicTypeInternal :

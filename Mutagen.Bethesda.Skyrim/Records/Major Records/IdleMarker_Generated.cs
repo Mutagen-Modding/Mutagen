@@ -59,8 +59,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Animations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IIdleAnimationGetter>>? _Animations;
-        public IExtendedList<IFormLink<IIdleAnimationGetter>>? Animations
+        private ExtendedList<IFormLink<IIdleAnimationGetter>>? _Animations;
+        public ExtendedList<IFormLink<IIdleAnimationGetter>>? Animations
         {
             get => this._Animations;
             set => this._Animations = value;
@@ -685,7 +685,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ObjectBounds ObjectBounds { get; set; }
         new IdleMarker.Flag? Flags { get; set; }
         new Single? IdleTimer { get; set; }
-        new IExtendedList<IFormLink<IIdleAnimationGetter>>? Animations { get; set; }
+        new ExtendedList<IFormLink<IIdleAnimationGetter>>? Animations { get; set; }
         new Model? Model { get; set; }
         #region Mutagen
         new IdleMarker.MajorFlag MajorFlags { get; set; }

@@ -57,8 +57,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<WorldspaceSubBlock> _Items = new ExtendedList<WorldspaceSubBlock>();
-        public IExtendedList<WorldspaceSubBlock> Items
+        private ExtendedList<WorldspaceSubBlock> _Items = new ExtendedList<WorldspaceSubBlock>();
+        public ExtendedList<WorldspaceSubBlock> Items
         {
             get => this._Items;
             protected set => this._Items = value;
@@ -700,7 +700,7 @@ namespace Mutagen.Bethesda.Skyrim
         new GroupTypeEnum GroupType { get; set; }
         new Int32 LastModified { get; set; }
         new Int32 Unknown { get; set; }
-        new IExtendedList<WorldspaceSubBlock> Items { get; }
+        new ExtendedList<WorldspaceSubBlock> Items { get; }
     }
 
     public partial interface IWorldspaceBlockGetter :

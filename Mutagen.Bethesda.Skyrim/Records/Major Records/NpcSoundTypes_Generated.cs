@@ -43,8 +43,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Types
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<NpcSoundType> _Types = new ExtendedList<NpcSoundType>();
-        public IExtendedList<NpcSoundType> Types
+        private ExtendedList<NpcSoundType> _Types = new ExtendedList<NpcSoundType>();
+        public ExtendedList<NpcSoundType> Types
         {
             get => this._Types;
             protected set => this._Types = value;
@@ -487,7 +487,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<INpcSoundTypes>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<NpcSoundType> Types { get; }
+        new ExtendedList<NpcSoundType> Types { get; }
     }
 
     public partial interface INpcSoundTypesGetter :

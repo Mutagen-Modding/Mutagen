@@ -95,8 +95,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MasterReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<MasterReference> _MasterReferences = new ExtendedList<MasterReference>();
-        public IExtendedList<MasterReference> MasterReferences
+        private ExtendedList<MasterReference> _MasterReferences = new ExtendedList<MasterReference>();
+        public ExtendedList<MasterReference> MasterReferences
         {
             get => this._MasterReferences;
             protected set => this._MasterReferences = value;
@@ -109,8 +109,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region OverriddenForms
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<ISkyrimMajorRecordGetter>>? _OverriddenForms;
-        public IExtendedList<IFormLink<ISkyrimMajorRecordGetter>>? OverriddenForms
+        private ExtendedList<IFormLink<ISkyrimMajorRecordGetter>>? _OverriddenForms;
+        public ExtendedList<IFormLink<ISkyrimMajorRecordGetter>>? OverriddenForms
         {
             get => this._OverriddenForms;
             set => this._OverriddenForms = value;
@@ -1036,8 +1036,8 @@ namespace Mutagen.Bethesda.Skyrim
         new MemorySlice<Byte>? Deleted { get; set; }
         new String? Author { get; set; }
         new String? Description { get; set; }
-        new IExtendedList<MasterReference> MasterReferences { get; }
-        new IExtendedList<IFormLink<ISkyrimMajorRecordGetter>>? OverriddenForms { get; set; }
+        new ExtendedList<MasterReference> MasterReferences { get; }
+        new ExtendedList<IFormLink<ISkyrimMajorRecordGetter>>? OverriddenForms { get; set; }
         new Int32? INTV { get; set; }
         new Int32? INCC { get; set; }
     }

@@ -47,8 +47,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Triangles
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<P3Int16> _Triangles = new ExtendedList<P3Int16>();
-        public IExtendedList<P3Int16> Triangles
+        private ExtendedList<P3Int16> _Triangles = new ExtendedList<P3Int16>();
+        public ExtendedList<P3Int16> Triangles
         {
             get => this._Triangles;
             protected set => this._Triangles = value;
@@ -61,8 +61,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Vertices
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<P3Float> _Vertices = new ExtendedList<P3Float>();
-        public IExtendedList<P3Float> Vertices
+        private ExtendedList<P3Float> _Vertices = new ExtendedList<P3Float>();
+        public ExtendedList<P3Float> Vertices
         {
             get => this._Vertices;
             protected set => this._Vertices = value;
@@ -670,8 +670,8 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new P3Float Min { get; set; }
         new P3Float Max { get; set; }
-        new IExtendedList<P3Int16> Triangles { get; }
-        new IExtendedList<P3Float> Vertices { get; }
+        new ExtendedList<P3Int16> Triangles { get; }
+        new ExtendedList<P3Float> Vertices { get; }
     }
 
     public partial interface IIslandDataGetter :

@@ -43,8 +43,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<String> _Data = new ExtendedList<String>();
-        public IExtendedList<String> Data
+        private ExtendedList<String> _Data = new ExtendedList<String>();
+        public ExtendedList<String> Data
         {
             get => this._Data;
             protected set => this._Data = value;
@@ -486,7 +486,7 @@ namespace Mutagen.Bethesda.Skyrim
         IScriptProperty,
         ILoquiObjectSetter<IScriptStringListProperty>
     {
-        new IExtendedList<String> Data { get; }
+        new ExtendedList<String> Data { get; }
     }
 
     public partial interface IScriptStringListPropertyGetter :

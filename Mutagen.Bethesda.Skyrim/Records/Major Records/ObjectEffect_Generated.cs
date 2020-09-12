@@ -81,8 +81,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Effect> _Effects = new ExtendedList<Effect>();
-        public IExtendedList<Effect> Effects
+        private ExtendedList<Effect> _Effects = new ExtendedList<Effect>();
+        public ExtendedList<Effect> Effects
         {
             get => this._Effects;
             protected set => this._Effects = value;
@@ -927,7 +927,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single ChargeTime { get; set; }
         new FormLink<IObjectEffectGetter> BaseEnchantment { get; set; }
         new FormLink<IFormListGetter> WornRestrictions { get; set; }
-        new IExtendedList<Effect> Effects { get; }
+        new ExtendedList<Effect> Effects { get; }
         new ObjectEffect.ENITDataType ENITDataTypeState { get; set; }
     }
 

@@ -47,8 +47,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Animations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IIdleAnimationGetter>> _Animations = new ExtendedList<IFormLink<IIdleAnimationGetter>>();
-        public IExtendedList<IFormLink<IIdleAnimationGetter>> Animations
+        private ExtendedList<IFormLink<IIdleAnimationGetter>> _Animations = new ExtendedList<IFormLink<IIdleAnimationGetter>>();
+        public ExtendedList<IFormLink<IIdleAnimationGetter>> Animations
         {
             get => this._Animations;
             protected set => this._Animations = value;
@@ -566,7 +566,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new PackageIdles.Types Type { get; set; }
         new Single TimerSetting { get; set; }
-        new IExtendedList<IFormLink<IIdleAnimationGetter>> Animations { get; }
+        new ExtendedList<IFormLink<IIdleAnimationGetter>> Animations { get; }
     }
 
     public partial interface IPackageIdlesGetter :

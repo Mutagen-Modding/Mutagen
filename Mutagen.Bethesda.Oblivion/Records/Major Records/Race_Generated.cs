@@ -54,8 +54,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<ISpellGetter>> _Spells = new ExtendedList<IFormLink<ISpellGetter>>();
-        public IExtendedList<IFormLink<ISpellGetter>> Spells
+        private ExtendedList<IFormLink<ISpellGetter>> _Spells = new ExtendedList<IFormLink<ISpellGetter>>();
+        public ExtendedList<IFormLink<ISpellGetter>> Spells
         {
             get => this._Spells;
             protected set => this._Spells = value;
@@ -68,8 +68,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Relations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<RaceRelation> _Relations = new ExtendedList<RaceRelation>();
-        public IExtendedList<RaceRelation> Relations
+        private ExtendedList<RaceRelation> _Relations = new ExtendedList<RaceRelation>();
+        public ExtendedList<RaceRelation> Relations
         {
             get => this._Relations;
             protected set => this._Relations = value;
@@ -120,8 +120,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region FaceData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<FacePart> _FaceData = new ExtendedList<FacePart>();
-        public IExtendedList<FacePart> FaceData
+        private ExtendedList<FacePart> _FaceData = new ExtendedList<FacePart>();
+        public ExtendedList<FacePart> FaceData
         {
             get => this._FaceData;
             protected set => this._FaceData = value;
@@ -138,8 +138,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Hairs
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IHairGetter>>? _Hairs;
-        public IExtendedList<IFormLink<IHairGetter>>? Hairs
+        private ExtendedList<IFormLink<IHairGetter>>? _Hairs;
+        public ExtendedList<IFormLink<IHairGetter>>? Hairs
         {
             get => this._Hairs;
             set => this._Hairs = value;
@@ -152,8 +152,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Eyes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IEyeGetter>>? _Eyes;
-        public IExtendedList<IFormLink<IEyeGetter>>? Eyes
+        private ExtendedList<IFormLink<IEyeGetter>>? _Eyes;
+        public ExtendedList<IFormLink<IEyeGetter>>? Eyes
         {
             get => this._Eyes;
             set => this._Eyes = value;
@@ -1444,8 +1444,8 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new String? Name { get; set; }
         new String? Description { get; set; }
-        new IExtendedList<IFormLink<ISpellGetter>> Spells { get; }
-        new IExtendedList<RaceRelation> Relations { get; }
+        new ExtendedList<IFormLink<ISpellGetter>> Spells { get; }
+        new ExtendedList<RaceRelation> Relations { get; }
         new RaceData? Data { get; set; }
         new GenderedItem<IFormLink<IRaceGetter>>? Voices { get; set; }
         new GenderedItem<IFormLink<IHairGetter>>? DefaultHair { get; set; }
@@ -1453,10 +1453,10 @@ namespace Mutagen.Bethesda.Oblivion
         new Int32? FaceGenMainClamp { get; set; }
         new Int32? FaceGenFaceClamp { get; set; }
         new GenderedItem<RaceStats>? RaceStats { get; set; }
-        new IExtendedList<FacePart> FaceData { get; }
+        new ExtendedList<FacePart> FaceData { get; }
         new GenderedItem<BodyData?>? BodyData { get; set; }
-        new IExtendedList<IFormLink<IHairGetter>>? Hairs { get; set; }
-        new IExtendedList<IFormLink<IEyeGetter>>? Eyes { get; set; }
+        new ExtendedList<IFormLink<IHairGetter>>? Hairs { get; set; }
+        new ExtendedList<IFormLink<IEyeGetter>>? Eyes { get; set; }
         new FaceGenData? FaceGenData { get; set; }
         new Int16? SNAM { get; set; }
     }

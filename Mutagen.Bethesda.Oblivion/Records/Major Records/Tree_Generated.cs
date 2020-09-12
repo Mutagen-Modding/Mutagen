@@ -60,8 +60,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region SpeedTreeSeeds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<UInt32>? _SpeedTreeSeeds;
-        public IExtendedList<UInt32>? SpeedTreeSeeds
+        private ExtendedList<UInt32>? _SpeedTreeSeeds;
+        public ExtendedList<UInt32>? SpeedTreeSeeds
         {
             get => this._SpeedTreeSeeds;
             set => this._SpeedTreeSeeds = value;
@@ -687,7 +687,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new Model? Model { get; set; }
         new String? Icon { get; set; }
-        new IExtendedList<UInt32>? SpeedTreeSeeds { get; set; }
+        new ExtendedList<UInt32>? SpeedTreeSeeds { get; set; }
         new TreeData? Data { get; set; }
         new Dimensions? BillboardDimensions { get; set; }
     }

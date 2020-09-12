@@ -43,8 +43,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region AlternateTextures
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<AlternateTexture>? _AlternateTextures;
-        public IExtendedList<AlternateTexture>? AlternateTextures
+        private ExtendedList<AlternateTexture>? _AlternateTextures;
+        public ExtendedList<AlternateTexture>? AlternateTextures
         {
             get => this._AlternateTextures;
             set => this._AlternateTextures = value;
@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IModel>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<AlternateTexture>? AlternateTextures { get; set; }
+        new ExtendedList<AlternateTexture>? AlternateTextures { get; set; }
     }
 
     public partial interface IModelGetter :

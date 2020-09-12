@@ -59,8 +59,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Grasses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IGrassGetter>> _Grasses = new ExtendedList<IFormLink<IGrassGetter>>();
-        public IExtendedList<IFormLink<IGrassGetter>> Grasses
+        private ExtendedList<IFormLink<IGrassGetter>> _Grasses = new ExtendedList<IFormLink<IGrassGetter>>();
+        public ExtendedList<IFormLink<IGrassGetter>> Grasses
         {
             get => this._Grasses;
             protected set => this._Grasses = value;
@@ -752,7 +752,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Byte HavokFriction { get; set; }
         new Byte HavokRestitution { get; set; }
         new Byte TextureSpecularExponent { get; set; }
-        new IExtendedList<IFormLink<IGrassGetter>> Grasses { get; }
+        new ExtendedList<IFormLink<IGrassGetter>> Grasses { get; }
         new LandscapeTexture.Flag? Flags { get; set; }
         new LandscapeTexture.HNAMDataType HNAMDataTypeState { get; set; }
     }

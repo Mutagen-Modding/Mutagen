@@ -70,8 +70,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Topics
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<ATopicReference> _Topics = new ExtendedList<ATopicReference>();
-        public IExtendedList<ATopicReference> Topics
+        private ExtendedList<ATopicReference> _Topics = new ExtendedList<ATopicReference>();
+        public ExtendedList<ATopicReference> Topics
         {
             get => this._Topics;
             protected set => this._Topics = value;
@@ -649,7 +649,7 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLink<IIdleAnimationGetter> Idle { get; set; }
         new MemorySlice<Byte>? SCHR { get; set; }
         new MemorySlice<Byte>? SCTX { get; set; }
-        new IExtendedList<ATopicReference> Topics { get; }
+        new ExtendedList<ATopicReference> Topics { get; }
     }
 
     public partial interface IPatrolGetter :

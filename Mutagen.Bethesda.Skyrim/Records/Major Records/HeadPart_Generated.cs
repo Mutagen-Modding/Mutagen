@@ -68,8 +68,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ExtraParts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IHeadPartGetter>> _ExtraParts = new ExtendedList<IFormLink<IHeadPartGetter>>();
-        public IExtendedList<IFormLink<IHeadPartGetter>> ExtraParts
+        private ExtendedList<IFormLink<IHeadPartGetter>> _ExtraParts = new ExtendedList<IFormLink<IHeadPartGetter>>();
+        public ExtendedList<IFormLink<IHeadPartGetter>> ExtraParts
         {
             get => this._ExtraParts;
             protected set => this._ExtraParts = value;
@@ -82,8 +82,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Parts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Part> _Parts = new ExtendedList<Part>();
-        public IExtendedList<Part> Parts
+        private ExtendedList<Part> _Parts = new ExtendedList<Part>();
+        public ExtendedList<Part> Parts
         {
             get => this._Parts;
             protected set => this._Parts = value;
@@ -887,8 +887,8 @@ namespace Mutagen.Bethesda.Skyrim
         new Model? Model { get; set; }
         new HeadPart.Flag Flags { get; set; }
         new HeadPart.TypeEnum? Type { get; set; }
-        new IExtendedList<IFormLink<IHeadPartGetter>> ExtraParts { get; }
-        new IExtendedList<Part> Parts { get; }
+        new ExtendedList<IFormLink<IHeadPartGetter>> ExtraParts { get; }
+        new ExtendedList<Part> Parts { get; }
         new FormLinkNullable<ITextureSetGetter> TextureSet { get; set; }
         new FormLinkNullable<IColorRecordGetter> Color { get; set; }
         new FormLinkNullable<IFormListGetter> ValidRaces { get; set; }

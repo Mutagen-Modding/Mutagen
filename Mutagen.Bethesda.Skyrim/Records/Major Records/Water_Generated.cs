@@ -50,8 +50,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region UnusedNoisemaps
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<String> _UnusedNoisemaps = new ExtendedList<String>();
-        public IExtendedList<String> UnusedNoisemaps
+        private ExtendedList<String> _UnusedNoisemaps = new ExtendedList<String>();
+        public ExtendedList<String> UnusedNoisemaps
         {
             get => this._UnusedNoisemaps;
             protected set => this._UnusedNoisemaps = value;
@@ -2665,7 +2665,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new TranslatedString? Name { get; set; }
-        new IExtendedList<String> UnusedNoisemaps { get; }
+        new ExtendedList<String> UnusedNoisemaps { get; }
         new Byte Opacity { get; set; }
         new Water.Flag? Flags { get; set; }
         new MemorySlice<Byte>? MNAM { get; set; }

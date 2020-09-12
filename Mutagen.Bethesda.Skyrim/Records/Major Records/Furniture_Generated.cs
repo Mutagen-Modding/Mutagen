@@ -87,8 +87,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
-        public IExtendedList<IFormLink<IKeywordGetter>>? Keywords
+        private ExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
+        public ExtendedList<IFormLink<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -134,8 +134,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Markers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<FurnitureMarker>? _Markers;
-        public IExtendedList<FurnitureMarker>? Markers
+        private ExtendedList<FurnitureMarker>? _Markers;
+        public ExtendedList<FurnitureMarker>? Markers
         {
             get => this._Markers;
             set => this._Markers = value;
@@ -1078,13 +1078,13 @@ namespace Mutagen.Bethesda.Skyrim
         new TranslatedString? Name { get; set; }
         new Model? Model { get; set; }
         new Destructible? Destructible { get; set; }
-        new IExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
+        new ExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
         new MemorySlice<Byte>? PNAM { get; set; }
         new Furniture.Flag? Flags { get; set; }
         new FormLinkNullable<IKeywordGetter> InteractionKeyword { get; set; }
         new WorkbenchData? WorkbenchData { get; set; }
         new FormLinkNullable<ISpellGetter> AssociatedSpell { get; set; }
-        new IExtendedList<FurnitureMarker>? Markers { get; set; }
+        new ExtendedList<FurnitureMarker>? Markers { get; set; }
         new String? ModelFilename { get; set; }
         #region Mutagen
         new Furniture.MajorFlag MajorFlags { get; set; }

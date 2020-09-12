@@ -65,8 +65,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region PotentialGrass
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IGrassGetter>> _PotentialGrass = new ExtendedList<IFormLink<IGrassGetter>>();
-        public IExtendedList<IFormLink<IGrassGetter>> PotentialGrass
+        private ExtendedList<IFormLink<IGrassGetter>> _PotentialGrass = new ExtendedList<IFormLink<IGrassGetter>>();
+        public ExtendedList<IFormLink<IGrassGetter>> PotentialGrass
         {
             get => this._PotentialGrass;
             protected set => this._PotentialGrass = value;
@@ -636,7 +636,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Icon { get; set; }
         new HavokData? Havok { get; set; }
         new Byte? TextureSpecularExponent { get; set; }
-        new IExtendedList<IFormLink<IGrassGetter>> PotentialGrass { get; }
+        new ExtendedList<IFormLink<IGrassGetter>> PotentialGrass { get; }
     }
 
     public partial interface ILandTextureInternal :

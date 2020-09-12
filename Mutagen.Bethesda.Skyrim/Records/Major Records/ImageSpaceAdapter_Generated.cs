@@ -59,8 +59,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region BlurRadius
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _BlurRadius;
-        public IExtendedList<KeyFrame>? BlurRadius
+        private ExtendedList<KeyFrame>? _BlurRadius;
+        public ExtendedList<KeyFrame>? BlurRadius
         {
             get => this._BlurRadius;
             set => this._BlurRadius = value;
@@ -73,8 +73,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region DoubleVisionStrength
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _DoubleVisionStrength;
-        public IExtendedList<KeyFrame>? DoubleVisionStrength
+        private ExtendedList<KeyFrame>? _DoubleVisionStrength;
+        public ExtendedList<KeyFrame>? DoubleVisionStrength
         {
             get => this._DoubleVisionStrength;
             set => this._DoubleVisionStrength = value;
@@ -87,8 +87,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region TintColor
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<ColorFrame>? _TintColor;
-        public IExtendedList<ColorFrame>? TintColor
+        private ExtendedList<ColorFrame>? _TintColor;
+        public ExtendedList<ColorFrame>? TintColor
         {
             get => this._TintColor;
             set => this._TintColor = value;
@@ -101,8 +101,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region FadeColor
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<ColorFrame>? _FadeColor;
-        public IExtendedList<ColorFrame>? FadeColor
+        private ExtendedList<ColorFrame>? _FadeColor;
+        public ExtendedList<ColorFrame>? FadeColor
         {
             get => this._FadeColor;
             set => this._FadeColor = value;
@@ -115,8 +115,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RadialBlurStrength
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _RadialBlurStrength;
-        public IExtendedList<KeyFrame>? RadialBlurStrength
+        private ExtendedList<KeyFrame>? _RadialBlurStrength;
+        public ExtendedList<KeyFrame>? RadialBlurStrength
         {
             get => this._RadialBlurStrength;
             set => this._RadialBlurStrength = value;
@@ -129,8 +129,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RadialBlurRampUp
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _RadialBlurRampUp;
-        public IExtendedList<KeyFrame>? RadialBlurRampUp
+        private ExtendedList<KeyFrame>? _RadialBlurRampUp;
+        public ExtendedList<KeyFrame>? RadialBlurRampUp
         {
             get => this._RadialBlurRampUp;
             set => this._RadialBlurRampUp = value;
@@ -143,8 +143,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RadialBlurStart
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _RadialBlurStart;
-        public IExtendedList<KeyFrame>? RadialBlurStart
+        private ExtendedList<KeyFrame>? _RadialBlurStart;
+        public ExtendedList<KeyFrame>? RadialBlurStart
         {
             get => this._RadialBlurStart;
             set => this._RadialBlurStart = value;
@@ -157,8 +157,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RadialBlurRampDown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _RadialBlurRampDown;
-        public IExtendedList<KeyFrame>? RadialBlurRampDown
+        private ExtendedList<KeyFrame>? _RadialBlurRampDown;
+        public ExtendedList<KeyFrame>? RadialBlurRampDown
         {
             get => this._RadialBlurRampDown;
             set => this._RadialBlurRampDown = value;
@@ -171,8 +171,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RadialBlurDownStart
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _RadialBlurDownStart;
-        public IExtendedList<KeyFrame>? RadialBlurDownStart
+        private ExtendedList<KeyFrame>? _RadialBlurDownStart;
+        public ExtendedList<KeyFrame>? RadialBlurDownStart
         {
             get => this._RadialBlurDownStart;
             set => this._RadialBlurDownStart = value;
@@ -185,8 +185,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region DepthOfFieldStrength
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _DepthOfFieldStrength;
-        public IExtendedList<KeyFrame>? DepthOfFieldStrength
+        private ExtendedList<KeyFrame>? _DepthOfFieldStrength;
+        public ExtendedList<KeyFrame>? DepthOfFieldStrength
         {
             get => this._DepthOfFieldStrength;
             set => this._DepthOfFieldStrength = value;
@@ -199,8 +199,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region DepthOfFieldDistance
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _DepthOfFieldDistance;
-        public IExtendedList<KeyFrame>? DepthOfFieldDistance
+        private ExtendedList<KeyFrame>? _DepthOfFieldDistance;
+        public ExtendedList<KeyFrame>? DepthOfFieldDistance
         {
             get => this._DepthOfFieldDistance;
             set => this._DepthOfFieldDistance = value;
@@ -213,8 +213,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region DepthOfFieldRange
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _DepthOfFieldRange;
-        public IExtendedList<KeyFrame>? DepthOfFieldRange
+        private ExtendedList<KeyFrame>? _DepthOfFieldRange;
+        public ExtendedList<KeyFrame>? DepthOfFieldRange
         {
             get => this._DepthOfFieldRange;
             set => this._DepthOfFieldRange = value;
@@ -227,8 +227,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MotionBlurStrength
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _MotionBlurStrength;
-        public IExtendedList<KeyFrame>? MotionBlurStrength
+        private ExtendedList<KeyFrame>? _MotionBlurStrength;
+        public ExtendedList<KeyFrame>? MotionBlurStrength
         {
             get => this._MotionBlurStrength;
             set => this._MotionBlurStrength = value;
@@ -241,8 +241,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HdrEyeAdaptSpeedMult
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _HdrEyeAdaptSpeedMult;
-        public IExtendedList<KeyFrame>? HdrEyeAdaptSpeedMult
+        private ExtendedList<KeyFrame>? _HdrEyeAdaptSpeedMult;
+        public ExtendedList<KeyFrame>? HdrEyeAdaptSpeedMult
         {
             get => this._HdrEyeAdaptSpeedMult;
             set => this._HdrEyeAdaptSpeedMult = value;
@@ -255,8 +255,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HdrEyeAdaptSpeedAdd
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _HdrEyeAdaptSpeedAdd;
-        public IExtendedList<KeyFrame>? HdrEyeAdaptSpeedAdd
+        private ExtendedList<KeyFrame>? _HdrEyeAdaptSpeedAdd;
+        public ExtendedList<KeyFrame>? HdrEyeAdaptSpeedAdd
         {
             get => this._HdrEyeAdaptSpeedAdd;
             set => this._HdrEyeAdaptSpeedAdd = value;
@@ -269,8 +269,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HdrBloomBlurRadiusMult
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _HdrBloomBlurRadiusMult;
-        public IExtendedList<KeyFrame>? HdrBloomBlurRadiusMult
+        private ExtendedList<KeyFrame>? _HdrBloomBlurRadiusMult;
+        public ExtendedList<KeyFrame>? HdrBloomBlurRadiusMult
         {
             get => this._HdrBloomBlurRadiusMult;
             set => this._HdrBloomBlurRadiusMult = value;
@@ -283,8 +283,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HdrBloomBlurRadiusAdd
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _HdrBloomBlurRadiusAdd;
-        public IExtendedList<KeyFrame>? HdrBloomBlurRadiusAdd
+        private ExtendedList<KeyFrame>? _HdrBloomBlurRadiusAdd;
+        public ExtendedList<KeyFrame>? HdrBloomBlurRadiusAdd
         {
             get => this._HdrBloomBlurRadiusAdd;
             set => this._HdrBloomBlurRadiusAdd = value;
@@ -297,8 +297,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HdrBloomThresholdMult
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _HdrBloomThresholdMult;
-        public IExtendedList<KeyFrame>? HdrBloomThresholdMult
+        private ExtendedList<KeyFrame>? _HdrBloomThresholdMult;
+        public ExtendedList<KeyFrame>? HdrBloomThresholdMult
         {
             get => this._HdrBloomThresholdMult;
             set => this._HdrBloomThresholdMult = value;
@@ -311,8 +311,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HdrBloomThresholdAdd
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _HdrBloomThresholdAdd;
-        public IExtendedList<KeyFrame>? HdrBloomThresholdAdd
+        private ExtendedList<KeyFrame>? _HdrBloomThresholdAdd;
+        public ExtendedList<KeyFrame>? HdrBloomThresholdAdd
         {
             get => this._HdrBloomThresholdAdd;
             set => this._HdrBloomThresholdAdd = value;
@@ -325,8 +325,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HdrBloomScaleMult
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _HdrBloomScaleMult;
-        public IExtendedList<KeyFrame>? HdrBloomScaleMult
+        private ExtendedList<KeyFrame>? _HdrBloomScaleMult;
+        public ExtendedList<KeyFrame>? HdrBloomScaleMult
         {
             get => this._HdrBloomScaleMult;
             set => this._HdrBloomScaleMult = value;
@@ -339,8 +339,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HdrBloomScaleAdd
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _HdrBloomScaleAdd;
-        public IExtendedList<KeyFrame>? HdrBloomScaleAdd
+        private ExtendedList<KeyFrame>? _HdrBloomScaleAdd;
+        public ExtendedList<KeyFrame>? HdrBloomScaleAdd
         {
             get => this._HdrBloomScaleAdd;
             set => this._HdrBloomScaleAdd = value;
@@ -353,8 +353,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HdrTargetLumMinMult
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _HdrTargetLumMinMult;
-        public IExtendedList<KeyFrame>? HdrTargetLumMinMult
+        private ExtendedList<KeyFrame>? _HdrTargetLumMinMult;
+        public ExtendedList<KeyFrame>? HdrTargetLumMinMult
         {
             get => this._HdrTargetLumMinMult;
             set => this._HdrTargetLumMinMult = value;
@@ -367,8 +367,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HdrTargetLumMinAdd
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _HdrTargetLumMinAdd;
-        public IExtendedList<KeyFrame>? HdrTargetLumMinAdd
+        private ExtendedList<KeyFrame>? _HdrTargetLumMinAdd;
+        public ExtendedList<KeyFrame>? HdrTargetLumMinAdd
         {
             get => this._HdrTargetLumMinAdd;
             set => this._HdrTargetLumMinAdd = value;
@@ -381,8 +381,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HdrTargetLumMaxMult
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _HdrTargetLumMaxMult;
-        public IExtendedList<KeyFrame>? HdrTargetLumMaxMult
+        private ExtendedList<KeyFrame>? _HdrTargetLumMaxMult;
+        public ExtendedList<KeyFrame>? HdrTargetLumMaxMult
         {
             get => this._HdrTargetLumMaxMult;
             set => this._HdrTargetLumMaxMult = value;
@@ -395,8 +395,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HdrTargetLumMaxAdd
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _HdrTargetLumMaxAdd;
-        public IExtendedList<KeyFrame>? HdrTargetLumMaxAdd
+        private ExtendedList<KeyFrame>? _HdrTargetLumMaxAdd;
+        public ExtendedList<KeyFrame>? HdrTargetLumMaxAdd
         {
             get => this._HdrTargetLumMaxAdd;
             set => this._HdrTargetLumMaxAdd = value;
@@ -409,8 +409,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HdrSunlightScaleMult
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _HdrSunlightScaleMult;
-        public IExtendedList<KeyFrame>? HdrSunlightScaleMult
+        private ExtendedList<KeyFrame>? _HdrSunlightScaleMult;
+        public ExtendedList<KeyFrame>? HdrSunlightScaleMult
         {
             get => this._HdrSunlightScaleMult;
             set => this._HdrSunlightScaleMult = value;
@@ -423,8 +423,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HdrSunlightScaleAdd
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _HdrSunlightScaleAdd;
-        public IExtendedList<KeyFrame>? HdrSunlightScaleAdd
+        private ExtendedList<KeyFrame>? _HdrSunlightScaleAdd;
+        public ExtendedList<KeyFrame>? HdrSunlightScaleAdd
         {
             get => this._HdrSunlightScaleAdd;
             set => this._HdrSunlightScaleAdd = value;
@@ -437,8 +437,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HdrSkyScaleMult
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _HdrSkyScaleMult;
-        public IExtendedList<KeyFrame>? HdrSkyScaleMult
+        private ExtendedList<KeyFrame>? _HdrSkyScaleMult;
+        public ExtendedList<KeyFrame>? HdrSkyScaleMult
         {
             get => this._HdrSkyScaleMult;
             set => this._HdrSkyScaleMult = value;
@@ -451,8 +451,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HdrSkyScaleAdd
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _HdrSkyScaleAdd;
-        public IExtendedList<KeyFrame>? HdrSkyScaleAdd
+        private ExtendedList<KeyFrame>? _HdrSkyScaleAdd;
+        public ExtendedList<KeyFrame>? HdrSkyScaleAdd
         {
             get => this._HdrSkyScaleAdd;
             set => this._HdrSkyScaleAdd = value;
@@ -465,8 +465,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown08
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _Unknown08;
-        public IExtendedList<KeyFrame>? Unknown08
+        private ExtendedList<KeyFrame>? _Unknown08;
+        public ExtendedList<KeyFrame>? Unknown08
         {
             get => this._Unknown08;
             set => this._Unknown08 = value;
@@ -479,8 +479,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown48
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _Unknown48;
-        public IExtendedList<KeyFrame>? Unknown48
+        private ExtendedList<KeyFrame>? _Unknown48;
+        public ExtendedList<KeyFrame>? Unknown48
         {
             get => this._Unknown48;
             set => this._Unknown48 = value;
@@ -493,8 +493,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown09
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _Unknown09;
-        public IExtendedList<KeyFrame>? Unknown09
+        private ExtendedList<KeyFrame>? _Unknown09;
+        public ExtendedList<KeyFrame>? Unknown09
         {
             get => this._Unknown09;
             set => this._Unknown09 = value;
@@ -507,8 +507,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown49
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _Unknown49;
-        public IExtendedList<KeyFrame>? Unknown49
+        private ExtendedList<KeyFrame>? _Unknown49;
+        public ExtendedList<KeyFrame>? Unknown49
         {
             get => this._Unknown49;
             set => this._Unknown49 = value;
@@ -521,8 +521,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown0A
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _Unknown0A;
-        public IExtendedList<KeyFrame>? Unknown0A
+        private ExtendedList<KeyFrame>? _Unknown0A;
+        public ExtendedList<KeyFrame>? Unknown0A
         {
             get => this._Unknown0A;
             set => this._Unknown0A = value;
@@ -535,8 +535,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown4A
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _Unknown4A;
-        public IExtendedList<KeyFrame>? Unknown4A
+        private ExtendedList<KeyFrame>? _Unknown4A;
+        public ExtendedList<KeyFrame>? Unknown4A
         {
             get => this._Unknown4A;
             set => this._Unknown4A = value;
@@ -549,8 +549,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown0B
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _Unknown0B;
-        public IExtendedList<KeyFrame>? Unknown0B
+        private ExtendedList<KeyFrame>? _Unknown0B;
+        public ExtendedList<KeyFrame>? Unknown0B
         {
             get => this._Unknown0B;
             set => this._Unknown0B = value;
@@ -563,8 +563,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown4B
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _Unknown4B;
-        public IExtendedList<KeyFrame>? Unknown4B
+        private ExtendedList<KeyFrame>? _Unknown4B;
+        public ExtendedList<KeyFrame>? Unknown4B
         {
             get => this._Unknown4B;
             set => this._Unknown4B = value;
@@ -577,8 +577,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown0C
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _Unknown0C;
-        public IExtendedList<KeyFrame>? Unknown0C
+        private ExtendedList<KeyFrame>? _Unknown0C;
+        public ExtendedList<KeyFrame>? Unknown0C
         {
             get => this._Unknown0C;
             set => this._Unknown0C = value;
@@ -591,8 +591,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown4C
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _Unknown4C;
-        public IExtendedList<KeyFrame>? Unknown4C
+        private ExtendedList<KeyFrame>? _Unknown4C;
+        public ExtendedList<KeyFrame>? Unknown4C
         {
             get => this._Unknown4C;
             set => this._Unknown4C = value;
@@ -605,8 +605,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown0D
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _Unknown0D;
-        public IExtendedList<KeyFrame>? Unknown0D
+        private ExtendedList<KeyFrame>? _Unknown0D;
+        public ExtendedList<KeyFrame>? Unknown0D
         {
             get => this._Unknown0D;
             set => this._Unknown0D = value;
@@ -619,8 +619,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown4D
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _Unknown4D;
-        public IExtendedList<KeyFrame>? Unknown4D
+        private ExtendedList<KeyFrame>? _Unknown4D;
+        public ExtendedList<KeyFrame>? Unknown4D
         {
             get => this._Unknown4D;
             set => this._Unknown4D = value;
@@ -633,8 +633,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown0E
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _Unknown0E;
-        public IExtendedList<KeyFrame>? Unknown0E
+        private ExtendedList<KeyFrame>? _Unknown0E;
+        public ExtendedList<KeyFrame>? Unknown0E
         {
             get => this._Unknown0E;
             set => this._Unknown0E = value;
@@ -647,8 +647,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown4E
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _Unknown4E;
-        public IExtendedList<KeyFrame>? Unknown4E
+        private ExtendedList<KeyFrame>? _Unknown4E;
+        public ExtendedList<KeyFrame>? Unknown4E
         {
             get => this._Unknown4E;
             set => this._Unknown4E = value;
@@ -661,8 +661,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown0F
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _Unknown0F;
-        public IExtendedList<KeyFrame>? Unknown0F
+        private ExtendedList<KeyFrame>? _Unknown0F;
+        public ExtendedList<KeyFrame>? Unknown0F
         {
             get => this._Unknown0F;
             set => this._Unknown0F = value;
@@ -675,8 +675,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown4F
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _Unknown4F;
-        public IExtendedList<KeyFrame>? Unknown4F
+        private ExtendedList<KeyFrame>? _Unknown4F;
+        public ExtendedList<KeyFrame>? Unknown4F
         {
             get => this._Unknown4F;
             set => this._Unknown4F = value;
@@ -689,8 +689,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown10
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _Unknown10;
-        public IExtendedList<KeyFrame>? Unknown10
+        private ExtendedList<KeyFrame>? _Unknown10;
+        public ExtendedList<KeyFrame>? Unknown10
         {
             get => this._Unknown10;
             set => this._Unknown10 = value;
@@ -703,8 +703,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown50
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _Unknown50;
-        public IExtendedList<KeyFrame>? Unknown50
+        private ExtendedList<KeyFrame>? _Unknown50;
+        public ExtendedList<KeyFrame>? Unknown50
         {
             get => this._Unknown50;
             set => this._Unknown50 = value;
@@ -717,8 +717,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region CinematicSaturationMult
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _CinematicSaturationMult;
-        public IExtendedList<KeyFrame>? CinematicSaturationMult
+        private ExtendedList<KeyFrame>? _CinematicSaturationMult;
+        public ExtendedList<KeyFrame>? CinematicSaturationMult
         {
             get => this._CinematicSaturationMult;
             set => this._CinematicSaturationMult = value;
@@ -731,8 +731,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region CinematicSaturationAdd
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _CinematicSaturationAdd;
-        public IExtendedList<KeyFrame>? CinematicSaturationAdd
+        private ExtendedList<KeyFrame>? _CinematicSaturationAdd;
+        public ExtendedList<KeyFrame>? CinematicSaturationAdd
         {
             get => this._CinematicSaturationAdd;
             set => this._CinematicSaturationAdd = value;
@@ -745,8 +745,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region CinematicBrightnessMult
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _CinematicBrightnessMult;
-        public IExtendedList<KeyFrame>? CinematicBrightnessMult
+        private ExtendedList<KeyFrame>? _CinematicBrightnessMult;
+        public ExtendedList<KeyFrame>? CinematicBrightnessMult
         {
             get => this._CinematicBrightnessMult;
             set => this._CinematicBrightnessMult = value;
@@ -759,8 +759,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region CinematicBrightnessAdd
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _CinematicBrightnessAdd;
-        public IExtendedList<KeyFrame>? CinematicBrightnessAdd
+        private ExtendedList<KeyFrame>? _CinematicBrightnessAdd;
+        public ExtendedList<KeyFrame>? CinematicBrightnessAdd
         {
             get => this._CinematicBrightnessAdd;
             set => this._CinematicBrightnessAdd = value;
@@ -773,8 +773,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region CinematicContrastMult
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _CinematicContrastMult;
-        public IExtendedList<KeyFrame>? CinematicContrastMult
+        private ExtendedList<KeyFrame>? _CinematicContrastMult;
+        public ExtendedList<KeyFrame>? CinematicContrastMult
         {
             get => this._CinematicContrastMult;
             set => this._CinematicContrastMult = value;
@@ -787,8 +787,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region CinematicContrastAdd
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _CinematicContrastAdd;
-        public IExtendedList<KeyFrame>? CinematicContrastAdd
+        private ExtendedList<KeyFrame>? _CinematicContrastAdd;
+        public ExtendedList<KeyFrame>? CinematicContrastAdd
         {
             get => this._CinematicContrastAdd;
             set => this._CinematicContrastAdd = value;
@@ -801,8 +801,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown14
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _Unknown14;
-        public IExtendedList<KeyFrame>? Unknown14
+        private ExtendedList<KeyFrame>? _Unknown14;
+        public ExtendedList<KeyFrame>? Unknown14
         {
             get => this._Unknown14;
             set => this._Unknown14 = value;
@@ -815,8 +815,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown54
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<KeyFrame>? _Unknown54;
-        public IExtendedList<KeyFrame>? Unknown54
+        private ExtendedList<KeyFrame>? _Unknown54;
+        public ExtendedList<KeyFrame>? Unknown54
         {
             get => this._Unknown54;
             set => this._Unknown54 = value;
@@ -7031,61 +7031,61 @@ namespace Mutagen.Bethesda.Skyrim
         new ImageSpaceAdapter.RadialBlurFlag RadialBlurFlags { get; set; }
         new P2Float RadialBlurCenter { get; set; }
         new ImageSpaceAdapter.DepthOfFieldFlag DepthOfFieldFlags { get; set; }
-        new IExtendedList<KeyFrame>? BlurRadius { get; set; }
-        new IExtendedList<KeyFrame>? DoubleVisionStrength { get; set; }
-        new IExtendedList<ColorFrame>? TintColor { get; set; }
-        new IExtendedList<ColorFrame>? FadeColor { get; set; }
-        new IExtendedList<KeyFrame>? RadialBlurStrength { get; set; }
-        new IExtendedList<KeyFrame>? RadialBlurRampUp { get; set; }
-        new IExtendedList<KeyFrame>? RadialBlurStart { get; set; }
-        new IExtendedList<KeyFrame>? RadialBlurRampDown { get; set; }
-        new IExtendedList<KeyFrame>? RadialBlurDownStart { get; set; }
-        new IExtendedList<KeyFrame>? DepthOfFieldStrength { get; set; }
-        new IExtendedList<KeyFrame>? DepthOfFieldDistance { get; set; }
-        new IExtendedList<KeyFrame>? DepthOfFieldRange { get; set; }
-        new IExtendedList<KeyFrame>? MotionBlurStrength { get; set; }
-        new IExtendedList<KeyFrame>? HdrEyeAdaptSpeedMult { get; set; }
-        new IExtendedList<KeyFrame>? HdrEyeAdaptSpeedAdd { get; set; }
-        new IExtendedList<KeyFrame>? HdrBloomBlurRadiusMult { get; set; }
-        new IExtendedList<KeyFrame>? HdrBloomBlurRadiusAdd { get; set; }
-        new IExtendedList<KeyFrame>? HdrBloomThresholdMult { get; set; }
-        new IExtendedList<KeyFrame>? HdrBloomThresholdAdd { get; set; }
-        new IExtendedList<KeyFrame>? HdrBloomScaleMult { get; set; }
-        new IExtendedList<KeyFrame>? HdrBloomScaleAdd { get; set; }
-        new IExtendedList<KeyFrame>? HdrTargetLumMinMult { get; set; }
-        new IExtendedList<KeyFrame>? HdrTargetLumMinAdd { get; set; }
-        new IExtendedList<KeyFrame>? HdrTargetLumMaxMult { get; set; }
-        new IExtendedList<KeyFrame>? HdrTargetLumMaxAdd { get; set; }
-        new IExtendedList<KeyFrame>? HdrSunlightScaleMult { get; set; }
-        new IExtendedList<KeyFrame>? HdrSunlightScaleAdd { get; set; }
-        new IExtendedList<KeyFrame>? HdrSkyScaleMult { get; set; }
-        new IExtendedList<KeyFrame>? HdrSkyScaleAdd { get; set; }
-        new IExtendedList<KeyFrame>? Unknown08 { get; set; }
-        new IExtendedList<KeyFrame>? Unknown48 { get; set; }
-        new IExtendedList<KeyFrame>? Unknown09 { get; set; }
-        new IExtendedList<KeyFrame>? Unknown49 { get; set; }
-        new IExtendedList<KeyFrame>? Unknown0A { get; set; }
-        new IExtendedList<KeyFrame>? Unknown4A { get; set; }
-        new IExtendedList<KeyFrame>? Unknown0B { get; set; }
-        new IExtendedList<KeyFrame>? Unknown4B { get; set; }
-        new IExtendedList<KeyFrame>? Unknown0C { get; set; }
-        new IExtendedList<KeyFrame>? Unknown4C { get; set; }
-        new IExtendedList<KeyFrame>? Unknown0D { get; set; }
-        new IExtendedList<KeyFrame>? Unknown4D { get; set; }
-        new IExtendedList<KeyFrame>? Unknown0E { get; set; }
-        new IExtendedList<KeyFrame>? Unknown4E { get; set; }
-        new IExtendedList<KeyFrame>? Unknown0F { get; set; }
-        new IExtendedList<KeyFrame>? Unknown4F { get; set; }
-        new IExtendedList<KeyFrame>? Unknown10 { get; set; }
-        new IExtendedList<KeyFrame>? Unknown50 { get; set; }
-        new IExtendedList<KeyFrame>? CinematicSaturationMult { get; set; }
-        new IExtendedList<KeyFrame>? CinematicSaturationAdd { get; set; }
-        new IExtendedList<KeyFrame>? CinematicBrightnessMult { get; set; }
-        new IExtendedList<KeyFrame>? CinematicBrightnessAdd { get; set; }
-        new IExtendedList<KeyFrame>? CinematicContrastMult { get; set; }
-        new IExtendedList<KeyFrame>? CinematicContrastAdd { get; set; }
-        new IExtendedList<KeyFrame>? Unknown14 { get; set; }
-        new IExtendedList<KeyFrame>? Unknown54 { get; set; }
+        new ExtendedList<KeyFrame>? BlurRadius { get; set; }
+        new ExtendedList<KeyFrame>? DoubleVisionStrength { get; set; }
+        new ExtendedList<ColorFrame>? TintColor { get; set; }
+        new ExtendedList<ColorFrame>? FadeColor { get; set; }
+        new ExtendedList<KeyFrame>? RadialBlurStrength { get; set; }
+        new ExtendedList<KeyFrame>? RadialBlurRampUp { get; set; }
+        new ExtendedList<KeyFrame>? RadialBlurStart { get; set; }
+        new ExtendedList<KeyFrame>? RadialBlurRampDown { get; set; }
+        new ExtendedList<KeyFrame>? RadialBlurDownStart { get; set; }
+        new ExtendedList<KeyFrame>? DepthOfFieldStrength { get; set; }
+        new ExtendedList<KeyFrame>? DepthOfFieldDistance { get; set; }
+        new ExtendedList<KeyFrame>? DepthOfFieldRange { get; set; }
+        new ExtendedList<KeyFrame>? MotionBlurStrength { get; set; }
+        new ExtendedList<KeyFrame>? HdrEyeAdaptSpeedMult { get; set; }
+        new ExtendedList<KeyFrame>? HdrEyeAdaptSpeedAdd { get; set; }
+        new ExtendedList<KeyFrame>? HdrBloomBlurRadiusMult { get; set; }
+        new ExtendedList<KeyFrame>? HdrBloomBlurRadiusAdd { get; set; }
+        new ExtendedList<KeyFrame>? HdrBloomThresholdMult { get; set; }
+        new ExtendedList<KeyFrame>? HdrBloomThresholdAdd { get; set; }
+        new ExtendedList<KeyFrame>? HdrBloomScaleMult { get; set; }
+        new ExtendedList<KeyFrame>? HdrBloomScaleAdd { get; set; }
+        new ExtendedList<KeyFrame>? HdrTargetLumMinMult { get; set; }
+        new ExtendedList<KeyFrame>? HdrTargetLumMinAdd { get; set; }
+        new ExtendedList<KeyFrame>? HdrTargetLumMaxMult { get; set; }
+        new ExtendedList<KeyFrame>? HdrTargetLumMaxAdd { get; set; }
+        new ExtendedList<KeyFrame>? HdrSunlightScaleMult { get; set; }
+        new ExtendedList<KeyFrame>? HdrSunlightScaleAdd { get; set; }
+        new ExtendedList<KeyFrame>? HdrSkyScaleMult { get; set; }
+        new ExtendedList<KeyFrame>? HdrSkyScaleAdd { get; set; }
+        new ExtendedList<KeyFrame>? Unknown08 { get; set; }
+        new ExtendedList<KeyFrame>? Unknown48 { get; set; }
+        new ExtendedList<KeyFrame>? Unknown09 { get; set; }
+        new ExtendedList<KeyFrame>? Unknown49 { get; set; }
+        new ExtendedList<KeyFrame>? Unknown0A { get; set; }
+        new ExtendedList<KeyFrame>? Unknown4A { get; set; }
+        new ExtendedList<KeyFrame>? Unknown0B { get; set; }
+        new ExtendedList<KeyFrame>? Unknown4B { get; set; }
+        new ExtendedList<KeyFrame>? Unknown0C { get; set; }
+        new ExtendedList<KeyFrame>? Unknown4C { get; set; }
+        new ExtendedList<KeyFrame>? Unknown0D { get; set; }
+        new ExtendedList<KeyFrame>? Unknown4D { get; set; }
+        new ExtendedList<KeyFrame>? Unknown0E { get; set; }
+        new ExtendedList<KeyFrame>? Unknown4E { get; set; }
+        new ExtendedList<KeyFrame>? Unknown0F { get; set; }
+        new ExtendedList<KeyFrame>? Unknown4F { get; set; }
+        new ExtendedList<KeyFrame>? Unknown10 { get; set; }
+        new ExtendedList<KeyFrame>? Unknown50 { get; set; }
+        new ExtendedList<KeyFrame>? CinematicSaturationMult { get; set; }
+        new ExtendedList<KeyFrame>? CinematicSaturationAdd { get; set; }
+        new ExtendedList<KeyFrame>? CinematicBrightnessMult { get; set; }
+        new ExtendedList<KeyFrame>? CinematicBrightnessAdd { get; set; }
+        new ExtendedList<KeyFrame>? CinematicContrastMult { get; set; }
+        new ExtendedList<KeyFrame>? CinematicContrastAdd { get; set; }
+        new ExtendedList<KeyFrame>? Unknown14 { get; set; }
+        new ExtendedList<KeyFrame>? Unknown54 { get; set; }
         new ImageSpaceAdapter.DNAMDataType DNAMDataTypeState { get; set; }
     }
 

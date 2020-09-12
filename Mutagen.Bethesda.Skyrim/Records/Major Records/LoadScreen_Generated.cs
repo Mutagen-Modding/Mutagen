@@ -58,8 +58,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public IExtendedList<Condition> Conditions
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -819,7 +819,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Icons? Icons { get; set; }
         new TranslatedString Description { get; set; }
-        new IExtendedList<Condition> Conditions { get; }
+        new ExtendedList<Condition> Conditions { get; }
         new FormLink<IStaticGetter> LoadingScreenNif { get; set; }
         new Single? InitialScale { get; set; }
         new P3Int16? InitialRotation { get; set; }

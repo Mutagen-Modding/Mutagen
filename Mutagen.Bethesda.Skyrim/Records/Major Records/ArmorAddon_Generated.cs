@@ -94,8 +94,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region AdditionalRaces
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IRaceGetter>> _AdditionalRaces = new ExtendedList<IFormLink<IRaceGetter>>();
-        public IExtendedList<IFormLink<IRaceGetter>> AdditionalRaces
+        private ExtendedList<IFormLink<IRaceGetter>> _AdditionalRaces = new ExtendedList<IFormLink<IRaceGetter>>();
+        public ExtendedList<IFormLink<IRaceGetter>> AdditionalRaces
         {
             get => this._AdditionalRaces;
             protected set => this._AdditionalRaces = value;
@@ -1065,7 +1065,7 @@ namespace Mutagen.Bethesda.Skyrim
         new GenderedItem<Model?>? FirstPersonModel { get; set; }
         new GenderedItem<IFormLinkNullable<ITextureSetGetter>>? SkinTexture { get; set; }
         new GenderedItem<IFormLinkNullable<IFormListGetter>>? TextureSwapList { get; set; }
-        new IExtendedList<IFormLink<IRaceGetter>> AdditionalRaces { get; }
+        new ExtendedList<IFormLink<IRaceGetter>> AdditionalRaces { get; }
         new FormLinkNullable<IFootstepSetGetter> FootstepSound { get; set; }
         new FormLinkNullable<IArtObjectGetter> ArtObject { get; set; }
         new ArmorAddon.DNAMDataType DNAMDataTypeState { get; set; }

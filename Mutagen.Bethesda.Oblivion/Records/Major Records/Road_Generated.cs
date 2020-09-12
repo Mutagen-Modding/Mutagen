@@ -44,8 +44,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Points
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<RoadPoint>? _Points;
-        public IExtendedList<RoadPoint>? Points
+        private ExtendedList<RoadPoint>? _Points;
+        public ExtendedList<RoadPoint>? Points
         {
             get => this._Points;
             set => this._Points = value;
@@ -516,7 +516,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecord,
         ILoquiObjectSetter<IRoadInternal>
     {
-        new IExtendedList<RoadPoint>? Points { get; set; }
+        new ExtendedList<RoadPoint>? Points { get; set; }
     }
 
     public partial interface IRoadInternal :

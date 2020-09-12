@@ -70,8 +70,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Regions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IRegionGetter>>? _Regions;
-        public IExtendedList<IFormLink<IRegionGetter>>? Regions
+        private ExtendedList<IFormLink<IRegionGetter>>? _Regions;
+        public ExtendedList<IFormLink<IRegionGetter>>? Regions
         {
             get => this._Regions;
             set => this._Regions = value;
@@ -139,8 +139,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Persistent
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IPlaced> _Persistent = new ExtendedList<IPlaced>();
-        public IExtendedList<IPlaced> Persistent
+        private ExtendedList<IPlaced> _Persistent = new ExtendedList<IPlaced>();
+        public ExtendedList<IPlaced> Persistent
         {
             get => this._Persistent;
             protected set => this._Persistent = value;
@@ -156,8 +156,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Temporary
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IPlaced> _Temporary = new ExtendedList<IPlaced>();
-        public IExtendedList<IPlaced> Temporary
+        private ExtendedList<IPlaced> _Temporary = new ExtendedList<IPlaced>();
+        public ExtendedList<IPlaced> Temporary
         {
             get => this._Temporary;
             protected set => this._Temporary = value;
@@ -173,8 +173,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region VisibleWhenDistant
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IPlaced> _VisibleWhenDistant = new ExtendedList<IPlaced>();
-        public IExtendedList<IPlaced> VisibleWhenDistant
+        private ExtendedList<IPlaced> _VisibleWhenDistant = new ExtendedList<IPlaced>();
+        public ExtendedList<IPlaced> VisibleWhenDistant
         {
             get => this._VisibleWhenDistant;
             protected set => this._VisibleWhenDistant = value;
@@ -1502,7 +1502,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Cell.Flag? Flags { get; set; }
         new P2Int? Grid { get; set; }
         new CellLighting? Lighting { get; set; }
-        new IExtendedList<IFormLink<IRegionGetter>>? Regions { get; set; }
+        new ExtendedList<IFormLink<IRegionGetter>>? Regions { get; set; }
         new MusicType? MusicType { get; set; }
         new Single? WaterHeight { get; set; }
         new FormLinkNullable<IClimateGetter> Climate { get; set; }
@@ -1514,11 +1514,11 @@ namespace Mutagen.Bethesda.Oblivion
         new Landscape? Landscape { get; set; }
         new Int32 Timestamp { get; set; }
         new Int32 PersistentTimestamp { get; set; }
-        new IExtendedList<IPlaced> Persistent { get; }
+        new ExtendedList<IPlaced> Persistent { get; }
         new Int32 TemporaryTimestamp { get; set; }
-        new IExtendedList<IPlaced> Temporary { get; }
+        new ExtendedList<IPlaced> Temporary { get; }
         new Int32 VisibleWhenDistantTimestamp { get; set; }
-        new IExtendedList<IPlaced> VisibleWhenDistant { get; }
+        new ExtendedList<IPlaced> VisibleWhenDistant { get; }
     }
 
     public partial interface ICellInternal :

@@ -89,8 +89,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region MasterReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<MasterReference> _MasterReferences = new ExtendedList<MasterReference>();
-        public IExtendedList<MasterReference> MasterReferences
+        private ExtendedList<MasterReference> _MasterReferences = new ExtendedList<MasterReference>();
+        public ExtendedList<MasterReference> MasterReferences
         {
             get => this._MasterReferences;
             protected set => this._MasterReferences = value;
@@ -784,7 +784,7 @@ namespace Mutagen.Bethesda.Oblivion
         new MemorySlice<Byte>? Deleted { get; set; }
         new String? Author { get; set; }
         new String? Description { get; set; }
-        new IExtendedList<MasterReference> MasterReferences { get; }
+        new ExtendedList<MasterReference> MasterReferences { get; }
     }
 
     public partial interface IOblivionModHeaderGetter :

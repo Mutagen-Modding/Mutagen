@@ -52,8 +52,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ActorEffect
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IASpellGetter>>? _ActorEffect;
-        public IExtendedList<IFormLink<IASpellGetter>>? ActorEffect
+        private ExtendedList<IFormLink<IASpellGetter>>? _ActorEffect;
+        public ExtendedList<IFormLink<IASpellGetter>>? ActorEffect
         {
             get => this._ActorEffect;
             set => this._ActorEffect = value;
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
-        public IExtendedList<IFormLink<IKeywordGetter>>? Keywords
+        private ExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
+        public ExtendedList<IFormLink<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -222,8 +222,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MovementTypeNames
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<String> _MovementTypeNames = new ExtendedList<String>();
-        public IExtendedList<String> MovementTypeNames
+        private ExtendedList<String> _MovementTypeNames = new ExtendedList<String>();
+        public ExtendedList<String> MovementTypeNames
         {
             get => this._MovementTypeNames;
             protected set => this._MovementTypeNames = value;
@@ -262,8 +262,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Attacks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Attack> _Attacks = new ExtendedList<Attack>();
-        public IExtendedList<Attack> Attacks
+        private ExtendedList<Attack> _Attacks = new ExtendedList<Attack>();
+        public ExtendedList<Attack> Attacks
         {
             get => this._Attacks;
             protected set => this._Attacks = value;
@@ -280,8 +280,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Hairs
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IHairGetter>>? _Hairs;
-        public IExtendedList<IFormLink<IHairGetter>>? Hairs
+        private ExtendedList<IFormLink<IHairGetter>>? _Hairs;
+        public ExtendedList<IFormLink<IHairGetter>>? Hairs
         {
             get => this._Hairs;
             set => this._Hairs = value;
@@ -294,8 +294,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Eyes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IEyesGetter>>? _Eyes;
-        public IExtendedList<IFormLink<IEyesGetter>>? Eyes
+        private ExtendedList<IFormLink<IEyesGetter>>? _Eyes;
+        public ExtendedList<IFormLink<IEyesGetter>>? Eyes
         {
             get => this._Eyes;
             set => this._Eyes = value;
@@ -339,8 +339,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MovementTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<RaceMovementType> _MovementTypes = new ExtendedList<RaceMovementType>();
-        public IExtendedList<RaceMovementType> MovementTypes
+        private ExtendedList<RaceMovementType> _MovementTypes = new ExtendedList<RaceMovementType>();
+        public ExtendedList<RaceMovementType> MovementTypes
         {
             get => this._MovementTypes;
             protected set => this._MovementTypes = value;
@@ -358,8 +358,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region EquipmentSlots
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IEquipTypeGetter>> _EquipmentSlots = new ExtendedList<IFormLink<IEquipTypeGetter>>();
-        public IExtendedList<IFormLink<IEquipTypeGetter>> EquipmentSlots
+        private ExtendedList<IFormLink<IEquipTypeGetter>> _EquipmentSlots = new ExtendedList<IFormLink<IEquipTypeGetter>>();
+        public ExtendedList<IFormLink<IEquipTypeGetter>> EquipmentSlots
         {
             get => this._EquipmentSlots;
             protected set => this._EquipmentSlots = value;
@@ -3822,10 +3822,10 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new TranslatedString? Name { get; set; }
         new TranslatedString Description { get; set; }
-        new IExtendedList<IFormLink<IASpellGetter>>? ActorEffect { get; set; }
+        new ExtendedList<IFormLink<IASpellGetter>>? ActorEffect { get; set; }
         new FormLinkNullable<IArmorGetter> Skin { get; set; }
         new BodyTemplate? BodyTemplate { get; set; }
-        new IExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
+        new ExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
         new SkillBoost SkillBoost0 { get; set; }
         new SkillBoost SkillBoost1 { get; set; }
         new SkillBoost SkillBoost2 { get; set; }
@@ -3857,7 +3857,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single AngularTolerance { get; set; }
         new MountData MountData { get; set; }
         new GenderedItem<SimpleModel?>? SkeletalModel { get; set; }
-        new IExtendedList<String> MovementTypeNames { get; }
+        new ExtendedList<String> MovementTypeNames { get; }
         new GenderedItem<IFormLink<IVoiceTypeGetter>> Voices { get; set; }
         new GenderedItem<IFormLink<IArmorGetter>>? DecapitateArmors { get; set; }
         new GenderedItem<IFormLink<IColorRecordGetter>>? DefaultHairColors { get; set; }
@@ -3865,10 +3865,10 @@ namespace Mutagen.Bethesda.Skyrim
         new Single FacegenMainClamp { get; set; }
         new Single FacegenFaceClamp { get; set; }
         new FormLinkNullable<IRaceGetter> AttackRace { get; set; }
-        new IExtendedList<Attack> Attacks { get; }
+        new ExtendedList<Attack> Attacks { get; }
         new GenderedItem<BodyData?> BodyData { get; set; }
-        new IExtendedList<IFormLink<IHairGetter>>? Hairs { get; set; }
-        new IExtendedList<IFormLink<IEyesGetter>>? Eyes { get; set; }
+        new ExtendedList<IFormLink<IHairGetter>>? Hairs { get; set; }
+        new ExtendedList<IFormLink<IEyesGetter>>? Eyes { get; set; }
         new FormLinkNullable<IBodyPartDataGetter> BodyPartData { get; set; }
         new GenderedItem<Model?> BehaviorGraph { get; set; }
         new FormLinkNullable<IMaterialTypeGetter> MaterialType { get; set; }
@@ -3877,9 +3877,9 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<ISoundDescriptorGetter> OpenLootSound { get; set; }
         new FormLinkNullable<ISoundDescriptorGetter> CloseLootSound { get; set; }
         new IDictionary<BipedObject, String> BipedObjectNames { get; }
-        new IExtendedList<RaceMovementType> MovementTypes { get; }
+        new ExtendedList<RaceMovementType> MovementTypes { get; }
         new EquipTypeFlag? EquipmentFlags { get; set; }
-        new IExtendedList<IFormLink<IEquipTypeGetter>> EquipmentSlots { get; }
+        new ExtendedList<IFormLink<IEquipTypeGetter>> EquipmentSlots { get; }
         new FormLinkNullable<IEquipTypeGetter> UnarmedEquipSlot { get; set; }
         new FaceFxPhonemes FaceFxPhonemes { get; set; }
         new FormLinkNullable<IMovementTypeGetter> BaseMovementDefaultWalk { get; set; }

@@ -44,8 +44,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region SlotParents
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IEquipTypeGetter>>? _SlotParents;
-        public IExtendedList<IFormLink<IEquipTypeGetter>>? SlotParents
+        private ExtendedList<IFormLink<IEquipTypeGetter>>? _SlotParents;
+        public ExtendedList<IFormLink<IEquipTypeGetter>>? SlotParents
         {
             get => this._SlotParents;
             set => this._SlotParents = value;
@@ -556,7 +556,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IEquipTypeInternal>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<IFormLink<IEquipTypeGetter>>? SlotParents { get; set; }
+        new ExtendedList<IFormLink<IEquipTypeGetter>>? SlotParents { get; set; }
         new Boolean? UseAllParents { get; set; }
     }
 

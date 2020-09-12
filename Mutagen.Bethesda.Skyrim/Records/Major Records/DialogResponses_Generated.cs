@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LinkTo
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IDialogGetter>> _LinkTo = new ExtendedList<IFormLink<IDialogGetter>>();
-        public IExtendedList<IFormLink<IDialogGetter>> LinkTo
+        private ExtendedList<IFormLink<IDialogGetter>> _LinkTo = new ExtendedList<IFormLink<IDialogGetter>>();
+        public ExtendedList<IFormLink<IDialogGetter>> LinkTo
         {
             get => this._LinkTo;
             protected set => this._LinkTo = value;
@@ -105,8 +105,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Responses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<DialogResponse> _Responses = new ExtendedList<DialogResponse>();
-        public IExtendedList<DialogResponse> Responses
+        private ExtendedList<DialogResponse> _Responses = new ExtendedList<DialogResponse>();
+        public ExtendedList<DialogResponse> Responses
         {
             get => this._Responses;
             protected set => this._Responses = value;
@@ -119,8 +119,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public IExtendedList<Condition> Conditions
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -133,8 +133,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region UnknownData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<DialogResponsesUnknownData> _UnknownData = new ExtendedList<DialogResponsesUnknownData>();
-        public IExtendedList<DialogResponsesUnknownData> UnknownData
+        private ExtendedList<DialogResponsesUnknownData> _UnknownData = new ExtendedList<DialogResponsesUnknownData>();
+        public ExtendedList<DialogResponsesUnknownData> UnknownData
         {
             get => this._UnknownData;
             protected set => this._UnknownData = value;
@@ -1269,11 +1269,11 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<IDialogTopicGetter> Topic { get; set; }
         new FormLinkNullable<IDialogResponsesGetter> PreviousDialog { get; set; }
         new FavorLevel? FavorLevel { get; set; }
-        new IExtendedList<IFormLink<IDialogGetter>> LinkTo { get; }
+        new ExtendedList<IFormLink<IDialogGetter>> LinkTo { get; }
         new FormLinkNullable<IDialogResponsesGetter> ResponseData { get; set; }
-        new IExtendedList<DialogResponse> Responses { get; }
-        new IExtendedList<Condition> Conditions { get; }
-        new IExtendedList<DialogResponsesUnknownData> UnknownData { get; }
+        new ExtendedList<DialogResponse> Responses { get; }
+        new ExtendedList<Condition> Conditions { get; }
+        new ExtendedList<DialogResponsesUnknownData> UnknownData { get; }
         new TranslatedString? Prompt { get; set; }
         new FormLinkNullable<INpcGetter> Speaker { get; set; }
         new FormLinkNullable<IDialogTopicGetter> WalkAwayTopic { get; set; }

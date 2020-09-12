@@ -45,8 +45,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public IExtendedList<Condition> Conditions
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region DataInputIndices
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Byte> _DataInputIndices = new ExtendedList<Byte>();
-        public IExtendedList<Byte> DataInputIndices
+        private ExtendedList<Byte> _DataInputIndices = new ExtendedList<Byte>();
+        public ExtendedList<Byte> DataInputIndices
         {
             get => this._DataInputIndices;
             protected set => this._DataInputIndices = value;
@@ -971,11 +971,11 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new String BranchType { get; set; }
-        new IExtendedList<Condition> Conditions { get; }
+        new ExtendedList<Condition> Conditions { get; }
         new PackageRoot? Root { get; set; }
         new String? ProcedureType { get; set; }
         new PackageBranch.Flag? Flags { get; set; }
-        new IExtendedList<Byte> DataInputIndices { get; }
+        new ExtendedList<Byte> DataInputIndices { get; }
         new PackageFlagsOverride? FlagsOverride { get; set; }
         new PackageFlagsOverride? FlagsOverrideUnused { get; set; }
         new SliceList<byte> Unknown { get; }

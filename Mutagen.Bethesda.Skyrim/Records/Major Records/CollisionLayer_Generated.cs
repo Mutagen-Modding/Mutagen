@@ -60,8 +60,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region CollidesWith
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<ICollisionLayerGetter>>? _CollidesWith;
-        public IExtendedList<IFormLink<ICollisionLayerGetter>>? CollidesWith
+        private ExtendedList<IFormLink<ICollisionLayerGetter>>? _CollidesWith;
+        public ExtendedList<IFormLink<ICollisionLayerGetter>>? CollidesWith
         {
             get => this._CollidesWith;
             set => this._CollidesWith = value;
@@ -684,7 +684,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Color DebugColor { get; set; }
         new CollisionLayer.Flag Flags { get; set; }
         new String Name { get; set; }
-        new IExtendedList<IFormLink<ICollisionLayerGetter>>? CollidesWith { get; set; }
+        new ExtendedList<IFormLink<ICollisionLayerGetter>>? CollidesWith { get; set; }
     }
 
     public partial interface ICollisionLayerInternal :

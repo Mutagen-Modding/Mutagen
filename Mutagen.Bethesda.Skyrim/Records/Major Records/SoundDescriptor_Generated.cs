@@ -61,8 +61,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region SoundFiles
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<String> _SoundFiles = new ExtendedList<String>();
-        public IExtendedList<String> SoundFiles
+        private ExtendedList<String> _SoundFiles = new ExtendedList<String>();
+        public ExtendedList<String> SoundFiles
         {
             get => this._SoundFiles;
             protected set => this._SoundFiles = value;
@@ -83,8 +83,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public IExtendedList<Condition> Conditions
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -1045,10 +1045,10 @@ namespace Mutagen.Bethesda.Skyrim
         new MemorySlice<Byte>? CNAM { get; set; }
         new FormLinkNullable<ISoundCategoryGetter> Category { get; set; }
         new FormLinkNullable<ISoundDescriptorGetter> AlternateSoundFor { get; set; }
-        new IExtendedList<String> SoundFiles { get; }
+        new ExtendedList<String> SoundFiles { get; }
         new FormLinkNullable<ISoundOutputModelGetter> OutputModel { get; set; }
         new String? String { get; set; }
-        new IExtendedList<Condition> Conditions { get; }
+        new ExtendedList<Condition> Conditions { get; }
         new SoundLoopAndRumble? LoopAndRumble { get; set; }
         new SByte PercentFrequencyShift { get; set; }
         new SByte PercentFrequencyVariance { get; set; }

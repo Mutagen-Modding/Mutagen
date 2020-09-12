@@ -57,8 +57,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Entries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<LeveledSpellEntry>? _Entries;
-        public IExtendedList<LeveledSpellEntry>? Entries
+        private ExtendedList<LeveledSpellEntry>? _Entries;
+        public ExtendedList<LeveledSpellEntry>? Entries
         {
             get => this._Entries;
             set => this._Entries = value;
@@ -634,7 +634,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ObjectBounds ObjectBounds { get; set; }
         new Byte? ChanceNone { get; set; }
         new LeveledSpell.Flag Flags { get; set; }
-        new IExtendedList<LeveledSpellEntry>? Entries { get; set; }
+        new ExtendedList<LeveledSpellEntry>? Entries { get; set; }
     }
 
     public partial interface ILeveledSpellInternal :

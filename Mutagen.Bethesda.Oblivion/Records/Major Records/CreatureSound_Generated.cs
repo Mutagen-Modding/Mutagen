@@ -47,8 +47,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<SoundItem> _Sounds = new ExtendedList<SoundItem>();
-        public IExtendedList<SoundItem> Sounds
+        private ExtendedList<SoundItem> _Sounds = new ExtendedList<SoundItem>();
+        public ExtendedList<SoundItem> Sounds
         {
             get => this._Sounds;
             protected set => this._Sounds = value;
@@ -538,7 +538,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkedFormKeyContainer
     {
         new CreatureSound.CreatureSoundType? SoundType { get; set; }
-        new IExtendedList<SoundItem> Sounds { get; }
+        new ExtendedList<SoundItem> Sounds { get; }
     }
 
     public partial interface ICreatureSoundGetter :

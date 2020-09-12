@@ -60,8 +60,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Presets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<TintPreset> _Presets = new ExtendedList<TintPreset>();
-        public IExtendedList<TintPreset> Presets
+        private ExtendedList<TintPreset> _Presets = new ExtendedList<TintPreset>();
+        public ExtendedList<TintPreset> Presets
         {
             get => this._Presets;
             protected set => this._Presets = value;
@@ -638,7 +638,7 @@ namespace Mutagen.Bethesda.Skyrim
         new String? FileName { get; set; }
         new TintAssets.TintMaskType? MaskType { get; set; }
         new FormLinkNullable<IColorRecordGetter> PresetDefault { get; set; }
-        new IExtendedList<TintPreset> Presets { get; }
+        new ExtendedList<TintPreset> Presets { get; }
     }
 
     public partial interface ITintAssetsGetter :

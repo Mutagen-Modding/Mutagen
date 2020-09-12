@@ -43,8 +43,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Objects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<ScriptObjectProperty> _Objects = new ExtendedList<ScriptObjectProperty>();
-        public IExtendedList<ScriptObjectProperty> Objects
+        private ExtendedList<ScriptObjectProperty> _Objects = new ExtendedList<ScriptObjectProperty>();
+        public ExtendedList<ScriptObjectProperty> Objects
         {
             get => this._Objects;
             protected set => this._Objects = value;
@@ -498,7 +498,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IScriptObjectListProperty>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<ScriptObjectProperty> Objects { get; }
+        new ExtendedList<ScriptObjectProperty> Objects { get; }
     }
 
     public partial interface IScriptObjectListPropertyGetter :

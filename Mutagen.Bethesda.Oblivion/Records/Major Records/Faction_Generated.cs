@@ -49,8 +49,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Relations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Relation> _Relations = new ExtendedList<Relation>();
-        public IExtendedList<Relation> Relations
+        private ExtendedList<Relation> _Relations = new ExtendedList<Relation>();
+        public ExtendedList<Relation> Relations
         {
             get => this._Relations;
             protected set => this._Relations = value;
@@ -73,8 +73,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Ranks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Rank> _Ranks = new ExtendedList<Rank>();
-        public IExtendedList<Rank> Ranks
+        private ExtendedList<Rank> _Ranks = new ExtendedList<Rank>();
+        public ExtendedList<Rank> Ranks
         {
             get => this._Ranks;
             protected set => this._Ranks = value;
@@ -742,10 +742,10 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkedFormKeyContainer
     {
         new String? Name { get; set; }
-        new IExtendedList<Relation> Relations { get; }
+        new ExtendedList<Relation> Relations { get; }
         new Faction.FactionFlag? Flags { get; set; }
         new Single? CrimeGoldMultiplier { get; set; }
-        new IExtendedList<Rank> Ranks { get; }
+        new ExtendedList<Rank> Ranks { get; }
     }
 
     public partial interface IFactionInternal :

@@ -105,8 +105,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public IExtendedList<Condition> Conditions
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -167,8 +167,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ProcedureTree
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<PackageBranch> _ProcedureTree = new ExtendedList<PackageBranch>();
-        public IExtendedList<PackageBranch> ProcedureTree
+        private ExtendedList<PackageBranch> _ProcedureTree = new ExtendedList<PackageBranch>();
+        public ExtendedList<PackageBranch> ProcedureTree
         {
             get => this._ProcedureTree;
             protected set => this._ProcedureTree = value;
@@ -1741,7 +1741,7 @@ namespace Mutagen.Bethesda.Skyrim
         new SByte ScheduleMinute { get; set; }
         new MemorySlice<Byte> Unknown3 { get; set; }
         new Int32 ScheduleDurationInMinutes { get; set; }
-        new IExtendedList<Condition> Conditions { get; }
+        new ExtendedList<Condition> Conditions { get; }
         new Int32? Unknown4 { get; set; }
         new PackageIdles? IdleAnimations { get; set; }
         new FormLinkNullable<ICombatStyleGetter> CombatStyle { get; set; }
@@ -1750,7 +1750,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Int32 DataInputVersion { get; set; }
         new IDictionary<SByte, APackageData> Data { get; }
         new MemorySlice<Byte> XnamMarker { get; set; }
-        new IExtendedList<PackageBranch> ProcedureTree { get; }
+        new ExtendedList<PackageBranch> ProcedureTree { get; }
         new PackageEvent? OnBegin { get; set; }
         new PackageEvent? OnEnd { get; set; }
         new PackageEvent? OnChange { get; set; }

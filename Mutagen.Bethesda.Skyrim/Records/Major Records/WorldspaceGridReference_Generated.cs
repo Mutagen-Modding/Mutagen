@@ -45,8 +45,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region References
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<WorldspaceReference> _References = new ExtendedList<WorldspaceReference>();
-        public IExtendedList<WorldspaceReference> References
+        private ExtendedList<WorldspaceReference> _References = new ExtendedList<WorldspaceReference>();
+        public ExtendedList<WorldspaceReference> References
         {
             get => this._References;
             protected set => this._References = value;
@@ -537,7 +537,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new P2Int16 GridPosition { get; set; }
-        new IExtendedList<WorldspaceReference> References { get; }
+        new ExtendedList<WorldspaceReference> References { get; }
     }
 
     public partial interface IWorldspaceGridReferenceGetter :

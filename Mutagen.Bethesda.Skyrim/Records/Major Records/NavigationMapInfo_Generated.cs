@@ -54,8 +54,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MergedTo
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IANavigationMeshGetter>> _MergedTo = new ExtendedList<IFormLink<IANavigationMeshGetter>>();
-        public IExtendedList<IFormLink<IANavigationMeshGetter>> MergedTo
+        private ExtendedList<IFormLink<IANavigationMeshGetter>> _MergedTo = new ExtendedList<IFormLink<IANavigationMeshGetter>>();
+        public ExtendedList<IFormLink<IANavigationMeshGetter>> MergedTo
         {
             get => this._MergedTo;
             protected set => this._MergedTo = value;
@@ -68,8 +68,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region PreferredMerges
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IANavigationMeshGetter>> _PreferredMerges = new ExtendedList<IFormLink<IANavigationMeshGetter>>();
-        public IExtendedList<IFormLink<IANavigationMeshGetter>> PreferredMerges
+        private ExtendedList<IFormLink<IANavigationMeshGetter>> _PreferredMerges = new ExtendedList<IFormLink<IANavigationMeshGetter>>();
+        public ExtendedList<IFormLink<IANavigationMeshGetter>> PreferredMerges
         {
             get => this._PreferredMerges;
             protected set => this._PreferredMerges = value;
@@ -82,8 +82,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LinkedDoors
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<LinkedDoor> _LinkedDoors = new ExtendedList<LinkedDoor>();
-        public IExtendedList<LinkedDoor> LinkedDoors
+        private ExtendedList<LinkedDoor> _LinkedDoors = new ExtendedList<LinkedDoor>();
+        public ExtendedList<LinkedDoor> LinkedDoors
         {
             get => this._LinkedDoors;
             protected set => this._LinkedDoors = value;
@@ -1033,9 +1033,9 @@ namespace Mutagen.Bethesda.Skyrim
         new Int32 Unknown { get; set; }
         new P3Float Point { get; set; }
         new UInt32 PreferredMergesFlag { get; set; }
-        new IExtendedList<IFormLink<IANavigationMeshGetter>> MergedTo { get; }
-        new IExtendedList<IFormLink<IANavigationMeshGetter>> PreferredMerges { get; }
-        new IExtendedList<LinkedDoor> LinkedDoors { get; }
+        new ExtendedList<IFormLink<IANavigationMeshGetter>> MergedTo { get; }
+        new ExtendedList<IFormLink<IANavigationMeshGetter>> PreferredMerges { get; }
+        new ExtendedList<LinkedDoor> LinkedDoors { get; }
         new IslandData? Island { get; set; }
         new Int32 Unknown2 { get; set; }
         new FormLink<IWorldspaceGetter> ParentWorldspace { get; set; }

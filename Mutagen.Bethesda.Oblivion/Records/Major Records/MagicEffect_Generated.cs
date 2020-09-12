@@ -81,8 +81,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region CounterEffects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IEDIDLink<IMagicEffectGetter>>? _CounterEffects;
-        public IExtendedList<IEDIDLink<IMagicEffectGetter>>? CounterEffects
+        private ExtendedList<IEDIDLink<IMagicEffectGetter>>? _CounterEffects;
+        public ExtendedList<IEDIDLink<IMagicEffectGetter>>? CounterEffects
         {
             get => this._CounterEffects;
             set => this._CounterEffects = value;
@@ -718,7 +718,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Icon { get; set; }
         new Model? Model { get; set; }
         new MagicEffectData? Data { get; set; }
-        new IExtendedList<IEDIDLink<IMagicEffectGetter>>? CounterEffects { get; set; }
+        new ExtendedList<IEDIDLink<IMagicEffectGetter>>? CounterEffects { get; set; }
     }
 
     public partial interface IMagicEffectInternal :

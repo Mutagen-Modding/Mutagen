@@ -78,8 +78,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region CuePoints
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Single>? _CuePoints;
-        public IExtendedList<Single>? CuePoints
+        private ExtendedList<Single>? _CuePoints;
+        public ExtendedList<Single>? CuePoints
         {
             get => this._CuePoints;
             set => this._CuePoints = value;
@@ -92,8 +92,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition>? _Conditions;
-        public IExtendedList<Condition>? Conditions
+        private ExtendedList<Condition>? _Conditions;
+        public ExtendedList<Condition>? Conditions
         {
             get => this._Conditions;
             set => this._Conditions = value;
@@ -106,8 +106,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Tracks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IMusicTrackGetter>>? _Tracks;
-        public IExtendedList<IFormLink<IMusicTrackGetter>>? Tracks
+        private ExtendedList<IFormLink<IMusicTrackGetter>>? _Tracks;
+        public ExtendedList<IFormLink<IMusicTrackGetter>>? Tracks
         {
             get => this._Tracks;
             set => this._Tracks = value;
@@ -970,9 +970,9 @@ namespace Mutagen.Bethesda.Skyrim
         new String? TrackFilename { get; set; }
         new String? FinaleFilename { get; set; }
         new MusicTrackLoopData? LoopData { get; set; }
-        new IExtendedList<Single>? CuePoints { get; set; }
-        new IExtendedList<Condition>? Conditions { get; set; }
-        new IExtendedList<IFormLink<IMusicTrackGetter>>? Tracks { get; set; }
+        new ExtendedList<Single>? CuePoints { get; set; }
+        new ExtendedList<Condition>? Conditions { get; set; }
+        new ExtendedList<IFormLink<IMusicTrackGetter>>? Tracks { get; set; }
     }
 
     public partial interface IMusicTrackInternal :

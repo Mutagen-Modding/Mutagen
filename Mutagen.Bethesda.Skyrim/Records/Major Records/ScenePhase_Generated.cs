@@ -47,8 +47,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region StartConditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition> _StartConditions = new ExtendedList<Condition>();
-        public IExtendedList<Condition> StartConditions
+        private ExtendedList<Condition> _StartConditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> StartConditions
         {
             get => this._StartConditions;
             protected set => this._StartConditions = value;
@@ -61,8 +61,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region CompletionConditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition> _CompletionConditions = new ExtendedList<Condition>();
-        public IExtendedList<Condition> CompletionConditions
+        private ExtendedList<Condition> _CompletionConditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> CompletionConditions
         {
             get => this._CompletionConditions;
             protected set => this._CompletionConditions = value;
@@ -781,8 +781,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new String? Name { get; set; }
-        new IExtendedList<Condition> StartConditions { get; }
-        new IExtendedList<Condition> CompletionConditions { get; }
+        new ExtendedList<Condition> StartConditions { get; }
+        new ExtendedList<Condition> CompletionConditions { get; }
         new ScenePhaseUnusedData? Unused { get; set; }
         new ScenePhaseUnusedData? Unused2 { get; set; }
         new UInt32? EditorWidth { get; set; }

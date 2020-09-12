@@ -43,8 +43,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region PhaseFragments
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<ScenePhaseFragment> _PhaseFragments = new ExtendedList<ScenePhaseFragment>();
-        public IExtendedList<ScenePhaseFragment> PhaseFragments
+        private ExtendedList<ScenePhaseFragment> _PhaseFragments = new ExtendedList<ScenePhaseFragment>();
+        public ExtendedList<ScenePhaseFragment> PhaseFragments
         {
             get => this._PhaseFragments;
             protected set => this._PhaseFragments = value;
@@ -492,7 +492,7 @@ namespace Mutagen.Bethesda.Skyrim
         IScriptFragments,
         ILoquiObjectSetter<ISceneScriptFragments>
     {
-        new IExtendedList<ScenePhaseFragment> PhaseFragments { get; }
+        new ExtendedList<ScenePhaseFragment> PhaseFragments { get; }
     }
 
     public partial interface ISceneScriptFragmentsGetter :

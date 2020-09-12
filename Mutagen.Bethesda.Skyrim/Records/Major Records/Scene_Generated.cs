@@ -60,8 +60,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Phases
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<ScenePhase> _Phases = new ExtendedList<ScenePhase>();
-        public IExtendedList<ScenePhase> Phases
+        private ExtendedList<ScenePhase> _Phases = new ExtendedList<ScenePhase>();
+        public ExtendedList<ScenePhase> Phases
         {
             get => this._Phases;
             protected set => this._Phases = value;
@@ -74,8 +74,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Actors
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<SceneActor> _Actors = new ExtendedList<SceneActor>();
-        public IExtendedList<SceneActor> Actors
+        private ExtendedList<SceneActor> _Actors = new ExtendedList<SceneActor>();
+        public ExtendedList<SceneActor> Actors
         {
             get => this._Actors;
             protected set => this._Actors = value;
@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Actions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<SceneAction> _Actions = new ExtendedList<SceneAction>();
-        public IExtendedList<SceneAction> Actions
+        private ExtendedList<SceneAction> _Actions = new ExtendedList<SceneAction>();
+        public ExtendedList<SceneAction> Actions
         {
             get => this._Actions;
             protected set => this._Actions = value;
@@ -143,8 +143,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public IExtendedList<Condition> Conditions
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -1152,15 +1152,15 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new SceneAdapter? VirtualMachineAdapter { get; set; }
         new Scene.Flag? Flags { get; set; }
-        new IExtendedList<ScenePhase> Phases { get; }
-        new IExtendedList<SceneActor> Actors { get; }
-        new IExtendedList<SceneAction> Actions { get; }
+        new ExtendedList<ScenePhase> Phases { get; }
+        new ExtendedList<SceneActor> Actors { get; }
+        new ExtendedList<SceneAction> Actions { get; }
         new ScenePhaseUnusedData? Unused { get; set; }
         new ScenePhaseUnusedData? Unused2 { get; set; }
         new FormLinkNullable<IQuestGetter> Quest { get; set; }
         new UInt32? LastActionIndex { get; set; }
         new MemorySlice<Byte>? VNAM { get; set; }
-        new IExtendedList<Condition> Conditions { get; }
+        new ExtendedList<Condition> Conditions { get; }
     }
 
     public partial interface ISceneInternal :

@@ -66,8 +66,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Factions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<RankPlacement> _Factions = new ExtendedList<RankPlacement>();
-        public IExtendedList<RankPlacement> Factions
+        private ExtendedList<RankPlacement> _Factions = new ExtendedList<RankPlacement>();
+        public ExtendedList<RankPlacement> Factions
         {
             get => this._Factions;
             protected set => this._Factions = value;
@@ -92,8 +92,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ActorEffect
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IASpellGetter>>? _ActorEffect;
-        public IExtendedList<IFormLink<IASpellGetter>>? ActorEffect
+        private ExtendedList<IFormLink<IASpellGetter>>? _ActorEffect;
+        public ExtendedList<IFormLink<IASpellGetter>>? ActorEffect
         {
             get => this._ActorEffect;
             set => this._ActorEffect = value;
@@ -126,8 +126,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Attacks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Attack> _Attacks = new ExtendedList<Attack>();
-        public IExtendedList<Attack> Attacks
+        private ExtendedList<Attack> _Attacks = new ExtendedList<Attack>();
+        public ExtendedList<Attack> Attacks
         {
             get => this._Attacks;
             protected set => this._Attacks = value;
@@ -152,8 +152,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Perks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<PerkPlacement>? _Perks;
-        public IExtendedList<PerkPlacement>? Perks
+        private ExtendedList<PerkPlacement>? _Perks;
+        public ExtendedList<PerkPlacement>? Perks
         {
             get => this._Perks;
             set => this._Perks = value;
@@ -166,8 +166,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<ContainerEntry>? _Items;
-        public IExtendedList<ContainerEntry>? Items
+        private ExtendedList<ContainerEntry>? _Items;
+        public ExtendedList<ContainerEntry>? Items
         {
             get => this._Items;
             set => this._Items = value;
@@ -185,8 +185,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Packages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IPackageGetter>> _Packages = new ExtendedList<IFormLink<IPackageGetter>>();
-        public IExtendedList<IFormLink<IPackageGetter>> Packages
+        private ExtendedList<IFormLink<IPackageGetter>> _Packages = new ExtendedList<IFormLink<IPackageGetter>>();
+        public ExtendedList<IFormLink<IPackageGetter>> Packages
         {
             get => this._Packages;
             protected set => this._Packages = value;
@@ -199,8 +199,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
-        public IExtendedList<IFormLink<IKeywordGetter>>? Keywords
+        private ExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
+        public ExtendedList<IFormLink<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -237,8 +237,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HeadParts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IHeadPartGetter>> _HeadParts = new ExtendedList<IFormLink<IHeadPartGetter>>();
-        public IExtendedList<IFormLink<IHeadPartGetter>> HeadParts
+        private ExtendedList<IFormLink<IHeadPartGetter>> _HeadParts = new ExtendedList<IFormLink<IHeadPartGetter>>();
+        public ExtendedList<IFormLink<IHeadPartGetter>> HeadParts
         {
             get => this._HeadParts;
             protected set => this._HeadParts = value;
@@ -326,8 +326,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region TintLayers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<TintLayer> _TintLayers = new ExtendedList<TintLayer>();
-        public IExtendedList<TintLayer> TintLayers
+        private ExtendedList<TintLayer> _TintLayers = new ExtendedList<TintLayer>();
+        public ExtendedList<TintLayer> TintLayers
         {
             get => this._TintLayers;
             protected set => this._TintLayers = value;
@@ -2708,31 +2708,31 @@ namespace Mutagen.Bethesda.Skyrim
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
         new NpcConfiguration Configuration { get; set; }
-        new IExtendedList<RankPlacement> Factions { get; }
+        new ExtendedList<RankPlacement> Factions { get; }
         new FormLinkNullable<ILeveledItemGetter> DeathItem { get; set; }
         new FormLinkNullable<IVoiceTypeGetter> Voice { get; set; }
         new FormLinkNullable<INpcSpawnGetter> Template { get; set; }
         new FormLink<IRaceGetter> Race { get; set; }
-        new IExtendedList<IFormLink<IASpellGetter>>? ActorEffect { get; set; }
+        new ExtendedList<IFormLink<IASpellGetter>>? ActorEffect { get; set; }
         new Destructible? Destructible { get; set; }
         new FormLinkNullable<IArmorGetter> WornArmor { get; set; }
         new FormLinkNullable<IArmorGetter> FarAwayModel { get; set; }
         new FormLinkNullable<IRaceGetter> AttackRace { get; set; }
-        new IExtendedList<Attack> Attacks { get; }
+        new ExtendedList<Attack> Attacks { get; }
         new FormLinkNullable<IFormListGetter> SpectatorOverridePackageList { get; set; }
         new FormLinkNullable<IFormListGetter> ObserveDeadBodyOverridePackageList { get; set; }
         new FormLinkNullable<IFormListGetter> GuardWarnOverridePackageList { get; set; }
         new FormLinkNullable<IFormListGetter> CombatOverridePackageList { get; set; }
-        new IExtendedList<PerkPlacement>? Perks { get; set; }
-        new IExtendedList<ContainerEntry>? Items { get; set; }
+        new ExtendedList<PerkPlacement>? Perks { get; set; }
+        new ExtendedList<ContainerEntry>? Items { get; set; }
         new AIData AIData { get; set; }
-        new IExtendedList<IFormLink<IPackageGetter>> Packages { get; }
-        new IExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
+        new ExtendedList<IFormLink<IPackageGetter>> Packages { get; }
+        new ExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
         new FormLink<IClassGetter> Class { get; set; }
         new TranslatedString? Name { get; set; }
         new TranslatedString? ShortName { get; set; }
         new PlayerSkills? PlayerSkills { get; set; }
-        new IExtendedList<IFormLink<IHeadPartGetter>> HeadParts { get; }
+        new ExtendedList<IFormLink<IHeadPartGetter>> HeadParts { get; }
         new FormLinkNullable<IColorRecordGetter> HairColor { get; set; }
         new FormLinkNullable<ICombatStyleGetter> CombatStyle { get; set; }
         new FormLinkNullable<IFormListGetter> GiftFilter { get; set; }
@@ -2749,7 +2749,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Color? TextureLighting { get; set; }
         new NpcFaceMorph? FaceMorph { get; set; }
         new NpcFaceParts? FaceParts { get; set; }
-        new IExtendedList<TintLayer> TintLayers { get; }
+        new ExtendedList<TintLayer> TintLayers { get; }
         #region Mutagen
         new Npc.MajorFlag MajorFlags { get; set; }
         #endregion

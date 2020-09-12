@@ -55,8 +55,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Parts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<BodyPart> _Parts = new ExtendedList<BodyPart>();
-        public IExtendedList<BodyPart> Parts
+        private ExtendedList<BodyPart> _Parts = new ExtendedList<BodyPart>();
+        public ExtendedList<BodyPart> Parts
         {
             get => this._Parts;
             protected set => this._Parts = value;
@@ -573,7 +573,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new Model? Model { get; set; }
-        new IExtendedList<BodyPart> Parts { get; }
+        new ExtendedList<BodyPart> Parts { get; }
     }
 
     public partial interface IBodyPartDataInternal :

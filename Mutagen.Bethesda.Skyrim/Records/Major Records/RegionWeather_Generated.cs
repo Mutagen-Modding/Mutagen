@@ -43,8 +43,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Weathers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<WeatherType>? _Weathers;
-        public IExtendedList<WeatherType>? Weathers
+        private ExtendedList<WeatherType>? _Weathers;
+        public ExtendedList<WeatherType>? Weathers
         {
             get => this._Weathers;
             set => this._Weathers = value;
@@ -498,7 +498,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IRegionWeather>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<WeatherType>? Weathers { get; set; }
+        new ExtendedList<WeatherType>? Weathers { get; set; }
     }
 
     public partial interface IRegionWeatherGetter :

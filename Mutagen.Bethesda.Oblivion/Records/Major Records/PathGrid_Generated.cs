@@ -44,8 +44,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region PointToPointConnections
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<PathGridPoint>? _PointToPointConnections;
-        public IExtendedList<PathGridPoint>? PointToPointConnections
+        private ExtendedList<PathGridPoint>? _PointToPointConnections;
+        public ExtendedList<PathGridPoint>? PointToPointConnections
         {
             get => this._PointToPointConnections;
             set => this._PointToPointConnections = value;
@@ -69,8 +69,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region InterCellConnections
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<InterCellPoint>? _InterCellConnections;
-        public IExtendedList<InterCellPoint>? InterCellConnections
+        private ExtendedList<InterCellPoint>? _InterCellConnections;
+        public ExtendedList<InterCellPoint>? InterCellConnections
         {
             get => this._InterCellConnections;
             set => this._InterCellConnections = value;
@@ -83,8 +83,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region PointToReferenceMappings
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<PointToReferenceMapping> _PointToReferenceMappings = new ExtendedList<PointToReferenceMapping>();
-        public IExtendedList<PointToReferenceMapping> PointToReferenceMappings
+        private ExtendedList<PointToReferenceMapping> _PointToReferenceMappings = new ExtendedList<PointToReferenceMapping>();
+        public ExtendedList<PointToReferenceMapping> PointToReferenceMappings
         {
             get => this._PointToReferenceMappings;
             protected set => this._PointToReferenceMappings = value;
@@ -796,10 +796,10 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IPathGridInternal>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<PathGridPoint>? PointToPointConnections { get; set; }
+        new ExtendedList<PathGridPoint>? PointToPointConnections { get; set; }
         new MemorySlice<Byte>? PGAG { get; set; }
-        new IExtendedList<InterCellPoint>? InterCellConnections { get; set; }
-        new IExtendedList<PointToReferenceMapping> PointToReferenceMappings { get; }
+        new ExtendedList<InterCellPoint>? InterCellConnections { get; set; }
+        new ExtendedList<PointToReferenceMapping> PointToReferenceMappings { get; }
     }
 
     public partial interface IPathGridInternal :

@@ -78,8 +78,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ConnectionLineToIndices
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<UInt32> _ConnectionLineToIndices = new ExtendedList<UInt32>();
-        public IExtendedList<UInt32> ConnectionLineToIndices
+        private ExtendedList<UInt32> _ConnectionLineToIndices = new ExtendedList<UInt32>();
+        public ExtendedList<UInt32> ConnectionLineToIndices
         {
             get => this._ConnectionLineToIndices;
             protected set => this._ConnectionLineToIndices = value;
@@ -775,7 +775,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single? HorizontalPosition { get; set; }
         new Single? VerticalPosition { get; set; }
         new FormLinkNullable<IActorValueInformationGetter> AssociatedSkill { get; set; }
-        new IExtendedList<UInt32> ConnectionLineToIndices { get; }
+        new ExtendedList<UInt32> ConnectionLineToIndices { get; }
         new UInt32? Index { get; set; }
     }
 

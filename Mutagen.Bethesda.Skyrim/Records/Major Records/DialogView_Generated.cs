@@ -47,8 +47,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Branches
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IDialogBranchGetter>> _Branches = new ExtendedList<IFormLink<IDialogBranchGetter>>();
-        public IExtendedList<IFormLink<IDialogBranchGetter>> Branches
+        private ExtendedList<IFormLink<IDialogBranchGetter>> _Branches = new ExtendedList<IFormLink<IDialogBranchGetter>>();
+        public ExtendedList<IFormLink<IDialogBranchGetter>> Branches
         {
             get => this._Branches;
             protected set => this._Branches = value;
@@ -748,7 +748,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new FormLink<IQuestGetter> Quest { get; set; }
-        new IExtendedList<IFormLink<IDialogBranchGetter>> Branches { get; }
+        new ExtendedList<IFormLink<IDialogBranchGetter>> Branches { get; }
         new SliceList<byte> TNAMs { get; }
         new MemorySlice<Byte>? ENAM { get; set; }
         new MemorySlice<Byte>? DNAM { get; set; }

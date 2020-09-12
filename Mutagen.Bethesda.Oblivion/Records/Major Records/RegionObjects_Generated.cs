@@ -43,8 +43,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Objects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<RegionObject>? _Objects;
-        public IExtendedList<RegionObject>? Objects
+        private ExtendedList<RegionObject>? _Objects;
+        public ExtendedList<RegionObject>? Objects
         {
             get => this._Objects;
             set => this._Objects = value;
@@ -496,7 +496,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IRegionObjects>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<RegionObject>? Objects { get; set; }
+        new ExtendedList<RegionObject>? Objects { get; set; }
     }
 
     public partial interface IRegionObjectsGetter :

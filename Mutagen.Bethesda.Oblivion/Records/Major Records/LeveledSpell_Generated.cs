@@ -54,8 +54,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Entries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<LeveledEntry<ASpell>> _Entries = new ExtendedList<LeveledEntry<ASpell>>();
-        public IExtendedList<LeveledEntry<ASpell>> Entries
+        private ExtendedList<LeveledEntry<ASpell>> _Entries = new ExtendedList<LeveledEntry<ASpell>>();
+        public ExtendedList<LeveledEntry<ASpell>> Entries
         {
             get => this._Entries;
             protected set => this._Entries = value;
@@ -591,7 +591,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new Byte? ChanceNone { get; set; }
         new LeveledFlag? Flags { get; set; }
-        new IExtendedList<LeveledEntry<ASpell>> Entries { get; }
+        new ExtendedList<LeveledEntry<ASpell>> Entries { get; }
     }
 
     public partial interface ILeveledSpellInternal :

@@ -53,8 +53,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RegionAreas
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<RegionArea> _RegionAreas = new ExtendedList<RegionArea>();
-        public IExtendedList<RegionArea> RegionAreas
+        private ExtendedList<RegionArea> _RegionAreas = new ExtendedList<RegionArea>();
+        public ExtendedList<RegionArea> RegionAreas
         {
             get => this._RegionAreas;
             protected set => this._RegionAreas = value;
@@ -874,7 +874,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Color? MapColor { get; set; }
         new FormLinkNullable<IWorldspaceGetter> Worldspace { get; set; }
-        new IExtendedList<RegionArea> RegionAreas { get; }
+        new ExtendedList<RegionArea> RegionAreas { get; }
         new RegionObjects? Objects { get; set; }
         new RegionWeather? Weather { get; set; }
         new RegionMap? Map { get; set; }

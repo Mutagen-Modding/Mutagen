@@ -46,8 +46,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<RegionSound>? _Sounds;
-        public IExtendedList<RegionSound>? Sounds
+        private ExtendedList<RegionSound>? _Sounds;
+        public ExtendedList<RegionSound>? Sounds
         {
             get => this._Sounds;
             set => this._Sounds = value;
@@ -530,7 +530,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new FormLinkNullable<IMusicTypeGetter> Music { get; set; }
-        new IExtendedList<RegionSound>? Sounds { get; set; }
+        new ExtendedList<RegionSound>? Sounds { get; set; }
     }
 
     public partial interface IRegionSoundsGetter :

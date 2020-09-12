@@ -49,8 +49,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Relations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Relation> _Relations = new ExtendedList<Relation>();
-        public IExtendedList<Relation> Relations
+        private ExtendedList<Relation> _Relations = new ExtendedList<Relation>();
+        public ExtendedList<Relation> Relations
         {
             get => this._Relations;
             protected set => this._Relations = value;
@@ -95,8 +95,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Ranks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Rank> _Ranks = new ExtendedList<Rank>();
-        public IExtendedList<Rank> Ranks
+        private ExtendedList<Rank> _Ranks = new ExtendedList<Rank>();
+        public ExtendedList<Rank> Ranks
         {
             get => this._Ranks;
             protected set => this._Ranks = value;
@@ -137,8 +137,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition>? _Conditions;
-        public IExtendedList<Condition>? Conditions
+        private ExtendedList<Condition>? _Conditions;
+        public ExtendedList<Condition>? Conditions
         {
             get => this._Conditions;
             set => this._Conditions = value;
@@ -1214,7 +1214,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new TranslatedString? Name { get; set; }
-        new IExtendedList<Relation> Relations { get; }
+        new ExtendedList<Relation> Relations { get; }
         new Faction.FactionFlag Flags { get; set; }
         new FormLinkNullable<IPlacedObjectGetter> ExteriorJailMarker { get; set; }
         new FormLinkNullable<IPlacedObjectGetter> FollowerWaitMarker { get; set; }
@@ -1223,12 +1223,12 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<IFormListGetter> SharedCrimeFactionList { get; set; }
         new FormLinkNullable<IOutfitGetter> JailOutfit { get; set; }
         new CrimeValues? CrimeValues { get; set; }
-        new IExtendedList<Rank> Ranks { get; }
+        new ExtendedList<Rank> Ranks { get; }
         new FormLinkNullable<IFormListGetter> VendorBuySellList { get; set; }
         new FormLinkNullable<IPlacedObjectGetter> MerchantContainer { get; set; }
         new VendorValues? VendorValues { get; set; }
         new LocationTargetRadius? VendorLocation { get; set; }
-        new IExtendedList<Condition>? Conditions { get; set; }
+        new ExtendedList<Condition>? Conditions { get; set; }
     }
 
     public partial interface IFactionInternal :

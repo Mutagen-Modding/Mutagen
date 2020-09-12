@@ -81,8 +81,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region PerkTree
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<ActorValuePerkNode> _PerkTree = new ExtendedList<ActorValuePerkNode>();
-        public IExtendedList<ActorValuePerkNode> PerkTree
+        private ExtendedList<ActorValuePerkNode> _PerkTree = new ExtendedList<ActorValuePerkNode>();
+        public ExtendedList<ActorValuePerkNode> PerkTree
         {
             get => this._PerkTree;
             protected set => this._PerkTree = value;
@@ -715,7 +715,7 @@ namespace Mutagen.Bethesda.Skyrim
         new String? Abbreviation { get; set; }
         new MemorySlice<Byte>? CNAM { get; set; }
         new ActorValueSkill? Skill { get; set; }
-        new IExtendedList<ActorValuePerkNode> PerkTree { get; }
+        new ExtendedList<ActorValuePerkNode> PerkTree { get; }
     }
 
     public partial interface IActorValueInformationInternal :

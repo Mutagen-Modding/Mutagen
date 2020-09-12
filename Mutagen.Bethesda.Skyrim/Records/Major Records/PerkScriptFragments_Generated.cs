@@ -48,8 +48,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Fragments
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IndexedScriptFragment> _Fragments = new ExtendedList<IndexedScriptFragment>();
-        public IExtendedList<IndexedScriptFragment> Fragments
+        private ExtendedList<IndexedScriptFragment> _Fragments = new ExtendedList<IndexedScriptFragment>();
+        public ExtendedList<IndexedScriptFragment> Fragments
         {
             get => this._Fragments;
             protected set => this._Fragments = value;
@@ -558,7 +558,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new SByte Unknown { get; set; }
         new String FileName { get; set; }
-        new IExtendedList<IndexedScriptFragment> Fragments { get; }
+        new ExtendedList<IndexedScriptFragment> Fragments { get; }
     }
 
     public partial interface IPerkScriptFragmentsGetter :

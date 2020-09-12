@@ -74,8 +74,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public IExtendedList<Condition> Conditions
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -106,8 +106,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<APerkEffect> _Effects = new ExtendedList<APerkEffect>();
-        public IExtendedList<APerkEffect> Effects
+        private ExtendedList<APerkEffect> _Effects = new ExtendedList<APerkEffect>();
+        public ExtendedList<APerkEffect> Effects
         {
             get => this._Effects;
             protected set => this._Effects = value;
@@ -1030,14 +1030,14 @@ namespace Mutagen.Bethesda.Skyrim
         new TranslatedString? Name { get; set; }
         new TranslatedString Description { get; set; }
         new Icons? Icons { get; set; }
-        new IExtendedList<Condition> Conditions { get; }
+        new ExtendedList<Condition> Conditions { get; }
         new Boolean Trait { get; set; }
         new Byte Level { get; set; }
         new Byte NumRanks { get; set; }
         new Boolean Playable { get; set; }
         new Boolean Hidden { get; set; }
         new FormLinkNullable<IPerkGetter> NextPerk { get; set; }
-        new IExtendedList<APerkEffect> Effects { get; }
+        new ExtendedList<APerkEffect> Effects { get; }
         new Perk.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
         new Perk.MajorFlag MajorFlags { get; set; }

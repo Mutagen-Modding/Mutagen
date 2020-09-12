@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region TextDisplayGlobals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IGlobalGetter>> _TextDisplayGlobals = new ExtendedList<IFormLink<IGlobalGetter>>();
-        public IExtendedList<IFormLink<IGlobalGetter>> TextDisplayGlobals
+        private ExtendedList<IFormLink<IGlobalGetter>> _TextDisplayGlobals = new ExtendedList<IFormLink<IGlobalGetter>>();
+        public ExtendedList<IFormLink<IGlobalGetter>> TextDisplayGlobals
         {
             get => this._TextDisplayGlobals;
             protected set => this._TextDisplayGlobals = value;
@@ -99,8 +99,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region DialogConditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition> _DialogConditions = new ExtendedList<Condition>();
-        public IExtendedList<Condition> DialogConditions
+        private ExtendedList<Condition> _DialogConditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> DialogConditions
         {
             get => this._DialogConditions;
             protected set => this._DialogConditions = value;
@@ -113,8 +113,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region UnusedConditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition> _UnusedConditions = new ExtendedList<Condition>();
-        public IExtendedList<Condition> UnusedConditions
+        private ExtendedList<Condition> _UnusedConditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> UnusedConditions
         {
             get => this._UnusedConditions;
             protected set => this._UnusedConditions = value;
@@ -127,8 +127,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Stages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<QuestStage> _Stages = new ExtendedList<QuestStage>();
-        public IExtendedList<QuestStage> Stages
+        private ExtendedList<QuestStage> _Stages = new ExtendedList<QuestStage>();
+        public ExtendedList<QuestStage> Stages
         {
             get => this._Stages;
             protected set => this._Stages = value;
@@ -141,8 +141,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Objectives
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<QuestObjective> _Objectives = new ExtendedList<QuestObjective>();
-        public IExtendedList<QuestObjective> Objectives
+        private ExtendedList<QuestObjective> _Objectives = new ExtendedList<QuestObjective>();
+        public ExtendedList<QuestObjective> Objectives
         {
             get => this._Objectives;
             protected set => this._Objectives = value;
@@ -155,8 +155,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Aliases
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<QuestAlias> _Aliases = new ExtendedList<QuestAlias>();
-        public IExtendedList<QuestAlias> Aliases
+        private ExtendedList<QuestAlias> _Aliases = new ExtendedList<QuestAlias>();
+        public ExtendedList<QuestAlias> Aliases
         {
             get => this._Aliases;
             protected set => this._Aliases = value;
@@ -1485,13 +1485,13 @@ namespace Mutagen.Bethesda.Skyrim
         new Int32 Unknown { get; set; }
         new Quest.TypeEnum Type { get; set; }
         new RecordType? Event { get; set; }
-        new IExtendedList<IFormLink<IGlobalGetter>> TextDisplayGlobals { get; }
+        new ExtendedList<IFormLink<IGlobalGetter>> TextDisplayGlobals { get; }
         new String? ObjectWindowFilter { get; set; }
-        new IExtendedList<Condition> DialogConditions { get; }
-        new IExtendedList<Condition> UnusedConditions { get; }
-        new IExtendedList<QuestStage> Stages { get; }
-        new IExtendedList<QuestObjective> Objectives { get; }
-        new IExtendedList<QuestAlias> Aliases { get; }
+        new ExtendedList<Condition> DialogConditions { get; }
+        new ExtendedList<Condition> UnusedConditions { get; }
+        new ExtendedList<QuestStage> Stages { get; }
+        new ExtendedList<QuestObjective> Objectives { get; }
+        new ExtendedList<QuestAlias> Aliases { get; }
         new TranslatedString? Description { get; set; }
         new Quest.DNAMDataType DNAMDataTypeState { get; set; }
     }

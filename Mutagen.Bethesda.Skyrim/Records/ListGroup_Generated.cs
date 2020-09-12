@@ -57,8 +57,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Records
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<T> _Records = new ExtendedList<T>();
-        public IExtendedList<T> Records
+        private ExtendedList<T> _Records = new ExtendedList<T>();
+        public ExtendedList<T> Records
         {
             get => this._Records;
             protected set => this._Records = value;
@@ -209,7 +209,7 @@ namespace Mutagen.Bethesda.Skyrim
         new GroupTypeEnum Type { get; set; }
         new Int32 LastModified { get; set; }
         new Int32 Unknown { get; set; }
-        new IExtendedList<T> Records { get; }
+        new ExtendedList<T> Records { get; }
     }
 
     public partial interface IListGroupGetter<out T> :
@@ -754,7 +754,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case ListGroup_FieldIndex.Unknown:
                     return typeof(Int32);
                 case ListGroup_FieldIndex.Records:
-                    return typeof(IExtendedList<T>);
+                    return typeof(ExtendedList<T>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

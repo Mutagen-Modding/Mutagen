@@ -76,8 +76,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Responses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<DialogResponses> _Responses = new ExtendedList<DialogResponses>();
-        public IExtendedList<DialogResponses> Responses
+        private ExtendedList<DialogResponses> _Responses = new ExtendedList<DialogResponses>();
+        public ExtendedList<DialogResponses> Responses
         {
             get => this._Responses;
             protected set => this._Responses = value;
@@ -919,7 +919,7 @@ namespace Mutagen.Bethesda.Skyrim
         new RecordType SubtypeName { get; set; }
         new Int32 Timestamp { get; set; }
         new Int32 Unknown { get; set; }
-        new IExtendedList<DialogResponses> Responses { get; }
+        new ExtendedList<DialogResponses> Responses { get; }
         new DialogTopic.DATADataType DATADataTypeState { get; set; }
     }
 

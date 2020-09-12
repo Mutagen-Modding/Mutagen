@@ -59,8 +59,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<ISpellGetter>> _Spells = new ExtendedList<IFormLink<ISpellGetter>>();
-        public IExtendedList<IFormLink<ISpellGetter>> Spells
+        private ExtendedList<IFormLink<ISpellGetter>> _Spells = new ExtendedList<IFormLink<ISpellGetter>>();
+        public ExtendedList<IFormLink<ISpellGetter>> Spells
         {
             get => this._Spells;
             protected set => this._Spells = value;
@@ -624,7 +624,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Name { get; set; }
         new String? Icon { get; set; }
         new String? Description { get; set; }
-        new IExtendedList<IFormLink<ISpellGetter>> Spells { get; }
+        new ExtendedList<IFormLink<ISpellGetter>> Spells { get; }
     }
 
     public partial interface IBirthsignInternal :
