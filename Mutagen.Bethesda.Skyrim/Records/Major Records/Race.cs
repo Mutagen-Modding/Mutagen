@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 for (int i = 0; i < NumBipedObjectNames; i++)
                 {
-                    var subHeader = frame.Reader.ReadSubrecordFrame(RecordTypes.NAME);
+                    if (!frame.Reader.TryReadSubrecordFrame(RecordTypes.NAME, out var subHeader)) break;
                     BipedObject type = (BipedObject)i;
                     var val = BinaryStringUtility.ProcessWholeToZString(subHeader.Content);
                     if (!string.IsNullOrEmpty(val))
@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Skyrim
                     var loc = _bipedObjectNamesLoc.Value;
                     for (int i = 0; i < RaceBinaryCreateTranslation.NumBipedObjectNames; i++)
                     {
-                        var subHeader = _package.MetaData.Constants.SubrecordFrame(_data.Slice(loc), RecordTypes.NAME);
+                        if (!_package.MetaData.Constants.TrySubrecordFrame(_data.Slice(loc), RecordTypes.NAME, out var subHeader)) break;
                         BipedObject type = (BipedObject)i;
                         var val = BinaryStringUtility.ProcessWholeToZString(subHeader.Content);
                         if (!string.IsNullOrEmpty(val))
