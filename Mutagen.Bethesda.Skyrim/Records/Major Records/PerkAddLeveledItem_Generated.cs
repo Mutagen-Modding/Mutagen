@@ -42,9 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Item
-        public FormLink<LeveledItem> Item { get; set; } = new FormLink<LeveledItem>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ILeveledItemGetter> IPerkAddLeveledItemGetter.Item => this.Item.ToGetter<LeveledItem, ILeveledItemGetter>();
+        public FormLink<ILeveledItemGetter> Item { get; set; } = new FormLink<ILeveledItemGetter>();
         #endregion
 
         #region To String
@@ -423,7 +421,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPerkAddLeveledItem>,
         ILinkedFormKeyContainer
     {
-        new FormLink<LeveledItem> Item { get; set; }
+        new FormLink<ILeveledItemGetter> Item { get; set; }
     }
 
     public partial interface IPerkAddLeveledItemGetter :
@@ -671,7 +669,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IPerkAddLeveledItem item)
         {
             ClearPartial();
-            item.Item = FormLink<LeveledItem>.Null;
+            item.Item = FormLink<ILeveledItemGetter>.Null;
             base.Clear(item);
         }
         
@@ -936,7 +934,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PerkAddLeveledItem_FieldIndex.Item) ?? true))
             {
-                item.Item = new FormLink<LeveledItem>(rhs.Item.FormKey);
+                item.Item = new FormLink<ILeveledItemGetter>(rhs.Item.FormKey);
             }
         }
         

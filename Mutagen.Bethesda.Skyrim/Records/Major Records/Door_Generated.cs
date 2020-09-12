@@ -86,19 +86,13 @@ namespace Mutagen.Bethesda.Skyrim
         IDestructibleGetter? IDoorGetter.Destructible => this.Destructible;
         #endregion
         #region OpenSound
-        public FormLinkNullable<SoundDescriptor> OpenSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IDoorGetter.OpenSound => this.OpenSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> OpenSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region CloseSound
-        public FormLinkNullable<SoundDescriptor> CloseSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IDoorGetter.CloseSound => this.CloseSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> CloseSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region LoopSound
-        public FormLinkNullable<SoundDescriptor> LoopSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IDoorGetter.LoopSound => this.LoopSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> LoopSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region Flags
         public Door.Flag Flags { get; set; } = default;
@@ -764,9 +758,9 @@ namespace Mutagen.Bethesda.Skyrim
         new TranslatedString? Name { get; set; }
         new Model? Model { get; set; }
         new Destructible? Destructible { get; set; }
-        new FormLinkNullable<SoundDescriptor> OpenSound { get; set; }
-        new FormLinkNullable<SoundDescriptor> CloseSound { get; set; }
-        new FormLinkNullable<SoundDescriptor> LoopSound { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> OpenSound { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> CloseSound { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> LoopSound { get; set; }
         new Door.Flag Flags { get; set; }
         #region Mutagen
         new Door.MajorFlag MajorFlags { get; set; }
@@ -1056,9 +1050,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Name = default;
             item.Model = null;
             item.Destructible = null;
-            item.OpenSound = FormLinkNullable<SoundDescriptor>.Null;
-            item.CloseSound = FormLinkNullable<SoundDescriptor>.Null;
-            item.LoopSound = FormLinkNullable<SoundDescriptor>.Null;
+            item.OpenSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
+            item.CloseSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
+            item.LoopSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
             item.Flags = default;
             base.Clear(item);
         }
@@ -1570,15 +1564,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.OpenSound) ?? true))
             {
-                item.OpenSound = new FormLinkNullable<SoundDescriptor>(rhs.OpenSound.FormKey);
+                item.OpenSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.OpenSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.CloseSound) ?? true))
             {
-                item.CloseSound = new FormLinkNullable<SoundDescriptor>(rhs.CloseSound.FormKey);
+                item.CloseSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.CloseSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.LoopSound) ?? true))
             {
-                item.LoopSound = new FormLinkNullable<SoundDescriptor>(rhs.LoopSound.FormKey);
+                item.LoopSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.LoopSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.Flags) ?? true))
             {

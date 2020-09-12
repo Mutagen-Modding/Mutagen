@@ -43,9 +43,7 @@ namespace Mutagen.Bethesda.Skyrim
         public WaterReflection.VersioningBreaks Versioning { get; set; } = default;
         #endregion
         #region Water
-        public FormLink<PlacedObject> Water { get; set; } = new FormLink<PlacedObject>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IPlacedObjectGetter> IWaterReflectionGetter.Water => this.Water.ToGetter<PlacedObject, IPlacedObjectGetter>();
+        public FormLink<IPlacedObjectGetter> Water { get; set; } = new FormLink<IPlacedObjectGetter>();
         #endregion
         #region Type
         public WaterReflection.Flag Type { get; set; } = default;
@@ -488,7 +486,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new WaterReflection.VersioningBreaks Versioning { get; set; }
-        new FormLink<PlacedObject> Water { get; set; }
+        new FormLink<IPlacedObjectGetter> Water { get; set; }
         new WaterReflection.Flag Type { get; set; }
     }
 
@@ -767,7 +765,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Versioning = default;
-            item.Water = FormLink<PlacedObject>.Null;
+            item.Water = FormLink<IPlacedObjectGetter>.Null;
             item.Type = default;
         }
         
@@ -937,7 +935,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)WaterReflection_FieldIndex.Water) ?? true))
             {
-                item.Water = new FormLink<PlacedObject>(rhs.Water.FormKey);
+                item.Water = new FormLink<IPlacedObjectGetter>(rhs.Water.FormKey);
             }
             if (rhs.Versioning.HasFlag(WaterReflection.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)WaterReflection_FieldIndex.Type) ?? true))

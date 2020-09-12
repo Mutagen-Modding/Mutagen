@@ -113,14 +113,10 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? IWeatherGetter.LNAM => this.LNAM;
         #endregion
         #region Precipitation
-        public FormLinkNullable<ShaderParticleGeometry> Precipitation { get; set; } = new FormLinkNullable<ShaderParticleGeometry>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IShaderParticleGeometryGetter> IWeatherGetter.Precipitation => this.Precipitation.ToGetter<ShaderParticleGeometry, IShaderParticleGeometryGetter>();
+        public FormLinkNullable<IShaderParticleGeometryGetter> Precipitation { get; set; } = new FormLinkNullable<IShaderParticleGeometryGetter>();
         #endregion
         #region VisualEffect
-        public FormLink<VisualEffect> VisualEffect { get; set; } = new FormLink<VisualEffect>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IVisualEffectGetter> IWeatherGetter.VisualEffect => this.VisualEffect.ToGetter<VisualEffect, IVisualEffectGetter>();
+        public FormLink<IVisualEffectGetter> VisualEffect { get; set; } = new FormLink<IVisualEffectGetter>();
         #endregion
         #region ONAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -323,8 +319,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region SkyStatics
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Static>> _SkyStatics = new ExtendedList<IFormLink<Static>>();
-        public IExtendedList<IFormLink<Static>> SkyStatics
+        private IExtendedList<IFormLink<IStaticGetter>> _SkyStatics = new ExtendedList<IFormLink<IStaticGetter>>();
+        public IExtendedList<IFormLink<IStaticGetter>> SkyStatics
         {
             get => this._SkyStatics;
             protected set => this._SkyStatics = value;
@@ -402,9 +398,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModelGetter? IWeatherGetter.Aurora => this.Aurora;
         #endregion
         #region SunGlareLensFlare
-        public FormLinkNullable<LensFlare> SunGlareLensFlare { get; set; } = new FormLinkNullable<LensFlare>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ILensFlareGetter> IWeatherGetter.SunGlareLensFlare => this.SunGlareLensFlare.ToGetter<LensFlare, ILensFlareGetter>();
+        public FormLinkNullable<ILensFlareGetter> SunGlareLensFlare { get; set; } = new FormLinkNullable<ILensFlareGetter>();
         #endregion
         #region NAM0DataTypeState
         public Weather.NAM0DataType NAM0DataTypeState { get; set; } = default;
@@ -3008,8 +3002,8 @@ namespace Mutagen.Bethesda.Skyrim
         new MemorySlice<Byte>? ANAM { get; set; }
         new MemorySlice<Byte>? BNAM { get; set; }
         new MemorySlice<Byte>? LNAM { get; set; }
-        new FormLinkNullable<ShaderParticleGeometry> Precipitation { get; set; }
-        new FormLink<VisualEffect> VisualEffect { get; set; }
+        new FormLinkNullable<IShaderParticleGeometryGetter> Precipitation { get; set; }
+        new FormLink<IVisualEffectGetter> VisualEffect { get; set; }
         new MemorySlice<Byte>? ONAM { get; set; }
         new CloudLayer[] Clouds { get; }
         new WeatherColor SkyUpperColor { get; set; }
@@ -3054,14 +3048,14 @@ namespace Mutagen.Bethesda.Skyrim
         new Single WindDirection { get; set; }
         new Single WindDirectionRange { get; set; }
         new IExtendedList<WeatherSound> Sounds { get; }
-        new IExtendedList<IFormLink<Static>> SkyStatics { get; }
+        new IExtendedList<IFormLink<IStaticGetter>> SkyStatics { get; }
         new WeatherImageSpaces? ImageSpaces { get; set; }
         new WeatherVolumetricLighting? VolumetricLighting { get; set; }
         new WeatherAmbientColorSet? DirectionalAmbientLightingColors { get; set; }
         new MemorySlice<Byte>? NAM2 { get; set; }
         new MemorySlice<Byte>? NAM3 { get; set; }
         new Model? Aurora { get; set; }
-        new FormLinkNullable<LensFlare> SunGlareLensFlare { get; set; }
+        new FormLinkNullable<ILensFlareGetter> SunGlareLensFlare { get; set; }
         new Weather.NAM0DataType NAM0DataTypeState { get; set; }
         new Weather.FNAMDataType FNAMDataTypeState { get; set; }
         new Weather.DATADataType DATADataTypeState { get; set; }
@@ -3449,8 +3443,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ANAM = default;
             item.BNAM = default;
             item.LNAM = default;
-            item.Precipitation = FormLinkNullable<ShaderParticleGeometry>.Null;
-            item.VisualEffect = FormLink<VisualEffect>.Null;
+            item.Precipitation = FormLinkNullable<IShaderParticleGeometryGetter>.Null;
+            item.VisualEffect = FormLink<IVisualEffectGetter>.Null;
             item.ONAM = default;
             item.Clouds.Fill(() => new CloudLayer());
             item.SkyUpperColor.Clear();
@@ -3502,7 +3496,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.NAM2 = default;
             item.NAM3 = default;
             item.Aurora = null;
-            item.SunGlareLensFlare = FormLinkNullable<LensFlare>.Null;
+            item.SunGlareLensFlare = FormLinkNullable<ILensFlareGetter>.Null;
             item.NAM0DataTypeState = default;
             item.FNAMDataTypeState = default;
             item.DATADataTypeState = default;
@@ -4458,11 +4452,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.Precipitation) ?? true))
             {
-                item.Precipitation = new FormLinkNullable<ShaderParticleGeometry>(rhs.Precipitation.FormKey);
+                item.Precipitation = new FormLinkNullable<IShaderParticleGeometryGetter>(rhs.Precipitation.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.VisualEffect) ?? true))
             {
-                item.VisualEffect = new FormLink<VisualEffect>(rhs.VisualEffect.FormKey);
+                item.VisualEffect = new FormLink<IVisualEffectGetter>(rhs.VisualEffect.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.ONAM) ?? true))
             {
@@ -4987,7 +4981,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.SkyStatics.SetTo(
                         rhs.SkyStatics
-                        .Select(r => (IFormLink<Static>)new FormLink<Static>(r.FormKey)));
+                        .Select(r => (IFormLink<IStaticGetter>)new FormLink<IStaticGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5127,7 +5121,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.SunGlareLensFlare) ?? true))
             {
-                item.SunGlareLensFlare = new FormLinkNullable<LensFlare>(rhs.SunGlareLensFlare.FormKey);
+                item.SunGlareLensFlare = new FormLinkNullable<ILensFlareGetter>(rhs.SunGlareLensFlare.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.NAM0DataTypeState) ?? true))
             {
@@ -5981,7 +5975,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.TNAM:
                 {
                     item.SkyStatics.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Static>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IStaticGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));

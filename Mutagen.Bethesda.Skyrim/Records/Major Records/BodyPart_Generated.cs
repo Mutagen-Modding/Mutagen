@@ -81,14 +81,10 @@ namespace Mutagen.Bethesda.Skyrim
         public UInt16 ExplodableDebrisCount { get; set; } = default;
         #endregion
         #region ExplodableDebris
-        public FormLink<Debris> ExplodableDebris { get; set; } = new FormLink<Debris>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IDebrisGetter> IBodyPartGetter.ExplodableDebris => this.ExplodableDebris.ToGetter<Debris, IDebrisGetter>();
+        public FormLink<IDebrisGetter> ExplodableDebris { get; set; } = new FormLink<IDebrisGetter>();
         #endregion
         #region ExplodableExplosion
-        public FormLink<Explosion> ExplodableExplosion { get; set; } = new FormLink<Explosion>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IExplosionGetter> IBodyPartGetter.ExplodableExplosion => this.ExplodableExplosion.ToGetter<Explosion, IExplosionGetter>();
+        public FormLink<IExplosionGetter> ExplodableExplosion { get; set; } = new FormLink<IExplosionGetter>();
         #endregion
         #region TrackingMaxAngle
         public Single TrackingMaxAngle { get; set; } = default;
@@ -100,14 +96,10 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 SeverableDebrisCount { get; set; } = default;
         #endregion
         #region SeverableDebris
-        public FormLink<Debris> SeverableDebris { get; set; } = new FormLink<Debris>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IDebrisGetter> IBodyPartGetter.SeverableDebris => this.SeverableDebris.ToGetter<Debris, IDebrisGetter>();
+        public FormLink<IDebrisGetter> SeverableDebris { get; set; } = new FormLink<IDebrisGetter>();
         #endregion
         #region SeverableExplosion
-        public FormLink<Explosion> SeverableExplosion { get; set; } = new FormLink<Explosion>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IExplosionGetter> IBodyPartGetter.SeverableExplosion => this.SeverableExplosion.ToGetter<Explosion, IExplosionGetter>();
+        public FormLink<IExplosionGetter> SeverableExplosion { get; set; } = new FormLink<IExplosionGetter>();
         #endregion
         #region SeverableDebrisScale
         public Single SeverableDebrisScale { get; set; } = default;
@@ -119,14 +111,10 @@ namespace Mutagen.Bethesda.Skyrim
         public P3Float GoreRotation { get; set; } = default;
         #endregion
         #region SeverableImpactData
-        public FormLink<ImpactDataSet> SeverableImpactData { get; set; } = new FormLink<ImpactDataSet>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IImpactDataSetGetter> IBodyPartGetter.SeverableImpactData => this.SeverableImpactData.ToGetter<ImpactDataSet, IImpactDataSetGetter>();
+        public FormLink<IImpactDataSetGetter> SeverableImpactData { get; set; } = new FormLink<IImpactDataSetGetter>();
         #endregion
         #region ExplodableImpactData
-        public FormLink<ImpactDataSet> ExplodableImpactData { get; set; } = new FormLink<ImpactDataSet>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IImpactDataSetGetter> IBodyPartGetter.ExplodableImpactData => this.ExplodableImpactData.ToGetter<ImpactDataSet, IImpactDataSetGetter>();
+        public FormLink<IImpactDataSetGetter> ExplodableImpactData { get; set; } = new FormLink<IImpactDataSetGetter>();
         #endregion
         #region SeverableDecalCount
         public Byte SeverableDecalCount { get; set; } = default;
@@ -1450,18 +1438,18 @@ namespace Mutagen.Bethesda.Skyrim
         new Byte ToHitChance { get; set; }
         new Byte ExplodableExplosionChance { get; set; }
         new UInt16 ExplodableDebrisCount { get; set; }
-        new FormLink<Debris> ExplodableDebris { get; set; }
-        new FormLink<Explosion> ExplodableExplosion { get; set; }
+        new FormLink<IDebrisGetter> ExplodableDebris { get; set; }
+        new FormLink<IExplosionGetter> ExplodableExplosion { get; set; }
         new Single TrackingMaxAngle { get; set; }
         new Single ExplodableDebrisScale { get; set; }
         new Int32 SeverableDebrisCount { get; set; }
-        new FormLink<Debris> SeverableDebris { get; set; }
-        new FormLink<Explosion> SeverableExplosion { get; set; }
+        new FormLink<IDebrisGetter> SeverableDebris { get; set; }
+        new FormLink<IExplosionGetter> SeverableExplosion { get; set; }
         new Single SeverableDebrisScale { get; set; }
         new P3Float GorePositioning { get; set; }
         new P3Float GoreRotation { get; set; }
-        new FormLink<ImpactDataSet> SeverableImpactData { get; set; }
-        new FormLink<ImpactDataSet> ExplodableImpactData { get; set; }
+        new FormLink<IImpactDataSetGetter> SeverableImpactData { get; set; }
+        new FormLink<IImpactDataSetGetter> ExplodableImpactData { get; set; }
         new Byte SeverableDecalCount { get; set; }
         new Byte ExplodableDecalCount { get; set; }
         new UInt16 Unknown { get; set; }
@@ -1820,18 +1808,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ToHitChance = default;
             item.ExplodableExplosionChance = default;
             item.ExplodableDebrisCount = default;
-            item.ExplodableDebris = FormLink<Debris>.Null;
-            item.ExplodableExplosion = FormLink<Explosion>.Null;
+            item.ExplodableDebris = FormLink<IDebrisGetter>.Null;
+            item.ExplodableExplosion = FormLink<IExplosionGetter>.Null;
             item.TrackingMaxAngle = default;
             item.ExplodableDebrisScale = default;
             item.SeverableDebrisCount = default;
-            item.SeverableDebris = FormLink<Debris>.Null;
-            item.SeverableExplosion = FormLink<Explosion>.Null;
+            item.SeverableDebris = FormLink<IDebrisGetter>.Null;
+            item.SeverableExplosion = FormLink<IExplosionGetter>.Null;
             item.SeverableDebrisScale = default;
             item.GorePositioning = default;
             item.GoreRotation = default;
-            item.SeverableImpactData = FormLink<ImpactDataSet>.Null;
-            item.ExplodableImpactData = FormLink<ImpactDataSet>.Null;
+            item.SeverableImpactData = FormLink<IImpactDataSetGetter>.Null;
+            item.ExplodableImpactData = FormLink<IImpactDataSetGetter>.Null;
             item.SeverableDecalCount = default;
             item.ExplodableDecalCount = default;
             item.Unknown = default;
@@ -2277,11 +2265,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableDebris) ?? true))
             {
-                item.ExplodableDebris = new FormLink<Debris>(rhs.ExplodableDebris.FormKey);
+                item.ExplodableDebris = new FormLink<IDebrisGetter>(rhs.ExplodableDebris.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableExplosion) ?? true))
             {
-                item.ExplodableExplosion = new FormLink<Explosion>(rhs.ExplodableExplosion.FormKey);
+                item.ExplodableExplosion = new FormLink<IExplosionGetter>(rhs.ExplodableExplosion.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.TrackingMaxAngle) ?? true))
             {
@@ -2297,11 +2285,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableDebris) ?? true))
             {
-                item.SeverableDebris = new FormLink<Debris>(rhs.SeverableDebris.FormKey);
+                item.SeverableDebris = new FormLink<IDebrisGetter>(rhs.SeverableDebris.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableExplosion) ?? true))
             {
-                item.SeverableExplosion = new FormLink<Explosion>(rhs.SeverableExplosion.FormKey);
+                item.SeverableExplosion = new FormLink<IExplosionGetter>(rhs.SeverableExplosion.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableDebrisScale) ?? true))
             {
@@ -2317,11 +2305,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableImpactData) ?? true))
             {
-                item.SeverableImpactData = new FormLink<ImpactDataSet>(rhs.SeverableImpactData.FormKey);
+                item.SeverableImpactData = new FormLink<IImpactDataSetGetter>(rhs.SeverableImpactData.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableImpactData) ?? true))
             {
-                item.ExplodableImpactData = new FormLink<ImpactDataSet>(rhs.ExplodableImpactData.FormKey);
+                item.ExplodableImpactData = new FormLink<IImpactDataSetGetter>(rhs.ExplodableImpactData.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableDecalCount) ?? true))
             {

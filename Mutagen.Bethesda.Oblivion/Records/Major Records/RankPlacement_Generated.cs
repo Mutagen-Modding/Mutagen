@@ -40,9 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Faction
-        public FormLink<Faction> Faction { get; set; } = new FormLink<Faction>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IFactionGetter> IRankPlacementGetter.Faction => this.Faction.ToGetter<Faction, IFactionGetter>();
+        public FormLink<IFactionGetter> Faction { get; set; } = new FormLink<IFactionGetter>();
         #endregion
         #region Rank
         public Byte Rank { get; set; } = default;
@@ -490,7 +488,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IRankPlacement>,
         ILinkedFormKeyContainer
     {
-        new FormLink<Faction> Faction { get; set; }
+        new FormLink<IFactionGetter> Faction { get; set; }
         new Byte Rank { get; set; }
         new MemorySlice<Byte> Unused { get; set; }
     }
@@ -769,7 +767,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IRankPlacement item)
         {
             ClearPartial();
-            item.Faction = FormLink<Faction>.Null;
+            item.Faction = FormLink<IFactionGetter>.Null;
             item.Rank = default;
             item.Unused = new byte[3];
         }
@@ -936,7 +934,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RankPlacement_FieldIndex.Faction) ?? true))
             {
-                item.Faction = new FormLink<Faction>(rhs.Faction.FormKey);
+                item.Faction = new FormLink<IFactionGetter>(rhs.Faction.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)RankPlacement_FieldIndex.Rank) ?? true))
             {

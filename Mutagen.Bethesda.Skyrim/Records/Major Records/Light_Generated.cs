@@ -137,9 +137,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Single FadeValue { get; set; } = default;
         #endregion
         #region Sound
-        public FormLinkNullable<SoundDescriptor> Sound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> ILightGetter.Sound => this.Sound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> Sound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region DATADataTypeState
         public Light.DATADataType DATADataTypeState { get; set; } = default;
@@ -1169,7 +1167,7 @@ namespace Mutagen.Bethesda.Skyrim
         new UInt32 Value { get; set; }
         new Single Weight { get; set; }
         new Single FadeValue { get; set; }
-        new FormLinkNullable<SoundDescriptor> Sound { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> Sound { get; set; }
         new Light.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
         new Light.MajorFlag MajorFlags { get; set; }
@@ -1500,7 +1498,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Value = default;
             item.Weight = default;
             item.FadeValue = default;
-            item.Sound = FormLinkNullable<SoundDescriptor>.Null;
+            item.Sound = FormLinkNullable<ISoundDescriptorGetter>.Null;
             item.DATADataTypeState = default;
             base.Clear(item);
         }
@@ -2174,7 +2172,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Sound) ?? true))
             {
-                item.Sound = new FormLinkNullable<SoundDescriptor>(rhs.Sound.FormKey);
+                item.Sound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.Sound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.DATADataTypeState) ?? true))
             {

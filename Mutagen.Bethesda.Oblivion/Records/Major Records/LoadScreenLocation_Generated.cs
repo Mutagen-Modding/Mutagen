@@ -40,14 +40,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Direct
-        public FormLink<Place> Direct { get; set; } = new FormLink<Place>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IPlaceGetter> ILoadScreenLocationGetter.Direct => this.Direct.ToGetter<Place, IPlaceGetter>();
+        public FormLink<IPlaceGetter> Direct { get; set; } = new FormLink<IPlaceGetter>();
         #endregion
         #region Indirect
-        public FormLink<Worldspace> Indirect { get; set; } = new FormLink<Worldspace>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IWorldspaceGetter> ILoadScreenLocationGetter.Indirect => this.Indirect.ToGetter<Worldspace, IWorldspaceGetter>();
+        public FormLink<IWorldspaceGetter> Indirect { get; set; } = new FormLink<IWorldspaceGetter>();
         #endregion
         #region GridPoint
         public P2Int16 GridPoint { get; set; } = default;
@@ -484,8 +480,8 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<ILoadScreenLocation>,
         ILinkedFormKeyContainer
     {
-        new FormLink<Place> Direct { get; set; }
-        new FormLink<Worldspace> Indirect { get; set; }
+        new FormLink<IPlaceGetter> Direct { get; set; }
+        new FormLink<IWorldspaceGetter> Indirect { get; set; }
         new P2Int16 GridPoint { get; set; }
     }
 
@@ -763,8 +759,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(ILoadScreenLocation item)
         {
             ClearPartial();
-            item.Direct = FormLink<Place>.Null;
-            item.Indirect = FormLink<Worldspace>.Null;
+            item.Direct = FormLink<IPlaceGetter>.Null;
+            item.Indirect = FormLink<IWorldspaceGetter>.Null;
             item.GridPoint = default;
         }
         
@@ -931,11 +927,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)LoadScreenLocation_FieldIndex.Direct) ?? true))
             {
-                item.Direct = new FormLink<Place>(rhs.Direct.FormKey);
+                item.Direct = new FormLink<IPlaceGetter>(rhs.Direct.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LoadScreenLocation_FieldIndex.Indirect) ?? true))
             {
-                item.Indirect = new FormLink<Worldspace>(rhs.Indirect.FormKey);
+                item.Indirect = new FormLink<IWorldspaceGetter>(rhs.Indirect.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LoadScreenLocation_FieldIndex.GridPoint) ?? true))
             {

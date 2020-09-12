@@ -123,9 +123,7 @@ namespace Mutagen.Bethesda.Skyrim
         IScenePhaseUnusedDataGetter? ISceneGetter.Unused2 => this.Unused2;
         #endregion
         #region Quest
-        public FormLinkNullable<Quest> Quest { get; set; } = new FormLinkNullable<Quest>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IQuestGetter> ISceneGetter.Quest => this.Quest.ToGetter<Quest, IQuestGetter>();
+        public FormLinkNullable<IQuestGetter> Quest { get; set; } = new FormLinkNullable<IQuestGetter>();
         #endregion
         #region LastActionIndex
         public UInt32? LastActionIndex { get; set; }
@@ -1159,7 +1157,7 @@ namespace Mutagen.Bethesda.Skyrim
         new IExtendedList<SceneAction> Actions { get; }
         new ScenePhaseUnusedData? Unused { get; set; }
         new ScenePhaseUnusedData? Unused2 { get; set; }
-        new FormLinkNullable<Quest> Quest { get; set; }
+        new FormLinkNullable<IQuestGetter> Quest { get; set; }
         new UInt32? LastActionIndex { get; set; }
         new MemorySlice<Byte>? VNAM { get; set; }
         new IExtendedList<Condition> Conditions { get; }
@@ -1444,7 +1442,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Actions.Clear();
             item.Unused = null;
             item.Unused2 = null;
-            item.Quest = FormLinkNullable<Quest>.Null;
+            item.Quest = FormLinkNullable<IQuestGetter>.Null;
             item.LastActionIndex = default;
             item.VNAM = default;
             item.Conditions.Clear();
@@ -2090,7 +2088,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Scene_FieldIndex.Quest) ?? true))
             {
-                item.Quest = new FormLinkNullable<Quest>(rhs.Quest.FormKey);
+                item.Quest = new FormLinkNullable<IQuestGetter>(rhs.Quest.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Scene_FieldIndex.LastActionIndex) ?? true))
             {

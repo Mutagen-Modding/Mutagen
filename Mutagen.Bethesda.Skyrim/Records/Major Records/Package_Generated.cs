@@ -134,19 +134,13 @@ namespace Mutagen.Bethesda.Skyrim
         IPackageIdlesGetter? IPackageGetter.IdleAnimations => this.IdleAnimations;
         #endregion
         #region CombatStyle
-        public FormLinkNullable<CombatStyle> CombatStyle { get; set; } = new FormLinkNullable<CombatStyle>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ICombatStyleGetter> IPackageGetter.CombatStyle => this.CombatStyle.ToGetter<CombatStyle, ICombatStyleGetter>();
+        public FormLinkNullable<ICombatStyleGetter> CombatStyle { get; set; } = new FormLinkNullable<ICombatStyleGetter>();
         #endregion
         #region OwnerQuest
-        public FormLinkNullable<Quest> OwnerQuest { get; set; } = new FormLinkNullable<Quest>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IQuestGetter> IPackageGetter.OwnerQuest => this.OwnerQuest.ToGetter<Quest, IQuestGetter>();
+        public FormLinkNullable<IQuestGetter> OwnerQuest { get; set; } = new FormLinkNullable<IQuestGetter>();
         #endregion
         #region PackageTemplate
-        public FormLink<Package> PackageTemplate { get; set; } = new FormLink<Package>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IPackageGetter> IPackageGetter.PackageTemplate => this.PackageTemplate.ToGetter<Package, IPackageGetter>();
+        public FormLink<IPackageGetter> PackageTemplate { get; set; } = new FormLink<IPackageGetter>();
         #endregion
         #region DataInputVersion
         public Int32 DataInputVersion { get; set; } = default;
@@ -1750,9 +1744,9 @@ namespace Mutagen.Bethesda.Skyrim
         new IExtendedList<Condition> Conditions { get; }
         new Int32? Unknown4 { get; set; }
         new PackageIdles? IdleAnimations { get; set; }
-        new FormLinkNullable<CombatStyle> CombatStyle { get; set; }
-        new FormLinkNullable<Quest> OwnerQuest { get; set; }
-        new FormLink<Package> PackageTemplate { get; set; }
+        new FormLinkNullable<ICombatStyleGetter> CombatStyle { get; set; }
+        new FormLinkNullable<IQuestGetter> OwnerQuest { get; set; }
+        new FormLink<IPackageGetter> PackageTemplate { get; set; }
         new Int32 DataInputVersion { get; set; }
         new IDictionary<SByte, APackageData> Data { get; }
         new MemorySlice<Byte> XnamMarker { get; set; }
@@ -2093,9 +2087,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Conditions.Clear();
             item.Unknown4 = default;
             item.IdleAnimations = null;
-            item.CombatStyle = FormLinkNullable<CombatStyle>.Null;
-            item.OwnerQuest = FormLinkNullable<Quest>.Null;
-            item.PackageTemplate = FormLink<Package>.Null;
+            item.CombatStyle = FormLinkNullable<ICombatStyleGetter>.Null;
+            item.OwnerQuest = FormLinkNullable<IQuestGetter>.Null;
+            item.PackageTemplate = FormLink<IPackageGetter>.Null;
             item.DataInputVersion = default;
             item.Data.Clear();
             item.XnamMarker = new byte[0];
@@ -2884,15 +2878,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.CombatStyle) ?? true))
             {
-                item.CombatStyle = new FormLinkNullable<CombatStyle>(rhs.CombatStyle.FormKey);
+                item.CombatStyle = new FormLinkNullable<ICombatStyleGetter>(rhs.CombatStyle.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.OwnerQuest) ?? true))
             {
-                item.OwnerQuest = new FormLinkNullable<Quest>(rhs.OwnerQuest.FormKey);
+                item.OwnerQuest = new FormLinkNullable<IQuestGetter>(rhs.OwnerQuest.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.PackageTemplate) ?? true))
             {
-                item.PackageTemplate = new FormLink<Package>(rhs.PackageTemplate.FormKey);
+                item.PackageTemplate = new FormLink<IPackageGetter>(rhs.PackageTemplate.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.DataInputVersion) ?? true))
             {

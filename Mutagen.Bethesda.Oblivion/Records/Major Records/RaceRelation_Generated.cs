@@ -40,9 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Race
-        public FormLink<Race> Race { get; set; } = new FormLink<Race>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IRaceGetter> IRaceRelationGetter.Race => this.Race.ToGetter<Race, IRaceGetter>();
+        public FormLink<IRaceGetter> Race { get; set; } = new FormLink<IRaceGetter>();
         #endregion
         #region Modifier
         public Int32 Modifier { get; set; } = default;
@@ -451,7 +449,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IRaceRelation>,
         ILinkedFormKeyContainer
     {
-        new FormLink<Race> Race { get; set; }
+        new FormLink<IRaceGetter> Race { get; set; }
         new Int32 Modifier { get; set; }
     }
 
@@ -727,7 +725,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IRaceRelation item)
         {
             ClearPartial();
-            item.Race = FormLink<Race>.Null;
+            item.Race = FormLink<IRaceGetter>.Null;
             item.Modifier = default;
         }
         
@@ -886,7 +884,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RaceRelation_FieldIndex.Race) ?? true))
             {
-                item.Race = new FormLink<Race>(rhs.Race.FormKey);
+                item.Race = new FormLink<IRaceGetter>(rhs.Race.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)RaceRelation_FieldIndex.Modifier) ?? true))
             {

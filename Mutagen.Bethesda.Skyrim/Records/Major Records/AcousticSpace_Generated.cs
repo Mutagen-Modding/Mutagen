@@ -48,19 +48,13 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundsGetter IAcousticSpaceGetter.ObjectBounds => ObjectBounds;
         #endregion
         #region AmbientSound
-        public FormLinkNullable<SoundDescriptor> AmbientSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IAcousticSpaceGetter.AmbientSound => this.AmbientSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> AmbientSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region UseSoundFromRegion
-        public FormLinkNullable<Region> UseSoundFromRegion { get; set; } = new FormLinkNullable<Region>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IRegionGetter> IAcousticSpaceGetter.UseSoundFromRegion => this.UseSoundFromRegion.ToGetter<Region, IRegionGetter>();
+        public FormLinkNullable<IRegionGetter> UseSoundFromRegion { get; set; } = new FormLinkNullable<IRegionGetter>();
         #endregion
         #region EnvironmentType
-        public FormLinkNullable<ReverbParameters> EnvironmentType { get; set; } = new FormLinkNullable<ReverbParameters>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IReverbParametersGetter> IAcousticSpaceGetter.EnvironmentType => this.EnvironmentType.ToGetter<ReverbParameters, IReverbParametersGetter>();
+        public FormLinkNullable<IReverbParametersGetter> EnvironmentType { get; set; } = new FormLinkNullable<IReverbParametersGetter>();
         #endregion
 
         #region To String
@@ -549,9 +543,9 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new ObjectBounds ObjectBounds { get; set; }
-        new FormLinkNullable<SoundDescriptor> AmbientSound { get; set; }
-        new FormLinkNullable<Region> UseSoundFromRegion { get; set; }
-        new FormLinkNullable<ReverbParameters> EnvironmentType { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> AmbientSound { get; set; }
+        new FormLinkNullable<IRegionGetter> UseSoundFromRegion { get; set; }
+        new FormLinkNullable<IReverbParametersGetter> EnvironmentType { get; set; }
     }
 
     public partial interface IAcousticSpaceInternal :
@@ -814,9 +808,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.ObjectBounds.Clear();
-            item.AmbientSound = FormLinkNullable<SoundDescriptor>.Null;
-            item.UseSoundFromRegion = FormLinkNullable<Region>.Null;
-            item.EnvironmentType = FormLinkNullable<ReverbParameters>.Null;
+            item.AmbientSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
+            item.UseSoundFromRegion = FormLinkNullable<IRegionGetter>.Null;
+            item.EnvironmentType = FormLinkNullable<IReverbParametersGetter>.Null;
             base.Clear(item);
         }
         
@@ -1161,15 +1155,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.AmbientSound) ?? true))
             {
-                item.AmbientSound = new FormLinkNullable<SoundDescriptor>(rhs.AmbientSound.FormKey);
+                item.AmbientSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.AmbientSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.UseSoundFromRegion) ?? true))
             {
-                item.UseSoundFromRegion = new FormLinkNullable<Region>(rhs.UseSoundFromRegion.FormKey);
+                item.UseSoundFromRegion = new FormLinkNullable<IRegionGetter>(rhs.UseSoundFromRegion.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.EnvironmentType) ?? true))
             {
-                item.EnvironmentType = new FormLinkNullable<ReverbParameters>(rhs.EnvironmentType.FormKey);
+                item.EnvironmentType = new FormLinkNullable<IReverbParametersGetter>(rhs.EnvironmentType.FormKey);
             }
         }
         

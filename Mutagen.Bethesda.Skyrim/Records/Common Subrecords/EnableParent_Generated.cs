@@ -43,9 +43,7 @@ namespace Mutagen.Bethesda.Skyrim
         public EnableParent.VersioningBreaks Versioning { get; set; } = default;
         #endregion
         #region Reference
-        public FormLink<ILinkedReference> Reference { get; set; } = new FormLink<ILinkedReference>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ILinkedReferenceGetter> IEnableParentGetter.Reference => this.Reference.ToGetter<ILinkedReference, ILinkedReferenceGetter>();
+        public FormLink<ILinkedReferenceGetter> Reference { get; set; } = new FormLink<ILinkedReferenceGetter>();
         #endregion
         #region Flags
         public EnableParent.Flag Flags { get; set; } = default;
@@ -527,7 +525,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new EnableParent.VersioningBreaks Versioning { get; set; }
-        new FormLink<ILinkedReference> Reference { get; set; }
+        new FormLink<ILinkedReferenceGetter> Reference { get; set; }
         new EnableParent.Flag Flags { get; set; }
         new MemorySlice<Byte> Unknown { get; set; }
     }
@@ -809,7 +807,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Versioning = default;
-            item.Reference = FormLink<ILinkedReference>.Null;
+            item.Reference = FormLink<ILinkedReferenceGetter>.Null;
             item.Flags = default;
             item.Unknown = new byte[3];
         }
@@ -987,7 +985,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)EnableParent_FieldIndex.Reference) ?? true))
             {
-                item.Reference = new FormLink<ILinkedReference>(rhs.Reference.FormKey);
+                item.Reference = new FormLink<ILinkedReferenceGetter>(rhs.Reference.FormKey);
             }
             if (rhs.Versioning.HasFlag(EnableParent.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)EnableParent_FieldIndex.Flags) ?? true))

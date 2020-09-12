@@ -62,9 +62,7 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte> IMessageGetter.INAM => this.INAM;
         #endregion
         #region Quest
-        public FormLinkNullable<Quest> Quest { get; set; } = new FormLinkNullable<Quest>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IQuestGetter> IMessageGetter.Quest => this.Quest.ToGetter<Quest, IQuestGetter>();
+        public FormLinkNullable<IQuestGetter> Quest { get; set; } = new FormLinkNullable<IQuestGetter>();
         #endregion
         #region Flags
         public Message.Flag Flags { get; set; } = default;
@@ -729,7 +727,7 @@ namespace Mutagen.Bethesda.Skyrim
         new TranslatedString Description { get; set; }
         new TranslatedString? Name { get; set; }
         new MemorySlice<Byte> INAM { get; set; }
-        new FormLinkNullable<Quest> Quest { get; set; }
+        new FormLinkNullable<IQuestGetter> Quest { get; set; }
         new Message.Flag Flags { get; set; }
         new UInt32? DisplayTime { get; set; }
         new IExtendedList<MessageButton> MenuButtons { get; }
@@ -1003,7 +1001,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Description.Clear();
             item.Name = default;
             item.INAM = new byte[0];
-            item.Quest = FormLinkNullable<Quest>.Null;
+            item.Quest = FormLinkNullable<IQuestGetter>.Null;
             item.Flags = default;
             item.DisplayTime = default;
             item.MenuButtons.Clear();
@@ -1384,7 +1382,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Message_FieldIndex.Quest) ?? true))
             {
-                item.Quest = new FormLinkNullable<Quest>(rhs.Quest.FormKey);
+                item.Quest = new FormLinkNullable<IQuestGetter>(rhs.Quest.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Message_FieldIndex.Flags) ?? true))
             {

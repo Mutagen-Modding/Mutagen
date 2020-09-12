@@ -40,9 +40,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Object
-        public FormLink<SkyrimMajorRecord> Object { get; set; } = new FormLink<SkyrimMajorRecord>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISkyrimMajorRecordGetter> ICreateReferenceToObjectGetter.Object => this.Object.ToGetter<SkyrimMajorRecord, ISkyrimMajorRecordGetter>();
+        public FormLink<ISkyrimMajorRecordGetter> Object { get; set; } = new FormLink<ISkyrimMajorRecordGetter>();
         #endregion
         #region AliasIndex
         public Int16 AliasIndex { get; set; } = default;
@@ -548,7 +546,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ICreateReferenceToObject>,
         ILinkedFormKeyContainer
     {
-        new FormLink<SkyrimMajorRecord> Object { get; set; }
+        new FormLink<ISkyrimMajorRecordGetter> Object { get; set; }
         new Int16 AliasIndex { get; set; }
         new CreateReferenceToObject.CreateEnum Create { get; set; }
         new Level Level { get; set; }
@@ -833,7 +831,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ICreateReferenceToObject item)
         {
             ClearPartial();
-            item.Object = FormLink<SkyrimMajorRecord>.Null;
+            item.Object = FormLink<ISkyrimMajorRecordGetter>.Null;
             item.AliasIndex = default;
             item.Create = default;
             item.Level = default;
@@ -1014,7 +1012,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)CreateReferenceToObject_FieldIndex.Object) ?? true))
             {
-                item.Object = new FormLink<SkyrimMajorRecord>(rhs.Object.FormKey);
+                item.Object = new FormLink<ISkyrimMajorRecordGetter>(rhs.Object.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)CreateReferenceToObject_FieldIndex.AliasIndex) ?? true))
             {

@@ -82,24 +82,16 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? IWaterGetter.MNAM => this.MNAM;
         #endregion
         #region Material
-        public FormLinkNullable<MaterialType> Material { get; set; } = new FormLinkNullable<MaterialType>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IMaterialTypeGetter> IWaterGetter.Material => this.Material.ToGetter<MaterialType, IMaterialTypeGetter>();
+        public FormLinkNullable<IMaterialTypeGetter> Material { get; set; } = new FormLinkNullable<IMaterialTypeGetter>();
         #endregion
         #region OpenSound
-        public FormLinkNullable<SoundDescriptor> OpenSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IWaterGetter.OpenSound => this.OpenSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> OpenSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region Spell
-        public FormLinkNullable<Spell> Spell { get; set; } = new FormLinkNullable<Spell>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISpellGetter> IWaterGetter.Spell => this.Spell.ToGetter<Spell, ISpellGetter>();
+        public FormLinkNullable<ISpellGetter> Spell { get; set; } = new FormLinkNullable<ISpellGetter>();
         #endregion
         #region ImageSpace
-        public FormLinkNullable<ImageSpaceAdapter> ImageSpace { get; set; } = new FormLinkNullable<ImageSpaceAdapter>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IImageSpaceAdapterGetter> IWaterGetter.ImageSpace => this.ImageSpace.ToGetter<ImageSpaceAdapter, IImageSpaceAdapterGetter>();
+        public FormLinkNullable<IImageSpaceAdapterGetter> ImageSpace { get; set; } = new FormLinkNullable<IImageSpaceAdapterGetter>();
         #endregion
         #region DamagePerSecond
         public UInt16? DamagePerSecond { get; set; }
@@ -2677,10 +2669,10 @@ namespace Mutagen.Bethesda.Skyrim
         new Byte Opacity { get; set; }
         new Water.Flag? Flags { get; set; }
         new MemorySlice<Byte>? MNAM { get; set; }
-        new FormLinkNullable<MaterialType> Material { get; set; }
-        new FormLinkNullable<SoundDescriptor> OpenSound { get; set; }
-        new FormLinkNullable<Spell> Spell { get; set; }
-        new FormLinkNullable<ImageSpaceAdapter> ImageSpace { get; set; }
+        new FormLinkNullable<IMaterialTypeGetter> Material { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> OpenSound { get; set; }
+        new FormLinkNullable<ISpellGetter> Spell { get; set; }
+        new FormLinkNullable<IImageSpaceAdapterGetter> ImageSpace { get; set; }
         new UInt16? DamagePerSecond { get; set; }
         new MemorySlice<Byte> Unknown { get; set; }
         new Single SpecularSunPower { get; set; }
@@ -3134,10 +3126,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Opacity = default;
             item.Flags = default;
             item.MNAM = default;
-            item.Material = FormLinkNullable<MaterialType>.Null;
-            item.OpenSound = FormLinkNullable<SoundDescriptor>.Null;
-            item.Spell = FormLinkNullable<Spell>.Null;
-            item.ImageSpace = FormLinkNullable<ImageSpaceAdapter>.Null;
+            item.Material = FormLinkNullable<IMaterialTypeGetter>.Null;
+            item.OpenSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
+            item.Spell = FormLinkNullable<ISpellGetter>.Null;
+            item.ImageSpace = FormLinkNullable<IImageSpaceAdapterGetter>.Null;
             item.DamagePerSecond = default;
             item.Unknown = new byte[16];
             item.SpecularSunPower = default;
@@ -4072,19 +4064,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Material) ?? true))
             {
-                item.Material = new FormLinkNullable<MaterialType>(rhs.Material.FormKey);
+                item.Material = new FormLinkNullable<IMaterialTypeGetter>(rhs.Material.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.OpenSound) ?? true))
             {
-                item.OpenSound = new FormLinkNullable<SoundDescriptor>(rhs.OpenSound.FormKey);
+                item.OpenSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.OpenSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Spell) ?? true))
             {
-                item.Spell = new FormLinkNullable<Spell>(rhs.Spell.FormKey);
+                item.Spell = new FormLinkNullable<ISpellGetter>(rhs.Spell.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.ImageSpace) ?? true))
             {
-                item.ImageSpace = new FormLinkNullable<ImageSpaceAdapter>(rhs.ImageSpace.FormKey);
+                item.ImageSpace = new FormLinkNullable<IImageSpaceAdapterGetter>(rhs.ImageSpace.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.DamagePerSecond) ?? true))
             {

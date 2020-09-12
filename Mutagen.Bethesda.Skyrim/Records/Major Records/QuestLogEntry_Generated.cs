@@ -65,9 +65,7 @@ namespace Mutagen.Bethesda.Skyrim
         TranslatedString? IQuestLogEntryGetter.Entry => this.Entry;
         #endregion
         #region NextQuest
-        public FormLinkNullable<Quest> NextQuest { get; set; } = new FormLinkNullable<Quest>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IQuestGetter> IQuestLogEntryGetter.NextQuest => this.NextQuest.ToGetter<Quest, IQuestGetter>();
+        public FormLinkNullable<IQuestGetter> NextQuest { get; set; } = new FormLinkNullable<IQuestGetter>();
         #endregion
         #region SCHR
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -723,7 +721,7 @@ namespace Mutagen.Bethesda.Skyrim
         new QuestLogEntry.Flag? Flags { get; set; }
         new IExtendedList<Condition> Conditions { get; }
         new TranslatedString? Entry { get; set; }
-        new FormLinkNullable<Quest> NextQuest { get; set; }
+        new FormLinkNullable<IQuestGetter> NextQuest { get; set; }
         new MemorySlice<Byte>? SCHR { get; set; }
         new MemorySlice<Byte>? SCTX { get; set; }
         new MemorySlice<Byte>? QNAM { get; set; }
@@ -1030,7 +1028,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Flags = default;
             item.Conditions.Clear();
             item.Entry = default;
-            item.NextQuest = FormLinkNullable<Quest>.Null;
+            item.NextQuest = FormLinkNullable<IQuestGetter>.Null;
             item.SCHR = default;
             item.SCTX = default;
             item.QNAM = default;
@@ -1301,7 +1299,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.NextQuest) ?? true))
             {
-                item.NextQuest = new FormLinkNullable<Quest>(rhs.NextQuest.FormKey);
+                item.NextQuest = new FormLinkNullable<IQuestGetter>(rhs.NextQuest.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.SCHR) ?? true))
             {

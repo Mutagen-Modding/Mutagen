@@ -40,9 +40,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Color
-        public FormLinkNullable<ColorRecord> Color { get; set; } = new FormLinkNullable<ColorRecord>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IColorRecordGetter> ITintPresetGetter.Color => this.Color.ToGetter<ColorRecord, IColorRecordGetter>();
+        public FormLinkNullable<IColorRecordGetter> Color { get; set; } = new FormLinkNullable<IColorRecordGetter>();
         #endregion
         #region DefaultValue
         public Single? DefaultValue { get; set; }
@@ -485,7 +483,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ITintPreset>,
         ILinkedFormKeyContainer
     {
-        new FormLinkNullable<ColorRecord> Color { get; set; }
+        new FormLinkNullable<IColorRecordGetter> Color { get; set; }
         new Single? DefaultValue { get; set; }
         new UInt16? Index { get; set; }
     }
@@ -776,7 +774,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ITintPreset item)
         {
             ClearPartial();
-            item.Color = FormLinkNullable<ColorRecord>.Null;
+            item.Color = FormLinkNullable<IColorRecordGetter>.Null;
             item.DefaultValue = default;
             item.Index = default;
         }
@@ -952,7 +950,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)TintPreset_FieldIndex.Color) ?? true))
             {
-                item.Color = new FormLinkNullable<ColorRecord>(rhs.Color.FormKey);
+                item.Color = new FormLinkNullable<IColorRecordGetter>(rhs.Color.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)TintPreset_FieldIndex.DefaultValue) ?? true))
             {

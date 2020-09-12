@@ -43,14 +43,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Parent
-        public FormLink<Npc> Parent { get; set; } = new FormLink<Npc>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<INpcGetter> IRelationshipGetter.Parent => this.Parent.ToGetter<Npc, INpcGetter>();
+        public FormLink<INpcGetter> Parent { get; set; } = new FormLink<INpcGetter>();
         #endregion
         #region Child
-        public FormLink<Npc> Child { get; set; } = new FormLink<Npc>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<INpcGetter> IRelationshipGetter.Child => this.Child.ToGetter<Npc, INpcGetter>();
+        public FormLink<INpcGetter> Child { get; set; } = new FormLink<INpcGetter>();
         #endregion
         #region Rank
         public Relationship.RankType Rank { get; set; } = default;
@@ -62,9 +58,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Relationship.Flag Flags { get; set; } = default;
         #endregion
         #region AssociationType
-        public FormLink<AssociationType> AssociationType { get; set; } = new FormLink<AssociationType>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IAssociationTypeGetter> IRelationshipGetter.AssociationType => this.AssociationType.ToGetter<AssociationType, IAssociationTypeGetter>();
+        public FormLink<IAssociationTypeGetter> AssociationType { get; set; } = new FormLink<IAssociationTypeGetter>();
         #endregion
         #region DATADataTypeState
         public Relationship.DATADataType DATADataTypeState { get; set; } = default;
@@ -640,12 +634,12 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IRelationshipInternal>,
         ILinkedFormKeyContainer
     {
-        new FormLink<Npc> Parent { get; set; }
-        new FormLink<Npc> Child { get; set; }
+        new FormLink<INpcGetter> Parent { get; set; }
+        new FormLink<INpcGetter> Child { get; set; }
         new Relationship.RankType Rank { get; set; }
         new Byte Unknown { get; set; }
         new Relationship.Flag Flags { get; set; }
-        new FormLink<AssociationType> AssociationType { get; set; }
+        new FormLink<IAssociationTypeGetter> AssociationType { get; set; }
         new Relationship.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
         new Relationship.MajorFlag MajorFlags { get; set; }
@@ -921,12 +915,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IRelationshipInternal item)
         {
             ClearPartial();
-            item.Parent = FormLink<Npc>.Null;
-            item.Child = FormLink<Npc>.Null;
+            item.Parent = FormLink<INpcGetter>.Null;
+            item.Child = FormLink<INpcGetter>.Null;
             item.Rank = default;
             item.Unknown = default;
             item.Flags = default;
-            item.AssociationType = FormLink<AssociationType>.Null;
+            item.AssociationType = FormLink<IAssociationTypeGetter>.Null;
             item.DATADataTypeState = default;
             base.Clear(item);
         }
@@ -1262,11 +1256,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.Parent) ?? true))
             {
-                item.Parent = new FormLink<Npc>(rhs.Parent.FormKey);
+                item.Parent = new FormLink<INpcGetter>(rhs.Parent.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.Child) ?? true))
             {
-                item.Child = new FormLink<Npc>(rhs.Child.FormKey);
+                item.Child = new FormLink<INpcGetter>(rhs.Child.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.Rank) ?? true))
             {
@@ -1282,7 +1276,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.AssociationType) ?? true))
             {
-                item.AssociationType = new FormLink<AssociationType>(rhs.AssociationType.FormKey);
+                item.AssociationType = new FormLink<IAssociationTypeGetter>(rhs.AssociationType.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.DATADataTypeState) ?? true))
             {

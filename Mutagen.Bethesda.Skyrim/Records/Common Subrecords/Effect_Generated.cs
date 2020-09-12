@@ -41,9 +41,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region BaseEffect
-        public FormLinkNullable<MagicEffect> BaseEffect { get; set; } = new FormLinkNullable<MagicEffect>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IMagicEffectGetter> IEffectGetter.BaseEffect => this.BaseEffect.ToGetter<MagicEffect, IMagicEffectGetter>();
+        public FormLinkNullable<IMagicEffectGetter> BaseEffect { get; set; } = new FormLinkNullable<IMagicEffectGetter>();
         #endregion
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -583,7 +581,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IEffect>,
         ILinkedFormKeyContainer
     {
-        new FormLinkNullable<MagicEffect> BaseEffect { get; set; }
+        new FormLinkNullable<IMagicEffectGetter> BaseEffect { get; set; }
         new EffectData? Data { get; set; }
         new IExtendedList<Condition> Conditions { get; }
     }
@@ -874,7 +872,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IEffect item)
         {
             ClearPartial();
-            item.BaseEffect = FormLinkNullable<MagicEffect>.Null;
+            item.BaseEffect = FormLinkNullable<IMagicEffectGetter>.Null;
             item.Data = null;
             item.Conditions.Clear();
         }
@@ -1072,7 +1070,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)Effect_FieldIndex.BaseEffect) ?? true))
             {
-                item.BaseEffect = new FormLinkNullable<MagicEffect>(rhs.BaseEffect.FormKey);
+                item.BaseEffect = new FormLinkNullable<IMagicEffectGetter>(rhs.BaseEffect.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Effect_FieldIndex.Data) ?? true))
             {

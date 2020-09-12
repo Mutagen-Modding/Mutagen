@@ -55,9 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
         IEntryPointsGetter? IFurnitureMarkerGetter.DisabledEntryPoints => this.DisabledEntryPoints;
         #endregion
         #region MarkerKeyword
-        public FormLinkNullable<Keyword> MarkerKeyword { get; set; } = new FormLinkNullable<Keyword>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IKeywordGetter> IFurnitureMarkerGetter.MarkerKeyword => this.MarkerKeyword.ToGetter<Keyword, IKeywordGetter>();
+        public FormLinkNullable<IKeywordGetter> MarkerKeyword { get; set; } = new FormLinkNullable<IKeywordGetter>();
         #endregion
         #region EntryPoints
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -545,7 +543,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Boolean Enabled { get; set; }
         new EntryPoints? DisabledEntryPoints { get; set; }
-        new FormLinkNullable<Keyword> MarkerKeyword { get; set; }
+        new FormLinkNullable<IKeywordGetter> MarkerKeyword { get; set; }
         new EntryPoints? EntryPoints { get; set; }
     }
 
@@ -826,7 +824,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.Enabled = default;
             item.DisabledEntryPoints = null;
-            item.MarkerKeyword = FormLinkNullable<Keyword>.Null;
+            item.MarkerKeyword = FormLinkNullable<IKeywordGetter>.Null;
             item.EntryPoints = null;
         }
         
@@ -1045,7 +1043,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)FurnitureMarker_FieldIndex.MarkerKeyword) ?? true))
             {
-                item.MarkerKeyword = new FormLinkNullable<Keyword>(rhs.MarkerKeyword.FormKey);
+                item.MarkerKeyword = new FormLinkNullable<IKeywordGetter>(rhs.MarkerKeyword.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)FurnitureMarker_FieldIndex.EntryPoints) ?? true))
             {

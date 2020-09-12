@@ -58,8 +58,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RelatedPaths
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<CameraPath>> _RelatedPaths = new ExtendedList<IFormLink<CameraPath>>();
-        public IExtendedList<IFormLink<CameraPath>> RelatedPaths
+        private IExtendedList<IFormLink<ICameraPathGetter>> _RelatedPaths = new ExtendedList<IFormLink<ICameraPathGetter>>();
+        public IExtendedList<IFormLink<ICameraPathGetter>> RelatedPaths
         {
             get => this._RelatedPaths;
             protected set => this._RelatedPaths = value;
@@ -78,8 +78,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Shots
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<CameraShot>> _Shots = new ExtendedList<IFormLink<CameraShot>>();
-        public IExtendedList<IFormLink<CameraShot>> Shots
+        private IExtendedList<IFormLink<ICameraShotGetter>> _Shots = new ExtendedList<IFormLink<ICameraShotGetter>>();
+        public IExtendedList<IFormLink<ICameraShotGetter>> Shots
         {
             get => this._Shots;
             protected set => this._Shots = value;
@@ -818,10 +818,10 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new IExtendedList<Condition> Conditions { get; }
-        new IExtendedList<IFormLink<CameraPath>> RelatedPaths { get; }
+        new IExtendedList<IFormLink<ICameraPathGetter>> RelatedPaths { get; }
         new CameraPath.ZoomType Zoom { get; set; }
         new Boolean ZoomMustHaveCameraShots { get; set; }
-        new IExtendedList<IFormLink<CameraShot>> Shots { get; }
+        new IExtendedList<IFormLink<ICameraShotGetter>> Shots { get; }
     }
 
     public partial interface ICameraPathInternal :
@@ -1499,7 +1499,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.RelatedPaths.SetTo(
                         rhs.RelatedPaths
-                        .Select(r => (IFormLink<CameraPath>)new FormLink<CameraPath>(r.FormKey)));
+                        .Select(r => (IFormLink<ICameraPathGetter>)new FormLink<ICameraPathGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1526,7 +1526,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Shots.SetTo(
                         rhs.Shots
-                        .Select(r => (IFormLink<CameraShot>)new FormLink<CameraShot>(r.FormKey)));
+                        .Select(r => (IFormLink<ICameraShotGetter>)new FormLink<ICameraShotGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1851,7 +1851,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RelatedPaths.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<CameraPath>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ICameraPathGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)CameraPath_FieldIndex.RelatedPaths;
@@ -1866,7 +1866,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.SNAM:
                 {
                     item.Shots.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<CameraShot>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ICameraShotGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));

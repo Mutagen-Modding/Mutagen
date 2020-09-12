@@ -43,14 +43,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region EffectArt
-        public FormLink<ArtObject> EffectArt { get; set; } = new FormLink<ArtObject>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IArtObjectGetter> IVisualEffectGetter.EffectArt => this.EffectArt.ToGetter<ArtObject, IArtObjectGetter>();
+        public FormLink<IArtObjectGetter> EffectArt { get; set; } = new FormLink<IArtObjectGetter>();
         #endregion
         #region Shader
-        public FormLink<EffectShader> Shader { get; set; } = new FormLink<EffectShader>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IEffectShaderGetter> IVisualEffectGetter.Shader => this.Shader.ToGetter<EffectShader, IEffectShaderGetter>();
+        public FormLink<IEffectShaderGetter> Shader { get; set; } = new FormLink<IEffectShaderGetter>();
         #endregion
         #region Flags
         public VisualEffect.Flag Flags { get; set; } = default;
@@ -540,8 +536,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IVisualEffectInternal>,
         ILinkedFormKeyContainer
     {
-        new FormLink<ArtObject> EffectArt { get; set; }
-        new FormLink<EffectShader> Shader { get; set; }
+        new FormLink<IArtObjectGetter> EffectArt { get; set; }
+        new FormLink<IEffectShaderGetter> Shader { get; set; }
         new VisualEffect.Flag Flags { get; set; }
         new VisualEffect.DATADataType DATADataTypeState { get; set; }
     }
@@ -804,8 +800,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IVisualEffectInternal item)
         {
             ClearPartial();
-            item.EffectArt = FormLink<ArtObject>.Null;
-            item.Shader = FormLink<EffectShader>.Null;
+            item.EffectArt = FormLink<IArtObjectGetter>.Null;
+            item.Shader = FormLink<IEffectShaderGetter>.Null;
             item.Flags = default;
             item.DATADataTypeState = default;
             base.Clear(item);
@@ -1120,11 +1116,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)VisualEffect_FieldIndex.EffectArt) ?? true))
             {
-                item.EffectArt = new FormLink<ArtObject>(rhs.EffectArt.FormKey);
+                item.EffectArt = new FormLink<IArtObjectGetter>(rhs.EffectArt.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)VisualEffect_FieldIndex.Shader) ?? true))
             {
-                item.Shader = new FormLink<EffectShader>(rhs.Shader.FormKey);
+                item.Shader = new FormLink<IEffectShaderGetter>(rhs.Shader.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)VisualEffect_FieldIndex.Flags) ?? true))
             {

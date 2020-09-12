@@ -102,9 +102,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Boolean Hidden { get; set; } = default;
         #endregion
         #region NextPerk
-        public FormLinkNullable<Perk> NextPerk { get; set; } = new FormLinkNullable<Perk>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IPerkGetter> IPerkGetter.NextPerk => this.NextPerk.ToGetter<Perk, IPerkGetter>();
+        public FormLinkNullable<IPerkGetter> NextPerk { get; set; } = new FormLinkNullable<IPerkGetter>();
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1038,7 +1036,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Byte NumRanks { get; set; }
         new Boolean Playable { get; set; }
         new Boolean Hidden { get; set; }
-        new FormLinkNullable<Perk> NextPerk { get; set; }
+        new FormLinkNullable<IPerkGetter> NextPerk { get; set; }
         new IExtendedList<APerkEffect> Effects { get; }
         new Perk.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
@@ -1339,7 +1337,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.NumRanks = default;
             item.Playable = default;
             item.Hidden = default;
-            item.NextPerk = FormLinkNullable<Perk>.Null;
+            item.NextPerk = FormLinkNullable<IPerkGetter>.Null;
             item.Effects.Clear();
             item.DATADataTypeState = default;
             base.Clear(item);
@@ -1894,7 +1892,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.NextPerk) ?? true))
             {
-                item.NextPerk = new FormLinkNullable<Perk>(rhs.NextPerk.FormKey);
+                item.NextPerk = new FormLinkNullable<IPerkGetter>(rhs.NextPerk.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.Effects) ?? true))
             {

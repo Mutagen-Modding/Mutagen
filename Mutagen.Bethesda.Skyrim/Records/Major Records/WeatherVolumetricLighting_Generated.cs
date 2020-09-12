@@ -40,24 +40,16 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Sunrise
-        public FormLink<VolumetricLighting> Sunrise { get; set; } = new FormLink<VolumetricLighting>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IVolumetricLightingGetter> IWeatherVolumetricLightingGetter.Sunrise => this.Sunrise.ToGetter<VolumetricLighting, IVolumetricLightingGetter>();
+        public FormLink<IVolumetricLightingGetter> Sunrise { get; set; } = new FormLink<IVolumetricLightingGetter>();
         #endregion
         #region Day
-        public FormLink<VolumetricLighting> Day { get; set; } = new FormLink<VolumetricLighting>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IVolumetricLightingGetter> IWeatherVolumetricLightingGetter.Day => this.Day.ToGetter<VolumetricLighting, IVolumetricLightingGetter>();
+        public FormLink<IVolumetricLightingGetter> Day { get; set; } = new FormLink<IVolumetricLightingGetter>();
         #endregion
         #region Sunset
-        public FormLink<VolumetricLighting> Sunset { get; set; } = new FormLink<VolumetricLighting>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IVolumetricLightingGetter> IWeatherVolumetricLightingGetter.Sunset => this.Sunset.ToGetter<VolumetricLighting, IVolumetricLightingGetter>();
+        public FormLink<IVolumetricLightingGetter> Sunset { get; set; } = new FormLink<IVolumetricLightingGetter>();
         #endregion
         #region Night
-        public FormLink<VolumetricLighting> Night { get; set; } = new FormLink<VolumetricLighting>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IVolumetricLightingGetter> IWeatherVolumetricLightingGetter.Night => this.Night.ToGetter<VolumetricLighting, IVolumetricLightingGetter>();
+        public FormLink<IVolumetricLightingGetter> Night { get; set; } = new FormLink<IVolumetricLightingGetter>();
         #endregion
 
         #region To String
@@ -519,10 +511,10 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IWeatherVolumetricLighting>,
         ILinkedFormKeyContainer
     {
-        new FormLink<VolumetricLighting> Sunrise { get; set; }
-        new FormLink<VolumetricLighting> Day { get; set; }
-        new FormLink<VolumetricLighting> Sunset { get; set; }
-        new FormLink<VolumetricLighting> Night { get; set; }
+        new FormLink<IVolumetricLightingGetter> Sunrise { get; set; }
+        new FormLink<IVolumetricLightingGetter> Day { get; set; }
+        new FormLink<IVolumetricLightingGetter> Sunset { get; set; }
+        new FormLink<IVolumetricLightingGetter> Night { get; set; }
     }
 
     public partial interface IWeatherVolumetricLightingGetter :
@@ -801,10 +793,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IWeatherVolumetricLighting item)
         {
             ClearPartial();
-            item.Sunrise = FormLink<VolumetricLighting>.Null;
-            item.Day = FormLink<VolumetricLighting>.Null;
-            item.Sunset = FormLink<VolumetricLighting>.Null;
-            item.Night = FormLink<VolumetricLighting>.Null;
+            item.Sunrise = FormLink<IVolumetricLightingGetter>.Null;
+            item.Day = FormLink<IVolumetricLightingGetter>.Null;
+            item.Sunset = FormLink<IVolumetricLightingGetter>.Null;
+            item.Night = FormLink<IVolumetricLightingGetter>.Null;
         }
         
         #region Binary Translation
@@ -979,19 +971,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)WeatherVolumetricLighting_FieldIndex.Sunrise) ?? true))
             {
-                item.Sunrise = new FormLink<VolumetricLighting>(rhs.Sunrise.FormKey);
+                item.Sunrise = new FormLink<IVolumetricLightingGetter>(rhs.Sunrise.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)WeatherVolumetricLighting_FieldIndex.Day) ?? true))
             {
-                item.Day = new FormLink<VolumetricLighting>(rhs.Day.FormKey);
+                item.Day = new FormLink<IVolumetricLightingGetter>(rhs.Day.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)WeatherVolumetricLighting_FieldIndex.Sunset) ?? true))
             {
-                item.Sunset = new FormLink<VolumetricLighting>(rhs.Sunset.FormKey);
+                item.Sunset = new FormLink<IVolumetricLightingGetter>(rhs.Sunset.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)WeatherVolumetricLighting_FieldIndex.Night) ?? true))
             {
-                item.Night = new FormLink<VolumetricLighting>(rhs.Night.FormKey);
+                item.Night = new FormLink<IVolumetricLightingGetter>(rhs.Night.FormKey);
             }
         }
         

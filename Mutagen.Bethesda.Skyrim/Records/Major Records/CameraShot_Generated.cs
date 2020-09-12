@@ -97,9 +97,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region ImageSpaceModifier
-        public FormLinkNullable<ImageSpaceAdapter> ImageSpaceModifier { get; set; } = new FormLinkNullable<ImageSpaceAdapter>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IImageSpaceAdapterGetter> ICameraShotGetter.ImageSpaceModifier => this.ImageSpaceModifier.ToGetter<ImageSpaceAdapter, IImageSpaceAdapterGetter>();
+        public FormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; set; } = new FormLinkNullable<IImageSpaceAdapterGetter>();
         #endregion
         #region DATADataTypeState
         public CameraShot.DATADataType DATADataTypeState { get; set; } = default;
@@ -887,7 +885,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single MinTime { get; set; }
         new Single TargetPercentBetweenActors { get; set; }
         new Single NearTargetDistance { get; set; }
-        new FormLinkNullable<ImageSpaceAdapter> ImageSpaceModifier { get; set; }
+        new FormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; set; }
         new CameraShot.DATADataType DATADataTypeState { get; set; }
     }
 
@@ -1182,7 +1180,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.MinTime = default;
             item.TargetPercentBetweenActors = default;
             item.NearTargetDistance = default;
-            item.ImageSpaceModifier = FormLinkNullable<ImageSpaceAdapter>.Null;
+            item.ImageSpaceModifier = FormLinkNullable<IImageSpaceAdapterGetter>.Null;
             item.DATADataTypeState = default;
             base.Clear(item);
         }
@@ -1653,7 +1651,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.ImageSpaceModifier) ?? true))
             {
-                item.ImageSpaceModifier = new FormLinkNullable<ImageSpaceAdapter>(rhs.ImageSpaceModifier.FormKey);
+                item.ImageSpaceModifier = new FormLinkNullable<IImageSpaceAdapterGetter>(rhs.ImageSpaceModifier.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.DATADataTypeState) ?? true))
             {

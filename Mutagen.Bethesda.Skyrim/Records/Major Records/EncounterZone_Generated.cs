@@ -43,14 +43,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Owner
-        public FormLink<IOwner> Owner { get; set; } = new FormLink<IOwner>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IOwnerGetter> IEncounterZoneGetter.Owner => this.Owner.ToGetter<IOwner, IOwnerGetter>();
+        public FormLink<IOwnerGetter> Owner { get; set; } = new FormLink<IOwnerGetter>();
         #endregion
         #region Location
-        public FormLink<Location> Location { get; set; } = new FormLink<Location>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ILocationGetter> IEncounterZoneGetter.Location => this.Location.ToGetter<Location, ILocationGetter>();
+        public FormLink<ILocationGetter> Location { get; set; } = new FormLink<ILocationGetter>();
         #endregion
         #region Rank
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -674,8 +670,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IEncounterZoneInternal>,
         ILinkedFormKeyContainer
     {
-        new FormLink<IOwner> Owner { get; set; }
-        new FormLink<Location> Location { get; set; }
+        new FormLink<IOwnerGetter> Owner { get; set; }
+        new FormLink<ILocationGetter> Location { get; set; }
         new SByte Rank { get; set; }
         new SByte MinLevel { get; set; }
         new EncounterZone.Flag Flags { get; set; }
@@ -947,8 +943,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IEncounterZoneInternal item)
         {
             ClearPartial();
-            item.Owner = FormLink<IOwner>.Null;
-            item.Location = FormLink<Location>.Null;
+            item.Owner = FormLink<IOwnerGetter>.Null;
+            item.Location = FormLink<ILocationGetter>.Null;
             item.Rank = default;
             item.MinLevel = default;
             item.Flags = default;
@@ -1287,11 +1283,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.Owner) ?? true))
             {
-                item.Owner = new FormLink<IOwner>(rhs.Owner.FormKey);
+                item.Owner = new FormLink<IOwnerGetter>(rhs.Owner.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.Location) ?? true))
             {
-                item.Location = new FormLink<Location>(rhs.Location.FormKey);
+                item.Location = new FormLink<ILocationGetter>(rhs.Location.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.Rank) ?? true))
             {

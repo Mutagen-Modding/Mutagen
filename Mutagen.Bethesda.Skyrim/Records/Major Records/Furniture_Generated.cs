@@ -87,8 +87,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Keyword>>? _Keywords;
-        public IExtendedList<IFormLink<Keyword>>? Keywords
+        private IExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
+        public IExtendedList<IFormLink<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -116,9 +116,7 @@ namespace Mutagen.Bethesda.Skyrim
         Furniture.Flag? IFurnitureGetter.Flags => this.Flags;
         #endregion
         #region InteractionKeyword
-        public FormLinkNullable<Keyword> InteractionKeyword { get; set; } = new FormLinkNullable<Keyword>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IKeywordGetter> IFurnitureGetter.InteractionKeyword => this.InteractionKeyword.ToGetter<Keyword, IKeywordGetter>();
+        public FormLinkNullable<IKeywordGetter> InteractionKeyword { get; set; } = new FormLinkNullable<IKeywordGetter>();
         #endregion
         #region WorkbenchData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -132,9 +130,7 @@ namespace Mutagen.Bethesda.Skyrim
         IWorkbenchDataGetter? IFurnitureGetter.WorkbenchData => this.WorkbenchData;
         #endregion
         #region AssociatedSpell
-        public FormLinkNullable<Spell> AssociatedSpell { get; set; } = new FormLinkNullable<Spell>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISpellGetter> IFurnitureGetter.AssociatedSpell => this.AssociatedSpell.ToGetter<Spell, ISpellGetter>();
+        public FormLinkNullable<ISpellGetter> AssociatedSpell { get; set; } = new FormLinkNullable<ISpellGetter>();
         #endregion
         #region Markers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1082,12 +1078,12 @@ namespace Mutagen.Bethesda.Skyrim
         new TranslatedString? Name { get; set; }
         new Model? Model { get; set; }
         new Destructible? Destructible { get; set; }
-        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new IExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
         new MemorySlice<Byte>? PNAM { get; set; }
         new Furniture.Flag? Flags { get; set; }
-        new FormLinkNullable<Keyword> InteractionKeyword { get; set; }
+        new FormLinkNullable<IKeywordGetter> InteractionKeyword { get; set; }
         new WorkbenchData? WorkbenchData { get; set; }
-        new FormLinkNullable<Spell> AssociatedSpell { get; set; }
+        new FormLinkNullable<ISpellGetter> AssociatedSpell { get; set; }
         new IExtendedList<FurnitureMarker>? Markers { get; set; }
         new String? ModelFilename { get; set; }
         #region Mutagen
@@ -1388,9 +1384,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Keywords = null;
             item.PNAM = default;
             item.Flags = default;
-            item.InteractionKeyword = FormLinkNullable<Keyword>.Null;
+            item.InteractionKeyword = FormLinkNullable<IKeywordGetter>.Null;
             item.WorkbenchData = null;
-            item.AssociatedSpell = FormLinkNullable<Spell>.Null;
+            item.AssociatedSpell = FormLinkNullable<ISpellGetter>.Null;
             item.Markers = null;
             item.ModelFilename = default;
             base.Clear(item);
@@ -2004,8 +2000,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLink<Keyword>)new FormLink<Keyword>(r.FormKey))
-                            .ToExtendedList<IFormLink<Keyword>>();
+                            .Select(r => (IFormLink<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IKeywordGetter>>();
                     }
                     else
                     {
@@ -2039,7 +2035,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.InteractionKeyword) ?? true))
             {
-                item.InteractionKeyword = new FormLinkNullable<Keyword>(rhs.InteractionKeyword.FormKey);
+                item.InteractionKeyword = new FormLinkNullable<IKeywordGetter>(rhs.InteractionKeyword.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.WorkbenchData) ?? true))
             {
@@ -2069,7 +2065,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.AssociatedSpell) ?? true))
             {
-                item.AssociatedSpell = new FormLinkNullable<Spell>(rhs.AssociatedSpell.FormKey);
+                item.AssociatedSpell = new FormLinkNullable<ISpellGetter>(rhs.AssociatedSpell.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.Markers) ?? true))
             {
@@ -2519,13 +2515,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KSIZ:
                 {
                     item.Keywords = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<Keyword>>();
+                        .CastExtendedList<IFormLink<IKeywordGetter>>();
                     return (int)Furniture_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.PNAM:

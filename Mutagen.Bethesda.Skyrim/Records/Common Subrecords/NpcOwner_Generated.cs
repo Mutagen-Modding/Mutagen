@@ -42,9 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Npc
-        public FormLink<Npc> Npc { get; set; } = new FormLink<Npc>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<INpcGetter> INpcOwnerGetter.Npc => this.Npc.ToGetter<Npc, INpcGetter>();
+        public FormLink<INpcGetter> Npc { get; set; } = new FormLink<INpcGetter>();
         #endregion
         #region RawVariableData
         public UInt32 RawVariableData { get; set; } = default;
@@ -441,7 +439,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<INpcOwner>,
         ILinkedFormKeyContainer
     {
-        new FormLink<Npc> Npc { get; set; }
+        new FormLink<INpcGetter> Npc { get; set; }
         new UInt32 RawVariableData { get; set; }
     }
 
@@ -685,7 +683,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(INpcOwner item)
         {
             ClearPartial();
-            item.Npc = FormLink<Npc>.Null;
+            item.Npc = FormLink<INpcGetter>.Null;
             item.RawVariableData = default;
             base.Clear(item);
         }
@@ -898,7 +896,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)NpcOwner_FieldIndex.Npc) ?? true))
             {
-                item.Npc = new FormLink<Npc>(rhs.Npc.FormKey);
+                item.Npc = new FormLink<INpcGetter>(rhs.Npc.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)NpcOwner_FieldIndex.RawVariableData) ?? true))
             {

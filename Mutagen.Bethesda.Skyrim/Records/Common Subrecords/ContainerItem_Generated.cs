@@ -40,9 +40,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Item
-        public FormLink<IItem> Item { get; set; } = new FormLink<IItem>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IItemGetter> IContainerItemGetter.Item => this.Item.ToGetter<IItem, IItemGetter>();
+        public FormLink<IItemGetter> Item { get; set; } = new FormLink<IItemGetter>();
         #endregion
         #region Count
         public Int32 Count { get; set; } = default;
@@ -451,7 +449,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IContainerItem>,
         ILinkedFormKeyContainer
     {
-        new FormLink<IItem> Item { get; set; }
+        new FormLink<IItemGetter> Item { get; set; }
         new Int32 Count { get; set; }
     }
 
@@ -727,7 +725,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IContainerItem item)
         {
             ClearPartial();
-            item.Item = FormLink<IItem>.Null;
+            item.Item = FormLink<IItemGetter>.Null;
             item.Count = default;
         }
         
@@ -886,7 +884,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)ContainerItem_FieldIndex.Item) ?? true))
             {
-                item.Item = new FormLink<IItem>(rhs.Item.FormKey);
+                item.Item = new FormLink<IItemGetter>(rhs.Item.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ContainerItem_FieldIndex.Count) ?? true))
             {

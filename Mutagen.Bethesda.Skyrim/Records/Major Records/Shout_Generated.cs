@@ -48,9 +48,7 @@ namespace Mutagen.Bethesda.Skyrim
         TranslatedString? IShoutGetter.Name => this.Name;
         #endregion
         #region MenuDisplayObject
-        public FormLinkNullable<Static> MenuDisplayObject { get; set; } = new FormLinkNullable<Static>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IStaticGetter> IShoutGetter.MenuDisplayObject => this.MenuDisplayObject.ToGetter<Static, IStaticGetter>();
+        public FormLinkNullable<IStaticGetter> MenuDisplayObject { get; set; } = new FormLinkNullable<IStaticGetter>();
         #endregion
         #region Description
         public TranslatedString? Description { get; set; }
@@ -632,7 +630,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new TranslatedString? Name { get; set; }
-        new FormLinkNullable<Static> MenuDisplayObject { get; set; }
+        new FormLinkNullable<IStaticGetter> MenuDisplayObject { get; set; }
         new TranslatedString? Description { get; set; }
         new IExtendedList<ShoutWord> WordsOfPower { get; }
         #region Mutagen
@@ -906,7 +904,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Name = default;
-            item.MenuDisplayObject = FormLinkNullable<Static>.Null;
+            item.MenuDisplayObject = FormLinkNullable<IStaticGetter>.Null;
             item.Description = default;
             item.WordsOfPower.Clear();
             base.Clear(item);
@@ -1307,7 +1305,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Shout_FieldIndex.MenuDisplayObject) ?? true))
             {
-                item.MenuDisplayObject = new FormLinkNullable<Static>(rhs.MenuDisplayObject.FormKey);
+                item.MenuDisplayObject = new FormLinkNullable<IStaticGetter>(rhs.MenuDisplayObject.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Shout_FieldIndex.Description) ?? true))
             {

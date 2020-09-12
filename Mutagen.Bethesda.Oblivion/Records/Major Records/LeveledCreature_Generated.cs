@@ -67,14 +67,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Script
-        public FormLinkNullable<Script> Script { get; set; } = new FormLinkNullable<Script>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IScriptGetter> ILeveledCreatureGetter.Script => this.Script.ToGetter<Script, IScriptGetter>();
+        public FormLinkNullable<IScriptGetter> Script { get; set; } = new FormLinkNullable<IScriptGetter>();
         #endregion
         #region Template
-        public FormLinkNullable<ANpc> Template { get; set; } = new FormLinkNullable<ANpc>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IANpcGetter> ILeveledCreatureGetter.Template => this.Template.ToGetter<ANpc, IANpcGetter>();
+        public FormLinkNullable<IANpcGetter> Template { get; set; } = new FormLinkNullable<IANpcGetter>();
         #endregion
 
         #region To String
@@ -658,8 +654,8 @@ namespace Mutagen.Bethesda.Oblivion
         new Byte? ChanceNone { get; set; }
         new LeveledFlag? Flags { get; set; }
         new IExtendedList<LeveledEntry<ANpcSpawn>> Entries { get; }
-        new FormLinkNullable<Script> Script { get; set; }
-        new FormLinkNullable<ANpc> Template { get; set; }
+        new FormLinkNullable<IScriptGetter> Script { get; set; }
+        new FormLinkNullable<IANpcGetter> Template { get; set; }
     }
 
     public partial interface ILeveledCreatureInternal :
@@ -924,8 +920,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ChanceNone = default;
             item.Flags = default;
             item.Entries.Clear();
-            item.Script = FormLinkNullable<Script>.Null;
-            item.Template = FormLinkNullable<ANpc>.Null;
+            item.Script = FormLinkNullable<IScriptGetter>.Null;
+            item.Template = FormLinkNullable<IANpcGetter>.Null;
             base.Clear(item);
         }
         
@@ -1359,11 +1355,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledCreature_FieldIndex.Script) ?? true))
             {
-                item.Script = new FormLinkNullable<Script>(rhs.Script.FormKey);
+                item.Script = new FormLinkNullable<IScriptGetter>(rhs.Script.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledCreature_FieldIndex.Template) ?? true))
             {
-                item.Template = new FormLinkNullable<ANpc>(rhs.Template.FormKey);
+                item.Template = new FormLinkNullable<IANpcGetter>(rhs.Template.FormKey);
             }
         }
         

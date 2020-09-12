@@ -70,9 +70,7 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? ISoundMarkerGetter.SNDD => this.SNDD;
         #endregion
         #region SoundDescriptor
-        public FormLinkNullable<SoundDescriptor> SoundDescriptor { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> ISoundMarkerGetter.SoundDescriptor => this.SoundDescriptor.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> SoundDescriptor { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
 
         #region To String
@@ -565,7 +563,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ObjectBounds ObjectBounds { get; set; }
         new MemorySlice<Byte>? FNAM { get; set; }
         new MemorySlice<Byte>? SNDD { get; set; }
-        new FormLinkNullable<SoundDescriptor> SoundDescriptor { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> SoundDescriptor { get; set; }
     }
 
     public partial interface ISoundMarkerInternal :
@@ -832,7 +830,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ObjectBounds.Clear();
             item.FNAM = default;
             item.SNDD = default;
-            item.SoundDescriptor = FormLinkNullable<SoundDescriptor>.Null;
+            item.SoundDescriptor = FormLinkNullable<ISoundDescriptorGetter>.Null;
             base.Clear(item);
         }
         
@@ -1199,7 +1197,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SoundMarker_FieldIndex.SoundDescriptor) ?? true))
             {
-                item.SoundDescriptor = new FormLinkNullable<SoundDescriptor>(rhs.SoundDescriptor.FormKey);
+                item.SoundDescriptor = new FormLinkNullable<ISoundDescriptorGetter>(rhs.SoundDescriptor.FormKey);
             }
         }
         

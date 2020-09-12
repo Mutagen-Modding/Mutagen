@@ -48,19 +48,13 @@ namespace Mutagen.Bethesda.Oblivion
         String? IWorldspaceGetter.Name => this.Name;
         #endregion
         #region Parent
-        public FormLinkNullable<Worldspace> Parent { get; set; } = new FormLinkNullable<Worldspace>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IWorldspaceGetter> IWorldspaceGetter.Parent => this.Parent.ToGetter<Worldspace, IWorldspaceGetter>();
+        public FormLinkNullable<IWorldspaceGetter> Parent { get; set; } = new FormLinkNullable<IWorldspaceGetter>();
         #endregion
         #region Climate
-        public FormLinkNullable<Climate> Climate { get; set; } = new FormLinkNullable<Climate>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IClimateGetter> IWorldspaceGetter.Climate => this.Climate.ToGetter<Climate, IClimateGetter>();
+        public FormLinkNullable<IClimateGetter> Climate { get; set; } = new FormLinkNullable<IClimateGetter>();
         #endregion
         #region Water
-        public FormLinkNullable<Water> Water { get; set; } = new FormLinkNullable<Water>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IWaterGetter> IWorldspaceGetter.Water => this.Water.ToGetter<Water, IWaterGetter>();
+        public FormLinkNullable<IWaterGetter> Water { get; set; } = new FormLinkNullable<IWaterGetter>();
         #endregion
         #region Icon
         public String? Icon { get; set; }
@@ -1065,9 +1059,9 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkedFormKeyContainer
     {
         new String? Name { get; set; }
-        new FormLinkNullable<Worldspace> Parent { get; set; }
-        new FormLinkNullable<Climate> Climate { get; set; }
-        new FormLinkNullable<Water> Water { get; set; }
+        new FormLinkNullable<IWorldspaceGetter> Parent { get; set; }
+        new FormLinkNullable<IClimateGetter> Climate { get; set; }
+        new FormLinkNullable<IWaterGetter> Water { get; set; }
         new String? Icon { get; set; }
         new MapData? MapData { get; set; }
         new Worldspace.Flag? Flags { get; set; }
@@ -1578,9 +1572,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ClearPartial();
             item.Name = default;
-            item.Parent = FormLinkNullable<Worldspace>.Null;
-            item.Climate = FormLinkNullable<Climate>.Null;
-            item.Water = FormLinkNullable<Water>.Null;
+            item.Parent = FormLinkNullable<IWorldspaceGetter>.Null;
+            item.Climate = FormLinkNullable<IClimateGetter>.Null;
+            item.Water = FormLinkNullable<IWaterGetter>.Null;
             item.Icon = default;
             item.MapData = null;
             item.Flags = default;
@@ -2912,15 +2906,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Parent) ?? true))
             {
-                item.Parent = new FormLinkNullable<Worldspace>(rhs.Parent.FormKey);
+                item.Parent = new FormLinkNullable<IWorldspaceGetter>(rhs.Parent.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Climate) ?? true))
             {
-                item.Climate = new FormLinkNullable<Climate>(rhs.Climate.FormKey);
+                item.Climate = new FormLinkNullable<IClimateGetter>(rhs.Climate.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Water) ?? true))
             {
-                item.Water = new FormLinkNullable<Water>(rhs.Water.FormKey);
+                item.Water = new FormLinkNullable<IWaterGetter>(rhs.Water.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Icon) ?? true))
             {

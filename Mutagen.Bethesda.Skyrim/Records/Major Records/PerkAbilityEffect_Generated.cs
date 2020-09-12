@@ -42,9 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Ability
-        public FormLink<Spell> Ability { get; set; } = new FormLink<Spell>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISpellGetter> IPerkAbilityEffectGetter.Ability => this.Ability.ToGetter<Spell, ISpellGetter>();
+        public FormLink<ISpellGetter> Ability { get; set; } = new FormLink<ISpellGetter>();
         #endregion
 
         #region To String
@@ -419,7 +417,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPerkAbilityEffect>,
         ILinkedFormKeyContainer
     {
-        new FormLink<Spell> Ability { get; set; }
+        new FormLink<ISpellGetter> Ability { get; set; }
     }
 
     public partial interface IPerkAbilityEffectGetter :
@@ -665,7 +663,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IPerkAbilityEffect item)
         {
             ClearPartial();
-            item.Ability = FormLink<Spell>.Null;
+            item.Ability = FormLink<ISpellGetter>.Null;
             base.Clear(item);
         }
         
@@ -879,7 +877,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PerkAbilityEffect_FieldIndex.Ability) ?? true))
             {
-                item.Ability = new FormLink<Spell>(rhs.Ability.FormKey);
+                item.Ability = new FormLink<ISpellGetter>(rhs.Ability.FormKey);
             }
         }
         

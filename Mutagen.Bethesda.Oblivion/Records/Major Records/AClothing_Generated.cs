@@ -48,14 +48,10 @@ namespace Mutagen.Bethesda.Oblivion
         String? IAClothingGetter.Name => this.Name;
         #endregion
         #region Script
-        public FormLinkNullable<Script> Script { get; set; } = new FormLinkNullable<Script>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IScriptGetter> IAClothingGetter.Script => this.Script.ToGetter<Script, IScriptGetter>();
+        public FormLinkNullable<IScriptGetter> Script { get; set; } = new FormLinkNullable<IScriptGetter>();
         #endregion
         #region Enchantment
-        public FormLinkNullable<Enchantment> Enchantment { get; set; } = new FormLinkNullable<Enchantment>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IEnchantmentGetter> IAClothingGetter.Enchantment => this.Enchantment.ToGetter<Enchantment, IEnchantmentGetter>();
+        public FormLinkNullable<IEnchantmentGetter> Enchantment { get; set; } = new FormLinkNullable<IEnchantmentGetter>();
         #endregion
         #region EnchantmentPoints
         public UInt16? EnchantmentPoints { get; set; }
@@ -811,8 +807,8 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkedFormKeyContainer
     {
         new String? Name { get; set; }
-        new FormLinkNullable<Script> Script { get; set; }
-        new FormLinkNullable<Enchantment> Enchantment { get; set; }
+        new FormLinkNullable<IScriptGetter> Script { get; set; }
+        new FormLinkNullable<IEnchantmentGetter> Enchantment { get; set; }
         new UInt16? EnchantmentPoints { get; set; }
         new ClothingFlags? ClothingFlags { get; set; }
         new Model? MaleBipedModel { get; set; }
@@ -1148,8 +1144,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ClearPartial();
             item.Name = default;
-            item.Script = FormLinkNullable<Script>.Null;
-            item.Enchantment = FormLinkNullable<Enchantment>.Null;
+            item.Script = FormLinkNullable<IScriptGetter>.Null;
+            item.Enchantment = FormLinkNullable<IEnchantmentGetter>.Null;
             item.EnchantmentPoints = default;
             item.ClothingFlags = null;
             item.MaleBipedModel = null;
@@ -1622,11 +1618,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AClothing_FieldIndex.Script) ?? true))
             {
-                item.Script = new FormLinkNullable<Script>(rhs.Script.FormKey);
+                item.Script = new FormLinkNullable<IScriptGetter>(rhs.Script.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)AClothing_FieldIndex.Enchantment) ?? true))
             {
-                item.Enchantment = new FormLinkNullable<Enchantment>(rhs.Enchantment.FormKey);
+                item.Enchantment = new FormLinkNullable<IEnchantmentGetter>(rhs.Enchantment.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)AClothing_FieldIndex.EnchantmentPoints) ?? true))
             {

@@ -40,9 +40,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Reference
-        public FormLink<PlacedObject> Reference { get; set; } = new FormLink<PlacedObject>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IPlacedObjectGetter> IWorldspaceReferenceGetter.Reference => this.Reference.ToGetter<PlacedObject, IPlacedObjectGetter>();
+        public FormLink<IPlacedObjectGetter> Reference { get; set; } = new FormLink<IPlacedObjectGetter>();
         #endregion
         #region Position
         public P2Int16 Position { get; set; } = default;
@@ -450,7 +448,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IWorldspaceReference>,
         ILinkedFormKeyContainer
     {
-        new FormLink<PlacedObject> Reference { get; set; }
+        new FormLink<IPlacedObjectGetter> Reference { get; set; }
         new P2Int16 Position { get; set; }
     }
 
@@ -725,7 +723,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IWorldspaceReference item)
         {
             ClearPartial();
-            item.Reference = FormLink<PlacedObject>.Null;
+            item.Reference = FormLink<IPlacedObjectGetter>.Null;
             item.Position = default;
         }
         
@@ -881,7 +879,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)WorldspaceReference_FieldIndex.Reference) ?? true))
             {
-                item.Reference = new FormLink<PlacedObject>(rhs.Reference.FormKey);
+                item.Reference = new FormLink<IPlacedObjectGetter>(rhs.Reference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)WorldspaceReference_FieldIndex.Position) ?? true))
             {

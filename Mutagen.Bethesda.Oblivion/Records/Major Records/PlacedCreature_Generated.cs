@@ -43,14 +43,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Base
-        public FormLinkNullable<Creature> Base { get; set; } = new FormLinkNullable<Creature>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ICreatureGetter> IPlacedCreatureGetter.Base => this.Base.ToGetter<Creature, ICreatureGetter>();
+        public FormLinkNullable<ICreatureGetter> Base { get; set; } = new FormLinkNullable<ICreatureGetter>();
         #endregion
         #region Owner
-        public FormLinkNullable<Faction> Owner { get; set; } = new FormLinkNullable<Faction>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IFactionGetter> IPlacedCreatureGetter.Owner => this.Owner.ToGetter<Faction, IFactionGetter>();
+        public FormLinkNullable<IFactionGetter> Owner { get; set; } = new FormLinkNullable<IFactionGetter>();
         #endregion
         #region FactionRank
         public Int32? FactionRank { get; set; }
@@ -58,9 +54,7 @@ namespace Mutagen.Bethesda.Oblivion
         Int32? IPlacedCreatureGetter.FactionRank => this.FactionRank;
         #endregion
         #region GlobalVariable
-        public FormLinkNullable<Global> GlobalVariable { get; set; } = new FormLinkNullable<Global>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IGlobalGetter> IPlacedCreatureGetter.GlobalVariable => this.GlobalVariable.ToGetter<Global, IGlobalGetter>();
+        public FormLinkNullable<IGlobalGetter> GlobalVariable { get; set; } = new FormLinkNullable<IGlobalGetter>();
         #endregion
         #region EnableParent
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -703,10 +697,10 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IPlacedCreatureInternal>,
         ILinkedFormKeyContainer
     {
-        new FormLinkNullable<Creature> Base { get; set; }
-        new FormLinkNullable<Faction> Owner { get; set; }
+        new FormLinkNullable<ICreatureGetter> Base { get; set; }
+        new FormLinkNullable<IFactionGetter> Owner { get; set; }
         new Int32? FactionRank { get; set; }
-        new FormLinkNullable<Global> GlobalVariable { get; set; }
+        new FormLinkNullable<IGlobalGetter> GlobalVariable { get; set; }
         new EnableParent? EnableParent { get; set; }
         new MemorySlice<Byte>? RagdollData { get; set; }
         new Single? Scale { get; set; }
@@ -979,10 +973,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IPlacedCreatureInternal item)
         {
             ClearPartial();
-            item.Base = FormLinkNullable<Creature>.Null;
-            item.Owner = FormLinkNullable<Faction>.Null;
+            item.Base = FormLinkNullable<ICreatureGetter>.Null;
+            item.Owner = FormLinkNullable<IFactionGetter>.Null;
             item.FactionRank = default;
-            item.GlobalVariable = FormLinkNullable<Global>.Null;
+            item.GlobalVariable = FormLinkNullable<IGlobalGetter>.Null;
             item.EnableParent = null;
             item.RagdollData = default;
             item.Scale = default;
@@ -1370,11 +1364,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.Base) ?? true))
             {
-                item.Base = new FormLinkNullable<Creature>(rhs.Base.FormKey);
+                item.Base = new FormLinkNullable<ICreatureGetter>(rhs.Base.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.Owner) ?? true))
             {
-                item.Owner = new FormLinkNullable<Faction>(rhs.Owner.FormKey);
+                item.Owner = new FormLinkNullable<IFactionGetter>(rhs.Owner.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.FactionRank) ?? true))
             {
@@ -1382,7 +1376,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.GlobalVariable) ?? true))
             {
-                item.GlobalVariable = new FormLinkNullable<Global>(rhs.GlobalVariable.FormKey);
+                item.GlobalVariable = new FormLinkNullable<IGlobalGetter>(rhs.GlobalVariable.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.EnableParent) ?? true))
             {

@@ -78,9 +78,7 @@ namespace Mutagen.Bethesda.Skyrim
         public MoveableStatic.Flag Flags { get; set; } = default;
         #endregion
         #region LoopingSound
-        public FormLinkNullable<SoundDescriptor> LoopingSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IMoveableStaticGetter.LoopingSound => this.LoopingSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> LoopingSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
 
         #region To String
@@ -652,7 +650,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Model? Model { get; set; }
         new Destructible? Destructible { get; set; }
         new MoveableStatic.Flag Flags { get; set; }
-        new FormLinkNullable<SoundDescriptor> LoopingSound { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> LoopingSound { get; set; }
         #region Mutagen
         new MoveableStatic.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -935,7 +933,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Model = null;
             item.Destructible = null;
             item.Flags = default;
-            item.LoopingSound = FormLinkNullable<SoundDescriptor>.Null;
+            item.LoopingSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
             base.Clear(item);
         }
         
@@ -1380,7 +1378,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MoveableStatic_FieldIndex.LoopingSound) ?? true))
             {
-                item.LoopingSound = new FormLinkNullable<SoundDescriptor>(rhs.LoopingSound.FormKey);
+                item.LoopingSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.LoopingSound.FormKey);
             }
         }
         

@@ -40,19 +40,13 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region LocationRefType
-        public FormLink<LocationReferenceType> LocationRefType { get; set; } = new FormLink<LocationReferenceType>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ILocationReferenceTypeGetter> ILocationCellStaticReferenceGetter.LocationRefType => this.LocationRefType.ToGetter<LocationReferenceType, ILocationReferenceTypeGetter>();
+        public FormLink<ILocationReferenceTypeGetter> LocationRefType { get; set; } = new FormLink<ILocationReferenceTypeGetter>();
         #endregion
         #region Marker
-        public FormLink<ILinkedReference> Marker { get; set; } = new FormLink<ILinkedReference>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ILinkedReferenceGetter> ILocationCellStaticReferenceGetter.Marker => this.Marker.ToGetter<ILinkedReference, ILinkedReferenceGetter>();
+        public FormLink<ILinkedReferenceGetter> Marker { get; set; } = new FormLink<ILinkedReferenceGetter>();
         #endregion
         #region Location
-        public FormLink<IComplexLocation> Location { get; set; } = new FormLink<IComplexLocation>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IComplexLocationGetter> ILocationCellStaticReferenceGetter.Location => this.Location.ToGetter<IComplexLocation, IComplexLocationGetter>();
+        public FormLink<IComplexLocationGetter> Location { get; set; } = new FormLink<IComplexLocationGetter>();
         #endregion
         #region Grid
         public P2Int16 Grid { get; set; } = default;
@@ -516,9 +510,9 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ILocationCellStaticReference>,
         ILinkedFormKeyContainer
     {
-        new FormLink<LocationReferenceType> LocationRefType { get; set; }
-        new FormLink<ILinkedReference> Marker { get; set; }
-        new FormLink<IComplexLocation> Location { get; set; }
+        new FormLink<ILocationReferenceTypeGetter> LocationRefType { get; set; }
+        new FormLink<ILinkedReferenceGetter> Marker { get; set; }
+        new FormLink<IComplexLocationGetter> Location { get; set; }
         new P2Int16 Grid { get; set; }
     }
 
@@ -797,9 +791,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ILocationCellStaticReference item)
         {
             ClearPartial();
-            item.LocationRefType = FormLink<LocationReferenceType>.Null;
-            item.Marker = FormLink<ILinkedReference>.Null;
-            item.Location = FormLink<IComplexLocation>.Null;
+            item.LocationRefType = FormLink<ILocationReferenceTypeGetter>.Null;
+            item.Marker = FormLink<ILinkedReferenceGetter>.Null;
+            item.Location = FormLink<IComplexLocationGetter>.Null;
             item.Grid = default;
         }
         
@@ -971,15 +965,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)LocationCellStaticReference_FieldIndex.LocationRefType) ?? true))
             {
-                item.LocationRefType = new FormLink<LocationReferenceType>(rhs.LocationRefType.FormKey);
+                item.LocationRefType = new FormLink<ILocationReferenceTypeGetter>(rhs.LocationRefType.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LocationCellStaticReference_FieldIndex.Marker) ?? true))
             {
-                item.Marker = new FormLink<ILinkedReference>(rhs.Marker.FormKey);
+                item.Marker = new FormLink<ILinkedReferenceGetter>(rhs.Marker.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LocationCellStaticReference_FieldIndex.Location) ?? true))
             {
-                item.Location = new FormLink<IComplexLocation>(rhs.Location.FormKey);
+                item.Location = new FormLink<IComplexLocationGetter>(rhs.Location.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LocationCellStaticReference_FieldIndex.Grid) ?? true))
             {

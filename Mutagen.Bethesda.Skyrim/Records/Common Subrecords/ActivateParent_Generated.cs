@@ -40,9 +40,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Reference
-        public FormLink<ILinkedReference> Reference { get; set; } = new FormLink<ILinkedReference>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ILinkedReferenceGetter> IActivateParentGetter.Reference => this.Reference.ToGetter<ILinkedReference, ILinkedReferenceGetter>();
+        public FormLink<ILinkedReferenceGetter> Reference { get; set; } = new FormLink<ILinkedReferenceGetter>();
         #endregion
         #region Delay
         public Single Delay { get; set; } = default;
@@ -451,7 +449,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IActivateParent>,
         ILinkedFormKeyContainer
     {
-        new FormLink<ILinkedReference> Reference { get; set; }
+        new FormLink<ILinkedReferenceGetter> Reference { get; set; }
         new Single Delay { get; set; }
     }
 
@@ -727,7 +725,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IActivateParent item)
         {
             ClearPartial();
-            item.Reference = FormLink<ILinkedReference>.Null;
+            item.Reference = FormLink<ILinkedReferenceGetter>.Null;
             item.Delay = default;
         }
         
@@ -886,7 +884,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)ActivateParent_FieldIndex.Reference) ?? true))
             {
-                item.Reference = new FormLink<ILinkedReference>(rhs.Reference.FormKey);
+                item.Reference = new FormLink<ILinkedReferenceGetter>(rhs.Reference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ActivateParent_FieldIndex.Delay) ?? true))
             {

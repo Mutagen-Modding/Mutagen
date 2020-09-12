@@ -42,9 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Link
-        public FormLink<ILocationTargetable> Link { get; set; } = new FormLink<ILocationTargetable>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ILocationTargetableGetter> ILocationTargetGetter.Link => this.Link.ToGetter<ILocationTargetable, ILocationTargetableGetter>();
+        public FormLink<ILocationTargetableGetter> Link { get; set; } = new FormLink<ILocationTargetableGetter>();
         #endregion
 
         #region To String
@@ -403,7 +401,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ILocationTarget>,
         ILinkedFormKeyContainer
     {
-        new FormLink<ILocationTargetable> Link { get; set; }
+        new FormLink<ILocationTargetableGetter> Link { get; set; }
     }
 
     public partial interface ILocationTargetGetter :
@@ -644,7 +642,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ILocationTarget item)
         {
             ClearPartial();
-            item.Link = FormLink<ILocationTargetable>.Null;
+            item.Link = FormLink<ILocationTargetableGetter>.Null;
             base.Clear(item);
         }
         
@@ -849,7 +847,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)LocationTarget_FieldIndex.Link) ?? true))
             {
-                item.Link = new FormLink<ILocationTargetable>(rhs.Link.FormKey);
+                item.Link = new FormLink<ILocationTargetableGetter>(rhs.Link.FormKey);
             }
         }
         

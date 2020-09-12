@@ -40,17 +40,13 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Weather
-        public FormLink<Weather> Weather { get; set; } = new FormLink<Weather>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IWeatherGetter> IWeatherTypeGetter.Weather => this.Weather.ToGetter<Weather, IWeatherGetter>();
+        public FormLink<IWeatherGetter> Weather { get; set; } = new FormLink<IWeatherGetter>();
         #endregion
         #region Chance
         public Int32 Chance { get; set; } = default;
         #endregion
         #region Global
-        public FormLink<Global> Global { get; set; } = new FormLink<Global>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IGlobalGetter> IWeatherTypeGetter.Global => this.Global.ToGetter<Global, IGlobalGetter>();
+        public FormLink<IGlobalGetter> Global { get; set; } = new FormLink<IGlobalGetter>();
         #endregion
 
         #region To String
@@ -483,9 +479,9 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IWeatherType>,
         ILinkedFormKeyContainer
     {
-        new FormLink<Weather> Weather { get; set; }
+        new FormLink<IWeatherGetter> Weather { get; set; }
         new Int32 Chance { get; set; }
-        new FormLink<Global> Global { get; set; }
+        new FormLink<IGlobalGetter> Global { get; set; }
     }
 
     public partial interface IWeatherTypeGetter :
@@ -761,9 +757,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IWeatherType item)
         {
             ClearPartial();
-            item.Weather = FormLink<Weather>.Null;
+            item.Weather = FormLink<IWeatherGetter>.Null;
             item.Chance = default;
-            item.Global = FormLink<Global>.Null;
+            item.Global = FormLink<IGlobalGetter>.Null;
         }
         
         #region Binary Translation
@@ -926,7 +922,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)WeatherType_FieldIndex.Weather) ?? true))
             {
-                item.Weather = new FormLink<Weather>(rhs.Weather.FormKey);
+                item.Weather = new FormLink<IWeatherGetter>(rhs.Weather.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)WeatherType_FieldIndex.Chance) ?? true))
             {
@@ -934,7 +930,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)WeatherType_FieldIndex.Global) ?? true))
             {
-                item.Global = new FormLink<Global>(rhs.Global.FormKey);
+                item.Global = new FormLink<IGlobalGetter>(rhs.Global.FormKey);
             }
         }
         

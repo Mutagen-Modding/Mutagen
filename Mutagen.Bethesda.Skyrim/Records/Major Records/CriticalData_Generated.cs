@@ -66,9 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 Unused3 { get; set; } = default;
         #endregion
         #region Effect
-        public FormLink<Spell> Effect { get; set; } = new FormLink<Spell>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISpellGetter> ICriticalDataGetter.Effect => this.Effect.ToGetter<Spell, ISpellGetter>();
+        public FormLink<ISpellGetter> Effect { get; set; } = new FormLink<ISpellGetter>();
         #endregion
         #region Unused4
         public Int32 Unused4 { get; set; } = default;
@@ -651,7 +649,7 @@ namespace Mutagen.Bethesda.Skyrim
         new CriticalData.Flag Flags { get; set; }
         new MemorySlice<Byte> Unused2 { get; set; }
         new Int32 Unused3 { get; set; }
-        new FormLink<Spell> Effect { get; set; }
+        new FormLink<ISpellGetter> Effect { get; set; }
         new Int32 Unused4 { get; set; }
     }
 
@@ -945,7 +943,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Flags = default;
             item.Unused2 = new byte[3];
             item.Unused3 = default;
-            item.Effect = FormLink<Spell>.Null;
+            item.Effect = FormLink<ISpellGetter>.Null;
             item.Unused4 = default;
         }
         
@@ -1170,7 +1168,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)CriticalData_FieldIndex.Effect) ?? true))
             {
-                item.Effect = new FormLink<Spell>(rhs.Effect.FormKey);
+                item.Effect = new FormLink<ISpellGetter>(rhs.Effect.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)CriticalData_FieldIndex.Unused4) ?? true))
             {

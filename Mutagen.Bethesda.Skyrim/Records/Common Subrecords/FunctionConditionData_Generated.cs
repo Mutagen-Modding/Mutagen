@@ -48,9 +48,7 @@ namespace Mutagen.Bethesda.Skyrim
         public UInt16 Unknown2 { get; set; } = default;
         #endregion
         #region ParameterOneRecord
-        public FormLink<SkyrimMajorRecord> ParameterOneRecord { get; set; } = new FormLink<SkyrimMajorRecord>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISkyrimMajorRecordGetter> IFunctionConditionDataGetter.ParameterOneRecord => this.ParameterOneRecord.ToGetter<SkyrimMajorRecord, ISkyrimMajorRecordGetter>();
+        public FormLink<ISkyrimMajorRecordGetter> ParameterOneRecord { get; set; } = new FormLink<ISkyrimMajorRecordGetter>();
         #endregion
         #region ParameterOneNumber
         public Int32 ParameterOneNumber { get; set; } = default;
@@ -61,9 +59,7 @@ namespace Mutagen.Bethesda.Skyrim
         String? IFunctionConditionDataGetter.ParameterOneString => this.ParameterOneString;
         #endregion
         #region ParameterTwoRecord
-        public FormLink<SkyrimMajorRecord> ParameterTwoRecord { get; set; } = new FormLink<SkyrimMajorRecord>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISkyrimMajorRecordGetter> IFunctionConditionDataGetter.ParameterTwoRecord => this.ParameterTwoRecord.ToGetter<SkyrimMajorRecord, ISkyrimMajorRecordGetter>();
+        public FormLink<ISkyrimMajorRecordGetter> ParameterTwoRecord { get; set; } = new FormLink<ISkyrimMajorRecordGetter>();
         #endregion
         #region ParameterTwoNumber
         public Int32 ParameterTwoNumber { get; set; } = default;
@@ -729,10 +725,10 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new UInt16 Function { get; set; }
         new UInt16 Unknown2 { get; set; }
-        new FormLink<SkyrimMajorRecord> ParameterOneRecord { get; set; }
+        new FormLink<ISkyrimMajorRecordGetter> ParameterOneRecord { get; set; }
         new Int32 ParameterOneNumber { get; set; }
         new String? ParameterOneString { get; set; }
-        new FormLink<SkyrimMajorRecord> ParameterTwoRecord { get; set; }
+        new FormLink<ISkyrimMajorRecordGetter> ParameterTwoRecord { get; set; }
         new Int32 ParameterTwoNumber { get; set; }
         new String? ParameterTwoString { get; set; }
         new Int32 Unknown3 { get; set; }
@@ -1000,10 +996,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.Function = default;
             item.Unknown2 = default;
-            item.ParameterOneRecord = FormLink<SkyrimMajorRecord>.Null;
+            item.ParameterOneRecord = FormLink<ISkyrimMajorRecordGetter>.Null;
             item.ParameterOneNumber = default;
             item.ParameterOneString = default;
-            item.ParameterTwoRecord = FormLink<SkyrimMajorRecord>.Null;
+            item.ParameterTwoRecord = FormLink<ISkyrimMajorRecordGetter>.Null;
             item.ParameterTwoNumber = default;
             item.ParameterTwoString = default;
             item.Unknown3 = default;
@@ -1300,7 +1296,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterOneRecord) ?? true))
             {
-                item.ParameterOneRecord = new FormLink<SkyrimMajorRecord>(rhs.ParameterOneRecord.FormKey);
+                item.ParameterOneRecord = new FormLink<ISkyrimMajorRecordGetter>(rhs.ParameterOneRecord.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterOneNumber) ?? true))
             {
@@ -1312,7 +1308,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterTwoRecord) ?? true))
             {
-                item.ParameterTwoRecord = new FormLink<SkyrimMajorRecord>(rhs.ParameterTwoRecord.FormKey);
+                item.ParameterTwoRecord = new FormLink<ISkyrimMajorRecordGetter>(rhs.ParameterTwoRecord.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterTwoNumber) ?? true))
             {

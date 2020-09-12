@@ -59,8 +59,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Spell>> _Spells = new ExtendedList<IFormLink<Spell>>();
-        public IExtendedList<IFormLink<Spell>> Spells
+        private IExtendedList<IFormLink<ISpellGetter>> _Spells = new ExtendedList<IFormLink<ISpellGetter>>();
+        public IExtendedList<IFormLink<ISpellGetter>> Spells
         {
             get => this._Spells;
             protected set => this._Spells = value;
@@ -624,7 +624,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Name { get; set; }
         new String? Icon { get; set; }
         new String? Description { get; set; }
-        new IExtendedList<IFormLink<Spell>> Spells { get; }
+        new IExtendedList<IFormLink<ISpellGetter>> Spells { get; }
     }
 
     public partial interface IBirthsignInternal :
@@ -1247,7 +1247,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Spells.SetTo(
                         rhs.Spells
-                        .Select(r => (IFormLink<Spell>)new FormLink<Spell>(r.FormKey)));
+                        .Select(r => (IFormLink<ISpellGetter>)new FormLink<ISpellGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1552,7 +1552,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.SPLO:
                 {
                     item.Spells.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Spell>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ISpellGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPLO),
                             transl: FormLinkBinaryTranslation.Instance.Parse));

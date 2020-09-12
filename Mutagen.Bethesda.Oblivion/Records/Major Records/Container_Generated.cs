@@ -59,9 +59,7 @@ namespace Mutagen.Bethesda.Oblivion
         IModelGetter? IContainerGetter.Model => this.Model;
         #endregion
         #region Script
-        public FormLinkNullable<Script> Script { get; set; } = new FormLinkNullable<Script>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IScriptGetter> IContainerGetter.Script => this.Script.ToGetter<Script, IScriptGetter>();
+        public FormLinkNullable<IScriptGetter> Script { get; set; } = new FormLinkNullable<IScriptGetter>();
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -89,14 +87,10 @@ namespace Mutagen.Bethesda.Oblivion
         IContainerDataGetter? IContainerGetter.Data => this.Data;
         #endregion
         #region OpenSound
-        public FormLinkNullable<Sound> OpenSound { get; set; } = new FormLinkNullable<Sound>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundGetter> IContainerGetter.OpenSound => this.OpenSound.ToGetter<Sound, ISoundGetter>();
+        public FormLinkNullable<ISoundGetter> OpenSound { get; set; } = new FormLinkNullable<ISoundGetter>();
         #endregion
         #region CloseSound
-        public FormLinkNullable<Sound> CloseSound { get; set; } = new FormLinkNullable<Sound>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundGetter> IContainerGetter.CloseSound => this.CloseSound.ToGetter<Sound, ISoundGetter>();
+        public FormLinkNullable<ISoundGetter> CloseSound { get; set; } = new FormLinkNullable<ISoundGetter>();
         #endregion
 
         #region To String
@@ -750,11 +744,11 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
-        new FormLinkNullable<Script> Script { get; set; }
+        new FormLinkNullable<IScriptGetter> Script { get; set; }
         new IExtendedList<ContainerItem> Items { get; }
         new ContainerData? Data { get; set; }
-        new FormLinkNullable<Sound> OpenSound { get; set; }
-        new FormLinkNullable<Sound> CloseSound { get; set; }
+        new FormLinkNullable<ISoundGetter> OpenSound { get; set; }
+        new FormLinkNullable<ISoundGetter> CloseSound { get; set; }
     }
 
     public partial interface IContainerInternal :
@@ -1023,11 +1017,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.Name = default;
             item.Model = null;
-            item.Script = FormLinkNullable<Script>.Null;
+            item.Script = FormLinkNullable<IScriptGetter>.Null;
             item.Items.Clear();
             item.Data = null;
-            item.OpenSound = FormLinkNullable<Sound>.Null;
-            item.CloseSound = FormLinkNullable<Sound>.Null;
+            item.OpenSound = FormLinkNullable<ISoundGetter>.Null;
+            item.CloseSound = FormLinkNullable<ISoundGetter>.Null;
             base.Clear(item);
         }
         
@@ -1440,7 +1434,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.Script) ?? true))
             {
-                item.Script = new FormLinkNullable<Script>(rhs.Script.FormKey);
+                item.Script = new FormLinkNullable<IScriptGetter>(rhs.Script.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.Items) ?? true))
             {
@@ -1494,11 +1488,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.OpenSound) ?? true))
             {
-                item.OpenSound = new FormLinkNullable<Sound>(rhs.OpenSound.FormKey);
+                item.OpenSound = new FormLinkNullable<ISoundGetter>(rhs.OpenSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.CloseSound) ?? true))
             {
-                item.CloseSound = new FormLinkNullable<Sound>(rhs.CloseSound.FormKey);
+                item.CloseSound = new FormLinkNullable<ISoundGetter>(rhs.CloseSound.FormKey);
             }
         }
         

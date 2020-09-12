@@ -42,9 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Parent
-        public FormLink<Worldspace> Parent { get; set; } = new FormLink<Worldspace>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IWorldspaceGetter> IWorldspaceNavigationMeshDataGetter.Parent => this.Parent.ToGetter<Worldspace, IWorldspaceGetter>();
+        public FormLink<IWorldspaceGetter> Parent { get; set; } = new FormLink<IWorldspaceGetter>();
         #endregion
         #region Coordinates
         public P2Int16 Coordinates { get; set; } = default;
@@ -465,7 +463,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IWorldspaceNavigationMeshData>,
         ILinkedFormKeyContainer
     {
-        new FormLink<Worldspace> Parent { get; set; }
+        new FormLink<IWorldspaceGetter> Parent { get; set; }
         new P2Int16 Coordinates { get; set; }
     }
 
@@ -721,7 +719,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IWorldspaceNavigationMeshData item)
         {
             ClearPartial();
-            item.Parent = FormLink<Worldspace>.Null;
+            item.Parent = FormLink<IWorldspaceGetter>.Null;
             item.Coordinates = default;
             base.Clear(item);
         }
@@ -958,7 +956,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)WorldspaceNavigationMeshData_FieldIndex.Parent) ?? true))
             {
-                item.Parent = new FormLink<Worldspace>(rhs.Parent.FormKey);
+                item.Parent = new FormLink<IWorldspaceGetter>(rhs.Parent.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)WorldspaceNavigationMeshData_FieldIndex.Coordinates) ?? true))
             {

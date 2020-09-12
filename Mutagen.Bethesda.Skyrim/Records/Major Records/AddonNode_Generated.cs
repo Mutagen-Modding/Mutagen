@@ -62,9 +62,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 NodeIndex { get; set; } = default;
         #endregion
         #region Sound
-        public FormLinkNullable<SoundDescriptor> Sound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IAddonNodeGetter.Sound => this.Sound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> Sound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region MasterParticleSystemCap
         public UInt16 MasterParticleSystemCap { get; set; } = default;
@@ -660,7 +658,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ObjectBounds ObjectBounds { get; set; }
         new Model? Model { get; set; }
         new Int32 NodeIndex { get; set; }
-        new FormLinkNullable<SoundDescriptor> Sound { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> Sound { get; set; }
         new UInt16 MasterParticleSystemCap { get; set; }
         new Boolean AlwaysLoaded { get; set; }
         new AddonNode.DNAMDataType DNAMDataTypeState { get; set; }
@@ -935,7 +933,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ObjectBounds.Clear();
             item.Model = null;
             item.NodeIndex = default;
-            item.Sound = FormLinkNullable<SoundDescriptor>.Null;
+            item.Sound = FormLinkNullable<ISoundDescriptorGetter>.Null;
             item.MasterParticleSystemCap = default;
             item.AlwaysLoaded = default;
             item.DNAMDataTypeState = default;
@@ -1341,7 +1339,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AddonNode_FieldIndex.Sound) ?? true))
             {
-                item.Sound = new FormLinkNullable<SoundDescriptor>(rhs.Sound.FormKey);
+                item.Sound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.Sound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)AddonNode_FieldIndex.MasterParticleSystemCap) ?? true))
             {

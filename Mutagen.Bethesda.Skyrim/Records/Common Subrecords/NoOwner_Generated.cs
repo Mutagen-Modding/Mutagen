@@ -45,9 +45,7 @@ namespace Mutagen.Bethesda.Skyrim
         public UInt32 RawOwnerData { get; set; } = default;
         #endregion
         #region Global
-        public FormLink<Global> Global { get; set; } = new FormLink<Global>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IGlobalGetter> INoOwnerGetter.Global => this.Global.ToGetter<Global, IGlobalGetter>();
+        public FormLink<IGlobalGetter> Global { get; set; } = new FormLink<IGlobalGetter>();
         #endregion
 
         #region To String
@@ -442,7 +440,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new UInt32 RawOwnerData { get; set; }
-        new FormLink<Global> Global { get; set; }
+        new FormLink<IGlobalGetter> Global { get; set; }
     }
 
     public partial interface INoOwnerGetter :
@@ -686,7 +684,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.RawOwnerData = default;
-            item.Global = FormLink<Global>.Null;
+            item.Global = FormLink<IGlobalGetter>.Null;
             base.Clear(item);
         }
         
@@ -902,7 +900,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)NoOwner_FieldIndex.Global) ?? true))
             {
-                item.Global = new FormLink<Global>(rhs.Global.FormKey);
+                item.Global = new FormLink<IGlobalGetter>(rhs.Global.FormKey);
             }
         }
         

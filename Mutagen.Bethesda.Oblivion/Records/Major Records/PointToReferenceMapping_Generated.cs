@@ -40,9 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Reference
-        public FormLink<IPlaced> Reference { get; set; } = new FormLink<IPlaced>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IPlacedGetter> IPointToReferenceMappingGetter.Reference => this.Reference.ToGetter<IPlaced, IPlacedGetter>();
+        public FormLink<IPlacedGetter> Reference { get; set; } = new FormLink<IPlacedGetter>();
         #endregion
         #region Points
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -535,7 +533,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IPointToReferenceMapping>,
         ILinkedFormKeyContainer
     {
-        new FormLink<IPlaced> Reference { get; set; }
+        new FormLink<IPlacedGetter> Reference { get; set; }
         new IExtendedList<Int16> Points { get; }
     }
 
@@ -811,7 +809,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IPointToReferenceMapping item)
         {
             ClearPartial();
-            item.Reference = FormLink<IPlaced>.Null;
+            item.Reference = FormLink<IPlacedGetter>.Null;
             item.Points.Clear();
         }
         
@@ -987,7 +985,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)PointToReferenceMapping_FieldIndex.Reference) ?? true))
             {
-                item.Reference = new FormLink<IPlaced>(rhs.Reference.FormKey);
+                item.Reference = new FormLink<IPlacedGetter>(rhs.Reference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PointToReferenceMapping_FieldIndex.Points) ?? true))
             {

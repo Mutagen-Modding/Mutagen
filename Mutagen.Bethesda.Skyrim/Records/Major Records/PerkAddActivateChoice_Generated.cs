@@ -42,9 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Spell
-        public FormLinkNullable<Spell> Spell { get; set; } = new FormLinkNullable<Spell>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISpellGetter> IPerkAddActivateChoiceGetter.Spell => this.Spell.ToGetter<Spell, ISpellGetter>();
+        public FormLinkNullable<ISpellGetter> Spell { get; set; } = new FormLinkNullable<ISpellGetter>();
         #endregion
         #region ButtonLabel
         public TranslatedString? ButtonLabel { get; set; }
@@ -496,7 +494,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPerkAddActivateChoice>,
         ILinkedFormKeyContainer
     {
-        new FormLinkNullable<Spell> Spell { get; set; }
+        new FormLinkNullable<ISpellGetter> Spell { get; set; }
         new TranslatedString? ButtonLabel { get; set; }
         new PerkScriptFlag Flags { get; set; }
     }
@@ -750,7 +748,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IPerkAddActivateChoice item)
         {
             ClearPartial();
-            item.Spell = FormLinkNullable<Spell>.Null;
+            item.Spell = FormLinkNullable<ISpellGetter>.Null;
             item.ButtonLabel = default;
             item.Flags.Clear();
             base.Clear(item);
@@ -1038,7 +1036,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PerkAddActivateChoice_FieldIndex.Spell) ?? true))
             {
-                item.Spell = new FormLinkNullable<Spell>(rhs.Spell.FormKey);
+                item.Spell = new FormLinkNullable<ISpellGetter>(rhs.Spell.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PerkAddActivateChoice_FieldIndex.ButtonLabel) ?? true))
             {

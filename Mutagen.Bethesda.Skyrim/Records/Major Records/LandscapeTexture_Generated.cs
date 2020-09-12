@@ -43,14 +43,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region TextureSet
-        public FormLinkNullable<TextureSet> TextureSet { get; set; } = new FormLinkNullable<TextureSet>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ITextureSetGetter> ILandscapeTextureGetter.TextureSet => this.TextureSet.ToGetter<TextureSet, ITextureSetGetter>();
+        public FormLinkNullable<ITextureSetGetter> TextureSet { get; set; } = new FormLinkNullable<ITextureSetGetter>();
         #endregion
         #region MaterialType
-        public FormLink<MaterialType> MaterialType { get; set; } = new FormLink<MaterialType>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IMaterialTypeGetter> ILandscapeTextureGetter.MaterialType => this.MaterialType.ToGetter<MaterialType, IMaterialTypeGetter>();
+        public FormLink<IMaterialTypeGetter> MaterialType { get; set; } = new FormLink<IMaterialTypeGetter>();
         #endregion
         #region HavokFriction
         public Byte HavokFriction { get; set; } = default;
@@ -63,8 +59,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Grasses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Grass>> _Grasses = new ExtendedList<IFormLink<Grass>>();
-        public IExtendedList<IFormLink<Grass>> Grasses
+        private IExtendedList<IFormLink<IGrassGetter>> _Grasses = new ExtendedList<IFormLink<IGrassGetter>>();
+        public IExtendedList<IFormLink<IGrassGetter>> Grasses
         {
             get => this._Grasses;
             protected set => this._Grasses = value;
@@ -751,12 +747,12 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ILandscapeTextureInternal>,
         ILinkedFormKeyContainer
     {
-        new FormLinkNullable<TextureSet> TextureSet { get; set; }
-        new FormLink<MaterialType> MaterialType { get; set; }
+        new FormLinkNullable<ITextureSetGetter> TextureSet { get; set; }
+        new FormLink<IMaterialTypeGetter> MaterialType { get; set; }
         new Byte HavokFriction { get; set; }
         new Byte HavokRestitution { get; set; }
         new Byte TextureSpecularExponent { get; set; }
-        new IExtendedList<IFormLink<Grass>> Grasses { get; }
+        new IExtendedList<IFormLink<IGrassGetter>> Grasses { get; }
         new LandscapeTexture.Flag? Flags { get; set; }
         new LandscapeTexture.HNAMDataType HNAMDataTypeState { get; set; }
     }
@@ -1028,8 +1024,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ILandscapeTextureInternal item)
         {
             ClearPartial();
-            item.TextureSet = FormLinkNullable<TextureSet>.Null;
-            item.MaterialType = FormLink<MaterialType>.Null;
+            item.TextureSet = FormLinkNullable<ITextureSetGetter>.Null;
+            item.MaterialType = FormLink<IMaterialTypeGetter>.Null;
             item.HavokFriction = default;
             item.HavokRestitution = default;
             item.TextureSpecularExponent = default;
@@ -1404,11 +1400,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.TextureSet) ?? true))
             {
-                item.TextureSet = new FormLinkNullable<TextureSet>(rhs.TextureSet.FormKey);
+                item.TextureSet = new FormLinkNullable<ITextureSetGetter>(rhs.TextureSet.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.MaterialType) ?? true))
             {
-                item.MaterialType = new FormLink<MaterialType>(rhs.MaterialType.FormKey);
+                item.MaterialType = new FormLink<IMaterialTypeGetter>(rhs.MaterialType.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.HavokFriction) ?? true))
             {
@@ -1429,7 +1425,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Grasses.SetTo(
                         rhs.Grasses
-                        .Select(r => (IFormLink<Grass>)new FormLink<Grass>(r.FormKey)));
+                        .Select(r => (IFormLink<IGrassGetter>)new FormLink<IGrassGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1767,7 +1763,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.GNAM:
                 {
                     item.Grasses.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Grass>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IGrassGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.GNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));

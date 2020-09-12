@@ -40,9 +40,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Worldspace
-        public FormLink<Worldspace> Worldspace { get; set; } = new FormLink<Worldspace>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IWorldspaceGetter> IWorldspaceParentGetter.Worldspace => this.Worldspace.ToGetter<Worldspace, IWorldspaceGetter>();
+        public FormLink<IWorldspaceGetter> Worldspace { get; set; } = new FormLink<IWorldspaceGetter>();
         #endregion
         #region Flags
         public WorldspaceParent.Flag Flags { get; set; } = default;
@@ -451,7 +449,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IWorldspaceParent>,
         ILinkedFormKeyContainer
     {
-        new FormLink<Worldspace> Worldspace { get; set; }
+        new FormLink<IWorldspaceGetter> Worldspace { get; set; }
         new WorldspaceParent.Flag Flags { get; set; }
     }
 
@@ -727,7 +725,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IWorldspaceParent item)
         {
             ClearPartial();
-            item.Worldspace = FormLink<Worldspace>.Null;
+            item.Worldspace = FormLink<IWorldspaceGetter>.Null;
             item.Flags = default;
         }
         
@@ -884,7 +882,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)WorldspaceParent_FieldIndex.Worldspace) ?? true))
             {
-                item.Worldspace = new FormLink<Worldspace>(rhs.Worldspace.FormKey);
+                item.Worldspace = new FormLink<IWorldspaceGetter>(rhs.Worldspace.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)WorldspaceParent_FieldIndex.Flags) ?? true))
             {

@@ -102,8 +102,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Textures
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<LandscapeTexture>>? _Textures;
-        public IExtendedList<IFormLink<LandscapeTexture>>? Textures
+        private IExtendedList<IFormLink<ILandscapeTextureGetter>>? _Textures;
+        public IExtendedList<IFormLink<ILandscapeTextureGetter>>? Textures
         {
             get => this._Textures;
             set => this._Textures = value;
@@ -801,7 +801,7 @@ namespace Mutagen.Bethesda.Skyrim
         new MemorySlice<Byte>? VertexHeightMap { get; set; }
         new MemorySlice<Byte>? VertexColors { get; set; }
         new IExtendedList<BaseLayer> Layers { get; }
-        new IExtendedList<IFormLink<LandscapeTexture>>? Textures { get; set; }
+        new IExtendedList<IFormLink<ILandscapeTextureGetter>>? Textures { get; set; }
     }
 
     public partial interface ILandscapeInternal :
@@ -1533,8 +1533,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Textures = 
                             rhs.Textures
-                            .Select(r => (IFormLink<LandscapeTexture>)new FormLink<LandscapeTexture>(r.FormKey))
-                            .ToExtendedList<IFormLink<LandscapeTexture>>();
+                            .Select(r => (IFormLink<ILandscapeTextureGetter>)new FormLink<ILandscapeTextureGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<ILandscapeTextureGetter>>();
                     }
                     else
                     {
@@ -1887,10 +1887,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Textures = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<LandscapeTexture>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ILandscapeTextureGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<LandscapeTexture>>();
+                        .CastExtendedList<IFormLink<ILandscapeTextureGetter>>();
                     return (int)Landscape_FieldIndex.Textures;
                 }
                 default:

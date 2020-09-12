@@ -40,9 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Destination
-        public FormLink<IPlaced> Destination { get; set; } = new FormLink<IPlaced>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IPlacedGetter> ITeleportDestinationGetter.Destination => this.Destination.ToGetter<IPlaced, IPlacedGetter>();
+        public FormLink<IPlacedGetter> Destination { get; set; } = new FormLink<IPlacedGetter>();
         #endregion
         #region Position
         public P3Float Position { get; set; } = default;
@@ -482,7 +480,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<ITeleportDestination>,
         ILinkedFormKeyContainer
     {
-        new FormLink<IPlaced> Destination { get; set; }
+        new FormLink<IPlacedGetter> Destination { get; set; }
         new P3Float Position { get; set; }
         new P3Float Rotation { get; set; }
     }
@@ -761,7 +759,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(ITeleportDestination item)
         {
             ClearPartial();
-            item.Destination = FormLink<IPlaced>.Null;
+            item.Destination = FormLink<IPlacedGetter>.Null;
             item.Position = default;
             item.Rotation = default;
         }
@@ -928,7 +926,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Destination) ?? true))
             {
-                item.Destination = new FormLink<IPlaced>(rhs.Destination.FormKey);
+                item.Destination = new FormLink<IPlacedGetter>(rhs.Destination.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Position) ?? true))
             {

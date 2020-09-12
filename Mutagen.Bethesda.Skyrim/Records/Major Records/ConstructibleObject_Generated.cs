@@ -71,14 +71,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region CreatedObject
-        public FormLinkNullable<SkyrimMajorRecord> CreatedObject { get; set; } = new FormLinkNullable<SkyrimMajorRecord>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISkyrimMajorRecordGetter> IConstructibleObjectGetter.CreatedObject => this.CreatedObject.ToGetter<SkyrimMajorRecord, ISkyrimMajorRecordGetter>();
+        public FormLinkNullable<ISkyrimMajorRecordGetter> CreatedObject { get; set; } = new FormLinkNullable<ISkyrimMajorRecordGetter>();
         #endregion
         #region WorkbenchKeyword
-        public FormLinkNullable<Keyword> WorkbenchKeyword { get; set; } = new FormLinkNullable<Keyword>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IKeywordGetter> IConstructibleObjectGetter.WorkbenchKeyword => this.WorkbenchKeyword.ToGetter<Keyword, IKeywordGetter>();
+        public FormLinkNullable<IKeywordGetter> WorkbenchKeyword { get; set; } = new FormLinkNullable<IKeywordGetter>();
         #endregion
         #region CreatedObjectCount
         public UInt16? CreatedObjectCount { get; set; }
@@ -743,8 +739,8 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new IExtendedList<ContainerEntry>? Items { get; set; }
         new IExtendedList<Condition> Conditions { get; }
-        new FormLinkNullable<SkyrimMajorRecord> CreatedObject { get; set; }
-        new FormLinkNullable<Keyword> WorkbenchKeyword { get; set; }
+        new FormLinkNullable<ISkyrimMajorRecordGetter> CreatedObject { get; set; }
+        new FormLinkNullable<IKeywordGetter> WorkbenchKeyword { get; set; }
         new UInt16? CreatedObjectCount { get; set; }
     }
 
@@ -1010,8 +1006,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.Items = null;
             item.Conditions.Clear();
-            item.CreatedObject = FormLinkNullable<SkyrimMajorRecord>.Null;
-            item.WorkbenchKeyword = FormLinkNullable<Keyword>.Null;
+            item.CreatedObject = FormLinkNullable<ISkyrimMajorRecordGetter>.Null;
+            item.WorkbenchKeyword = FormLinkNullable<IKeywordGetter>.Null;
             item.CreatedObjectCount = default;
             base.Clear(item);
         }
@@ -1446,11 +1442,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.CreatedObject) ?? true))
             {
-                item.CreatedObject = new FormLinkNullable<SkyrimMajorRecord>(rhs.CreatedObject.FormKey);
+                item.CreatedObject = new FormLinkNullable<ISkyrimMajorRecordGetter>(rhs.CreatedObject.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.WorkbenchKeyword) ?? true))
             {
-                item.WorkbenchKeyword = new FormLinkNullable<Keyword>(rhs.WorkbenchKeyword.FormKey);
+                item.WorkbenchKeyword = new FormLinkNullable<IKeywordGetter>(rhs.WorkbenchKeyword.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.CreatedObjectCount) ?? true))
             {

@@ -106,14 +106,10 @@ namespace Mutagen.Bethesda.Skyrim
         public Single Weight { get; set; } = default;
         #endregion
         #region OpenSound
-        public FormLinkNullable<SoundDescriptor> OpenSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IContainerGetter.OpenSound => this.OpenSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> OpenSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region CloseSound
-        public FormLinkNullable<SoundDescriptor> CloseSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IContainerGetter.CloseSound => this.CloseSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> CloseSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region DATADataTypeState
         public Container.DATADataType DATADataTypeState { get; set; } = default;
@@ -916,8 +912,8 @@ namespace Mutagen.Bethesda.Skyrim
         new Destructible? Destructible { get; set; }
         new Container.Flag Flags { get; set; }
         new Single Weight { get; set; }
-        new FormLinkNullable<SoundDescriptor> OpenSound { get; set; }
-        new FormLinkNullable<SoundDescriptor> CloseSound { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> OpenSound { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> CloseSound { get; set; }
         new Container.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
         new Container.MajorFlag MajorFlags { get; set; }
@@ -1213,8 +1209,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Destructible = null;
             item.Flags = default;
             item.Weight = default;
-            item.OpenSound = FormLinkNullable<SoundDescriptor>.Null;
-            item.CloseSound = FormLinkNullable<SoundDescriptor>.Null;
+            item.OpenSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
+            item.CloseSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
             item.DATADataTypeState = default;
             base.Clear(item);
         }
@@ -1802,11 +1798,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.OpenSound) ?? true))
             {
-                item.OpenSound = new FormLinkNullable<SoundDescriptor>(rhs.OpenSound.FormKey);
+                item.OpenSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.OpenSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.CloseSound) ?? true))
             {
-                item.CloseSound = new FormLinkNullable<SoundDescriptor>(rhs.CloseSound.FormKey);
+                item.CloseSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.CloseSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.DATADataTypeState) ?? true))
             {

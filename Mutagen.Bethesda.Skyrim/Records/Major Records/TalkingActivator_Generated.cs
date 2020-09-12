@@ -87,8 +87,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Keyword>>? _Keywords;
-        public IExtendedList<IFormLink<Keyword>>? Keywords
+        private IExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
+        public IExtendedList<IFormLink<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -105,9 +105,7 @@ namespace Mutagen.Bethesda.Skyrim
         Int32? ITalkingActivatorGetter.PNAM => this.PNAM;
         #endregion
         #region LoopingSound
-        public FormLinkNullable<SoundMarker> LoopingSound { get; set; } = new FormLinkNullable<SoundMarker>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundMarkerGetter> ITalkingActivatorGetter.LoopingSound => this.LoopingSound.ToGetter<SoundMarker, ISoundMarkerGetter>();
+        public FormLinkNullable<ISoundMarkerGetter> LoopingSound { get; set; } = new FormLinkNullable<ISoundMarkerGetter>();
         #endregion
         #region FNAM
         public Int16? FNAM { get; set; }
@@ -115,9 +113,7 @@ namespace Mutagen.Bethesda.Skyrim
         Int16? ITalkingActivatorGetter.FNAM => this.FNAM;
         #endregion
         #region VoiceType
-        public FormLinkNullable<VoiceType> VoiceType { get; set; } = new FormLinkNullable<VoiceType>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IVoiceTypeGetter> ITalkingActivatorGetter.VoiceType => this.VoiceType.ToGetter<VoiceType, IVoiceTypeGetter>();
+        public FormLinkNullable<IVoiceTypeGetter> VoiceType { get; set; } = new FormLinkNullable<IVoiceTypeGetter>();
         #endregion
 
         #region To String
@@ -879,11 +875,11 @@ namespace Mutagen.Bethesda.Skyrim
         new TranslatedString? Name { get; set; }
         new Model? Model { get; set; }
         new Destructible? Destructible { get; set; }
-        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new IExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
         new Int32? PNAM { get; set; }
-        new FormLinkNullable<SoundMarker> LoopingSound { get; set; }
+        new FormLinkNullable<ISoundMarkerGetter> LoopingSound { get; set; }
         new Int16? FNAM { get; set; }
-        new FormLinkNullable<VoiceType> VoiceType { get; set; }
+        new FormLinkNullable<IVoiceTypeGetter> VoiceType { get; set; }
         #region Mutagen
         new TalkingActivator.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1174,9 +1170,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Destructible = null;
             item.Keywords = null;
             item.PNAM = default;
-            item.LoopingSound = FormLinkNullable<SoundMarker>.Null;
+            item.LoopingSound = FormLinkNullable<ISoundMarkerGetter>.Null;
             item.FNAM = default;
-            item.VoiceType = FormLinkNullable<VoiceType>.Null;
+            item.VoiceType = FormLinkNullable<IVoiceTypeGetter>.Null;
             base.Clear(item);
         }
         
@@ -1730,8 +1726,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLink<Keyword>)new FormLink<Keyword>(r.FormKey))
-                            .ToExtendedList<IFormLink<Keyword>>();
+                            .Select(r => (IFormLink<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IKeywordGetter>>();
                     }
                     else
                     {
@@ -1754,7 +1750,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)TalkingActivator_FieldIndex.LoopingSound) ?? true))
             {
-                item.LoopingSound = new FormLinkNullable<SoundMarker>(rhs.LoopingSound.FormKey);
+                item.LoopingSound = new FormLinkNullable<ISoundMarkerGetter>(rhs.LoopingSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)TalkingActivator_FieldIndex.FNAM) ?? true))
             {
@@ -1762,7 +1758,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)TalkingActivator_FieldIndex.VoiceType) ?? true))
             {
-                item.VoiceType = new FormLinkNullable<VoiceType>(rhs.VoiceType.FormKey);
+                item.VoiceType = new FormLinkNullable<IVoiceTypeGetter>(rhs.VoiceType.FormKey);
             }
         }
         
@@ -2104,13 +2100,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KSIZ:
                 {
                     item.Keywords = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<Keyword>>();
+                        .CastExtendedList<IFormLink<IKeywordGetter>>();
                     return (int)TalkingActivator_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.PNAM:

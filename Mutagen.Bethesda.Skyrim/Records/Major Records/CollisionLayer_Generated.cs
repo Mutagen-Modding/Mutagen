@@ -60,8 +60,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region CollidesWith
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<CollisionLayer>>? _CollidesWith;
-        public IExtendedList<IFormLink<CollisionLayer>>? CollidesWith
+        private IExtendedList<IFormLink<ICollisionLayerGetter>>? _CollidesWith;
+        public IExtendedList<IFormLink<ICollisionLayerGetter>>? CollidesWith
         {
             get => this._CollidesWith;
             set => this._CollidesWith = value;
@@ -684,7 +684,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Color DebugColor { get; set; }
         new CollisionLayer.Flag Flags { get; set; }
         new String Name { get; set; }
-        new IExtendedList<IFormLink<CollisionLayer>>? CollidesWith { get; set; }
+        new IExtendedList<IFormLink<ICollisionLayerGetter>>? CollidesWith { get; set; }
     }
 
     public partial interface ICollisionLayerInternal :
@@ -1331,8 +1331,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.CollidesWith = 
                             rhs.CollidesWith
-                            .Select(r => (IFormLink<CollisionLayer>)new FormLink<CollisionLayer>(r.FormKey))
-                            .ToExtendedList<IFormLink<CollisionLayer>>();
+                            .Select(r => (IFormLink<ICollisionLayerGetter>)new FormLink<ICollisionLayerGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<ICollisionLayerGetter>>();
                     }
                     else
                     {
@@ -1666,13 +1666,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.INTV:
                 {
                     item.CollidesWith = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<CollisionLayer>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ICollisionLayerGetter>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.INTV),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedListIfAny<IFormLink<CollisionLayer>>();
+                        .CastExtendedListIfAny<IFormLink<ICollisionLayerGetter>>();
                     return (int)CollisionLayer_FieldIndex.CollidesWith;
                 }
                 default:

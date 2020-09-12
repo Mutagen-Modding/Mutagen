@@ -54,8 +54,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Keyword>>? _Keywords;
-        public IExtendedList<IFormLink<Keyword>>? Keywords
+        private IExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
+        public IExtendedList<IFormLink<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -105,19 +105,13 @@ namespace Mutagen.Bethesda.Skyrim
         IIconsGetter? IIngestibleGetter.Icons => this.Icons;
         #endregion
         #region PickUpSound
-        public FormLinkNullable<SoundDescriptor> PickUpSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IIngestibleGetter.PickUpSound => this.PickUpSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region PutDownSound
-        public FormLinkNullable<SoundDescriptor> PutDownSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IIngestibleGetter.PutDownSound => this.PutDownSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region EquipmentType
-        public FormLinkNullable<EquipType> EquipmentType { get; set; } = new FormLinkNullable<EquipType>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IEquipTypeGetter> IIngestibleGetter.EquipmentType => this.EquipmentType.ToGetter<EquipType, IEquipTypeGetter>();
+        public FormLinkNullable<IEquipTypeGetter> EquipmentType { get; set; } = new FormLinkNullable<IEquipTypeGetter>();
         #endregion
         #region Weight
         public Single Weight { get; set; } = default;
@@ -129,17 +123,13 @@ namespace Mutagen.Bethesda.Skyrim
         public Ingestible.Flag Flags { get; set; } = default;
         #endregion
         #region Addiction
-        public FormLink<SkyrimMajorRecord> Addiction { get; set; } = new FormLink<SkyrimMajorRecord>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISkyrimMajorRecordGetter> IIngestibleGetter.Addiction => this.Addiction.ToGetter<SkyrimMajorRecord, ISkyrimMajorRecordGetter>();
+        public FormLink<ISkyrimMajorRecordGetter> Addiction { get; set; } = new FormLink<ISkyrimMajorRecordGetter>();
         #endregion
         #region AddictionChance
         public Single AddictionChance { get; set; } = default;
         #endregion
         #region ConsumeSound
-        public FormLink<SoundDescriptor> ConsumeSound { get; set; } = new FormLink<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISoundDescriptorGetter> IIngestibleGetter.ConsumeSound => this.ConsumeSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLink<ISoundDescriptorGetter> ConsumeSound { get; set; } = new FormLink<ISoundDescriptorGetter>();
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1220,20 +1210,20 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new ObjectBounds ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
-        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new IExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
         new TranslatedString? Description { get; set; }
         new Model? Model { get; set; }
         new Destructible? Destructible { get; set; }
         new Icons? Icons { get; set; }
-        new FormLinkNullable<SoundDescriptor> PickUpSound { get; set; }
-        new FormLinkNullable<SoundDescriptor> PutDownSound { get; set; }
-        new FormLinkNullable<EquipType> EquipmentType { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; set; }
+        new FormLinkNullable<IEquipTypeGetter> EquipmentType { get; set; }
         new Single Weight { get; set; }
         new UInt32 Value { get; set; }
         new Ingestible.Flag Flags { get; set; }
-        new FormLink<SkyrimMajorRecord> Addiction { get; set; }
+        new FormLink<ISkyrimMajorRecordGetter> Addiction { get; set; }
         new Single AddictionChance { get; set; }
-        new FormLink<SoundDescriptor> ConsumeSound { get; set; }
+        new FormLink<ISoundDescriptorGetter> ConsumeSound { get; set; }
         new IExtendedList<Effect> Effects { get; }
         new Ingestible.ENITDataType ENITDataTypeState { get; set; }
         #region Mutagen
@@ -1544,15 +1534,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Model = null;
             item.Destructible = null;
             item.Icons = null;
-            item.PickUpSound = FormLinkNullable<SoundDescriptor>.Null;
-            item.PutDownSound = FormLinkNullable<SoundDescriptor>.Null;
-            item.EquipmentType = FormLinkNullable<EquipType>.Null;
+            item.PickUpSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
+            item.PutDownSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
+            item.EquipmentType = FormLinkNullable<IEquipTypeGetter>.Null;
             item.Weight = default;
             item.Value = default;
             item.Flags = default;
-            item.Addiction = FormLink<SkyrimMajorRecord>.Null;
+            item.Addiction = FormLink<ISkyrimMajorRecordGetter>.Null;
             item.AddictionChance = default;
-            item.ConsumeSound = FormLink<SoundDescriptor>.Null;
+            item.ConsumeSound = FormLink<ISoundDescriptorGetter>.Null;
             item.Effects.Clear();
             item.ENITDataTypeState = default;
             base.Clear(item);
@@ -2102,8 +2092,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLink<Keyword>)new FormLink<Keyword>(r.FormKey))
-                            .ToExtendedList<IFormLink<Keyword>>();
+                            .Select(r => (IFormLink<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IKeywordGetter>>();
                     }
                     else
                     {
@@ -2204,15 +2194,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Ingestible_FieldIndex.PickUpSound) ?? true))
             {
-                item.PickUpSound = new FormLinkNullable<SoundDescriptor>(rhs.PickUpSound.FormKey);
+                item.PickUpSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.PickUpSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Ingestible_FieldIndex.PutDownSound) ?? true))
             {
-                item.PutDownSound = new FormLinkNullable<SoundDescriptor>(rhs.PutDownSound.FormKey);
+                item.PutDownSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.PutDownSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Ingestible_FieldIndex.EquipmentType) ?? true))
             {
-                item.EquipmentType = new FormLinkNullable<EquipType>(rhs.EquipmentType.FormKey);
+                item.EquipmentType = new FormLinkNullable<IEquipTypeGetter>(rhs.EquipmentType.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Weight) ?? true))
             {
@@ -2228,7 +2218,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Addiction) ?? true))
             {
-                item.Addiction = new FormLink<SkyrimMajorRecord>(rhs.Addiction.FormKey);
+                item.Addiction = new FormLink<ISkyrimMajorRecordGetter>(rhs.Addiction.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Ingestible_FieldIndex.AddictionChance) ?? true))
             {
@@ -2236,7 +2226,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Ingestible_FieldIndex.ConsumeSound) ?? true))
             {
-                item.ConsumeSound = new FormLink<SoundDescriptor>(rhs.ConsumeSound.FormKey);
+                item.ConsumeSound = new FormLink<ISoundDescriptorGetter>(rhs.ConsumeSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Effects) ?? true))
             {
@@ -2628,13 +2618,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KSIZ:
                 {
                     item.Keywords = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<Keyword>>();
+                        .CastExtendedList<IFormLink<IKeywordGetter>>();
                     return (int)Ingestible_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DESC:

@@ -42,9 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Spell
-        public FormLink<Spell> Spell { get; set; } = new FormLink<Spell>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISpellGetter> IBookSpellGetter.Spell => this.Spell.ToGetter<Spell, ISpellGetter>();
+        public FormLink<ISpellGetter> Spell { get; set; } = new FormLink<ISpellGetter>();
         #endregion
 
         #region To String
@@ -403,7 +401,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IBookSpell>,
         ILinkedFormKeyContainer
     {
-        new FormLink<Spell> Spell { get; set; }
+        new FormLink<ISpellGetter> Spell { get; set; }
     }
 
     public partial interface IBookSpellGetter :
@@ -644,7 +642,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IBookSpell item)
         {
             ClearPartial();
-            item.Spell = FormLink<Spell>.Null;
+            item.Spell = FormLink<ISpellGetter>.Null;
             base.Clear(item);
         }
         
@@ -849,7 +847,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)BookSpell_FieldIndex.Spell) ?? true))
             {
-                item.Spell = new FormLink<Spell>(rhs.Spell.FormKey);
+                item.Spell = new FormLink<ISpellGetter>(rhs.Spell.FormKey);
             }
         }
         

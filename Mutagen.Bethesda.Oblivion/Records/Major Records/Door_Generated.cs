@@ -59,24 +59,16 @@ namespace Mutagen.Bethesda.Oblivion
         IModelGetter? IDoorGetter.Model => this.Model;
         #endregion
         #region Script
-        public FormLinkNullable<Script> Script { get; set; } = new FormLinkNullable<Script>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IScriptGetter> IDoorGetter.Script => this.Script.ToGetter<Script, IScriptGetter>();
+        public FormLinkNullable<IScriptGetter> Script { get; set; } = new FormLinkNullable<IScriptGetter>();
         #endregion
         #region OpenSound
-        public FormLinkNullable<Sound> OpenSound { get; set; } = new FormLinkNullable<Sound>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundGetter> IDoorGetter.OpenSound => this.OpenSound.ToGetter<Sound, ISoundGetter>();
+        public FormLinkNullable<ISoundGetter> OpenSound { get; set; } = new FormLinkNullable<ISoundGetter>();
         #endregion
         #region CloseSound
-        public FormLinkNullable<Sound> CloseSound { get; set; } = new FormLinkNullable<Sound>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundGetter> IDoorGetter.CloseSound => this.CloseSound.ToGetter<Sound, ISoundGetter>();
+        public FormLinkNullable<ISoundGetter> CloseSound { get; set; } = new FormLinkNullable<ISoundGetter>();
         #endregion
         #region LoopSound
-        public FormLinkNullable<Sound> LoopSound { get; set; } = new FormLinkNullable<Sound>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundGetter> IDoorGetter.LoopSound => this.LoopSound.ToGetter<Sound, ISoundGetter>();
+        public FormLinkNullable<ISoundGetter> LoopSound { get; set; } = new FormLinkNullable<ISoundGetter>();
         #endregion
         #region Flags
         public Door.DoorFlag? Flags { get; set; }
@@ -85,8 +77,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region RandomTeleportDestinations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Place>> _RandomTeleportDestinations = new ExtendedList<IFormLink<Place>>();
-        public IExtendedList<IFormLink<Place>> RandomTeleportDestinations
+        private IExtendedList<IFormLink<IPlaceGetter>> _RandomTeleportDestinations = new ExtendedList<IFormLink<IPlaceGetter>>();
+        public IExtendedList<IFormLink<IPlaceGetter>> RandomTeleportDestinations
         {
             get => this._RandomTeleportDestinations;
             protected set => this._RandomTeleportDestinations = value;
@@ -768,12 +760,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
-        new FormLinkNullable<Script> Script { get; set; }
-        new FormLinkNullable<Sound> OpenSound { get; set; }
-        new FormLinkNullable<Sound> CloseSound { get; set; }
-        new FormLinkNullable<Sound> LoopSound { get; set; }
+        new FormLinkNullable<IScriptGetter> Script { get; set; }
+        new FormLinkNullable<ISoundGetter> OpenSound { get; set; }
+        new FormLinkNullable<ISoundGetter> CloseSound { get; set; }
+        new FormLinkNullable<ISoundGetter> LoopSound { get; set; }
         new Door.DoorFlag? Flags { get; set; }
-        new IExtendedList<IFormLink<Place>> RandomTeleportDestinations { get; }
+        new IExtendedList<IFormLink<IPlaceGetter>> RandomTeleportDestinations { get; }
     }
 
     public partial interface IDoorInternal :
@@ -1044,10 +1036,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.Name = default;
             item.Model = null;
-            item.Script = FormLinkNullable<Script>.Null;
-            item.OpenSound = FormLinkNullable<Sound>.Null;
-            item.CloseSound = FormLinkNullable<Sound>.Null;
-            item.LoopSound = FormLinkNullable<Sound>.Null;
+            item.Script = FormLinkNullable<IScriptGetter>.Null;
+            item.OpenSound = FormLinkNullable<ISoundGetter>.Null;
+            item.CloseSound = FormLinkNullable<ISoundGetter>.Null;
+            item.LoopSound = FormLinkNullable<ISoundGetter>.Null;
             item.Flags = default;
             item.RandomTeleportDestinations.Clear();
             base.Clear(item);
@@ -1469,19 +1461,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.Script) ?? true))
             {
-                item.Script = new FormLinkNullable<Script>(rhs.Script.FormKey);
+                item.Script = new FormLinkNullable<IScriptGetter>(rhs.Script.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.OpenSound) ?? true))
             {
-                item.OpenSound = new FormLinkNullable<Sound>(rhs.OpenSound.FormKey);
+                item.OpenSound = new FormLinkNullable<ISoundGetter>(rhs.OpenSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.CloseSound) ?? true))
             {
-                item.CloseSound = new FormLinkNullable<Sound>(rhs.CloseSound.FormKey);
+                item.CloseSound = new FormLinkNullable<ISoundGetter>(rhs.CloseSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.LoopSound) ?? true))
             {
-                item.LoopSound = new FormLinkNullable<Sound>(rhs.LoopSound.FormKey);
+                item.LoopSound = new FormLinkNullable<ISoundGetter>(rhs.LoopSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.Flags) ?? true))
             {
@@ -1494,7 +1486,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.RandomTeleportDestinations.SetTo(
                         rhs.RandomTeleportDestinations
-                        .Select(r => (IFormLink<Place>)new FormLink<Place>(r.FormKey)));
+                        .Select(r => (IFormLink<IPlaceGetter>)new FormLink<IPlaceGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1846,7 +1838,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.TNAM:
                 {
                     item.RandomTeleportDestinations.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Place>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPlaceGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));

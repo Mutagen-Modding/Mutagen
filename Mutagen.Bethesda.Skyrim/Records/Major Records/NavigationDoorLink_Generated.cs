@@ -40,9 +40,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region NavMesh
-        public FormLink<ANavigationMesh> NavMesh { get; set; } = new FormLink<ANavigationMesh>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IANavigationMeshGetter> INavigationDoorLinkGetter.NavMesh => this.NavMesh.ToGetter<ANavigationMesh, IANavigationMeshGetter>();
+        public FormLink<IANavigationMeshGetter> NavMesh { get; set; } = new FormLink<IANavigationMeshGetter>();
         #endregion
         #region NavMeshTriangleIndex
         public Int16 NavMeshTriangleIndex { get; set; } = default;
@@ -482,7 +480,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<INavigationDoorLink>,
         ILinkedFormKeyContainer
     {
-        new FormLink<ANavigationMesh> NavMesh { get; set; }
+        new FormLink<IANavigationMeshGetter> NavMesh { get; set; }
         new Int16 NavMeshTriangleIndex { get; set; }
         new Int16 Unused { get; set; }
     }
@@ -761,7 +759,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(INavigationDoorLink item)
         {
             ClearPartial();
-            item.NavMesh = FormLink<ANavigationMesh>.Null;
+            item.NavMesh = FormLink<IANavigationMeshGetter>.Null;
             item.NavMeshTriangleIndex = default;
             item.Unused = default;
         }
@@ -928,7 +926,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)NavigationDoorLink_FieldIndex.NavMesh) ?? true))
             {
-                item.NavMesh = new FormLink<ANavigationMesh>(rhs.NavMesh.FormKey);
+                item.NavMesh = new FormLink<IANavigationMeshGetter>(rhs.NavMesh.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)NavigationDoorLink_FieldIndex.NavMeshTriangleIndex) ?? true))
             {

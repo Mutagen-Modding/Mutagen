@@ -42,9 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Faction
-        public FormLink<Faction> Faction { get; set; } = new FormLink<Faction>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IFactionGetter> IFactionOwnerGetter.Faction => this.Faction.ToGetter<Faction, IFactionGetter>();
+        public FormLink<IFactionGetter> Faction { get; set; } = new FormLink<IFactionGetter>();
         #endregion
         #region RequiredRank
         public Int32 RequiredRank { get; set; } = default;
@@ -441,7 +439,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IFactionOwner>,
         ILinkedFormKeyContainer
     {
-        new FormLink<Faction> Faction { get; set; }
+        new FormLink<IFactionGetter> Faction { get; set; }
         new Int32 RequiredRank { get; set; }
     }
 
@@ -685,7 +683,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IFactionOwner item)
         {
             ClearPartial();
-            item.Faction = FormLink<Faction>.Null;
+            item.Faction = FormLink<IFactionGetter>.Null;
             item.RequiredRank = default;
             base.Clear(item);
         }
@@ -898,7 +896,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)FactionOwner_FieldIndex.Faction) ?? true))
             {
-                item.Faction = new FormLink<Faction>(rhs.Faction.FormKey);
+                item.Faction = new FormLink<IFactionGetter>(rhs.Faction.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)FactionOwner_FieldIndex.RequiredRank) ?? true))
             {

@@ -62,17 +62,13 @@ namespace Mutagen.Bethesda.Oblivion
         public UInt32 CounterEffectCount { get; set; } = default;
         #endregion
         #region Light
-        public FormLink<Light> Light { get; set; } = new FormLink<Light>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ILightGetter> IMagicEffectDataGetter.Light => this.Light.ToGetter<Light, ILightGetter>();
+        public FormLink<ILightGetter> Light { get; set; } = new FormLink<ILightGetter>();
         #endregion
         #region ProjectileSpeed
         public Single ProjectileSpeed { get; set; } = default;
         #endregion
         #region EffectShader
-        public FormLink<EffectShader> EffectShader { get; set; } = new FormLink<EffectShader>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IEffectShaderGetter> IMagicEffectDataGetter.EffectShader => this.EffectShader.ToGetter<EffectShader, IEffectShaderGetter>();
+        public FormLink<IEffectShaderGetter> EffectShader { get; set; } = new FormLink<IEffectShaderGetter>();
         #endregion
         #region SubData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -760,9 +756,9 @@ namespace Mutagen.Bethesda.Oblivion
         new MagicSchool MagicSchool { get; set; }
         new Resistance Resistance { get; set; }
         new UInt32 CounterEffectCount { get; set; }
-        new FormLink<Light> Light { get; set; }
+        new FormLink<ILightGetter> Light { get; set; }
         new Single ProjectileSpeed { get; set; }
-        new FormLink<EffectShader> EffectShader { get; set; }
+        new FormLink<IEffectShaderGetter> EffectShader { get; set; }
         new MagicEffectSubData? SubData { get; set; }
     }
 
@@ -1063,9 +1059,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.MagicSchool = default;
             item.Resistance = default;
             item.CounterEffectCount = default;
-            item.Light = FormLink<Light>.Null;
+            item.Light = FormLink<ILightGetter>.Null;
             item.ProjectileSpeed = default;
-            item.EffectShader = FormLink<EffectShader>.Null;
+            item.EffectShader = FormLink<IEffectShaderGetter>.Null;
             item.SubData = null;
         }
         
@@ -1332,7 +1328,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.Light) ?? true))
             {
-                item.Light = new FormLink<Light>(rhs.Light.FormKey);
+                item.Light = new FormLink<ILightGetter>(rhs.Light.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.ProjectileSpeed) ?? true))
             {
@@ -1340,7 +1336,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.EffectShader) ?? true))
             {
-                item.EffectShader = new FormLink<EffectShader>(rhs.EffectShader.FormKey);
+                item.EffectShader = new FormLink<IEffectShaderGetter>(rhs.EffectShader.FormKey);
             }
             if (rhs.Versioning.HasFlag(MagicEffectData.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.SubData) ?? true))

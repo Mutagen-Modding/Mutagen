@@ -43,9 +43,7 @@ namespace Mutagen.Bethesda.Skyrim
         public String Name { get; set; } = string.Empty;
         #endregion
         #region NewTexture
-        public FormLink<TextureSet> NewTexture { get; set; } = new FormLink<TextureSet>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ITextureSetGetter> IAlternateTextureGetter.NewTexture => this.NewTexture.ToGetter<TextureSet, ITextureSetGetter>();
+        public FormLink<ITextureSetGetter> NewTexture { get; set; } = new FormLink<ITextureSetGetter>();
         #endregion
         #region Index
         public Int32 Index { get; set; } = default;
@@ -482,7 +480,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new String Name { get; set; }
-        new FormLink<TextureSet> NewTexture { get; set; }
+        new FormLink<ITextureSetGetter> NewTexture { get; set; }
         new Int32 Index { get; set; }
     }
 
@@ -760,7 +758,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Name = string.Empty;
-            item.NewTexture = FormLink<TextureSet>.Null;
+            item.NewTexture = FormLink<ITextureSetGetter>.Null;
             item.Index = default;
         }
         
@@ -927,7 +925,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AlternateTexture_FieldIndex.NewTexture) ?? true))
             {
-                item.NewTexture = new FormLink<TextureSet>(rhs.NewTexture.FormKey);
+                item.NewTexture = new FormLink<ITextureSetGetter>(rhs.NewTexture.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)AlternateTexture_FieldIndex.Index) ?? true))
             {

@@ -40,9 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Texture
-        public FormLink<LandTexture> Texture { get; set; } = new FormLink<LandTexture>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ILandTextureGetter> ILayerHeaderGetter.Texture => this.Texture.ToGetter<LandTexture, ILandTextureGetter>();
+        public FormLink<ILandTextureGetter> Texture { get; set; } = new FormLink<ILandTextureGetter>();
         #endregion
         #region Quadrant
         public Quadrant Quadrant { get; set; } = default;
@@ -488,7 +486,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<ILayerHeaderInternal>,
         ILinkedFormKeyContainer
     {
-        new FormLink<LandTexture> Texture { get; set; }
+        new FormLink<ILandTextureGetter> Texture { get; set; }
         new Quadrant Quadrant { get; set; }
     }
 
@@ -773,7 +771,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(ILayerHeaderInternal item)
         {
             ClearPartial();
-            item.Texture = FormLink<LandTexture>.Null;
+            item.Texture = FormLink<ILandTextureGetter>.Null;
             item.Quadrant = default;
         }
         
@@ -958,7 +956,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)LayerHeader_FieldIndex.Texture) ?? true))
             {
-                item.Texture = new FormLink<LandTexture>(rhs.Texture.FormKey);
+                item.Texture = new FormLink<ILandTextureGetter>(rhs.Texture.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LayerHeader_FieldIndex.Quadrant) ?? true))
             {

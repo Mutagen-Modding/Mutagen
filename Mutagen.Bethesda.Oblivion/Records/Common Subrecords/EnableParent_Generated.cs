@@ -40,9 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Reference
-        public FormLink<IPlaced> Reference { get; set; } = new FormLink<IPlaced>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IPlacedGetter> IEnableParentGetter.Reference => this.Reference.ToGetter<IPlaced, IPlacedGetter>();
+        public FormLink<IPlacedGetter> Reference { get; set; } = new FormLink<IPlacedGetter>();
         #endregion
         #region Flags
         public EnableParent.Flag Flags { get; set; } = default;
@@ -451,7 +449,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IEnableParent>,
         ILinkedFormKeyContainer
     {
-        new FormLink<IPlaced> Reference { get; set; }
+        new FormLink<IPlacedGetter> Reference { get; set; }
         new EnableParent.Flag Flags { get; set; }
     }
 
@@ -727,7 +725,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IEnableParent item)
         {
             ClearPartial();
-            item.Reference = FormLink<IPlaced>.Null;
+            item.Reference = FormLink<IPlacedGetter>.Null;
             item.Flags = default;
         }
         
@@ -886,7 +884,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)EnableParent_FieldIndex.Reference) ?? true))
             {
-                item.Reference = new FormLink<IPlaced>(rhs.Reference.FormKey);
+                item.Reference = new FormLink<IPlacedGetter>(rhs.Reference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)EnableParent_FieldIndex.Flags) ?? true))
             {

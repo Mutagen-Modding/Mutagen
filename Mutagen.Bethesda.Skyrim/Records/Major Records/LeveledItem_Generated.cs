@@ -54,9 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
         public LeveledItem.Flag Flags { get; set; } = default;
         #endregion
         #region Global
-        public FormLinkNullable<Global> Global { get; set; } = new FormLinkNullable<Global>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IGlobalGetter> ILeveledItemGetter.Global => this.Global.ToGetter<Global, IGlobalGetter>();
+        public FormLinkNullable<IGlobalGetter> Global { get; set; } = new FormLinkNullable<IGlobalGetter>();
         #endregion
         #region Entries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -667,7 +665,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ObjectBounds ObjectBounds { get; set; }
         new Byte ChanceNone { get; set; }
         new LeveledItem.Flag Flags { get; set; }
-        new FormLinkNullable<Global> Global { get; set; }
+        new FormLinkNullable<IGlobalGetter> Global { get; set; }
         new IExtendedList<LeveledItemEntry>? Entries { get; set; }
     }
 
@@ -938,7 +936,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ObjectBounds.Clear();
             item.ChanceNone = default;
             item.Flags = default;
-            item.Global = FormLinkNullable<Global>.Null;
+            item.Global = FormLinkNullable<IGlobalGetter>.Null;
             item.Entries = null;
             base.Clear(item);
         }
@@ -1317,7 +1315,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Global) ?? true))
             {
-                item.Global = new FormLinkNullable<Global>(rhs.Global.FormKey);
+                item.Global = new FormLinkNullable<IGlobalGetter>(rhs.Global.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Entries) ?? true))
             {

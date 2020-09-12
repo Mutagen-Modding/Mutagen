@@ -41,8 +41,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Navmeshes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<ANavigationMesh>> _Navmeshes = new ExtendedList<IFormLink<ANavigationMesh>>();
-        public IExtendedList<IFormLink<ANavigationMesh>> Navmeshes
+        private IExtendedList<IFormLink<IANavigationMeshGetter>> _Navmeshes = new ExtendedList<IFormLink<IANavigationMeshGetter>>();
+        public IExtendedList<IFormLink<IANavigationMeshGetter>> Navmeshes
         {
             get => this._Navmeshes;
             protected set => this._Navmeshes = value;
@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<INavmeshSet>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<IFormLink<ANavigationMesh>> Navmeshes { get; }
+        new IExtendedList<IFormLink<IANavigationMeshGetter>> Navmeshes { get; }
     }
 
     public partial interface INavmeshSetGetter :
@@ -940,7 +940,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Navmeshes.SetTo(
                         rhs.Navmeshes
-                        .Select(r => (IFormLink<ANavigationMesh>)new FormLink<ANavigationMesh>(r.FormKey)));
+                        .Select(r => (IFormLink<IANavigationMeshGetter>)new FormLink<IANavigationMeshGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1092,7 +1092,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame)
         {
             item.Navmeshes.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ANavigationMesh>>.Instance.Parse(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IANavigationMeshGetter>>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     frame: frame,
                     transl: FormLinkBinaryTranslation.Instance.Parse));

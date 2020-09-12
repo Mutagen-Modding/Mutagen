@@ -53,9 +53,7 @@ namespace Mutagen.Bethesda.Skyrim
         SoundCategory.Flag? ISoundCategoryGetter.Flags => this.Flags;
         #endregion
         #region Parent
-        public FormLinkNullable<SoundDescriptor> Parent { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> ISoundCategoryGetter.Parent => this.Parent.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> Parent { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region StaticVolumeMultiplier
         public Single? StaticVolumeMultiplier { get; set; }
@@ -576,7 +574,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new TranslatedString? Name { get; set; }
         new SoundCategory.Flag? Flags { get; set; }
-        new FormLinkNullable<SoundDescriptor> Parent { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> Parent { get; set; }
         new Single? StaticVolumeMultiplier { get; set; }
         new Single? DefaultMenuVolume { get; set; }
     }
@@ -844,7 +842,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.Name = default;
             item.Flags = default;
-            item.Parent = FormLinkNullable<SoundDescriptor>.Null;
+            item.Parent = FormLinkNullable<ISoundDescriptorGetter>.Null;
             item.StaticVolumeMultiplier = default;
             item.DefaultMenuVolume = default;
             base.Clear(item);
@@ -1192,7 +1190,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SoundCategory_FieldIndex.Parent) ?? true))
             {
-                item.Parent = new FormLinkNullable<SoundDescriptor>(rhs.Parent.FormKey);
+                item.Parent = new FormLinkNullable<ISoundDescriptorGetter>(rhs.Parent.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)SoundCategory_FieldIndex.StaticVolumeMultiplier) ?? true))
             {

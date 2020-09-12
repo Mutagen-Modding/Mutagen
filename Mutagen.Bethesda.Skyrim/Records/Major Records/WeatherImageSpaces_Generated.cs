@@ -40,24 +40,16 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Sunrise
-        public FormLink<ImageSpaceAdapter> Sunrise { get; set; } = new FormLink<ImageSpaceAdapter>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IImageSpaceAdapterGetter> IWeatherImageSpacesGetter.Sunrise => this.Sunrise.ToGetter<ImageSpaceAdapter, IImageSpaceAdapterGetter>();
+        public FormLink<IImageSpaceAdapterGetter> Sunrise { get; set; } = new FormLink<IImageSpaceAdapterGetter>();
         #endregion
         #region Day
-        public FormLink<ImageSpaceAdapter> Day { get; set; } = new FormLink<ImageSpaceAdapter>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IImageSpaceAdapterGetter> IWeatherImageSpacesGetter.Day => this.Day.ToGetter<ImageSpaceAdapter, IImageSpaceAdapterGetter>();
+        public FormLink<IImageSpaceAdapterGetter> Day { get; set; } = new FormLink<IImageSpaceAdapterGetter>();
         #endregion
         #region Sunset
-        public FormLink<ImageSpaceAdapter> Sunset { get; set; } = new FormLink<ImageSpaceAdapter>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IImageSpaceAdapterGetter> IWeatherImageSpacesGetter.Sunset => this.Sunset.ToGetter<ImageSpaceAdapter, IImageSpaceAdapterGetter>();
+        public FormLink<IImageSpaceAdapterGetter> Sunset { get; set; } = new FormLink<IImageSpaceAdapterGetter>();
         #endregion
         #region Night
-        public FormLink<ImageSpaceAdapter> Night { get; set; } = new FormLink<ImageSpaceAdapter>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IImageSpaceAdapterGetter> IWeatherImageSpacesGetter.Night => this.Night.ToGetter<ImageSpaceAdapter, IImageSpaceAdapterGetter>();
+        public FormLink<IImageSpaceAdapterGetter> Night { get; set; } = new FormLink<IImageSpaceAdapterGetter>();
         #endregion
 
         #region To String
@@ -519,10 +511,10 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IWeatherImageSpaces>,
         ILinkedFormKeyContainer
     {
-        new FormLink<ImageSpaceAdapter> Sunrise { get; set; }
-        new FormLink<ImageSpaceAdapter> Day { get; set; }
-        new FormLink<ImageSpaceAdapter> Sunset { get; set; }
-        new FormLink<ImageSpaceAdapter> Night { get; set; }
+        new FormLink<IImageSpaceAdapterGetter> Sunrise { get; set; }
+        new FormLink<IImageSpaceAdapterGetter> Day { get; set; }
+        new FormLink<IImageSpaceAdapterGetter> Sunset { get; set; }
+        new FormLink<IImageSpaceAdapterGetter> Night { get; set; }
     }
 
     public partial interface IWeatherImageSpacesGetter :
@@ -801,10 +793,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IWeatherImageSpaces item)
         {
             ClearPartial();
-            item.Sunrise = FormLink<ImageSpaceAdapter>.Null;
-            item.Day = FormLink<ImageSpaceAdapter>.Null;
-            item.Sunset = FormLink<ImageSpaceAdapter>.Null;
-            item.Night = FormLink<ImageSpaceAdapter>.Null;
+            item.Sunrise = FormLink<IImageSpaceAdapterGetter>.Null;
+            item.Day = FormLink<IImageSpaceAdapterGetter>.Null;
+            item.Sunset = FormLink<IImageSpaceAdapterGetter>.Null;
+            item.Night = FormLink<IImageSpaceAdapterGetter>.Null;
         }
         
         #region Binary Translation
@@ -979,19 +971,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)WeatherImageSpaces_FieldIndex.Sunrise) ?? true))
             {
-                item.Sunrise = new FormLink<ImageSpaceAdapter>(rhs.Sunrise.FormKey);
+                item.Sunrise = new FormLink<IImageSpaceAdapterGetter>(rhs.Sunrise.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)WeatherImageSpaces_FieldIndex.Day) ?? true))
             {
-                item.Day = new FormLink<ImageSpaceAdapter>(rhs.Day.FormKey);
+                item.Day = new FormLink<IImageSpaceAdapterGetter>(rhs.Day.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)WeatherImageSpaces_FieldIndex.Sunset) ?? true))
             {
-                item.Sunset = new FormLink<ImageSpaceAdapter>(rhs.Sunset.FormKey);
+                item.Sunset = new FormLink<IImageSpaceAdapterGetter>(rhs.Sunset.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)WeatherImageSpaces_FieldIndex.Night) ?? true))
             {
-                item.Night = new FormLink<ImageSpaceAdapter>(rhs.Night.FormKey);
+                item.Night = new FormLink<IImageSpaceAdapterGetter>(rhs.Night.FormKey);
             }
         }
         

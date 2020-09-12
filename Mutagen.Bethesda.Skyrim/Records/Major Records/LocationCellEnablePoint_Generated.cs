@@ -40,14 +40,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Actor
-        public FormLink<IPlaced> Actor { get; set; } = new FormLink<IPlaced>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IPlacedGetter> ILocationCellEnablePointGetter.Actor => this.Actor.ToGetter<IPlaced, IPlacedGetter>();
+        public FormLink<IPlacedGetter> Actor { get; set; } = new FormLink<IPlacedGetter>();
         #endregion
         #region Ref
-        public FormLink<IPlaced> Ref { get; set; } = new FormLink<IPlaced>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IPlacedGetter> ILocationCellEnablePointGetter.Ref => this.Ref.ToGetter<IPlaced, IPlacedGetter>();
+        public FormLink<IPlacedGetter> Ref { get; set; } = new FormLink<IPlacedGetter>();
         #endregion
         #region Grid
         public P2Int16 Grid { get; set; } = default;
@@ -483,8 +479,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ILocationCellEnablePoint>,
         ILinkedFormKeyContainer
     {
-        new FormLink<IPlaced> Actor { get; set; }
-        new FormLink<IPlaced> Ref { get; set; }
+        new FormLink<IPlacedGetter> Actor { get; set; }
+        new FormLink<IPlacedGetter> Ref { get; set; }
         new P2Int16 Grid { get; set; }
     }
 
@@ -761,8 +757,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ILocationCellEnablePoint item)
         {
             ClearPartial();
-            item.Actor = FormLink<IPlaced>.Null;
-            item.Ref = FormLink<IPlaced>.Null;
+            item.Actor = FormLink<IPlacedGetter>.Null;
+            item.Ref = FormLink<IPlacedGetter>.Null;
             item.Grid = default;
         }
         
@@ -926,11 +922,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)LocationCellEnablePoint_FieldIndex.Actor) ?? true))
             {
-                item.Actor = new FormLink<IPlaced>(rhs.Actor.FormKey);
+                item.Actor = new FormLink<IPlacedGetter>(rhs.Actor.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LocationCellEnablePoint_FieldIndex.Ref) ?? true))
             {
-                item.Ref = new FormLink<IPlaced>(rhs.Ref.FormKey);
+                item.Ref = new FormLink<IPlacedGetter>(rhs.Ref.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LocationCellEnablePoint_FieldIndex.Grid) ?? true))
             {

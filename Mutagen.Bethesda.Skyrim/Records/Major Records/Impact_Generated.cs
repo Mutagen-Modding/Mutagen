@@ -89,29 +89,19 @@ namespace Mutagen.Bethesda.Skyrim
         IDecalGetter? IImpactGetter.Decal => this.Decal;
         #endregion
         #region TextureSet
-        public FormLinkNullable<TextureSet> TextureSet { get; set; } = new FormLinkNullable<TextureSet>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ITextureSetGetter> IImpactGetter.TextureSet => this.TextureSet.ToGetter<TextureSet, ITextureSetGetter>();
+        public FormLinkNullable<ITextureSetGetter> TextureSet { get; set; } = new FormLinkNullable<ITextureSetGetter>();
         #endregion
         #region SecondaryTextureSet
-        public FormLinkNullable<TextureSet> SecondaryTextureSet { get; set; } = new FormLinkNullable<TextureSet>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ITextureSetGetter> IImpactGetter.SecondaryTextureSet => this.SecondaryTextureSet.ToGetter<TextureSet, ITextureSetGetter>();
+        public FormLinkNullable<ITextureSetGetter> SecondaryTextureSet { get; set; } = new FormLinkNullable<ITextureSetGetter>();
         #endregion
         #region Sound1
-        public FormLinkNullable<ISound> Sound1 { get; set; } = new FormLinkNullable<ISound>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundGetter> IImpactGetter.Sound1 => this.Sound1.ToGetter<ISound, ISoundGetter>();
+        public FormLinkNullable<ISoundGetter> Sound1 { get; set; } = new FormLinkNullable<ISoundGetter>();
         #endregion
         #region Sound2
-        public FormLinkNullable<ISound> Sound2 { get; set; } = new FormLinkNullable<ISound>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundGetter> IImpactGetter.Sound2 => this.Sound2.ToGetter<ISound, ISoundGetter>();
+        public FormLinkNullable<ISoundGetter> Sound2 { get; set; } = new FormLinkNullable<ISoundGetter>();
         #endregion
         #region Hazard
-        public FormLinkNullable<Hazard> Hazard { get; set; } = new FormLinkNullable<Hazard>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IHazardGetter> IImpactGetter.Hazard => this.Hazard.ToGetter<Hazard, IHazardGetter>();
+        public FormLinkNullable<IHazardGetter> Hazard { get; set; } = new FormLinkNullable<IHazardGetter>();
         #endregion
         #region DATADataTypeState
         public Impact.DATADataType DATADataTypeState { get; set; } = default;
@@ -959,11 +949,11 @@ namespace Mutagen.Bethesda.Skyrim
         new Impact.ResultType Result { get; set; }
         new Int16 Unknown { get; set; }
         new Decal? Decal { get; set; }
-        new FormLinkNullable<TextureSet> TextureSet { get; set; }
-        new FormLinkNullable<TextureSet> SecondaryTextureSet { get; set; }
-        new FormLinkNullable<ISound> Sound1 { get; set; }
-        new FormLinkNullable<ISound> Sound2 { get; set; }
-        new FormLinkNullable<Hazard> Hazard { get; set; }
+        new FormLinkNullable<ITextureSetGetter> TextureSet { get; set; }
+        new FormLinkNullable<ITextureSetGetter> SecondaryTextureSet { get; set; }
+        new FormLinkNullable<ISoundGetter> Sound1 { get; set; }
+        new FormLinkNullable<ISoundGetter> Sound2 { get; set; }
+        new FormLinkNullable<IHazardGetter> Hazard { get; set; }
         new Impact.DATADataType DATADataTypeState { get; set; }
     }
 
@@ -1260,11 +1250,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Result = default;
             item.Unknown = default;
             item.Decal = null;
-            item.TextureSet = FormLinkNullable<TextureSet>.Null;
-            item.SecondaryTextureSet = FormLinkNullable<TextureSet>.Null;
-            item.Sound1 = FormLinkNullable<ISound>.Null;
-            item.Sound2 = FormLinkNullable<ISound>.Null;
-            item.Hazard = FormLinkNullable<Hazard>.Null;
+            item.TextureSet = FormLinkNullable<ITextureSetGetter>.Null;
+            item.SecondaryTextureSet = FormLinkNullable<ITextureSetGetter>.Null;
+            item.Sound1 = FormLinkNullable<ISoundGetter>.Null;
+            item.Sound2 = FormLinkNullable<ISoundGetter>.Null;
+            item.Hazard = FormLinkNullable<IHazardGetter>.Null;
             item.DATADataTypeState = default;
             base.Clear(item);
         }
@@ -1787,23 +1777,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.TextureSet) ?? true))
             {
-                item.TextureSet = new FormLinkNullable<TextureSet>(rhs.TextureSet.FormKey);
+                item.TextureSet = new FormLinkNullable<ITextureSetGetter>(rhs.TextureSet.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.SecondaryTextureSet) ?? true))
             {
-                item.SecondaryTextureSet = new FormLinkNullable<TextureSet>(rhs.SecondaryTextureSet.FormKey);
+                item.SecondaryTextureSet = new FormLinkNullable<ITextureSetGetter>(rhs.SecondaryTextureSet.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.Sound1) ?? true))
             {
-                item.Sound1 = new FormLinkNullable<ISound>(rhs.Sound1.FormKey);
+                item.Sound1 = new FormLinkNullable<ISoundGetter>(rhs.Sound1.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.Sound2) ?? true))
             {
-                item.Sound2 = new FormLinkNullable<ISound>(rhs.Sound2.FormKey);
+                item.Sound2 = new FormLinkNullable<ISoundGetter>(rhs.Sound2.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.Hazard) ?? true))
             {
-                item.Hazard = new FormLinkNullable<Hazard>(rhs.Hazard.FormKey);
+                item.Hazard = new FormLinkNullable<IHazardGetter>(rhs.Hazard.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.DATADataTypeState) ?? true))
             {

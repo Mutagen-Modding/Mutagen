@@ -74,8 +74,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region RelatedIdleAnimations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IdleAnimation>>? _RelatedIdleAnimations;
-        public IExtendedList<IFormLink<IdleAnimation>>? RelatedIdleAnimations
+        private IExtendedList<IFormLink<IIdleAnimationGetter>>? _RelatedIdleAnimations;
+        public IExtendedList<IFormLink<IIdleAnimationGetter>>? RelatedIdleAnimations
         {
             get => this._RelatedIdleAnimations;
             set => this._RelatedIdleAnimations = value;
@@ -720,7 +720,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Model? Model { get; set; }
         new IExtendedList<Condition> Conditions { get; }
         new IdleAnimation.AnimationGroupSectionEnum? AnimationGroupSection { get; set; }
-        new IExtendedList<IFormLink<IdleAnimation>>? RelatedIdleAnimations { get; set; }
+        new IExtendedList<IFormLink<IIdleAnimationGetter>>? RelatedIdleAnimations { get; set; }
     }
 
     public partial interface IIdleAnimationInternal :
@@ -1407,8 +1407,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.RelatedIdleAnimations = 
                             rhs.RelatedIdleAnimations
-                            .Select(r => (IFormLink<IdleAnimation>)new FormLink<IdleAnimation>(r.FormKey))
-                            .ToExtendedList<IFormLink<IdleAnimation>>();
+                            .Select(r => (IFormLink<IIdleAnimationGetter>)new FormLink<IIdleAnimationGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IIdleAnimationGetter>>();
                     }
                     else
                     {
@@ -1727,10 +1727,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RelatedIdleAnimations = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IdleAnimation>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IIdleAnimationGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<IdleAnimation>>();
+                        .CastExtendedList<IFormLink<IIdleAnimationGetter>>();
                     return (int)IdleAnimation_FieldIndex.RelatedIdleAnimations;
                 }
                 default:

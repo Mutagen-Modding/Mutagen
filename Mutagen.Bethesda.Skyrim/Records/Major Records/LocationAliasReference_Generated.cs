@@ -45,14 +45,10 @@ namespace Mutagen.Bethesda.Skyrim
         Int32? ILocationAliasReferenceGetter.AliasIndex => this.AliasIndex;
         #endregion
         #region Keyword
-        public FormLinkNullable<Keyword> Keyword { get; set; } = new FormLinkNullable<Keyword>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IKeywordGetter> ILocationAliasReferenceGetter.Keyword => this.Keyword.ToGetter<Keyword, IKeywordGetter>();
+        public FormLinkNullable<IKeywordGetter> Keyword { get; set; } = new FormLinkNullable<IKeywordGetter>();
         #endregion
         #region RefType
-        public FormLinkNullable<LocationReferenceType> RefType { get; set; } = new FormLinkNullable<LocationReferenceType>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ILocationReferenceTypeGetter> ILocationAliasReferenceGetter.RefType => this.RefType.ToGetter<LocationReferenceType, ILocationReferenceTypeGetter>();
+        public FormLinkNullable<ILocationReferenceTypeGetter> RefType { get; set; } = new FormLinkNullable<ILocationReferenceTypeGetter>();
         #endregion
 
         #region To String
@@ -486,8 +482,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new Int32? AliasIndex { get; set; }
-        new FormLinkNullable<Keyword> Keyword { get; set; }
-        new FormLinkNullable<LocationReferenceType> RefType { get; set; }
+        new FormLinkNullable<IKeywordGetter> Keyword { get; set; }
+        new FormLinkNullable<ILocationReferenceTypeGetter> RefType { get; set; }
     }
 
     public partial interface ILocationAliasReferenceGetter :
@@ -777,8 +773,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.AliasIndex = default;
-            item.Keyword = FormLinkNullable<Keyword>.Null;
-            item.RefType = FormLinkNullable<LocationReferenceType>.Null;
+            item.Keyword = FormLinkNullable<IKeywordGetter>.Null;
+            item.RefType = FormLinkNullable<ILocationReferenceTypeGetter>.Null;
         }
         
         #region Binary Translation
@@ -956,11 +952,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LocationAliasReference_FieldIndex.Keyword) ?? true))
             {
-                item.Keyword = new FormLinkNullable<Keyword>(rhs.Keyword.FormKey);
+                item.Keyword = new FormLinkNullable<IKeywordGetter>(rhs.Keyword.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LocationAliasReference_FieldIndex.RefType) ?? true))
             {
-                item.RefType = new FormLinkNullable<LocationReferenceType>(rhs.RefType.FormKey);
+                item.RefType = new FormLinkNullable<ILocationReferenceTypeGetter>(rhs.RefType.FormKey);
             }
         }
         

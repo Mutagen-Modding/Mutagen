@@ -41,9 +41,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Idle
-        public FormLinkNullable<IdleAnimation> Idle { get; set; } = new FormLinkNullable<IdleAnimation>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IIdleAnimationGetter> IPackageEventGetter.Idle => this.Idle.ToGetter<IdleAnimation, IIdleAnimationGetter>();
+        public FormLinkNullable<IIdleAnimationGetter> Idle { get; set; } = new FormLinkNullable<IIdleAnimationGetter>();
         #endregion
         #region SCHR
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -732,7 +730,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPackageEvent>,
         ILinkedFormKeyContainer
     {
-        new FormLinkNullable<IdleAnimation> Idle { get; set; }
+        new FormLinkNullable<IIdleAnimationGetter> Idle { get; set; }
         new MemorySlice<Byte>? SCHR { get; set; }
         new MemorySlice<Byte>? SCDA { get; set; }
         new MemorySlice<Byte>? SCTX { get; set; }
@@ -1039,7 +1037,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IPackageEvent item)
         {
             ClearPartial();
-            item.Idle = FormLinkNullable<IdleAnimation>.Null;
+            item.Idle = FormLinkNullable<IIdleAnimationGetter>.Null;
             item.SCHR = default;
             item.SCDA = default;
             item.SCTX = default;
@@ -1281,7 +1279,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)PackageEvent_FieldIndex.Idle) ?? true))
             {
-                item.Idle = new FormLinkNullable<IdleAnimation>(rhs.Idle.FormKey);
+                item.Idle = new FormLinkNullable<IIdleAnimationGetter>(rhs.Idle.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PackageEvent_FieldIndex.SCHR) ?? true))
             {

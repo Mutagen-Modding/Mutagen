@@ -42,9 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Music
-        public FormLinkNullable<MusicType> Music { get; set; } = new FormLinkNullable<MusicType>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IMusicTypeGetter> IRegionSoundsGetter.Music => this.Music.ToGetter<MusicType, IMusicTypeGetter>();
+        public FormLinkNullable<IMusicTypeGetter> Music { get; set; } = new FormLinkNullable<IMusicTypeGetter>();
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -531,7 +529,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IRegionSounds>,
         ILinkedFormKeyContainer
     {
-        new FormLinkNullable<MusicType> Music { get; set; }
+        new FormLinkNullable<IMusicTypeGetter> Music { get; set; }
         new IExtendedList<RegionSound>? Sounds { get; set; }
     }
 
@@ -789,7 +787,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IRegionSounds item)
         {
             ClearPartial();
-            item.Music = FormLinkNullable<MusicType>.Null;
+            item.Music = FormLinkNullable<IMusicTypeGetter>.Null;
             item.Sounds = null;
             base.Clear(item);
         }
@@ -1035,7 +1033,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)RegionSounds_FieldIndex.Music) ?? true))
             {
-                item.Music = new FormLinkNullable<MusicType>(rhs.Music.FormKey);
+                item.Music = new FormLinkNullable<IMusicTypeGetter>(rhs.Music.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)RegionSounds_FieldIndex.Sounds) ?? true))
             {

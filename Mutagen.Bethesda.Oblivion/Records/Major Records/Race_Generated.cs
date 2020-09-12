@@ -54,8 +54,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Spell>> _Spells = new ExtendedList<IFormLink<Spell>>();
-        public IExtendedList<IFormLink<Spell>> Spells
+        private IExtendedList<IFormLink<ISpellGetter>> _Spells = new ExtendedList<IFormLink<ISpellGetter>>();
+        public IExtendedList<IFormLink<ISpellGetter>> Spells
         {
             get => this._Spells;
             protected set => this._Spells = value;
@@ -92,11 +92,11 @@ namespace Mutagen.Bethesda.Oblivion
         IRaceDataGetter? IRaceGetter.Data => this.Data;
         #endregion
         #region Voices
-        public GenderedItem<IFormLink<Race>>? Voices { get; set; }
+        public GenderedItem<IFormLink<IRaceGetter>>? Voices { get; set; }
         IGenderedItemGetter<IFormLink<IRaceGetter>>? IRaceGetter.Voices => this.Voices;
         #endregion
         #region DefaultHair
-        public GenderedItem<IFormLink<Hair>>? DefaultHair { get; set; }
+        public GenderedItem<IFormLink<IHairGetter>>? DefaultHair { get; set; }
         IGenderedItemGetter<IFormLink<IHairGetter>>? IRaceGetter.DefaultHair => this.DefaultHair;
         #endregion
         #region DefaultHairColor
@@ -138,8 +138,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Hairs
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Hair>>? _Hairs;
-        public IExtendedList<IFormLink<Hair>>? Hairs
+        private IExtendedList<IFormLink<IHairGetter>>? _Hairs;
+        public IExtendedList<IFormLink<IHairGetter>>? Hairs
         {
             get => this._Hairs;
             set => this._Hairs = value;
@@ -152,8 +152,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Eyes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Eye>>? _Eyes;
-        public IExtendedList<IFormLink<Eye>>? Eyes
+        private IExtendedList<IFormLink<IEyeGetter>>? _Eyes;
+        public IExtendedList<IFormLink<IEyeGetter>>? Eyes
         {
             get => this._Eyes;
             set => this._Eyes = value;
@@ -1444,19 +1444,19 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new String? Name { get; set; }
         new String? Description { get; set; }
-        new IExtendedList<IFormLink<Spell>> Spells { get; }
+        new IExtendedList<IFormLink<ISpellGetter>> Spells { get; }
         new IExtendedList<RaceRelation> Relations { get; }
         new RaceData? Data { get; set; }
-        new GenderedItem<IFormLink<Race>>? Voices { get; set; }
-        new GenderedItem<IFormLink<Hair>>? DefaultHair { get; set; }
+        new GenderedItem<IFormLink<IRaceGetter>>? Voices { get; set; }
+        new GenderedItem<IFormLink<IHairGetter>>? DefaultHair { get; set; }
         new Byte? DefaultHairColor { get; set; }
         new Int32? FaceGenMainClamp { get; set; }
         new Int32? FaceGenFaceClamp { get; set; }
         new GenderedItem<RaceStats>? RaceStats { get; set; }
         new IExtendedList<FacePart> FaceData { get; }
         new GenderedItem<BodyData?>? BodyData { get; set; }
-        new IExtendedList<IFormLink<Hair>>? Hairs { get; set; }
-        new IExtendedList<IFormLink<Eye>>? Eyes { get; set; }
+        new IExtendedList<IFormLink<IHairGetter>>? Hairs { get; set; }
+        new IExtendedList<IFormLink<IEyeGetter>>? Eyes { get; set; }
         new FaceGenData? FaceGenData { get; set; }
         new Int16? SNAM { get; set; }
     }
@@ -1466,8 +1466,8 @@ namespace Mutagen.Bethesda.Oblivion
         IRace,
         IRaceGetter
     {
-        new GenderedItem<IFormLink<Race>>? Voices { get; set; }
-        new GenderedItem<IFormLink<Hair>>? DefaultHair { get; set; }
+        new GenderedItem<IFormLink<IRaceGetter>>? Voices { get; set; }
+        new GenderedItem<IFormLink<IHairGetter>>? DefaultHair { get; set; }
         new GenderedItem<RaceStats>? RaceStats { get; set; }
         new GenderedItem<BodyData?>? BodyData { get; set; }
     }
@@ -2373,7 +2373,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Spells.SetTo(
                         rhs.Spells
-                        .Select(r => (IFormLink<Spell>)new FormLink<Spell>(r.FormKey)));
+                        .Select(r => (IFormLink<ISpellGetter>)new FormLink<ISpellGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2441,9 +2441,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             else
             {
-                item.Voices = new GenderedItem<IFormLink<Race>>(
-                    male: new FormLink<Race>(rhsVoicesitem.Male.FormKey),
-                    female: new FormLink<Race>(rhsVoicesitem.Female.FormKey));
+                item.Voices = new GenderedItem<IFormLink<IRaceGetter>>(
+                    male: new FormLink<IRaceGetter>(rhsVoicesitem.Male.FormKey),
+                    female: new FormLink<IRaceGetter>(rhsVoicesitem.Female.FormKey));
             }
             if (!rhs.DefaultHair.TryGet(out var rhsDefaultHairitem))
             {
@@ -2451,9 +2451,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             else
             {
-                item.DefaultHair = new GenderedItem<IFormLink<Hair>>(
-                    male: new FormLink<Hair>(rhsDefaultHairitem.Male.FormKey),
-                    female: new FormLink<Hair>(rhsDefaultHairitem.Female.FormKey));
+                item.DefaultHair = new GenderedItem<IFormLink<IHairGetter>>(
+                    male: new FormLink<IHairGetter>(rhsDefaultHairitem.Male.FormKey),
+                    female: new FormLink<IHairGetter>(rhsDefaultHairitem.Female.FormKey));
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.DefaultHairColor) ?? true))
             {
@@ -2528,8 +2528,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Hairs = 
                             rhs.Hairs
-                            .Select(r => (IFormLink<Hair>)new FormLink<Hair>(r.FormKey))
-                            .ToExtendedList<IFormLink<Hair>>();
+                            .Select(r => (IFormLink<IHairGetter>)new FormLink<IHairGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IHairGetter>>();
                     }
                     else
                     {
@@ -2555,8 +2555,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Eyes = 
                             rhs.Eyes
-                            .Select(r => (IFormLink<Eye>)new FormLink<Eye>(r.FormKey))
-                            .ToExtendedList<IFormLink<Eye>>();
+                            .Select(r => (IFormLink<IEyeGetter>)new FormLink<IEyeGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IEyeGetter>>();
                     }
                     else
                     {
@@ -3005,7 +3005,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.SPLO:
                 {
                     item.Spells.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Spell>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ISpellGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPLO),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -3029,7 +3029,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.VNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Voices = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<IFormLink<Race>>(
+                    item.Voices = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<IFormLink<IRaceGetter>>(
                         frame: frame,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return (int)Race_FieldIndex.Voices;
@@ -3037,7 +3037,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DefaultHair = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<IFormLink<Hair>>(
+                    item.DefaultHair = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<IFormLink<IHairGetter>>(
                         frame: frame,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return (int)Race_FieldIndex.DefaultHair;
@@ -3093,20 +3093,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Hairs = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Hair>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IHairGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<Hair>>();
+                        .CastExtendedList<IFormLink<IHairGetter>>();
                     return (int)Race_FieldIndex.Hairs;
                 }
                 case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Eyes = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Eye>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IEyeGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<Eye>>();
+                        .CastExtendedList<IFormLink<IEyeGetter>>();
                     return (int)Race_FieldIndex.Eyes;
                 }
                 case RecordTypeInts.FGGS:

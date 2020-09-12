@@ -25,6 +25,7 @@ namespace Mutagen.Bethesda.Generation
         public FormIDTypeEnum FormIDType;
         public override bool IsEnumerable => false;
         public override bool CanBeNullable(bool getter) => false;
+        public bool NeedCovariance => this.LoquiType.RefType == Loqui.Generation.LoquiType.LoquiRefType.Generic;
 
         public string ClassTypeStringPrefix => this.FormIDType switch
         {
@@ -46,7 +47,7 @@ namespace Mutagen.Bethesda.Generation
 
         public string DirectTypeName(bool getter, bool internalInterface = false)
         {
-            return $"{ClassTypeStringPrefix}Link{(this.Nullable ? "Nullable" : string.Empty)}<{LoquiType.TypeNameInternal(getter, internalInterface: true)}>";
+            return $"{ClassTypeStringPrefix}Link{(this.Nullable ? "Nullable" : string.Empty)}<{LoquiType.TypeNameInternal(getter: true, internalInterface: true)}>";
         }
 
         public override async Task Load(XElement node, bool requireName = true)
@@ -162,8 +163,11 @@ namespace Mutagen.Bethesda.Generation
         public override void GenerateForClass(FileGeneration fg)
         {
             fg.AppendLine($"public {this.TypeName(getter: false)} {this.Name} {{ get; set; }} = {GetNewForNonNullable()};");
-            fg.AppendLine($"[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-            fg.AppendLine($"{this.TypeName(getter: true)} {this.ObjectGen.Interface(getter: true, this.InternalGetInterface)}.{this.Name} => this.{this.Name}.ToGetter<{LoquiType.TypeNameInternal(getter: false, internalInterface: true)}, {LoquiType.TypeNameInternal(getter: true, internalInterface: true)}>();");
+            if (NeedCovariance)
+            {
+                fg.AppendLine($"[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                fg.AppendLine($"{this.TypeName(getter: true)} {this.ObjectGen.Interface(getter: true, this.InternalGetInterface)}.{this.Name} => this.{this.Name}.ToGetter<{LoquiType.TypeNameInternal(getter: false, internalInterface: true)}, {LoquiType.TypeNameInternal(getter: true, internalInterface: true)}>();");
+            }
         }
 
         public override void GenerateForInterface(FileGeneration fg, bool getter, bool internalInterface)
@@ -171,7 +175,7 @@ namespace Mutagen.Bethesda.Generation
             if (getter)
             {
                 if (!ApplicableInterfaceField(getter, internalInterface)) return;
-                fg.AppendLine($"{TypeName(getter: true, needsCovariance: this.LoquiType.RefType == Loqui.Generation.LoquiType.LoquiRefType.Generic)} {this.Name} {{ get; }}");
+                fg.AppendLine($"{TypeName(getter: true, needsCovariance: NeedCovariance)} {this.Name} {{ get; }}");
             }
             else
             {

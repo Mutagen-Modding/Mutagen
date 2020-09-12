@@ -91,8 +91,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Packages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Package>> _Packages = new ExtendedList<IFormLink<Package>>();
-        public IExtendedList<IFormLink<Package>> Packages
+        private IExtendedList<IFormLink<IPackageGetter>> _Packages = new ExtendedList<IFormLink<IPackageGetter>>();
+        public IExtendedList<IFormLink<IPackageGetter>> Packages
         {
             get => this._Packages;
             protected set => this._Packages = value;
@@ -104,9 +104,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region Topic
-        public FormLinkNullable<DialogTopic> Topic { get; set; } = new FormLinkNullable<DialogTopic>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IDialogTopicGetter> ISceneActionGetter.Topic => this.Topic.ToGetter<DialogTopic, IDialogTopicGetter>();
+        public FormLinkNullable<IDialogTopicGetter> Topic { get; set; } = new FormLinkNullable<IDialogTopicGetter>();
         #endregion
         #region HeadtrackActorID
         public Int32? HeadtrackActorID { get; set; }
@@ -1057,8 +1055,8 @@ namespace Mutagen.Bethesda.Skyrim
         new UInt32? StartPhase { get; set; }
         new UInt32? EndPhase { get; set; }
         new Single? TimerSeconds { get; set; }
-        new IExtendedList<IFormLink<Package>> Packages { get; }
-        new FormLinkNullable<DialogTopic> Topic { get; set; }
+        new IExtendedList<IFormLink<IPackageGetter>> Packages { get; }
+        new FormLinkNullable<IDialogTopicGetter> Topic { get; set; }
         new Int32? HeadtrackActorID { get; set; }
         new Single? LoopingMax { get; set; }
         new Single? LoopingMin { get; set; }
@@ -1379,7 +1377,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.EndPhase = default;
             item.TimerSeconds = default;
             item.Packages.Clear();
-            item.Topic = FormLinkNullable<DialogTopic>.Null;
+            item.Topic = FormLinkNullable<IDialogTopicGetter>.Null;
             item.HeadtrackActorID = default;
             item.LoopingMax = default;
             item.LoopingMin = default;
@@ -1778,7 +1776,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Packages.SetTo(
                         rhs.Packages
-                        .Select(r => (IFormLink<Package>)new FormLink<Package>(r.FormKey)));
+                        .Select(r => (IFormLink<IPackageGetter>)new FormLink<IPackageGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1792,7 +1790,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SceneAction_FieldIndex.Topic) ?? true))
             {
-                item.Topic = new FormLinkNullable<DialogTopic>(rhs.Topic.FormKey);
+                item.Topic = new FormLinkNullable<IDialogTopicGetter>(rhs.Topic.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)SceneAction_FieldIndex.HeadtrackActorID) ?? true))
             {
@@ -2140,7 +2138,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.PNAM:
                 {
                     item.Packages.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Package>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPackageGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));

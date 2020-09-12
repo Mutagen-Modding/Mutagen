@@ -40,9 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Weather
-        public FormLink<Weather> Weather { get; set; } = new FormLink<Weather>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IWeatherGetter> IWeatherTypeGetter.Weather => this.Weather.ToGetter<Weather, IWeatherGetter>();
+        public FormLink<IWeatherGetter> Weather { get; set; } = new FormLink<IWeatherGetter>();
         #endregion
         #region Chance
         public Int32 Chance { get; set; } = default;
@@ -450,7 +448,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IWeatherType>,
         ILinkedFormKeyContainer
     {
-        new FormLink<Weather> Weather { get; set; }
+        new FormLink<IWeatherGetter> Weather { get; set; }
         new Int32 Chance { get; set; }
     }
 
@@ -725,7 +723,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IWeatherType item)
         {
             ClearPartial();
-            item.Weather = FormLink<Weather>.Null;
+            item.Weather = FormLink<IWeatherGetter>.Null;
             item.Chance = default;
         }
         
@@ -881,7 +879,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)WeatherType_FieldIndex.Weather) ?? true))
             {
-                item.Weather = new FormLink<Weather>(rhs.Weather.FormKey);
+                item.Weather = new FormLink<IWeatherGetter>(rhs.Weather.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)WeatherType_FieldIndex.Chance) ?? true))
             {

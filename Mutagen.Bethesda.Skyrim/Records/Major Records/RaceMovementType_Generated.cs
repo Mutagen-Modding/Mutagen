@@ -41,9 +41,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region MovementType
-        public FormLinkNullable<MovementType> MovementType { get; set; } = new FormLinkNullable<MovementType>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IMovementTypeGetter> IRaceMovementTypeGetter.MovementType => this.MovementType.ToGetter<MovementType, IMovementTypeGetter>();
+        public FormLinkNullable<IMovementTypeGetter> MovementType { get; set; } = new FormLinkNullable<IMovementTypeGetter>();
         #endregion
         #region Overrides
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -466,7 +464,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IRaceMovementType>,
         ILinkedFormKeyContainer
     {
-        new FormLinkNullable<MovementType> MovementType { get; set; }
+        new FormLinkNullable<IMovementTypeGetter> MovementType { get; set; }
         new SpeedOverrides? Overrides { get; set; }
     }
 
@@ -753,7 +751,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IRaceMovementType item)
         {
             ClearPartial();
-            item.MovementType = FormLinkNullable<MovementType>.Null;
+            item.MovementType = FormLinkNullable<IMovementTypeGetter>.Null;
             item.Overrides = null;
         }
         
@@ -921,7 +919,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RaceMovementType_FieldIndex.MovementType) ?? true))
             {
-                item.MovementType = new FormLinkNullable<MovementType>(rhs.MovementType.FormKey);
+                item.MovementType = new FormLinkNullable<IMovementTypeGetter>(rhs.MovementType.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)RaceMovementType_FieldIndex.Overrides) ?? true))
             {

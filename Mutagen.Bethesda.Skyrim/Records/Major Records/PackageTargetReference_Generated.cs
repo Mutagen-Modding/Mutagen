@@ -42,9 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Reference
-        public FormLink<SkyrimMajorRecord> Reference { get; set; } = new FormLink<SkyrimMajorRecord>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISkyrimMajorRecordGetter> IPackageTargetReferenceGetter.Reference => this.Reference.ToGetter<SkyrimMajorRecord, ISkyrimMajorRecordGetter>();
+        public FormLink<ISkyrimMajorRecordGetter> Reference { get; set; } = new FormLink<ISkyrimMajorRecordGetter>();
         #endregion
 
         #region To String
@@ -411,7 +409,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPackageTargetReference>,
         ILinkedFormKeyContainer
     {
-        new FormLink<SkyrimMajorRecord> Reference { get; set; }
+        new FormLink<ISkyrimMajorRecordGetter> Reference { get; set; }
     }
 
     public partial interface IPackageTargetReferenceGetter :
@@ -653,7 +651,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IPackageTargetReference item)
         {
             ClearPartial();
-            item.Reference = FormLink<SkyrimMajorRecord>.Null;
+            item.Reference = FormLink<ISkyrimMajorRecordGetter>.Null;
             base.Clear(item);
         }
         
@@ -860,7 +858,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PackageTargetReference_FieldIndex.Reference) ?? true))
             {
-                item.Reference = new FormLink<SkyrimMajorRecord>(rhs.Reference.FormKey);
+                item.Reference = new FormLink<ISkyrimMajorRecordGetter>(rhs.Reference.FormKey);
             }
         }
         

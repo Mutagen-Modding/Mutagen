@@ -46,9 +46,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Int16 Unknown { get; set; } = default;
         #endregion
         #region Reference
-        public FormLink<INpcSpawn> Reference { get; set; } = new FormLink<INpcSpawn>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<INpcSpawnGetter> ILeveledNpcEntryDataGetter.Reference => this.Reference.ToGetter<INpcSpawn, INpcSpawnGetter>();
+        public FormLink<INpcSpawnGetter> Reference { get; set; } = new FormLink<INpcSpawnGetter>();
         #endregion
         #region Count
         public Int16 Count { get; set; } = default;
@@ -546,7 +544,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Int16 Level { get; set; }
         new Int16 Unknown { get; set; }
-        new FormLink<INpcSpawn> Reference { get; set; }
+        new FormLink<INpcSpawnGetter> Reference { get; set; }
         new Int16 Count { get; set; }
         new Int16 Unknown2 { get; set; }
     }
@@ -831,7 +829,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.Level = default;
             item.Unknown = default;
-            item.Reference = FormLink<INpcSpawn>.Null;
+            item.Reference = FormLink<INpcSpawnGetter>.Null;
             item.Count = default;
             item.Unknown2 = default;
         }
@@ -1020,7 +1018,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledNpcEntryData_FieldIndex.Reference) ?? true))
             {
-                item.Reference = new FormLink<INpcSpawn>(rhs.Reference.FormKey);
+                item.Reference = new FormLink<INpcSpawnGetter>(rhs.Reference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledNpcEntryData_FieldIndex.Count) ?? true))
             {

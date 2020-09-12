@@ -40,9 +40,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Target
-        public FormLink<IRelatable> Target { get; set; } = new FormLink<IRelatable>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IRelatableGetter> IRelationGetter.Target => this.Target.ToGetter<IRelatable, IRelatableGetter>();
+        public FormLink<IRelatableGetter> Target { get; set; } = new FormLink<IRelatableGetter>();
         #endregion
         #region Modifier
         public Int32 Modifier { get; set; } = default;
@@ -482,7 +480,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IRelation>,
         ILinkedFormKeyContainer
     {
-        new FormLink<IRelatable> Target { get; set; }
+        new FormLink<IRelatableGetter> Target { get; set; }
         new Int32 Modifier { get; set; }
         new CombatReaction Reaction { get; set; }
     }
@@ -761,7 +759,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IRelation item)
         {
             ClearPartial();
-            item.Target = FormLink<IRelatable>.Null;
+            item.Target = FormLink<IRelatableGetter>.Null;
             item.Modifier = default;
             item.Reaction = default;
         }
@@ -928,7 +926,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)Relation_FieldIndex.Target) ?? true))
             {
-                item.Target = new FormLink<IRelatable>(rhs.Target.FormKey);
+                item.Target = new FormLink<IRelatableGetter>(rhs.Target.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Relation_FieldIndex.Modifier) ?? true))
             {

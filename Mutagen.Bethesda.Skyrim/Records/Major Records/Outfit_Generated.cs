@@ -44,8 +44,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IOutfitTarget>>? _Items;
-        public IExtendedList<IFormLink<IOutfitTarget>>? Items
+        private IExtendedList<IFormLink<IOutfitTargetGetter>>? _Items;
+        public IExtendedList<IFormLink<IOutfitTargetGetter>>? Items
         {
             get => this._Items;
             set => this._Items = value;
@@ -523,7 +523,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IOutfitInternal>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<IFormLink<IOutfitTarget>>? Items { get; set; }
+        new IExtendedList<IFormLink<IOutfitTargetGetter>>? Items { get; set; }
     }
 
     public partial interface IOutfitInternal :
@@ -1100,8 +1100,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Items = 
                             rhs.Items
-                            .Select(r => (IFormLink<IOutfitTarget>)new FormLink<IOutfitTarget>(r.FormKey))
-                            .ToExtendedList<IFormLink<IOutfitTarget>>();
+                            .Select(r => (IFormLink<IOutfitTargetGetter>)new FormLink<IOutfitTargetGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IOutfitTargetGetter>>();
                     }
                     else
                     {
@@ -1373,10 +1373,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Items = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IOutfitTarget>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IOutfitTargetGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<IOutfitTarget>>();
+                        .CastExtendedList<IFormLink<IOutfitTargetGetter>>();
                     return (int)Outfit_FieldIndex.Items;
                 }
                 default:

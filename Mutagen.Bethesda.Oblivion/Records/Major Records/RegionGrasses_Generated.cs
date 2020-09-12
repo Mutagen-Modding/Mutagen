@@ -43,8 +43,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Grasses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Grass>>? _Grasses;
-        public IExtendedList<IFormLink<Grass>>? Grasses
+        private IExtendedList<IFormLink<IGrassGetter>>? _Grasses;
+        public IExtendedList<IFormLink<IGrassGetter>>? Grasses
         {
             get => this._Grasses;
             set => this._Grasses = value;
@@ -494,7 +494,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IRegionGrasses>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<IFormLink<Grass>>? Grasses { get; set; }
+        new IExtendedList<IFormLink<IGrassGetter>>? Grasses { get; set; }
     }
 
     public partial interface IRegionGrassesGetter :
@@ -976,8 +976,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Grasses = 
                             rhs.Grasses
-                            .Select(r => (IFormLink<Grass>)new FormLink<Grass>(r.FormKey))
-                            .ToExtendedList<IFormLink<Grass>>();
+                            .Select(r => (IFormLink<IGrassGetter>)new FormLink<IGrassGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IGrassGetter>>();
                     }
                     else
                     {
@@ -1180,10 +1180,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Grasses = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Grass>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IGrassGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<Grass>>();
+                        .CastExtendedList<IFormLink<IGrassGetter>>();
                     return (int)RegionGrasses_FieldIndex.Grasses;
                 }
                 default:

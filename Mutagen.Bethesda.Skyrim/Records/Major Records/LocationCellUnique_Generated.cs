@@ -40,19 +40,13 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Actor
-        public FormLink<Npc> Actor { get; set; } = new FormLink<Npc>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<INpcGetter> ILocationCellUniqueGetter.Actor => this.Actor.ToGetter<Npc, INpcGetter>();
+        public FormLink<INpcGetter> Actor { get; set; } = new FormLink<INpcGetter>();
         #endregion
         #region Ref
-        public FormLink<PlacedNpc> Ref { get; set; } = new FormLink<PlacedNpc>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IPlacedNpcGetter> ILocationCellUniqueGetter.Ref => this.Ref.ToGetter<PlacedNpc, IPlacedNpcGetter>();
+        public FormLink<IPlacedNpcGetter> Ref { get; set; } = new FormLink<IPlacedNpcGetter>();
         #endregion
         #region Location
-        public FormLink<Location> Location { get; set; } = new FormLink<Location>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ILocationGetter> ILocationCellUniqueGetter.Location => this.Location.ToGetter<Location, ILocationGetter>();
+        public FormLink<ILocationGetter> Location { get; set; } = new FormLink<ILocationGetter>();
         #endregion
 
         #region To String
@@ -485,9 +479,9 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ILocationCellUnique>,
         ILinkedFormKeyContainer
     {
-        new FormLink<Npc> Actor { get; set; }
-        new FormLink<PlacedNpc> Ref { get; set; }
-        new FormLink<Location> Location { get; set; }
+        new FormLink<INpcGetter> Actor { get; set; }
+        new FormLink<IPlacedNpcGetter> Ref { get; set; }
+        new FormLink<ILocationGetter> Location { get; set; }
     }
 
     public partial interface ILocationCellUniqueGetter :
@@ -763,9 +757,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ILocationCellUnique item)
         {
             ClearPartial();
-            item.Actor = FormLink<Npc>.Null;
-            item.Ref = FormLink<PlacedNpc>.Null;
-            item.Location = FormLink<Location>.Null;
+            item.Actor = FormLink<INpcGetter>.Null;
+            item.Ref = FormLink<IPlacedNpcGetter>.Null;
+            item.Location = FormLink<ILocationGetter>.Null;
         }
         
         #region Binary Translation
@@ -929,15 +923,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)LocationCellUnique_FieldIndex.Actor) ?? true))
             {
-                item.Actor = new FormLink<Npc>(rhs.Actor.FormKey);
+                item.Actor = new FormLink<INpcGetter>(rhs.Actor.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LocationCellUnique_FieldIndex.Ref) ?? true))
             {
-                item.Ref = new FormLink<PlacedNpc>(rhs.Ref.FormKey);
+                item.Ref = new FormLink<IPlacedNpcGetter>(rhs.Ref.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LocationCellUnique_FieldIndex.Location) ?? true))
             {
-                item.Location = new FormLink<Location>(rhs.Location.FormKey);
+                item.Location = new FormLink<ILocationGetter>(rhs.Location.FormKey);
             }
         }
         

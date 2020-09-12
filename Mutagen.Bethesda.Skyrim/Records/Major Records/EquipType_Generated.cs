@@ -44,8 +44,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region SlotParents
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<EquipType>>? _SlotParents;
-        public IExtendedList<IFormLink<EquipType>>? SlotParents
+        private IExtendedList<IFormLink<IEquipTypeGetter>>? _SlotParents;
+        public IExtendedList<IFormLink<IEquipTypeGetter>>? SlotParents
         {
             get => this._SlotParents;
             set => this._SlotParents = value;
@@ -556,7 +556,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IEquipTypeInternal>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<IFormLink<EquipType>>? SlotParents { get; set; }
+        new IExtendedList<IFormLink<IEquipTypeGetter>>? SlotParents { get; set; }
         new Boolean? UseAllParents { get; set; }
     }
 
@@ -1148,8 +1148,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.SlotParents = 
                             rhs.SlotParents
-                            .Select(r => (IFormLink<EquipType>)new FormLink<EquipType>(r.FormKey))
-                            .ToExtendedList<IFormLink<EquipType>>();
+                            .Select(r => (IFormLink<IEquipTypeGetter>)new FormLink<IEquipTypeGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IEquipTypeGetter>>();
                     }
                     else
                     {
@@ -1430,10 +1430,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SlotParents = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<EquipType>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IEquipTypeGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<EquipType>>();
+                        .CastExtendedList<IFormLink<IEquipTypeGetter>>();
                     return (int)EquipType_FieldIndex.SlotParents;
                 }
                 case RecordTypeInts.DATA:

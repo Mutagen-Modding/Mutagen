@@ -109,8 +109,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region OverriddenForms
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<SkyrimMajorRecord>>? _OverriddenForms;
-        public IExtendedList<IFormLink<SkyrimMajorRecord>>? OverriddenForms
+        private IExtendedList<IFormLink<ISkyrimMajorRecordGetter>>? _OverriddenForms;
+        public IExtendedList<IFormLink<ISkyrimMajorRecordGetter>>? OverriddenForms
         {
             get => this._OverriddenForms;
             set => this._OverriddenForms = value;
@@ -1037,7 +1037,7 @@ namespace Mutagen.Bethesda.Skyrim
         new String? Author { get; set; }
         new String? Description { get; set; }
         new IExtendedList<MasterReference> MasterReferences { get; }
-        new IExtendedList<IFormLink<SkyrimMajorRecord>>? OverriddenForms { get; set; }
+        new IExtendedList<IFormLink<ISkyrimMajorRecordGetter>>? OverriddenForms { get; set; }
         new Int32? INTV { get; set; }
         new Int32? INCC { get; set; }
     }
@@ -1762,8 +1762,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.OverriddenForms = 
                             rhs.OverriddenForms
-                            .Select(r => (IFormLink<SkyrimMajorRecord>)new FormLink<SkyrimMajorRecord>(r.FormKey))
-                            .ToExtendedList<IFormLink<SkyrimMajorRecord>>();
+                            .Select(r => (IFormLink<ISkyrimMajorRecordGetter>)new FormLink<ISkyrimMajorRecordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<ISkyrimMajorRecordGetter>>();
                     }
                     else
                     {
@@ -2061,10 +2061,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.OverriddenForms = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<SkyrimMajorRecord>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ISkyrimMajorRecordGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<SkyrimMajorRecord>>();
+                        .CastExtendedList<IFormLink<ISkyrimMajorRecordGetter>>();
                     return (int)SkyrimModHeader_FieldIndex.OverriddenForms;
                 }
                 case RecordTypeInts.INTV:

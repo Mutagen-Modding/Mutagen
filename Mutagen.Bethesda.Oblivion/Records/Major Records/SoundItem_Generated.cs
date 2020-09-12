@@ -40,9 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Sound
-        public FormLinkNullable<Sound> Sound { get; set; } = new FormLinkNullable<Sound>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundGetter> ISoundItemGetter.Sound => this.Sound.ToGetter<Sound, ISoundGetter>();
+        public FormLinkNullable<ISoundGetter> Sound { get; set; } = new FormLinkNullable<ISoundGetter>();
         #endregion
         #region Chance
         public Byte? Chance { get; set; }
@@ -452,7 +450,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<ISoundItem>,
         ILinkedFormKeyContainer
     {
-        new FormLinkNullable<Sound> Sound { get; set; }
+        new FormLinkNullable<ISoundGetter> Sound { get; set; }
         new Byte? Chance { get; set; }
     }
 
@@ -739,7 +737,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(ISoundItem item)
         {
             ClearPartial();
-            item.Sound = FormLinkNullable<Sound>.Null;
+            item.Sound = FormLinkNullable<ISoundGetter>.Null;
             item.Chance = default;
         }
         
@@ -903,7 +901,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)SoundItem_FieldIndex.Sound) ?? true))
             {
-                item.Sound = new FormLinkNullable<Sound>(rhs.Sound.FormKey);
+                item.Sound = new FormLinkNullable<ISoundGetter>(rhs.Sound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)SoundItem_FieldIndex.Chance) ?? true))
             {

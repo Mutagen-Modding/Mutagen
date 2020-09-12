@@ -42,9 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Reference
-        public FormLink<DialogTopic> Reference { get; set; } = new FormLink<DialogTopic>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IDialogTopicGetter> ITopicReferenceGetter.Reference => this.Reference.ToGetter<DialogTopic, IDialogTopicGetter>();
+        public FormLink<IDialogTopicGetter> Reference { get; set; } = new FormLink<IDialogTopicGetter>();
         #endregion
 
         #region To String
@@ -404,7 +402,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ITopicReference>,
         ILinkedFormKeyContainer
     {
-        new FormLink<DialogTopic> Reference { get; set; }
+        new FormLink<IDialogTopicGetter> Reference { get; set; }
     }
 
     public partial interface ITopicReferenceGetter :
@@ -646,7 +644,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ITopicReference item)
         {
             ClearPartial();
-            item.Reference = FormLink<DialogTopic>.Null;
+            item.Reference = FormLink<IDialogTopicGetter>.Null;
             base.Clear(item);
         }
         
@@ -851,7 +849,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)TopicReference_FieldIndex.Reference) ?? true))
             {
-                item.Reference = new FormLink<DialogTopic>(rhs.Reference.FormKey);
+                item.Reference = new FormLink<IDialogTopicGetter>(rhs.Reference.FormKey);
             }
         }
         

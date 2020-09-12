@@ -65,8 +65,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region PotentialGrass
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Grass>> _PotentialGrass = new ExtendedList<IFormLink<Grass>>();
-        public IExtendedList<IFormLink<Grass>> PotentialGrass
+        private IExtendedList<IFormLink<IGrassGetter>> _PotentialGrass = new ExtendedList<IFormLink<IGrassGetter>>();
+        public IExtendedList<IFormLink<IGrassGetter>> PotentialGrass
         {
             get => this._PotentialGrass;
             protected set => this._PotentialGrass = value;
@@ -636,7 +636,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Icon { get; set; }
         new HavokData? Havok { get; set; }
         new Byte? TextureSpecularExponent { get; set; }
-        new IExtendedList<IFormLink<Grass>> PotentialGrass { get; }
+        new IExtendedList<IFormLink<IGrassGetter>> PotentialGrass { get; }
     }
 
     public partial interface ILandTextureInternal :
@@ -1284,7 +1284,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.PotentialGrass.SetTo(
                         rhs.PotentialGrass
-                        .Select(r => (IFormLink<Grass>)new FormLink<Grass>(r.FormKey)));
+                        .Select(r => (IFormLink<IGrassGetter>)new FormLink<IGrassGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1585,7 +1585,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.GNAM:
                 {
                     item.PotentialGrass.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Grass>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IGrassGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.GNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));

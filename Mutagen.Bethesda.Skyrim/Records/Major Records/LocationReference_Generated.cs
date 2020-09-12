@@ -40,14 +40,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Actor
-        public FormLink<ILinkedReference> Actor { get; set; } = new FormLink<ILinkedReference>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ILinkedReferenceGetter> ILocationReferenceGetter.Actor => this.Actor.ToGetter<ILinkedReference, ILinkedReferenceGetter>();
+        public FormLink<ILinkedReferenceGetter> Actor { get; set; } = new FormLink<ILinkedReferenceGetter>();
         #endregion
         #region Location
-        public FormLink<IComplexLocation> Location { get; set; } = new FormLink<IComplexLocation>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IComplexLocationGetter> ILocationReferenceGetter.Location => this.Location.ToGetter<IComplexLocation, IComplexLocationGetter>();
+        public FormLink<IComplexLocationGetter> Location { get; set; } = new FormLink<IComplexLocationGetter>();
         #endregion
         #region Grid
         public P2Int16 Grid { get; set; } = default;
@@ -483,8 +479,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ILocationReference>,
         ILinkedFormKeyContainer
     {
-        new FormLink<ILinkedReference> Actor { get; set; }
-        new FormLink<IComplexLocation> Location { get; set; }
+        new FormLink<ILinkedReferenceGetter> Actor { get; set; }
+        new FormLink<IComplexLocationGetter> Location { get; set; }
         new P2Int16 Grid { get; set; }
     }
 
@@ -761,8 +757,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ILocationReference item)
         {
             ClearPartial();
-            item.Actor = FormLink<ILinkedReference>.Null;
-            item.Location = FormLink<IComplexLocation>.Null;
+            item.Actor = FormLink<ILinkedReferenceGetter>.Null;
+            item.Location = FormLink<IComplexLocationGetter>.Null;
             item.Grid = default;
         }
         
@@ -926,11 +922,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)LocationReference_FieldIndex.Actor) ?? true))
             {
-                item.Actor = new FormLink<ILinkedReference>(rhs.Actor.FormKey);
+                item.Actor = new FormLink<ILinkedReferenceGetter>(rhs.Actor.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LocationReference_FieldIndex.Location) ?? true))
             {
-                item.Location = new FormLink<IComplexLocation>(rhs.Location.FormKey);
+                item.Location = new FormLink<IComplexLocationGetter>(rhs.Location.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LocationReference_FieldIndex.Grid) ?? true))
             {

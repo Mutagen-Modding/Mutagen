@@ -40,9 +40,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Door
-        public FormLink<PlacedObject> Door { get; set; } = new FormLink<PlacedObject>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IPlacedObjectGetter> ITeleportDestinationGetter.Door => this.Door.ToGetter<PlacedObject, IPlacedObjectGetter>();
+        public FormLink<IPlacedObjectGetter> Door { get; set; } = new FormLink<IPlacedObjectGetter>();
         #endregion
         #region Position
         public P3Float Position { get; set; } = default;
@@ -514,7 +512,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ITeleportDestination>,
         ILinkedFormKeyContainer
     {
-        new FormLink<PlacedObject> Door { get; set; }
+        new FormLink<IPlacedObjectGetter> Door { get; set; }
         new P3Float Position { get; set; }
         new P3Float Rotation { get; set; }
         new TeleportDestination.Flag Flags { get; set; }
@@ -797,7 +795,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ITeleportDestination item)
         {
             ClearPartial();
-            item.Door = FormLink<PlacedObject>.Null;
+            item.Door = FormLink<IPlacedObjectGetter>.Null;
             item.Position = default;
             item.Rotation = default;
             item.Flags = default;
@@ -972,7 +970,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Door) ?? true))
             {
-                item.Door = new FormLink<PlacedObject>(rhs.Door.FormKey);
+                item.Door = new FormLink<IPlacedObjectGetter>(rhs.Door.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Position) ?? true))
             {

@@ -81,8 +81,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region CounterEffects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IEDIDLink<MagicEffect>>? _CounterEffects;
-        public IExtendedList<IEDIDLink<MagicEffect>>? CounterEffects
+        private IExtendedList<IEDIDLink<IMagicEffectGetter>>? _CounterEffects;
+        public IExtendedList<IEDIDLink<IMagicEffectGetter>>? CounterEffects
         {
             get => this._CounterEffects;
             set => this._CounterEffects = value;
@@ -718,7 +718,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Icon { get; set; }
         new Model? Model { get; set; }
         new MagicEffectData? Data { get; set; }
-        new IExtendedList<IEDIDLink<MagicEffect>>? CounterEffects { get; set; }
+        new IExtendedList<IEDIDLink<IMagicEffectGetter>>? CounterEffects { get; set; }
     }
 
     public partial interface IMagicEffectInternal :
@@ -1435,8 +1435,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.CounterEffects = 
                             rhs.CounterEffects
-                            .Select(r => (IEDIDLink<MagicEffect>)new EDIDLink<MagicEffect>(r.EDID))
-                            .ToExtendedList<IEDIDLink<MagicEffect>>();
+                            .Select(r => (IEDIDLink<IMagicEffectGetter>)new EDIDLink<IMagicEffectGetter>(r.EDID))
+                            .ToExtendedList<IEDIDLink<IMagicEffectGetter>>();
                     }
                     else
                     {
@@ -1773,10 +1773,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CounterEffects = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IEDIDLink<MagicEffect>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IEDIDLink<IMagicEffectGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: RecordTypeBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IEDIDLink<MagicEffect>>();
+                        .CastExtendedList<IEDIDLink<IMagicEffectGetter>>();
                     return (int)MagicEffect_FieldIndex.CounterEffects;
                 }
                 default:

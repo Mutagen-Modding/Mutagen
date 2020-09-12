@@ -40,14 +40,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Word
-        public FormLink<WordOfPower> Word { get; set; } = new FormLink<WordOfPower>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IWordOfPowerGetter> IShoutWordGetter.Word => this.Word.ToGetter<WordOfPower, IWordOfPowerGetter>();
+        public FormLink<IWordOfPowerGetter> Word { get; set; } = new FormLink<IWordOfPowerGetter>();
         #endregion
         #region Spell
-        public FormLink<Spell> Spell { get; set; } = new FormLink<Spell>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISpellGetter> IShoutWordGetter.Spell => this.Spell.ToGetter<Spell, ISpellGetter>();
+        public FormLink<ISpellGetter> Spell { get; set; } = new FormLink<ISpellGetter>();
         #endregion
         #region RecoveryTime
         public Single RecoveryTime { get; set; } = default;
@@ -484,8 +480,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IShoutWord>,
         ILinkedFormKeyContainer
     {
-        new FormLink<WordOfPower> Word { get; set; }
-        new FormLink<Spell> Spell { get; set; }
+        new FormLink<IWordOfPowerGetter> Word { get; set; }
+        new FormLink<ISpellGetter> Spell { get; set; }
         new Single RecoveryTime { get; set; }
     }
 
@@ -763,8 +759,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IShoutWord item)
         {
             ClearPartial();
-            item.Word = FormLink<WordOfPower>.Null;
-            item.Spell = FormLink<Spell>.Null;
+            item.Word = FormLink<IWordOfPowerGetter>.Null;
+            item.Spell = FormLink<ISpellGetter>.Null;
             item.RecoveryTime = default;
         }
         
@@ -931,11 +927,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)ShoutWord_FieldIndex.Word) ?? true))
             {
-                item.Word = new FormLink<WordOfPower>(rhs.Word.FormKey);
+                item.Word = new FormLink<IWordOfPowerGetter>(rhs.Word.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ShoutWord_FieldIndex.Spell) ?? true))
             {
-                item.Spell = new FormLink<Spell>(rhs.Spell.FormKey);
+                item.Spell = new FormLink<ISpellGetter>(rhs.Spell.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ShoutWord_FieldIndex.RecoveryTime) ?? true))
             {

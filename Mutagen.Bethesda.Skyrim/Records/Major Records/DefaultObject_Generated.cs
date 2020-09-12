@@ -43,9 +43,7 @@ namespace Mutagen.Bethesda.Skyrim
         public RecordType Use { get; set; } = RecordType.Null;
         #endregion
         #region Object
-        public FormLink<SkyrimMajorRecord> Object { get; set; } = new FormLink<SkyrimMajorRecord>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISkyrimMajorRecordGetter> IDefaultObjectGetter.Object => this.Object.ToGetter<SkyrimMajorRecord, ISkyrimMajorRecordGetter>();
+        public FormLink<ISkyrimMajorRecordGetter> Object { get; set; } = new FormLink<ISkyrimMajorRecordGetter>();
         #endregion
 
         #region To String
@@ -451,7 +449,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new RecordType Use { get; set; }
-        new FormLink<SkyrimMajorRecord> Object { get; set; }
+        new FormLink<ISkyrimMajorRecordGetter> Object { get; set; }
     }
 
     public partial interface IDefaultObjectGetter :
@@ -726,7 +724,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Use = RecordType.Null;
-            item.Object = FormLink<SkyrimMajorRecord>.Null;
+            item.Object = FormLink<ISkyrimMajorRecordGetter>.Null;
         }
         
         #region Binary Translation
@@ -885,7 +883,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DefaultObject_FieldIndex.Object) ?? true))
             {
-                item.Object = new FormLink<SkyrimMajorRecord>(rhs.Object.FormKey);
+                item.Object = new FormLink<ISkyrimMajorRecordGetter>(rhs.Object.FormKey);
             }
         }
         

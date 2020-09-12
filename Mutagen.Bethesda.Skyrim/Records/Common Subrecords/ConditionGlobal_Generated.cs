@@ -42,9 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region ComparisonValue
-        public FormLink<Global> ComparisonValue { get; set; } = new FormLink<Global>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IGlobalGetter> IConditionGlobalGetter.ComparisonValue => this.ComparisonValue.ToGetter<Global, IGlobalGetter>();
+        public FormLink<IGlobalGetter> ComparisonValue { get; set; } = new FormLink<IGlobalGetter>();
         #endregion
 
         #region To String
@@ -452,7 +450,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IConditionGlobal>,
         ILinkedFormKeyContainer
     {
-        new FormLink<Global> ComparisonValue { get; set; }
+        new FormLink<IGlobalGetter> ComparisonValue { get; set; }
         new ConditionData Data { get; set; }
     }
 
@@ -700,7 +698,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IConditionGlobal item)
         {
             ClearPartial();
-            item.ComparisonValue = FormLink<Global>.Null;
+            item.ComparisonValue = FormLink<IGlobalGetter>.Null;
             item.Data.Clear();
             base.Clear(item);
         }
@@ -932,7 +930,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)ConditionGlobal_FieldIndex.ComparisonValue) ?? true))
             {
-                item.ComparisonValue = new FormLink<Global>(rhs.ComparisonValue.FormKey);
+                item.ComparisonValue = new FormLink<IGlobalGetter>(rhs.ComparisonValue.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ConditionGlobal_FieldIndex.Data) ?? true))
             {

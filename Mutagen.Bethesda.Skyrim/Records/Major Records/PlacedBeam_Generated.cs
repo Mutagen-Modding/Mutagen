@@ -43,9 +43,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Projectile
-        public FormLink<Projectile> Projectile { get; set; } = new FormLink<Projectile>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IProjectileGetter> IPlacedBeamGetter.Projectile => this.Projectile.ToGetter<Projectile, IProjectileGetter>();
+        public FormLink<IProjectileGetter> Projectile { get; set; } = new FormLink<IProjectileGetter>();
         #endregion
 
         #region To String
@@ -475,7 +473,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPlacedBeamInternal>,
         ILinkedFormKeyContainer
     {
-        new FormLink<Projectile> Projectile { get; set; }
+        new FormLink<IProjectileGetter> Projectile { get; set; }
     }
 
     public partial interface IPlacedBeamInternal :
@@ -747,7 +745,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IPlacedBeamInternal item)
         {
             ClearPartial();
-            item.Projectile = FormLink<Projectile>.Null;
+            item.Projectile = FormLink<IProjectileGetter>.Null;
             base.Clear(item);
         }
         
@@ -1123,7 +1121,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PlacedBeam_FieldIndex.Projectile) ?? true))
             {
-                item.Projectile = new FormLink<Projectile>(rhs.Projectile.FormKey);
+                item.Projectile = new FormLink<IProjectileGetter>(rhs.Projectile.FormKey);
             }
         }
         

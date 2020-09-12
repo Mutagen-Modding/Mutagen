@@ -85,8 +85,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Keyword>>? _Keywords;
-        public IExtendedList<IFormLink<Keyword>>? Keywords
+        private IExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
+        public IExtendedList<IFormLink<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -125,14 +125,10 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? IFloraGetter.FNAM => this.FNAM;
         #endregion
         #region Ingredient
-        public FormLinkNullable<IHarvestTarget> Ingredient { get; set; } = new FormLinkNullable<IHarvestTarget>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IHarvestTargetGetter> IFloraGetter.Ingredient => this.Ingredient.ToGetter<IHarvestTarget, IHarvestTargetGetter>();
+        public FormLinkNullable<IHarvestTargetGetter> Ingredient { get; set; } = new FormLinkNullable<IHarvestTargetGetter>();
         #endregion
         #region HarvestSound
-        public FormLinkNullable<SoundDescriptor> HarvestSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IFloraGetter.HarvestSound => this.HarvestSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> HarvestSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region Production
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -964,12 +960,12 @@ namespace Mutagen.Bethesda.Skyrim
         new TranslatedString Name { get; set; }
         new Model? Model { get; set; }
         new Destructible? Destructible { get; set; }
-        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new IExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
         new MemorySlice<Byte>? PNAM { get; set; }
         new TranslatedString? ActivateTextOverride { get; set; }
         new MemorySlice<Byte>? FNAM { get; set; }
-        new FormLinkNullable<IHarvestTarget> Ingredient { get; set; }
-        new FormLinkNullable<SoundDescriptor> HarvestSound { get; set; }
+        new FormLinkNullable<IHarvestTargetGetter> Ingredient { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> HarvestSound { get; set; }
         new SeasonalIngredientProduction? Production { get; set; }
     }
 
@@ -1260,8 +1256,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.PNAM = default;
             item.ActivateTextOverride = default;
             item.FNAM = default;
-            item.Ingredient = FormLinkNullable<IHarvestTarget>.Null;
-            item.HarvestSound = FormLinkNullable<SoundDescriptor>.Null;
+            item.Ingredient = FormLinkNullable<IHarvestTargetGetter>.Null;
+            item.HarvestSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
             item.Production = null;
             base.Clear(item);
         }
@@ -1838,8 +1834,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLink<Keyword>)new FormLink<Keyword>(r.FormKey))
-                            .ToExtendedList<IFormLink<Keyword>>();
+                            .Select(r => (IFormLink<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IKeywordGetter>>();
                     }
                     else
                     {
@@ -1884,11 +1880,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Ingredient) ?? true))
             {
-                item.Ingredient = new FormLinkNullable<IHarvestTarget>(rhs.Ingredient.FormKey);
+                item.Ingredient = new FormLinkNullable<IHarvestTargetGetter>(rhs.Ingredient.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.HarvestSound) ?? true))
             {
-                item.HarvestSound = new FormLinkNullable<SoundDescriptor>(rhs.HarvestSound.FormKey);
+                item.HarvestSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.HarvestSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Production) ?? true))
             {
@@ -2269,13 +2265,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KSIZ:
                 {
                     item.Keywords = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<Keyword>>();
+                        .CastExtendedList<IFormLink<IKeywordGetter>>();
                     return (int)Flora_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.PNAM:

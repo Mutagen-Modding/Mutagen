@@ -43,14 +43,12 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Quest
-        public FormLink<Quest> Quest { get; set; } = new FormLink<Quest>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IQuestGetter> IDialogViewGetter.Quest => this.Quest.ToGetter<Quest, IQuestGetter>();
+        public FormLink<IQuestGetter> Quest { get; set; } = new FormLink<IQuestGetter>();
         #endregion
         #region Branches
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<DialogBranch>> _Branches = new ExtendedList<IFormLink<DialogBranch>>();
-        public IExtendedList<IFormLink<DialogBranch>> Branches
+        private IExtendedList<IFormLink<IDialogBranchGetter>> _Branches = new ExtendedList<IFormLink<IDialogBranchGetter>>();
+        public IExtendedList<IFormLink<IDialogBranchGetter>> Branches
         {
             get => this._Branches;
             protected set => this._Branches = value;
@@ -749,8 +747,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IDialogViewInternal>,
         ILinkedFormKeyContainer
     {
-        new FormLink<Quest> Quest { get; set; }
-        new IExtendedList<IFormLink<DialogBranch>> Branches { get; }
+        new FormLink<IQuestGetter> Quest { get; set; }
+        new IExtendedList<IFormLink<IDialogBranchGetter>> Branches { get; }
         new SliceList<byte> TNAMs { get; }
         new MemorySlice<Byte>? ENAM { get; set; }
         new MemorySlice<Byte>? DNAM { get; set; }
@@ -1016,7 +1014,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IDialogViewInternal item)
         {
             ClearPartial();
-            item.Quest = FormLink<Quest>.Null;
+            item.Quest = FormLink<IQuestGetter>.Null;
             item.Branches.Clear();
             item.TNAMs.Clear();
             item.ENAM = default;
@@ -1385,7 +1383,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)DialogView_FieldIndex.Quest) ?? true))
             {
-                item.Quest = new FormLink<Quest>(rhs.Quest.FormKey);
+                item.Quest = new FormLink<IQuestGetter>(rhs.Quest.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogView_FieldIndex.Branches) ?? true))
             {
@@ -1394,7 +1392,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Branches.SetTo(
                         rhs.Branches
-                        .Select(r => (IFormLink<DialogBranch>)new FormLink<DialogBranch>(r.FormKey)));
+                        .Select(r => (IFormLink<IDialogBranchGetter>)new FormLink<IDialogBranchGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1726,7 +1724,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.BNAM:
                 {
                     item.Branches.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<DialogBranch>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IDialogBranchGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.BNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));

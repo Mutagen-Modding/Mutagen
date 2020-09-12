@@ -43,9 +43,7 @@ namespace Mutagen.Bethesda.Skyrim
         public MagicEffect.SoundType Type { get; set; } = default;
         #endregion
         #region Sound
-        public FormLink<SoundDescriptor> Sound { get; set; } = new FormLink<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISoundDescriptorGetter> IMagicEffectSoundGetter.Sound => this.Sound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLink<ISoundDescriptorGetter> Sound { get; set; } = new FormLink<ISoundDescriptorGetter>();
         #endregion
 
         #region To String
@@ -451,7 +449,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new MagicEffect.SoundType Type { get; set; }
-        new FormLink<SoundDescriptor> Sound { get; set; }
+        new FormLink<ISoundDescriptorGetter> Sound { get; set; }
     }
 
     public partial interface IMagicEffectSoundGetter :
@@ -726,7 +724,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Type = default;
-            item.Sound = FormLink<SoundDescriptor>.Null;
+            item.Sound = FormLink<ISoundDescriptorGetter>.Null;
         }
         
         #region Binary Translation
@@ -885,7 +883,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffectSound_FieldIndex.Sound) ?? true))
             {
-                item.Sound = new FormLink<SoundDescriptor>(rhs.Sound.FormKey);
+                item.Sound = new FormLink<ISoundDescriptorGetter>(rhs.Sound.FormKey);
             }
         }
         

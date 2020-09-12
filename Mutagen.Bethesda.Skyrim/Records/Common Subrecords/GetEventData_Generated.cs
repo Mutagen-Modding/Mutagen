@@ -51,17 +51,13 @@ namespace Mutagen.Bethesda.Skyrim
         public UInt16 EventMember { get; set; } = default;
         #endregion
         #region Parameter3
-        public FormLink<SkyrimMajorRecord> Parameter3 { get; set; } = new FormLink<SkyrimMajorRecord>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISkyrimMajorRecordGetter> IGetEventDataGetter.Parameter3 => this.Parameter3.ToGetter<SkyrimMajorRecord, ISkyrimMajorRecordGetter>();
+        public FormLink<ISkyrimMajorRecordGetter> Parameter3 { get; set; } = new FormLink<ISkyrimMajorRecordGetter>();
         #endregion
         #region RunOnType
         public Condition.RunOnType RunOnType { get; set; } = default;
         #endregion
         #region Reference
-        public FormLink<SkyrimMajorRecord> Reference { get; set; } = new FormLink<SkyrimMajorRecord>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISkyrimMajorRecordGetter> IGetEventDataGetter.Reference => this.Reference.ToGetter<SkyrimMajorRecord, ISkyrimMajorRecordGetter>();
+        public FormLink<ISkyrimMajorRecordGetter> Reference { get; set; } = new FormLink<ISkyrimMajorRecordGetter>();
         #endregion
         #region Unknown3
         public readonly static Int32 _Unknown3_Default = -1;
@@ -602,9 +598,9 @@ namespace Mutagen.Bethesda.Skyrim
         new UInt16 Unknown2 { get; set; }
         new UInt16 EventFunction { get; set; }
         new UInt16 EventMember { get; set; }
-        new FormLink<SkyrimMajorRecord> Parameter3 { get; set; }
+        new FormLink<ISkyrimMajorRecordGetter> Parameter3 { get; set; }
         new Condition.RunOnType RunOnType { get; set; }
-        new FormLink<SkyrimMajorRecord> Reference { get; set; }
+        new FormLink<ISkyrimMajorRecordGetter> Reference { get; set; }
         new Int32 Unknown3 { get; set; }
     }
 
@@ -861,9 +857,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Unknown2 = default;
             item.EventFunction = default;
             item.EventMember = default;
-            item.Parameter3 = FormLink<SkyrimMajorRecord>.Null;
+            item.Parameter3 = FormLink<ISkyrimMajorRecordGetter>.Null;
             item.RunOnType = default;
-            item.Reference = FormLink<SkyrimMajorRecord>.Null;
+            item.Reference = FormLink<ISkyrimMajorRecordGetter>.Null;
             item.Unknown3 = GetEventData._Unknown3_Default;
             base.Clear(item);
         }
@@ -1124,7 +1120,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)GetEventData_FieldIndex.Parameter3) ?? true))
             {
-                item.Parameter3 = new FormLink<SkyrimMajorRecord>(rhs.Parameter3.FormKey);
+                item.Parameter3 = new FormLink<ISkyrimMajorRecordGetter>(rhs.Parameter3.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)GetEventData_FieldIndex.RunOnType) ?? true))
             {
@@ -1132,7 +1128,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)GetEventData_FieldIndex.Reference) ?? true))
             {
-                item.Reference = new FormLink<SkyrimMajorRecord>(rhs.Reference.FormKey);
+                item.Reference = new FormLink<ISkyrimMajorRecordGetter>(rhs.Reference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)GetEventData_FieldIndex.Unknown3) ?? true))
             {

@@ -9,8 +9,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public interface IHarvestable : ISkyrimMajorRecordInternal, IHarvestableGetter
     {
-        new FormLinkNullable<IHarvestTarget> Ingredient { get; }
-        new FormLinkNullable<SoundDescriptor> HarvestSound { get; }
+        new FormLinkNullable<IHarvestTargetGetter> Ingredient { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> HarvestSound { get; set; }
     }
 
     /// <summary>

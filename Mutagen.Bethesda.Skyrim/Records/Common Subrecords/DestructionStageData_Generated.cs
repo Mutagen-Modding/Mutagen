@@ -55,14 +55,10 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 SelfDamagePerSecond { get; set; } = default;
         #endregion
         #region Explosion
-        public FormLink<Explosion> Explosion { get; set; } = new FormLink<Explosion>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IExplosionGetter> IDestructionStageDataGetter.Explosion => this.Explosion.ToGetter<Explosion, IExplosionGetter>();
+        public FormLink<IExplosionGetter> Explosion { get; set; } = new FormLink<IExplosionGetter>();
         #endregion
         #region Debris
-        public FormLink<Debris> Debris { get; set; } = new FormLink<Debris>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IDebrisGetter> IDestructionStageDataGetter.Debris => this.Debris.ToGetter<Debris, IDebrisGetter>();
+        public FormLink<IDebrisGetter> Debris { get; set; } = new FormLink<IDebrisGetter>();
         #endregion
         #region DebrisCount
         public Int32 DebrisCount { get; set; } = default;
@@ -644,8 +640,8 @@ namespace Mutagen.Bethesda.Skyrim
         new Byte ModelDamageStage { get; set; }
         new DestructionStageData.Flag Flags { get; set; }
         new Int32 SelfDamagePerSecond { get; set; }
-        new FormLink<Explosion> Explosion { get; set; }
-        new FormLink<Debris> Debris { get; set; }
+        new FormLink<IExplosionGetter> Explosion { get; set; }
+        new FormLink<IDebrisGetter> Debris { get; set; }
         new Int32 DebrisCount { get; set; }
     }
 
@@ -938,8 +934,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ModelDamageStage = default;
             item.Flags = default;
             item.SelfDamagePerSecond = default;
-            item.Explosion = FormLink<Explosion>.Null;
-            item.Debris = FormLink<Debris>.Null;
+            item.Explosion = FormLink<IExplosionGetter>.Null;
+            item.Debris = FormLink<IDebrisGetter>.Null;
             item.DebrisCount = default;
         }
         
@@ -1161,11 +1157,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DestructionStageData_FieldIndex.Explosion) ?? true))
             {
-                item.Explosion = new FormLink<Explosion>(rhs.Explosion.FormKey);
+                item.Explosion = new FormLink<IExplosionGetter>(rhs.Explosion.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DestructionStageData_FieldIndex.Debris) ?? true))
             {
-                item.Debris = new FormLink<Debris>(rhs.Debris.FormKey);
+                item.Debris = new FormLink<IDebrisGetter>(rhs.Debris.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DestructionStageData_FieldIndex.DebrisCount) ?? true))
             {

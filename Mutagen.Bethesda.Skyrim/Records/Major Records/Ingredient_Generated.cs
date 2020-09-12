@@ -65,8 +65,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Keyword>>? _Keywords;
-        public IExtendedList<IFormLink<Keyword>>? Keywords
+        private IExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
+        public IExtendedList<IFormLink<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -111,19 +111,13 @@ namespace Mutagen.Bethesda.Skyrim
         IDestructibleGetter? IIngredientGetter.Destructible => this.Destructible;
         #endregion
         #region EquipType
-        public FormLinkNullable<EquipType> EquipType { get; set; } = new FormLinkNullable<EquipType>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IEquipTypeGetter> IIngredientGetter.EquipType => this.EquipType.ToGetter<EquipType, IEquipTypeGetter>();
+        public FormLinkNullable<IEquipTypeGetter> EquipType { get; set; } = new FormLinkNullable<IEquipTypeGetter>();
         #endregion
         #region PickUpSound
-        public FormLinkNullable<SoundDescriptor> PickUpSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IIngredientGetter.PickUpSound => this.PickUpSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region PutDownSound
-        public FormLinkNullable<SoundDescriptor> PutDownSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IIngredientGetter.PutDownSound => this.PutDownSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region Value
         public UInt32 Value { get; set; } = default;
@@ -1200,13 +1194,13 @@ namespace Mutagen.Bethesda.Skyrim
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
-        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new IExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
         new Model? Model { get; set; }
         new Icons? Icons { get; set; }
         new Destructible? Destructible { get; set; }
-        new FormLinkNullable<EquipType> EquipType { get; set; }
-        new FormLinkNullable<SoundDescriptor> PickUpSound { get; set; }
-        new FormLinkNullable<SoundDescriptor> PutDownSound { get; set; }
+        new FormLinkNullable<IEquipTypeGetter> EquipType { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; set; }
         new UInt32 Value { get; set; }
         new Single Weight { get; set; }
         new Int32 IngredientValue { get; set; }
@@ -1514,9 +1508,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Model = null;
             item.Icons = null;
             item.Destructible = null;
-            item.EquipType = FormLinkNullable<EquipType>.Null;
-            item.PickUpSound = FormLinkNullable<SoundDescriptor>.Null;
-            item.PutDownSound = FormLinkNullable<SoundDescriptor>.Null;
+            item.EquipType = FormLinkNullable<IEquipTypeGetter>.Null;
+            item.PickUpSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
+            item.PutDownSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
             item.Value = default;
             item.Weight = default;
             item.IngredientValue = default;
@@ -2099,8 +2093,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLink<Keyword>)new FormLink<Keyword>(r.FormKey))
-                            .ToExtendedList<IFormLink<Keyword>>();
+                            .Select(r => (IFormLink<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IKeywordGetter>>();
                     }
                     else
                     {
@@ -2197,15 +2191,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.EquipType) ?? true))
             {
-                item.EquipType = new FormLinkNullable<EquipType>(rhs.EquipType.FormKey);
+                item.EquipType = new FormLinkNullable<IEquipTypeGetter>(rhs.EquipType.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.PickUpSound) ?? true))
             {
-                item.PickUpSound = new FormLinkNullable<SoundDescriptor>(rhs.PickUpSound.FormKey);
+                item.PickUpSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.PickUpSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.PutDownSound) ?? true))
             {
-                item.PutDownSound = new FormLinkNullable<SoundDescriptor>(rhs.PutDownSound.FormKey);
+                item.PutDownSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.PutDownSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.Value) ?? true))
             {
@@ -2617,13 +2611,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KSIZ:
                 {
                     item.Keywords = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<Keyword>>();
+                        .CastExtendedList<IFormLink<IKeywordGetter>>();
                     return (int)Ingredient_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.MODL:

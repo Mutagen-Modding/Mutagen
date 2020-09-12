@@ -64,9 +64,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? IAmmunitionGetter.Icon => this.Icon;
         #endregion
         #region Enchantment
-        public FormLinkNullable<Enchantment> Enchantment { get; set; } = new FormLinkNullable<Enchantment>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IEnchantmentGetter> IAmmunitionGetter.Enchantment => this.Enchantment.ToGetter<Enchantment, IEnchantmentGetter>();
+        public FormLinkNullable<IEnchantmentGetter> Enchantment { get; set; } = new FormLinkNullable<IEnchantmentGetter>();
         #endregion
         #region EnchantmentPoints
         public UInt16? EnchantmentPoints { get; set; }
@@ -634,7 +632,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Name { get; set; }
         new Model? Model { get; set; }
         new String? Icon { get; set; }
-        new FormLinkNullable<Enchantment> Enchantment { get; set; }
+        new FormLinkNullable<IEnchantmentGetter> Enchantment { get; set; }
         new UInt16? EnchantmentPoints { get; set; }
         new AmmunitionData? Data { get; set; }
     }
@@ -904,7 +902,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name = default;
             item.Model = null;
             item.Icon = default;
-            item.Enchantment = FormLinkNullable<Enchantment>.Null;
+            item.Enchantment = FormLinkNullable<IEnchantmentGetter>.Null;
             item.EnchantmentPoints = default;
             item.Data = null;
             base.Clear(item);
@@ -1344,7 +1342,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Enchantment) ?? true))
             {
-                item.Enchantment = new FormLinkNullable<Enchantment>(rhs.Enchantment.FormKey);
+                item.Enchantment = new FormLinkNullable<IEnchantmentGetter>(rhs.Enchantment.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.EnchantmentPoints) ?? true))
             {

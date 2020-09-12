@@ -40,14 +40,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Material
-        public FormLink<MaterialType> Material { get; set; } = new FormLink<MaterialType>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IMaterialTypeGetter> IImpactDataGetter.Material => this.Material.ToGetter<MaterialType, IMaterialTypeGetter>();
+        public FormLink<IMaterialTypeGetter> Material { get; set; } = new FormLink<IMaterialTypeGetter>();
         #endregion
         #region Impact
-        public FormLink<Impact> Impact { get; set; } = new FormLink<Impact>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IImpactGetter> IImpactDataGetter.Impact => this.Impact.ToGetter<Impact, IImpactGetter>();
+        public FormLink<IImpactGetter> Impact { get; set; } = new FormLink<IImpactGetter>();
         #endregion
 
         #region To String
@@ -453,8 +449,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IImpactData>,
         ILinkedFormKeyContainer
     {
-        new FormLink<MaterialType> Material { get; set; }
-        new FormLink<Impact> Impact { get; set; }
+        new FormLink<IMaterialTypeGetter> Material { get; set; }
+        new FormLink<IImpactGetter> Impact { get; set; }
     }
 
     public partial interface IImpactDataGetter :
@@ -729,8 +725,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IImpactData item)
         {
             ClearPartial();
-            item.Material = FormLink<MaterialType>.Null;
-            item.Impact = FormLink<Impact>.Null;
+            item.Material = FormLink<IMaterialTypeGetter>.Null;
+            item.Impact = FormLink<IImpactGetter>.Null;
         }
         
         #region Binary Translation
@@ -889,11 +885,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)ImpactData_FieldIndex.Material) ?? true))
             {
-                item.Material = new FormLink<MaterialType>(rhs.Material.FormKey);
+                item.Material = new FormLink<IMaterialTypeGetter>(rhs.Material.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ImpactData_FieldIndex.Impact) ?? true))
             {
-                item.Impact = new FormLink<Impact>(rhs.Impact.FormKey);
+                item.Impact = new FormLink<IImpactGetter>(rhs.Impact.FormKey);
             }
         }
         

@@ -42,9 +42,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Reference
-        public FormLink<OblivionMajorRecord> Reference { get; set; } = new FormLink<OblivionMajorRecord>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IOblivionMajorRecordGetter> IScriptObjectReferenceGetter.Reference => this.Reference.ToGetter<OblivionMajorRecord, IOblivionMajorRecordGetter>();
+        public FormLink<IOblivionMajorRecordGetter> Reference { get; set; } = new FormLink<IOblivionMajorRecordGetter>();
         #endregion
 
         #region To String
@@ -404,7 +402,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IScriptObjectReference>,
         ILinkedFormKeyContainer
     {
-        new FormLink<OblivionMajorRecord> Reference { get; set; }
+        new FormLink<IOblivionMajorRecordGetter> Reference { get; set; }
     }
 
     public partial interface IScriptObjectReferenceGetter :
@@ -646,7 +644,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IScriptObjectReference item)
         {
             ClearPartial();
-            item.Reference = FormLink<OblivionMajorRecord>.Null;
+            item.Reference = FormLink<IOblivionMajorRecordGetter>.Null;
             base.Clear(item);
         }
         
@@ -852,7 +850,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)ScriptObjectReference_FieldIndex.Reference) ?? true))
             {
-                item.Reference = new FormLink<OblivionMajorRecord>(rhs.Reference.FormKey);
+                item.Reference = new FormLink<IOblivionMajorRecordGetter>(rhs.Reference.FormKey);
             }
         }
         

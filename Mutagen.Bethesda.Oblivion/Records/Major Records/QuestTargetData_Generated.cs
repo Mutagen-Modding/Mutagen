@@ -40,9 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Target
-        public FormLink<IPlaced> Target { get; set; } = new FormLink<IPlaced>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IPlacedGetter> IQuestTargetDataGetter.Target => this.Target.ToGetter<IPlaced, IPlacedGetter>();
+        public FormLink<IPlacedGetter> Target { get; set; } = new FormLink<IPlacedGetter>();
         #endregion
         #region Flags
         public QuestTarget.Flag Flags { get; set; } = default;
@@ -451,7 +449,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IQuestTargetData>,
         ILinkedFormKeyContainer
     {
-        new FormLink<IPlaced> Target { get; set; }
+        new FormLink<IPlacedGetter> Target { get; set; }
         new QuestTarget.Flag Flags { get; set; }
     }
 
@@ -727,7 +725,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IQuestTargetData item)
         {
             ClearPartial();
-            item.Target = FormLink<IPlaced>.Null;
+            item.Target = FormLink<IPlacedGetter>.Null;
             item.Flags = default;
         }
         
@@ -886,7 +884,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)QuestTargetData_FieldIndex.Target) ?? true))
             {
-                item.Target = new FormLink<IPlaced>(rhs.Target.FormKey);
+                item.Target = new FormLink<IPlacedGetter>(rhs.Target.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)QuestTargetData_FieldIndex.Flags) ?? true))
             {

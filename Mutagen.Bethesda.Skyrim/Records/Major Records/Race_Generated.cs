@@ -52,8 +52,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ActorEffect
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<ASpell>>? _ActorEffect;
-        public IExtendedList<IFormLink<ASpell>>? ActorEffect
+        private IExtendedList<IFormLink<IASpellGetter>>? _ActorEffect;
+        public IExtendedList<IFormLink<IASpellGetter>>? ActorEffect
         {
             get => this._ActorEffect;
             set => this._ActorEffect = value;
@@ -65,9 +65,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region Skin
-        public FormLinkNullable<Armor> Skin { get; set; } = new FormLinkNullable<Armor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IArmorGetter> IRaceGetter.Skin => this.Skin.ToGetter<Armor, IArmorGetter>();
+        public FormLinkNullable<IArmorGetter> Skin { get; set; } = new FormLinkNullable<IArmorGetter>();
         #endregion
         #region BodyTemplate
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -82,8 +80,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Keyword>>? _Keywords;
-        public IExtendedList<IFormLink<Keyword>>? Keywords
+        private IExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
+        public IExtendedList<IFormLink<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -237,15 +235,15 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region Voices
-        public GenderedItem<IFormLink<VoiceType>> Voices { get; set; } = new GenderedItem<IFormLink<VoiceType>>(FormLink<VoiceType>.Null, FormLink<VoiceType>.Null);
+        public GenderedItem<IFormLink<IVoiceTypeGetter>> Voices { get; set; } = new GenderedItem<IFormLink<IVoiceTypeGetter>>(FormLink<VoiceType>.Null, FormLink<VoiceType>.Null);
         IGenderedItemGetter<IFormLink<IVoiceTypeGetter>> IRaceGetter.Voices => this.Voices;
         #endregion
         #region DecapitateArmors
-        public GenderedItem<IFormLink<Armor>>? DecapitateArmors { get; set; }
+        public GenderedItem<IFormLink<IArmorGetter>>? DecapitateArmors { get; set; }
         IGenderedItemGetter<IFormLink<IArmorGetter>>? IRaceGetter.DecapitateArmors => this.DecapitateArmors;
         #endregion
         #region DefaultHairColors
-        public GenderedItem<IFormLink<ColorRecord>>? DefaultHairColors { get; set; }
+        public GenderedItem<IFormLink<IColorRecordGetter>>? DefaultHairColors { get; set; }
         IGenderedItemGetter<IFormLink<IColorRecordGetter>>? IRaceGetter.DefaultHairColors => this.DefaultHairColors;
         #endregion
         #region NumberOfTintsInList
@@ -260,9 +258,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Single FacegenFaceClamp { get; set; } = default;
         #endregion
         #region AttackRace
-        public FormLinkNullable<Race> AttackRace { get; set; } = new FormLinkNullable<Race>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IRaceGetter> IRaceGetter.AttackRace => this.AttackRace.ToGetter<Race, IRaceGetter>();
+        public FormLinkNullable<IRaceGetter> AttackRace { get; set; } = new FormLinkNullable<IRaceGetter>();
         #endregion
         #region Attacks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -284,8 +280,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Hairs
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Hair>>? _Hairs;
-        public IExtendedList<IFormLink<Hair>>? Hairs
+        private IExtendedList<IFormLink<IHairGetter>>? _Hairs;
+        public IExtendedList<IFormLink<IHairGetter>>? Hairs
         {
             get => this._Hairs;
             set => this._Hairs = value;
@@ -298,8 +294,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Eyes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Eyes>>? _Eyes;
-        public IExtendedList<IFormLink<Eyes>>? Eyes
+        private IExtendedList<IFormLink<IEyesGetter>>? _Eyes;
+        public IExtendedList<IFormLink<IEyesGetter>>? Eyes
         {
             get => this._Eyes;
             set => this._Eyes = value;
@@ -311,38 +307,26 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region BodyPartData
-        public FormLinkNullable<BodyPartData> BodyPartData { get; set; } = new FormLinkNullable<BodyPartData>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IBodyPartDataGetter> IRaceGetter.BodyPartData => this.BodyPartData.ToGetter<BodyPartData, IBodyPartDataGetter>();
+        public FormLinkNullable<IBodyPartDataGetter> BodyPartData { get; set; } = new FormLinkNullable<IBodyPartDataGetter>();
         #endregion
         #region BehaviorGraph
         public GenderedItem<Model?> BehaviorGraph { get; set; } = new GenderedItem<Model?>(default(Model?), default(Model?));
         IGenderedItemGetter<IModelGetter?> IRaceGetter.BehaviorGraph => this.BehaviorGraph;
         #endregion
         #region MaterialType
-        public FormLinkNullable<MaterialType> MaterialType { get; set; } = new FormLinkNullable<MaterialType>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IMaterialTypeGetter> IRaceGetter.MaterialType => this.MaterialType.ToGetter<MaterialType, IMaterialTypeGetter>();
+        public FormLinkNullable<IMaterialTypeGetter> MaterialType { get; set; } = new FormLinkNullable<IMaterialTypeGetter>();
         #endregion
         #region ImpactDataSet
-        public FormLinkNullable<ImpactDataSet> ImpactDataSet { get; set; } = new FormLinkNullable<ImpactDataSet>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IImpactDataSetGetter> IRaceGetter.ImpactDataSet => this.ImpactDataSet.ToGetter<ImpactDataSet, IImpactDataSetGetter>();
+        public FormLinkNullable<IImpactDataSetGetter> ImpactDataSet { get; set; } = new FormLinkNullable<IImpactDataSetGetter>();
         #endregion
         #region DecapitationFX
-        public FormLinkNullable<ArtObject> DecapitationFX { get; set; } = new FormLinkNullable<ArtObject>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IArtObjectGetter> IRaceGetter.DecapitationFX => this.DecapitationFX.ToGetter<ArtObject, IArtObjectGetter>();
+        public FormLinkNullable<IArtObjectGetter> DecapitationFX { get; set; } = new FormLinkNullable<IArtObjectGetter>();
         #endregion
         #region OpenLootSound
-        public FormLinkNullable<SoundDescriptor> OpenLootSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IRaceGetter.OpenLootSound => this.OpenLootSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> OpenLootSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region CloseLootSound
-        public FormLinkNullable<SoundDescriptor> CloseLootSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IRaceGetter.CloseLootSound => this.CloseLootSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> CloseLootSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region BipedObjectNames
         private readonly Dictionary<BipedObject, String> _BipedObjectNames = new Dictionary<BipedObject, String>();
@@ -374,8 +358,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region EquipmentSlots
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<EquipType>> _EquipmentSlots = new ExtendedList<IFormLink<EquipType>>();
-        public IExtendedList<IFormLink<EquipType>> EquipmentSlots
+        private IExtendedList<IFormLink<IEquipTypeGetter>> _EquipmentSlots = new ExtendedList<IFormLink<IEquipTypeGetter>>();
+        public IExtendedList<IFormLink<IEquipTypeGetter>> EquipmentSlots
         {
             get => this._EquipmentSlots;
             protected set => this._EquipmentSlots = value;
@@ -387,9 +371,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region UnarmedEquipSlot
-        public FormLinkNullable<EquipType> UnarmedEquipSlot { get; set; } = new FormLinkNullable<EquipType>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IEquipTypeGetter> IRaceGetter.UnarmedEquipSlot => this.UnarmedEquipSlot.ToGetter<EquipType, IEquipTypeGetter>();
+        public FormLinkNullable<IEquipTypeGetter> UnarmedEquipSlot { get; set; } = new FormLinkNullable<IEquipTypeGetter>();
         #endregion
         #region FaceFxPhonemes
         public FaceFxPhonemes FaceFxPhonemes { get; set; } = new FaceFxPhonemes();
@@ -397,48 +379,32 @@ namespace Mutagen.Bethesda.Skyrim
         IFaceFxPhonemesGetter IRaceGetter.FaceFxPhonemes => FaceFxPhonemes;
         #endregion
         #region BaseMovementDefaultWalk
-        public FormLinkNullable<MovementType> BaseMovementDefaultWalk { get; set; } = new FormLinkNullable<MovementType>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IMovementTypeGetter> IRaceGetter.BaseMovementDefaultWalk => this.BaseMovementDefaultWalk.ToGetter<MovementType, IMovementTypeGetter>();
+        public FormLinkNullable<IMovementTypeGetter> BaseMovementDefaultWalk { get; set; } = new FormLinkNullable<IMovementTypeGetter>();
         #endregion
         #region BaseMovementDefaultRun
-        public FormLinkNullable<MovementType> BaseMovementDefaultRun { get; set; } = new FormLinkNullable<MovementType>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IMovementTypeGetter> IRaceGetter.BaseMovementDefaultRun => this.BaseMovementDefaultRun.ToGetter<MovementType, IMovementTypeGetter>();
+        public FormLinkNullable<IMovementTypeGetter> BaseMovementDefaultRun { get; set; } = new FormLinkNullable<IMovementTypeGetter>();
         #endregion
         #region BaseMovementDefaultSwim
-        public FormLinkNullable<MovementType> BaseMovementDefaultSwim { get; set; } = new FormLinkNullable<MovementType>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IMovementTypeGetter> IRaceGetter.BaseMovementDefaultSwim => this.BaseMovementDefaultSwim.ToGetter<MovementType, IMovementTypeGetter>();
+        public FormLinkNullable<IMovementTypeGetter> BaseMovementDefaultSwim { get; set; } = new FormLinkNullable<IMovementTypeGetter>();
         #endregion
         #region BaseMovementDefaultFly
-        public FormLinkNullable<MovementType> BaseMovementDefaultFly { get; set; } = new FormLinkNullable<MovementType>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IMovementTypeGetter> IRaceGetter.BaseMovementDefaultFly => this.BaseMovementDefaultFly.ToGetter<MovementType, IMovementTypeGetter>();
+        public FormLinkNullable<IMovementTypeGetter> BaseMovementDefaultFly { get; set; } = new FormLinkNullable<IMovementTypeGetter>();
         #endregion
         #region BaseMovementDefaultSneak
-        public FormLinkNullable<MovementType> BaseMovementDefaultSneak { get; set; } = new FormLinkNullable<MovementType>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IMovementTypeGetter> IRaceGetter.BaseMovementDefaultSneak => this.BaseMovementDefaultSneak.ToGetter<MovementType, IMovementTypeGetter>();
+        public FormLinkNullable<IMovementTypeGetter> BaseMovementDefaultSneak { get; set; } = new FormLinkNullable<IMovementTypeGetter>();
         #endregion
         #region BaseMovementDefaultSprint
-        public FormLinkNullable<MovementType> BaseMovementDefaultSprint { get; set; } = new FormLinkNullable<MovementType>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IMovementTypeGetter> IRaceGetter.BaseMovementDefaultSprint => this.BaseMovementDefaultSprint.ToGetter<MovementType, IMovementTypeGetter>();
+        public FormLinkNullable<IMovementTypeGetter> BaseMovementDefaultSprint { get; set; } = new FormLinkNullable<IMovementTypeGetter>();
         #endregion
         #region HeadData
         public GenderedItem<HeadData?>? HeadData { get; set; }
         IGenderedItemGetter<IHeadDataGetter?>? IRaceGetter.HeadData => this.HeadData;
         #endregion
         #region MorphRace
-        public FormLinkNullable<Race> MorphRace { get; set; } = new FormLinkNullable<Race>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IRaceGetter> IRaceGetter.MorphRace => this.MorphRace.ToGetter<Race, IRaceGetter>();
+        public FormLinkNullable<IRaceGetter> MorphRace { get; set; } = new FormLinkNullable<IRaceGetter>();
         #endregion
         #region ArmorRace
-        public FormLinkNullable<Race> ArmorRace { get; set; } = new FormLinkNullable<Race>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IRaceGetter> IRaceGetter.ArmorRace => this.ArmorRace.ToGetter<Race, IRaceGetter>();
+        public FormLinkNullable<IRaceGetter> ArmorRace { get; set; } = new FormLinkNullable<IRaceGetter>();
         #endregion
         #region DATADataTypeState
         public Race.DATADataType DATADataTypeState { get; set; } = default;
@@ -3856,10 +3822,10 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new TranslatedString? Name { get; set; }
         new TranslatedString Description { get; set; }
-        new IExtendedList<IFormLink<ASpell>>? ActorEffect { get; set; }
-        new FormLinkNullable<Armor> Skin { get; set; }
+        new IExtendedList<IFormLink<IASpellGetter>>? ActorEffect { get; set; }
+        new FormLinkNullable<IArmorGetter> Skin { get; set; }
         new BodyTemplate? BodyTemplate { get; set; }
-        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new IExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
         new SkillBoost SkillBoost0 { get; set; }
         new SkillBoost SkillBoost1 { get; set; }
         new SkillBoost SkillBoost2 { get; set; }
@@ -3892,39 +3858,39 @@ namespace Mutagen.Bethesda.Skyrim
         new MountData MountData { get; set; }
         new GenderedItem<SimpleModel?>? SkeletalModel { get; set; }
         new IExtendedList<String> MovementTypeNames { get; }
-        new GenderedItem<IFormLink<VoiceType>> Voices { get; set; }
-        new GenderedItem<IFormLink<Armor>>? DecapitateArmors { get; set; }
-        new GenderedItem<IFormLink<ColorRecord>>? DefaultHairColors { get; set; }
+        new GenderedItem<IFormLink<IVoiceTypeGetter>> Voices { get; set; }
+        new GenderedItem<IFormLink<IArmorGetter>>? DecapitateArmors { get; set; }
+        new GenderedItem<IFormLink<IColorRecordGetter>>? DefaultHairColors { get; set; }
         new UInt16? NumberOfTintsInList { get; set; }
         new Single FacegenMainClamp { get; set; }
         new Single FacegenFaceClamp { get; set; }
-        new FormLinkNullable<Race> AttackRace { get; set; }
+        new FormLinkNullable<IRaceGetter> AttackRace { get; set; }
         new IExtendedList<Attack> Attacks { get; }
         new GenderedItem<BodyData?> BodyData { get; set; }
-        new IExtendedList<IFormLink<Hair>>? Hairs { get; set; }
-        new IExtendedList<IFormLink<Eyes>>? Eyes { get; set; }
-        new FormLinkNullable<BodyPartData> BodyPartData { get; set; }
+        new IExtendedList<IFormLink<IHairGetter>>? Hairs { get; set; }
+        new IExtendedList<IFormLink<IEyesGetter>>? Eyes { get; set; }
+        new FormLinkNullable<IBodyPartDataGetter> BodyPartData { get; set; }
         new GenderedItem<Model?> BehaviorGraph { get; set; }
-        new FormLinkNullable<MaterialType> MaterialType { get; set; }
-        new FormLinkNullable<ImpactDataSet> ImpactDataSet { get; set; }
-        new FormLinkNullable<ArtObject> DecapitationFX { get; set; }
-        new FormLinkNullable<SoundDescriptor> OpenLootSound { get; set; }
-        new FormLinkNullable<SoundDescriptor> CloseLootSound { get; set; }
+        new FormLinkNullable<IMaterialTypeGetter> MaterialType { get; set; }
+        new FormLinkNullable<IImpactDataSetGetter> ImpactDataSet { get; set; }
+        new FormLinkNullable<IArtObjectGetter> DecapitationFX { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> OpenLootSound { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> CloseLootSound { get; set; }
         new IDictionary<BipedObject, String> BipedObjectNames { get; }
         new IExtendedList<RaceMovementType> MovementTypes { get; }
         new EquipTypeFlag? EquipmentFlags { get; set; }
-        new IExtendedList<IFormLink<EquipType>> EquipmentSlots { get; }
-        new FormLinkNullable<EquipType> UnarmedEquipSlot { get; set; }
+        new IExtendedList<IFormLink<IEquipTypeGetter>> EquipmentSlots { get; }
+        new FormLinkNullable<IEquipTypeGetter> UnarmedEquipSlot { get; set; }
         new FaceFxPhonemes FaceFxPhonemes { get; set; }
-        new FormLinkNullable<MovementType> BaseMovementDefaultWalk { get; set; }
-        new FormLinkNullable<MovementType> BaseMovementDefaultRun { get; set; }
-        new FormLinkNullable<MovementType> BaseMovementDefaultSwim { get; set; }
-        new FormLinkNullable<MovementType> BaseMovementDefaultFly { get; set; }
-        new FormLinkNullable<MovementType> BaseMovementDefaultSneak { get; set; }
-        new FormLinkNullable<MovementType> BaseMovementDefaultSprint { get; set; }
+        new FormLinkNullable<IMovementTypeGetter> BaseMovementDefaultWalk { get; set; }
+        new FormLinkNullable<IMovementTypeGetter> BaseMovementDefaultRun { get; set; }
+        new FormLinkNullable<IMovementTypeGetter> BaseMovementDefaultSwim { get; set; }
+        new FormLinkNullable<IMovementTypeGetter> BaseMovementDefaultFly { get; set; }
+        new FormLinkNullable<IMovementTypeGetter> BaseMovementDefaultSneak { get; set; }
+        new FormLinkNullable<IMovementTypeGetter> BaseMovementDefaultSprint { get; set; }
         new GenderedItem<HeadData?>? HeadData { get; set; }
-        new FormLinkNullable<Race> MorphRace { get; set; }
-        new FormLinkNullable<Race> ArmorRace { get; set; }
+        new FormLinkNullable<IRaceGetter> MorphRace { get; set; }
+        new FormLinkNullable<IRaceGetter> ArmorRace { get; set; }
         new Race.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
         new Race.MajorFlag MajorFlags { get; set; }
@@ -3942,9 +3908,9 @@ namespace Mutagen.Bethesda.Skyrim
         new IDictionary<BasicStat, Single> Starting { get; }
         new IDictionary<BasicStat, Single> Regen { get; }
         new GenderedItem<SimpleModel?>? SkeletalModel { get; set; }
-        new GenderedItem<IFormLink<VoiceType>> Voices { get; set; }
-        new GenderedItem<IFormLink<Armor>>? DecapitateArmors { get; set; }
-        new GenderedItem<IFormLink<ColorRecord>>? DefaultHairColors { get; set; }
+        new GenderedItem<IFormLink<IVoiceTypeGetter>> Voices { get; set; }
+        new GenderedItem<IFormLink<IArmorGetter>>? DecapitateArmors { get; set; }
+        new GenderedItem<IFormLink<IColorRecordGetter>>? DefaultHairColors { get; set; }
         new GenderedItem<BodyData?> BodyData { get; set; }
         new GenderedItem<Model?> BehaviorGraph { get; set; }
         new IDictionary<BipedObject, String> BipedObjectNames { get; }
@@ -4364,7 +4330,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Name = default;
             item.Description.Clear();
             item.ActorEffect = null;
-            item.Skin = FormLinkNullable<Armor>.Null;
+            item.Skin = FormLinkNullable<IArmorGetter>.Null;
             item.BodyTemplate = null;
             item.Keywords = null;
             item.SkillBoost0.Clear();
@@ -4401,42 +4367,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.MountData.Clear();
             item.SkeletalModel = null;
             item.MovementTypeNames.Clear();
-            item.Voices.Male = FormLink<VoiceType>.Null;
-            item.Voices.Female = FormLink<VoiceType>.Null;
+            item.Voices.Male = FormLink<IVoiceTypeGetter>.Null;
+            item.Voices.Female = FormLink<IVoiceTypeGetter>.Null;
             item.DecapitateArmors = null;
             item.DefaultHairColors = null;
             item.NumberOfTintsInList = default;
             item.FacegenMainClamp = default;
             item.FacegenFaceClamp = default;
-            item.AttackRace = FormLinkNullable<Race>.Null;
+            item.AttackRace = FormLinkNullable<IRaceGetter>.Null;
             item.Attacks.Clear();
             item.BodyData.Male = null;
             item.BodyData.Female = null;
             item.Hairs = null;
             item.Eyes = null;
-            item.BodyPartData = FormLinkNullable<BodyPartData>.Null;
+            item.BodyPartData = FormLinkNullable<IBodyPartDataGetter>.Null;
             item.BehaviorGraph.Male = null;
             item.BehaviorGraph.Female = null;
-            item.MaterialType = FormLinkNullable<MaterialType>.Null;
-            item.ImpactDataSet = FormLinkNullable<ImpactDataSet>.Null;
-            item.DecapitationFX = FormLinkNullable<ArtObject>.Null;
-            item.OpenLootSound = FormLinkNullable<SoundDescriptor>.Null;
-            item.CloseLootSound = FormLinkNullable<SoundDescriptor>.Null;
+            item.MaterialType = FormLinkNullable<IMaterialTypeGetter>.Null;
+            item.ImpactDataSet = FormLinkNullable<IImpactDataSetGetter>.Null;
+            item.DecapitationFX = FormLinkNullable<IArtObjectGetter>.Null;
+            item.OpenLootSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
+            item.CloseLootSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
             item.BipedObjectNames.Clear();
             item.MovementTypes.Clear();
             item.EquipmentFlags = default;
             item.EquipmentSlots.Clear();
-            item.UnarmedEquipSlot = FormLinkNullable<EquipType>.Null;
+            item.UnarmedEquipSlot = FormLinkNullable<IEquipTypeGetter>.Null;
             item.FaceFxPhonemes.Clear();
-            item.BaseMovementDefaultWalk = FormLinkNullable<MovementType>.Null;
-            item.BaseMovementDefaultRun = FormLinkNullable<MovementType>.Null;
-            item.BaseMovementDefaultSwim = FormLinkNullable<MovementType>.Null;
-            item.BaseMovementDefaultFly = FormLinkNullable<MovementType>.Null;
-            item.BaseMovementDefaultSneak = FormLinkNullable<MovementType>.Null;
-            item.BaseMovementDefaultSprint = FormLinkNullable<MovementType>.Null;
+            item.BaseMovementDefaultWalk = FormLinkNullable<IMovementTypeGetter>.Null;
+            item.BaseMovementDefaultRun = FormLinkNullable<IMovementTypeGetter>.Null;
+            item.BaseMovementDefaultSwim = FormLinkNullable<IMovementTypeGetter>.Null;
+            item.BaseMovementDefaultFly = FormLinkNullable<IMovementTypeGetter>.Null;
+            item.BaseMovementDefaultSneak = FormLinkNullable<IMovementTypeGetter>.Null;
+            item.BaseMovementDefaultSprint = FormLinkNullable<IMovementTypeGetter>.Null;
             item.HeadData = null;
-            item.MorphRace = FormLinkNullable<Race>.Null;
-            item.ArmorRace = FormLinkNullable<Race>.Null;
+            item.MorphRace = FormLinkNullable<IRaceGetter>.Null;
+            item.ArmorRace = FormLinkNullable<IRaceGetter>.Null;
             item.DATADataTypeState = default;
             base.Clear(item);
         }
@@ -5649,8 +5615,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.ActorEffect = 
                             rhs.ActorEffect
-                            .Select(r => (IFormLink<ASpell>)new FormLink<ASpell>(r.FormKey))
-                            .ToExtendedList<IFormLink<ASpell>>();
+                            .Select(r => (IFormLink<IASpellGetter>)new FormLink<IASpellGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IASpellGetter>>();
                     }
                     else
                     {
@@ -5669,7 +5635,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Skin) ?? true))
             {
-                item.Skin = new FormLinkNullable<Armor>(rhs.Skin.FormKey);
+                item.Skin = new FormLinkNullable<IArmorGetter>(rhs.Skin.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.BodyTemplate) ?? true))
             {
@@ -5706,8 +5672,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLink<Keyword>)new FormLink<Keyword>(r.FormKey))
-                            .ToExtendedList<IFormLink<Keyword>>();
+                            .Select(r => (IFormLink<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IKeywordGetter>>();
                     }
                     else
                     {
@@ -6017,18 +5983,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            item.Voices = new GenderedItem<IFormLink<VoiceType>>(
-                male: new FormLink<VoiceType>(rhs.Voices.Male.FormKey),
-                female: new FormLink<VoiceType>(rhs.Voices.Female.FormKey));
+            item.Voices = new GenderedItem<IFormLink<IVoiceTypeGetter>>(
+                male: new FormLink<IVoiceTypeGetter>(rhs.Voices.Male.FormKey),
+                female: new FormLink<IVoiceTypeGetter>(rhs.Voices.Female.FormKey));
             if (!rhs.DecapitateArmors.TryGet(out var rhsDecapitateArmorsitem))
             {
                 item.DecapitateArmors = null;
             }
             else
             {
-                item.DecapitateArmors = new GenderedItem<IFormLink<Armor>>(
-                    male: new FormLink<Armor>(rhsDecapitateArmorsitem.Male.FormKey),
-                    female: new FormLink<Armor>(rhsDecapitateArmorsitem.Female.FormKey));
+                item.DecapitateArmors = new GenderedItem<IFormLink<IArmorGetter>>(
+                    male: new FormLink<IArmorGetter>(rhsDecapitateArmorsitem.Male.FormKey),
+                    female: new FormLink<IArmorGetter>(rhsDecapitateArmorsitem.Female.FormKey));
             }
             if (!rhs.DefaultHairColors.TryGet(out var rhsDefaultHairColorsitem))
             {
@@ -6036,9 +6002,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             else
             {
-                item.DefaultHairColors = new GenderedItem<IFormLink<ColorRecord>>(
-                    male: new FormLink<ColorRecord>(rhsDefaultHairColorsitem.Male.FormKey),
-                    female: new FormLink<ColorRecord>(rhsDefaultHairColorsitem.Female.FormKey));
+                item.DefaultHairColors = new GenderedItem<IFormLink<IColorRecordGetter>>(
+                    male: new FormLink<IColorRecordGetter>(rhsDefaultHairColorsitem.Male.FormKey),
+                    female: new FormLink<IColorRecordGetter>(rhsDefaultHairColorsitem.Female.FormKey));
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.NumberOfTintsInList) ?? true))
             {
@@ -6054,7 +6020,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.AttackRace) ?? true))
             {
-                item.AttackRace = new FormLinkNullable<Race>(rhs.AttackRace.FormKey);
+                item.AttackRace = new FormLinkNullable<IRaceGetter>(rhs.AttackRace.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Attacks) ?? true))
             {
@@ -6096,8 +6062,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Hairs = 
                             rhs.Hairs
-                            .Select(r => (IFormLink<Hair>)new FormLink<Hair>(r.FormKey))
-                            .ToExtendedList<IFormLink<Hair>>();
+                            .Select(r => (IFormLink<IHairGetter>)new FormLink<IHairGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IHairGetter>>();
                     }
                     else
                     {
@@ -6123,8 +6089,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Eyes = 
                             rhs.Eyes
-                            .Select(r => (IFormLink<Eyes>)new FormLink<Eyes>(r.FormKey))
-                            .ToExtendedList<IFormLink<Eyes>>();
+                            .Select(r => (IFormLink<IEyesGetter>)new FormLink<IEyesGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IEyesGetter>>();
                     }
                     else
                     {
@@ -6143,7 +6109,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.BodyPartData) ?? true))
             {
-                item.BodyPartData = new FormLinkNullable<BodyPartData>(rhs.BodyPartData.FormKey);
+                item.BodyPartData = new FormLinkNullable<IBodyPartDataGetter>(rhs.BodyPartData.FormKey);
             }
             item.BehaviorGraph = new GenderedItem<Model?>(
                 male: rhs.BehaviorGraph.Male?.DeepCopy(
@@ -6154,23 +6120,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     default(TranslationCrystal)));
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.MaterialType) ?? true))
             {
-                item.MaterialType = new FormLinkNullable<MaterialType>(rhs.MaterialType.FormKey);
+                item.MaterialType = new FormLinkNullable<IMaterialTypeGetter>(rhs.MaterialType.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.ImpactDataSet) ?? true))
             {
-                item.ImpactDataSet = new FormLinkNullable<ImpactDataSet>(rhs.ImpactDataSet.FormKey);
+                item.ImpactDataSet = new FormLinkNullable<IImpactDataSetGetter>(rhs.ImpactDataSet.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.DecapitationFX) ?? true))
             {
-                item.DecapitationFX = new FormLinkNullable<ArtObject>(rhs.DecapitationFX.FormKey);
+                item.DecapitationFX = new FormLinkNullable<IArtObjectGetter>(rhs.DecapitationFX.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.OpenLootSound) ?? true))
             {
-                item.OpenLootSound = new FormLinkNullable<SoundDescriptor>(rhs.OpenLootSound.FormKey);
+                item.OpenLootSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.OpenLootSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.CloseLootSound) ?? true))
             {
-                item.CloseLootSound = new FormLinkNullable<SoundDescriptor>(rhs.CloseLootSound.FormKey);
+                item.CloseLootSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.CloseLootSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.BipedObjectNames) ?? true))
             {
@@ -6211,7 +6177,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.EquipmentSlots.SetTo(
                         rhs.EquipmentSlots
-                        .Select(r => (IFormLink<EquipType>)new FormLink<EquipType>(r.FormKey)));
+                        .Select(r => (IFormLink<IEquipTypeGetter>)new FormLink<IEquipTypeGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6225,7 +6191,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.UnarmedEquipSlot) ?? true))
             {
-                item.UnarmedEquipSlot = new FormLinkNullable<EquipType>(rhs.UnarmedEquipSlot.FormKey);
+                item.UnarmedEquipSlot = new FormLinkNullable<IEquipTypeGetter>(rhs.UnarmedEquipSlot.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.FaceFxPhonemes) ?? true))
             {
@@ -6251,27 +6217,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultWalk) ?? true))
             {
-                item.BaseMovementDefaultWalk = new FormLinkNullable<MovementType>(rhs.BaseMovementDefaultWalk.FormKey);
+                item.BaseMovementDefaultWalk = new FormLinkNullable<IMovementTypeGetter>(rhs.BaseMovementDefaultWalk.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultRun) ?? true))
             {
-                item.BaseMovementDefaultRun = new FormLinkNullable<MovementType>(rhs.BaseMovementDefaultRun.FormKey);
+                item.BaseMovementDefaultRun = new FormLinkNullable<IMovementTypeGetter>(rhs.BaseMovementDefaultRun.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultSwim) ?? true))
             {
-                item.BaseMovementDefaultSwim = new FormLinkNullable<MovementType>(rhs.BaseMovementDefaultSwim.FormKey);
+                item.BaseMovementDefaultSwim = new FormLinkNullable<IMovementTypeGetter>(rhs.BaseMovementDefaultSwim.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultFly) ?? true))
             {
-                item.BaseMovementDefaultFly = new FormLinkNullable<MovementType>(rhs.BaseMovementDefaultFly.FormKey);
+                item.BaseMovementDefaultFly = new FormLinkNullable<IMovementTypeGetter>(rhs.BaseMovementDefaultFly.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultSneak) ?? true))
             {
-                item.BaseMovementDefaultSneak = new FormLinkNullable<MovementType>(rhs.BaseMovementDefaultSneak.FormKey);
+                item.BaseMovementDefaultSneak = new FormLinkNullable<IMovementTypeGetter>(rhs.BaseMovementDefaultSneak.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultSprint) ?? true))
             {
-                item.BaseMovementDefaultSprint = new FormLinkNullable<MovementType>(rhs.BaseMovementDefaultSprint.FormKey);
+                item.BaseMovementDefaultSprint = new FormLinkNullable<IMovementTypeGetter>(rhs.BaseMovementDefaultSprint.FormKey);
             }
             if (!rhs.HeadData.TryGet(out var rhsHeadDataitem))
             {
@@ -6289,11 +6255,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.MorphRace) ?? true))
             {
-                item.MorphRace = new FormLinkNullable<Race>(rhs.MorphRace.FormKey);
+                item.MorphRace = new FormLinkNullable<IRaceGetter>(rhs.MorphRace.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.ArmorRace) ?? true))
             {
-                item.ArmorRace = new FormLinkNullable<Race>(rhs.ArmorRace.FormKey);
+                item.ArmorRace = new FormLinkNullable<IRaceGetter>(rhs.ArmorRace.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.DATADataTypeState) ?? true))
             {
@@ -7073,13 +7039,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.SPCT:
                 {
                     item.ActorEffect = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ASpell>>.Instance.ParsePerItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IASpellGetter>>.Instance.ParsePerItem(
                             frame: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPCT),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPLO),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<ASpell>>();
+                        .CastExtendedList<IFormLink<IASpellGetter>>();
                     return (int)Race_FieldIndex.ActorEffect;
                 }
                 case RecordTypeInts.WNAM:
@@ -7102,13 +7068,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KSIZ:
                 {
                     item.Keywords = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<Keyword>>();
+                        .CastExtendedList<IFormLink<IKeywordGetter>>();
                     return (int)Race_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DATA:
@@ -7195,7 +7161,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.VTCK:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Voices = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<IFormLink<VoiceType>>(
+                    item.Voices = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<IFormLink<IVoiceTypeGetter>>(
                         frame: frame,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return (int)Race_FieldIndex.Voices;
@@ -7203,7 +7169,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DecapitateArmors = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<IFormLink<Armor>>(
+                    item.DecapitateArmors = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<IFormLink<IArmorGetter>>(
                         frame: frame,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return (int)Race_FieldIndex.DecapitateArmors;
@@ -7211,7 +7177,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.HCLF:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DefaultHairColors = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<IFormLink<ColorRecord>>(
+                    item.DefaultHairColors = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<IFormLink<IColorRecordGetter>>(
                         frame: frame,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return (int)Race_FieldIndex.DefaultHairColors;
@@ -7267,20 +7233,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Hairs = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Hair>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IHairGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<Hair>>();
+                        .CastExtendedList<IFormLink<IHairGetter>>();
                     return (int)Race_FieldIndex.Hairs;
                 }
                 case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Eyes = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Eyes>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IEyesGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<Eyes>>();
+                        .CastExtendedList<IFormLink<IEyesGetter>>();
                     return (int)Race_FieldIndex.Eyes;
                 }
                 case RecordTypeInts.GNAM:
@@ -7368,7 +7334,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.QNAM:
                 {
                     item.EquipmentSlots.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<EquipType>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IEquipTypeGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.QNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));

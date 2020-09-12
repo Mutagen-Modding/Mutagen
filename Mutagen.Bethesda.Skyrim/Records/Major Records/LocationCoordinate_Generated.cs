@@ -40,9 +40,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Location
-        public FormLink<IComplexLocation> Location { get; set; } = new FormLink<IComplexLocation>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IComplexLocationGetter> ILocationCoordinateGetter.Location => this.Location.ToGetter<IComplexLocation, IComplexLocationGetter>();
+        public FormLink<IComplexLocationGetter> Location { get; set; } = new FormLink<IComplexLocationGetter>();
         #endregion
         #region Coordinates
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -534,7 +532,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ILocationCoordinate>,
         ILinkedFormKeyContainer
     {
-        new FormLink<IComplexLocation> Location { get; set; }
+        new FormLink<IComplexLocationGetter> Location { get; set; }
         new IExtendedList<P2Int16> Coordinates { get; }
     }
 
@@ -809,7 +807,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ILocationCoordinate item)
         {
             ClearPartial();
-            item.Location = FormLink<IComplexLocation>.Null;
+            item.Location = FormLink<IComplexLocationGetter>.Null;
             item.Coordinates.Clear();
         }
         
@@ -982,7 +980,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)LocationCoordinate_FieldIndex.Location) ?? true))
             {
-                item.Location = new FormLink<IComplexLocation>(rhs.Location.FormKey);
+                item.Location = new FormLink<IComplexLocationGetter>(rhs.Location.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LocationCoordinate_FieldIndex.Coordinates) ?? true))
             {

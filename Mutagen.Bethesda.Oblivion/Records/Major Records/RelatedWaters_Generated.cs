@@ -40,19 +40,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region RelatedWaterDaytime
-        public FormLink<Water> RelatedWaterDaytime { get; set; } = new FormLink<Water>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IWaterGetter> IRelatedWatersGetter.RelatedWaterDaytime => this.RelatedWaterDaytime.ToGetter<Water, IWaterGetter>();
+        public FormLink<IWaterGetter> RelatedWaterDaytime { get; set; } = new FormLink<IWaterGetter>();
         #endregion
         #region RelatedWaterNighttime
-        public FormLink<Water> RelatedWaterNighttime { get; set; } = new FormLink<Water>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IWaterGetter> IRelatedWatersGetter.RelatedWaterNighttime => this.RelatedWaterNighttime.ToGetter<Water, IWaterGetter>();
+        public FormLink<IWaterGetter> RelatedWaterNighttime { get; set; } = new FormLink<IWaterGetter>();
         #endregion
         #region RelatedWaterUnderwater
-        public FormLink<Water> RelatedWaterUnderwater { get; set; } = new FormLink<Water>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IWaterGetter> IRelatedWatersGetter.RelatedWaterUnderwater => this.RelatedWaterUnderwater.ToGetter<Water, IWaterGetter>();
+        public FormLink<IWaterGetter> RelatedWaterUnderwater { get; set; } = new FormLink<IWaterGetter>();
         #endregion
 
         #region To String
@@ -486,9 +480,9 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IRelatedWaters>,
         ILinkedFormKeyContainer
     {
-        new FormLink<Water> RelatedWaterDaytime { get; set; }
-        new FormLink<Water> RelatedWaterNighttime { get; set; }
-        new FormLink<Water> RelatedWaterUnderwater { get; set; }
+        new FormLink<IWaterGetter> RelatedWaterDaytime { get; set; }
+        new FormLink<IWaterGetter> RelatedWaterNighttime { get; set; }
+        new FormLink<IWaterGetter> RelatedWaterUnderwater { get; set; }
     }
 
     public partial interface IRelatedWatersGetter :
@@ -765,9 +759,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IRelatedWaters item)
         {
             ClearPartial();
-            item.RelatedWaterDaytime = FormLink<Water>.Null;
-            item.RelatedWaterNighttime = FormLink<Water>.Null;
-            item.RelatedWaterUnderwater = FormLink<Water>.Null;
+            item.RelatedWaterDaytime = FormLink<IWaterGetter>.Null;
+            item.RelatedWaterNighttime = FormLink<IWaterGetter>.Null;
+            item.RelatedWaterUnderwater = FormLink<IWaterGetter>.Null;
         }
         
         #region Binary Translation
@@ -934,15 +928,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RelatedWaters_FieldIndex.RelatedWaterDaytime) ?? true))
             {
-                item.RelatedWaterDaytime = new FormLink<Water>(rhs.RelatedWaterDaytime.FormKey);
+                item.RelatedWaterDaytime = new FormLink<IWaterGetter>(rhs.RelatedWaterDaytime.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)RelatedWaters_FieldIndex.RelatedWaterNighttime) ?? true))
             {
-                item.RelatedWaterNighttime = new FormLink<Water>(rhs.RelatedWaterNighttime.FormKey);
+                item.RelatedWaterNighttime = new FormLink<IWaterGetter>(rhs.RelatedWaterNighttime.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)RelatedWaters_FieldIndex.RelatedWaterUnderwater) ?? true))
             {
-                item.RelatedWaterUnderwater = new FormLink<Water>(rhs.RelatedWaterUnderwater.FormKey);
+                item.RelatedWaterUnderwater = new FormLink<IWaterGetter>(rhs.RelatedWaterUnderwater.FormKey);
             }
         }
         

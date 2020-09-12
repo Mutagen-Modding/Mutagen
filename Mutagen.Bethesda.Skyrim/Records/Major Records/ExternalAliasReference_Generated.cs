@@ -40,9 +40,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Quest
-        public FormLinkNullable<Quest> Quest { get; set; } = new FormLinkNullable<Quest>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IQuestGetter> IExternalAliasReferenceGetter.Quest => this.Quest.ToGetter<Quest, IQuestGetter>();
+        public FormLinkNullable<IQuestGetter> Quest { get; set; } = new FormLinkNullable<IQuestGetter>();
         #endregion
         #region AliasIndex
         public Int32? AliasIndex { get; set; }
@@ -452,7 +450,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IExternalAliasReference>,
         ILinkedFormKeyContainer
     {
-        new FormLinkNullable<Quest> Quest { get; set; }
+        new FormLinkNullable<IQuestGetter> Quest { get; set; }
         new Int32? AliasIndex { get; set; }
     }
 
@@ -739,7 +737,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IExternalAliasReference item)
         {
             ClearPartial();
-            item.Quest = FormLinkNullable<Quest>.Null;
+            item.Quest = FormLinkNullable<IQuestGetter>.Null;
             item.AliasIndex = default;
         }
         
@@ -903,7 +901,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)ExternalAliasReference_FieldIndex.Quest) ?? true))
             {
-                item.Quest = new FormLinkNullable<Quest>(rhs.Quest.FormKey);
+                item.Quest = new FormLinkNullable<IQuestGetter>(rhs.Quest.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ExternalAliasReference_FieldIndex.AliasIndex) ?? true))
             {

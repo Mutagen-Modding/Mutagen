@@ -46,9 +46,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Int16 Unknown { get; set; } = default;
         #endregion
         #region Reference
-        public FormLink<ISpellSpawn> Reference { get; set; } = new FormLink<ISpellSpawn>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISpellSpawnGetter> ILeveledSpellEntryDataGetter.Reference => this.Reference.ToGetter<ISpellSpawn, ISpellSpawnGetter>();
+        public FormLink<ISpellSpawnGetter> Reference { get; set; } = new FormLink<ISpellSpawnGetter>();
         #endregion
         #region Count
         public Int16 Count { get; set; } = default;
@@ -546,7 +544,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Int16 Level { get; set; }
         new Int16 Unknown { get; set; }
-        new FormLink<ISpellSpawn> Reference { get; set; }
+        new FormLink<ISpellSpawnGetter> Reference { get; set; }
         new Int16 Count { get; set; }
         new Int16 Unknown2 { get; set; }
     }
@@ -831,7 +829,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.Level = default;
             item.Unknown = default;
-            item.Reference = FormLink<ISpellSpawn>.Null;
+            item.Reference = FormLink<ISpellSpawnGetter>.Null;
             item.Count = default;
             item.Unknown2 = default;
         }
@@ -1020,7 +1018,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledSpellEntryData_FieldIndex.Reference) ?? true))
             {
-                item.Reference = new FormLink<ISpellSpawn>(rhs.Reference.FormKey);
+                item.Reference = new FormLink<ISpellSpawnGetter>(rhs.Reference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledSpellEntryData_FieldIndex.Count) ?? true))
             {

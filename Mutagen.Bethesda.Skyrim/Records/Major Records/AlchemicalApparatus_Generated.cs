@@ -97,14 +97,10 @@ namespace Mutagen.Bethesda.Skyrim
         IDestructibleGetter? IAlchemicalApparatusGetter.Destructible => this.Destructible;
         #endregion
         #region PickUpSound
-        public FormLinkNullable<SoundDescriptor> PickUpSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IAlchemicalApparatusGetter.PickUpSound => this.PickUpSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region PutDownSound
-        public FormLinkNullable<SoundDescriptor> PutDownSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IAlchemicalApparatusGetter.PutDownSound => this.PutDownSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region Quality
         public AlchemicalApparatus.QualityLevel? Quality { get; set; }
@@ -906,8 +902,8 @@ namespace Mutagen.Bethesda.Skyrim
         new Model? Model { get; set; }
         new Icons? Icons { get; set; }
         new Destructible? Destructible { get; set; }
-        new FormLinkNullable<SoundDescriptor> PickUpSound { get; set; }
-        new FormLinkNullable<SoundDescriptor> PutDownSound { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; set; }
         new AlchemicalApparatus.QualityLevel? Quality { get; set; }
         new TranslatedString? Description { get; set; }
         new UInt32 Value { get; set; }
@@ -1203,8 +1199,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Model = null;
             item.Icons = null;
             item.Destructible = null;
-            item.PickUpSound = FormLinkNullable<SoundDescriptor>.Null;
-            item.PutDownSound = FormLinkNullable<SoundDescriptor>.Null;
+            item.PickUpSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
+            item.PutDownSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
             item.Quality = default;
             item.Description = default;
             item.Value = default;
@@ -1786,11 +1782,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.PickUpSound) ?? true))
             {
-                item.PickUpSound = new FormLinkNullable<SoundDescriptor>(rhs.PickUpSound.FormKey);
+                item.PickUpSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.PickUpSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.PutDownSound) ?? true))
             {
-                item.PutDownSound = new FormLinkNullable<SoundDescriptor>(rhs.PutDownSound.FormKey);
+                item.PutDownSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.PutDownSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.Quality) ?? true))
             {

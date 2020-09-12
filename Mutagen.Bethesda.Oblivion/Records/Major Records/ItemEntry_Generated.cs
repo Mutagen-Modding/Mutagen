@@ -40,9 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Item
-        public FormLink<AItem> Item { get; set; } = new FormLink<AItem>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IAItemGetter> IItemEntryGetter.Item => this.Item.ToGetter<AItem, IAItemGetter>();
+        public FormLink<IAItemGetter> Item { get; set; } = new FormLink<IAItemGetter>();
         #endregion
         #region Count
         public Int32? Count { get; set; }
@@ -453,7 +451,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IItemEntry>,
         ILinkedFormKeyContainer
     {
-        new FormLink<AItem> Item { get; set; }
+        new FormLink<IAItemGetter> Item { get; set; }
         new Int32? Count { get; set; }
     }
 
@@ -729,7 +727,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IItemEntry item)
         {
             ClearPartial();
-            item.Item = FormLink<AItem>.Null;
+            item.Item = FormLink<IAItemGetter>.Null;
             item.Count = default;
         }
         
@@ -892,7 +890,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)ItemEntry_FieldIndex.Item) ?? true))
             {
-                item.Item = new FormLink<AItem>(rhs.Item.FormKey);
+                item.Item = new FormLink<IAItemGetter>(rhs.Item.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ItemEntry_FieldIndex.Count) ?? true))
             {

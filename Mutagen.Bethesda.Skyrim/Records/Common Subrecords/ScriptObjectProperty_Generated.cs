@@ -42,9 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Object
-        public FormLink<SkyrimMajorRecord> Object { get; set; } = new FormLink<SkyrimMajorRecord>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISkyrimMajorRecordGetter> IScriptObjectPropertyGetter.Object => this.Object.ToGetter<SkyrimMajorRecord, ISkyrimMajorRecordGetter>();
+        public FormLink<ISkyrimMajorRecordGetter> Object { get; set; } = new FormLink<ISkyrimMajorRecordGetter>();
         #endregion
         #region Alias
         public Int16 Alias { get; set; } = default;
@@ -476,7 +474,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IScriptObjectProperty>,
         ILinkedFormKeyContainer
     {
-        new FormLink<SkyrimMajorRecord> Object { get; set; }
+        new FormLink<ISkyrimMajorRecordGetter> Object { get; set; }
         new Int16 Alias { get; set; }
         new UInt16 Unused { get; set; }
     }
@@ -725,7 +723,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IScriptObjectProperty item)
         {
             ClearPartial();
-            item.Object = FormLink<SkyrimMajorRecord>.Null;
+            item.Object = FormLink<ISkyrimMajorRecordGetter>.Null;
             item.Alias = default;
             item.Unused = default;
             base.Clear(item);
@@ -950,7 +948,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)ScriptObjectProperty_FieldIndex.Object) ?? true))
             {
-                item.Object = new FormLink<SkyrimMajorRecord>(rhs.Object.FormKey);
+                item.Object = new FormLink<ISkyrimMajorRecordGetter>(rhs.Object.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ScriptObjectProperty_FieldIndex.Alias) ?? true))
             {

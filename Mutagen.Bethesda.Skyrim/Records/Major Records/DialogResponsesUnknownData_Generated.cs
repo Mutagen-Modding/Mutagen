@@ -51,9 +51,7 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? IDialogResponsesUnknownDataGetter.SCHR => this.SCHR;
         #endregion
         #region QNAM
-        public FormLinkNullable<SkyrimMajorRecord> QNAM { get; set; } = new FormLinkNullable<SkyrimMajorRecord>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISkyrimMajorRecordGetter> IDialogResponsesUnknownDataGetter.QNAM => this.QNAM.ToGetter<SkyrimMajorRecord, ISkyrimMajorRecordGetter>();
+        public FormLinkNullable<ISkyrimMajorRecordGetter> QNAM { get; set; } = new FormLinkNullable<ISkyrimMajorRecordGetter>();
         #endregion
         #region NEXT
         public Boolean NEXT { get; set; } = default;
@@ -490,7 +488,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new MemorySlice<Byte>? SCHR { get; set; }
-        new FormLinkNullable<SkyrimMajorRecord> QNAM { get; set; }
+        new FormLinkNullable<ISkyrimMajorRecordGetter> QNAM { get; set; }
         new Boolean NEXT { get; set; }
     }
 
@@ -781,7 +779,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.SCHR = default;
-            item.QNAM = FormLinkNullable<SkyrimMajorRecord>.Null;
+            item.QNAM = FormLinkNullable<ISkyrimMajorRecordGetter>.Null;
             item.NEXT = default;
         }
         
@@ -963,7 +961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.QNAM) ?? true))
             {
-                item.QNAM = new FormLinkNullable<SkyrimMajorRecord>(rhs.QNAM.FormKey);
+                item.QNAM = new FormLinkNullable<ISkyrimMajorRecordGetter>(rhs.QNAM.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.NEXT) ?? true))
             {

@@ -63,8 +63,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Tracks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<MusicTrack>>? _Tracks;
-        public IExtendedList<IFormLink<MusicTrack>>? Tracks
+        private IExtendedList<IFormLink<IMusicTrackGetter>>? _Tracks;
+        public IExtendedList<IFormLink<IMusicTrackGetter>>? Tracks
         {
             get => this._Tracks;
             set => this._Tracks = value;
@@ -636,7 +636,7 @@ namespace Mutagen.Bethesda.Skyrim
         new MusicType.Flag Flags { get; set; }
         new MusicTypeData? Data { get; set; }
         new Single? FadeDuration { get; set; }
-        new IExtendedList<IFormLink<MusicTrack>>? Tracks { get; set; }
+        new IExtendedList<IFormLink<IMusicTrackGetter>>? Tracks { get; set; }
     }
 
     public partial interface IMusicTypeInternal :
@@ -1289,8 +1289,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Tracks = 
                             rhs.Tracks
-                            .Select(r => (IFormLink<MusicTrack>)new FormLink<MusicTrack>(r.FormKey))
-                            .ToExtendedList<IFormLink<MusicTrack>>();
+                            .Select(r => (IFormLink<IMusicTrackGetter>)new FormLink<IMusicTrackGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IMusicTrackGetter>>();
                     }
                     else
                     {
@@ -1595,10 +1595,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Tracks = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<MusicTrack>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IMusicTrackGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<MusicTrack>>();
+                        .CastExtendedList<IFormLink<IMusicTrackGetter>>();
                     return (int)MusicType_FieldIndex.Tracks;
                 }
                 default:

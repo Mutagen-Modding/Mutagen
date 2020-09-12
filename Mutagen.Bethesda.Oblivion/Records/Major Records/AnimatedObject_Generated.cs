@@ -54,9 +54,7 @@ namespace Mutagen.Bethesda.Oblivion
         IModelGetter? IAnimatedObjectGetter.Model => this.Model;
         #endregion
         #region IdleAnimation
-        public FormLinkNullable<IdleAnimation> IdleAnimation { get; set; } = new FormLinkNullable<IdleAnimation>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IIdleAnimationGetter> IAnimatedObjectGetter.IdleAnimation => this.IdleAnimation.ToGetter<IdleAnimation, IIdleAnimationGetter>();
+        public FormLinkNullable<IIdleAnimationGetter> IdleAnimation { get; set; } = new FormLinkNullable<IIdleAnimationGetter>();
         #endregion
 
         #region To String
@@ -486,7 +484,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkedFormKeyContainer
     {
         new Model? Model { get; set; }
-        new FormLinkNullable<IdleAnimation> IdleAnimation { get; set; }
+        new FormLinkNullable<IIdleAnimationGetter> IdleAnimation { get; set; }
     }
 
     public partial interface IAnimatedObjectInternal :
@@ -743,7 +741,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ClearPartial();
             item.Model = null;
-            item.IdleAnimation = FormLinkNullable<IdleAnimation>.Null;
+            item.IdleAnimation = FormLinkNullable<IIdleAnimationGetter>.Null;
             base.Clear(item);
         }
         
@@ -1076,7 +1074,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AnimatedObject_FieldIndex.IdleAnimation) ?? true))
             {
-                item.IdleAnimation = new FormLinkNullable<IdleAnimation>(rhs.IdleAnimation.FormKey);
+                item.IdleAnimation = new FormLinkNullable<IIdleAnimationGetter>(rhs.IdleAnimation.FormKey);
             }
         }
         

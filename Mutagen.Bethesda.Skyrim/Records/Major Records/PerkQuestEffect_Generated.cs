@@ -42,9 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Quest
-        public FormLink<Quest> Quest { get; set; } = new FormLink<Quest>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IQuestGetter> IPerkQuestEffectGetter.Quest => this.Quest.ToGetter<Quest, IQuestGetter>();
+        public FormLink<IQuestGetter> Quest { get; set; } = new FormLink<IQuestGetter>();
         #endregion
         #region Stage
         public Byte Stage { get; set; } = default;
@@ -489,7 +487,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPerkQuestEffect>,
         ILinkedFormKeyContainer
     {
-        new FormLink<Quest> Quest { get; set; }
+        new FormLink<IQuestGetter> Quest { get; set; }
         new Byte Stage { get; set; }
         new MemorySlice<Byte> Unknown { get; set; }
     }
@@ -741,7 +739,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IPerkQuestEffect item)
         {
             ClearPartial();
-            item.Quest = FormLink<Quest>.Null;
+            item.Quest = FormLink<IQuestGetter>.Null;
             item.Stage = default;
             item.Unknown = new byte[3];
             base.Clear(item);
@@ -971,7 +969,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PerkQuestEffect_FieldIndex.Quest) ?? true))
             {
-                item.Quest = new FormLink<Quest>(rhs.Quest.FormKey);
+                item.Quest = new FormLink<IQuestGetter>(rhs.Quest.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PerkQuestEffect_FieldIndex.Stage) ?? true))
             {

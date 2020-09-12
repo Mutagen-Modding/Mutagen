@@ -59,9 +59,7 @@ namespace Mutagen.Bethesda.Oblivion
         IModelGetter? IFurnitureGetter.Model => this.Model;
         #endregion
         #region Script
-        public FormLinkNullable<Script> Script { get; set; } = new FormLinkNullable<Script>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IScriptGetter> IFurnitureGetter.Script => this.Script.ToGetter<Script, IScriptGetter>();
+        public FormLinkNullable<IScriptGetter> Script { get; set; } = new FormLinkNullable<IScriptGetter>();
         #endregion
         #region MarkerFlags
         public Int32? MarkerFlags { get; set; }
@@ -554,7 +552,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
-        new FormLinkNullable<Script> Script { get; set; }
+        new FormLinkNullable<IScriptGetter> Script { get; set; }
         new Int32? MarkerFlags { get; set; }
     }
 
@@ -818,7 +816,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.Name = default;
             item.Model = null;
-            item.Script = FormLinkNullable<Script>.Null;
+            item.Script = FormLinkNullable<IScriptGetter>.Null;
             item.MarkerFlags = default;
             base.Clear(item);
         }
@@ -1178,7 +1176,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.Script) ?? true))
             {
-                item.Script = new FormLinkNullable<Script>(rhs.Script.FormKey);
+                item.Script = new FormLinkNullable<IScriptGetter>(rhs.Script.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.MarkerFlags) ?? true))
             {

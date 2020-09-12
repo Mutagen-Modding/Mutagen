@@ -46,9 +46,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Int16 Unknown { get; set; } = default;
         #endregion
         #region Reference
-        public FormLink<IItem> Reference { get; set; } = new FormLink<IItem>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IItemGetter> ILeveledItemEntryDataGetter.Reference => this.Reference.ToGetter<IItem, IItemGetter>();
+        public FormLink<IItemGetter> Reference { get; set; } = new FormLink<IItemGetter>();
         #endregion
         #region Count
         public Int16 Count { get; set; } = default;
@@ -546,7 +544,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Int16 Level { get; set; }
         new Int16 Unknown { get; set; }
-        new FormLink<IItem> Reference { get; set; }
+        new FormLink<IItemGetter> Reference { get; set; }
         new Int16 Count { get; set; }
         new Int16 Unknown2 { get; set; }
     }
@@ -831,7 +829,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.Level = default;
             item.Unknown = default;
-            item.Reference = FormLink<IItem>.Null;
+            item.Reference = FormLink<IItemGetter>.Null;
             item.Count = default;
             item.Unknown2 = default;
         }
@@ -1020,7 +1018,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledItemEntryData_FieldIndex.Reference) ?? true))
             {
-                item.Reference = new FormLink<IItem>(rhs.Reference.FormKey);
+                item.Reference = new FormLink<IItemGetter>(rhs.Reference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledItemEntryData_FieldIndex.Count) ?? true))
             {

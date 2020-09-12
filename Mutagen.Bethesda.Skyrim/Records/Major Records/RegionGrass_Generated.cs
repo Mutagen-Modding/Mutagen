@@ -40,9 +40,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Grass
-        public FormLink<Grass> Grass { get; set; } = new FormLink<Grass>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IGrassGetter> IRegionGrassGetter.Grass => this.Grass.ToGetter<Grass, IGrassGetter>();
+        public FormLink<IGrassGetter> Grass { get; set; } = new FormLink<IGrassGetter>();
         #endregion
         #region Unknown
         public Int32 Unknown { get; set; } = default;
@@ -450,7 +448,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IRegionGrass>,
         ILinkedFormKeyContainer
     {
-        new FormLink<Grass> Grass { get; set; }
+        new FormLink<IGrassGetter> Grass { get; set; }
         new Int32 Unknown { get; set; }
     }
 
@@ -725,7 +723,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IRegionGrass item)
         {
             ClearPartial();
-            item.Grass = FormLink<Grass>.Null;
+            item.Grass = FormLink<IGrassGetter>.Null;
             item.Unknown = default;
         }
         
@@ -881,7 +879,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RegionGrass_FieldIndex.Grass) ?? true))
             {
-                item.Grass = new FormLink<Grass>(rhs.Grass.FormKey);
+                item.Grass = new FormLink<IGrassGetter>(rhs.Grass.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)RegionGrass_FieldIndex.Unknown) ?? true))
             {

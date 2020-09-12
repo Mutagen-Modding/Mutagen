@@ -43,9 +43,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Script
-        public FormLinkNullable<Script> Script { get; set; } = new FormLinkNullable<Script>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IScriptGetter> IQuestGetter.Script => this.Script.ToGetter<Script, IScriptGetter>();
+        public FormLinkNullable<IScriptGetter> Script { get; set; } = new FormLinkNullable<IScriptGetter>();
         #endregion
         #region Name
         public String? Name { get; set; }
@@ -903,7 +901,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IQuestInternal>,
         ILinkedFormKeyContainer
     {
-        new FormLinkNullable<Script> Script { get; set; }
+        new FormLinkNullable<IScriptGetter> Script { get; set; }
         new String? Name { get; set; }
         new String? Icon { get; set; }
         new QuestData? Data { get; set; }
@@ -1176,7 +1174,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IQuestInternal item)
         {
             ClearPartial();
-            item.Script = FormLinkNullable<Script>.Null;
+            item.Script = FormLinkNullable<IScriptGetter>.Null;
             item.Name = default;
             item.Icon = default;
             item.Data = null;
@@ -1592,7 +1590,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Script) ?? true))
             {
-                item.Script = new FormLinkNullable<Script>(rhs.Script.FormKey);
+                item.Script = new FormLinkNullable<IScriptGetter>(rhs.Script.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Name) ?? true))
             {

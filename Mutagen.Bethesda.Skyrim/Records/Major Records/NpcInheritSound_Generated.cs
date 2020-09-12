@@ -42,9 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region InheritsSoundsFrom
-        public FormLinkNullable<Npc> InheritsSoundsFrom { get; set; } = new FormLinkNullable<Npc>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<INpcGetter> INpcInheritSoundGetter.InheritsSoundsFrom => this.InheritsSoundsFrom.ToGetter<Npc, INpcGetter>();
+        public FormLinkNullable<INpcGetter> InheritsSoundsFrom { get; set; } = new FormLinkNullable<INpcGetter>();
         #endregion
 
         #region To String
@@ -404,7 +402,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<INpcInheritSound>,
         ILinkedFormKeyContainer
     {
-        new FormLinkNullable<Npc> InheritsSoundsFrom { get; set; }
+        new FormLinkNullable<INpcGetter> InheritsSoundsFrom { get; set; }
     }
 
     public partial interface INpcInheritSoundGetter :
@@ -646,7 +644,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(INpcInheritSound item)
         {
             ClearPartial();
-            item.InheritsSoundsFrom = FormLinkNullable<Npc>.Null;
+            item.InheritsSoundsFrom = FormLinkNullable<INpcGetter>.Null;
             base.Clear(item);
         }
         
@@ -855,7 +853,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)NpcInheritSound_FieldIndex.InheritsSoundsFrom) ?? true))
             {
-                item.InheritsSoundsFrom = new FormLinkNullable<Npc>(rhs.InheritsSoundsFrom.FormKey);
+                item.InheritsSoundsFrom = new FormLinkNullable<INpcGetter>(rhs.InheritsSoundsFrom.FormKey);
             }
         }
         

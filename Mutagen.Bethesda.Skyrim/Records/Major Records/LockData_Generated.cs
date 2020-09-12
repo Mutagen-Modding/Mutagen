@@ -54,9 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte> ILockDataGetter.Unused => this.Unused;
         #endregion
         #region Key
-        public FormLink<Key> Key { get; set; } = new FormLink<Key>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IKeyGetter> ILockDataGetter.Key => this.Key.ToGetter<Key, IKeyGetter>();
+        public FormLink<IKeyGetter> Key { get; set; } = new FormLink<IKeyGetter>();
         #endregion
         #region Flags
         public LockData.Flag Flags { get; set; } = default;
@@ -562,7 +560,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new LockLevel Level { get; set; }
         new MemorySlice<Byte> Unused { get; set; }
-        new FormLink<Key> Key { get; set; }
+        new FormLink<IKeyGetter> Key { get; set; }
         new LockData.Flag Flags { get; set; }
         new MemorySlice<Byte> Unused2 { get; set; }
     }
@@ -847,7 +845,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.Level = default;
             item.Unused = new byte[3];
-            item.Key = FormLink<Key>.Null;
+            item.Key = FormLink<IKeyGetter>.Null;
             item.Flags = default;
             item.Unused2 = new byte[11];
         }
@@ -1036,7 +1034,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LockData_FieldIndex.Key) ?? true))
             {
-                item.Key = new FormLink<Key>(rhs.Key.FormKey);
+                item.Key = new FormLink<IKeyGetter>(rhs.Key.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LockData_FieldIndex.Flags) ?? true))
             {

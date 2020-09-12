@@ -43,17 +43,13 @@ namespace Mutagen.Bethesda.Oblivion
         public ScriptEffectData.VersioningBreaks Versioning { get; set; } = default;
         #endregion
         #region Script
-        public FormLink<Script> Script { get; set; } = new FormLink<Script>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IScriptGetter> IScriptEffectDataGetter.Script => this.Script.ToGetter<Script, IScriptGetter>();
+        public FormLink<IScriptGetter> Script { get; set; } = new FormLink<IScriptGetter>();
         #endregion
         #region MagicSchool
         public MagicSchool MagicSchool { get; set; } = default;
         #endregion
         #region VisualEffect
-        public EDIDLink<MagicEffect> VisualEffect { get; set; } = new EDIDLink<MagicEffect>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        EDIDLink<IMagicEffectGetter> IScriptEffectDataGetter.VisualEffect => this.VisualEffect.ToGetter<MagicEffect, IMagicEffectGetter>();
+        public EDIDLink<IMagicEffectGetter> VisualEffect { get; set; } = new EDIDLink<IMagicEffectGetter>();
         #endregion
         #region Flags
         public ScriptEffect.Flag Flags { get; set; } = default;
@@ -553,9 +549,9 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkedFormKeyContainer
     {
         new ScriptEffectData.VersioningBreaks Versioning { get; set; }
-        new FormLink<Script> Script { get; set; }
+        new FormLink<IScriptGetter> Script { get; set; }
         new MagicSchool MagicSchool { get; set; }
-        new EDIDLink<MagicEffect> VisualEffect { get; set; }
+        new EDIDLink<IMagicEffectGetter> VisualEffect { get; set; }
         new ScriptEffect.Flag Flags { get; set; }
     }
 
@@ -838,9 +834,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ClearPartial();
             item.Versioning = default;
-            item.Script = FormLink<Script>.Null;
+            item.Script = FormLink<IScriptGetter>.Null;
             item.MagicSchool = default;
-            item.VisualEffect = EDIDLink<MagicEffect>.Null;
+            item.VisualEffect = EDIDLink<IMagicEffectGetter>.Null;
             item.Flags = default;
         }
         
@@ -1024,7 +1020,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)ScriptEffectData_FieldIndex.Script) ?? true))
             {
-                item.Script = new FormLink<Script>(rhs.Script.FormKey);
+                item.Script = new FormLink<IScriptGetter>(rhs.Script.FormKey);
             }
             if (rhs.Versioning.HasFlag(ScriptEffectData.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)ScriptEffectData_FieldIndex.MagicSchool) ?? true))
@@ -1033,7 +1029,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)ScriptEffectData_FieldIndex.VisualEffect) ?? true))
             {
-                item.VisualEffect = new EDIDLink<MagicEffect>(rhs.VisualEffect.EDID);
+                item.VisualEffect = new EDIDLink<IMagicEffectGetter>(rhs.VisualEffect.EDID);
             }
             if (rhs.Versioning.HasFlag(ScriptEffectData.VersioningBreaks.Break1)) return;
             if ((copyMask?.GetShouldTranslate((int)ScriptEffectData_FieldIndex.Flags) ?? true))

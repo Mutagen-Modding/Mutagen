@@ -59,14 +59,10 @@ namespace Mutagen.Bethesda.Oblivion
         IModelGetter? IFloraGetter.Model => this.Model;
         #endregion
         #region Script
-        public FormLinkNullable<Script> Script { get; set; } = new FormLinkNullable<Script>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IScriptGetter> IFloraGetter.Script => this.Script.ToGetter<Script, IScriptGetter>();
+        public FormLinkNullable<IScriptGetter> Script { get; set; } = new FormLinkNullable<IScriptGetter>();
         #endregion
         #region Ingredient
-        public FormLinkNullable<Ingredient> Ingredient { get; set; } = new FormLinkNullable<Ingredient>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IIngredientGetter> IFloraGetter.Ingredient => this.Ingredient.ToGetter<Ingredient, IIngredientGetter>();
+        public FormLinkNullable<IIngredientGetter> Ingredient { get; set; } = new FormLinkNullable<IIngredientGetter>();
         #endregion
         #region SeasonalIngredientProduction
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -600,8 +596,8 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
-        new FormLinkNullable<Script> Script { get; set; }
-        new FormLinkNullable<Ingredient> Ingredient { get; set; }
+        new FormLinkNullable<IScriptGetter> Script { get; set; }
+        new FormLinkNullable<IIngredientGetter> Ingredient { get; set; }
         new SeasonalIngredientProduction? SeasonalIngredientProduction { get; set; }
     }
 
@@ -867,8 +863,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.Name = default;
             item.Model = null;
-            item.Script = FormLinkNullable<Script>.Null;
-            item.Ingredient = FormLinkNullable<Ingredient>.Null;
+            item.Script = FormLinkNullable<IScriptGetter>.Null;
+            item.Ingredient = FormLinkNullable<IIngredientGetter>.Null;
             item.SeasonalIngredientProduction = null;
             base.Clear(item);
         }
@@ -1243,11 +1239,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Script) ?? true))
             {
-                item.Script = new FormLinkNullable<Script>(rhs.Script.FormKey);
+                item.Script = new FormLinkNullable<IScriptGetter>(rhs.Script.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Ingredient) ?? true))
             {
-                item.Ingredient = new FormLinkNullable<Ingredient>(rhs.Ingredient.FormKey);
+                item.Ingredient = new FormLinkNullable<IIngredientGetter>(rhs.Ingredient.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.SeasonalIngredientProduction) ?? true))
             {

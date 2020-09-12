@@ -40,9 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Sound
-        public FormLink<Sound> Sound { get; set; } = new FormLink<Sound>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISoundGetter> IWeatherSoundGetter.Sound => this.Sound.ToGetter<Sound, ISoundGetter>();
+        public FormLink<ISoundGetter> Sound { get; set; } = new FormLink<ISoundGetter>();
         #endregion
         #region Type
         public WeatherSound.SoundType Type { get; set; } = default;
@@ -451,7 +449,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IWeatherSound>,
         ILinkedFormKeyContainer
     {
-        new FormLink<Sound> Sound { get; set; }
+        new FormLink<ISoundGetter> Sound { get; set; }
         new WeatherSound.SoundType Type { get; set; }
     }
 
@@ -727,7 +725,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IWeatherSound item)
         {
             ClearPartial();
-            item.Sound = FormLink<Sound>.Null;
+            item.Sound = FormLink<ISoundGetter>.Null;
             item.Type = default;
         }
         
@@ -886,7 +884,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)WeatherSound_FieldIndex.Sound) ?? true))
             {
-                item.Sound = new FormLink<Sound>(rhs.Sound.FormKey);
+                item.Sound = new FormLink<ISoundGetter>(rhs.Sound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)WeatherSound_FieldIndex.Type) ?? true))
             {

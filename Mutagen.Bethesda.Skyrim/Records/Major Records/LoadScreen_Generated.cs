@@ -71,9 +71,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region LoadingScreenNif
-        public FormLink<Static> LoadingScreenNif { get; set; } = new FormLink<Static>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IStaticGetter> ILoadScreenGetter.LoadingScreenNif => this.LoadingScreenNif.ToGetter<Static, IStaticGetter>();
+        public FormLink<IStaticGetter> LoadingScreenNif { get; set; } = new FormLink<IStaticGetter>();
         #endregion
         #region InitialScale
         public Single? InitialScale { get; set; }
@@ -822,7 +820,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Icons? Icons { get; set; }
         new TranslatedString Description { get; set; }
         new IExtendedList<Condition> Conditions { get; }
-        new FormLink<Static> LoadingScreenNif { get; set; }
+        new FormLink<IStaticGetter> LoadingScreenNif { get; set; }
         new Single? InitialScale { get; set; }
         new P3Int16? InitialRotation { get; set; }
         new Int16MinMax? RotationOffsetConstraints { get; set; }
@@ -1110,7 +1108,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Icons = null;
             item.Description.Clear();
             item.Conditions.Clear();
-            item.LoadingScreenNif = FormLink<Static>.Null;
+            item.LoadingScreenNif = FormLink<IStaticGetter>.Null;
             item.InitialScale = default;
             item.InitialRotation = default;
             item.RotationOffsetConstraints = null;
@@ -1570,7 +1568,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LoadScreen_FieldIndex.LoadingScreenNif) ?? true))
             {
-                item.LoadingScreenNif = new FormLink<Static>(rhs.LoadingScreenNif.FormKey);
+                item.LoadingScreenNif = new FormLink<IStaticGetter>(rhs.LoadingScreenNif.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LoadScreen_FieldIndex.InitialScale) ?? true))
             {

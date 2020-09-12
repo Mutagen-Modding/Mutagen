@@ -43,9 +43,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 Unknown { get; set; } = default;
         #endregion
         #region Mesh
-        public FormLink<ANavigationMesh> Mesh { get; set; } = new FormLink<ANavigationMesh>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IANavigationMeshGetter> IEdgeLinkGetter.Mesh => this.Mesh.ToGetter<ANavigationMesh, IANavigationMeshGetter>();
+        public FormLink<IANavigationMeshGetter> Mesh { get; set; } = new FormLink<IANavigationMeshGetter>();
         #endregion
         #region TriangleIndex
         public Int16 TriangleIndex { get; set; } = default;
@@ -482,7 +480,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new Int32 Unknown { get; set; }
-        new FormLink<ANavigationMesh> Mesh { get; set; }
+        new FormLink<IANavigationMeshGetter> Mesh { get; set; }
         new Int16 TriangleIndex { get; set; }
     }
 
@@ -760,7 +758,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Unknown = default;
-            item.Mesh = FormLink<ANavigationMesh>.Null;
+            item.Mesh = FormLink<IANavigationMeshGetter>.Null;
             item.TriangleIndex = default;
         }
         
@@ -927,7 +925,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)EdgeLink_FieldIndex.Mesh) ?? true))
             {
-                item.Mesh = new FormLink<ANavigationMesh>(rhs.Mesh.FormKey);
+                item.Mesh = new FormLink<IANavigationMeshGetter>(rhs.Mesh.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)EdgeLink_FieldIndex.TriangleIndex) ?? true))
             {

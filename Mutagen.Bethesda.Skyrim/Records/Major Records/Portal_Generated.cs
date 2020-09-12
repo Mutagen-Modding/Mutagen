@@ -40,14 +40,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Origin
-        public FormLink<PlacedObject> Origin { get; set; } = new FormLink<PlacedObject>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IPlacedObjectGetter> IPortalGetter.Origin => this.Origin.ToGetter<PlacedObject, IPlacedObjectGetter>();
+        public FormLink<IPlacedObjectGetter> Origin { get; set; } = new FormLink<IPlacedObjectGetter>();
         #endregion
         #region Destination
-        public FormLink<PlacedObject> Destination { get; set; } = new FormLink<PlacedObject>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IPlacedObjectGetter> IPortalGetter.Destination => this.Destination.ToGetter<PlacedObject, IPlacedObjectGetter>();
+        public FormLink<IPlacedObjectGetter> Destination { get; set; } = new FormLink<IPlacedObjectGetter>();
         #endregion
 
         #region To String
@@ -452,8 +448,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPortal>,
         ILinkedFormKeyContainer
     {
-        new FormLink<PlacedObject> Origin { get; set; }
-        new FormLink<PlacedObject> Destination { get; set; }
+        new FormLink<IPlacedObjectGetter> Origin { get; set; }
+        new FormLink<IPlacedObjectGetter> Destination { get; set; }
     }
 
     public partial interface IPortalGetter :
@@ -727,8 +723,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IPortal item)
         {
             ClearPartial();
-            item.Origin = FormLink<PlacedObject>.Null;
-            item.Destination = FormLink<PlacedObject>.Null;
+            item.Origin = FormLink<IPlacedObjectGetter>.Null;
+            item.Destination = FormLink<IPlacedObjectGetter>.Null;
         }
         
         #region Binary Translation
@@ -884,11 +880,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)Portal_FieldIndex.Origin) ?? true))
             {
-                item.Origin = new FormLink<PlacedObject>(rhs.Origin.FormKey);
+                item.Origin = new FormLink<IPlacedObjectGetter>(rhs.Origin.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Portal_FieldIndex.Destination) ?? true))
             {
-                item.Destination = new FormLink<PlacedObject>(rhs.Destination.FormKey);
+                item.Destination = new FormLink<IPlacedObjectGetter>(rhs.Destination.FormKey);
             }
         }
         

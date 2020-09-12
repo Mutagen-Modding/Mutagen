@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region TextDisplayGlobals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Global>> _TextDisplayGlobals = new ExtendedList<IFormLink<Global>>();
-        public IExtendedList<IFormLink<Global>> TextDisplayGlobals
+        private IExtendedList<IFormLink<IGlobalGetter>> _TextDisplayGlobals = new ExtendedList<IFormLink<IGlobalGetter>>();
+        public IExtendedList<IFormLink<IGlobalGetter>> TextDisplayGlobals
         {
             get => this._TextDisplayGlobals;
             protected set => this._TextDisplayGlobals = value;
@@ -1485,7 +1485,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Int32 Unknown { get; set; }
         new Quest.TypeEnum Type { get; set; }
         new RecordType? Event { get; set; }
-        new IExtendedList<IFormLink<Global>> TextDisplayGlobals { get; }
+        new IExtendedList<IFormLink<IGlobalGetter>> TextDisplayGlobals { get; }
         new String? ObjectWindowFilter { get; set; }
         new IExtendedList<Condition> DialogConditions { get; }
         new IExtendedList<Condition> UnusedConditions { get; }
@@ -2418,7 +2418,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.TextDisplayGlobals.SetTo(
                         rhs.TextDisplayGlobals
-                        .Select(r => (IFormLink<Global>)new FormLink<Global>(r.FormKey)));
+                        .Select(r => (IFormLink<IGlobalGetter>)new FormLink<IGlobalGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2979,7 +2979,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.QTGL:
                 {
                     item.TextDisplayGlobals.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Global>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IGlobalGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.QTGL),
                             transl: FormLinkBinaryTranslation.Instance.Parse));

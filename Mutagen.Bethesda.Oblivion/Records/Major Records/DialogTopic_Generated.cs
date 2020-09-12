@@ -44,8 +44,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Quests
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Quest>> _Quests = new ExtendedList<IFormLink<Quest>>();
-        public IExtendedList<IFormLink<Quest>> Quests
+        private IExtendedList<IFormLink<IQuestGetter>> _Quests = new ExtendedList<IFormLink<IQuestGetter>>();
+        public IExtendedList<IFormLink<IQuestGetter>> Quests
         {
             get => this._Quests;
             protected set => this._Quests = value;
@@ -771,7 +771,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IDialogTopicInternal>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<IFormLink<Quest>> Quests { get; }
+        new IExtendedList<IFormLink<IQuestGetter>> Quests { get; }
         new String? Name { get; set; }
         new DialogType? DialogType { get; set; }
         new Int32 Timestamp { get; set; }
@@ -1803,7 +1803,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Quests.SetTo(
                         rhs.Quests
-                        .Select(r => (IFormLink<Quest>)new FormLink<Quest>(r.FormKey)));
+                        .Select(r => (IFormLink<IQuestGetter>)new FormLink<IQuestGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2138,7 +2138,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.QSTI:
                 {
                     item.Quests.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Quest>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IQuestGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.QSTI),
                             transl: FormLinkBinaryTranslation.Instance.Parse));

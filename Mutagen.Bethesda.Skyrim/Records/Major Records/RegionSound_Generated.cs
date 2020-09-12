@@ -40,9 +40,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Sound
-        public FormLink<SoundDescriptor> Sound { get; set; } = new FormLink<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISoundDescriptorGetter> IRegionSoundGetter.Sound => this.Sound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLink<ISoundDescriptorGetter> Sound { get; set; } = new FormLink<ISoundDescriptorGetter>();
         #endregion
         #region Flags
         public RegionSound.Flag Flags { get; set; } = default;
@@ -482,7 +480,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IRegionSound>,
         ILinkedFormKeyContainer
     {
-        new FormLink<SoundDescriptor> Sound { get; set; }
+        new FormLink<ISoundDescriptorGetter> Sound { get; set; }
         new RegionSound.Flag Flags { get; set; }
         new Single Chance { get; set; }
     }
@@ -760,7 +758,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IRegionSound item)
         {
             ClearPartial();
-            item.Sound = FormLink<SoundDescriptor>.Null;
+            item.Sound = FormLink<ISoundDescriptorGetter>.Null;
             item.Flags = default;
             item.Chance = default;
         }
@@ -924,7 +922,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RegionSound_FieldIndex.Sound) ?? true))
             {
-                item.Sound = new FormLink<SoundDescriptor>(rhs.Sound.FormKey);
+                item.Sound = new FormLink<ISoundDescriptorGetter>(rhs.Sound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)RegionSound_FieldIndex.Flags) ?? true))
             {

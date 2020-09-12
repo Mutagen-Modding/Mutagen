@@ -74,14 +74,10 @@ namespace Mutagen.Bethesda.Skyrim
         public Single ChargeTime { get; set; } = default;
         #endregion
         #region BaseEnchantment
-        public FormLink<ObjectEffect> BaseEnchantment { get; set; } = new FormLink<ObjectEffect>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IObjectEffectGetter> IObjectEffectGetter.BaseEnchantment => this.BaseEnchantment.ToGetter<ObjectEffect, IObjectEffectGetter>();
+        public FormLink<IObjectEffectGetter> BaseEnchantment { get; set; } = new FormLink<IObjectEffectGetter>();
         #endregion
         #region WornRestrictions
-        public FormLink<FormList> WornRestrictions { get; set; } = new FormLink<FormList>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IFormListGetter> IObjectEffectGetter.WornRestrictions => this.WornRestrictions.ToGetter<FormList, IFormListGetter>();
+        public FormLink<IFormListGetter> WornRestrictions { get; set; } = new FormLink<IFormListGetter>();
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -929,8 +925,8 @@ namespace Mutagen.Bethesda.Skyrim
         new TargetType TargetType { get; set; }
         new ObjectEffect.EnchantTypeEnum EnchantType { get; set; }
         new Single ChargeTime { get; set; }
-        new FormLink<ObjectEffect> BaseEnchantment { get; set; }
-        new FormLink<FormList> WornRestrictions { get; set; }
+        new FormLink<IObjectEffectGetter> BaseEnchantment { get; set; }
+        new FormLink<IFormListGetter> WornRestrictions { get; set; }
         new IExtendedList<Effect> Effects { get; }
         new ObjectEffect.ENITDataType ENITDataTypeState { get; set; }
     }
@@ -1223,8 +1219,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.TargetType = default;
             item.EnchantType = default;
             item.ChargeTime = default;
-            item.BaseEnchantment = FormLink<ObjectEffect>.Null;
-            item.WornRestrictions = FormLink<FormList>.Null;
+            item.BaseEnchantment = FormLink<IObjectEffectGetter>.Null;
+            item.WornRestrictions = FormLink<IFormListGetter>.Null;
             item.Effects.Clear();
             item.ENITDataTypeState = default;
             base.Clear(item);
@@ -1681,11 +1677,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.BaseEnchantment) ?? true))
             {
-                item.BaseEnchantment = new FormLink<ObjectEffect>(rhs.BaseEnchantment.FormKey);
+                item.BaseEnchantment = new FormLink<IObjectEffectGetter>(rhs.BaseEnchantment.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.WornRestrictions) ?? true))
             {
-                item.WornRestrictions = new FormLink<FormList>(rhs.WornRestrictions.FormKey);
+                item.WornRestrictions = new FormLink<IFormListGetter>(rhs.WornRestrictions.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.Effects) ?? true))
             {

@@ -40,9 +40,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Owner
-        public FormLinkNullable<IOwner> Owner { get; set; } = new FormLinkNullable<IOwner>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IOwnerGetter> IOwnershipGetter.Owner => this.Owner.ToGetter<IOwner, IOwnerGetter>();
+        public FormLinkNullable<IOwnerGetter> Owner { get; set; } = new FormLinkNullable<IOwnerGetter>();
         #endregion
         #region FactionRank
         public Int32? FactionRank { get; set; }
@@ -452,7 +450,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IOwnership>,
         ILinkedFormKeyContainer
     {
-        new FormLinkNullable<IOwner> Owner { get; set; }
+        new FormLinkNullable<IOwnerGetter> Owner { get; set; }
         new Int32? FactionRank { get; set; }
     }
 
@@ -739,7 +737,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IOwnership item)
         {
             ClearPartial();
-            item.Owner = FormLinkNullable<IOwner>.Null;
+            item.Owner = FormLinkNullable<IOwnerGetter>.Null;
             item.FactionRank = default;
         }
         
@@ -903,7 +901,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)Ownership_FieldIndex.Owner) ?? true))
             {
-                item.Owner = new FormLinkNullable<IOwner>(rhs.Owner.FormKey);
+                item.Owner = new FormLinkNullable<IOwnerGetter>(rhs.Owner.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Ownership_FieldIndex.FactionRank) ?? true))
             {

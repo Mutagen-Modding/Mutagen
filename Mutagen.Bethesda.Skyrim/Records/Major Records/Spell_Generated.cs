@@ -54,8 +54,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Keyword>>? _Keywords;
-        public IExtendedList<IFormLink<Keyword>>? Keywords
+        private IExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
+        public IExtendedList<IFormLink<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -67,14 +67,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region MenuDisplayObject
-        public FormLinkNullable<Static> MenuDisplayObject { get; set; } = new FormLinkNullable<Static>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IStaticGetter> ISpellGetter.MenuDisplayObject => this.MenuDisplayObject.ToGetter<Static, IStaticGetter>();
+        public FormLinkNullable<IStaticGetter> MenuDisplayObject { get; set; } = new FormLinkNullable<IStaticGetter>();
         #endregion
         #region EquipmentType
-        public FormLinkNullable<EquipType> EquipmentType { get; set; } = new FormLinkNullable<EquipType>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IEquipTypeGetter> ISpellGetter.EquipmentType => this.EquipmentType.ToGetter<EquipType, IEquipTypeGetter>();
+        public FormLinkNullable<IEquipTypeGetter> EquipmentType { get; set; } = new FormLinkNullable<IEquipTypeGetter>();
         #endregion
         #region Description
         public TranslatedString Description { get; set; } = string.Empty;
@@ -104,9 +100,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Single Range { get; set; } = default;
         #endregion
         #region HalfCostPerk
-        public FormLink<Perk> HalfCostPerk { get; set; } = new FormLink<Perk>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IPerkGetter> ISpellGetter.HalfCostPerk => this.HalfCostPerk.ToGetter<Perk, IPerkGetter>();
+        public FormLink<IPerkGetter> HalfCostPerk { get; set; } = new FormLink<IPerkGetter>();
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1133,9 +1127,9 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new ObjectBounds ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
-        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
-        new FormLinkNullable<Static> MenuDisplayObject { get; set; }
-        new FormLinkNullable<EquipType> EquipmentType { get; set; }
+        new IExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
+        new FormLinkNullable<IStaticGetter> MenuDisplayObject { get; set; }
+        new FormLinkNullable<IEquipTypeGetter> EquipmentType { get; set; }
         new TranslatedString Description { get; set; }
         new UInt32 BaseCost { get; set; }
         new SpellDataFlag Flags { get; set; }
@@ -1145,7 +1139,7 @@ namespace Mutagen.Bethesda.Skyrim
         new TargetType TargetType { get; set; }
         new Single CastDuration { get; set; }
         new Single Range { get; set; }
-        new FormLink<Perk> HalfCostPerk { get; set; }
+        new FormLink<IPerkGetter> HalfCostPerk { get; set; }
         new IExtendedList<Effect> Effects { get; }
         new Spell.SPITDataType SPITDataTypeState { get; set; }
     }
@@ -1442,8 +1436,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ObjectBounds.Clear();
             item.Name = default;
             item.Keywords = null;
-            item.MenuDisplayObject = FormLinkNullable<Static>.Null;
-            item.EquipmentType = FormLinkNullable<EquipType>.Null;
+            item.MenuDisplayObject = FormLinkNullable<IStaticGetter>.Null;
+            item.EquipmentType = FormLinkNullable<IEquipTypeGetter>.Null;
             item.Description.Clear();
             item.BaseCost = default;
             item.Flags = default;
@@ -1453,7 +1447,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.TargetType = default;
             item.CastDuration = default;
             item.Range = default;
-            item.HalfCostPerk = FormLink<Perk>.Null;
+            item.HalfCostPerk = FormLink<IPerkGetter>.Null;
             item.Effects.Clear();
             item.SPITDataTypeState = default;
             base.Clear(item);
@@ -2000,8 +1994,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLink<Keyword>)new FormLink<Keyword>(r.FormKey))
-                            .ToExtendedList<IFormLink<Keyword>>();
+                            .Select(r => (IFormLink<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IKeywordGetter>>();
                     }
                     else
                     {
@@ -2020,11 +2014,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.MenuDisplayObject) ?? true))
             {
-                item.MenuDisplayObject = new FormLinkNullable<Static>(rhs.MenuDisplayObject.FormKey);
+                item.MenuDisplayObject = new FormLinkNullable<IStaticGetter>(rhs.MenuDisplayObject.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.EquipmentType) ?? true))
             {
-                item.EquipmentType = new FormLinkNullable<EquipType>(rhs.EquipmentType.FormKey);
+                item.EquipmentType = new FormLinkNullable<IEquipTypeGetter>(rhs.EquipmentType.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.Description) ?? true))
             {
@@ -2064,7 +2058,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.HalfCostPerk) ?? true))
             {
-                item.HalfCostPerk = new FormLink<Perk>(rhs.HalfCostPerk.FormKey);
+                item.HalfCostPerk = new FormLink<IPerkGetter>(rhs.HalfCostPerk.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.Effects) ?? true))
             {
@@ -2483,13 +2477,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KSIZ:
                 {
                     item.Keywords = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<Keyword>>();
+                        .CastExtendedList<IFormLink<IKeywordGetter>>();
                     return (int)Spell_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.MDOB:

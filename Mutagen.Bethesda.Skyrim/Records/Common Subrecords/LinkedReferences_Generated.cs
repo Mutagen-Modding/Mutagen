@@ -43,14 +43,10 @@ namespace Mutagen.Bethesda.Skyrim
         public LinkedReferences.VersioningBreaks Versioning { get; set; } = default;
         #endregion
         #region KeywordOrReference
-        public FormLink<IKeywordLinkedReference> KeywordOrReference { get; set; } = new FormLink<IKeywordLinkedReference>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IKeywordLinkedReferenceGetter> ILinkedReferencesGetter.KeywordOrReference => this.KeywordOrReference.ToGetter<IKeywordLinkedReference, IKeywordLinkedReferenceGetter>();
+        public FormLink<IKeywordLinkedReferenceGetter> KeywordOrReference { get; set; } = new FormLink<IKeywordLinkedReferenceGetter>();
         #endregion
         #region Reference
-        public FormLink<ILinkedReference> Reference { get; set; } = new FormLink<ILinkedReference>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ILinkedReferenceGetter> ILinkedReferencesGetter.Reference => this.Reference.ToGetter<ILinkedReference, ILinkedReferenceGetter>();
+        public FormLink<ILinkedReferenceGetter> Reference { get; set; } = new FormLink<ILinkedReferenceGetter>();
         #endregion
 
         #region To String
@@ -490,8 +486,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new LinkedReferences.VersioningBreaks Versioning { get; set; }
-        new FormLink<IKeywordLinkedReference> KeywordOrReference { get; set; }
-        new FormLink<ILinkedReference> Reference { get; set; }
+        new FormLink<IKeywordLinkedReferenceGetter> KeywordOrReference { get; set; }
+        new FormLink<ILinkedReferenceGetter> Reference { get; set; }
     }
 
     public partial interface ILinkedReferencesGetter :
@@ -769,8 +765,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Versioning = default;
-            item.KeywordOrReference = FormLink<IKeywordLinkedReference>.Null;
-            item.Reference = FormLink<ILinkedReference>.Null;
+            item.KeywordOrReference = FormLink<IKeywordLinkedReferenceGetter>.Null;
+            item.Reference = FormLink<ILinkedReferenceGetter>.Null;
         }
         
         #region Binary Translation
@@ -941,12 +937,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LinkedReferences_FieldIndex.KeywordOrReference) ?? true))
             {
-                item.KeywordOrReference = new FormLink<IKeywordLinkedReference>(rhs.KeywordOrReference.FormKey);
+                item.KeywordOrReference = new FormLink<IKeywordLinkedReferenceGetter>(rhs.KeywordOrReference.FormKey);
             }
             if (rhs.Versioning.HasFlag(LinkedReferences.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)LinkedReferences_FieldIndex.Reference) ?? true))
             {
-                item.Reference = new FormLink<ILinkedReference>(rhs.Reference.FormKey);
+                item.Reference = new FormLink<ILinkedReferenceGetter>(rhs.Reference.FormKey);
             }
         }
         

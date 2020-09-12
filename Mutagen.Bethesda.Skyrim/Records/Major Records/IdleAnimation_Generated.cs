@@ -68,8 +68,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RelatedIdles
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IIdleRelation>> _RelatedIdles = new ExtendedList<IFormLink<IIdleRelation>>();
-        public IExtendedList<IFormLink<IIdleRelation>> RelatedIdles
+        private IExtendedList<IFormLink<IIdleRelationGetter>> _RelatedIdles = new ExtendedList<IFormLink<IIdleRelationGetter>>();
+        public IExtendedList<IFormLink<IIdleRelationGetter>> RelatedIdles
         {
             get => this._RelatedIdles;
             protected set => this._RelatedIdles = value;
@@ -900,7 +900,7 @@ namespace Mutagen.Bethesda.Skyrim
         new IExtendedList<Condition> Conditions { get; }
         new String? Filename { get; set; }
         new String? AnimationEvent { get; set; }
-        new IExtendedList<IFormLink<IIdleRelation>> RelatedIdles { get; }
+        new IExtendedList<IFormLink<IIdleRelationGetter>> RelatedIdles { get; }
         new Byte LoopingSecondsMin { get; set; }
         new Byte LoopingSecondsMax { get; set; }
         new IdleAnimation.Flag Flags { get; set; }
@@ -1630,7 +1630,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.RelatedIdles.SetTo(
                         rhs.RelatedIdles
-                        .Select(r => (IFormLink<IIdleRelation>)new FormLink<IIdleRelation>(r.FormKey)));
+                        .Select(r => (IFormLink<IIdleRelationGetter>)new FormLink<IIdleRelationGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1990,7 +1990,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RelatedIdles.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IIdleRelation>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IIdleRelationGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)IdleAnimation_FieldIndex.RelatedIdles;

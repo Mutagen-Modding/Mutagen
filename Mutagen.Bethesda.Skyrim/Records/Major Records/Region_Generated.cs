@@ -49,9 +49,7 @@ namespace Mutagen.Bethesda.Skyrim
         Color? IRegionGetter.MapColor => this.MapColor;
         #endregion
         #region Worldspace
-        public FormLinkNullable<Worldspace> Worldspace { get; set; } = new FormLinkNullable<Worldspace>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IWorldspaceGetter> IRegionGetter.Worldspace => this.Worldspace.ToGetter<Worldspace, IWorldspaceGetter>();
+        public FormLinkNullable<IWorldspaceGetter> Worldspace { get; set; } = new FormLinkNullable<IWorldspaceGetter>();
         #endregion
         #region RegionAreas
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -875,7 +873,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new Color? MapColor { get; set; }
-        new FormLinkNullable<Worldspace> Worldspace { get; set; }
+        new FormLinkNullable<IWorldspaceGetter> Worldspace { get; set; }
         new IExtendedList<RegionArea> RegionAreas { get; }
         new RegionObjects? Objects { get; set; }
         new RegionWeather? Weather { get; set; }
@@ -1163,7 +1161,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.MapColor = default;
-            item.Worldspace = FormLinkNullable<Worldspace>.Null;
+            item.Worldspace = FormLinkNullable<IWorldspaceGetter>.Null;
             item.RegionAreas.Clear();
             item.Objects = null;
             item.Weather = null;
@@ -1621,7 +1619,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.Worldspace) ?? true))
             {
-                item.Worldspace = new FormLinkNullable<Worldspace>(rhs.Worldspace.FormKey);
+                item.Worldspace = new FormLinkNullable<IWorldspaceGetter>(rhs.Worldspace.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.RegionAreas) ?? true))
             {

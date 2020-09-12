@@ -46,9 +46,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Single Chance { get; set; } = default;
         #endregion
         #region Spell
-        public FormLink<ASpell> Spell { get; set; } = new FormLink<ASpell>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IASpellGetter> IAttackDataGetter.Spell => this.Spell.ToGetter<ASpell, IASpellGetter>();
+        public FormLink<IASpellGetter> Spell { get; set; } = new FormLink<IASpellGetter>();
         #endregion
         #region Flags
         public AttackData.Flag Flags { get; set; } = default;
@@ -63,9 +61,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Single Stagger { get; set; } = default;
         #endregion
         #region AttackType
-        public FormLink<Keyword> AttackType { get; set; } = new FormLink<Keyword>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IKeywordGetter> IAttackDataGetter.AttackType => this.AttackType.ToGetter<Keyword, IKeywordGetter>();
+        public FormLink<IKeywordGetter> AttackType { get; set; } = new FormLink<IKeywordGetter>();
         #endregion
         #region Knockdown
         public Single Knockdown { get; set; } = default;
@@ -734,12 +730,12 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Single DamageMult { get; set; }
         new Single Chance { get; set; }
-        new FormLink<ASpell> Spell { get; set; }
+        new FormLink<IASpellGetter> Spell { get; set; }
         new AttackData.Flag Flags { get; set; }
         new Single AttackAngle { get; set; }
         new Single StrikeAngle { get; set; }
         new Single Stagger { get; set; }
-        new FormLink<Keyword> AttackType { get; set; }
+        new FormLink<IKeywordGetter> AttackType { get; set; }
         new Single Knockdown { get; set; }
         new Single RecoveryTime { get; set; }
         new Single StaminaMult { get; set; }
@@ -1037,12 +1033,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.DamageMult = default;
             item.Chance = default;
-            item.Spell = FormLink<ASpell>.Null;
+            item.Spell = FormLink<IASpellGetter>.Null;
             item.Flags = default;
             item.AttackAngle = default;
             item.StrikeAngle = default;
             item.Stagger = default;
-            item.AttackType = FormLink<Keyword>.Null;
+            item.AttackType = FormLink<IKeywordGetter>.Null;
             item.Knockdown = default;
             item.RecoveryTime = default;
             item.StaminaMult = default;
@@ -1275,7 +1271,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AttackData_FieldIndex.Spell) ?? true))
             {
-                item.Spell = new FormLink<ASpell>(rhs.Spell.FormKey);
+                item.Spell = new FormLink<IASpellGetter>(rhs.Spell.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)AttackData_FieldIndex.Flags) ?? true))
             {
@@ -1295,7 +1291,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AttackData_FieldIndex.AttackType) ?? true))
             {
-                item.AttackType = new FormLink<Keyword>(rhs.AttackType.FormKey);
+                item.AttackType = new FormLink<IKeywordGetter>(rhs.AttackType.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)AttackData_FieldIndex.Knockdown) ?? true))
             {

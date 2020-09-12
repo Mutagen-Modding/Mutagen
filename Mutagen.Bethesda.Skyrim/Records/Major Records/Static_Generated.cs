@@ -64,9 +64,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static RangeFloat MaxAngle_Range = new RangeFloat(30f, 120f);
         #endregion
         #region Material
-        public FormLink<MaterialObject> Material { get; set; } = new FormLink<MaterialObject>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IMaterialObjectGetter> IStaticGetter.Material => this.Material.ToGetter<MaterialObject, IMaterialObjectGetter>();
+        public FormLink<IMaterialObjectGetter> Material { get; set; } = new FormLink<IMaterialObjectGetter>();
         #endregion
         #region Flags
         public Static.Flag Flags { get; set; } = default;
@@ -723,7 +721,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ObjectBounds ObjectBounds { get; set; }
         new Model? Model { get; set; }
         new Single MaxAngle { get; set; }
-        new FormLink<MaterialObject> Material { get; set; }
+        new FormLink<IMaterialObjectGetter> Material { get; set; }
         new Static.Flag Flags { get; set; }
         new MemorySlice<Byte> Unused { get; set; }
         new Lod? Lod { get; set; }
@@ -1011,7 +1009,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ObjectBounds.Clear();
             item.Model = null;
             item.MaxAngle = Static._MaxAngle_Default;
-            item.Material = FormLink<MaterialObject>.Null;
+            item.Material = FormLink<IMaterialObjectGetter>.Null;
             item.Flags = default;
             item.Unused = new byte[3];
             item.Lod = null;
@@ -1430,7 +1428,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.Material) ?? true))
             {
-                item.Material = new FormLink<MaterialObject>(rhs.Material.FormKey);
+                item.Material = new FormLink<IMaterialObjectGetter>(rhs.Material.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.Flags) ?? true))
             {

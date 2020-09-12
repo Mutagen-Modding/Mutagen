@@ -43,9 +43,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region ImpactDataSet
-        public FormLink<ImpactDataSet> ImpactDataSet { get; set; } = new FormLink<ImpactDataSet>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IImpactDataSetGetter> IFootstepGetter.ImpactDataSet => this.ImpactDataSet.ToGetter<ImpactDataSet, IImpactDataSetGetter>();
+        public FormLink<IImpactDataSetGetter> ImpactDataSet { get; set; } = new FormLink<IImpactDataSetGetter>();
         #endregion
         #region Tag
         public String Tag { get; set; } = string.Empty;
@@ -472,7 +470,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IFootstepInternal>,
         ILinkedFormKeyContainer
     {
-        new FormLink<ImpactDataSet> ImpactDataSet { get; set; }
+        new FormLink<IImpactDataSetGetter> ImpactDataSet { get; set; }
         new String Tag { get; set; }
     }
 
@@ -730,7 +728,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IFootstepInternal item)
         {
             ClearPartial();
-            item.ImpactDataSet = FormLink<ImpactDataSet>.Null;
+            item.ImpactDataSet = FormLink<IImpactDataSetGetter>.Null;
             item.Tag = string.Empty;
             base.Clear(item);
         }
@@ -1029,7 +1027,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)Footstep_FieldIndex.ImpactDataSet) ?? true))
             {
-                item.ImpactDataSet = new FormLink<ImpactDataSet>(rhs.ImpactDataSet.FormKey);
+                item.ImpactDataSet = new FormLink<IImpactDataSetGetter>(rhs.ImpactDataSet.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Footstep_FieldIndex.Tag) ?? true))
             {

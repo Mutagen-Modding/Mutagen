@@ -46,9 +46,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 Unknown { get; set; } = default;
         #endregion
         #region Door
-        public FormLink<PlacedObject> Door { get; set; } = new FormLink<PlacedObject>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IPlacedObjectGetter> IDoorTriangleGetter.Door => this.Door.ToGetter<PlacedObject, IPlacedObjectGetter>();
+        public FormLink<IPlacedObjectGetter> Door { get; set; } = new FormLink<IPlacedObjectGetter>();
         #endregion
 
         #region To String
@@ -483,7 +481,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Int16 TriangleBeforeDoor { get; set; }
         new Int32 Unknown { get; set; }
-        new FormLink<PlacedObject> Door { get; set; }
+        new FormLink<IPlacedObjectGetter> Door { get; set; }
     }
 
     public partial interface IDoorTriangleGetter :
@@ -761,7 +759,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.TriangleBeforeDoor = default;
             item.Unknown = default;
-            item.Door = FormLink<PlacedObject>.Null;
+            item.Door = FormLink<IPlacedObjectGetter>.Null;
         }
         
         #region Binary Translation
@@ -931,7 +929,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DoorTriangle_FieldIndex.Door) ?? true))
             {
-                item.Door = new FormLink<PlacedObject>(rhs.Door.FormKey);
+                item.Door = new FormLink<IPlacedObjectGetter>(rhs.Door.FormKey);
             }
         }
         

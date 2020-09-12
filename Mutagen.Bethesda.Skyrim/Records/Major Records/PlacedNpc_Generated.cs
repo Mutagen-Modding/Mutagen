@@ -54,14 +54,10 @@ namespace Mutagen.Bethesda.Skyrim
         IVirtualMachineAdapterGetter? IPlacedNpcGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region Base
-        public FormLinkNullable<Npc> Base { get; set; } = new FormLinkNullable<Npc>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<INpcGetter> IPlacedNpcGetter.Base => this.Base.ToGetter<Npc, INpcGetter>();
+        public FormLinkNullable<INpcGetter> Base { get; set; } = new FormLinkNullable<INpcGetter>();
         #endregion
         #region EncounterZone
-        public FormLinkNullable<EncounterZone> EncounterZone { get; set; } = new FormLinkNullable<EncounterZone>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IEncounterZoneGetter> IPlacedNpcGetter.EncounterZone => this.EncounterZone.ToGetter<EncounterZone, IEncounterZoneGetter>();
+        public FormLinkNullable<IEncounterZoneGetter> EncounterZone { get; set; } = new FormLinkNullable<IEncounterZoneGetter>();
         #endregion
         #region RagdollData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -102,9 +98,7 @@ namespace Mutagen.Bethesda.Skyrim
         Level? IPlacedNpcGetter.LevelModifier => this.LevelModifier;
         #endregion
         #region MerchantContainer
-        public FormLinkNullable<PlacedObject> MerchantContainer { get; set; } = new FormLinkNullable<PlacedObject>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IPlacedObjectGetter> IPlacedNpcGetter.MerchantContainer => this.MerchantContainer.ToGetter<PlacedObject, IPlacedObjectGetter>();
+        public FormLinkNullable<IPlacedObjectGetter> MerchantContainer { get; set; } = new FormLinkNullable<IPlacedObjectGetter>();
         #endregion
         #region Count
         public Int32? Count { get; set; }
@@ -158,22 +152,18 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedReferenceColorGetter? IPlacedNpcGetter.LinkedReferenceColor => this.LinkedReferenceColor;
         #endregion
         #region PersistentLocation
-        public FormLinkNullable<Location> PersistentLocation { get; set; } = new FormLinkNullable<Location>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ILocationGetter> IPlacedNpcGetter.PersistentLocation => this.PersistentLocation.ToGetter<Location, ILocationGetter>();
+        public FormLinkNullable<ILocationGetter> PersistentLocation { get; set; } = new FormLinkNullable<ILocationGetter>();
         #endregion
         #region LocationReference
-        public FormLinkNullable<ILocationRecord> LocationReference { get; set; } = new FormLinkNullable<ILocationRecord>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ILocationRecordGetter> IPlacedNpcGetter.LocationReference => this.LocationReference.ToGetter<ILocationRecord, ILocationRecordGetter>();
+        public FormLinkNullable<ILocationRecordGetter> LocationReference { get; set; } = new FormLinkNullable<ILocationRecordGetter>();
         #endregion
         #region IgnoredBySandbox
         public Boolean IgnoredBySandbox { get; set; } = default;
         #endregion
         #region LocationRefTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<LocationReferenceType>>? _LocationRefTypes;
-        public IExtendedList<IFormLink<LocationReferenceType>>? LocationRefTypes
+        private IExtendedList<IFormLink<ILocationReferenceTypeGetter>>? _LocationRefTypes;
+        public IExtendedList<IFormLink<ILocationReferenceTypeGetter>>? LocationRefTypes
         {
             get => this._LocationRefTypes;
             set => this._LocationRefTypes = value;
@@ -190,9 +180,7 @@ namespace Mutagen.Bethesda.Skyrim
         Single? IPlacedNpcGetter.HeadTrackingWeight => this.HeadTrackingWeight;
         #endregion
         #region Horse
-        public FormLinkNullable<PlacedNpc> Horse { get; set; } = new FormLinkNullable<PlacedNpc>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IPlacedNpcGetter> IPlacedNpcGetter.Horse => this.Horse.ToGetter<PlacedNpc, IPlacedNpcGetter>();
+        public FormLinkNullable<IPlacedNpcGetter> Horse { get; set; } = new FormLinkNullable<IPlacedNpcGetter>();
         #endregion
         #region FavorCost
         public Single? FavorCost { get; set; }
@@ -222,14 +210,10 @@ namespace Mutagen.Bethesda.Skyrim
         IOwnershipGetter? IPlacedNpcGetter.Ownership => this.Ownership;
         #endregion
         #region Emittance
-        public FormLinkNullable<IEmittance> Emittance { get; set; } = new FormLinkNullable<IEmittance>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IEmittanceGetter> IPlacedNpcGetter.Emittance => this.Emittance.ToGetter<IEmittance, IEmittanceGetter>();
+        public FormLinkNullable<IEmittanceGetter> Emittance { get; set; } = new FormLinkNullable<IEmittanceGetter>();
         #endregion
         #region MultiboundReference
-        public FormLinkNullable<PlacedObject> MultiboundReference { get; set; } = new FormLinkNullable<PlacedObject>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IPlacedObjectGetter> IPlacedNpcGetter.MultiboundReference => this.MultiboundReference.ToGetter<PlacedObject, IPlacedObjectGetter>();
+        public FormLinkNullable<IPlacedObjectGetter> MultiboundReference { get; set; } = new FormLinkNullable<IPlacedObjectGetter>();
         #endregion
         #region IgnoredBySandbox2
         public Boolean IgnoredBySandbox2 { get; set; } = default;
@@ -1608,30 +1592,30 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
-        new FormLinkNullable<Npc> Base { get; set; }
-        new FormLinkNullable<EncounterZone> EncounterZone { get; set; }
+        new FormLinkNullable<INpcGetter> Base { get; set; }
+        new FormLinkNullable<IEncounterZoneGetter> EncounterZone { get; set; }
         new MemorySlice<Byte>? RagdollData { get; set; }
         new MemorySlice<Byte>? RagdollBipedData { get; set; }
         new Patrol? Patrol { get; set; }
         new Level? LevelModifier { get; set; }
-        new FormLinkNullable<PlacedObject> MerchantContainer { get; set; }
+        new FormLinkNullable<IPlacedObjectGetter> MerchantContainer { get; set; }
         new Int32? Count { get; set; }
         new Single? Radius { get; set; }
         new Single? Health { get; set; }
         new IExtendedList<LinkedReferences> LinkedReferences { get; }
         new ActivateParents? ActivateParents { get; set; }
         new LinkedReferenceColor? LinkedReferenceColor { get; set; }
-        new FormLinkNullable<Location> PersistentLocation { get; set; }
-        new FormLinkNullable<ILocationRecord> LocationReference { get; set; }
+        new FormLinkNullable<ILocationGetter> PersistentLocation { get; set; }
+        new FormLinkNullable<ILocationRecordGetter> LocationReference { get; set; }
         new Boolean IgnoredBySandbox { get; set; }
-        new IExtendedList<IFormLink<LocationReferenceType>>? LocationRefTypes { get; set; }
+        new IExtendedList<IFormLink<ILocationReferenceTypeGetter>>? LocationRefTypes { get; set; }
         new Single? HeadTrackingWeight { get; set; }
-        new FormLinkNullable<PlacedNpc> Horse { get; set; }
+        new FormLinkNullable<IPlacedNpcGetter> Horse { get; set; }
         new Single? FavorCost { get; set; }
         new EnableParent? EnableParent { get; set; }
         new Ownership? Ownership { get; set; }
-        new FormLinkNullable<IEmittance> Emittance { get; set; }
-        new FormLinkNullable<PlacedObject> MultiboundReference { get; set; }
+        new FormLinkNullable<IEmittanceGetter> Emittance { get; set; }
+        new FormLinkNullable<IPlacedObjectGetter> MultiboundReference { get; set; }
         new Boolean IgnoredBySandbox2 { get; set; }
         new Single? Scale { get; set; }
         new Placement? Placement { get; set; }
@@ -1957,30 +1941,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.VirtualMachineAdapter = null;
-            item.Base = FormLinkNullable<Npc>.Null;
-            item.EncounterZone = FormLinkNullable<EncounterZone>.Null;
+            item.Base = FormLinkNullable<INpcGetter>.Null;
+            item.EncounterZone = FormLinkNullable<IEncounterZoneGetter>.Null;
             item.RagdollData = default;
             item.RagdollBipedData = default;
             item.Patrol = null;
             item.LevelModifier = default;
-            item.MerchantContainer = FormLinkNullable<PlacedObject>.Null;
+            item.MerchantContainer = FormLinkNullable<IPlacedObjectGetter>.Null;
             item.Count = default;
             item.Radius = default;
             item.Health = default;
             item.LinkedReferences.Clear();
             item.ActivateParents = null;
             item.LinkedReferenceColor = null;
-            item.PersistentLocation = FormLinkNullable<Location>.Null;
-            item.LocationReference = FormLinkNullable<ILocationRecord>.Null;
+            item.PersistentLocation = FormLinkNullable<ILocationGetter>.Null;
+            item.LocationReference = FormLinkNullable<ILocationRecordGetter>.Null;
             item.IgnoredBySandbox = default;
             item.LocationRefTypes = null;
             item.HeadTrackingWeight = default;
-            item.Horse = FormLinkNullable<PlacedNpc>.Null;
+            item.Horse = FormLinkNullable<IPlacedNpcGetter>.Null;
             item.FavorCost = default;
             item.EnableParent = null;
             item.Ownership = null;
-            item.Emittance = FormLinkNullable<IEmittance>.Null;
-            item.MultiboundReference = FormLinkNullable<PlacedObject>.Null;
+            item.Emittance = FormLinkNullable<IEmittanceGetter>.Null;
+            item.MultiboundReference = FormLinkNullable<IPlacedObjectGetter>.Null;
             item.IgnoredBySandbox2 = default;
             item.Scale = default;
             item.Placement = null;
@@ -2693,11 +2677,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Base) ?? true))
             {
-                item.Base = new FormLinkNullable<Npc>(rhs.Base.FormKey);
+                item.Base = new FormLinkNullable<INpcGetter>(rhs.Base.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.EncounterZone) ?? true))
             {
-                item.EncounterZone = new FormLinkNullable<EncounterZone>(rhs.EncounterZone.FormKey);
+                item.EncounterZone = new FormLinkNullable<IEncounterZoneGetter>(rhs.EncounterZone.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.RagdollData) ?? true))
             {
@@ -2753,7 +2737,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.MerchantContainer) ?? true))
             {
-                item.MerchantContainer = new FormLinkNullable<PlacedObject>(rhs.MerchantContainer.FormKey);
+                item.MerchantContainer = new FormLinkNullable<IPlacedObjectGetter>(rhs.MerchantContainer.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Count) ?? true))
             {
@@ -2845,11 +2829,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.PersistentLocation) ?? true))
             {
-                item.PersistentLocation = new FormLinkNullable<Location>(rhs.PersistentLocation.FormKey);
+                item.PersistentLocation = new FormLinkNullable<ILocationGetter>(rhs.PersistentLocation.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.LocationReference) ?? true))
             {
-                item.LocationReference = new FormLinkNullable<ILocationRecord>(rhs.LocationReference.FormKey);
+                item.LocationReference = new FormLinkNullable<ILocationRecordGetter>(rhs.LocationReference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.IgnoredBySandbox) ?? true))
             {
@@ -2864,8 +2848,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.LocationRefTypes = 
                             rhs.LocationRefTypes
-                            .Select(r => (IFormLink<LocationReferenceType>)new FormLink<LocationReferenceType>(r.FormKey))
-                            .ToExtendedList<IFormLink<LocationReferenceType>>();
+                            .Select(r => (IFormLink<ILocationReferenceTypeGetter>)new FormLink<ILocationReferenceTypeGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<ILocationReferenceTypeGetter>>();
                     }
                     else
                     {
@@ -2888,7 +2872,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Horse) ?? true))
             {
-                item.Horse = new FormLinkNullable<PlacedNpc>(rhs.Horse.FormKey);
+                item.Horse = new FormLinkNullable<IPlacedNpcGetter>(rhs.Horse.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.FavorCost) ?? true))
             {
@@ -2948,11 +2932,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Emittance) ?? true))
             {
-                item.Emittance = new FormLinkNullable<IEmittance>(rhs.Emittance.FormKey);
+                item.Emittance = new FormLinkNullable<IEmittanceGetter>(rhs.Emittance.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.MultiboundReference) ?? true))
             {
-                item.MultiboundReference = new FormLinkNullable<PlacedObject>(rhs.MultiboundReference.FormKey);
+                item.MultiboundReference = new FormLinkNullable<IPlacedObjectGetter>(rhs.MultiboundReference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.IgnoredBySandbox2) ?? true))
             {
@@ -3495,10 +3479,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.LocationRefTypes = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<LocationReferenceType>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ILocationReferenceTypeGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<LocationReferenceType>>();
+                        .CastExtendedList<IFormLink<ILocationReferenceTypeGetter>>();
                     return (int)PlacedNpc_FieldIndex.LocationRefTypes;
                 }
                 case RecordTypeInts.XHTW:

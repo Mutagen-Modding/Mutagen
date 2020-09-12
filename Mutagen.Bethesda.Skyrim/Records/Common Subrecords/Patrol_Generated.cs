@@ -44,9 +44,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Single IdleTime { get; set; } = default;
         #endregion
         #region Idle
-        public FormLink<IdleAnimation> Idle { get; set; } = new FormLink<IdleAnimation>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IIdleAnimationGetter> IPatrolGetter.Idle => this.Idle.ToGetter<IdleAnimation, IIdleAnimationGetter>();
+        public FormLink<IIdleAnimationGetter> Idle { get; set; } = new FormLink<IIdleAnimationGetter>();
         #endregion
         #region SCHR
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -648,7 +646,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new Single IdleTime { get; set; }
-        new FormLink<IdleAnimation> Idle { get; set; }
+        new FormLink<IIdleAnimationGetter> Idle { get; set; }
         new MemorySlice<Byte>? SCHR { get; set; }
         new MemorySlice<Byte>? SCTX { get; set; }
         new IExtendedList<ATopicReference> Topics { get; }
@@ -933,7 +931,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.IdleTime = default;
-            item.Idle = FormLink<IdleAnimation>.Null;
+            item.Idle = FormLink<IIdleAnimationGetter>.Null;
             item.SCHR = default;
             item.SCTX = default;
             item.Topics.Clear();
@@ -1147,7 +1145,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Patrol_FieldIndex.Idle) ?? true))
             {
-                item.Idle = new FormLink<IdleAnimation>(rhs.Idle.FormKey);
+                item.Idle = new FormLink<IIdleAnimationGetter>(rhs.Idle.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Patrol_FieldIndex.SCHR) ?? true))
             {

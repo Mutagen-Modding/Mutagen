@@ -40,9 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region MagicEffect
-        public EDIDLink<MagicEffect> MagicEffect { get; set; } = new EDIDLink<MagicEffect>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        EDIDLink<IMagicEffectGetter> IEffectDataGetter.MagicEffect => this.MagicEffect.ToGetter<MagicEffect, IMagicEffectGetter>();
+        public EDIDLink<IMagicEffectGetter> MagicEffect { get; set; } = new EDIDLink<IMagicEffectGetter>();
         #endregion
         #region Magnitude
         public UInt32 Magnitude { get; set; } = default;
@@ -575,7 +573,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IEffectData>,
         ILinkedFormKeyContainer
     {
-        new EDIDLink<MagicEffect> MagicEffect { get; set; }
+        new EDIDLink<IMagicEffectGetter> MagicEffect { get; set; }
         new UInt32 Magnitude { get; set; }
         new UInt32 Area { get; set; }
         new UInt32 Duration { get; set; }
@@ -863,7 +861,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IEffectData item)
         {
             ClearPartial();
-            item.MagicEffect = EDIDLink<MagicEffect>.Null;
+            item.MagicEffect = EDIDLink<IMagicEffectGetter>.Null;
             item.Magnitude = default;
             item.Area = default;
             item.Duration = default;
@@ -1053,7 +1051,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)EffectData_FieldIndex.MagicEffect) ?? true))
             {
-                item.MagicEffect = new EDIDLink<MagicEffect>(rhs.MagicEffect.EDID);
+                item.MagicEffect = new EDIDLink<IMagicEffectGetter>(rhs.MagicEffect.EDID);
             }
             if ((copyMask?.GetShouldTranslate((int)EffectData_FieldIndex.Magnitude) ?? true))
             {

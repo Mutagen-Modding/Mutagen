@@ -54,9 +54,7 @@ namespace Mutagen.Bethesda.Oblivion
         Color? IRegionGetter.MapColor => this.MapColor;
         #endregion
         #region Worldspace
-        public FormLinkNullable<Worldspace> Worldspace { get; set; } = new FormLinkNullable<Worldspace>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IWorldspaceGetter> IRegionGetter.Worldspace => this.Worldspace.ToGetter<Worldspace, IWorldspaceGetter>();
+        public FormLinkNullable<IWorldspaceGetter> Worldspace { get; set; } = new FormLinkNullable<IWorldspaceGetter>();
         #endregion
         #region Areas
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -855,7 +853,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new String? Icon { get; set; }
         new Color? MapColor { get; set; }
-        new FormLinkNullable<Worldspace> Worldspace { get; set; }
+        new FormLinkNullable<IWorldspaceGetter> Worldspace { get; set; }
         new IExtendedList<RegionArea> Areas { get; }
         new RegionObjects? Objects { get; set; }
         new RegionWeather? Weather { get; set; }
@@ -1133,7 +1131,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.Icon = default;
             item.MapColor = default;
-            item.Worldspace = FormLinkNullable<Worldspace>.Null;
+            item.Worldspace = FormLinkNullable<IWorldspaceGetter>.Null;
             item.Areas.Clear();
             item.Objects = null;
             item.Weather = null;
@@ -1588,7 +1586,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.Worldspace) ?? true))
             {
-                item.Worldspace = new FormLinkNullable<Worldspace>(rhs.Worldspace.FormKey);
+                item.Worldspace = new FormLinkNullable<IWorldspaceGetter>(rhs.Worldspace.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.Areas) ?? true))
             {

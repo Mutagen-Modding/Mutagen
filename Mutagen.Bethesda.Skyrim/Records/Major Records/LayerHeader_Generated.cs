@@ -40,9 +40,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Texture
-        public FormLink<LandscapeTexture> Texture { get; set; } = new FormLink<LandscapeTexture>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ILandscapeTextureGetter> ILayerHeaderGetter.Texture => this.Texture.ToGetter<LandscapeTexture, ILandscapeTextureGetter>();
+        public FormLink<ILandscapeTextureGetter> Texture { get; set; } = new FormLink<ILandscapeTextureGetter>();
         #endregion
         #region Quadrant
         public Quadrant Quadrant { get; set; } = default;
@@ -482,7 +480,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ILayerHeader>,
         ILinkedFormKeyContainer
     {
-        new FormLink<LandscapeTexture> Texture { get; set; }
+        new FormLink<ILandscapeTextureGetter> Texture { get; set; }
         new Quadrant Quadrant { get; set; }
         new UInt16 LayerNumber { get; set; }
     }
@@ -761,7 +759,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ILayerHeader item)
         {
             ClearPartial();
-            item.Texture = FormLink<LandscapeTexture>.Null;
+            item.Texture = FormLink<ILandscapeTextureGetter>.Null;
             item.Quadrant = default;
             item.LayerNumber = default;
         }
@@ -928,7 +926,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)LayerHeader_FieldIndex.Texture) ?? true))
             {
-                item.Texture = new FormLink<LandscapeTexture>(rhs.Texture.FormKey);
+                item.Texture = new FormLink<ILandscapeTextureGetter>(rhs.Texture.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LayerHeader_FieldIndex.Quadrant) ?? true))
             {

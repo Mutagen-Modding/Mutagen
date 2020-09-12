@@ -41,9 +41,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Target
-        public FormLink<IPlaced> Target { get; set; } = new FormLink<IPlaced>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IPlacedGetter> IQuestTargetGetter.Target => this.Target.ToGetter<IPlaced, IPlacedGetter>();
+        public FormLink<IPlacedGetter> Target { get; set; } = new FormLink<IPlacedGetter>();
         #endregion
         #region Flags
         public Quest.TargetFlag Flags { get; set; } = default;
@@ -604,7 +602,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IQuestTarget>,
         ILinkedFormKeyContainer
     {
-        new FormLink<IPlaced> Target { get; set; }
+        new FormLink<IPlacedGetter> Target { get; set; }
         new Quest.TargetFlag Flags { get; set; }
         new IExtendedList<Condition> Conditions { get; }
         new QuestTarget.QSTADataType QSTADataTypeState { get; set; }
@@ -886,7 +884,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IQuestTarget item)
         {
             ClearPartial();
-            item.Target = FormLink<IPlaced>.Null;
+            item.Target = FormLink<IPlacedGetter>.Null;
             item.Flags = default;
             item.Conditions.Clear();
             item.QSTADataTypeState = default;
@@ -1081,7 +1079,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)QuestTarget_FieldIndex.Target) ?? true))
             {
-                item.Target = new FormLink<IPlaced>(rhs.Target.FormKey);
+                item.Target = new FormLink<IPlacedGetter>(rhs.Target.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)QuestTarget_FieldIndex.Flags) ?? true))
             {

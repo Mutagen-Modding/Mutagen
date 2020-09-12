@@ -51,14 +51,10 @@ namespace Mutagen.Bethesda.Skyrim
         public Single Priority { get; set; } = default;
         #endregion
         #region Branch
-        public FormLinkNullable<DialogBranch> Branch { get; set; } = new FormLinkNullable<DialogBranch>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IDialogBranchGetter> IDialogTopicGetter.Branch => this.Branch.ToGetter<DialogBranch, IDialogBranchGetter>();
+        public FormLinkNullable<IDialogBranchGetter> Branch { get; set; } = new FormLinkNullable<IDialogBranchGetter>();
         #endregion
         #region Quest
-        public FormLinkNullable<Quest> Quest { get; set; } = new FormLinkNullable<Quest>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IQuestGetter> IDialogTopicGetter.Quest => this.Quest.ToGetter<Quest, IQuestGetter>();
+        public FormLinkNullable<IQuestGetter> Quest { get; set; } = new FormLinkNullable<IQuestGetter>();
         #endregion
         #region TopicFlags
         public DialogTopic.TopicFlag TopicFlags { get; set; } = default;
@@ -915,8 +911,8 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new TranslatedString? Name { get; set; }
         new Single Priority { get; set; }
-        new FormLinkNullable<DialogBranch> Branch { get; set; }
-        new FormLinkNullable<Quest> Quest { get; set; }
+        new FormLinkNullable<IDialogBranchGetter> Branch { get; set; }
+        new FormLinkNullable<IQuestGetter> Quest { get; set; }
         new DialogTopic.TopicFlag TopicFlags { get; set; }
         new DialogTopic.CategoryEnum Category { get; set; }
         new DialogTopic.SubtypeEnum Subtype { get; set; }
@@ -1421,8 +1417,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.Name = default;
             item.Priority = default;
-            item.Branch = FormLinkNullable<DialogBranch>.Null;
-            item.Quest = FormLinkNullable<Quest>.Null;
+            item.Branch = FormLinkNullable<IDialogBranchGetter>.Null;
+            item.Quest = FormLinkNullable<IQuestGetter>.Null;
             item.TopicFlags = default;
             item.Category = default;
             item.Subtype = default;
@@ -2012,11 +2008,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Branch) ?? true))
             {
-                item.Branch = new FormLinkNullable<DialogBranch>(rhs.Branch.FormKey);
+                item.Branch = new FormLinkNullable<IDialogBranchGetter>(rhs.Branch.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Quest) ?? true))
             {
-                item.Quest = new FormLinkNullable<Quest>(rhs.Quest.FormKey);
+                item.Quest = new FormLinkNullable<IQuestGetter>(rhs.Quest.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.TopicFlags) ?? true))
             {

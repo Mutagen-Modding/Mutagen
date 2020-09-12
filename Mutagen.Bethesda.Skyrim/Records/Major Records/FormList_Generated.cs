@@ -44,8 +44,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<SkyrimMajorRecord>> _Items = new ExtendedList<IFormLink<SkyrimMajorRecord>>();
-        public IExtendedList<IFormLink<SkyrimMajorRecord>> Items
+        private IExtendedList<IFormLink<ISkyrimMajorRecordGetter>> _Items = new ExtendedList<IFormLink<ISkyrimMajorRecordGetter>>();
+        public IExtendedList<IFormLink<ISkyrimMajorRecordGetter>> Items
         {
             get => this._Items;
             protected set => this._Items = value;
@@ -526,7 +526,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IFormListInternal>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<IFormLink<SkyrimMajorRecord>> Items { get; }
+        new IExtendedList<IFormLink<ISkyrimMajorRecordGetter>> Items { get; }
     }
 
     public partial interface IFormListInternal :
@@ -1100,7 +1100,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Items.SetTo(
                         rhs.Items
-                        .Select(r => (IFormLink<SkyrimMajorRecord>)new FormLink<SkyrimMajorRecord>(r.FormKey)));
+                        .Select(r => (IFormLink<ISkyrimMajorRecordGetter>)new FormLink<ISkyrimMajorRecordGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1366,7 +1366,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.LNAM:
                 {
                     item.Items.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<SkyrimMajorRecord>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ISkyrimMajorRecordGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.LNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));

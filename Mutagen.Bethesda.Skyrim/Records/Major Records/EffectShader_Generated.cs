@@ -260,9 +260,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Single ParticleRotationSpeedDegreePerSecPlusMinus { get; set; } = default;
         #endregion
         #region AddonModels
-        public FormLink<Debris> AddonModels { get; set; } = new FormLink<Debris>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IDebrisGetter> IEffectShaderGetter.AddonModels => this.AddonModels.ToGetter<Debris, IDebrisGetter>();
+        public FormLink<IDebrisGetter> AddonModels { get; set; } = new FormLink<IDebrisGetter>();
         #endregion
         #region HolesStartTime
         public Single HolesStartTime { get; set; } = default;
@@ -310,9 +308,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Single AddonModelsScaleOutTime { get; set; } = default;
         #endregion
         #region AmbientSound
-        public FormLink<ISound> AmbientSound { get; set; } = new FormLink<ISound>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISoundGetter> IEffectShaderGetter.AmbientSound => this.AmbientSound.ToGetter<ISound, ISoundGetter>();
+        public FormLink<ISoundGetter> AmbientSound { get; set; } = new FormLink<ISoundGetter>();
         #endregion
         #region FillColorKey2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -4048,7 +4044,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single ParticleInitialRotationDegreePlusMinus { get; set; }
         new Single ParticleRotationSpeedDegreePerSec { get; set; }
         new Single ParticleRotationSpeedDegreePerSecPlusMinus { get; set; }
-        new FormLink<Debris> AddonModels { get; set; }
+        new FormLink<IDebrisGetter> AddonModels { get; set; }
         new Single HolesStartTime { get; set; }
         new Single HolesEndTime { get; set; }
         new Single HolesStartValue { get; set; }
@@ -4064,7 +4060,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single AddonModelsScaleEnd { get; set; }
         new Single AddonModelsScaleInTime { get; set; }
         new Single AddonModelsScaleOutTime { get; set; }
-        new FormLink<ISound> AmbientSound { get; set; }
+        new FormLink<ISoundGetter> AmbientSound { get; set; }
         new Color FillColorKey2 { get; set; }
         new Color FillColorKey3 { get; set; }
         new Single FillColorKey1Scale { get; set; }
@@ -4618,7 +4614,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ParticleInitialRotationDegreePlusMinus = default;
             item.ParticleRotationSpeedDegreePerSec = default;
             item.ParticleRotationSpeedDegreePerSecPlusMinus = default;
-            item.AddonModels = FormLink<Debris>.Null;
+            item.AddonModels = FormLink<IDebrisGetter>.Null;
             item.HolesStartTime = default;
             item.HolesEndTime = default;
             item.HolesStartValue = default;
@@ -4634,7 +4630,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.AddonModelsScaleEnd = default;
             item.AddonModelsScaleInTime = default;
             item.AddonModelsScaleOutTime = default;
-            item.AmbientSound = FormLink<ISound>.Null;
+            item.AmbientSound = FormLink<ISoundGetter>.Null;
             item.FillColorKey2 = default;
             item.FillColorKey3 = default;
             item.FillColorKey1Scale = default;
@@ -5968,7 +5964,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.AddonModels) ?? true))
             {
-                item.AddonModels = new FormLink<Debris>(rhs.AddonModels.FormKey);
+                item.AddonModels = new FormLink<IDebrisGetter>(rhs.AddonModels.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesStartTime) ?? true))
             {
@@ -6032,7 +6028,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.AmbientSound) ?? true))
             {
-                item.AmbientSound = new FormLink<ISound>(rhs.AmbientSound.FormKey);
+                item.AmbientSound = new FormLink<ISoundGetter>(rhs.AmbientSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey2) ?? true))
             {

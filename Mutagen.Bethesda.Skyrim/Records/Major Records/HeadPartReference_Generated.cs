@@ -45,9 +45,7 @@ namespace Mutagen.Bethesda.Skyrim
         Int32? IHeadPartReferenceGetter.Number => this.Number;
         #endregion
         #region Head
-        public FormLinkNullable<HeadPart> Head { get; set; } = new FormLinkNullable<HeadPart>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IHeadPartGetter> IHeadPartReferenceGetter.Head => this.Head.ToGetter<HeadPart, IHeadPartGetter>();
+        public FormLinkNullable<IHeadPartGetter> Head { get; set; } = new FormLinkNullable<IHeadPartGetter>();
         #endregion
 
         #region To String
@@ -453,7 +451,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new Int32? Number { get; set; }
-        new FormLinkNullable<HeadPart> Head { get; set; }
+        new FormLinkNullable<IHeadPartGetter> Head { get; set; }
     }
 
     public partial interface IHeadPartReferenceGetter :
@@ -740,7 +738,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Number = default;
-            item.Head = FormLinkNullable<HeadPart>.Null;
+            item.Head = FormLinkNullable<IHeadPartGetter>.Null;
         }
         
         #region Binary Translation
@@ -907,7 +905,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)HeadPartReference_FieldIndex.Head) ?? true))
             {
-                item.Head = new FormLinkNullable<HeadPart>(rhs.Head.FormKey);
+                item.Head = new FormLinkNullable<IHeadPartGetter>(rhs.Head.FormKey);
             }
         }
         

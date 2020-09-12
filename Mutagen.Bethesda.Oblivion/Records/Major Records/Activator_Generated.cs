@@ -59,14 +59,10 @@ namespace Mutagen.Bethesda.Oblivion
         IModelGetter? IActivatorGetter.Model => this.Model;
         #endregion
         #region Script
-        public FormLinkNullable<Script> Script { get; set; } = new FormLinkNullable<Script>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IScriptGetter> IActivatorGetter.Script => this.Script.ToGetter<Script, IScriptGetter>();
+        public FormLinkNullable<IScriptGetter> Script { get; set; } = new FormLinkNullable<IScriptGetter>();
         #endregion
         #region Sound
-        public FormLinkNullable<Sound> Sound { get; set; } = new FormLinkNullable<Sound>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundGetter> IActivatorGetter.Sound => this.Sound.ToGetter<Sound, ISoundGetter>();
+        public FormLinkNullable<ISoundGetter> Sound { get; set; } = new FormLinkNullable<ISoundGetter>();
         #endregion
 
         #region To String
@@ -554,8 +550,8 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
-        new FormLinkNullable<Script> Script { get; set; }
-        new FormLinkNullable<Sound> Sound { get; set; }
+        new FormLinkNullable<IScriptGetter> Script { get; set; }
+        new FormLinkNullable<ISoundGetter> Sound { get; set; }
     }
 
     public partial interface IActivatorInternal :
@@ -818,8 +814,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.Name = default;
             item.Model = null;
-            item.Script = FormLinkNullable<Script>.Null;
-            item.Sound = FormLinkNullable<Sound>.Null;
+            item.Script = FormLinkNullable<IScriptGetter>.Null;
+            item.Sound = FormLinkNullable<ISoundGetter>.Null;
             base.Clear(item);
         }
         
@@ -1178,11 +1174,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.Script) ?? true))
             {
-                item.Script = new FormLinkNullable<Script>(rhs.Script.FormKey);
+                item.Script = new FormLinkNullable<IScriptGetter>(rhs.Script.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.Sound) ?? true))
             {
-                item.Sound = new FormLinkNullable<Sound>(rhs.Sound.FormKey);
+                item.Sound = new FormLinkNullable<ISoundGetter>(rhs.Sound.FormKey);
             }
         }
         

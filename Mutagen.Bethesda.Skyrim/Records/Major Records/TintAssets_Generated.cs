@@ -56,9 +56,7 @@ namespace Mutagen.Bethesda.Skyrim
         TintAssets.TintMaskType? ITintAssetsGetter.MaskType => this.MaskType;
         #endregion
         #region PresetDefault
-        public FormLinkNullable<ColorRecord> PresetDefault { get; set; } = new FormLinkNullable<ColorRecord>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IColorRecordGetter> ITintAssetsGetter.PresetDefault => this.PresetDefault.ToGetter<ColorRecord, IColorRecordGetter>();
+        public FormLinkNullable<IColorRecordGetter> PresetDefault { get; set; } = new FormLinkNullable<IColorRecordGetter>();
         #endregion
         #region Presets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -639,7 +637,7 @@ namespace Mutagen.Bethesda.Skyrim
         new UInt16? Index { get; set; }
         new String? FileName { get; set; }
         new TintAssets.TintMaskType? MaskType { get; set; }
-        new FormLinkNullable<ColorRecord> PresetDefault { get; set; }
+        new FormLinkNullable<IColorRecordGetter> PresetDefault { get; set; }
         new IExtendedList<TintPreset> Presets { get; }
     }
 
@@ -940,7 +938,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Index = default;
             item.FileName = default;
             item.MaskType = default;
-            item.PresetDefault = FormLinkNullable<ColorRecord>.Null;
+            item.PresetDefault = FormLinkNullable<IColorRecordGetter>.Null;
             item.Presets.Clear();
         }
         
@@ -1166,7 +1164,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)TintAssets_FieldIndex.PresetDefault) ?? true))
             {
-                item.PresetDefault = new FormLinkNullable<ColorRecord>(rhs.PresetDefault.FormKey);
+                item.PresetDefault = new FormLinkNullable<IColorRecordGetter>(rhs.PresetDefault.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)TintAssets_FieldIndex.Presets) ?? true))
             {
