@@ -306,9 +306,9 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     var subMetaFrame = frame.Reader.ReadSubrecordFrame(RecordTypes.PHWT);
                     var content = subMetaFrame.Content;
-                    if (content.Length != expectedSize)
+                    if (content.Length < expectedSize)
                     {
-                        throw new ArgumentException($"Unexpected target size: {content.Length} != {expectedSize}");
+                        throw new ArgumentException($"Unexpected target size: {content.Length} < {expectedSize}");
                     }
                     slots[i] = subMetaFrame.Content;
                 }

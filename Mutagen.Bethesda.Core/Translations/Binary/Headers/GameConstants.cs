@@ -152,6 +152,22 @@ namespace Mutagen.Bethesda.Binary
             return meta;
         }
 
+        public bool TrySubrecord(ReadOnlyMemorySlice<byte> span, RecordType targetType, out SubrecordHeader header)
+        {
+            if (span.Length < this.SubConstants.HeaderLength)
+            {
+                header = default;
+                return false;
+            }
+            header = new SubrecordHeader(this, span);
+            if (header.RecordType != targetType)
+            {
+                header = default;
+                return false;
+            }
+            return true;
+        }
+
         public SubrecordFrame SubrecordFrame(ReadOnlyMemorySlice<byte> span) => new SubrecordFrame(this, span);
 
         public SubrecordFrame SubrecordFrame(ReadOnlyMemorySlice<byte> span, RecordType targetType)
@@ -162,6 +178,23 @@ namespace Mutagen.Bethesda.Binary
                 throw new ArgumentException($"Unexpected header type: {meta.RecordType}");
             }
             return new SubrecordFrame(meta, span);
+        }
+
+        public bool TrySubrecordFrame(ReadOnlyMemorySlice<byte> span, RecordType targetType, out SubrecordFrame header)
+        {
+            if (span.Length < this.SubConstants.HeaderLength)
+            {
+                header = default;
+                return false;
+            }
+            var meta = new SubrecordHeader(this, span);
+            if (meta.RecordType != targetType)
+            {
+                header = default;
+                return false;
+            }
+            header = new SubrecordFrame(meta, span);
+            return true;
         }
 
         public VariableHeader NextRecordVariableMeta(ReadOnlyMemorySlice<byte> span)

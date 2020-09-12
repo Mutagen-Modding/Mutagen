@@ -5,6 +5,9 @@ using System.Text;
 namespace Mutagen.Bethesda
 {
     public struct ModContext<TMod, TMajorSetter, TMajorGetter>
+        where TMod : IModGetter
+        where TMajorSetter : IMajorRecordCommon, TMajorGetter
+        where TMajorGetter : IMajorRecordCommonGetter
     {
         private readonly Func<TMod, TMajorGetter, TMajorSetter> _getOrAddAsOverride;
         public readonly TMajorGetter Record;
@@ -22,7 +25,14 @@ namespace Mutagen.Bethesda
 
         public TMajorSetter GetOrAddAsOverride(TMod mod)
         {
-            return _getOrAddAsOverride(mod, Record);
+            try
+            {
+                return _getOrAddAsOverride(mod, Record);
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Factory(ex, Record);
+            }
         }
     }
 }
