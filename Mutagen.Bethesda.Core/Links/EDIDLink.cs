@@ -94,17 +94,17 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// Attempts to locate link target in given Link Cache.
         /// </summary>
-        /// <param name="package">Link Cache to resolve against</param>
+        /// <param name="cache">Link Cache to resolve against</param>
         /// <param name="major">Located record if successful</param>
         /// <returns>True if link was resolved and a record was retrieved</returns>
-        public bool TryResolve(ILinkCache package, out TMajor major)
+        public bool TryResolve(ILinkCache cache, out TMajor major)
         {
             if (this.EDID == Null)
             {
                 major = default!;
                 return false;
             }
-            foreach (var mod in package.PriorityOrder)
+            foreach (var mod in cache.PriorityOrder)
             {
                 if (TryLinkToMod(mod, out var item))
                 {
@@ -119,12 +119,12 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// Attempts to locate link target's FormKey in given Link Cache.
         /// </summary>
-        /// <param name="package">Link Cache to resolve against</param>
+        /// <param name="cache">Link Cache to resolve against</param>
         /// <param name="formKey">Located FormKey if successful</param>
         /// <returns>True if link was resolved and a record was retrieved</returns>
-        public bool TryResolveFormKey(ILinkCache package, [MaybeNullWhen(false)]out FormKey formKey)
+        public bool TryResolveFormKey(ILinkCache cache, [MaybeNullWhen(false)]out FormKey formKey)
         {
-            if (TryResolve(package, out var rec))
+            if (TryResolve(cache, out var rec))
             {
                 formKey = rec.FormKey;
                 return true;
@@ -133,9 +133,9 @@ namespace Mutagen.Bethesda
             return false;
         }
 
-        bool ILink.TryResolveCommon(ILinkCache package, [MaybeNullWhen(false)]out IMajorRecordCommonGetter formKey)
+        bool ILink.TryResolveCommon(ILinkCache cache, [MaybeNullWhen(false)]out IMajorRecordCommonGetter formKey)
         {
-            if (TryResolve(package, out TMajor rec))
+            if (TryResolve(cache, out TMajor rec))
             {
                 formKey = rec;
                 return true;
@@ -147,11 +147,11 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// Attempts to locate link target in given Link Cache.
         /// </summary>
-        /// <param name="package">Link Cache to resolve against</param>
+        /// <param name="cache">Link Cache to resolve against</param>
         /// <returns>TryGet object with located record if successful</returns>
-        public ITryGetter<TMajor> TryResolve(ILinkCache package) 
+        public ITryGetter<TMajor> TryResolve(ILinkCache cache) 
         {
-            if (TryResolve(package, out TMajor rec))
+            if (TryResolve(cache, out TMajor rec))
             {
                 return TryGet<TMajor>.Succeed(rec);
             }
