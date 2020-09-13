@@ -2,6 +2,7 @@
 using Noggog;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.ExceptionServices;
 using System.Text;
@@ -164,6 +165,39 @@ namespace Mutagen.Bethesda
             catch (Exception ex)
             {
                 throw RecordException.Factory(ex, major.FormKey, major.EditorID);
+            }
+        }
+
+        /// <summary>
+        /// Takes in a FormLink, and either returns the existing override definition
+        /// from the Group, or attempts to link and copy the given record, inserting it, and then returning it as an override.
+        /// </summary>
+        /// <param name="group">Group to retrieve and/or insert from</param>
+        /// <param name="link">Link to query and add</param>
+        /// <param name="cache">Cache to query link against</param>
+        /// <param name="rec">Retrieved record if successful</param>
+        /// <returns>True if a record was retrieved</returns>
+        public static bool TryGetOrAddAsOverride<TMajor, TMajorGetter>(this IGroupCommon<TMajor> group, IFormLink<TMajorGetter> link, ILinkCache cache, [MaybeNullWhen(false)] out TMajor rec)
+            where TMajor : class, IMajorRecordInternal, TMajorGetter
+            where TMajorGetter : class, IMajorRecordGetter, IBinaryItem
+        {
+            try
+            {
+                if (group.RecordCache.TryGetValue(link.FormKey, out rec))
+                {
+                    return true;
+                }
+                if (!link.TryResolve<TMajorGetter>(cache, out var getter))
+                {
+                    rec = default;
+                    return false;
+                }
+                rec = GetOrAddAsOverride(group, getter);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Factory(ex, link.FormKey, edid: null);
             }
         }
     }
