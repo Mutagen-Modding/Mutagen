@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Reference
         public FormLink<T> Reference { get; set; } = new FormLink<T>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<T> ILeveledEntryGetter<T>.Reference => this.Reference.ToGetter<T, T>();
+        IFormLink<T> ILeveledEntryGetter<T>.Reference => this.Reference;
         #endregion
         #region Count
         public Int16? Count { get; set; }

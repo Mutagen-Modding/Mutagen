@@ -166,7 +166,7 @@ namespace Mutagen.Bethesda.Generation
             if (NeedCovariance)
             {
                 fg.AppendLine($"[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                fg.AppendLine($"{this.TypeName(getter: true)} {this.ObjectGen.Interface(getter: true, this.InternalGetInterface)}.{this.Name} => this.{this.Name}.ToGetter<{LoquiType.TypeNameInternal(getter: false, internalInterface: true)}, {LoquiType.TypeNameInternal(getter: true, internalInterface: true)}>();");
+                fg.AppendLine($"{this.TypeName(getter: true)} {this.ObjectGen.Interface(getter: true, this.InternalGetInterface)}.{this.Name} => this.{this.Name};");
             }
         }
 
