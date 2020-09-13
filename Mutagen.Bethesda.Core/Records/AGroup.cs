@@ -81,6 +81,14 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
+        public TMajor AddNew(FormKey formKey)
+        {
+            var ret = MajorRecordInstantiator<TMajor>.Activator(SourceMod.GetNextFormKey());
+            InternalCache.Set(ret);
+            return ret;
+        }
+
+        /// <inheritdoc />
         public TMajor AddNew()
         {
             var ret = MajorRecordInstantiator<TMajor>.Activator(SourceMod.GetNextFormKey());

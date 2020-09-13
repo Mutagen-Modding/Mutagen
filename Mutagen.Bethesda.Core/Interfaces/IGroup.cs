@@ -94,6 +94,8 @@ namespace Mutagen.Bethesda
         /// </summary>
         void Clear();
 
+        TMajor AddNew(FormKey formKey);
+
         /// <summary>
         /// Convenience function to instantiate a new Major Record and add it to the Group.<br />
         /// FormKey will be automatically assigned.
@@ -108,5 +110,39 @@ namespace Mutagen.Bethesda
         /// <param name="editorID">Editor ID to assign the new record.</param>
         /// <returns>New record already added to the Group</returns>
         TMajor AddNew(string editorID);
+    }
+
+    public static class GroupExt
+    {
+        /// <summary>
+        /// Duplicates a given record (giving it a new FormID) adding it to the group and returning it.
+        /// </summary>
+        /// <param name="group">Group to add to</param>
+        /// <param name="source">Source record to duplicate</param>
+        /// <returns>Duplicated and added record</returns>
+        public static TMajor DuplicateIn<TMajor, TMajorGetter>(this IGroupCommon<TMajor> group, TMajorGetter source)
+            where TMajor : IMajorRecordCommon, TMajorGetter
+            where TMajorGetter : IMajorRecordCommonGetter, IBinaryItem, IDuplicatable
+        {
+            var ret = (TMajor)source.Duplicate(group.SourceMod.GetNextFormKey);
+            group.Add(ret);
+            return ret;
+        }
+
+        /// <summary>
+        /// Duplicates a given record (giving it a new FormID) adding it to the group and returning it.
+        /// </summary>
+        /// <param name="group">Group to add to</param>
+        /// <param name="edid">EditorID to drive the FormID assignment off any persistance systems</param>
+        /// <param name="source">Source record to duplicate</param>
+        /// <returns>Duplicated and added record</returns>
+        public static TMajor DuplicateIn<TMajor, TMajorGetter>(this IGroupCommon<TMajor> group, string edid, TMajorGetter source)
+            where TMajor : IMajorRecordCommon, TMajorGetter
+            where TMajorGetter : IMajorRecordCommonGetter, IBinaryItem, IDuplicatable
+        {
+            var ret = (TMajor)source.Duplicate(() => group.SourceMod.GetNextFormKey(edid));
+            group.Add(ret);
+            return ret;
+        }
     }
 }
