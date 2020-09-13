@@ -31,27 +31,6 @@ namespace Mutagen.Bethesda.UnitTests
         }
     }
 
-    public class LinkingApi
-    {
-        /// <summary>
-        /// This API test is related to #106 on github
-        /// Want to confirm that typical given FormLinks can resolve even if backing 
-        /// mod isn't a setter mod.
-        /// </summary>
-        [Fact]
-        public static void TypicalLinksLocate()
-        {
-            SkyrimMod sourceMod = new SkyrimMod(Utility.ModKey, SkyrimRelease.SkyrimSE);
-            var race = sourceMod.Races.AddNew();
-            using var cleanup = Linking_ImmutableOverlay_Tests.ConvertModToOverlay(sourceMod, out var sourceModGetter);
-            var cache = sourceModGetter.ToImmutableLinkCache();
-            var otherMod = new SkyrimMod(Utility.ModKey2, SkyrimRelease.SkyrimSE);
-            var npc = otherMod.Npcs.AddNew();
-            npc.Race = race;
-            Assert.True(npc.Race.TryResolve(cache, out var _));
-        }
-    }
-
     public abstract class Linking_Abstract_Tests : IClassFixture<LinkingInit>
     {
         public static FormKey UnusedFormKey = new FormKey(Utility.ModKey, 123456);
