@@ -43,14 +43,12 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Quest
-        public FormLink<Quest> Quest { get; set; } = new FormLink<Quest>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IQuestGetter> IDialogViewGetter.Quest => this.Quest.ToGetter<Quest, IQuestGetter>();
+        public FormLink<IQuestGetter> Quest { get; set; } = new FormLink<IQuestGetter>();
         #endregion
         #region Branches
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<DialogBranch>> _Branches = new ExtendedList<IFormLink<DialogBranch>>();
-        public IExtendedList<IFormLink<DialogBranch>> Branches
+        private ExtendedList<IFormLink<IDialogBranchGetter>> _Branches = new ExtendedList<IFormLink<IDialogBranchGetter>>();
+        public ExtendedList<IFormLink<IDialogBranchGetter>> Branches
         {
             get => this._Branches;
             protected set => this._Branches = value;
@@ -749,8 +747,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IDialogViewInternal>,
         ILinkedFormKeyContainer
     {
-        new FormLink<Quest> Quest { get; set; }
-        new IExtendedList<IFormLink<DialogBranch>> Branches { get; }
+        new FormLink<IQuestGetter> Quest { get; set; }
+        new ExtendedList<IFormLink<IDialogBranchGetter>> Branches { get; }
         new SliceList<byte> TNAMs { get; }
         new MemorySlice<Byte>? ENAM { get; set; }
         new MemorySlice<Byte>? DNAM { get; set; }
@@ -973,146 +971,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "QUEST":
-                    return (ushort)DialogView_FieldIndex.Quest;
-                case "BRANCHES":
-                    return (ushort)DialogView_FieldIndex.Branches;
-                case "TNAMS":
-                    return (ushort)DialogView_FieldIndex.TNAMs;
-                case "ENAM":
-                    return (ushort)DialogView_FieldIndex.ENAM;
-                case "DNAM":
-                    return (ushort)DialogView_FieldIndex.DNAM;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            DialogView_FieldIndex enu = (DialogView_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogView_FieldIndex.Branches:
-                case DialogView_FieldIndex.TNAMs:
-                    return true;
-                case DialogView_FieldIndex.Quest:
-                case DialogView_FieldIndex.ENAM:
-                case DialogView_FieldIndex.DNAM:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            DialogView_FieldIndex enu = (DialogView_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogView_FieldIndex.Quest:
-                case DialogView_FieldIndex.Branches:
-                case DialogView_FieldIndex.TNAMs:
-                case DialogView_FieldIndex.ENAM:
-                case DialogView_FieldIndex.DNAM:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            DialogView_FieldIndex enu = (DialogView_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogView_FieldIndex.Quest:
-                case DialogView_FieldIndex.Branches:
-                case DialogView_FieldIndex.TNAMs:
-                case DialogView_FieldIndex.ENAM:
-                case DialogView_FieldIndex.DNAM:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            DialogView_FieldIndex enu = (DialogView_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogView_FieldIndex.Quest:
-                    return "Quest";
-                case DialogView_FieldIndex.Branches:
-                    return "Branches";
-                case DialogView_FieldIndex.TNAMs:
-                    return "TNAMs";
-                case DialogView_FieldIndex.ENAM:
-                    return "ENAM";
-                case DialogView_FieldIndex.DNAM:
-                    return "DNAM";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            DialogView_FieldIndex enu = (DialogView_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogView_FieldIndex.Quest:
-                case DialogView_FieldIndex.Branches:
-                case DialogView_FieldIndex.TNAMs:
-                case DialogView_FieldIndex.ENAM:
-                case DialogView_FieldIndex.DNAM:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            DialogView_FieldIndex enu = (DialogView_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogView_FieldIndex.Quest:
-                case DialogView_FieldIndex.Branches:
-                case DialogView_FieldIndex.TNAMs:
-                case DialogView_FieldIndex.ENAM:
-                case DialogView_FieldIndex.DNAM:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            DialogView_FieldIndex enu = (DialogView_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogView_FieldIndex.Quest:
-                    return typeof(FormLink<Quest>);
-                case DialogView_FieldIndex.Branches:
-                    return typeof(IExtendedList<IFormLink<DialogBranch>>);
-                case DialogView_FieldIndex.TNAMs:
-                    return typeof(SliceList<byte>);
-                case DialogView_FieldIndex.ENAM:
-                    return typeof(MemorySlice<Byte>);
-                case DialogView_FieldIndex.DNAM:
-                    return typeof(MemorySlice<Byte>);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.DLVW;
         public static readonly Type BinaryWriteTranslation = typeof(DialogViewBinaryWriteTranslation);
         #region Interface
@@ -1133,14 +991,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1156,7 +1014,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IDialogViewInternal item)
         {
             ClearPartial();
-            item.Quest = FormLink<Quest>.Null;
+            item.Quest = FormLink<IQuestGetter>.Null;
             item.Branches.Clear();
             item.TNAMs.Clear();
             item.ENAM = default;
@@ -1525,7 +1383,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)DialogView_FieldIndex.Quest) ?? true))
             {
-                item.Quest = new FormLink<Quest>(rhs.Quest.FormKey);
+                item.Quest = new FormLink<IQuestGetter>(rhs.Quest.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogView_FieldIndex.Branches) ?? true))
             {
@@ -1534,7 +1392,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Branches.SetTo(
                         rhs.Branches
-                        .Select(r => (IFormLink<DialogBranch>)new FormLink<DialogBranch>(r.FormKey)));
+                        .Select(r => (IFormLink<IDialogBranchGetter>)new FormLink<IDialogBranchGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1866,7 +1724,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.BNAM:
                 {
                     item.Branches.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<DialogBranch>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IDialogBranchGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.BNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));

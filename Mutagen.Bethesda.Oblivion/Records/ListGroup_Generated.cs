@@ -54,8 +54,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Records
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<T> _Records = new ExtendedList<T>();
-        public IExtendedList<T> Records
+        private ExtendedList<T> _Records = new ExtendedList<T>();
+        public ExtendedList<T> Records
         {
             get => this._Records;
             protected set => this._Records = value;
@@ -205,7 +205,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new GroupTypeEnum Type { get; set; }
         new Int32 LastModified { get; set; }
-        new IExtendedList<T> Records { get; }
+        new ExtendedList<T> Records { get; }
     }
 
     public partial interface IListGroupGetter<out T> :
@@ -699,111 +699,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = typeof(ListGroup_Registration<>);
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "TYPE":
-                    return (ushort)ListGroup_FieldIndex.Type;
-                case "LASTMODIFIED":
-                    return (ushort)ListGroup_FieldIndex.LastModified;
-                case "RECORDS":
-                    return (ushort)ListGroup_FieldIndex.Records;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            ListGroup_FieldIndex enu = (ListGroup_FieldIndex)index;
-            switch (enu)
-            {
-                case ListGroup_FieldIndex.Records:
-                    return true;
-                case ListGroup_FieldIndex.Type:
-                case ListGroup_FieldIndex.LastModified:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            ListGroup_FieldIndex enu = (ListGroup_FieldIndex)index;
-            switch (enu)
-            {
-                case ListGroup_FieldIndex.Records:
-                    return true;
-                case ListGroup_FieldIndex.Type:
-                case ListGroup_FieldIndex.LastModified:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            ListGroup_FieldIndex enu = (ListGroup_FieldIndex)index;
-            switch (enu)
-            {
-                case ListGroup_FieldIndex.Type:
-                case ListGroup_FieldIndex.LastModified:
-                case ListGroup_FieldIndex.Records:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            ListGroup_FieldIndex enu = (ListGroup_FieldIndex)index;
-            switch (enu)
-            {
-                case ListGroup_FieldIndex.Type:
-                    return "Type";
-                case ListGroup_FieldIndex.LastModified:
-                    return "LastModified";
-                case ListGroup_FieldIndex.Records:
-                    return "Records";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            ListGroup_FieldIndex enu = (ListGroup_FieldIndex)index;
-            switch (enu)
-            {
-                case ListGroup_FieldIndex.Type:
-                case ListGroup_FieldIndex.LastModified:
-                case ListGroup_FieldIndex.Records:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            ListGroup_FieldIndex enu = (ListGroup_FieldIndex)index;
-            switch (enu)
-            {
-                case ListGroup_FieldIndex.Type:
-                case ListGroup_FieldIndex.LastModified:
-                case ListGroup_FieldIndex.Records:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index) => throw new ArgumentException("Cannot get nth type for a generic object here.  Use generic registration instead.");
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.GRUP;
         public static readonly Type BinaryWriteTranslation = typeof(ListGroupBinaryWriteTranslation);
         #region Interface
@@ -824,14 +719,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -851,7 +746,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ListGroup_FieldIndex.LastModified:
                     return typeof(Int32);
                 case ListGroup_FieldIndex.Records:
-                    return typeof(IExtendedList<T>);
+                    return typeof(ExtendedList<T>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

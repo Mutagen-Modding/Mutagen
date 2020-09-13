@@ -64,9 +64,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? IPotionGetter.Icon => this.Icon;
         #endregion
         #region Script
-        public FormLinkNullable<Script> Script { get; set; } = new FormLinkNullable<Script>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IScriptGetter> IPotionGetter.Script => this.Script.ToGetter<Script, IScriptGetter>();
+        public FormLinkNullable<IScriptGetter> Script { get; set; } = new FormLinkNullable<IScriptGetter>();
         #endregion
         #region Weight
         public Single? Weight { get; set; }
@@ -86,8 +84,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Effect> _Effects = new ExtendedList<Effect>();
-        public IExtendedList<Effect> Effects
+        private ExtendedList<Effect> _Effects = new ExtendedList<Effect>();
+        public ExtendedList<Effect> Effects
         {
             get => this._Effects;
             protected set => this._Effects = value;
@@ -751,10 +749,10 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Name { get; set; }
         new Model? Model { get; set; }
         new String? Icon { get; set; }
-        new FormLinkNullable<Script> Script { get; set; }
+        new FormLinkNullable<IScriptGetter> Script { get; set; }
         new Single? Weight { get; set; }
         new PotionData? Data { get; set; }
-        new IExtendedList<Effect> Effects { get; }
+        new ExtendedList<Effect> Effects { get; }
     }
 
     public partial interface IPotionInternal :
@@ -978,169 +976,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "NAME":
-                    return (ushort)Potion_FieldIndex.Name;
-                case "MODEL":
-                    return (ushort)Potion_FieldIndex.Model;
-                case "ICON":
-                    return (ushort)Potion_FieldIndex.Icon;
-                case "SCRIPT":
-                    return (ushort)Potion_FieldIndex.Script;
-                case "WEIGHT":
-                    return (ushort)Potion_FieldIndex.Weight;
-                case "DATA":
-                    return (ushort)Potion_FieldIndex.Data;
-                case "EFFECTS":
-                    return (ushort)Potion_FieldIndex.Effects;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Potion_FieldIndex enu = (Potion_FieldIndex)index;
-            switch (enu)
-            {
-                case Potion_FieldIndex.Effects:
-                    return true;
-                case Potion_FieldIndex.Name:
-                case Potion_FieldIndex.Model:
-                case Potion_FieldIndex.Icon:
-                case Potion_FieldIndex.Script:
-                case Potion_FieldIndex.Weight:
-                case Potion_FieldIndex.Data:
-                    return false;
-                default:
-                    return AItem_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Potion_FieldIndex enu = (Potion_FieldIndex)index;
-            switch (enu)
-            {
-                case Potion_FieldIndex.Model:
-                case Potion_FieldIndex.Data:
-                case Potion_FieldIndex.Effects:
-                    return true;
-                case Potion_FieldIndex.Name:
-                case Potion_FieldIndex.Icon:
-                case Potion_FieldIndex.Script:
-                case Potion_FieldIndex.Weight:
-                    return false;
-                default:
-                    return AItem_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Potion_FieldIndex enu = (Potion_FieldIndex)index;
-            switch (enu)
-            {
-                case Potion_FieldIndex.Name:
-                case Potion_FieldIndex.Model:
-                case Potion_FieldIndex.Icon:
-                case Potion_FieldIndex.Script:
-                case Potion_FieldIndex.Weight:
-                case Potion_FieldIndex.Data:
-                case Potion_FieldIndex.Effects:
-                    return false;
-                default:
-                    return AItem_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Potion_FieldIndex enu = (Potion_FieldIndex)index;
-            switch (enu)
-            {
-                case Potion_FieldIndex.Name:
-                    return "Name";
-                case Potion_FieldIndex.Model:
-                    return "Model";
-                case Potion_FieldIndex.Icon:
-                    return "Icon";
-                case Potion_FieldIndex.Script:
-                    return "Script";
-                case Potion_FieldIndex.Weight:
-                    return "Weight";
-                case Potion_FieldIndex.Data:
-                    return "Data";
-                case Potion_FieldIndex.Effects:
-                    return "Effects";
-                default:
-                    return AItem_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Potion_FieldIndex enu = (Potion_FieldIndex)index;
-            switch (enu)
-            {
-                case Potion_FieldIndex.Name:
-                case Potion_FieldIndex.Model:
-                case Potion_FieldIndex.Icon:
-                case Potion_FieldIndex.Script:
-                case Potion_FieldIndex.Weight:
-                case Potion_FieldIndex.Data:
-                case Potion_FieldIndex.Effects:
-                    return false;
-                default:
-                    return AItem_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Potion_FieldIndex enu = (Potion_FieldIndex)index;
-            switch (enu)
-            {
-                case Potion_FieldIndex.Name:
-                case Potion_FieldIndex.Model:
-                case Potion_FieldIndex.Icon:
-                case Potion_FieldIndex.Script:
-                case Potion_FieldIndex.Weight:
-                case Potion_FieldIndex.Data:
-                case Potion_FieldIndex.Effects:
-                    return false;
-                default:
-                    return AItem_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Potion_FieldIndex enu = (Potion_FieldIndex)index;
-            switch (enu)
-            {
-                case Potion_FieldIndex.Name:
-                    return typeof(String);
-                case Potion_FieldIndex.Model:
-                    return typeof(Model);
-                case Potion_FieldIndex.Icon:
-                    return typeof(String);
-                case Potion_FieldIndex.Script:
-                    return typeof(FormLinkNullable<Script>);
-                case Potion_FieldIndex.Weight:
-                    return typeof(Single);
-                case Potion_FieldIndex.Data:
-                    return typeof(PotionData);
-                case Potion_FieldIndex.Effects:
-                    return typeof(IExtendedList<Effect>);
-                default:
-                    return AItem_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.ALCH;
         public static readonly Type BinaryWriteTranslation = typeof(PotionBinaryWriteTranslation);
         #region Interface
@@ -1161,14 +996,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1187,7 +1022,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name = default;
             item.Model = null;
             item.Icon = default;
-            item.Script = FormLinkNullable<Script>.Null;
+            item.Script = FormLinkNullable<IScriptGetter>.Null;
             item.Weight = default;
             item.Data = null;
             item.Effects.Clear();
@@ -1656,7 +1491,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Potion_FieldIndex.Script) ?? true))
             {
-                item.Script = new FormLinkNullable<Script>(rhs.Script.FormKey);
+                item.Script = new FormLinkNullable<IScriptGetter>(rhs.Script.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Potion_FieldIndex.Weight) ?? true))
             {

@@ -54,8 +54,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Keyword>>? _Keywords;
-        public IExtendedList<IFormLink<Keyword>>? Keywords
+        private ExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
+        public ExtendedList<IFormLink<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -67,14 +67,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region MenuDisplayObject
-        public FormLinkNullable<Static> MenuDisplayObject { get; set; } = new FormLinkNullable<Static>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IStaticGetter> ISpellGetter.MenuDisplayObject => this.MenuDisplayObject.ToGetter<Static, IStaticGetter>();
+        public FormLinkNullable<IStaticGetter> MenuDisplayObject { get; set; } = new FormLinkNullable<IStaticGetter>();
         #endregion
         #region EquipmentType
-        public FormLinkNullable<EquipType> EquipmentType { get; set; } = new FormLinkNullable<EquipType>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IEquipTypeGetter> ISpellGetter.EquipmentType => this.EquipmentType.ToGetter<EquipType, IEquipTypeGetter>();
+        public FormLinkNullable<IEquipTypeGetter> EquipmentType { get; set; } = new FormLinkNullable<IEquipTypeGetter>();
         #endregion
         #region Description
         public TranslatedString Description { get; set; } = string.Empty;
@@ -104,14 +100,12 @@ namespace Mutagen.Bethesda.Skyrim
         public Single Range { get; set; } = default;
         #endregion
         #region HalfCostPerk
-        public FormLink<Perk> HalfCostPerk { get; set; } = new FormLink<Perk>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IPerkGetter> ISpellGetter.HalfCostPerk => this.HalfCostPerk.ToGetter<Perk, IPerkGetter>();
+        public FormLink<IPerkGetter> HalfCostPerk { get; set; } = new FormLink<IPerkGetter>();
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Effect> _Effects = new ExtendedList<Effect>();
-        public IExtendedList<Effect> Effects
+        private ExtendedList<Effect> _Effects = new ExtendedList<Effect>();
+        public ExtendedList<Effect> Effects
         {
             get => this._Effects;
             protected set => this._Effects = value;
@@ -1133,9 +1127,9 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new ObjectBounds ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
-        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
-        new FormLinkNullable<Static> MenuDisplayObject { get; set; }
-        new FormLinkNullable<EquipType> EquipmentType { get; set; }
+        new ExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
+        new FormLinkNullable<IStaticGetter> MenuDisplayObject { get; set; }
+        new FormLinkNullable<IEquipTypeGetter> EquipmentType { get; set; }
         new TranslatedString Description { get; set; }
         new UInt32 BaseCost { get; set; }
         new SpellDataFlag Flags { get; set; }
@@ -1145,8 +1139,8 @@ namespace Mutagen.Bethesda.Skyrim
         new TargetType TargetType { get; set; }
         new Single CastDuration { get; set; }
         new Single Range { get; set; }
-        new FormLink<Perk> HalfCostPerk { get; set; }
-        new IExtendedList<Effect> Effects { get; }
+        new FormLink<IPerkGetter> HalfCostPerk { get; set; }
+        new ExtendedList<Effect> Effects { get; }
         new Spell.SPITDataType SPITDataTypeState { get; set; }
     }
 
@@ -1396,279 +1390,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "OBJECTBOUNDS":
-                    return (ushort)Spell_FieldIndex.ObjectBounds;
-                case "NAME":
-                    return (ushort)Spell_FieldIndex.Name;
-                case "KEYWORDS":
-                    return (ushort)Spell_FieldIndex.Keywords;
-                case "MENUDISPLAYOBJECT":
-                    return (ushort)Spell_FieldIndex.MenuDisplayObject;
-                case "EQUIPMENTTYPE":
-                    return (ushort)Spell_FieldIndex.EquipmentType;
-                case "DESCRIPTION":
-                    return (ushort)Spell_FieldIndex.Description;
-                case "BASECOST":
-                    return (ushort)Spell_FieldIndex.BaseCost;
-                case "FLAGS":
-                    return (ushort)Spell_FieldIndex.Flags;
-                case "TYPE":
-                    return (ushort)Spell_FieldIndex.Type;
-                case "CHARGETIME":
-                    return (ushort)Spell_FieldIndex.ChargeTime;
-                case "CASTTYPE":
-                    return (ushort)Spell_FieldIndex.CastType;
-                case "TARGETTYPE":
-                    return (ushort)Spell_FieldIndex.TargetType;
-                case "CASTDURATION":
-                    return (ushort)Spell_FieldIndex.CastDuration;
-                case "RANGE":
-                    return (ushort)Spell_FieldIndex.Range;
-                case "HALFCOSTPERK":
-                    return (ushort)Spell_FieldIndex.HalfCostPerk;
-                case "EFFECTS":
-                    return (ushort)Spell_FieldIndex.Effects;
-                case "SPITDATATYPESTATE":
-                    return (ushort)Spell_FieldIndex.SPITDataTypeState;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Spell_FieldIndex enu = (Spell_FieldIndex)index;
-            switch (enu)
-            {
-                case Spell_FieldIndex.Keywords:
-                case Spell_FieldIndex.Effects:
-                    return true;
-                case Spell_FieldIndex.ObjectBounds:
-                case Spell_FieldIndex.Name:
-                case Spell_FieldIndex.MenuDisplayObject:
-                case Spell_FieldIndex.EquipmentType:
-                case Spell_FieldIndex.Description:
-                case Spell_FieldIndex.BaseCost:
-                case Spell_FieldIndex.Flags:
-                case Spell_FieldIndex.Type:
-                case Spell_FieldIndex.ChargeTime:
-                case Spell_FieldIndex.CastType:
-                case Spell_FieldIndex.TargetType:
-                case Spell_FieldIndex.CastDuration:
-                case Spell_FieldIndex.Range:
-                case Spell_FieldIndex.HalfCostPerk:
-                case Spell_FieldIndex.SPITDataTypeState:
-                    return false;
-                default:
-                    return ASpell_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Spell_FieldIndex enu = (Spell_FieldIndex)index;
-            switch (enu)
-            {
-                case Spell_FieldIndex.ObjectBounds:
-                case Spell_FieldIndex.Effects:
-                    return true;
-                case Spell_FieldIndex.Name:
-                case Spell_FieldIndex.Keywords:
-                case Spell_FieldIndex.MenuDisplayObject:
-                case Spell_FieldIndex.EquipmentType:
-                case Spell_FieldIndex.Description:
-                case Spell_FieldIndex.BaseCost:
-                case Spell_FieldIndex.Flags:
-                case Spell_FieldIndex.Type:
-                case Spell_FieldIndex.ChargeTime:
-                case Spell_FieldIndex.CastType:
-                case Spell_FieldIndex.TargetType:
-                case Spell_FieldIndex.CastDuration:
-                case Spell_FieldIndex.Range:
-                case Spell_FieldIndex.HalfCostPerk:
-                case Spell_FieldIndex.SPITDataTypeState:
-                    return false;
-                default:
-                    return ASpell_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Spell_FieldIndex enu = (Spell_FieldIndex)index;
-            switch (enu)
-            {
-                case Spell_FieldIndex.ObjectBounds:
-                case Spell_FieldIndex.Name:
-                case Spell_FieldIndex.Keywords:
-                case Spell_FieldIndex.MenuDisplayObject:
-                case Spell_FieldIndex.EquipmentType:
-                case Spell_FieldIndex.Description:
-                case Spell_FieldIndex.BaseCost:
-                case Spell_FieldIndex.Flags:
-                case Spell_FieldIndex.Type:
-                case Spell_FieldIndex.ChargeTime:
-                case Spell_FieldIndex.CastType:
-                case Spell_FieldIndex.TargetType:
-                case Spell_FieldIndex.CastDuration:
-                case Spell_FieldIndex.Range:
-                case Spell_FieldIndex.HalfCostPerk:
-                case Spell_FieldIndex.Effects:
-                case Spell_FieldIndex.SPITDataTypeState:
-                    return false;
-                default:
-                    return ASpell_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Spell_FieldIndex enu = (Spell_FieldIndex)index;
-            switch (enu)
-            {
-                case Spell_FieldIndex.ObjectBounds:
-                    return "ObjectBounds";
-                case Spell_FieldIndex.Name:
-                    return "Name";
-                case Spell_FieldIndex.Keywords:
-                    return "Keywords";
-                case Spell_FieldIndex.MenuDisplayObject:
-                    return "MenuDisplayObject";
-                case Spell_FieldIndex.EquipmentType:
-                    return "EquipmentType";
-                case Spell_FieldIndex.Description:
-                    return "Description";
-                case Spell_FieldIndex.BaseCost:
-                    return "BaseCost";
-                case Spell_FieldIndex.Flags:
-                    return "Flags";
-                case Spell_FieldIndex.Type:
-                    return "Type";
-                case Spell_FieldIndex.ChargeTime:
-                    return "ChargeTime";
-                case Spell_FieldIndex.CastType:
-                    return "CastType";
-                case Spell_FieldIndex.TargetType:
-                    return "TargetType";
-                case Spell_FieldIndex.CastDuration:
-                    return "CastDuration";
-                case Spell_FieldIndex.Range:
-                    return "Range";
-                case Spell_FieldIndex.HalfCostPerk:
-                    return "HalfCostPerk";
-                case Spell_FieldIndex.Effects:
-                    return "Effects";
-                case Spell_FieldIndex.SPITDataTypeState:
-                    return "SPITDataTypeState";
-                default:
-                    return ASpell_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Spell_FieldIndex enu = (Spell_FieldIndex)index;
-            switch (enu)
-            {
-                case Spell_FieldIndex.ObjectBounds:
-                case Spell_FieldIndex.Name:
-                case Spell_FieldIndex.Keywords:
-                case Spell_FieldIndex.MenuDisplayObject:
-                case Spell_FieldIndex.EquipmentType:
-                case Spell_FieldIndex.Description:
-                case Spell_FieldIndex.BaseCost:
-                case Spell_FieldIndex.Flags:
-                case Spell_FieldIndex.Type:
-                case Spell_FieldIndex.ChargeTime:
-                case Spell_FieldIndex.CastType:
-                case Spell_FieldIndex.TargetType:
-                case Spell_FieldIndex.CastDuration:
-                case Spell_FieldIndex.Range:
-                case Spell_FieldIndex.HalfCostPerk:
-                case Spell_FieldIndex.Effects:
-                case Spell_FieldIndex.SPITDataTypeState:
-                    return false;
-                default:
-                    return ASpell_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Spell_FieldIndex enu = (Spell_FieldIndex)index;
-            switch (enu)
-            {
-                case Spell_FieldIndex.ObjectBounds:
-                case Spell_FieldIndex.Name:
-                case Spell_FieldIndex.Keywords:
-                case Spell_FieldIndex.MenuDisplayObject:
-                case Spell_FieldIndex.EquipmentType:
-                case Spell_FieldIndex.Description:
-                case Spell_FieldIndex.BaseCost:
-                case Spell_FieldIndex.Flags:
-                case Spell_FieldIndex.Type:
-                case Spell_FieldIndex.ChargeTime:
-                case Spell_FieldIndex.CastType:
-                case Spell_FieldIndex.TargetType:
-                case Spell_FieldIndex.CastDuration:
-                case Spell_FieldIndex.Range:
-                case Spell_FieldIndex.HalfCostPerk:
-                case Spell_FieldIndex.Effects:
-                case Spell_FieldIndex.SPITDataTypeState:
-                    return false;
-                default:
-                    return ASpell_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Spell_FieldIndex enu = (Spell_FieldIndex)index;
-            switch (enu)
-            {
-                case Spell_FieldIndex.ObjectBounds:
-                    return typeof(ObjectBounds);
-                case Spell_FieldIndex.Name:
-                    return typeof(TranslatedString);
-                case Spell_FieldIndex.Keywords:
-                    return typeof(IExtendedList<IFormLink<Keyword>>);
-                case Spell_FieldIndex.MenuDisplayObject:
-                    return typeof(FormLinkNullable<Static>);
-                case Spell_FieldIndex.EquipmentType:
-                    return typeof(FormLinkNullable<EquipType>);
-                case Spell_FieldIndex.Description:
-                    return typeof(TranslatedString);
-                case Spell_FieldIndex.BaseCost:
-                    return typeof(UInt32);
-                case Spell_FieldIndex.Flags:
-                    return typeof(SpellDataFlag);
-                case Spell_FieldIndex.Type:
-                    return typeof(SpellType);
-                case Spell_FieldIndex.ChargeTime:
-                    return typeof(Single);
-                case Spell_FieldIndex.CastType:
-                    return typeof(CastType);
-                case Spell_FieldIndex.TargetType:
-                    return typeof(TargetType);
-                case Spell_FieldIndex.CastDuration:
-                    return typeof(Single);
-                case Spell_FieldIndex.Range:
-                    return typeof(Single);
-                case Spell_FieldIndex.HalfCostPerk:
-                    return typeof(FormLink<Perk>);
-                case Spell_FieldIndex.Effects:
-                    return typeof(IExtendedList<Effect>);
-                case Spell_FieldIndex.SPITDataTypeState:
-                    return typeof(Spell.SPITDataType);
-                default:
-                    return ASpell_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.SPEL;
         public static readonly Type BinaryWriteTranslation = typeof(SpellBinaryWriteTranslation);
         #region Interface
@@ -1689,14 +1410,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1715,8 +1436,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ObjectBounds.Clear();
             item.Name = default;
             item.Keywords = null;
-            item.MenuDisplayObject = FormLinkNullable<Static>.Null;
-            item.EquipmentType = FormLinkNullable<EquipType>.Null;
+            item.MenuDisplayObject = FormLinkNullable<IStaticGetter>.Null;
+            item.EquipmentType = FormLinkNullable<IEquipTypeGetter>.Null;
             item.Description.Clear();
             item.BaseCost = default;
             item.Flags = default;
@@ -1726,7 +1447,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.TargetType = default;
             item.CastDuration = default;
             item.Range = default;
-            item.HalfCostPerk = FormLink<Perk>.Null;
+            item.HalfCostPerk = FormLink<IPerkGetter>.Null;
             item.Effects.Clear();
             item.SPITDataTypeState = default;
             base.Clear(item);
@@ -2273,8 +1994,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLink<Keyword>)new FormLink<Keyword>(r.FormKey))
-                            .ToExtendedList<IFormLink<Keyword>>();
+                            .Select(r => (IFormLink<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IKeywordGetter>>();
                     }
                     else
                     {
@@ -2293,11 +2014,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.MenuDisplayObject) ?? true))
             {
-                item.MenuDisplayObject = new FormLinkNullable<Static>(rhs.MenuDisplayObject.FormKey);
+                item.MenuDisplayObject = new FormLinkNullable<IStaticGetter>(rhs.MenuDisplayObject.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.EquipmentType) ?? true))
             {
-                item.EquipmentType = new FormLinkNullable<EquipType>(rhs.EquipmentType.FormKey);
+                item.EquipmentType = new FormLinkNullable<IEquipTypeGetter>(rhs.EquipmentType.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.Description) ?? true))
             {
@@ -2337,7 +2058,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.HalfCostPerk) ?? true))
             {
-                item.HalfCostPerk = new FormLink<Perk>(rhs.HalfCostPerk.FormKey);
+                item.HalfCostPerk = new FormLink<IPerkGetter>(rhs.HalfCostPerk.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.Effects) ?? true))
             {
@@ -2756,13 +2477,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KSIZ:
                 {
                     item.Keywords = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<Keyword>>();
+                        .CastExtendedList<IFormLink<IKeywordGetter>>();
                     return (int)Spell_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.MDOB:

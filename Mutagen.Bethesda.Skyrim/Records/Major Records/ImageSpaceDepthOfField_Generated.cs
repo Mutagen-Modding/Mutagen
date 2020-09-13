@@ -850,167 +850,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "VERSIONING":
-                    return (ushort)ImageSpaceDepthOfField_FieldIndex.Versioning;
-                case "STRENGTH":
-                    return (ushort)ImageSpaceDepthOfField_FieldIndex.Strength;
-                case "DISTANCE":
-                    return (ushort)ImageSpaceDepthOfField_FieldIndex.Distance;
-                case "RANGE":
-                    return (ushort)ImageSpaceDepthOfField_FieldIndex.Range;
-                case "UNKNOWN":
-                    return (ushort)ImageSpaceDepthOfField_FieldIndex.Unknown;
-                case "BLURRADIUS":
-                    return (ushort)ImageSpaceDepthOfField_FieldIndex.BlurRadius;
-                case "SKY":
-                    return (ushort)ImageSpaceDepthOfField_FieldIndex.Sky;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            ImageSpaceDepthOfField_FieldIndex enu = (ImageSpaceDepthOfField_FieldIndex)index;
-            switch (enu)
-            {
-                case ImageSpaceDepthOfField_FieldIndex.Versioning:
-                case ImageSpaceDepthOfField_FieldIndex.Strength:
-                case ImageSpaceDepthOfField_FieldIndex.Distance:
-                case ImageSpaceDepthOfField_FieldIndex.Range:
-                case ImageSpaceDepthOfField_FieldIndex.Unknown:
-                case ImageSpaceDepthOfField_FieldIndex.BlurRadius:
-                case ImageSpaceDepthOfField_FieldIndex.Sky:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            ImageSpaceDepthOfField_FieldIndex enu = (ImageSpaceDepthOfField_FieldIndex)index;
-            switch (enu)
-            {
-                case ImageSpaceDepthOfField_FieldIndex.Versioning:
-                case ImageSpaceDepthOfField_FieldIndex.Strength:
-                case ImageSpaceDepthOfField_FieldIndex.Distance:
-                case ImageSpaceDepthOfField_FieldIndex.Range:
-                case ImageSpaceDepthOfField_FieldIndex.Unknown:
-                case ImageSpaceDepthOfField_FieldIndex.BlurRadius:
-                case ImageSpaceDepthOfField_FieldIndex.Sky:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            ImageSpaceDepthOfField_FieldIndex enu = (ImageSpaceDepthOfField_FieldIndex)index;
-            switch (enu)
-            {
-                case ImageSpaceDepthOfField_FieldIndex.Versioning:
-                case ImageSpaceDepthOfField_FieldIndex.Strength:
-                case ImageSpaceDepthOfField_FieldIndex.Distance:
-                case ImageSpaceDepthOfField_FieldIndex.Range:
-                case ImageSpaceDepthOfField_FieldIndex.Unknown:
-                case ImageSpaceDepthOfField_FieldIndex.BlurRadius:
-                case ImageSpaceDepthOfField_FieldIndex.Sky:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            ImageSpaceDepthOfField_FieldIndex enu = (ImageSpaceDepthOfField_FieldIndex)index;
-            switch (enu)
-            {
-                case ImageSpaceDepthOfField_FieldIndex.Versioning:
-                    return "Versioning";
-                case ImageSpaceDepthOfField_FieldIndex.Strength:
-                    return "Strength";
-                case ImageSpaceDepthOfField_FieldIndex.Distance:
-                    return "Distance";
-                case ImageSpaceDepthOfField_FieldIndex.Range:
-                    return "Range";
-                case ImageSpaceDepthOfField_FieldIndex.Unknown:
-                    return "Unknown";
-                case ImageSpaceDepthOfField_FieldIndex.BlurRadius:
-                    return "BlurRadius";
-                case ImageSpaceDepthOfField_FieldIndex.Sky:
-                    return "Sky";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            ImageSpaceDepthOfField_FieldIndex enu = (ImageSpaceDepthOfField_FieldIndex)index;
-            switch (enu)
-            {
-                case ImageSpaceDepthOfField_FieldIndex.Versioning:
-                case ImageSpaceDepthOfField_FieldIndex.Strength:
-                case ImageSpaceDepthOfField_FieldIndex.Distance:
-                case ImageSpaceDepthOfField_FieldIndex.Range:
-                case ImageSpaceDepthOfField_FieldIndex.Unknown:
-                case ImageSpaceDepthOfField_FieldIndex.BlurRadius:
-                case ImageSpaceDepthOfField_FieldIndex.Sky:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            ImageSpaceDepthOfField_FieldIndex enu = (ImageSpaceDepthOfField_FieldIndex)index;
-            switch (enu)
-            {
-                case ImageSpaceDepthOfField_FieldIndex.Versioning:
-                case ImageSpaceDepthOfField_FieldIndex.Strength:
-                case ImageSpaceDepthOfField_FieldIndex.Distance:
-                case ImageSpaceDepthOfField_FieldIndex.Range:
-                case ImageSpaceDepthOfField_FieldIndex.Unknown:
-                case ImageSpaceDepthOfField_FieldIndex.BlurRadius:
-                case ImageSpaceDepthOfField_FieldIndex.Sky:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            ImageSpaceDepthOfField_FieldIndex enu = (ImageSpaceDepthOfField_FieldIndex)index;
-            switch (enu)
-            {
-                case ImageSpaceDepthOfField_FieldIndex.Versioning:
-                    return typeof(ImageSpaceDepthOfField.VersioningBreaks);
-                case ImageSpaceDepthOfField_FieldIndex.Strength:
-                    return typeof(Single);
-                case ImageSpaceDepthOfField_FieldIndex.Distance:
-                    return typeof(Single);
-                case ImageSpaceDepthOfField_FieldIndex.Range:
-                    return typeof(Single);
-                case ImageSpaceDepthOfField_FieldIndex.Unknown:
-                    return typeof(Int16);
-                case ImageSpaceDepthOfField_FieldIndex.BlurRadius:
-                    return typeof(Byte);
-                case ImageSpaceDepthOfField_FieldIndex.Sky:
-                    return typeof(Boolean);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.DNAM;
         public static readonly Type BinaryWriteTranslation = typeof(ImageSpaceDepthOfFieldBinaryWriteTranslation);
         #region Interface
@@ -1031,14 +870,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

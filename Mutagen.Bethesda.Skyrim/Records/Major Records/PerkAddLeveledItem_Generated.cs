@@ -42,9 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Item
-        public FormLink<LeveledItem> Item { get; set; } = new FormLink<LeveledItem>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ILeveledItemGetter> IPerkAddLeveledItemGetter.Item => this.Item.ToGetter<LeveledItem, ILeveledItemGetter>();
+        public FormLink<ILeveledItemGetter> Item { get; set; } = new FormLink<ILeveledItemGetter>();
         #endregion
 
         #region To String
@@ -423,7 +421,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPerkAddLeveledItem>,
         ILinkedFormKeyContainer
     {
-        new FormLink<LeveledItem> Item { get; set; }
+        new FormLink<ILeveledItemGetter> Item { get; set; }
     }
 
     public partial interface IPerkAddLeveledItemGetter :
@@ -628,101 +626,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "ITEM":
-                    return (ushort)PerkAddLeveledItem_FieldIndex.Item;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            PerkAddLeveledItem_FieldIndex enu = (PerkAddLeveledItem_FieldIndex)index;
-            switch (enu)
-            {
-                case PerkAddLeveledItem_FieldIndex.Item:
-                    return false;
-                default:
-                    return APerkEntryPointEffect_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            PerkAddLeveledItem_FieldIndex enu = (PerkAddLeveledItem_FieldIndex)index;
-            switch (enu)
-            {
-                case PerkAddLeveledItem_FieldIndex.Item:
-                    return false;
-                default:
-                    return APerkEntryPointEffect_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            PerkAddLeveledItem_FieldIndex enu = (PerkAddLeveledItem_FieldIndex)index;
-            switch (enu)
-            {
-                case PerkAddLeveledItem_FieldIndex.Item:
-                    return false;
-                default:
-                    return APerkEntryPointEffect_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            PerkAddLeveledItem_FieldIndex enu = (PerkAddLeveledItem_FieldIndex)index;
-            switch (enu)
-            {
-                case PerkAddLeveledItem_FieldIndex.Item:
-                    return "Item";
-                default:
-                    return APerkEntryPointEffect_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            PerkAddLeveledItem_FieldIndex enu = (PerkAddLeveledItem_FieldIndex)index;
-            switch (enu)
-            {
-                case PerkAddLeveledItem_FieldIndex.Item:
-                    return false;
-                default:
-                    return APerkEntryPointEffect_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            PerkAddLeveledItem_FieldIndex enu = (PerkAddLeveledItem_FieldIndex)index;
-            switch (enu)
-            {
-                case PerkAddLeveledItem_FieldIndex.Item:
-                    return false;
-                default:
-                    return APerkEntryPointEffect_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            PerkAddLeveledItem_FieldIndex enu = (PerkAddLeveledItem_FieldIndex)index;
-            switch (enu)
-            {
-                case PerkAddLeveledItem_FieldIndex.Item:
-                    return typeof(FormLink<LeveledItem>);
-                default:
-                    return APerkEntryPointEffect_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.PRKE;
         public static readonly Type BinaryWriteTranslation = typeof(PerkAddLeveledItemBinaryWriteTranslation);
         #region Interface
@@ -743,14 +646,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -766,7 +669,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IPerkAddLeveledItem item)
         {
             ClearPartial();
-            item.Item = FormLink<LeveledItem>.Null;
+            item.Item = FormLink<ILeveledItemGetter>.Null;
             base.Clear(item);
         }
         
@@ -1031,7 +934,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PerkAddLeveledItem_FieldIndex.Item) ?? true))
             {
-                item.Item = new FormLink<LeveledItem>(rhs.Item.FormKey);
+                item.Item = new FormLink<ILeveledItemGetter>(rhs.Item.FormKey);
             }
         }
         

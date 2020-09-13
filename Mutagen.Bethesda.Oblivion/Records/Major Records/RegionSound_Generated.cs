@@ -40,9 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Sound
-        public FormLink<Sound> Sound { get; set; } = new FormLink<Sound>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISoundGetter> IRegionSoundGetter.Sound => this.Sound.ToGetter<Sound, ISoundGetter>();
+        public FormLink<ISoundGetter> Sound { get; set; } = new FormLink<ISoundGetter>();
         #endregion
         #region Flags
         public RegionSound.Flag Flags { get; set; } = default;
@@ -482,7 +480,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IRegionSound>,
         ILinkedFormKeyContainer
     {
-        new FormLink<Sound> Sound { get; set; }
+        new FormLink<ISoundGetter> Sound { get; set; }
         new RegionSound.Flag Flags { get; set; }
         new Single Chance { get; set; }
     }
@@ -718,123 +716,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "SOUND":
-                    return (ushort)RegionSound_FieldIndex.Sound;
-                case "FLAGS":
-                    return (ushort)RegionSound_FieldIndex.Flags;
-                case "CHANCE":
-                    return (ushort)RegionSound_FieldIndex.Chance;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            RegionSound_FieldIndex enu = (RegionSound_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionSound_FieldIndex.Sound:
-                case RegionSound_FieldIndex.Flags:
-                case RegionSound_FieldIndex.Chance:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            RegionSound_FieldIndex enu = (RegionSound_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionSound_FieldIndex.Sound:
-                case RegionSound_FieldIndex.Flags:
-                case RegionSound_FieldIndex.Chance:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            RegionSound_FieldIndex enu = (RegionSound_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionSound_FieldIndex.Sound:
-                case RegionSound_FieldIndex.Flags:
-                case RegionSound_FieldIndex.Chance:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            RegionSound_FieldIndex enu = (RegionSound_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionSound_FieldIndex.Sound:
-                    return "Sound";
-                case RegionSound_FieldIndex.Flags:
-                    return "Flags";
-                case RegionSound_FieldIndex.Chance:
-                    return "Chance";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            RegionSound_FieldIndex enu = (RegionSound_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionSound_FieldIndex.Sound:
-                case RegionSound_FieldIndex.Flags:
-                case RegionSound_FieldIndex.Chance:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            RegionSound_FieldIndex enu = (RegionSound_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionSound_FieldIndex.Sound:
-                case RegionSound_FieldIndex.Flags:
-                case RegionSound_FieldIndex.Chance:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            RegionSound_FieldIndex enu = (RegionSound_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionSound_FieldIndex.Sound:
-                    return typeof(FormLink<Sound>);
-                case RegionSound_FieldIndex.Flags:
-                    return typeof(RegionSound.Flag);
-                case RegionSound_FieldIndex.Chance:
-                    return typeof(Single);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly Type BinaryWriteTranslation = typeof(RegionSoundBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -854,14 +735,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -877,7 +758,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IRegionSound item)
         {
             ClearPartial();
-            item.Sound = FormLink<Sound>.Null;
+            item.Sound = FormLink<ISoundGetter>.Null;
             item.Flags = default;
             item.Chance = default;
         }
@@ -1041,7 +922,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RegionSound_FieldIndex.Sound) ?? true))
             {
-                item.Sound = new FormLink<Sound>(rhs.Sound.FormKey);
+                item.Sound = new FormLink<ISoundGetter>(rhs.Sound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)RegionSound_FieldIndex.Flags) ?? true))
             {

@@ -43,9 +43,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 Unknown { get; set; } = default;
         #endregion
         #region Door
-        public FormLink<PlacedObject> Door { get; set; } = new FormLink<PlacedObject>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IPlacedObjectGetter> ILinkedDoorGetter.Door => this.Door.ToGetter<PlacedObject, IPlacedObjectGetter>();
+        public FormLink<IPlacedObjectGetter> Door { get; set; } = new FormLink<IPlacedObjectGetter>();
         #endregion
 
         #region To String
@@ -451,7 +449,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new Int32 Unknown { get; set; }
-        new FormLink<PlacedObject> Door { get; set; }
+        new FormLink<IPlacedObjectGetter> Door { get; set; }
     }
 
     public partial interface ILinkedDoorGetter :
@@ -683,112 +681,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "UNKNOWN":
-                    return (ushort)LinkedDoor_FieldIndex.Unknown;
-                case "DOOR":
-                    return (ushort)LinkedDoor_FieldIndex.Door;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            LinkedDoor_FieldIndex enu = (LinkedDoor_FieldIndex)index;
-            switch (enu)
-            {
-                case LinkedDoor_FieldIndex.Unknown:
-                case LinkedDoor_FieldIndex.Door:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            LinkedDoor_FieldIndex enu = (LinkedDoor_FieldIndex)index;
-            switch (enu)
-            {
-                case LinkedDoor_FieldIndex.Unknown:
-                case LinkedDoor_FieldIndex.Door:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            LinkedDoor_FieldIndex enu = (LinkedDoor_FieldIndex)index;
-            switch (enu)
-            {
-                case LinkedDoor_FieldIndex.Unknown:
-                case LinkedDoor_FieldIndex.Door:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            LinkedDoor_FieldIndex enu = (LinkedDoor_FieldIndex)index;
-            switch (enu)
-            {
-                case LinkedDoor_FieldIndex.Unknown:
-                    return "Unknown";
-                case LinkedDoor_FieldIndex.Door:
-                    return "Door";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            LinkedDoor_FieldIndex enu = (LinkedDoor_FieldIndex)index;
-            switch (enu)
-            {
-                case LinkedDoor_FieldIndex.Unknown:
-                case LinkedDoor_FieldIndex.Door:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            LinkedDoor_FieldIndex enu = (LinkedDoor_FieldIndex)index;
-            switch (enu)
-            {
-                case LinkedDoor_FieldIndex.Unknown:
-                case LinkedDoor_FieldIndex.Door:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            LinkedDoor_FieldIndex enu = (LinkedDoor_FieldIndex)index;
-            switch (enu)
-            {
-                case LinkedDoor_FieldIndex.Unknown:
-                    return typeof(Int32);
-                case LinkedDoor_FieldIndex.Door:
-                    return typeof(FormLink<PlacedObject>);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly Type BinaryWriteTranslation = typeof(LinkedDoorBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -808,14 +700,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -832,7 +724,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Unknown = default;
-            item.Door = FormLink<PlacedObject>.Null;
+            item.Door = FormLink<IPlacedObjectGetter>.Null;
         }
         
         #region Binary Translation
@@ -991,7 +883,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LinkedDoor_FieldIndex.Door) ?? true))
             {
-                item.Door = new FormLink<PlacedObject>(rhs.Door.FormKey);
+                item.Door = new FormLink<IPlacedObjectGetter>(rhs.Door.FormKey);
             }
         }
         

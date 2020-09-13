@@ -95,8 +95,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MasterReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<MasterReference> _MasterReferences = new ExtendedList<MasterReference>();
-        public IExtendedList<MasterReference> MasterReferences
+        private ExtendedList<MasterReference> _MasterReferences = new ExtendedList<MasterReference>();
+        public ExtendedList<MasterReference> MasterReferences
         {
             get => this._MasterReferences;
             protected set => this._MasterReferences = value;
@@ -109,8 +109,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region OverriddenForms
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<SkyrimMajorRecord>>? _OverriddenForms;
-        public IExtendedList<IFormLink<SkyrimMajorRecord>>? OverriddenForms
+        private ExtendedList<IFormLink<ISkyrimMajorRecordGetter>>? _OverriddenForms;
+        public ExtendedList<IFormLink<ISkyrimMajorRecordGetter>>? OverriddenForms
         {
             get => this._OverriddenForms;
             set => this._OverriddenForms = value;
@@ -1036,8 +1036,8 @@ namespace Mutagen.Bethesda.Skyrim
         new MemorySlice<Byte>? Deleted { get; set; }
         new String? Author { get; set; }
         new String? Description { get; set; }
-        new IExtendedList<MasterReference> MasterReferences { get; }
-        new IExtendedList<IFormLink<SkyrimMajorRecord>>? OverriddenForms { get; set; }
+        new ExtendedList<MasterReference> MasterReferences { get; }
+        new ExtendedList<IFormLink<ISkyrimMajorRecordGetter>>? OverriddenForms { get; set; }
         new Int32? INTV { get; set; }
         new Int32? INCC { get; set; }
     }
@@ -1295,246 +1295,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "FLAGS":
-                    return (ushort)SkyrimModHeader_FieldIndex.Flags;
-                case "FORMID":
-                    return (ushort)SkyrimModHeader_FieldIndex.FormID;
-                case "VERSION":
-                    return (ushort)SkyrimModHeader_FieldIndex.Version;
-                case "FORMVERSION":
-                    return (ushort)SkyrimModHeader_FieldIndex.FormVersion;
-                case "VERSION2":
-                    return (ushort)SkyrimModHeader_FieldIndex.Version2;
-                case "STATS":
-                    return (ushort)SkyrimModHeader_FieldIndex.Stats;
-                case "TYPEOFFSETS":
-                    return (ushort)SkyrimModHeader_FieldIndex.TypeOffsets;
-                case "DELETED":
-                    return (ushort)SkyrimModHeader_FieldIndex.Deleted;
-                case "AUTHOR":
-                    return (ushort)SkyrimModHeader_FieldIndex.Author;
-                case "DESCRIPTION":
-                    return (ushort)SkyrimModHeader_FieldIndex.Description;
-                case "MASTERREFERENCES":
-                    return (ushort)SkyrimModHeader_FieldIndex.MasterReferences;
-                case "OVERRIDDENFORMS":
-                    return (ushort)SkyrimModHeader_FieldIndex.OverriddenForms;
-                case "INTV":
-                    return (ushort)SkyrimModHeader_FieldIndex.INTV;
-                case "INCC":
-                    return (ushort)SkyrimModHeader_FieldIndex.INCC;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            SkyrimModHeader_FieldIndex enu = (SkyrimModHeader_FieldIndex)index;
-            switch (enu)
-            {
-                case SkyrimModHeader_FieldIndex.MasterReferences:
-                case SkyrimModHeader_FieldIndex.OverriddenForms:
-                    return true;
-                case SkyrimModHeader_FieldIndex.Flags:
-                case SkyrimModHeader_FieldIndex.FormID:
-                case SkyrimModHeader_FieldIndex.Version:
-                case SkyrimModHeader_FieldIndex.FormVersion:
-                case SkyrimModHeader_FieldIndex.Version2:
-                case SkyrimModHeader_FieldIndex.Stats:
-                case SkyrimModHeader_FieldIndex.TypeOffsets:
-                case SkyrimModHeader_FieldIndex.Deleted:
-                case SkyrimModHeader_FieldIndex.Author:
-                case SkyrimModHeader_FieldIndex.Description:
-                case SkyrimModHeader_FieldIndex.INTV:
-                case SkyrimModHeader_FieldIndex.INCC:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            SkyrimModHeader_FieldIndex enu = (SkyrimModHeader_FieldIndex)index;
-            switch (enu)
-            {
-                case SkyrimModHeader_FieldIndex.Stats:
-                case SkyrimModHeader_FieldIndex.MasterReferences:
-                    return true;
-                case SkyrimModHeader_FieldIndex.Flags:
-                case SkyrimModHeader_FieldIndex.FormID:
-                case SkyrimModHeader_FieldIndex.Version:
-                case SkyrimModHeader_FieldIndex.FormVersion:
-                case SkyrimModHeader_FieldIndex.Version2:
-                case SkyrimModHeader_FieldIndex.TypeOffsets:
-                case SkyrimModHeader_FieldIndex.Deleted:
-                case SkyrimModHeader_FieldIndex.Author:
-                case SkyrimModHeader_FieldIndex.Description:
-                case SkyrimModHeader_FieldIndex.OverriddenForms:
-                case SkyrimModHeader_FieldIndex.INTV:
-                case SkyrimModHeader_FieldIndex.INCC:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            SkyrimModHeader_FieldIndex enu = (SkyrimModHeader_FieldIndex)index;
-            switch (enu)
-            {
-                case SkyrimModHeader_FieldIndex.Flags:
-                case SkyrimModHeader_FieldIndex.FormID:
-                case SkyrimModHeader_FieldIndex.Version:
-                case SkyrimModHeader_FieldIndex.FormVersion:
-                case SkyrimModHeader_FieldIndex.Version2:
-                case SkyrimModHeader_FieldIndex.Stats:
-                case SkyrimModHeader_FieldIndex.TypeOffsets:
-                case SkyrimModHeader_FieldIndex.Deleted:
-                case SkyrimModHeader_FieldIndex.Author:
-                case SkyrimModHeader_FieldIndex.Description:
-                case SkyrimModHeader_FieldIndex.MasterReferences:
-                case SkyrimModHeader_FieldIndex.OverriddenForms:
-                case SkyrimModHeader_FieldIndex.INTV:
-                case SkyrimModHeader_FieldIndex.INCC:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            SkyrimModHeader_FieldIndex enu = (SkyrimModHeader_FieldIndex)index;
-            switch (enu)
-            {
-                case SkyrimModHeader_FieldIndex.Flags:
-                    return "Flags";
-                case SkyrimModHeader_FieldIndex.FormID:
-                    return "FormID";
-                case SkyrimModHeader_FieldIndex.Version:
-                    return "Version";
-                case SkyrimModHeader_FieldIndex.FormVersion:
-                    return "FormVersion";
-                case SkyrimModHeader_FieldIndex.Version2:
-                    return "Version2";
-                case SkyrimModHeader_FieldIndex.Stats:
-                    return "Stats";
-                case SkyrimModHeader_FieldIndex.TypeOffsets:
-                    return "TypeOffsets";
-                case SkyrimModHeader_FieldIndex.Deleted:
-                    return "Deleted";
-                case SkyrimModHeader_FieldIndex.Author:
-                    return "Author";
-                case SkyrimModHeader_FieldIndex.Description:
-                    return "Description";
-                case SkyrimModHeader_FieldIndex.MasterReferences:
-                    return "MasterReferences";
-                case SkyrimModHeader_FieldIndex.OverriddenForms:
-                    return "OverriddenForms";
-                case SkyrimModHeader_FieldIndex.INTV:
-                    return "INTV";
-                case SkyrimModHeader_FieldIndex.INCC:
-                    return "INCC";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            SkyrimModHeader_FieldIndex enu = (SkyrimModHeader_FieldIndex)index;
-            switch (enu)
-            {
-                case SkyrimModHeader_FieldIndex.Flags:
-                case SkyrimModHeader_FieldIndex.FormID:
-                case SkyrimModHeader_FieldIndex.Version:
-                case SkyrimModHeader_FieldIndex.FormVersion:
-                case SkyrimModHeader_FieldIndex.Version2:
-                case SkyrimModHeader_FieldIndex.Stats:
-                case SkyrimModHeader_FieldIndex.TypeOffsets:
-                case SkyrimModHeader_FieldIndex.Deleted:
-                case SkyrimModHeader_FieldIndex.Author:
-                case SkyrimModHeader_FieldIndex.Description:
-                case SkyrimModHeader_FieldIndex.MasterReferences:
-                case SkyrimModHeader_FieldIndex.OverriddenForms:
-                case SkyrimModHeader_FieldIndex.INTV:
-                case SkyrimModHeader_FieldIndex.INCC:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            SkyrimModHeader_FieldIndex enu = (SkyrimModHeader_FieldIndex)index;
-            switch (enu)
-            {
-                case SkyrimModHeader_FieldIndex.Flags:
-                case SkyrimModHeader_FieldIndex.FormID:
-                case SkyrimModHeader_FieldIndex.Version:
-                case SkyrimModHeader_FieldIndex.FormVersion:
-                case SkyrimModHeader_FieldIndex.Version2:
-                case SkyrimModHeader_FieldIndex.Stats:
-                case SkyrimModHeader_FieldIndex.TypeOffsets:
-                case SkyrimModHeader_FieldIndex.Deleted:
-                case SkyrimModHeader_FieldIndex.Author:
-                case SkyrimModHeader_FieldIndex.Description:
-                case SkyrimModHeader_FieldIndex.MasterReferences:
-                case SkyrimModHeader_FieldIndex.OverriddenForms:
-                case SkyrimModHeader_FieldIndex.INTV:
-                case SkyrimModHeader_FieldIndex.INCC:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            SkyrimModHeader_FieldIndex enu = (SkyrimModHeader_FieldIndex)index;
-            switch (enu)
-            {
-                case SkyrimModHeader_FieldIndex.Flags:
-                    return typeof(SkyrimModHeader.HeaderFlag);
-                case SkyrimModHeader_FieldIndex.FormID:
-                    return typeof(UInt32);
-                case SkyrimModHeader_FieldIndex.Version:
-                    return typeof(Int32);
-                case SkyrimModHeader_FieldIndex.FormVersion:
-                    return typeof(UInt16);
-                case SkyrimModHeader_FieldIndex.Version2:
-                    return typeof(UInt16);
-                case SkyrimModHeader_FieldIndex.Stats:
-                    return typeof(ModStats);
-                case SkyrimModHeader_FieldIndex.TypeOffsets:
-                    return typeof(MemorySlice<Byte>);
-                case SkyrimModHeader_FieldIndex.Deleted:
-                    return typeof(MemorySlice<Byte>);
-                case SkyrimModHeader_FieldIndex.Author:
-                    return typeof(String);
-                case SkyrimModHeader_FieldIndex.Description:
-                    return typeof(String);
-                case SkyrimModHeader_FieldIndex.MasterReferences:
-                    return typeof(IExtendedList<MasterReference>);
-                case SkyrimModHeader_FieldIndex.OverriddenForms:
-                    return typeof(IExtendedList<IFormLink<SkyrimMajorRecord>>);
-                case SkyrimModHeader_FieldIndex.INTV:
-                    return typeof(Int32);
-                case SkyrimModHeader_FieldIndex.INCC:
-                    return typeof(Int32);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.TES4;
         public static readonly Type BinaryWriteTranslation = typeof(SkyrimModHeaderBinaryWriteTranslation);
         #region Interface
@@ -1555,14 +1315,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -2002,8 +1762,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.OverriddenForms = 
                             rhs.OverriddenForms
-                            .Select(r => (IFormLink<SkyrimMajorRecord>)new FormLink<SkyrimMajorRecord>(r.FormKey))
-                            .ToExtendedList<IFormLink<SkyrimMajorRecord>>();
+                            .Select(r => (IFormLink<ISkyrimMajorRecordGetter>)new FormLink<ISkyrimMajorRecordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<ISkyrimMajorRecordGetter>>();
                     }
                     else
                     {
@@ -2301,10 +2061,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.OverriddenForms = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<SkyrimMajorRecord>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ISkyrimMajorRecordGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<SkyrimMajorRecord>>();
+                        .CastExtendedList<IFormLink<ISkyrimMajorRecordGetter>>();
                     return (int)SkyrimModHeader_FieldIndex.OverriddenForms;
                 }
                 case RecordTypeInts.INTV:

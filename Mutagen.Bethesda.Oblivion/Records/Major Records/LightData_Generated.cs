@@ -921,189 +921,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "VERSIONING":
-                    return (ushort)LightData_FieldIndex.Versioning;
-                case "TIME":
-                    return (ushort)LightData_FieldIndex.Time;
-                case "RADIUS":
-                    return (ushort)LightData_FieldIndex.Radius;
-                case "COLOR":
-                    return (ushort)LightData_FieldIndex.Color;
-                case "FLAGS":
-                    return (ushort)LightData_FieldIndex.Flags;
-                case "FALLOFFEXPONENT":
-                    return (ushort)LightData_FieldIndex.FalloffExponent;
-                case "FOV":
-                    return (ushort)LightData_FieldIndex.FOV;
-                case "VALUE":
-                    return (ushort)LightData_FieldIndex.Value;
-                case "WEIGHT":
-                    return (ushort)LightData_FieldIndex.Weight;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            LightData_FieldIndex enu = (LightData_FieldIndex)index;
-            switch (enu)
-            {
-                case LightData_FieldIndex.Versioning:
-                case LightData_FieldIndex.Time:
-                case LightData_FieldIndex.Radius:
-                case LightData_FieldIndex.Color:
-                case LightData_FieldIndex.Flags:
-                case LightData_FieldIndex.FalloffExponent:
-                case LightData_FieldIndex.FOV:
-                case LightData_FieldIndex.Value:
-                case LightData_FieldIndex.Weight:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            LightData_FieldIndex enu = (LightData_FieldIndex)index;
-            switch (enu)
-            {
-                case LightData_FieldIndex.Versioning:
-                case LightData_FieldIndex.Time:
-                case LightData_FieldIndex.Radius:
-                case LightData_FieldIndex.Color:
-                case LightData_FieldIndex.Flags:
-                case LightData_FieldIndex.FalloffExponent:
-                case LightData_FieldIndex.FOV:
-                case LightData_FieldIndex.Value:
-                case LightData_FieldIndex.Weight:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            LightData_FieldIndex enu = (LightData_FieldIndex)index;
-            switch (enu)
-            {
-                case LightData_FieldIndex.Versioning:
-                case LightData_FieldIndex.Time:
-                case LightData_FieldIndex.Radius:
-                case LightData_FieldIndex.Color:
-                case LightData_FieldIndex.Flags:
-                case LightData_FieldIndex.FalloffExponent:
-                case LightData_FieldIndex.FOV:
-                case LightData_FieldIndex.Value:
-                case LightData_FieldIndex.Weight:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            LightData_FieldIndex enu = (LightData_FieldIndex)index;
-            switch (enu)
-            {
-                case LightData_FieldIndex.Versioning:
-                    return "Versioning";
-                case LightData_FieldIndex.Time:
-                    return "Time";
-                case LightData_FieldIndex.Radius:
-                    return "Radius";
-                case LightData_FieldIndex.Color:
-                    return "Color";
-                case LightData_FieldIndex.Flags:
-                    return "Flags";
-                case LightData_FieldIndex.FalloffExponent:
-                    return "FalloffExponent";
-                case LightData_FieldIndex.FOV:
-                    return "FOV";
-                case LightData_FieldIndex.Value:
-                    return "Value";
-                case LightData_FieldIndex.Weight:
-                    return "Weight";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            LightData_FieldIndex enu = (LightData_FieldIndex)index;
-            switch (enu)
-            {
-                case LightData_FieldIndex.Versioning:
-                case LightData_FieldIndex.Time:
-                case LightData_FieldIndex.Radius:
-                case LightData_FieldIndex.Color:
-                case LightData_FieldIndex.Flags:
-                case LightData_FieldIndex.FalloffExponent:
-                case LightData_FieldIndex.FOV:
-                case LightData_FieldIndex.Value:
-                case LightData_FieldIndex.Weight:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            LightData_FieldIndex enu = (LightData_FieldIndex)index;
-            switch (enu)
-            {
-                case LightData_FieldIndex.Versioning:
-                case LightData_FieldIndex.Time:
-                case LightData_FieldIndex.Radius:
-                case LightData_FieldIndex.Color:
-                case LightData_FieldIndex.Flags:
-                case LightData_FieldIndex.FalloffExponent:
-                case LightData_FieldIndex.FOV:
-                case LightData_FieldIndex.Value:
-                case LightData_FieldIndex.Weight:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            LightData_FieldIndex enu = (LightData_FieldIndex)index;
-            switch (enu)
-            {
-                case LightData_FieldIndex.Versioning:
-                    return typeof(LightData.VersioningBreaks);
-                case LightData_FieldIndex.Time:
-                    return typeof(Int32);
-                case LightData_FieldIndex.Radius:
-                    return typeof(UInt32);
-                case LightData_FieldIndex.Color:
-                    return typeof(Color);
-                case LightData_FieldIndex.Flags:
-                    return typeof(Light.LightFlag);
-                case LightData_FieldIndex.FalloffExponent:
-                    return typeof(Single);
-                case LightData_FieldIndex.FOV:
-                    return typeof(Single);
-                case LightData_FieldIndex.Value:
-                    return typeof(UInt32);
-                case LightData_FieldIndex.Weight:
-                    return typeof(Single);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.DATA;
         public static readonly Type BinaryWriteTranslation = typeof(LightDataBinaryWriteTranslation);
         #region Interface
@@ -1124,14 +941,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

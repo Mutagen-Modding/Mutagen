@@ -54,8 +54,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Cells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Cell> _Cells = new ExtendedList<Cell>();
-        public IExtendedList<Cell> Cells
+        private ExtendedList<Cell> _Cells = new ExtendedList<Cell>();
+        public ExtendedList<Cell> Cells
         {
             get => this._Cells;
             protected set => this._Cells = value;
@@ -668,7 +668,7 @@ namespace Mutagen.Bethesda.Skyrim
         new GroupTypeEnum GroupType { get; set; }
         new Int32 LastModified { get; set; }
         new Int32 Unknown { get; set; }
-        new IExtendedList<Cell> Cells { get; }
+        new ExtendedList<Cell> Cells { get; }
     }
 
     public partial interface ICellSubBlockGetter :
@@ -1122,147 +1122,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "BLOCKNUMBER":
-                    return (ushort)CellSubBlock_FieldIndex.BlockNumber;
-                case "GROUPTYPE":
-                    return (ushort)CellSubBlock_FieldIndex.GroupType;
-                case "LASTMODIFIED":
-                    return (ushort)CellSubBlock_FieldIndex.LastModified;
-                case "UNKNOWN":
-                    return (ushort)CellSubBlock_FieldIndex.Unknown;
-                case "CELLS":
-                    return (ushort)CellSubBlock_FieldIndex.Cells;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            CellSubBlock_FieldIndex enu = (CellSubBlock_FieldIndex)index;
-            switch (enu)
-            {
-                case CellSubBlock_FieldIndex.Cells:
-                    return true;
-                case CellSubBlock_FieldIndex.BlockNumber:
-                case CellSubBlock_FieldIndex.GroupType:
-                case CellSubBlock_FieldIndex.LastModified:
-                case CellSubBlock_FieldIndex.Unknown:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            CellSubBlock_FieldIndex enu = (CellSubBlock_FieldIndex)index;
-            switch (enu)
-            {
-                case CellSubBlock_FieldIndex.Cells:
-                    return true;
-                case CellSubBlock_FieldIndex.BlockNumber:
-                case CellSubBlock_FieldIndex.GroupType:
-                case CellSubBlock_FieldIndex.LastModified:
-                case CellSubBlock_FieldIndex.Unknown:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            CellSubBlock_FieldIndex enu = (CellSubBlock_FieldIndex)index;
-            switch (enu)
-            {
-                case CellSubBlock_FieldIndex.BlockNumber:
-                case CellSubBlock_FieldIndex.GroupType:
-                case CellSubBlock_FieldIndex.LastModified:
-                case CellSubBlock_FieldIndex.Unknown:
-                case CellSubBlock_FieldIndex.Cells:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            CellSubBlock_FieldIndex enu = (CellSubBlock_FieldIndex)index;
-            switch (enu)
-            {
-                case CellSubBlock_FieldIndex.BlockNumber:
-                    return "BlockNumber";
-                case CellSubBlock_FieldIndex.GroupType:
-                    return "GroupType";
-                case CellSubBlock_FieldIndex.LastModified:
-                    return "LastModified";
-                case CellSubBlock_FieldIndex.Unknown:
-                    return "Unknown";
-                case CellSubBlock_FieldIndex.Cells:
-                    return "Cells";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            CellSubBlock_FieldIndex enu = (CellSubBlock_FieldIndex)index;
-            switch (enu)
-            {
-                case CellSubBlock_FieldIndex.BlockNumber:
-                case CellSubBlock_FieldIndex.GroupType:
-                case CellSubBlock_FieldIndex.LastModified:
-                case CellSubBlock_FieldIndex.Unknown:
-                case CellSubBlock_FieldIndex.Cells:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            CellSubBlock_FieldIndex enu = (CellSubBlock_FieldIndex)index;
-            switch (enu)
-            {
-                case CellSubBlock_FieldIndex.BlockNumber:
-                case CellSubBlock_FieldIndex.GroupType:
-                case CellSubBlock_FieldIndex.LastModified:
-                case CellSubBlock_FieldIndex.Unknown:
-                case CellSubBlock_FieldIndex.Cells:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            CellSubBlock_FieldIndex enu = (CellSubBlock_FieldIndex)index;
-            switch (enu)
-            {
-                case CellSubBlock_FieldIndex.BlockNumber:
-                    return typeof(Int32);
-                case CellSubBlock_FieldIndex.GroupType:
-                    return typeof(GroupTypeEnum);
-                case CellSubBlock_FieldIndex.LastModified:
-                    return typeof(Int32);
-                case CellSubBlock_FieldIndex.Unknown:
-                    return typeof(Int32);
-                case CellSubBlock_FieldIndex.Cells:
-                    return typeof(IExtendedList<Cell>);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.GRUP;
         public static readonly Type BinaryWriteTranslation = typeof(CellSubBlockBinaryWriteTranslation);
         #region Interface
@@ -1283,14 +1142,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

@@ -43,9 +43,7 @@ namespace Mutagen.Bethesda.Oblivion
         public AIPackageLocation.LocationType Type { get; set; } = default;
         #endregion
         #region LocationReference
-        public FormLink<IPlaced> LocationReference { get; set; } = new FormLink<IPlaced>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IPlacedGetter> IAIPackageLocationGetter.LocationReference => this.LocationReference.ToGetter<IPlaced, IPlacedGetter>();
+        public FormLink<IPlacedGetter> LocationReference { get; set; } = new FormLink<IPlacedGetter>();
         #endregion
         #region Radius
         public Single Radius { get; set; } = default;
@@ -483,7 +481,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkedFormKeyContainer
     {
         new AIPackageLocation.LocationType Type { get; set; }
-        new FormLink<IPlaced> LocationReference { get; set; }
+        new FormLink<IPlacedGetter> LocationReference { get; set; }
         new Single Radius { get; set; }
     }
 
@@ -718,123 +716,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "TYPE":
-                    return (ushort)AIPackageLocation_FieldIndex.Type;
-                case "LOCATIONREFERENCE":
-                    return (ushort)AIPackageLocation_FieldIndex.LocationReference;
-                case "RADIUS":
-                    return (ushort)AIPackageLocation_FieldIndex.Radius;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            AIPackageLocation_FieldIndex enu = (AIPackageLocation_FieldIndex)index;
-            switch (enu)
-            {
-                case AIPackageLocation_FieldIndex.Type:
-                case AIPackageLocation_FieldIndex.LocationReference:
-                case AIPackageLocation_FieldIndex.Radius:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            AIPackageLocation_FieldIndex enu = (AIPackageLocation_FieldIndex)index;
-            switch (enu)
-            {
-                case AIPackageLocation_FieldIndex.Type:
-                case AIPackageLocation_FieldIndex.LocationReference:
-                case AIPackageLocation_FieldIndex.Radius:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            AIPackageLocation_FieldIndex enu = (AIPackageLocation_FieldIndex)index;
-            switch (enu)
-            {
-                case AIPackageLocation_FieldIndex.Type:
-                case AIPackageLocation_FieldIndex.LocationReference:
-                case AIPackageLocation_FieldIndex.Radius:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            AIPackageLocation_FieldIndex enu = (AIPackageLocation_FieldIndex)index;
-            switch (enu)
-            {
-                case AIPackageLocation_FieldIndex.Type:
-                    return "Type";
-                case AIPackageLocation_FieldIndex.LocationReference:
-                    return "LocationReference";
-                case AIPackageLocation_FieldIndex.Radius:
-                    return "Radius";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            AIPackageLocation_FieldIndex enu = (AIPackageLocation_FieldIndex)index;
-            switch (enu)
-            {
-                case AIPackageLocation_FieldIndex.Type:
-                case AIPackageLocation_FieldIndex.LocationReference:
-                case AIPackageLocation_FieldIndex.Radius:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            AIPackageLocation_FieldIndex enu = (AIPackageLocation_FieldIndex)index;
-            switch (enu)
-            {
-                case AIPackageLocation_FieldIndex.Type:
-                case AIPackageLocation_FieldIndex.LocationReference:
-                case AIPackageLocation_FieldIndex.Radius:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            AIPackageLocation_FieldIndex enu = (AIPackageLocation_FieldIndex)index;
-            switch (enu)
-            {
-                case AIPackageLocation_FieldIndex.Type:
-                    return typeof(AIPackageLocation.LocationType);
-                case AIPackageLocation_FieldIndex.LocationReference:
-                    return typeof(FormLink<IPlaced>);
-                case AIPackageLocation_FieldIndex.Radius:
-                    return typeof(Single);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.PLDT;
         public static readonly Type BinaryWriteTranslation = typeof(AIPackageLocationBinaryWriteTranslation);
         #region Interface
@@ -855,14 +736,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -879,7 +760,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ClearPartial();
             item.Type = default;
-            item.LocationReference = FormLink<IPlaced>.Null;
+            item.LocationReference = FormLink<IPlacedGetter>.Null;
             item.Radius = default;
         }
         
@@ -1049,7 +930,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AIPackageLocation_FieldIndex.LocationReference) ?? true))
             {
-                item.LocationReference = new FormLink<IPlaced>(rhs.LocationReference.FormKey);
+                item.LocationReference = new FormLink<IPlacedGetter>(rhs.LocationReference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)AIPackageLocation_FieldIndex.Radius) ?? true))
             {

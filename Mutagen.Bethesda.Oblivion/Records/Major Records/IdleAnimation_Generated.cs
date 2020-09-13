@@ -55,8 +55,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public IExtendedList<Condition> Conditions
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -74,8 +74,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region RelatedIdleAnimations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IdleAnimation>>? _RelatedIdleAnimations;
-        public IExtendedList<IFormLink<IdleAnimation>>? RelatedIdleAnimations
+        private ExtendedList<IFormLink<IIdleAnimationGetter>>? _RelatedIdleAnimations;
+        public ExtendedList<IFormLink<IIdleAnimationGetter>>? RelatedIdleAnimations
         {
             get => this._RelatedIdleAnimations;
             set => this._RelatedIdleAnimations = value;
@@ -718,9 +718,9 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkedFormKeyContainer
     {
         new Model? Model { get; set; }
-        new IExtendedList<Condition> Conditions { get; }
+        new ExtendedList<Condition> Conditions { get; }
         new IdleAnimation.AnimationGroupSectionEnum? AnimationGroupSection { get; set; }
-        new IExtendedList<IFormLink<IdleAnimation>>? RelatedIdleAnimations { get; set; }
+        new ExtendedList<IFormLink<IIdleAnimationGetter>>? RelatedIdleAnimations { get; set; }
     }
 
     public partial interface IIdleAnimationInternal :
@@ -937,136 +937,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "MODEL":
-                    return (ushort)IdleAnimation_FieldIndex.Model;
-                case "CONDITIONS":
-                    return (ushort)IdleAnimation_FieldIndex.Conditions;
-                case "ANIMATIONGROUPSECTION":
-                    return (ushort)IdleAnimation_FieldIndex.AnimationGroupSection;
-                case "RELATEDIDLEANIMATIONS":
-                    return (ushort)IdleAnimation_FieldIndex.RelatedIdleAnimations;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            IdleAnimation_FieldIndex enu = (IdleAnimation_FieldIndex)index;
-            switch (enu)
-            {
-                case IdleAnimation_FieldIndex.Conditions:
-                case IdleAnimation_FieldIndex.RelatedIdleAnimations:
-                    return true;
-                case IdleAnimation_FieldIndex.Model:
-                case IdleAnimation_FieldIndex.AnimationGroupSection:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            IdleAnimation_FieldIndex enu = (IdleAnimation_FieldIndex)index;
-            switch (enu)
-            {
-                case IdleAnimation_FieldIndex.Model:
-                case IdleAnimation_FieldIndex.Conditions:
-                    return true;
-                case IdleAnimation_FieldIndex.AnimationGroupSection:
-                case IdleAnimation_FieldIndex.RelatedIdleAnimations:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            IdleAnimation_FieldIndex enu = (IdleAnimation_FieldIndex)index;
-            switch (enu)
-            {
-                case IdleAnimation_FieldIndex.Model:
-                case IdleAnimation_FieldIndex.Conditions:
-                case IdleAnimation_FieldIndex.AnimationGroupSection:
-                case IdleAnimation_FieldIndex.RelatedIdleAnimations:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            IdleAnimation_FieldIndex enu = (IdleAnimation_FieldIndex)index;
-            switch (enu)
-            {
-                case IdleAnimation_FieldIndex.Model:
-                    return "Model";
-                case IdleAnimation_FieldIndex.Conditions:
-                    return "Conditions";
-                case IdleAnimation_FieldIndex.AnimationGroupSection:
-                    return "AnimationGroupSection";
-                case IdleAnimation_FieldIndex.RelatedIdleAnimations:
-                    return "RelatedIdleAnimations";
-                default:
-                    return OblivionMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            IdleAnimation_FieldIndex enu = (IdleAnimation_FieldIndex)index;
-            switch (enu)
-            {
-                case IdleAnimation_FieldIndex.Model:
-                case IdleAnimation_FieldIndex.Conditions:
-                case IdleAnimation_FieldIndex.AnimationGroupSection:
-                case IdleAnimation_FieldIndex.RelatedIdleAnimations:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            IdleAnimation_FieldIndex enu = (IdleAnimation_FieldIndex)index;
-            switch (enu)
-            {
-                case IdleAnimation_FieldIndex.Model:
-                case IdleAnimation_FieldIndex.Conditions:
-                case IdleAnimation_FieldIndex.AnimationGroupSection:
-                case IdleAnimation_FieldIndex.RelatedIdleAnimations:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            IdleAnimation_FieldIndex enu = (IdleAnimation_FieldIndex)index;
-            switch (enu)
-            {
-                case IdleAnimation_FieldIndex.Model:
-                    return typeof(Model);
-                case IdleAnimation_FieldIndex.Conditions:
-                    return typeof(IExtendedList<Condition>);
-                case IdleAnimation_FieldIndex.AnimationGroupSection:
-                    return typeof(IdleAnimation.AnimationGroupSectionEnum);
-                case IdleAnimation_FieldIndex.RelatedIdleAnimations:
-                    return typeof(IExtendedList<IFormLink<IdleAnimation>>);
-                default:
-                    return OblivionMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.IDLE;
         public static readonly Type BinaryWriteTranslation = typeof(IdleAnimationBinaryWriteTranslation);
         #region Interface
@@ -1087,14 +957,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1537,8 +1407,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.RelatedIdleAnimations = 
                             rhs.RelatedIdleAnimations
-                            .Select(r => (IFormLink<IdleAnimation>)new FormLink<IdleAnimation>(r.FormKey))
-                            .ToExtendedList<IFormLink<IdleAnimation>>();
+                            .Select(r => (IFormLink<IIdleAnimationGetter>)new FormLink<IIdleAnimationGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IIdleAnimationGetter>>();
                     }
                     else
                     {
@@ -1857,10 +1727,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RelatedIdleAnimations = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IdleAnimation>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IIdleAnimationGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<IdleAnimation>>();
+                        .CastExtendedList<IFormLink<IIdleAnimationGetter>>();
                     return (int)IdleAnimation_FieldIndex.RelatedIdleAnimations;
                 }
                 default:

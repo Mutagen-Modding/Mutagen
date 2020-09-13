@@ -40,29 +40,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region EnchantEffect
-        public FormLink<EffectShader> EnchantEffect { get; set; } = new FormLink<EffectShader>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IEffectShaderGetter> IMagicEffectSubDataGetter.EnchantEffect => this.EnchantEffect.ToGetter<EffectShader, IEffectShaderGetter>();
+        public FormLink<IEffectShaderGetter> EnchantEffect { get; set; } = new FormLink<IEffectShaderGetter>();
         #endregion
         #region CastingSound
-        public FormLink<Sound> CastingSound { get; set; } = new FormLink<Sound>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISoundGetter> IMagicEffectSubDataGetter.CastingSound => this.CastingSound.ToGetter<Sound, ISoundGetter>();
+        public FormLink<ISoundGetter> CastingSound { get; set; } = new FormLink<ISoundGetter>();
         #endregion
         #region BoltSound
-        public FormLink<Sound> BoltSound { get; set; } = new FormLink<Sound>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISoundGetter> IMagicEffectSubDataGetter.BoltSound => this.BoltSound.ToGetter<Sound, ISoundGetter>();
+        public FormLink<ISoundGetter> BoltSound { get; set; } = new FormLink<ISoundGetter>();
         #endregion
         #region HitSound
-        public FormLink<Sound> HitSound { get; set; } = new FormLink<Sound>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISoundGetter> IMagicEffectSubDataGetter.HitSound => this.HitSound.ToGetter<Sound, ISoundGetter>();
+        public FormLink<ISoundGetter> HitSound { get; set; } = new FormLink<ISoundGetter>();
         #endregion
         #region AreaSound
-        public FormLink<Sound> AreaSound { get; set; } = new FormLink<Sound>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISoundGetter> IMagicEffectSubDataGetter.AreaSound => this.AreaSound.ToGetter<Sound, ISoundGetter>();
+        public FormLink<ISoundGetter> AreaSound { get; set; } = new FormLink<ISoundGetter>();
         #endregion
         #region ConstantEffectEnchantmentFactor
         public Single ConstantEffectEnchantmentFactor { get; set; } = default;
@@ -613,11 +603,11 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IMagicEffectSubData>,
         ILinkedFormKeyContainer
     {
-        new FormLink<EffectShader> EnchantEffect { get; set; }
-        new FormLink<Sound> CastingSound { get; set; }
-        new FormLink<Sound> BoltSound { get; set; }
-        new FormLink<Sound> HitSound { get; set; }
-        new FormLink<Sound> AreaSound { get; set; }
+        new FormLink<IEffectShaderGetter> EnchantEffect { get; set; }
+        new FormLink<ISoundGetter> CastingSound { get; set; }
+        new FormLink<ISoundGetter> BoltSound { get; set; }
+        new FormLink<ISoundGetter> HitSound { get; set; }
+        new FormLink<ISoundGetter> AreaSound { get; set; }
         new Single ConstantEffectEnchantmentFactor { get; set; }
         new Single ConstantEffectBarterFactor { get; set; }
     }
@@ -861,167 +851,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "ENCHANTEFFECT":
-                    return (ushort)MagicEffectSubData_FieldIndex.EnchantEffect;
-                case "CASTINGSOUND":
-                    return (ushort)MagicEffectSubData_FieldIndex.CastingSound;
-                case "BOLTSOUND":
-                    return (ushort)MagicEffectSubData_FieldIndex.BoltSound;
-                case "HITSOUND":
-                    return (ushort)MagicEffectSubData_FieldIndex.HitSound;
-                case "AREASOUND":
-                    return (ushort)MagicEffectSubData_FieldIndex.AreaSound;
-                case "CONSTANTEFFECTENCHANTMENTFACTOR":
-                    return (ushort)MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor;
-                case "CONSTANTEFFECTBARTERFACTOR":
-                    return (ushort)MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            MagicEffectSubData_FieldIndex enu = (MagicEffectSubData_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffectSubData_FieldIndex.EnchantEffect:
-                case MagicEffectSubData_FieldIndex.CastingSound:
-                case MagicEffectSubData_FieldIndex.BoltSound:
-                case MagicEffectSubData_FieldIndex.HitSound:
-                case MagicEffectSubData_FieldIndex.AreaSound:
-                case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
-                case MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            MagicEffectSubData_FieldIndex enu = (MagicEffectSubData_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffectSubData_FieldIndex.EnchantEffect:
-                case MagicEffectSubData_FieldIndex.CastingSound:
-                case MagicEffectSubData_FieldIndex.BoltSound:
-                case MagicEffectSubData_FieldIndex.HitSound:
-                case MagicEffectSubData_FieldIndex.AreaSound:
-                case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
-                case MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            MagicEffectSubData_FieldIndex enu = (MagicEffectSubData_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffectSubData_FieldIndex.EnchantEffect:
-                case MagicEffectSubData_FieldIndex.CastingSound:
-                case MagicEffectSubData_FieldIndex.BoltSound:
-                case MagicEffectSubData_FieldIndex.HitSound:
-                case MagicEffectSubData_FieldIndex.AreaSound:
-                case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
-                case MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            MagicEffectSubData_FieldIndex enu = (MagicEffectSubData_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffectSubData_FieldIndex.EnchantEffect:
-                    return "EnchantEffect";
-                case MagicEffectSubData_FieldIndex.CastingSound:
-                    return "CastingSound";
-                case MagicEffectSubData_FieldIndex.BoltSound:
-                    return "BoltSound";
-                case MagicEffectSubData_FieldIndex.HitSound:
-                    return "HitSound";
-                case MagicEffectSubData_FieldIndex.AreaSound:
-                    return "AreaSound";
-                case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
-                    return "ConstantEffectEnchantmentFactor";
-                case MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor:
-                    return "ConstantEffectBarterFactor";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            MagicEffectSubData_FieldIndex enu = (MagicEffectSubData_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffectSubData_FieldIndex.EnchantEffect:
-                case MagicEffectSubData_FieldIndex.CastingSound:
-                case MagicEffectSubData_FieldIndex.BoltSound:
-                case MagicEffectSubData_FieldIndex.HitSound:
-                case MagicEffectSubData_FieldIndex.AreaSound:
-                case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
-                case MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            MagicEffectSubData_FieldIndex enu = (MagicEffectSubData_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffectSubData_FieldIndex.EnchantEffect:
-                case MagicEffectSubData_FieldIndex.CastingSound:
-                case MagicEffectSubData_FieldIndex.BoltSound:
-                case MagicEffectSubData_FieldIndex.HitSound:
-                case MagicEffectSubData_FieldIndex.AreaSound:
-                case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
-                case MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            MagicEffectSubData_FieldIndex enu = (MagicEffectSubData_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffectSubData_FieldIndex.EnchantEffect:
-                    return typeof(FormLink<EffectShader>);
-                case MagicEffectSubData_FieldIndex.CastingSound:
-                    return typeof(FormLink<Sound>);
-                case MagicEffectSubData_FieldIndex.BoltSound:
-                    return typeof(FormLink<Sound>);
-                case MagicEffectSubData_FieldIndex.HitSound:
-                    return typeof(FormLink<Sound>);
-                case MagicEffectSubData_FieldIndex.AreaSound:
-                    return typeof(FormLink<Sound>);
-                case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
-                    return typeof(Single);
-                case MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor:
-                    return typeof(Single);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly Type BinaryWriteTranslation = typeof(MagicEffectSubDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1041,14 +870,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1064,11 +893,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IMagicEffectSubData item)
         {
             ClearPartial();
-            item.EnchantEffect = FormLink<EffectShader>.Null;
-            item.CastingSound = FormLink<Sound>.Null;
-            item.BoltSound = FormLink<Sound>.Null;
-            item.HitSound = FormLink<Sound>.Null;
-            item.AreaSound = FormLink<Sound>.Null;
+            item.EnchantEffect = FormLink<IEffectShaderGetter>.Null;
+            item.CastingSound = FormLink<ISoundGetter>.Null;
+            item.BoltSound = FormLink<ISoundGetter>.Null;
+            item.HitSound = FormLink<ISoundGetter>.Null;
+            item.AreaSound = FormLink<ISoundGetter>.Null;
             item.ConstantEffectEnchantmentFactor = default;
             item.ConstantEffectBarterFactor = default;
         }
@@ -1264,23 +1093,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)MagicEffectSubData_FieldIndex.EnchantEffect) ?? true))
             {
-                item.EnchantEffect = new FormLink<EffectShader>(rhs.EnchantEffect.FormKey);
+                item.EnchantEffect = new FormLink<IEffectShaderGetter>(rhs.EnchantEffect.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffectSubData_FieldIndex.CastingSound) ?? true))
             {
-                item.CastingSound = new FormLink<Sound>(rhs.CastingSound.FormKey);
+                item.CastingSound = new FormLink<ISoundGetter>(rhs.CastingSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffectSubData_FieldIndex.BoltSound) ?? true))
             {
-                item.BoltSound = new FormLink<Sound>(rhs.BoltSound.FormKey);
+                item.BoltSound = new FormLink<ISoundGetter>(rhs.BoltSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffectSubData_FieldIndex.HitSound) ?? true))
             {
-                item.HitSound = new FormLink<Sound>(rhs.HitSound.FormKey);
+                item.HitSound = new FormLink<ISoundGetter>(rhs.HitSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffectSubData_FieldIndex.AreaSound) ?? true))
             {
-                item.AreaSound = new FormLink<Sound>(rhs.AreaSound.FormKey);
+                item.AreaSound = new FormLink<ISoundGetter>(rhs.AreaSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor) ?? true))
             {

@@ -86,19 +86,13 @@ namespace Mutagen.Bethesda.Skyrim
         IDestructibleGetter? IDoorGetter.Destructible => this.Destructible;
         #endregion
         #region OpenSound
-        public FormLinkNullable<SoundDescriptor> OpenSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IDoorGetter.OpenSound => this.OpenSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> OpenSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region CloseSound
-        public FormLinkNullable<SoundDescriptor> CloseSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IDoorGetter.CloseSound => this.CloseSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> CloseSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region LoopSound
-        public FormLinkNullable<SoundDescriptor> LoopSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IDoorGetter.LoopSound => this.LoopSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> LoopSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region Flags
         public Door.Flag Flags { get; set; } = default;
@@ -764,9 +758,9 @@ namespace Mutagen.Bethesda.Skyrim
         new TranslatedString? Name { get; set; }
         new Model? Model { get; set; }
         new Destructible? Destructible { get; set; }
-        new FormLinkNullable<SoundDescriptor> OpenSound { get; set; }
-        new FormLinkNullable<SoundDescriptor> CloseSound { get; set; }
-        new FormLinkNullable<SoundDescriptor> LoopSound { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> OpenSound { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> CloseSound { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> LoopSound { get; set; }
         new Door.Flag Flags { get; set; }
         #region Mutagen
         new Door.MajorFlag MajorFlags { get; set; }
@@ -1008,190 +1002,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "VIRTUALMACHINEADAPTER":
-                    return (ushort)Door_FieldIndex.VirtualMachineAdapter;
-                case "OBJECTBOUNDS":
-                    return (ushort)Door_FieldIndex.ObjectBounds;
-                case "NAME":
-                    return (ushort)Door_FieldIndex.Name;
-                case "MODEL":
-                    return (ushort)Door_FieldIndex.Model;
-                case "DESTRUCTIBLE":
-                    return (ushort)Door_FieldIndex.Destructible;
-                case "OPENSOUND":
-                    return (ushort)Door_FieldIndex.OpenSound;
-                case "CLOSESOUND":
-                    return (ushort)Door_FieldIndex.CloseSound;
-                case "LOOPSOUND":
-                    return (ushort)Door_FieldIndex.LoopSound;
-                case "FLAGS":
-                    return (ushort)Door_FieldIndex.Flags;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Door_FieldIndex enu = (Door_FieldIndex)index;
-            switch (enu)
-            {
-                case Door_FieldIndex.VirtualMachineAdapter:
-                case Door_FieldIndex.ObjectBounds:
-                case Door_FieldIndex.Name:
-                case Door_FieldIndex.Model:
-                case Door_FieldIndex.Destructible:
-                case Door_FieldIndex.OpenSound:
-                case Door_FieldIndex.CloseSound:
-                case Door_FieldIndex.LoopSound:
-                case Door_FieldIndex.Flags:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Door_FieldIndex enu = (Door_FieldIndex)index;
-            switch (enu)
-            {
-                case Door_FieldIndex.VirtualMachineAdapter:
-                case Door_FieldIndex.ObjectBounds:
-                case Door_FieldIndex.Model:
-                case Door_FieldIndex.Destructible:
-                    return true;
-                case Door_FieldIndex.Name:
-                case Door_FieldIndex.OpenSound:
-                case Door_FieldIndex.CloseSound:
-                case Door_FieldIndex.LoopSound:
-                case Door_FieldIndex.Flags:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Door_FieldIndex enu = (Door_FieldIndex)index;
-            switch (enu)
-            {
-                case Door_FieldIndex.VirtualMachineAdapter:
-                case Door_FieldIndex.ObjectBounds:
-                case Door_FieldIndex.Name:
-                case Door_FieldIndex.Model:
-                case Door_FieldIndex.Destructible:
-                case Door_FieldIndex.OpenSound:
-                case Door_FieldIndex.CloseSound:
-                case Door_FieldIndex.LoopSound:
-                case Door_FieldIndex.Flags:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Door_FieldIndex enu = (Door_FieldIndex)index;
-            switch (enu)
-            {
-                case Door_FieldIndex.VirtualMachineAdapter:
-                    return "VirtualMachineAdapter";
-                case Door_FieldIndex.ObjectBounds:
-                    return "ObjectBounds";
-                case Door_FieldIndex.Name:
-                    return "Name";
-                case Door_FieldIndex.Model:
-                    return "Model";
-                case Door_FieldIndex.Destructible:
-                    return "Destructible";
-                case Door_FieldIndex.OpenSound:
-                    return "OpenSound";
-                case Door_FieldIndex.CloseSound:
-                    return "CloseSound";
-                case Door_FieldIndex.LoopSound:
-                    return "LoopSound";
-                case Door_FieldIndex.Flags:
-                    return "Flags";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Door_FieldIndex enu = (Door_FieldIndex)index;
-            switch (enu)
-            {
-                case Door_FieldIndex.VirtualMachineAdapter:
-                case Door_FieldIndex.ObjectBounds:
-                case Door_FieldIndex.Name:
-                case Door_FieldIndex.Model:
-                case Door_FieldIndex.Destructible:
-                case Door_FieldIndex.OpenSound:
-                case Door_FieldIndex.CloseSound:
-                case Door_FieldIndex.LoopSound:
-                case Door_FieldIndex.Flags:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Door_FieldIndex enu = (Door_FieldIndex)index;
-            switch (enu)
-            {
-                case Door_FieldIndex.VirtualMachineAdapter:
-                case Door_FieldIndex.ObjectBounds:
-                case Door_FieldIndex.Name:
-                case Door_FieldIndex.Model:
-                case Door_FieldIndex.Destructible:
-                case Door_FieldIndex.OpenSound:
-                case Door_FieldIndex.CloseSound:
-                case Door_FieldIndex.LoopSound:
-                case Door_FieldIndex.Flags:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Door_FieldIndex enu = (Door_FieldIndex)index;
-            switch (enu)
-            {
-                case Door_FieldIndex.VirtualMachineAdapter:
-                    return typeof(VirtualMachineAdapter);
-                case Door_FieldIndex.ObjectBounds:
-                    return typeof(ObjectBounds);
-                case Door_FieldIndex.Name:
-                    return typeof(TranslatedString);
-                case Door_FieldIndex.Model:
-                    return typeof(Model);
-                case Door_FieldIndex.Destructible:
-                    return typeof(Destructible);
-                case Door_FieldIndex.OpenSound:
-                    return typeof(FormLinkNullable<SoundDescriptor>);
-                case Door_FieldIndex.CloseSound:
-                    return typeof(FormLinkNullable<SoundDescriptor>);
-                case Door_FieldIndex.LoopSound:
-                    return typeof(FormLinkNullable<SoundDescriptor>);
-                case Door_FieldIndex.Flags:
-                    return typeof(Door.Flag);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.DOOR;
         public static readonly Type BinaryWriteTranslation = typeof(DoorBinaryWriteTranslation);
         #region Interface
@@ -1212,14 +1022,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1240,9 +1050,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Name = default;
             item.Model = null;
             item.Destructible = null;
-            item.OpenSound = FormLinkNullable<SoundDescriptor>.Null;
-            item.CloseSound = FormLinkNullable<SoundDescriptor>.Null;
-            item.LoopSound = FormLinkNullable<SoundDescriptor>.Null;
+            item.OpenSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
+            item.CloseSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
+            item.LoopSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
             item.Flags = default;
             base.Clear(item);
         }
@@ -1754,15 +1564,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.OpenSound) ?? true))
             {
-                item.OpenSound = new FormLinkNullable<SoundDescriptor>(rhs.OpenSound.FormKey);
+                item.OpenSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.OpenSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.CloseSound) ?? true))
             {
-                item.CloseSound = new FormLinkNullable<SoundDescriptor>(rhs.CloseSound.FormKey);
+                item.CloseSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.CloseSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.LoopSound) ?? true))
             {
-                item.LoopSound = new FormLinkNullable<SoundDescriptor>(rhs.LoopSound.FormKey);
+                item.LoopSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.LoopSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.Flags) ?? true))
             {

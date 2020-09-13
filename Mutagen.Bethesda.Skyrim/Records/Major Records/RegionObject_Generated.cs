@@ -40,9 +40,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Object
-        public FormLink<IRegionTarget> Object { get; set; } = new FormLink<IRegionTarget>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IRegionTargetGetter> IRegionObjectGetter.Object => this.Object.ToGetter<IRegionTarget, IRegionTargetGetter>();
+        public FormLink<IRegionTargetGetter> Object { get; set; } = new FormLink<IRegionTargetGetter>();
         #endregion
         #region ParentIndex
         public UInt16 ParentIndex { get; set; } = default;
@@ -923,7 +921,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IRegionObject>,
         ILinkedFormKeyContainer
     {
-        new FormLink<IRegionTarget> Object { get; set; }
+        new FormLink<IRegionTargetGetter> Object { get; set; }
         new UInt16 ParentIndex { get; set; }
         new UInt16 Unknown { get; set; }
         new Single Density { get; set; }
@@ -1201,277 +1199,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "OBJECT":
-                    return (ushort)RegionObject_FieldIndex.Object;
-                case "PARENTINDEX":
-                    return (ushort)RegionObject_FieldIndex.ParentIndex;
-                case "UNKNOWN":
-                    return (ushort)RegionObject_FieldIndex.Unknown;
-                case "DENSITY":
-                    return (ushort)RegionObject_FieldIndex.Density;
-                case "CLUSTERING":
-                    return (ushort)RegionObject_FieldIndex.Clustering;
-                case "MINSLOPE":
-                    return (ushort)RegionObject_FieldIndex.MinSlope;
-                case "MAXSLOPE":
-                    return (ushort)RegionObject_FieldIndex.MaxSlope;
-                case "FLAGS":
-                    return (ushort)RegionObject_FieldIndex.Flags;
-                case "RADIUSWRTPERCENT":
-                    return (ushort)RegionObject_FieldIndex.RadiusWrtPercent;
-                case "RADIUS":
-                    return (ushort)RegionObject_FieldIndex.Radius;
-                case "MINHEIGHT":
-                    return (ushort)RegionObject_FieldIndex.MinHeight;
-                case "MAXHEIGHT":
-                    return (ushort)RegionObject_FieldIndex.MaxHeight;
-                case "SINK":
-                    return (ushort)RegionObject_FieldIndex.Sink;
-                case "SINKVARIANCE":
-                    return (ushort)RegionObject_FieldIndex.SinkVariance;
-                case "SIZEVARIANCE":
-                    return (ushort)RegionObject_FieldIndex.SizeVariance;
-                case "ANGLEVARIANCE":
-                    return (ushort)RegionObject_FieldIndex.AngleVariance;
-                case "UNKNOWN2":
-                    return (ushort)RegionObject_FieldIndex.Unknown2;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            RegionObject_FieldIndex enu = (RegionObject_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionObject_FieldIndex.Object:
-                case RegionObject_FieldIndex.ParentIndex:
-                case RegionObject_FieldIndex.Unknown:
-                case RegionObject_FieldIndex.Density:
-                case RegionObject_FieldIndex.Clustering:
-                case RegionObject_FieldIndex.MinSlope:
-                case RegionObject_FieldIndex.MaxSlope:
-                case RegionObject_FieldIndex.Flags:
-                case RegionObject_FieldIndex.RadiusWrtPercent:
-                case RegionObject_FieldIndex.Radius:
-                case RegionObject_FieldIndex.MinHeight:
-                case RegionObject_FieldIndex.MaxHeight:
-                case RegionObject_FieldIndex.Sink:
-                case RegionObject_FieldIndex.SinkVariance:
-                case RegionObject_FieldIndex.SizeVariance:
-                case RegionObject_FieldIndex.AngleVariance:
-                case RegionObject_FieldIndex.Unknown2:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            RegionObject_FieldIndex enu = (RegionObject_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionObject_FieldIndex.Object:
-                case RegionObject_FieldIndex.ParentIndex:
-                case RegionObject_FieldIndex.Unknown:
-                case RegionObject_FieldIndex.Density:
-                case RegionObject_FieldIndex.Clustering:
-                case RegionObject_FieldIndex.MinSlope:
-                case RegionObject_FieldIndex.MaxSlope:
-                case RegionObject_FieldIndex.Flags:
-                case RegionObject_FieldIndex.RadiusWrtPercent:
-                case RegionObject_FieldIndex.Radius:
-                case RegionObject_FieldIndex.MinHeight:
-                case RegionObject_FieldIndex.MaxHeight:
-                case RegionObject_FieldIndex.Sink:
-                case RegionObject_FieldIndex.SinkVariance:
-                case RegionObject_FieldIndex.SizeVariance:
-                case RegionObject_FieldIndex.AngleVariance:
-                case RegionObject_FieldIndex.Unknown2:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            RegionObject_FieldIndex enu = (RegionObject_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionObject_FieldIndex.Object:
-                case RegionObject_FieldIndex.ParentIndex:
-                case RegionObject_FieldIndex.Unknown:
-                case RegionObject_FieldIndex.Density:
-                case RegionObject_FieldIndex.Clustering:
-                case RegionObject_FieldIndex.MinSlope:
-                case RegionObject_FieldIndex.MaxSlope:
-                case RegionObject_FieldIndex.Flags:
-                case RegionObject_FieldIndex.RadiusWrtPercent:
-                case RegionObject_FieldIndex.Radius:
-                case RegionObject_FieldIndex.MinHeight:
-                case RegionObject_FieldIndex.MaxHeight:
-                case RegionObject_FieldIndex.Sink:
-                case RegionObject_FieldIndex.SinkVariance:
-                case RegionObject_FieldIndex.SizeVariance:
-                case RegionObject_FieldIndex.AngleVariance:
-                case RegionObject_FieldIndex.Unknown2:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            RegionObject_FieldIndex enu = (RegionObject_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionObject_FieldIndex.Object:
-                    return "Object";
-                case RegionObject_FieldIndex.ParentIndex:
-                    return "ParentIndex";
-                case RegionObject_FieldIndex.Unknown:
-                    return "Unknown";
-                case RegionObject_FieldIndex.Density:
-                    return "Density";
-                case RegionObject_FieldIndex.Clustering:
-                    return "Clustering";
-                case RegionObject_FieldIndex.MinSlope:
-                    return "MinSlope";
-                case RegionObject_FieldIndex.MaxSlope:
-                    return "MaxSlope";
-                case RegionObject_FieldIndex.Flags:
-                    return "Flags";
-                case RegionObject_FieldIndex.RadiusWrtPercent:
-                    return "RadiusWrtPercent";
-                case RegionObject_FieldIndex.Radius:
-                    return "Radius";
-                case RegionObject_FieldIndex.MinHeight:
-                    return "MinHeight";
-                case RegionObject_FieldIndex.MaxHeight:
-                    return "MaxHeight";
-                case RegionObject_FieldIndex.Sink:
-                    return "Sink";
-                case RegionObject_FieldIndex.SinkVariance:
-                    return "SinkVariance";
-                case RegionObject_FieldIndex.SizeVariance:
-                    return "SizeVariance";
-                case RegionObject_FieldIndex.AngleVariance:
-                    return "AngleVariance";
-                case RegionObject_FieldIndex.Unknown2:
-                    return "Unknown2";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            RegionObject_FieldIndex enu = (RegionObject_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionObject_FieldIndex.Object:
-                case RegionObject_FieldIndex.ParentIndex:
-                case RegionObject_FieldIndex.Unknown:
-                case RegionObject_FieldIndex.Density:
-                case RegionObject_FieldIndex.Clustering:
-                case RegionObject_FieldIndex.MinSlope:
-                case RegionObject_FieldIndex.MaxSlope:
-                case RegionObject_FieldIndex.Flags:
-                case RegionObject_FieldIndex.RadiusWrtPercent:
-                case RegionObject_FieldIndex.Radius:
-                case RegionObject_FieldIndex.MinHeight:
-                case RegionObject_FieldIndex.MaxHeight:
-                case RegionObject_FieldIndex.Sink:
-                case RegionObject_FieldIndex.SinkVariance:
-                case RegionObject_FieldIndex.SizeVariance:
-                case RegionObject_FieldIndex.AngleVariance:
-                case RegionObject_FieldIndex.Unknown2:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            RegionObject_FieldIndex enu = (RegionObject_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionObject_FieldIndex.Object:
-                case RegionObject_FieldIndex.ParentIndex:
-                case RegionObject_FieldIndex.Unknown:
-                case RegionObject_FieldIndex.Density:
-                case RegionObject_FieldIndex.Clustering:
-                case RegionObject_FieldIndex.MinSlope:
-                case RegionObject_FieldIndex.MaxSlope:
-                case RegionObject_FieldIndex.Flags:
-                case RegionObject_FieldIndex.RadiusWrtPercent:
-                case RegionObject_FieldIndex.Radius:
-                case RegionObject_FieldIndex.MinHeight:
-                case RegionObject_FieldIndex.MaxHeight:
-                case RegionObject_FieldIndex.Sink:
-                case RegionObject_FieldIndex.SinkVariance:
-                case RegionObject_FieldIndex.SizeVariance:
-                case RegionObject_FieldIndex.AngleVariance:
-                case RegionObject_FieldIndex.Unknown2:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            RegionObject_FieldIndex enu = (RegionObject_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionObject_FieldIndex.Object:
-                    return typeof(FormLink<IRegionTarget>);
-                case RegionObject_FieldIndex.ParentIndex:
-                    return typeof(UInt16);
-                case RegionObject_FieldIndex.Unknown:
-                    return typeof(UInt16);
-                case RegionObject_FieldIndex.Density:
-                    return typeof(Single);
-                case RegionObject_FieldIndex.Clustering:
-                    return typeof(Byte);
-                case RegionObject_FieldIndex.MinSlope:
-                    return typeof(Byte);
-                case RegionObject_FieldIndex.MaxSlope:
-                    return typeof(Byte);
-                case RegionObject_FieldIndex.Flags:
-                    return typeof(RegionObject.Flag);
-                case RegionObject_FieldIndex.RadiusWrtPercent:
-                    return typeof(UInt16);
-                case RegionObject_FieldIndex.Radius:
-                    return typeof(UInt16);
-                case RegionObject_FieldIndex.MinHeight:
-                    return typeof(Single);
-                case RegionObject_FieldIndex.MaxHeight:
-                    return typeof(Single);
-                case RegionObject_FieldIndex.Sink:
-                    return typeof(Single);
-                case RegionObject_FieldIndex.SinkVariance:
-                    return typeof(Single);
-                case RegionObject_FieldIndex.SizeVariance:
-                    return typeof(Single);
-                case RegionObject_FieldIndex.AngleVariance:
-                    return typeof(P3UInt16);
-                case RegionObject_FieldIndex.Unknown2:
-                    return typeof(MemorySlice<Byte>);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly Type BinaryWriteTranslation = typeof(RegionObjectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1491,14 +1218,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1514,7 +1241,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IRegionObject item)
         {
             ClearPartial();
-            item.Object = FormLink<IRegionTarget>.Null;
+            item.Object = FormLink<IRegionTargetGetter>.Null;
             item.ParentIndex = default;
             item.Unknown = default;
             item.Density = default;
@@ -1790,7 +1517,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RegionObject_FieldIndex.Object) ?? true))
             {
-                item.Object = new FormLink<IRegionTarget>(rhs.Object.FormKey);
+                item.Object = new FormLink<IRegionTargetGetter>(rhs.Object.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)RegionObject_FieldIndex.ParentIndex) ?? true))
             {

@@ -48,15 +48,15 @@ namespace Mutagen.Bethesda.Skyrim
                 frame.ReadSubrecordFrame();
             }
 
-            public static ExtendedList<IFormLink<IdleAnimation>> ParseAnimations(IMutagenReadStream stream)
+            public static ExtendedList<IFormLink<IIdleAnimationGetter>> ParseAnimations(IMutagenReadStream stream)
             {
                 var subFrame = stream.ReadSubrecordFrame();
-                var ret = new ExtendedList<IFormLink<IdleAnimation>>();
+                var ret = new ExtendedList<IFormLink<IIdleAnimationGetter>>();
                 int pos = 0;
                 while (pos < subFrame.Content.Length)
                 {
                     ret.Add(
-                        new FormLink<IdleAnimation>(
+                        new FormLink<IIdleAnimationGetter>(
                             FormKeyBinaryTranslation.Instance.Parse(subFrame.Content.Slice(pos), stream.MetaData.MasterReferences!)));
                     pos += 4;
                 }

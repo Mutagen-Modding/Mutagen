@@ -48,19 +48,13 @@ namespace Mutagen.Bethesda.Oblivion
         String? IWorldspaceGetter.Name => this.Name;
         #endregion
         #region Parent
-        public FormLinkNullable<Worldspace> Parent { get; set; } = new FormLinkNullable<Worldspace>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IWorldspaceGetter> IWorldspaceGetter.Parent => this.Parent.ToGetter<Worldspace, IWorldspaceGetter>();
+        public FormLinkNullable<IWorldspaceGetter> Parent { get; set; } = new FormLinkNullable<IWorldspaceGetter>();
         #endregion
         #region Climate
-        public FormLinkNullable<Climate> Climate { get; set; } = new FormLinkNullable<Climate>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IClimateGetter> IWorldspaceGetter.Climate => this.Climate.ToGetter<Climate, IClimateGetter>();
+        public FormLinkNullable<IClimateGetter> Climate { get; set; } = new FormLinkNullable<IClimateGetter>();
         #endregion
         #region Water
-        public FormLinkNullable<Water> Water { get; set; } = new FormLinkNullable<Water>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IWaterGetter> IWorldspaceGetter.Water => this.Water.ToGetter<Water, IWaterGetter>();
+        public FormLinkNullable<IWaterGetter> Water { get; set; } = new FormLinkNullable<IWaterGetter>();
         #endregion
         #region Icon
         public String? Icon { get; set; }
@@ -136,8 +130,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region SubCells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<WorldspaceBlock> _SubCells = new ExtendedList<WorldspaceBlock>();
-        public IExtendedList<WorldspaceBlock> SubCells
+        private ExtendedList<WorldspaceBlock> _SubCells = new ExtendedList<WorldspaceBlock>();
+        public ExtendedList<WorldspaceBlock> SubCells
         {
             get => this._SubCells;
             protected set => this._SubCells = value;
@@ -1065,9 +1059,9 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkedFormKeyContainer
     {
         new String? Name { get; set; }
-        new FormLinkNullable<Worldspace> Parent { get; set; }
-        new FormLinkNullable<Climate> Climate { get; set; }
-        new FormLinkNullable<Water> Water { get; set; }
+        new FormLinkNullable<IWorldspaceGetter> Parent { get; set; }
+        new FormLinkNullable<IClimateGetter> Climate { get; set; }
+        new FormLinkNullable<IWaterGetter> Water { get; set; }
         new String? Icon { get; set; }
         new MapData? MapData { get; set; }
         new Worldspace.Flag? Flags { get; set; }
@@ -1078,7 +1072,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Road? Road { get; set; }
         new Cell? TopCell { get; set; }
         new Int32 SubCellsTimestamp { get; set; }
-        new IExtendedList<WorldspaceBlock> SubCells { get; }
+        new ExtendedList<WorldspaceBlock> SubCells { get; }
     }
 
     public partial interface IWorldspaceInternal :
@@ -1534,257 +1528,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "NAME":
-                    return (ushort)Worldspace_FieldIndex.Name;
-                case "PARENT":
-                    return (ushort)Worldspace_FieldIndex.Parent;
-                case "CLIMATE":
-                    return (ushort)Worldspace_FieldIndex.Climate;
-                case "WATER":
-                    return (ushort)Worldspace_FieldIndex.Water;
-                case "ICON":
-                    return (ushort)Worldspace_FieldIndex.Icon;
-                case "MAPDATA":
-                    return (ushort)Worldspace_FieldIndex.MapData;
-                case "FLAGS":
-                    return (ushort)Worldspace_FieldIndex.Flags;
-                case "OBJECTBOUNDSMIN":
-                    return (ushort)Worldspace_FieldIndex.ObjectBoundsMin;
-                case "OBJECTBOUNDSMAX":
-                    return (ushort)Worldspace_FieldIndex.ObjectBoundsMax;
-                case "MUSIC":
-                    return (ushort)Worldspace_FieldIndex.Music;
-                case "OFFSETDATA":
-                    return (ushort)Worldspace_FieldIndex.OffsetData;
-                case "ROAD":
-                    return (ushort)Worldspace_FieldIndex.Road;
-                case "TOPCELL":
-                    return (ushort)Worldspace_FieldIndex.TopCell;
-                case "SUBCELLSTIMESTAMP":
-                    return (ushort)Worldspace_FieldIndex.SubCellsTimestamp;
-                case "SUBCELLS":
-                    return (ushort)Worldspace_FieldIndex.SubCells;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
-            switch (enu)
-            {
-                case Worldspace_FieldIndex.SubCells:
-                    return true;
-                case Worldspace_FieldIndex.Name:
-                case Worldspace_FieldIndex.Parent:
-                case Worldspace_FieldIndex.Climate:
-                case Worldspace_FieldIndex.Water:
-                case Worldspace_FieldIndex.Icon:
-                case Worldspace_FieldIndex.MapData:
-                case Worldspace_FieldIndex.Flags:
-                case Worldspace_FieldIndex.ObjectBoundsMin:
-                case Worldspace_FieldIndex.ObjectBoundsMax:
-                case Worldspace_FieldIndex.Music:
-                case Worldspace_FieldIndex.OffsetData:
-                case Worldspace_FieldIndex.Road:
-                case Worldspace_FieldIndex.TopCell:
-                case Worldspace_FieldIndex.SubCellsTimestamp:
-                    return false;
-                default:
-                    return Place_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
-            switch (enu)
-            {
-                case Worldspace_FieldIndex.MapData:
-                case Worldspace_FieldIndex.Road:
-                case Worldspace_FieldIndex.TopCell:
-                case Worldspace_FieldIndex.SubCells:
-                    return true;
-                case Worldspace_FieldIndex.Name:
-                case Worldspace_FieldIndex.Parent:
-                case Worldspace_FieldIndex.Climate:
-                case Worldspace_FieldIndex.Water:
-                case Worldspace_FieldIndex.Icon:
-                case Worldspace_FieldIndex.Flags:
-                case Worldspace_FieldIndex.ObjectBoundsMin:
-                case Worldspace_FieldIndex.ObjectBoundsMax:
-                case Worldspace_FieldIndex.Music:
-                case Worldspace_FieldIndex.OffsetData:
-                case Worldspace_FieldIndex.SubCellsTimestamp:
-                    return false;
-                default:
-                    return Place_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
-            switch (enu)
-            {
-                case Worldspace_FieldIndex.Name:
-                case Worldspace_FieldIndex.Parent:
-                case Worldspace_FieldIndex.Climate:
-                case Worldspace_FieldIndex.Water:
-                case Worldspace_FieldIndex.Icon:
-                case Worldspace_FieldIndex.MapData:
-                case Worldspace_FieldIndex.Flags:
-                case Worldspace_FieldIndex.ObjectBoundsMin:
-                case Worldspace_FieldIndex.ObjectBoundsMax:
-                case Worldspace_FieldIndex.Music:
-                case Worldspace_FieldIndex.OffsetData:
-                case Worldspace_FieldIndex.Road:
-                case Worldspace_FieldIndex.TopCell:
-                case Worldspace_FieldIndex.SubCellsTimestamp:
-                case Worldspace_FieldIndex.SubCells:
-                    return false;
-                default:
-                    return Place_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
-            switch (enu)
-            {
-                case Worldspace_FieldIndex.Name:
-                    return "Name";
-                case Worldspace_FieldIndex.Parent:
-                    return "Parent";
-                case Worldspace_FieldIndex.Climate:
-                    return "Climate";
-                case Worldspace_FieldIndex.Water:
-                    return "Water";
-                case Worldspace_FieldIndex.Icon:
-                    return "Icon";
-                case Worldspace_FieldIndex.MapData:
-                    return "MapData";
-                case Worldspace_FieldIndex.Flags:
-                    return "Flags";
-                case Worldspace_FieldIndex.ObjectBoundsMin:
-                    return "ObjectBoundsMin";
-                case Worldspace_FieldIndex.ObjectBoundsMax:
-                    return "ObjectBoundsMax";
-                case Worldspace_FieldIndex.Music:
-                    return "Music";
-                case Worldspace_FieldIndex.OffsetData:
-                    return "OffsetData";
-                case Worldspace_FieldIndex.Road:
-                    return "Road";
-                case Worldspace_FieldIndex.TopCell:
-                    return "TopCell";
-                case Worldspace_FieldIndex.SubCellsTimestamp:
-                    return "SubCellsTimestamp";
-                case Worldspace_FieldIndex.SubCells:
-                    return "SubCells";
-                default:
-                    return Place_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
-            switch (enu)
-            {
-                case Worldspace_FieldIndex.Name:
-                case Worldspace_FieldIndex.Parent:
-                case Worldspace_FieldIndex.Climate:
-                case Worldspace_FieldIndex.Water:
-                case Worldspace_FieldIndex.Icon:
-                case Worldspace_FieldIndex.MapData:
-                case Worldspace_FieldIndex.Flags:
-                case Worldspace_FieldIndex.ObjectBoundsMin:
-                case Worldspace_FieldIndex.ObjectBoundsMax:
-                case Worldspace_FieldIndex.Music:
-                case Worldspace_FieldIndex.OffsetData:
-                case Worldspace_FieldIndex.Road:
-                case Worldspace_FieldIndex.TopCell:
-                case Worldspace_FieldIndex.SubCellsTimestamp:
-                case Worldspace_FieldIndex.SubCells:
-                    return false;
-                default:
-                    return Place_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
-            switch (enu)
-            {
-                case Worldspace_FieldIndex.Name:
-                case Worldspace_FieldIndex.Parent:
-                case Worldspace_FieldIndex.Climate:
-                case Worldspace_FieldIndex.Water:
-                case Worldspace_FieldIndex.Icon:
-                case Worldspace_FieldIndex.MapData:
-                case Worldspace_FieldIndex.Flags:
-                case Worldspace_FieldIndex.ObjectBoundsMin:
-                case Worldspace_FieldIndex.ObjectBoundsMax:
-                case Worldspace_FieldIndex.Music:
-                case Worldspace_FieldIndex.OffsetData:
-                case Worldspace_FieldIndex.Road:
-                case Worldspace_FieldIndex.TopCell:
-                case Worldspace_FieldIndex.SubCellsTimestamp:
-                case Worldspace_FieldIndex.SubCells:
-                    return false;
-                default:
-                    return Place_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
-            switch (enu)
-            {
-                case Worldspace_FieldIndex.Name:
-                    return typeof(String);
-                case Worldspace_FieldIndex.Parent:
-                    return typeof(FormLinkNullable<Worldspace>);
-                case Worldspace_FieldIndex.Climate:
-                    return typeof(FormLinkNullable<Climate>);
-                case Worldspace_FieldIndex.Water:
-                    return typeof(FormLinkNullable<Water>);
-                case Worldspace_FieldIndex.Icon:
-                    return typeof(String);
-                case Worldspace_FieldIndex.MapData:
-                    return typeof(MapData);
-                case Worldspace_FieldIndex.Flags:
-                    return typeof(Worldspace.Flag);
-                case Worldspace_FieldIndex.ObjectBoundsMin:
-                    return typeof(P2Float);
-                case Worldspace_FieldIndex.ObjectBoundsMax:
-                    return typeof(P2Float);
-                case Worldspace_FieldIndex.Music:
-                    return typeof(MusicType);
-                case Worldspace_FieldIndex.OffsetData:
-                    return typeof(MemorySlice<Byte>);
-                case Worldspace_FieldIndex.Road:
-                    return typeof(Road);
-                case Worldspace_FieldIndex.TopCell:
-                    return typeof(Cell);
-                case Worldspace_FieldIndex.SubCellsTimestamp:
-                    return typeof(Int32);
-                case Worldspace_FieldIndex.SubCells:
-                    return typeof(IExtendedList<WorldspaceBlock>);
-                default:
-                    return Place_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.WRLD;
         public static readonly Type BinaryWriteTranslation = typeof(WorldspaceBinaryWriteTranslation);
         #region Interface
@@ -1805,14 +1548,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1829,9 +1572,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ClearPartial();
             item.Name = default;
-            item.Parent = FormLinkNullable<Worldspace>.Null;
-            item.Climate = FormLinkNullable<Climate>.Null;
-            item.Water = FormLinkNullable<Water>.Null;
+            item.Parent = FormLinkNullable<IWorldspaceGetter>.Null;
+            item.Climate = FormLinkNullable<IClimateGetter>.Null;
+            item.Water = FormLinkNullable<IWaterGetter>.Null;
             item.Icon = default;
             item.MapData = null;
             item.Flags = default;
@@ -3163,15 +2906,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Parent) ?? true))
             {
-                item.Parent = new FormLinkNullable<Worldspace>(rhs.Parent.FormKey);
+                item.Parent = new FormLinkNullable<IWorldspaceGetter>(rhs.Parent.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Climate) ?? true))
             {
-                item.Climate = new FormLinkNullable<Climate>(rhs.Climate.FormKey);
+                item.Climate = new FormLinkNullable<IClimateGetter>(rhs.Climate.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Water) ?? true))
             {
-                item.Water = new FormLinkNullable<Water>(rhs.Water.FormKey);
+                item.Water = new FormLinkNullable<IWaterGetter>(rhs.Water.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Icon) ?? true))
             {

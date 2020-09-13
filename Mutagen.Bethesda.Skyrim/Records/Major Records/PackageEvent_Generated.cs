@@ -41,9 +41,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Idle
-        public FormLinkNullable<IdleAnimation> Idle { get; set; } = new FormLinkNullable<IdleAnimation>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IIdleAnimationGetter> IPackageEventGetter.Idle => this.Idle.ToGetter<IdleAnimation, IIdleAnimationGetter>();
+        public FormLinkNullable<IIdleAnimationGetter> Idle { get; set; } = new FormLinkNullable<IIdleAnimationGetter>();
         #endregion
         #region SCHR
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -102,8 +100,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Topics
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<ATopicReference> _Topics = new ExtendedList<ATopicReference>();
-        public IExtendedList<ATopicReference> Topics
+        private ExtendedList<ATopicReference> _Topics = new ExtendedList<ATopicReference>();
+        public ExtendedList<ATopicReference> Topics
         {
             get => this._Topics;
             protected set => this._Topics = value;
@@ -732,13 +730,13 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPackageEvent>,
         ILinkedFormKeyContainer
     {
-        new FormLinkNullable<IdleAnimation> Idle { get; set; }
+        new FormLinkNullable<IIdleAnimationGetter> Idle { get; set; }
         new MemorySlice<Byte>? SCHR { get; set; }
         new MemorySlice<Byte>? SCDA { get; set; }
         new MemorySlice<Byte>? SCTX { get; set; }
         new MemorySlice<Byte>? QNAM { get; set; }
         new MemorySlice<Byte>? TNAM { get; set; }
-        new IExtendedList<ATopicReference> Topics { get; }
+        new ExtendedList<ATopicReference> Topics { get; }
     }
 
     public partial interface IPackageEventGetter :
@@ -980,169 +978,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "IDLE":
-                    return (ushort)PackageEvent_FieldIndex.Idle;
-                case "SCHR":
-                    return (ushort)PackageEvent_FieldIndex.SCHR;
-                case "SCDA":
-                    return (ushort)PackageEvent_FieldIndex.SCDA;
-                case "SCTX":
-                    return (ushort)PackageEvent_FieldIndex.SCTX;
-                case "QNAM":
-                    return (ushort)PackageEvent_FieldIndex.QNAM;
-                case "TNAM":
-                    return (ushort)PackageEvent_FieldIndex.TNAM;
-                case "TOPICS":
-                    return (ushort)PackageEvent_FieldIndex.Topics;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            PackageEvent_FieldIndex enu = (PackageEvent_FieldIndex)index;
-            switch (enu)
-            {
-                case PackageEvent_FieldIndex.Topics:
-                    return true;
-                case PackageEvent_FieldIndex.Idle:
-                case PackageEvent_FieldIndex.SCHR:
-                case PackageEvent_FieldIndex.SCDA:
-                case PackageEvent_FieldIndex.SCTX:
-                case PackageEvent_FieldIndex.QNAM:
-                case PackageEvent_FieldIndex.TNAM:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            PackageEvent_FieldIndex enu = (PackageEvent_FieldIndex)index;
-            switch (enu)
-            {
-                case PackageEvent_FieldIndex.Topics:
-                    return true;
-                case PackageEvent_FieldIndex.Idle:
-                case PackageEvent_FieldIndex.SCHR:
-                case PackageEvent_FieldIndex.SCDA:
-                case PackageEvent_FieldIndex.SCTX:
-                case PackageEvent_FieldIndex.QNAM:
-                case PackageEvent_FieldIndex.TNAM:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            PackageEvent_FieldIndex enu = (PackageEvent_FieldIndex)index;
-            switch (enu)
-            {
-                case PackageEvent_FieldIndex.Idle:
-                case PackageEvent_FieldIndex.SCHR:
-                case PackageEvent_FieldIndex.SCDA:
-                case PackageEvent_FieldIndex.SCTX:
-                case PackageEvent_FieldIndex.QNAM:
-                case PackageEvent_FieldIndex.TNAM:
-                case PackageEvent_FieldIndex.Topics:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            PackageEvent_FieldIndex enu = (PackageEvent_FieldIndex)index;
-            switch (enu)
-            {
-                case PackageEvent_FieldIndex.Idle:
-                    return "Idle";
-                case PackageEvent_FieldIndex.SCHR:
-                    return "SCHR";
-                case PackageEvent_FieldIndex.SCDA:
-                    return "SCDA";
-                case PackageEvent_FieldIndex.SCTX:
-                    return "SCTX";
-                case PackageEvent_FieldIndex.QNAM:
-                    return "QNAM";
-                case PackageEvent_FieldIndex.TNAM:
-                    return "TNAM";
-                case PackageEvent_FieldIndex.Topics:
-                    return "Topics";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            PackageEvent_FieldIndex enu = (PackageEvent_FieldIndex)index;
-            switch (enu)
-            {
-                case PackageEvent_FieldIndex.Idle:
-                case PackageEvent_FieldIndex.SCHR:
-                case PackageEvent_FieldIndex.SCDA:
-                case PackageEvent_FieldIndex.SCTX:
-                case PackageEvent_FieldIndex.QNAM:
-                case PackageEvent_FieldIndex.TNAM:
-                case PackageEvent_FieldIndex.Topics:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            PackageEvent_FieldIndex enu = (PackageEvent_FieldIndex)index;
-            switch (enu)
-            {
-                case PackageEvent_FieldIndex.Idle:
-                case PackageEvent_FieldIndex.SCHR:
-                case PackageEvent_FieldIndex.SCDA:
-                case PackageEvent_FieldIndex.SCTX:
-                case PackageEvent_FieldIndex.QNAM:
-                case PackageEvent_FieldIndex.TNAM:
-                case PackageEvent_FieldIndex.Topics:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            PackageEvent_FieldIndex enu = (PackageEvent_FieldIndex)index;
-            switch (enu)
-            {
-                case PackageEvent_FieldIndex.Idle:
-                    return typeof(FormLinkNullable<IdleAnimation>);
-                case PackageEvent_FieldIndex.SCHR:
-                    return typeof(MemorySlice<Byte>);
-                case PackageEvent_FieldIndex.SCDA:
-                    return typeof(MemorySlice<Byte>);
-                case PackageEvent_FieldIndex.SCTX:
-                    return typeof(MemorySlice<Byte>);
-                case PackageEvent_FieldIndex.QNAM:
-                    return typeof(MemorySlice<Byte>);
-                case PackageEvent_FieldIndex.TNAM:
-                    return typeof(MemorySlice<Byte>);
-                case PackageEvent_FieldIndex.Topics:
-                    return typeof(IExtendedList<ATopicReference>);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1179,14 +1014,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1202,7 +1037,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IPackageEvent item)
         {
             ClearPartial();
-            item.Idle = FormLinkNullable<IdleAnimation>.Null;
+            item.Idle = FormLinkNullable<IIdleAnimationGetter>.Null;
             item.SCHR = default;
             item.SCDA = default;
             item.SCTX = default;
@@ -1444,7 +1279,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)PackageEvent_FieldIndex.Idle) ?? true))
             {
-                item.Idle = new FormLinkNullable<IdleAnimation>(rhs.Idle.FormKey);
+                item.Idle = new FormLinkNullable<IIdleAnimationGetter>(rhs.Idle.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PackageEvent_FieldIndex.SCHR) ?? true))
             {

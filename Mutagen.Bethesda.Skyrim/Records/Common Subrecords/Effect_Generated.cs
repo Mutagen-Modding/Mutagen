@@ -41,9 +41,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region BaseEffect
-        public FormLinkNullable<MagicEffect> BaseEffect { get; set; } = new FormLinkNullable<MagicEffect>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IMagicEffectGetter> IEffectGetter.BaseEffect => this.BaseEffect.ToGetter<MagicEffect, IMagicEffectGetter>();
+        public FormLinkNullable<IMagicEffectGetter> BaseEffect { get; set; } = new FormLinkNullable<IMagicEffectGetter>();
         #endregion
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -58,8 +56,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public IExtendedList<Condition> Conditions
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -583,9 +581,9 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IEffect>,
         ILinkedFormKeyContainer
     {
-        new FormLinkNullable<MagicEffect> BaseEffect { get; set; }
+        new FormLinkNullable<IMagicEffectGetter> BaseEffect { get; set; }
         new EffectData? Data { get; set; }
-        new IExtendedList<Condition> Conditions { get; }
+        new ExtendedList<Condition> Conditions { get; }
     }
 
     public partial interface IEffectGetter :
@@ -819,125 +817,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "BASEEFFECT":
-                    return (ushort)Effect_FieldIndex.BaseEffect;
-                case "DATA":
-                    return (ushort)Effect_FieldIndex.Data;
-                case "CONDITIONS":
-                    return (ushort)Effect_FieldIndex.Conditions;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Effect_FieldIndex enu = (Effect_FieldIndex)index;
-            switch (enu)
-            {
-                case Effect_FieldIndex.Conditions:
-                    return true;
-                case Effect_FieldIndex.BaseEffect:
-                case Effect_FieldIndex.Data:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Effect_FieldIndex enu = (Effect_FieldIndex)index;
-            switch (enu)
-            {
-                case Effect_FieldIndex.Data:
-                case Effect_FieldIndex.Conditions:
-                    return true;
-                case Effect_FieldIndex.BaseEffect:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Effect_FieldIndex enu = (Effect_FieldIndex)index;
-            switch (enu)
-            {
-                case Effect_FieldIndex.BaseEffect:
-                case Effect_FieldIndex.Data:
-                case Effect_FieldIndex.Conditions:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Effect_FieldIndex enu = (Effect_FieldIndex)index;
-            switch (enu)
-            {
-                case Effect_FieldIndex.BaseEffect:
-                    return "BaseEffect";
-                case Effect_FieldIndex.Data:
-                    return "Data";
-                case Effect_FieldIndex.Conditions:
-                    return "Conditions";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Effect_FieldIndex enu = (Effect_FieldIndex)index;
-            switch (enu)
-            {
-                case Effect_FieldIndex.BaseEffect:
-                case Effect_FieldIndex.Data:
-                case Effect_FieldIndex.Conditions:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Effect_FieldIndex enu = (Effect_FieldIndex)index;
-            switch (enu)
-            {
-                case Effect_FieldIndex.BaseEffect:
-                case Effect_FieldIndex.Data:
-                case Effect_FieldIndex.Conditions:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Effect_FieldIndex enu = (Effect_FieldIndex)index;
-            switch (enu)
-            {
-                case Effect_FieldIndex.BaseEffect:
-                    return typeof(FormLinkNullable<MagicEffect>);
-                case Effect_FieldIndex.Data:
-                    return typeof(EffectData);
-                case Effect_FieldIndex.Conditions:
-                    return typeof(IExtendedList<Condition>);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -970,14 +849,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -993,7 +872,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IEffect item)
         {
             ClearPartial();
-            item.BaseEffect = FormLinkNullable<MagicEffect>.Null;
+            item.BaseEffect = FormLinkNullable<IMagicEffectGetter>.Null;
             item.Data = null;
             item.Conditions.Clear();
         }
@@ -1191,7 +1070,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)Effect_FieldIndex.BaseEffect) ?? true))
             {
-                item.BaseEffect = new FormLinkNullable<MagicEffect>(rhs.BaseEffect.FormKey);
+                item.BaseEffect = new FormLinkNullable<IMagicEffectGetter>(rhs.BaseEffect.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Effect_FieldIndex.Data) ?? true))
             {

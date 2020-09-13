@@ -765,135 +765,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "NAME":
-                    return (ushort)Hair_FieldIndex.Name;
-                case "MODEL":
-                    return (ushort)Hair_FieldIndex.Model;
-                case "ICON":
-                    return (ushort)Hair_FieldIndex.Icon;
-                case "FLAGS":
-                    return (ushort)Hair_FieldIndex.Flags;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Hair_FieldIndex enu = (Hair_FieldIndex)index;
-            switch (enu)
-            {
-                case Hair_FieldIndex.Name:
-                case Hair_FieldIndex.Model:
-                case Hair_FieldIndex.Icon:
-                case Hair_FieldIndex.Flags:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Hair_FieldIndex enu = (Hair_FieldIndex)index;
-            switch (enu)
-            {
-                case Hair_FieldIndex.Model:
-                    return true;
-                case Hair_FieldIndex.Name:
-                case Hair_FieldIndex.Icon:
-                case Hair_FieldIndex.Flags:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Hair_FieldIndex enu = (Hair_FieldIndex)index;
-            switch (enu)
-            {
-                case Hair_FieldIndex.Name:
-                case Hair_FieldIndex.Model:
-                case Hair_FieldIndex.Icon:
-                case Hair_FieldIndex.Flags:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Hair_FieldIndex enu = (Hair_FieldIndex)index;
-            switch (enu)
-            {
-                case Hair_FieldIndex.Name:
-                    return "Name";
-                case Hair_FieldIndex.Model:
-                    return "Model";
-                case Hair_FieldIndex.Icon:
-                    return "Icon";
-                case Hair_FieldIndex.Flags:
-                    return "Flags";
-                default:
-                    return OblivionMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Hair_FieldIndex enu = (Hair_FieldIndex)index;
-            switch (enu)
-            {
-                case Hair_FieldIndex.Name:
-                case Hair_FieldIndex.Model:
-                case Hair_FieldIndex.Icon:
-                case Hair_FieldIndex.Flags:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Hair_FieldIndex enu = (Hair_FieldIndex)index;
-            switch (enu)
-            {
-                case Hair_FieldIndex.Name:
-                case Hair_FieldIndex.Model:
-                case Hair_FieldIndex.Icon:
-                case Hair_FieldIndex.Flags:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Hair_FieldIndex enu = (Hair_FieldIndex)index;
-            switch (enu)
-            {
-                case Hair_FieldIndex.Name:
-                    return typeof(String);
-                case Hair_FieldIndex.Model:
-                    return typeof(Model);
-                case Hair_FieldIndex.Icon:
-                    return typeof(String);
-                case Hair_FieldIndex.Flags:
-                    return typeof(Hair.HairFlag);
-                default:
-                    return OblivionMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.HAIR;
         public static readonly Type BinaryWriteTranslation = typeof(HairBinaryWriteTranslation);
         #region Interface
@@ -914,14 +785,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

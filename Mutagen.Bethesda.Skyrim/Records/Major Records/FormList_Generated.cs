@@ -44,8 +44,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<SkyrimMajorRecord>> _Items = new ExtendedList<IFormLink<SkyrimMajorRecord>>();
-        public IExtendedList<IFormLink<SkyrimMajorRecord>> Items
+        private ExtendedList<IFormLink<ISkyrimMajorRecordGetter>> _Items = new ExtendedList<IFormLink<ISkyrimMajorRecordGetter>>();
+        public ExtendedList<IFormLink<ISkyrimMajorRecordGetter>> Items
         {
             get => this._Items;
             protected set => this._Items = value;
@@ -526,7 +526,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IFormListInternal>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<IFormLink<SkyrimMajorRecord>> Items { get; }
+        new ExtendedList<IFormLink<ISkyrimMajorRecordGetter>> Items { get; }
     }
 
     public partial interface IFormListInternal :
@@ -741,101 +741,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "ITEMS":
-                    return (ushort)FormList_FieldIndex.Items;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            FormList_FieldIndex enu = (FormList_FieldIndex)index;
-            switch (enu)
-            {
-                case FormList_FieldIndex.Items:
-                    return true;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            FormList_FieldIndex enu = (FormList_FieldIndex)index;
-            switch (enu)
-            {
-                case FormList_FieldIndex.Items:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            FormList_FieldIndex enu = (FormList_FieldIndex)index;
-            switch (enu)
-            {
-                case FormList_FieldIndex.Items:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            FormList_FieldIndex enu = (FormList_FieldIndex)index;
-            switch (enu)
-            {
-                case FormList_FieldIndex.Items:
-                    return "Items";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            FormList_FieldIndex enu = (FormList_FieldIndex)index;
-            switch (enu)
-            {
-                case FormList_FieldIndex.Items:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            FormList_FieldIndex enu = (FormList_FieldIndex)index;
-            switch (enu)
-            {
-                case FormList_FieldIndex.Items:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            FormList_FieldIndex enu = (FormList_FieldIndex)index;
-            switch (enu)
-            {
-                case FormList_FieldIndex.Items:
-                    return typeof(IExtendedList<IFormLink<SkyrimMajorRecord>>);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.FLST;
         public static readonly Type BinaryWriteTranslation = typeof(FormListBinaryWriteTranslation);
         #region Interface
@@ -856,14 +761,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1195,7 +1100,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Items.SetTo(
                         rhs.Items
-                        .Select(r => (IFormLink<SkyrimMajorRecord>)new FormLink<SkyrimMajorRecord>(r.FormKey)));
+                        .Select(r => (IFormLink<ISkyrimMajorRecordGetter>)new FormLink<ISkyrimMajorRecordGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1461,7 +1366,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.LNAM:
                 {
                     item.Items.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<SkyrimMajorRecord>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ISkyrimMajorRecordGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.LNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));

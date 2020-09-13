@@ -60,8 +60,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Phases
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<ScenePhase> _Phases = new ExtendedList<ScenePhase>();
-        public IExtendedList<ScenePhase> Phases
+        private ExtendedList<ScenePhase> _Phases = new ExtendedList<ScenePhase>();
+        public ExtendedList<ScenePhase> Phases
         {
             get => this._Phases;
             protected set => this._Phases = value;
@@ -74,8 +74,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Actors
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<SceneActor> _Actors = new ExtendedList<SceneActor>();
-        public IExtendedList<SceneActor> Actors
+        private ExtendedList<SceneActor> _Actors = new ExtendedList<SceneActor>();
+        public ExtendedList<SceneActor> Actors
         {
             get => this._Actors;
             protected set => this._Actors = value;
@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Actions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<SceneAction> _Actions = new ExtendedList<SceneAction>();
-        public IExtendedList<SceneAction> Actions
+        private ExtendedList<SceneAction> _Actions = new ExtendedList<SceneAction>();
+        public ExtendedList<SceneAction> Actions
         {
             get => this._Actions;
             protected set => this._Actions = value;
@@ -123,9 +123,7 @@ namespace Mutagen.Bethesda.Skyrim
         IScenePhaseUnusedDataGetter? ISceneGetter.Unused2 => this.Unused2;
         #endregion
         #region Quest
-        public FormLinkNullable<Quest> Quest { get; set; } = new FormLinkNullable<Quest>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IQuestGetter> ISceneGetter.Quest => this.Quest.ToGetter<Quest, IQuestGetter>();
+        public FormLinkNullable<IQuestGetter> Quest { get; set; } = new FormLinkNullable<IQuestGetter>();
         #endregion
         #region LastActionIndex
         public UInt32? LastActionIndex { get; set; }
@@ -145,8 +143,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public IExtendedList<Condition> Conditions
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -1154,15 +1152,15 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new SceneAdapter? VirtualMachineAdapter { get; set; }
         new Scene.Flag? Flags { get; set; }
-        new IExtendedList<ScenePhase> Phases { get; }
-        new IExtendedList<SceneActor> Actors { get; }
-        new IExtendedList<SceneAction> Actions { get; }
+        new ExtendedList<ScenePhase> Phases { get; }
+        new ExtendedList<SceneActor> Actors { get; }
+        new ExtendedList<SceneAction> Actions { get; }
         new ScenePhaseUnusedData? Unused { get; set; }
         new ScenePhaseUnusedData? Unused2 { get; set; }
-        new FormLinkNullable<Quest> Quest { get; set; }
+        new FormLinkNullable<IQuestGetter> Quest { get; set; }
         new UInt32? LastActionIndex { get; set; }
         new MemorySlice<Byte>? VNAM { get; set; }
-        new IExtendedList<Condition> Conditions { get; }
+        new ExtendedList<Condition> Conditions { get; }
     }
 
     public partial interface ISceneInternal :
@@ -1394,213 +1392,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "VIRTUALMACHINEADAPTER":
-                    return (ushort)Scene_FieldIndex.VirtualMachineAdapter;
-                case "FLAGS":
-                    return (ushort)Scene_FieldIndex.Flags;
-                case "PHASES":
-                    return (ushort)Scene_FieldIndex.Phases;
-                case "ACTORS":
-                    return (ushort)Scene_FieldIndex.Actors;
-                case "ACTIONS":
-                    return (ushort)Scene_FieldIndex.Actions;
-                case "UNUSED":
-                    return (ushort)Scene_FieldIndex.Unused;
-                case "UNUSED2":
-                    return (ushort)Scene_FieldIndex.Unused2;
-                case "QUEST":
-                    return (ushort)Scene_FieldIndex.Quest;
-                case "LASTACTIONINDEX":
-                    return (ushort)Scene_FieldIndex.LastActionIndex;
-                case "VNAM":
-                    return (ushort)Scene_FieldIndex.VNAM;
-                case "CONDITIONS":
-                    return (ushort)Scene_FieldIndex.Conditions;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Scene_FieldIndex enu = (Scene_FieldIndex)index;
-            switch (enu)
-            {
-                case Scene_FieldIndex.Phases:
-                case Scene_FieldIndex.Actors:
-                case Scene_FieldIndex.Actions:
-                case Scene_FieldIndex.Conditions:
-                    return true;
-                case Scene_FieldIndex.VirtualMachineAdapter:
-                case Scene_FieldIndex.Flags:
-                case Scene_FieldIndex.Unused:
-                case Scene_FieldIndex.Unused2:
-                case Scene_FieldIndex.Quest:
-                case Scene_FieldIndex.LastActionIndex:
-                case Scene_FieldIndex.VNAM:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Scene_FieldIndex enu = (Scene_FieldIndex)index;
-            switch (enu)
-            {
-                case Scene_FieldIndex.VirtualMachineAdapter:
-                case Scene_FieldIndex.Phases:
-                case Scene_FieldIndex.Actors:
-                case Scene_FieldIndex.Actions:
-                case Scene_FieldIndex.Unused:
-                case Scene_FieldIndex.Unused2:
-                case Scene_FieldIndex.Conditions:
-                    return true;
-                case Scene_FieldIndex.Flags:
-                case Scene_FieldIndex.Quest:
-                case Scene_FieldIndex.LastActionIndex:
-                case Scene_FieldIndex.VNAM:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Scene_FieldIndex enu = (Scene_FieldIndex)index;
-            switch (enu)
-            {
-                case Scene_FieldIndex.VirtualMachineAdapter:
-                case Scene_FieldIndex.Flags:
-                case Scene_FieldIndex.Phases:
-                case Scene_FieldIndex.Actors:
-                case Scene_FieldIndex.Actions:
-                case Scene_FieldIndex.Unused:
-                case Scene_FieldIndex.Unused2:
-                case Scene_FieldIndex.Quest:
-                case Scene_FieldIndex.LastActionIndex:
-                case Scene_FieldIndex.VNAM:
-                case Scene_FieldIndex.Conditions:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Scene_FieldIndex enu = (Scene_FieldIndex)index;
-            switch (enu)
-            {
-                case Scene_FieldIndex.VirtualMachineAdapter:
-                    return "VirtualMachineAdapter";
-                case Scene_FieldIndex.Flags:
-                    return "Flags";
-                case Scene_FieldIndex.Phases:
-                    return "Phases";
-                case Scene_FieldIndex.Actors:
-                    return "Actors";
-                case Scene_FieldIndex.Actions:
-                    return "Actions";
-                case Scene_FieldIndex.Unused:
-                    return "Unused";
-                case Scene_FieldIndex.Unused2:
-                    return "Unused2";
-                case Scene_FieldIndex.Quest:
-                    return "Quest";
-                case Scene_FieldIndex.LastActionIndex:
-                    return "LastActionIndex";
-                case Scene_FieldIndex.VNAM:
-                    return "VNAM";
-                case Scene_FieldIndex.Conditions:
-                    return "Conditions";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Scene_FieldIndex enu = (Scene_FieldIndex)index;
-            switch (enu)
-            {
-                case Scene_FieldIndex.VirtualMachineAdapter:
-                case Scene_FieldIndex.Flags:
-                case Scene_FieldIndex.Phases:
-                case Scene_FieldIndex.Actors:
-                case Scene_FieldIndex.Actions:
-                case Scene_FieldIndex.Unused:
-                case Scene_FieldIndex.Unused2:
-                case Scene_FieldIndex.Quest:
-                case Scene_FieldIndex.LastActionIndex:
-                case Scene_FieldIndex.VNAM:
-                case Scene_FieldIndex.Conditions:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Scene_FieldIndex enu = (Scene_FieldIndex)index;
-            switch (enu)
-            {
-                case Scene_FieldIndex.VirtualMachineAdapter:
-                case Scene_FieldIndex.Flags:
-                case Scene_FieldIndex.Phases:
-                case Scene_FieldIndex.Actors:
-                case Scene_FieldIndex.Actions:
-                case Scene_FieldIndex.Unused:
-                case Scene_FieldIndex.Unused2:
-                case Scene_FieldIndex.Quest:
-                case Scene_FieldIndex.LastActionIndex:
-                case Scene_FieldIndex.VNAM:
-                case Scene_FieldIndex.Conditions:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Scene_FieldIndex enu = (Scene_FieldIndex)index;
-            switch (enu)
-            {
-                case Scene_FieldIndex.VirtualMachineAdapter:
-                    return typeof(SceneAdapter);
-                case Scene_FieldIndex.Flags:
-                    return typeof(Scene.Flag);
-                case Scene_FieldIndex.Phases:
-                    return typeof(IExtendedList<ScenePhase>);
-                case Scene_FieldIndex.Actors:
-                    return typeof(IExtendedList<SceneActor>);
-                case Scene_FieldIndex.Actions:
-                    return typeof(IExtendedList<SceneAction>);
-                case Scene_FieldIndex.Unused:
-                    return typeof(ScenePhaseUnusedData);
-                case Scene_FieldIndex.Unused2:
-                    return typeof(ScenePhaseUnusedData);
-                case Scene_FieldIndex.Quest:
-                    return typeof(FormLinkNullable<Quest>);
-                case Scene_FieldIndex.LastActionIndex:
-                    return typeof(UInt32);
-                case Scene_FieldIndex.VNAM:
-                    return typeof(MemorySlice<Byte>);
-                case Scene_FieldIndex.Conditions:
-                    return typeof(IExtendedList<Condition>);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.SCEN;
         public static readonly Type BinaryWriteTranslation = typeof(SceneBinaryWriteTranslation);
         #region Interface
@@ -1621,14 +1412,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1651,7 +1442,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Actions.Clear();
             item.Unused = null;
             item.Unused2 = null;
-            item.Quest = FormLinkNullable<Quest>.Null;
+            item.Quest = FormLinkNullable<IQuestGetter>.Null;
             item.LastActionIndex = default;
             item.VNAM = default;
             item.Conditions.Clear();
@@ -2297,7 +2088,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Scene_FieldIndex.Quest) ?? true))
             {
-                item.Quest = new FormLinkNullable<Quest>(rhs.Quest.FormKey);
+                item.Quest = new FormLinkNullable<IQuestGetter>(rhs.Quest.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Scene_FieldIndex.LastActionIndex) ?? true))
             {

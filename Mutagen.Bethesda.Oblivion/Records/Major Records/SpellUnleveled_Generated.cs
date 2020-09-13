@@ -55,8 +55,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Effect> _Effects = new ExtendedList<Effect>();
-        public IExtendedList<Effect> Effects
+        private ExtendedList<Effect> _Effects = new ExtendedList<Effect>();
+        public ExtendedList<Effect> Effects
         {
             get => this._Effects;
             protected set => this._Effects = value;
@@ -572,7 +572,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkedFormKeyContainer
     {
         new SpellData? Data { get; set; }
-        new IExtendedList<Effect> Effects { get; }
+        new ExtendedList<Effect> Effects { get; }
     }
 
     public partial interface ISpellUnleveledInternal :
@@ -786,113 +786,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "DATA":
-                    return (ushort)SpellUnleveled_FieldIndex.Data;
-                case "EFFECTS":
-                    return (ushort)SpellUnleveled_FieldIndex.Effects;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            SpellUnleveled_FieldIndex enu = (SpellUnleveled_FieldIndex)index;
-            switch (enu)
-            {
-                case SpellUnleveled_FieldIndex.Effects:
-                    return true;
-                case SpellUnleveled_FieldIndex.Data:
-                    return false;
-                default:
-                    return Spell_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            SpellUnleveled_FieldIndex enu = (SpellUnleveled_FieldIndex)index;
-            switch (enu)
-            {
-                case SpellUnleveled_FieldIndex.Data:
-                case SpellUnleveled_FieldIndex.Effects:
-                    return true;
-                default:
-                    return Spell_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            SpellUnleveled_FieldIndex enu = (SpellUnleveled_FieldIndex)index;
-            switch (enu)
-            {
-                case SpellUnleveled_FieldIndex.Data:
-                case SpellUnleveled_FieldIndex.Effects:
-                    return false;
-                default:
-                    return Spell_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            SpellUnleveled_FieldIndex enu = (SpellUnleveled_FieldIndex)index;
-            switch (enu)
-            {
-                case SpellUnleveled_FieldIndex.Data:
-                    return "Data";
-                case SpellUnleveled_FieldIndex.Effects:
-                    return "Effects";
-                default:
-                    return Spell_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            SpellUnleveled_FieldIndex enu = (SpellUnleveled_FieldIndex)index;
-            switch (enu)
-            {
-                case SpellUnleveled_FieldIndex.Data:
-                case SpellUnleveled_FieldIndex.Effects:
-                    return false;
-                default:
-                    return Spell_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            SpellUnleveled_FieldIndex enu = (SpellUnleveled_FieldIndex)index;
-            switch (enu)
-            {
-                case SpellUnleveled_FieldIndex.Data:
-                case SpellUnleveled_FieldIndex.Effects:
-                    return false;
-                default:
-                    return Spell_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            SpellUnleveled_FieldIndex enu = (SpellUnleveled_FieldIndex)index;
-            switch (enu)
-            {
-                case SpellUnleveled_FieldIndex.Data:
-                    return typeof(SpellData);
-                case SpellUnleveled_FieldIndex.Effects:
-                    return typeof(IExtendedList<Effect>);
-                default:
-                    return Spell_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.SPEL;
         public static readonly Type BinaryWriteTranslation = typeof(SpellUnleveledBinaryWriteTranslation);
         #region Interface
@@ -913,14 +806,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

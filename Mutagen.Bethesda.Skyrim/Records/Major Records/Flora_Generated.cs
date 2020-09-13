@@ -85,8 +85,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Keyword>>? _Keywords;
-        public IExtendedList<IFormLink<Keyword>>? Keywords
+        private ExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
+        public ExtendedList<IFormLink<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -125,14 +125,10 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? IFloraGetter.FNAM => this.FNAM;
         #endregion
         #region Ingredient
-        public FormLinkNullable<IHarvestTarget> Ingredient { get; set; } = new FormLinkNullable<IHarvestTarget>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IHarvestTargetGetter> IFloraGetter.Ingredient => this.Ingredient.ToGetter<IHarvestTarget, IHarvestTargetGetter>();
+        public FormLinkNullable<IHarvestTargetGetter> Ingredient { get; set; } = new FormLinkNullable<IHarvestTargetGetter>();
         #endregion
         #region HarvestSound
-        public FormLinkNullable<SoundDescriptor> HarvestSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IFloraGetter.HarvestSound => this.HarvestSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> HarvestSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region Production
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -964,12 +960,12 @@ namespace Mutagen.Bethesda.Skyrim
         new TranslatedString Name { get; set; }
         new Model? Model { get; set; }
         new Destructible? Destructible { get; set; }
-        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new ExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
         new MemorySlice<Byte>? PNAM { get; set; }
         new TranslatedString? ActivateTextOverride { get; set; }
         new MemorySlice<Byte>? FNAM { get; set; }
-        new FormLinkNullable<IHarvestTarget> Ingredient { get; set; }
-        new FormLinkNullable<SoundDescriptor> HarvestSound { get; set; }
+        new FormLinkNullable<IHarvestTargetGetter> Ingredient { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> HarvestSound { get; set; }
         new SeasonalIngredientProduction? Production { get; set; }
     }
 
@@ -1208,224 +1204,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "VIRTUALMACHINEADAPTER":
-                    return (ushort)Flora_FieldIndex.VirtualMachineAdapter;
-                case "OBJECTBOUNDS":
-                    return (ushort)Flora_FieldIndex.ObjectBounds;
-                case "NAME":
-                    return (ushort)Flora_FieldIndex.Name;
-                case "MODEL":
-                    return (ushort)Flora_FieldIndex.Model;
-                case "DESTRUCTIBLE":
-                    return (ushort)Flora_FieldIndex.Destructible;
-                case "KEYWORDS":
-                    return (ushort)Flora_FieldIndex.Keywords;
-                case "PNAM":
-                    return (ushort)Flora_FieldIndex.PNAM;
-                case "ACTIVATETEXTOVERRIDE":
-                    return (ushort)Flora_FieldIndex.ActivateTextOverride;
-                case "FNAM":
-                    return (ushort)Flora_FieldIndex.FNAM;
-                case "INGREDIENT":
-                    return (ushort)Flora_FieldIndex.Ingredient;
-                case "HARVESTSOUND":
-                    return (ushort)Flora_FieldIndex.HarvestSound;
-                case "PRODUCTION":
-                    return (ushort)Flora_FieldIndex.Production;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Flora_FieldIndex enu = (Flora_FieldIndex)index;
-            switch (enu)
-            {
-                case Flora_FieldIndex.Keywords:
-                    return true;
-                case Flora_FieldIndex.VirtualMachineAdapter:
-                case Flora_FieldIndex.ObjectBounds:
-                case Flora_FieldIndex.Name:
-                case Flora_FieldIndex.Model:
-                case Flora_FieldIndex.Destructible:
-                case Flora_FieldIndex.PNAM:
-                case Flora_FieldIndex.ActivateTextOverride:
-                case Flora_FieldIndex.FNAM:
-                case Flora_FieldIndex.Ingredient:
-                case Flora_FieldIndex.HarvestSound:
-                case Flora_FieldIndex.Production:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Flora_FieldIndex enu = (Flora_FieldIndex)index;
-            switch (enu)
-            {
-                case Flora_FieldIndex.VirtualMachineAdapter:
-                case Flora_FieldIndex.ObjectBounds:
-                case Flora_FieldIndex.Model:
-                case Flora_FieldIndex.Destructible:
-                case Flora_FieldIndex.Production:
-                    return true;
-                case Flora_FieldIndex.Name:
-                case Flora_FieldIndex.Keywords:
-                case Flora_FieldIndex.PNAM:
-                case Flora_FieldIndex.ActivateTextOverride:
-                case Flora_FieldIndex.FNAM:
-                case Flora_FieldIndex.Ingredient:
-                case Flora_FieldIndex.HarvestSound:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Flora_FieldIndex enu = (Flora_FieldIndex)index;
-            switch (enu)
-            {
-                case Flora_FieldIndex.VirtualMachineAdapter:
-                case Flora_FieldIndex.ObjectBounds:
-                case Flora_FieldIndex.Name:
-                case Flora_FieldIndex.Model:
-                case Flora_FieldIndex.Destructible:
-                case Flora_FieldIndex.Keywords:
-                case Flora_FieldIndex.PNAM:
-                case Flora_FieldIndex.ActivateTextOverride:
-                case Flora_FieldIndex.FNAM:
-                case Flora_FieldIndex.Ingredient:
-                case Flora_FieldIndex.HarvestSound:
-                case Flora_FieldIndex.Production:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Flora_FieldIndex enu = (Flora_FieldIndex)index;
-            switch (enu)
-            {
-                case Flora_FieldIndex.VirtualMachineAdapter:
-                    return "VirtualMachineAdapter";
-                case Flora_FieldIndex.ObjectBounds:
-                    return "ObjectBounds";
-                case Flora_FieldIndex.Name:
-                    return "Name";
-                case Flora_FieldIndex.Model:
-                    return "Model";
-                case Flora_FieldIndex.Destructible:
-                    return "Destructible";
-                case Flora_FieldIndex.Keywords:
-                    return "Keywords";
-                case Flora_FieldIndex.PNAM:
-                    return "PNAM";
-                case Flora_FieldIndex.ActivateTextOverride:
-                    return "ActivateTextOverride";
-                case Flora_FieldIndex.FNAM:
-                    return "FNAM";
-                case Flora_FieldIndex.Ingredient:
-                    return "Ingredient";
-                case Flora_FieldIndex.HarvestSound:
-                    return "HarvestSound";
-                case Flora_FieldIndex.Production:
-                    return "Production";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Flora_FieldIndex enu = (Flora_FieldIndex)index;
-            switch (enu)
-            {
-                case Flora_FieldIndex.VirtualMachineAdapter:
-                case Flora_FieldIndex.ObjectBounds:
-                case Flora_FieldIndex.Name:
-                case Flora_FieldIndex.Model:
-                case Flora_FieldIndex.Destructible:
-                case Flora_FieldIndex.Keywords:
-                case Flora_FieldIndex.PNAM:
-                case Flora_FieldIndex.ActivateTextOverride:
-                case Flora_FieldIndex.FNAM:
-                case Flora_FieldIndex.Ingredient:
-                case Flora_FieldIndex.HarvestSound:
-                case Flora_FieldIndex.Production:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Flora_FieldIndex enu = (Flora_FieldIndex)index;
-            switch (enu)
-            {
-                case Flora_FieldIndex.VirtualMachineAdapter:
-                case Flora_FieldIndex.ObjectBounds:
-                case Flora_FieldIndex.Name:
-                case Flora_FieldIndex.Model:
-                case Flora_FieldIndex.Destructible:
-                case Flora_FieldIndex.Keywords:
-                case Flora_FieldIndex.PNAM:
-                case Flora_FieldIndex.ActivateTextOverride:
-                case Flora_FieldIndex.FNAM:
-                case Flora_FieldIndex.Ingredient:
-                case Flora_FieldIndex.HarvestSound:
-                case Flora_FieldIndex.Production:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Flora_FieldIndex enu = (Flora_FieldIndex)index;
-            switch (enu)
-            {
-                case Flora_FieldIndex.VirtualMachineAdapter:
-                    return typeof(VirtualMachineAdapter);
-                case Flora_FieldIndex.ObjectBounds:
-                    return typeof(ObjectBounds);
-                case Flora_FieldIndex.Name:
-                    return typeof(TranslatedString);
-                case Flora_FieldIndex.Model:
-                    return typeof(Model);
-                case Flora_FieldIndex.Destructible:
-                    return typeof(Destructible);
-                case Flora_FieldIndex.Keywords:
-                    return typeof(IExtendedList<IFormLink<Keyword>>);
-                case Flora_FieldIndex.PNAM:
-                    return typeof(MemorySlice<Byte>);
-                case Flora_FieldIndex.ActivateTextOverride:
-                    return typeof(TranslatedString);
-                case Flora_FieldIndex.FNAM:
-                    return typeof(MemorySlice<Byte>);
-                case Flora_FieldIndex.Ingredient:
-                    return typeof(FormLinkNullable<IHarvestTarget>);
-                case Flora_FieldIndex.HarvestSound:
-                    return typeof(FormLinkNullable<SoundDescriptor>);
-                case Flora_FieldIndex.Production:
-                    return typeof(SeasonalIngredientProduction);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.FLOR;
         public static readonly Type BinaryWriteTranslation = typeof(FloraBinaryWriteTranslation);
         #region Interface
@@ -1446,14 +1224,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1478,8 +1256,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.PNAM = default;
             item.ActivateTextOverride = default;
             item.FNAM = default;
-            item.Ingredient = FormLinkNullable<IHarvestTarget>.Null;
-            item.HarvestSound = FormLinkNullable<SoundDescriptor>.Null;
+            item.Ingredient = FormLinkNullable<IHarvestTargetGetter>.Null;
+            item.HarvestSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
             item.Production = null;
             base.Clear(item);
         }
@@ -2056,8 +1834,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLink<Keyword>)new FormLink<Keyword>(r.FormKey))
-                            .ToExtendedList<IFormLink<Keyword>>();
+                            .Select(r => (IFormLink<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IKeywordGetter>>();
                     }
                     else
                     {
@@ -2102,11 +1880,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Ingredient) ?? true))
             {
-                item.Ingredient = new FormLinkNullable<IHarvestTarget>(rhs.Ingredient.FormKey);
+                item.Ingredient = new FormLinkNullable<IHarvestTargetGetter>(rhs.Ingredient.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.HarvestSound) ?? true))
             {
-                item.HarvestSound = new FormLinkNullable<SoundDescriptor>(rhs.HarvestSound.FormKey);
+                item.HarvestSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.HarvestSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Production) ?? true))
             {
@@ -2487,13 +2265,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KSIZ:
                 {
                     item.Keywords = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<Keyword>>();
+                        .CastExtendedList<IFormLink<IKeywordGetter>>();
                     return (int)Flora_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.PNAM:

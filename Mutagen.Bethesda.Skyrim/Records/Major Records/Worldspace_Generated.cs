@@ -44,8 +44,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region LargeReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<WorldspaceGridReference> _LargeReferences = new ExtendedList<WorldspaceGridReference>();
-        public IExtendedList<WorldspaceGridReference> LargeReferences
+        private ExtendedList<WorldspaceGridReference> _LargeReferences = new ExtendedList<WorldspaceGridReference>();
+        public ExtendedList<WorldspaceGridReference> LargeReferences
         {
             get => this._LargeReferences;
             protected set => this._LargeReferences = value;
@@ -78,19 +78,13 @@ namespace Mutagen.Bethesda.Skyrim
         P2Int16? IWorldspaceGetter.FixedDimensionsCenterCell => this.FixedDimensionsCenterCell;
         #endregion
         #region InteriorLighting
-        public FormLinkNullable<LightingTemplate> InteriorLighting { get; set; } = new FormLinkNullable<LightingTemplate>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ILightingTemplateGetter> IWorldspaceGetter.InteriorLighting => this.InteriorLighting.ToGetter<LightingTemplate, ILightingTemplateGetter>();
+        public FormLinkNullable<ILightingTemplateGetter> InteriorLighting { get; set; } = new FormLinkNullable<ILightingTemplateGetter>();
         #endregion
         #region EncounterZone
-        public FormLinkNullable<EncounterZone> EncounterZone { get; set; } = new FormLinkNullable<EncounterZone>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IEncounterZoneGetter> IWorldspaceGetter.EncounterZone => this.EncounterZone.ToGetter<EncounterZone, IEncounterZoneGetter>();
+        public FormLinkNullable<IEncounterZoneGetter> EncounterZone { get; set; } = new FormLinkNullable<IEncounterZoneGetter>();
         #endregion
         #region Location
-        public FormLinkNullable<Location> Location { get; set; } = new FormLinkNullable<Location>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ILocationGetter> IWorldspaceGetter.Location => this.Location.ToGetter<Location, ILocationGetter>();
+        public FormLinkNullable<ILocationGetter> Location { get; set; } = new FormLinkNullable<ILocationGetter>();
         #endregion
         #region Parent
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -104,19 +98,13 @@ namespace Mutagen.Bethesda.Skyrim
         IWorldspaceParentGetter? IWorldspaceGetter.Parent => this.Parent;
         #endregion
         #region Climate
-        public FormLinkNullable<Climate> Climate { get; set; } = new FormLinkNullable<Climate>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IClimateGetter> IWorldspaceGetter.Climate => this.Climate.ToGetter<Climate, IClimateGetter>();
+        public FormLinkNullable<IClimateGetter> Climate { get; set; } = new FormLinkNullable<IClimateGetter>();
         #endregion
         #region Water
-        public FormLinkNullable<Water> Water { get; set; } = new FormLinkNullable<Water>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IWaterGetter> IWorldspaceGetter.Water => this.Water.ToGetter<Water, IWaterGetter>();
+        public FormLinkNullable<IWaterGetter> Water { get; set; } = new FormLinkNullable<IWaterGetter>();
         #endregion
         #region LodWater
-        public FormLinkNullable<Water> LodWater { get; set; } = new FormLinkNullable<Water>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IWaterGetter> IWorldspaceGetter.LodWater => this.LodWater.ToGetter<Water, IWaterGetter>();
+        public FormLinkNullable<IWaterGetter> LodWater { get; set; } = new FormLinkNullable<IWaterGetter>();
         #endregion
         #region LodWaterHeight
         public Single? LodWaterHeight { get; set; }
@@ -186,9 +174,7 @@ namespace Mutagen.Bethesda.Skyrim
         IWorldspaceObjectBoundsGetter? IWorldspaceGetter.ObjectBounds => this.ObjectBounds;
         #endregion
         #region Music
-        public FormLinkNullable<MusicType> Music { get; set; } = new FormLinkNullable<MusicType>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IMusicTypeGetter> IWorldspaceGetter.Music => this.Music.ToGetter<MusicType, IMusicTypeGetter>();
+        public FormLinkNullable<IMusicTypeGetter> Music { get; set; } = new FormLinkNullable<IMusicTypeGetter>();
         #endregion
         #region CanopyShadow
         public String? CanopyShadow { get; set; }
@@ -245,8 +231,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region SubCells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<WorldspaceBlock> _SubCells = new ExtendedList<WorldspaceBlock>();
-        public IExtendedList<WorldspaceBlock> SubCells
+        private ExtendedList<WorldspaceBlock> _SubCells = new ExtendedList<WorldspaceBlock>();
+        public ExtendedList<WorldspaceBlock> SubCells
         {
             get => this._SubCells;
             protected set => this._SubCells = value;
@@ -1739,17 +1725,17 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IWorldspaceInternal>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<WorldspaceGridReference> LargeReferences { get; }
+        new ExtendedList<WorldspaceGridReference> LargeReferences { get; }
         new WorldspaceMaxHeight? MaxHeight { get; set; }
         new TranslatedString? Name { get; set; }
         new P2Int16? FixedDimensionsCenterCell { get; set; }
-        new FormLinkNullable<LightingTemplate> InteriorLighting { get; set; }
-        new FormLinkNullable<EncounterZone> EncounterZone { get; set; }
-        new FormLinkNullable<Location> Location { get; set; }
+        new FormLinkNullable<ILightingTemplateGetter> InteriorLighting { get; set; }
+        new FormLinkNullable<IEncounterZoneGetter> EncounterZone { get; set; }
+        new FormLinkNullable<ILocationGetter> Location { get; set; }
         new WorldspaceParent? Parent { get; set; }
-        new FormLinkNullable<Climate> Climate { get; set; }
-        new FormLinkNullable<Water> Water { get; set; }
-        new FormLinkNullable<Water> LodWater { get; set; }
+        new FormLinkNullable<IClimateGetter> Climate { get; set; }
+        new FormLinkNullable<IWaterGetter> Water { get; set; }
+        new FormLinkNullable<IWaterGetter> LodWater { get; set; }
         new Single? LodWaterHeight { get; set; }
         new WorldspaceLandDefaults? LandDefaults { get; set; }
         new String? MapImage { get; set; }
@@ -1759,7 +1745,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single? DistantLodMultiplier { get; set; }
         new Worldspace.Flag Flags { get; set; }
         new WorldspaceObjectBounds? ObjectBounds { get; set; }
-        new FormLinkNullable<MusicType> Music { get; set; }
+        new FormLinkNullable<IMusicTypeGetter> Music { get; set; }
         new String? CanopyShadow { get; set; }
         new String? WaterNoiseTexture { get; set; }
         new String? HdLodDiffuseTexture { get; set; }
@@ -1769,7 +1755,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Cell? TopCell { get; set; }
         new Int32 SubCellsTimestamp { get; set; }
         new Int32 SubCellsUnknown { get; set; }
-        new IExtendedList<WorldspaceBlock> SubCells { get; }
+        new ExtendedList<WorldspaceBlock> SubCells { get; }
         #region Mutagen
         new Worldspace.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -2267,433 +2253,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "LARGEREFERENCES":
-                    return (ushort)Worldspace_FieldIndex.LargeReferences;
-                case "MAXHEIGHT":
-                    return (ushort)Worldspace_FieldIndex.MaxHeight;
-                case "NAME":
-                    return (ushort)Worldspace_FieldIndex.Name;
-                case "FIXEDDIMENSIONSCENTERCELL":
-                    return (ushort)Worldspace_FieldIndex.FixedDimensionsCenterCell;
-                case "INTERIORLIGHTING":
-                    return (ushort)Worldspace_FieldIndex.InteriorLighting;
-                case "ENCOUNTERZONE":
-                    return (ushort)Worldspace_FieldIndex.EncounterZone;
-                case "LOCATION":
-                    return (ushort)Worldspace_FieldIndex.Location;
-                case "PARENT":
-                    return (ushort)Worldspace_FieldIndex.Parent;
-                case "CLIMATE":
-                    return (ushort)Worldspace_FieldIndex.Climate;
-                case "WATER":
-                    return (ushort)Worldspace_FieldIndex.Water;
-                case "LODWATER":
-                    return (ushort)Worldspace_FieldIndex.LodWater;
-                case "LODWATERHEIGHT":
-                    return (ushort)Worldspace_FieldIndex.LodWaterHeight;
-                case "LANDDEFAULTS":
-                    return (ushort)Worldspace_FieldIndex.LandDefaults;
-                case "MAPIMAGE":
-                    return (ushort)Worldspace_FieldIndex.MapImage;
-                case "CLOUDMODEL":
-                    return (ushort)Worldspace_FieldIndex.CloudModel;
-                case "MAPDATA":
-                    return (ushort)Worldspace_FieldIndex.MapData;
-                case "MAPOFFSET":
-                    return (ushort)Worldspace_FieldIndex.MapOffset;
-                case "DISTANTLODMULTIPLIER":
-                    return (ushort)Worldspace_FieldIndex.DistantLodMultiplier;
-                case "FLAGS":
-                    return (ushort)Worldspace_FieldIndex.Flags;
-                case "OBJECTBOUNDS":
-                    return (ushort)Worldspace_FieldIndex.ObjectBounds;
-                case "MUSIC":
-                    return (ushort)Worldspace_FieldIndex.Music;
-                case "CANOPYSHADOW":
-                    return (ushort)Worldspace_FieldIndex.CanopyShadow;
-                case "WATERNOISETEXTURE":
-                    return (ushort)Worldspace_FieldIndex.WaterNoiseTexture;
-                case "HDLODDIFFUSETEXTURE":
-                    return (ushort)Worldspace_FieldIndex.HdLodDiffuseTexture;
-                case "HDLODNORMALTEXTURE":
-                    return (ushort)Worldspace_FieldIndex.HdLodNormalTexture;
-                case "WATERENVIRONMENTMAP":
-                    return (ushort)Worldspace_FieldIndex.WaterEnvironmentMap;
-                case "OFFSETDATA":
-                    return (ushort)Worldspace_FieldIndex.OffsetData;
-                case "TOPCELL":
-                    return (ushort)Worldspace_FieldIndex.TopCell;
-                case "SUBCELLSTIMESTAMP":
-                    return (ushort)Worldspace_FieldIndex.SubCellsTimestamp;
-                case "SUBCELLSUNKNOWN":
-                    return (ushort)Worldspace_FieldIndex.SubCellsUnknown;
-                case "SUBCELLS":
-                    return (ushort)Worldspace_FieldIndex.SubCells;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
-            switch (enu)
-            {
-                case Worldspace_FieldIndex.LargeReferences:
-                case Worldspace_FieldIndex.SubCells:
-                    return true;
-                case Worldspace_FieldIndex.MaxHeight:
-                case Worldspace_FieldIndex.Name:
-                case Worldspace_FieldIndex.FixedDimensionsCenterCell:
-                case Worldspace_FieldIndex.InteriorLighting:
-                case Worldspace_FieldIndex.EncounterZone:
-                case Worldspace_FieldIndex.Location:
-                case Worldspace_FieldIndex.Parent:
-                case Worldspace_FieldIndex.Climate:
-                case Worldspace_FieldIndex.Water:
-                case Worldspace_FieldIndex.LodWater:
-                case Worldspace_FieldIndex.LodWaterHeight:
-                case Worldspace_FieldIndex.LandDefaults:
-                case Worldspace_FieldIndex.MapImage:
-                case Worldspace_FieldIndex.CloudModel:
-                case Worldspace_FieldIndex.MapData:
-                case Worldspace_FieldIndex.MapOffset:
-                case Worldspace_FieldIndex.DistantLodMultiplier:
-                case Worldspace_FieldIndex.Flags:
-                case Worldspace_FieldIndex.ObjectBounds:
-                case Worldspace_FieldIndex.Music:
-                case Worldspace_FieldIndex.CanopyShadow:
-                case Worldspace_FieldIndex.WaterNoiseTexture:
-                case Worldspace_FieldIndex.HdLodDiffuseTexture:
-                case Worldspace_FieldIndex.HdLodNormalTexture:
-                case Worldspace_FieldIndex.WaterEnvironmentMap:
-                case Worldspace_FieldIndex.OffsetData:
-                case Worldspace_FieldIndex.TopCell:
-                case Worldspace_FieldIndex.SubCellsTimestamp:
-                case Worldspace_FieldIndex.SubCellsUnknown:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
-            switch (enu)
-            {
-                case Worldspace_FieldIndex.LargeReferences:
-                case Worldspace_FieldIndex.MaxHeight:
-                case Worldspace_FieldIndex.Parent:
-                case Worldspace_FieldIndex.LandDefaults:
-                case Worldspace_FieldIndex.CloudModel:
-                case Worldspace_FieldIndex.MapData:
-                case Worldspace_FieldIndex.MapOffset:
-                case Worldspace_FieldIndex.ObjectBounds:
-                case Worldspace_FieldIndex.TopCell:
-                case Worldspace_FieldIndex.SubCells:
-                    return true;
-                case Worldspace_FieldIndex.Name:
-                case Worldspace_FieldIndex.FixedDimensionsCenterCell:
-                case Worldspace_FieldIndex.InteriorLighting:
-                case Worldspace_FieldIndex.EncounterZone:
-                case Worldspace_FieldIndex.Location:
-                case Worldspace_FieldIndex.Climate:
-                case Worldspace_FieldIndex.Water:
-                case Worldspace_FieldIndex.LodWater:
-                case Worldspace_FieldIndex.LodWaterHeight:
-                case Worldspace_FieldIndex.MapImage:
-                case Worldspace_FieldIndex.DistantLodMultiplier:
-                case Worldspace_FieldIndex.Flags:
-                case Worldspace_FieldIndex.Music:
-                case Worldspace_FieldIndex.CanopyShadow:
-                case Worldspace_FieldIndex.WaterNoiseTexture:
-                case Worldspace_FieldIndex.HdLodDiffuseTexture:
-                case Worldspace_FieldIndex.HdLodNormalTexture:
-                case Worldspace_FieldIndex.WaterEnvironmentMap:
-                case Worldspace_FieldIndex.OffsetData:
-                case Worldspace_FieldIndex.SubCellsTimestamp:
-                case Worldspace_FieldIndex.SubCellsUnknown:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
-            switch (enu)
-            {
-                case Worldspace_FieldIndex.LargeReferences:
-                case Worldspace_FieldIndex.MaxHeight:
-                case Worldspace_FieldIndex.Name:
-                case Worldspace_FieldIndex.FixedDimensionsCenterCell:
-                case Worldspace_FieldIndex.InteriorLighting:
-                case Worldspace_FieldIndex.EncounterZone:
-                case Worldspace_FieldIndex.Location:
-                case Worldspace_FieldIndex.Parent:
-                case Worldspace_FieldIndex.Climate:
-                case Worldspace_FieldIndex.Water:
-                case Worldspace_FieldIndex.LodWater:
-                case Worldspace_FieldIndex.LodWaterHeight:
-                case Worldspace_FieldIndex.LandDefaults:
-                case Worldspace_FieldIndex.MapImage:
-                case Worldspace_FieldIndex.CloudModel:
-                case Worldspace_FieldIndex.MapData:
-                case Worldspace_FieldIndex.MapOffset:
-                case Worldspace_FieldIndex.DistantLodMultiplier:
-                case Worldspace_FieldIndex.Flags:
-                case Worldspace_FieldIndex.ObjectBounds:
-                case Worldspace_FieldIndex.Music:
-                case Worldspace_FieldIndex.CanopyShadow:
-                case Worldspace_FieldIndex.WaterNoiseTexture:
-                case Worldspace_FieldIndex.HdLodDiffuseTexture:
-                case Worldspace_FieldIndex.HdLodNormalTexture:
-                case Worldspace_FieldIndex.WaterEnvironmentMap:
-                case Worldspace_FieldIndex.OffsetData:
-                case Worldspace_FieldIndex.TopCell:
-                case Worldspace_FieldIndex.SubCellsTimestamp:
-                case Worldspace_FieldIndex.SubCellsUnknown:
-                case Worldspace_FieldIndex.SubCells:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
-            switch (enu)
-            {
-                case Worldspace_FieldIndex.LargeReferences:
-                    return "LargeReferences";
-                case Worldspace_FieldIndex.MaxHeight:
-                    return "MaxHeight";
-                case Worldspace_FieldIndex.Name:
-                    return "Name";
-                case Worldspace_FieldIndex.FixedDimensionsCenterCell:
-                    return "FixedDimensionsCenterCell";
-                case Worldspace_FieldIndex.InteriorLighting:
-                    return "InteriorLighting";
-                case Worldspace_FieldIndex.EncounterZone:
-                    return "EncounterZone";
-                case Worldspace_FieldIndex.Location:
-                    return "Location";
-                case Worldspace_FieldIndex.Parent:
-                    return "Parent";
-                case Worldspace_FieldIndex.Climate:
-                    return "Climate";
-                case Worldspace_FieldIndex.Water:
-                    return "Water";
-                case Worldspace_FieldIndex.LodWater:
-                    return "LodWater";
-                case Worldspace_FieldIndex.LodWaterHeight:
-                    return "LodWaterHeight";
-                case Worldspace_FieldIndex.LandDefaults:
-                    return "LandDefaults";
-                case Worldspace_FieldIndex.MapImage:
-                    return "MapImage";
-                case Worldspace_FieldIndex.CloudModel:
-                    return "CloudModel";
-                case Worldspace_FieldIndex.MapData:
-                    return "MapData";
-                case Worldspace_FieldIndex.MapOffset:
-                    return "MapOffset";
-                case Worldspace_FieldIndex.DistantLodMultiplier:
-                    return "DistantLodMultiplier";
-                case Worldspace_FieldIndex.Flags:
-                    return "Flags";
-                case Worldspace_FieldIndex.ObjectBounds:
-                    return "ObjectBounds";
-                case Worldspace_FieldIndex.Music:
-                    return "Music";
-                case Worldspace_FieldIndex.CanopyShadow:
-                    return "CanopyShadow";
-                case Worldspace_FieldIndex.WaterNoiseTexture:
-                    return "WaterNoiseTexture";
-                case Worldspace_FieldIndex.HdLodDiffuseTexture:
-                    return "HdLodDiffuseTexture";
-                case Worldspace_FieldIndex.HdLodNormalTexture:
-                    return "HdLodNormalTexture";
-                case Worldspace_FieldIndex.WaterEnvironmentMap:
-                    return "WaterEnvironmentMap";
-                case Worldspace_FieldIndex.OffsetData:
-                    return "OffsetData";
-                case Worldspace_FieldIndex.TopCell:
-                    return "TopCell";
-                case Worldspace_FieldIndex.SubCellsTimestamp:
-                    return "SubCellsTimestamp";
-                case Worldspace_FieldIndex.SubCellsUnknown:
-                    return "SubCellsUnknown";
-                case Worldspace_FieldIndex.SubCells:
-                    return "SubCells";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
-            switch (enu)
-            {
-                case Worldspace_FieldIndex.LargeReferences:
-                case Worldspace_FieldIndex.MaxHeight:
-                case Worldspace_FieldIndex.Name:
-                case Worldspace_FieldIndex.FixedDimensionsCenterCell:
-                case Worldspace_FieldIndex.InteriorLighting:
-                case Worldspace_FieldIndex.EncounterZone:
-                case Worldspace_FieldIndex.Location:
-                case Worldspace_FieldIndex.Parent:
-                case Worldspace_FieldIndex.Climate:
-                case Worldspace_FieldIndex.Water:
-                case Worldspace_FieldIndex.LodWater:
-                case Worldspace_FieldIndex.LodWaterHeight:
-                case Worldspace_FieldIndex.LandDefaults:
-                case Worldspace_FieldIndex.MapImage:
-                case Worldspace_FieldIndex.CloudModel:
-                case Worldspace_FieldIndex.MapData:
-                case Worldspace_FieldIndex.MapOffset:
-                case Worldspace_FieldIndex.DistantLodMultiplier:
-                case Worldspace_FieldIndex.Flags:
-                case Worldspace_FieldIndex.ObjectBounds:
-                case Worldspace_FieldIndex.Music:
-                case Worldspace_FieldIndex.CanopyShadow:
-                case Worldspace_FieldIndex.WaterNoiseTexture:
-                case Worldspace_FieldIndex.HdLodDiffuseTexture:
-                case Worldspace_FieldIndex.HdLodNormalTexture:
-                case Worldspace_FieldIndex.WaterEnvironmentMap:
-                case Worldspace_FieldIndex.OffsetData:
-                case Worldspace_FieldIndex.TopCell:
-                case Worldspace_FieldIndex.SubCellsTimestamp:
-                case Worldspace_FieldIndex.SubCellsUnknown:
-                case Worldspace_FieldIndex.SubCells:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
-            switch (enu)
-            {
-                case Worldspace_FieldIndex.LargeReferences:
-                case Worldspace_FieldIndex.MaxHeight:
-                case Worldspace_FieldIndex.Name:
-                case Worldspace_FieldIndex.FixedDimensionsCenterCell:
-                case Worldspace_FieldIndex.InteriorLighting:
-                case Worldspace_FieldIndex.EncounterZone:
-                case Worldspace_FieldIndex.Location:
-                case Worldspace_FieldIndex.Parent:
-                case Worldspace_FieldIndex.Climate:
-                case Worldspace_FieldIndex.Water:
-                case Worldspace_FieldIndex.LodWater:
-                case Worldspace_FieldIndex.LodWaterHeight:
-                case Worldspace_FieldIndex.LandDefaults:
-                case Worldspace_FieldIndex.MapImage:
-                case Worldspace_FieldIndex.CloudModel:
-                case Worldspace_FieldIndex.MapData:
-                case Worldspace_FieldIndex.MapOffset:
-                case Worldspace_FieldIndex.DistantLodMultiplier:
-                case Worldspace_FieldIndex.Flags:
-                case Worldspace_FieldIndex.ObjectBounds:
-                case Worldspace_FieldIndex.Music:
-                case Worldspace_FieldIndex.CanopyShadow:
-                case Worldspace_FieldIndex.WaterNoiseTexture:
-                case Worldspace_FieldIndex.HdLodDiffuseTexture:
-                case Worldspace_FieldIndex.HdLodNormalTexture:
-                case Worldspace_FieldIndex.WaterEnvironmentMap:
-                case Worldspace_FieldIndex.OffsetData:
-                case Worldspace_FieldIndex.TopCell:
-                case Worldspace_FieldIndex.SubCellsTimestamp:
-                case Worldspace_FieldIndex.SubCellsUnknown:
-                case Worldspace_FieldIndex.SubCells:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
-            switch (enu)
-            {
-                case Worldspace_FieldIndex.LargeReferences:
-                    return typeof(IExtendedList<WorldspaceGridReference>);
-                case Worldspace_FieldIndex.MaxHeight:
-                    return typeof(WorldspaceMaxHeight);
-                case Worldspace_FieldIndex.Name:
-                    return typeof(TranslatedString);
-                case Worldspace_FieldIndex.FixedDimensionsCenterCell:
-                    return typeof(P2Int16);
-                case Worldspace_FieldIndex.InteriorLighting:
-                    return typeof(FormLinkNullable<LightingTemplate>);
-                case Worldspace_FieldIndex.EncounterZone:
-                    return typeof(FormLinkNullable<EncounterZone>);
-                case Worldspace_FieldIndex.Location:
-                    return typeof(FormLinkNullable<Location>);
-                case Worldspace_FieldIndex.Parent:
-                    return typeof(WorldspaceParent);
-                case Worldspace_FieldIndex.Climate:
-                    return typeof(FormLinkNullable<Climate>);
-                case Worldspace_FieldIndex.Water:
-                    return typeof(FormLinkNullable<Water>);
-                case Worldspace_FieldIndex.LodWater:
-                    return typeof(FormLinkNullable<Water>);
-                case Worldspace_FieldIndex.LodWaterHeight:
-                    return typeof(Single);
-                case Worldspace_FieldIndex.LandDefaults:
-                    return typeof(WorldspaceLandDefaults);
-                case Worldspace_FieldIndex.MapImage:
-                    return typeof(String);
-                case Worldspace_FieldIndex.CloudModel:
-                    return typeof(Model);
-                case Worldspace_FieldIndex.MapData:
-                    return typeof(WorldspaceMap);
-                case Worldspace_FieldIndex.MapOffset:
-                    return typeof(WorldspaceMapOffset);
-                case Worldspace_FieldIndex.DistantLodMultiplier:
-                    return typeof(Single);
-                case Worldspace_FieldIndex.Flags:
-                    return typeof(Worldspace.Flag);
-                case Worldspace_FieldIndex.ObjectBounds:
-                    return typeof(WorldspaceObjectBounds);
-                case Worldspace_FieldIndex.Music:
-                    return typeof(FormLinkNullable<MusicType>);
-                case Worldspace_FieldIndex.CanopyShadow:
-                    return typeof(String);
-                case Worldspace_FieldIndex.WaterNoiseTexture:
-                    return typeof(String);
-                case Worldspace_FieldIndex.HdLodDiffuseTexture:
-                    return typeof(String);
-                case Worldspace_FieldIndex.HdLodNormalTexture:
-                    return typeof(String);
-                case Worldspace_FieldIndex.WaterEnvironmentMap:
-                    return typeof(String);
-                case Worldspace_FieldIndex.OffsetData:
-                    return typeof(MemorySlice<Byte>);
-                case Worldspace_FieldIndex.TopCell:
-                    return typeof(Cell);
-                case Worldspace_FieldIndex.SubCellsTimestamp:
-                    return typeof(Int32);
-                case Worldspace_FieldIndex.SubCellsUnknown:
-                    return typeof(Int32);
-                case Worldspace_FieldIndex.SubCells:
-                    return typeof(IExtendedList<WorldspaceBlock>);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.WRLD;
         public static readonly Type BinaryWriteTranslation = typeof(WorldspaceBinaryWriteTranslation);
         #region Interface
@@ -2714,14 +2273,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -2741,13 +2300,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.MaxHeight = null;
             item.Name = default;
             item.FixedDimensionsCenterCell = default;
-            item.InteriorLighting = FormLinkNullable<LightingTemplate>.Null;
-            item.EncounterZone = FormLinkNullable<EncounterZone>.Null;
-            item.Location = FormLinkNullable<Location>.Null;
+            item.InteriorLighting = FormLinkNullable<ILightingTemplateGetter>.Null;
+            item.EncounterZone = FormLinkNullable<IEncounterZoneGetter>.Null;
+            item.Location = FormLinkNullable<ILocationGetter>.Null;
             item.Parent = null;
-            item.Climate = FormLinkNullable<Climate>.Null;
-            item.Water = FormLinkNullable<Water>.Null;
-            item.LodWater = FormLinkNullable<Water>.Null;
+            item.Climate = FormLinkNullable<IClimateGetter>.Null;
+            item.Water = FormLinkNullable<IWaterGetter>.Null;
+            item.LodWater = FormLinkNullable<IWaterGetter>.Null;
             item.LodWaterHeight = default;
             item.LandDefaults = null;
             item.MapImage = default;
@@ -2757,7 +2316,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.DistantLodMultiplier = default;
             item.Flags = default;
             item.ObjectBounds = null;
-            item.Music = FormLinkNullable<MusicType>.Null;
+            item.Music = FormLinkNullable<IMusicTypeGetter>.Null;
             item.CanopyShadow = default;
             item.WaterNoiseTexture = default;
             item.HdLodDiffuseTexture = default;
@@ -4777,15 +4336,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.InteriorLighting) ?? true))
             {
-                item.InteriorLighting = new FormLinkNullable<LightingTemplate>(rhs.InteriorLighting.FormKey);
+                item.InteriorLighting = new FormLinkNullable<ILightingTemplateGetter>(rhs.InteriorLighting.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.EncounterZone) ?? true))
             {
-                item.EncounterZone = new FormLinkNullable<EncounterZone>(rhs.EncounterZone.FormKey);
+                item.EncounterZone = new FormLinkNullable<IEncounterZoneGetter>(rhs.EncounterZone.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Location) ?? true))
             {
-                item.Location = new FormLinkNullable<Location>(rhs.Location.FormKey);
+                item.Location = new FormLinkNullable<ILocationGetter>(rhs.Location.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Parent) ?? true))
             {
@@ -4815,15 +4374,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Climate) ?? true))
             {
-                item.Climate = new FormLinkNullable<Climate>(rhs.Climate.FormKey);
+                item.Climate = new FormLinkNullable<IClimateGetter>(rhs.Climate.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Water) ?? true))
             {
-                item.Water = new FormLinkNullable<Water>(rhs.Water.FormKey);
+                item.Water = new FormLinkNullable<IWaterGetter>(rhs.Water.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.LodWater) ?? true))
             {
-                item.LodWater = new FormLinkNullable<Water>(rhs.LodWater.FormKey);
+                item.LodWater = new FormLinkNullable<IWaterGetter>(rhs.LodWater.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.LodWaterHeight) ?? true))
             {
@@ -4969,7 +4528,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Music) ?? true))
             {
-                item.Music = new FormLinkNullable<MusicType>(rhs.Music.FormKey);
+                item.Music = new FormLinkNullable<IMusicTypeGetter>(rhs.Music.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.CanopyShadow) ?? true))
             {

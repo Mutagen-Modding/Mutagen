@@ -45,9 +45,7 @@ namespace Mutagen.Bethesda.Skyrim
         public UInt32 RawOwnerData { get; set; } = default;
         #endregion
         #region Global
-        public FormLink<Global> Global { get; set; } = new FormLink<Global>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IGlobalGetter> INoOwnerGetter.Global => this.Global.ToGetter<Global, IGlobalGetter>();
+        public FormLink<IGlobalGetter> Global { get; set; } = new FormLink<IGlobalGetter>();
         #endregion
 
         #region To String
@@ -442,7 +440,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new UInt32 RawOwnerData { get; set; }
-        new FormLink<Global> Global { get; set; }
+        new FormLink<IGlobalGetter> Global { get; set; }
     }
 
     public partial interface INoOwnerGetter :
@@ -643,112 +641,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "RAWOWNERDATA":
-                    return (ushort)NoOwner_FieldIndex.RawOwnerData;
-                case "GLOBAL":
-                    return (ushort)NoOwner_FieldIndex.Global;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            NoOwner_FieldIndex enu = (NoOwner_FieldIndex)index;
-            switch (enu)
-            {
-                case NoOwner_FieldIndex.RawOwnerData:
-                case NoOwner_FieldIndex.Global:
-                    return false;
-                default:
-                    return OwnerTarget_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            NoOwner_FieldIndex enu = (NoOwner_FieldIndex)index;
-            switch (enu)
-            {
-                case NoOwner_FieldIndex.RawOwnerData:
-                case NoOwner_FieldIndex.Global:
-                    return false;
-                default:
-                    return OwnerTarget_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            NoOwner_FieldIndex enu = (NoOwner_FieldIndex)index;
-            switch (enu)
-            {
-                case NoOwner_FieldIndex.RawOwnerData:
-                case NoOwner_FieldIndex.Global:
-                    return false;
-                default:
-                    return OwnerTarget_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            NoOwner_FieldIndex enu = (NoOwner_FieldIndex)index;
-            switch (enu)
-            {
-                case NoOwner_FieldIndex.RawOwnerData:
-                    return "RawOwnerData";
-                case NoOwner_FieldIndex.Global:
-                    return "Global";
-                default:
-                    return OwnerTarget_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            NoOwner_FieldIndex enu = (NoOwner_FieldIndex)index;
-            switch (enu)
-            {
-                case NoOwner_FieldIndex.RawOwnerData:
-                case NoOwner_FieldIndex.Global:
-                    return false;
-                default:
-                    return OwnerTarget_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            NoOwner_FieldIndex enu = (NoOwner_FieldIndex)index;
-            switch (enu)
-            {
-                case NoOwner_FieldIndex.RawOwnerData:
-                case NoOwner_FieldIndex.Global:
-                    return false;
-                default:
-                    return OwnerTarget_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            NoOwner_FieldIndex enu = (NoOwner_FieldIndex)index;
-            switch (enu)
-            {
-                case NoOwner_FieldIndex.RawOwnerData:
-                    return typeof(UInt32);
-                case NoOwner_FieldIndex.Global:
-                    return typeof(FormLink<Global>);
-                default:
-                    return OwnerTarget_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly Type BinaryWriteTranslation = typeof(NoOwnerBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -768,14 +660,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -792,7 +684,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.RawOwnerData = default;
-            item.Global = FormLink<Global>.Null;
+            item.Global = FormLink<IGlobalGetter>.Null;
             base.Clear(item);
         }
         
@@ -1008,7 +900,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)NoOwner_FieldIndex.Global) ?? true))
             {
-                item.Global = new FormLink<Global>(rhs.Global.FormKey);
+                item.Global = new FormLink<IGlobalGetter>(rhs.Global.FormKey);
             }
         }
         

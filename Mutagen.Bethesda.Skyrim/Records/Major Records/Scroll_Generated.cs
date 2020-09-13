@@ -54,8 +54,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Keyword>>? _Keywords;
-        public IExtendedList<IFormLink<Keyword>>? Keywords
+        private ExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
+        public ExtendedList<IFormLink<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -67,14 +67,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region MenuDisplayObject
-        public FormLinkNullable<Static> MenuDisplayObject { get; set; } = new FormLinkNullable<Static>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IStaticGetter> IScrollGetter.MenuDisplayObject => this.MenuDisplayObject.ToGetter<Static, IStaticGetter>();
+        public FormLinkNullable<IStaticGetter> MenuDisplayObject { get; set; } = new FormLinkNullable<IStaticGetter>();
         #endregion
         #region EquipmentType
-        public FormLinkNullable<EquipType> EquipmentType { get; set; } = new FormLinkNullable<EquipType>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IEquipTypeGetter> IScrollGetter.EquipmentType => this.EquipmentType.ToGetter<EquipType, IEquipTypeGetter>();
+        public FormLinkNullable<IEquipTypeGetter> EquipmentType { get; set; } = new FormLinkNullable<IEquipTypeGetter>();
         #endregion
         #region Description
         public TranslatedString? Description { get; set; }
@@ -104,14 +100,10 @@ namespace Mutagen.Bethesda.Skyrim
         IDestructibleGetter? IScrollGetter.Destructible => this.Destructible;
         #endregion
         #region PickUpSound
-        public FormLinkNullable<SoundDescriptor> PickUpSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IScrollGetter.PickUpSound => this.PickUpSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region PutDownSound
-        public FormLinkNullable<SoundDescriptor> PutDownSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IScrollGetter.PutDownSound => this.PutDownSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region Value
         public UInt32 Value { get; set; } = default;
@@ -144,14 +136,12 @@ namespace Mutagen.Bethesda.Skyrim
         public Single Range { get; set; } = default;
         #endregion
         #region HalfCostPerk
-        public FormLink<Perk> HalfCostPerk { get; set; } = new FormLink<Perk>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IPerkGetter> IScrollGetter.HalfCostPerk => this.HalfCostPerk.ToGetter<Perk, IPerkGetter>();
+        public FormLink<IPerkGetter> HalfCostPerk { get; set; } = new FormLink<IPerkGetter>();
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Effect> _Effects = new ExtendedList<Effect>();
-        public IExtendedList<Effect> Effects
+        private ExtendedList<Effect> _Effects = new ExtendedList<Effect>();
+        public ExtendedList<Effect> Effects
         {
             get => this._Effects;
             protected set => this._Effects = value;
@@ -1391,14 +1381,14 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new ObjectBounds ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
-        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
-        new FormLinkNullable<Static> MenuDisplayObject { get; set; }
-        new FormLinkNullable<EquipType> EquipmentType { get; set; }
+        new ExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
+        new FormLinkNullable<IStaticGetter> MenuDisplayObject { get; set; }
+        new FormLinkNullable<IEquipTypeGetter> EquipmentType { get; set; }
         new TranslatedString? Description { get; set; }
         new Model? Model { get; set; }
         new Destructible? Destructible { get; set; }
-        new FormLinkNullable<SoundDescriptor> PickUpSound { get; set; }
-        new FormLinkNullable<SoundDescriptor> PutDownSound { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; set; }
         new UInt32 Value { get; set; }
         new Single Weight { get; set; }
         new UInt32 BaseCost { get; set; }
@@ -1409,8 +1399,8 @@ namespace Mutagen.Bethesda.Skyrim
         new TargetType TargetType { get; set; }
         new Single CastDuration { get; set; }
         new Single Range { get; set; }
-        new FormLink<Perk> HalfCostPerk { get; set; }
-        new IExtendedList<Effect> Effects { get; }
+        new FormLink<IPerkGetter> HalfCostPerk { get; set; }
+        new ExtendedList<Effect> Effects { get; }
         new Scroll.DATADataType DATADataTypeState { get; set; }
         new Scroll.SPITDataType SPITDataTypeState { get; set; }
     }
@@ -1676,356 +1666,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "OBJECTBOUNDS":
-                    return (ushort)Scroll_FieldIndex.ObjectBounds;
-                case "NAME":
-                    return (ushort)Scroll_FieldIndex.Name;
-                case "KEYWORDS":
-                    return (ushort)Scroll_FieldIndex.Keywords;
-                case "MENUDISPLAYOBJECT":
-                    return (ushort)Scroll_FieldIndex.MenuDisplayObject;
-                case "EQUIPMENTTYPE":
-                    return (ushort)Scroll_FieldIndex.EquipmentType;
-                case "DESCRIPTION":
-                    return (ushort)Scroll_FieldIndex.Description;
-                case "MODEL":
-                    return (ushort)Scroll_FieldIndex.Model;
-                case "DESTRUCTIBLE":
-                    return (ushort)Scroll_FieldIndex.Destructible;
-                case "PICKUPSOUND":
-                    return (ushort)Scroll_FieldIndex.PickUpSound;
-                case "PUTDOWNSOUND":
-                    return (ushort)Scroll_FieldIndex.PutDownSound;
-                case "VALUE":
-                    return (ushort)Scroll_FieldIndex.Value;
-                case "WEIGHT":
-                    return (ushort)Scroll_FieldIndex.Weight;
-                case "BASECOST":
-                    return (ushort)Scroll_FieldIndex.BaseCost;
-                case "FLAGS":
-                    return (ushort)Scroll_FieldIndex.Flags;
-                case "TYPE":
-                    return (ushort)Scroll_FieldIndex.Type;
-                case "CHARGETIME":
-                    return (ushort)Scroll_FieldIndex.ChargeTime;
-                case "CASTTYPE":
-                    return (ushort)Scroll_FieldIndex.CastType;
-                case "TARGETTYPE":
-                    return (ushort)Scroll_FieldIndex.TargetType;
-                case "CASTDURATION":
-                    return (ushort)Scroll_FieldIndex.CastDuration;
-                case "RANGE":
-                    return (ushort)Scroll_FieldIndex.Range;
-                case "HALFCOSTPERK":
-                    return (ushort)Scroll_FieldIndex.HalfCostPerk;
-                case "EFFECTS":
-                    return (ushort)Scroll_FieldIndex.Effects;
-                case "DATADATATYPESTATE":
-                    return (ushort)Scroll_FieldIndex.DATADataTypeState;
-                case "SPITDATATYPESTATE":
-                    return (ushort)Scroll_FieldIndex.SPITDataTypeState;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Scroll_FieldIndex enu = (Scroll_FieldIndex)index;
-            switch (enu)
-            {
-                case Scroll_FieldIndex.Keywords:
-                case Scroll_FieldIndex.Effects:
-                    return true;
-                case Scroll_FieldIndex.ObjectBounds:
-                case Scroll_FieldIndex.Name:
-                case Scroll_FieldIndex.MenuDisplayObject:
-                case Scroll_FieldIndex.EquipmentType:
-                case Scroll_FieldIndex.Description:
-                case Scroll_FieldIndex.Model:
-                case Scroll_FieldIndex.Destructible:
-                case Scroll_FieldIndex.PickUpSound:
-                case Scroll_FieldIndex.PutDownSound:
-                case Scroll_FieldIndex.Value:
-                case Scroll_FieldIndex.Weight:
-                case Scroll_FieldIndex.BaseCost:
-                case Scroll_FieldIndex.Flags:
-                case Scroll_FieldIndex.Type:
-                case Scroll_FieldIndex.ChargeTime:
-                case Scroll_FieldIndex.CastType:
-                case Scroll_FieldIndex.TargetType:
-                case Scroll_FieldIndex.CastDuration:
-                case Scroll_FieldIndex.Range:
-                case Scroll_FieldIndex.HalfCostPerk:
-                case Scroll_FieldIndex.DATADataTypeState:
-                case Scroll_FieldIndex.SPITDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Scroll_FieldIndex enu = (Scroll_FieldIndex)index;
-            switch (enu)
-            {
-                case Scroll_FieldIndex.ObjectBounds:
-                case Scroll_FieldIndex.Model:
-                case Scroll_FieldIndex.Destructible:
-                case Scroll_FieldIndex.Effects:
-                    return true;
-                case Scroll_FieldIndex.Name:
-                case Scroll_FieldIndex.Keywords:
-                case Scroll_FieldIndex.MenuDisplayObject:
-                case Scroll_FieldIndex.EquipmentType:
-                case Scroll_FieldIndex.Description:
-                case Scroll_FieldIndex.PickUpSound:
-                case Scroll_FieldIndex.PutDownSound:
-                case Scroll_FieldIndex.Value:
-                case Scroll_FieldIndex.Weight:
-                case Scroll_FieldIndex.BaseCost:
-                case Scroll_FieldIndex.Flags:
-                case Scroll_FieldIndex.Type:
-                case Scroll_FieldIndex.ChargeTime:
-                case Scroll_FieldIndex.CastType:
-                case Scroll_FieldIndex.TargetType:
-                case Scroll_FieldIndex.CastDuration:
-                case Scroll_FieldIndex.Range:
-                case Scroll_FieldIndex.HalfCostPerk:
-                case Scroll_FieldIndex.DATADataTypeState:
-                case Scroll_FieldIndex.SPITDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Scroll_FieldIndex enu = (Scroll_FieldIndex)index;
-            switch (enu)
-            {
-                case Scroll_FieldIndex.ObjectBounds:
-                case Scroll_FieldIndex.Name:
-                case Scroll_FieldIndex.Keywords:
-                case Scroll_FieldIndex.MenuDisplayObject:
-                case Scroll_FieldIndex.EquipmentType:
-                case Scroll_FieldIndex.Description:
-                case Scroll_FieldIndex.Model:
-                case Scroll_FieldIndex.Destructible:
-                case Scroll_FieldIndex.PickUpSound:
-                case Scroll_FieldIndex.PutDownSound:
-                case Scroll_FieldIndex.Value:
-                case Scroll_FieldIndex.Weight:
-                case Scroll_FieldIndex.BaseCost:
-                case Scroll_FieldIndex.Flags:
-                case Scroll_FieldIndex.Type:
-                case Scroll_FieldIndex.ChargeTime:
-                case Scroll_FieldIndex.CastType:
-                case Scroll_FieldIndex.TargetType:
-                case Scroll_FieldIndex.CastDuration:
-                case Scroll_FieldIndex.Range:
-                case Scroll_FieldIndex.HalfCostPerk:
-                case Scroll_FieldIndex.Effects:
-                case Scroll_FieldIndex.DATADataTypeState:
-                case Scroll_FieldIndex.SPITDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Scroll_FieldIndex enu = (Scroll_FieldIndex)index;
-            switch (enu)
-            {
-                case Scroll_FieldIndex.ObjectBounds:
-                    return "ObjectBounds";
-                case Scroll_FieldIndex.Name:
-                    return "Name";
-                case Scroll_FieldIndex.Keywords:
-                    return "Keywords";
-                case Scroll_FieldIndex.MenuDisplayObject:
-                    return "MenuDisplayObject";
-                case Scroll_FieldIndex.EquipmentType:
-                    return "EquipmentType";
-                case Scroll_FieldIndex.Description:
-                    return "Description";
-                case Scroll_FieldIndex.Model:
-                    return "Model";
-                case Scroll_FieldIndex.Destructible:
-                    return "Destructible";
-                case Scroll_FieldIndex.PickUpSound:
-                    return "PickUpSound";
-                case Scroll_FieldIndex.PutDownSound:
-                    return "PutDownSound";
-                case Scroll_FieldIndex.Value:
-                    return "Value";
-                case Scroll_FieldIndex.Weight:
-                    return "Weight";
-                case Scroll_FieldIndex.BaseCost:
-                    return "BaseCost";
-                case Scroll_FieldIndex.Flags:
-                    return "Flags";
-                case Scroll_FieldIndex.Type:
-                    return "Type";
-                case Scroll_FieldIndex.ChargeTime:
-                    return "ChargeTime";
-                case Scroll_FieldIndex.CastType:
-                    return "CastType";
-                case Scroll_FieldIndex.TargetType:
-                    return "TargetType";
-                case Scroll_FieldIndex.CastDuration:
-                    return "CastDuration";
-                case Scroll_FieldIndex.Range:
-                    return "Range";
-                case Scroll_FieldIndex.HalfCostPerk:
-                    return "HalfCostPerk";
-                case Scroll_FieldIndex.Effects:
-                    return "Effects";
-                case Scroll_FieldIndex.DATADataTypeState:
-                    return "DATADataTypeState";
-                case Scroll_FieldIndex.SPITDataTypeState:
-                    return "SPITDataTypeState";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Scroll_FieldIndex enu = (Scroll_FieldIndex)index;
-            switch (enu)
-            {
-                case Scroll_FieldIndex.ObjectBounds:
-                case Scroll_FieldIndex.Name:
-                case Scroll_FieldIndex.Keywords:
-                case Scroll_FieldIndex.MenuDisplayObject:
-                case Scroll_FieldIndex.EquipmentType:
-                case Scroll_FieldIndex.Description:
-                case Scroll_FieldIndex.Model:
-                case Scroll_FieldIndex.Destructible:
-                case Scroll_FieldIndex.PickUpSound:
-                case Scroll_FieldIndex.PutDownSound:
-                case Scroll_FieldIndex.Value:
-                case Scroll_FieldIndex.Weight:
-                case Scroll_FieldIndex.BaseCost:
-                case Scroll_FieldIndex.Flags:
-                case Scroll_FieldIndex.Type:
-                case Scroll_FieldIndex.ChargeTime:
-                case Scroll_FieldIndex.CastType:
-                case Scroll_FieldIndex.TargetType:
-                case Scroll_FieldIndex.CastDuration:
-                case Scroll_FieldIndex.Range:
-                case Scroll_FieldIndex.HalfCostPerk:
-                case Scroll_FieldIndex.Effects:
-                case Scroll_FieldIndex.DATADataTypeState:
-                case Scroll_FieldIndex.SPITDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Scroll_FieldIndex enu = (Scroll_FieldIndex)index;
-            switch (enu)
-            {
-                case Scroll_FieldIndex.ObjectBounds:
-                case Scroll_FieldIndex.Name:
-                case Scroll_FieldIndex.Keywords:
-                case Scroll_FieldIndex.MenuDisplayObject:
-                case Scroll_FieldIndex.EquipmentType:
-                case Scroll_FieldIndex.Description:
-                case Scroll_FieldIndex.Model:
-                case Scroll_FieldIndex.Destructible:
-                case Scroll_FieldIndex.PickUpSound:
-                case Scroll_FieldIndex.PutDownSound:
-                case Scroll_FieldIndex.Value:
-                case Scroll_FieldIndex.Weight:
-                case Scroll_FieldIndex.BaseCost:
-                case Scroll_FieldIndex.Flags:
-                case Scroll_FieldIndex.Type:
-                case Scroll_FieldIndex.ChargeTime:
-                case Scroll_FieldIndex.CastType:
-                case Scroll_FieldIndex.TargetType:
-                case Scroll_FieldIndex.CastDuration:
-                case Scroll_FieldIndex.Range:
-                case Scroll_FieldIndex.HalfCostPerk:
-                case Scroll_FieldIndex.Effects:
-                case Scroll_FieldIndex.DATADataTypeState:
-                case Scroll_FieldIndex.SPITDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Scroll_FieldIndex enu = (Scroll_FieldIndex)index;
-            switch (enu)
-            {
-                case Scroll_FieldIndex.ObjectBounds:
-                    return typeof(ObjectBounds);
-                case Scroll_FieldIndex.Name:
-                    return typeof(TranslatedString);
-                case Scroll_FieldIndex.Keywords:
-                    return typeof(IExtendedList<IFormLink<Keyword>>);
-                case Scroll_FieldIndex.MenuDisplayObject:
-                    return typeof(FormLinkNullable<Static>);
-                case Scroll_FieldIndex.EquipmentType:
-                    return typeof(FormLinkNullable<EquipType>);
-                case Scroll_FieldIndex.Description:
-                    return typeof(TranslatedString);
-                case Scroll_FieldIndex.Model:
-                    return typeof(Model);
-                case Scroll_FieldIndex.Destructible:
-                    return typeof(Destructible);
-                case Scroll_FieldIndex.PickUpSound:
-                    return typeof(FormLinkNullable<SoundDescriptor>);
-                case Scroll_FieldIndex.PutDownSound:
-                    return typeof(FormLinkNullable<SoundDescriptor>);
-                case Scroll_FieldIndex.Value:
-                    return typeof(UInt32);
-                case Scroll_FieldIndex.Weight:
-                    return typeof(Single);
-                case Scroll_FieldIndex.BaseCost:
-                    return typeof(UInt32);
-                case Scroll_FieldIndex.Flags:
-                    return typeof(SpellDataFlag);
-                case Scroll_FieldIndex.Type:
-                    return typeof(SpellType);
-                case Scroll_FieldIndex.ChargeTime:
-                    return typeof(Single);
-                case Scroll_FieldIndex.CastType:
-                    return typeof(CastType);
-                case Scroll_FieldIndex.TargetType:
-                    return typeof(TargetType);
-                case Scroll_FieldIndex.CastDuration:
-                    return typeof(Single);
-                case Scroll_FieldIndex.Range:
-                    return typeof(Single);
-                case Scroll_FieldIndex.HalfCostPerk:
-                    return typeof(FormLink<Perk>);
-                case Scroll_FieldIndex.Effects:
-                    return typeof(IExtendedList<Effect>);
-                case Scroll_FieldIndex.DATADataTypeState:
-                    return typeof(Scroll.DATADataType);
-                case Scroll_FieldIndex.SPITDataTypeState:
-                    return typeof(Scroll.SPITDataType);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.SCRL;
         public static readonly Type BinaryWriteTranslation = typeof(ScrollBinaryWriteTranslation);
         #region Interface
@@ -2046,14 +1686,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -2072,13 +1712,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ObjectBounds.Clear();
             item.Name = default;
             item.Keywords = null;
-            item.MenuDisplayObject = FormLinkNullable<Static>.Null;
-            item.EquipmentType = FormLinkNullable<EquipType>.Null;
+            item.MenuDisplayObject = FormLinkNullable<IStaticGetter>.Null;
+            item.EquipmentType = FormLinkNullable<IEquipTypeGetter>.Null;
             item.Description = default;
             item.Model = null;
             item.Destructible = null;
-            item.PickUpSound = FormLinkNullable<SoundDescriptor>.Null;
-            item.PutDownSound = FormLinkNullable<SoundDescriptor>.Null;
+            item.PickUpSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
+            item.PutDownSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
             item.Value = default;
             item.Weight = default;
             item.BaseCost = default;
@@ -2089,7 +1729,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.TargetType = default;
             item.CastDuration = default;
             item.Range = default;
-            item.HalfCostPerk = FormLink<Perk>.Null;
+            item.HalfCostPerk = FormLink<IPerkGetter>.Null;
             item.Effects.Clear();
             item.DATADataTypeState = default;
             item.SPITDataTypeState = default;
@@ -2677,8 +2317,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLink<Keyword>)new FormLink<Keyword>(r.FormKey))
-                            .ToExtendedList<IFormLink<Keyword>>();
+                            .Select(r => (IFormLink<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IKeywordGetter>>();
                     }
                     else
                     {
@@ -2697,11 +2337,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.MenuDisplayObject) ?? true))
             {
-                item.MenuDisplayObject = new FormLinkNullable<Static>(rhs.MenuDisplayObject.FormKey);
+                item.MenuDisplayObject = new FormLinkNullable<IStaticGetter>(rhs.MenuDisplayObject.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.EquipmentType) ?? true))
             {
-                item.EquipmentType = new FormLinkNullable<EquipType>(rhs.EquipmentType.FormKey);
+                item.EquipmentType = new FormLinkNullable<IEquipTypeGetter>(rhs.EquipmentType.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.Description) ?? true))
             {
@@ -2761,11 +2401,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.PickUpSound) ?? true))
             {
-                item.PickUpSound = new FormLinkNullable<SoundDescriptor>(rhs.PickUpSound.FormKey);
+                item.PickUpSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.PickUpSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.PutDownSound) ?? true))
             {
-                item.PutDownSound = new FormLinkNullable<SoundDescriptor>(rhs.PutDownSound.FormKey);
+                item.PutDownSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.PutDownSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.Value) ?? true))
             {
@@ -2809,7 +2449,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.HalfCostPerk) ?? true))
             {
-                item.HalfCostPerk = new FormLink<Perk>(rhs.HalfCostPerk.FormKey);
+                item.HalfCostPerk = new FormLink<IPerkGetter>(rhs.HalfCostPerk.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.Effects) ?? true))
             {
@@ -3220,13 +2860,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KSIZ:
                 {
                     item.Keywords = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<Keyword>>();
+                        .CastExtendedList<IFormLink<IKeywordGetter>>();
                     return (int)Scroll_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.MDOB:

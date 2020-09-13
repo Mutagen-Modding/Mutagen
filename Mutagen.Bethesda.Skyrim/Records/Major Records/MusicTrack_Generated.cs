@@ -78,8 +78,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region CuePoints
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Single>? _CuePoints;
-        public IExtendedList<Single>? CuePoints
+        private ExtendedList<Single>? _CuePoints;
+        public ExtendedList<Single>? CuePoints
         {
             get => this._CuePoints;
             set => this._CuePoints = value;
@@ -92,8 +92,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition>? _Conditions;
-        public IExtendedList<Condition>? Conditions
+        private ExtendedList<Condition>? _Conditions;
+        public ExtendedList<Condition>? Conditions
         {
             get => this._Conditions;
             set => this._Conditions = value;
@@ -106,8 +106,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Tracks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<MusicTrack>>? _Tracks;
-        public IExtendedList<IFormLink<MusicTrack>>? Tracks
+        private ExtendedList<IFormLink<IMusicTrackGetter>>? _Tracks;
+        public ExtendedList<IFormLink<IMusicTrackGetter>>? Tracks
         {
             get => this._Tracks;
             set => this._Tracks = value;
@@ -970,9 +970,9 @@ namespace Mutagen.Bethesda.Skyrim
         new String? TrackFilename { get; set; }
         new String? FinaleFilename { get; set; }
         new MusicTrackLoopData? LoopData { get; set; }
-        new IExtendedList<Single>? CuePoints { get; set; }
-        new IExtendedList<Condition>? Conditions { get; set; }
-        new IExtendedList<IFormLink<MusicTrack>>? Tracks { get; set; }
+        new ExtendedList<Single>? CuePoints { get; set; }
+        new ExtendedList<Condition>? Conditions { get; set; }
+        new ExtendedList<IFormLink<IMusicTrackGetter>>? Tracks { get; set; }
     }
 
     public partial interface IMusicTrackInternal :
@@ -1200,191 +1200,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "TYPE":
-                    return (ushort)MusicTrack_FieldIndex.Type;
-                case "DURATION":
-                    return (ushort)MusicTrack_FieldIndex.Duration;
-                case "FADEOUT":
-                    return (ushort)MusicTrack_FieldIndex.FadeOut;
-                case "TRACKFILENAME":
-                    return (ushort)MusicTrack_FieldIndex.TrackFilename;
-                case "FINALEFILENAME":
-                    return (ushort)MusicTrack_FieldIndex.FinaleFilename;
-                case "LOOPDATA":
-                    return (ushort)MusicTrack_FieldIndex.LoopData;
-                case "CUEPOINTS":
-                    return (ushort)MusicTrack_FieldIndex.CuePoints;
-                case "CONDITIONS":
-                    return (ushort)MusicTrack_FieldIndex.Conditions;
-                case "TRACKS":
-                    return (ushort)MusicTrack_FieldIndex.Tracks;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            MusicTrack_FieldIndex enu = (MusicTrack_FieldIndex)index;
-            switch (enu)
-            {
-                case MusicTrack_FieldIndex.CuePoints:
-                case MusicTrack_FieldIndex.Conditions:
-                case MusicTrack_FieldIndex.Tracks:
-                    return true;
-                case MusicTrack_FieldIndex.Type:
-                case MusicTrack_FieldIndex.Duration:
-                case MusicTrack_FieldIndex.FadeOut:
-                case MusicTrack_FieldIndex.TrackFilename:
-                case MusicTrack_FieldIndex.FinaleFilename:
-                case MusicTrack_FieldIndex.LoopData:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            MusicTrack_FieldIndex enu = (MusicTrack_FieldIndex)index;
-            switch (enu)
-            {
-                case MusicTrack_FieldIndex.LoopData:
-                case MusicTrack_FieldIndex.Conditions:
-                    return true;
-                case MusicTrack_FieldIndex.Type:
-                case MusicTrack_FieldIndex.Duration:
-                case MusicTrack_FieldIndex.FadeOut:
-                case MusicTrack_FieldIndex.TrackFilename:
-                case MusicTrack_FieldIndex.FinaleFilename:
-                case MusicTrack_FieldIndex.CuePoints:
-                case MusicTrack_FieldIndex.Tracks:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            MusicTrack_FieldIndex enu = (MusicTrack_FieldIndex)index;
-            switch (enu)
-            {
-                case MusicTrack_FieldIndex.Type:
-                case MusicTrack_FieldIndex.Duration:
-                case MusicTrack_FieldIndex.FadeOut:
-                case MusicTrack_FieldIndex.TrackFilename:
-                case MusicTrack_FieldIndex.FinaleFilename:
-                case MusicTrack_FieldIndex.LoopData:
-                case MusicTrack_FieldIndex.CuePoints:
-                case MusicTrack_FieldIndex.Conditions:
-                case MusicTrack_FieldIndex.Tracks:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            MusicTrack_FieldIndex enu = (MusicTrack_FieldIndex)index;
-            switch (enu)
-            {
-                case MusicTrack_FieldIndex.Type:
-                    return "Type";
-                case MusicTrack_FieldIndex.Duration:
-                    return "Duration";
-                case MusicTrack_FieldIndex.FadeOut:
-                    return "FadeOut";
-                case MusicTrack_FieldIndex.TrackFilename:
-                    return "TrackFilename";
-                case MusicTrack_FieldIndex.FinaleFilename:
-                    return "FinaleFilename";
-                case MusicTrack_FieldIndex.LoopData:
-                    return "LoopData";
-                case MusicTrack_FieldIndex.CuePoints:
-                    return "CuePoints";
-                case MusicTrack_FieldIndex.Conditions:
-                    return "Conditions";
-                case MusicTrack_FieldIndex.Tracks:
-                    return "Tracks";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            MusicTrack_FieldIndex enu = (MusicTrack_FieldIndex)index;
-            switch (enu)
-            {
-                case MusicTrack_FieldIndex.Type:
-                case MusicTrack_FieldIndex.Duration:
-                case MusicTrack_FieldIndex.FadeOut:
-                case MusicTrack_FieldIndex.TrackFilename:
-                case MusicTrack_FieldIndex.FinaleFilename:
-                case MusicTrack_FieldIndex.LoopData:
-                case MusicTrack_FieldIndex.CuePoints:
-                case MusicTrack_FieldIndex.Conditions:
-                case MusicTrack_FieldIndex.Tracks:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            MusicTrack_FieldIndex enu = (MusicTrack_FieldIndex)index;
-            switch (enu)
-            {
-                case MusicTrack_FieldIndex.Type:
-                case MusicTrack_FieldIndex.Duration:
-                case MusicTrack_FieldIndex.FadeOut:
-                case MusicTrack_FieldIndex.TrackFilename:
-                case MusicTrack_FieldIndex.FinaleFilename:
-                case MusicTrack_FieldIndex.LoopData:
-                case MusicTrack_FieldIndex.CuePoints:
-                case MusicTrack_FieldIndex.Conditions:
-                case MusicTrack_FieldIndex.Tracks:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            MusicTrack_FieldIndex enu = (MusicTrack_FieldIndex)index;
-            switch (enu)
-            {
-                case MusicTrack_FieldIndex.Type:
-                    return typeof(MusicTrack.TypeEnum);
-                case MusicTrack_FieldIndex.Duration:
-                    return typeof(Single);
-                case MusicTrack_FieldIndex.FadeOut:
-                    return typeof(Single);
-                case MusicTrack_FieldIndex.TrackFilename:
-                    return typeof(String);
-                case MusicTrack_FieldIndex.FinaleFilename:
-                    return typeof(String);
-                case MusicTrack_FieldIndex.LoopData:
-                    return typeof(MusicTrackLoopData);
-                case MusicTrack_FieldIndex.CuePoints:
-                    return typeof(IExtendedList<Single>);
-                case MusicTrack_FieldIndex.Conditions:
-                    return typeof(IExtendedList<Condition>);
-                case MusicTrack_FieldIndex.Tracks:
-                    return typeof(IExtendedList<IFormLink<MusicTrack>>);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.MUST;
         public static readonly Type BinaryWriteTranslation = typeof(MusicTrackBinaryWriteTranslation);
         #region Interface
@@ -1405,14 +1220,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1986,8 +1801,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Tracks = 
                             rhs.Tracks
-                            .Select(r => (IFormLink<MusicTrack>)new FormLink<MusicTrack>(r.FormKey))
-                            .ToExtendedList<IFormLink<MusicTrack>>();
+                            .Select(r => (IFormLink<IMusicTrackGetter>)new FormLink<IMusicTrackGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IMusicTrackGetter>>();
                     }
                     else
                     {
@@ -2367,10 +2182,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Tracks = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<MusicTrack>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IMusicTrackGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<MusicTrack>>();
+                        .CastExtendedList<IFormLink<IMusicTrackGetter>>();
                     return (int)MusicTrack_FieldIndex.Tracks;
                 }
                 default:

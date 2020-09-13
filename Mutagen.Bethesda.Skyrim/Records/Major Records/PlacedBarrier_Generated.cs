@@ -43,9 +43,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Projectile
-        public FormLink<Projectile> Projectile { get; set; } = new FormLink<Projectile>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IProjectileGetter> IPlacedBarrierGetter.Projectile => this.Projectile.ToGetter<Projectile, IProjectileGetter>();
+        public FormLink<IProjectileGetter> Projectile { get; set; } = new FormLink<IProjectileGetter>();
         #endregion
 
         #region To String
@@ -475,7 +473,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPlacedBarrierInternal>,
         ILinkedFormKeyContainer
     {
-        new FormLink<Projectile> Projectile { get; set; }
+        new FormLink<IProjectileGetter> Projectile { get; set; }
     }
 
     public partial interface IPlacedBarrierInternal :
@@ -704,101 +702,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "PROJECTILE":
-                    return (ushort)PlacedBarrier_FieldIndex.Projectile;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            PlacedBarrier_FieldIndex enu = (PlacedBarrier_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedBarrier_FieldIndex.Projectile:
-                    return false;
-                default:
-                    return APlacedTrap_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            PlacedBarrier_FieldIndex enu = (PlacedBarrier_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedBarrier_FieldIndex.Projectile:
-                    return false;
-                default:
-                    return APlacedTrap_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            PlacedBarrier_FieldIndex enu = (PlacedBarrier_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedBarrier_FieldIndex.Projectile:
-                    return false;
-                default:
-                    return APlacedTrap_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            PlacedBarrier_FieldIndex enu = (PlacedBarrier_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedBarrier_FieldIndex.Projectile:
-                    return "Projectile";
-                default:
-                    return APlacedTrap_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            PlacedBarrier_FieldIndex enu = (PlacedBarrier_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedBarrier_FieldIndex.Projectile:
-                    return false;
-                default:
-                    return APlacedTrap_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            PlacedBarrier_FieldIndex enu = (PlacedBarrier_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedBarrier_FieldIndex.Projectile:
-                    return false;
-                default:
-                    return APlacedTrap_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            PlacedBarrier_FieldIndex enu = (PlacedBarrier_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedBarrier_FieldIndex.Projectile:
-                    return typeof(FormLink<Projectile>);
-                default:
-                    return APlacedTrap_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.PBAR;
         public static readonly Type BinaryWriteTranslation = typeof(PlacedBarrierBinaryWriteTranslation);
         #region Interface
@@ -819,14 +722,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -842,7 +745,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IPlacedBarrierInternal item)
         {
             ClearPartial();
-            item.Projectile = FormLink<Projectile>.Null;
+            item.Projectile = FormLink<IProjectileGetter>.Null;
             base.Clear(item);
         }
         
@@ -1218,7 +1121,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PlacedBarrier_FieldIndex.Projectile) ?? true))
             {
-                item.Projectile = new FormLink<Projectile>(rhs.Projectile.FormKey);
+                item.Projectile = new FormLink<IProjectileGetter>(rhs.Projectile.FormKey);
             }
         }
         

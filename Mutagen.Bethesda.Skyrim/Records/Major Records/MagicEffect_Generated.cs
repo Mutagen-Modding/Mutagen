@@ -59,14 +59,12 @@ namespace Mutagen.Bethesda.Skyrim
         TranslatedString? IMagicEffectGetter.Name => this.Name;
         #endregion
         #region MenuDisplayObject
-        public FormLinkNullable<Static> MenuDisplayObject { get; set; } = new FormLinkNullable<Static>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IStaticGetter> IMagicEffectGetter.MenuDisplayObject => this.MenuDisplayObject.ToGetter<Static, IStaticGetter>();
+        public FormLinkNullable<IStaticGetter> MenuDisplayObject { get; set; } = new FormLinkNullable<IStaticGetter>();
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Keyword>>? _Keywords;
-        public IExtendedList<IFormLink<Keyword>>? Keywords
+        private ExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
+        public ExtendedList<IFormLink<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -98,22 +96,16 @@ namespace Mutagen.Bethesda.Skyrim
         public UInt16 Unknown1 { get; set; } = default;
         #endregion
         #region CastingLight
-        public FormLink<Light> CastingLight { get; set; } = new FormLink<Light>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ILightGetter> IMagicEffectGetter.CastingLight => this.CastingLight.ToGetter<Light, ILightGetter>();
+        public FormLink<ILightGetter> CastingLight { get; set; } = new FormLink<ILightGetter>();
         #endregion
         #region TaperWeight
         public Single TaperWeight { get; set; } = default;
         #endregion
         #region HitShader
-        public FormLink<EffectShader> HitShader { get; set; } = new FormLink<EffectShader>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IEffectShaderGetter> IMagicEffectGetter.HitShader => this.HitShader.ToGetter<EffectShader, IEffectShaderGetter>();
+        public FormLink<IEffectShaderGetter> HitShader { get; set; } = new FormLink<IEffectShaderGetter>();
         #endregion
         #region EnchantShader
-        public FormLink<EffectShader> EnchantShader { get; set; } = new FormLink<EffectShader>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IEffectShaderGetter> IMagicEffectGetter.EnchantShader => this.EnchantShader.ToGetter<EffectShader, IEffectShaderGetter>();
+        public FormLink<IEffectShaderGetter> EnchantShader { get; set; } = new FormLink<IEffectShaderGetter>();
         #endregion
         #region MinimumSkillLevel
         public UInt32 MinimumSkillLevel { get; set; } = default;
@@ -139,14 +131,10 @@ namespace Mutagen.Bethesda.Skyrim
         IMagicEffectArchetypeGetter IMagicEffectGetter.Archetype => Archetype;
         #endregion
         #region Projectile
-        public FormLink<Projectile> Projectile { get; set; } = new FormLink<Projectile>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IProjectileGetter> IMagicEffectGetter.Projectile => this.Projectile.ToGetter<Projectile, IProjectileGetter>();
+        public FormLink<IProjectileGetter> Projectile { get; set; } = new FormLink<IProjectileGetter>();
         #endregion
         #region Explosion
-        public FormLink<Explosion> Explosion { get; set; } = new FormLink<Explosion>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IExplosionGetter> IMagicEffectGetter.Explosion => this.Explosion.ToGetter<Explosion, IExplosionGetter>();
+        public FormLink<IExplosionGetter> Explosion { get; set; } = new FormLink<IExplosionGetter>();
         #endregion
         #region CastType
         public CastType CastType { get; set; } = default;
@@ -159,60 +147,40 @@ namespace Mutagen.Bethesda.Skyrim
         public ActorValue SecondActorValue { get; set; } = _SecondActorValue_Default;
         #endregion
         #region CastingArt
-        public FormLink<ArtObject> CastingArt { get; set; } = new FormLink<ArtObject>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IArtObjectGetter> IMagicEffectGetter.CastingArt => this.CastingArt.ToGetter<ArtObject, IArtObjectGetter>();
+        public FormLink<IArtObjectGetter> CastingArt { get; set; } = new FormLink<IArtObjectGetter>();
         #endregion
         #region HitEffectArt
-        public FormLink<ArtObject> HitEffectArt { get; set; } = new FormLink<ArtObject>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IArtObjectGetter> IMagicEffectGetter.HitEffectArt => this.HitEffectArt.ToGetter<ArtObject, IArtObjectGetter>();
+        public FormLink<IArtObjectGetter> HitEffectArt { get; set; } = new FormLink<IArtObjectGetter>();
         #endregion
         #region ImpactData
-        public FormLink<ImpactDataSet> ImpactData { get; set; } = new FormLink<ImpactDataSet>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IImpactDataSetGetter> IMagicEffectGetter.ImpactData => this.ImpactData.ToGetter<ImpactDataSet, IImpactDataSetGetter>();
+        public FormLink<IImpactDataSetGetter> ImpactData { get; set; } = new FormLink<IImpactDataSetGetter>();
         #endregion
         #region SkillUsageMultiplier
         public Single SkillUsageMultiplier { get; set; } = default;
         #endregion
         #region DualCastArt
-        public FormLink<DualCastData> DualCastArt { get; set; } = new FormLink<DualCastData>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IDualCastDataGetter> IMagicEffectGetter.DualCastArt => this.DualCastArt.ToGetter<DualCastData, IDualCastDataGetter>();
+        public FormLink<IDualCastDataGetter> DualCastArt { get; set; } = new FormLink<IDualCastDataGetter>();
         #endregion
         #region DualCastScale
         public Single DualCastScale { get; set; } = default;
         #endregion
         #region EnchantArt
-        public FormLink<ArtObject> EnchantArt { get; set; } = new FormLink<ArtObject>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IArtObjectGetter> IMagicEffectGetter.EnchantArt => this.EnchantArt.ToGetter<ArtObject, IArtObjectGetter>();
+        public FormLink<IArtObjectGetter> EnchantArt { get; set; } = new FormLink<IArtObjectGetter>();
         #endregion
         #region Unknown2
-        public FormLink<SkyrimMajorRecord> Unknown2 { get; set; } = new FormLink<SkyrimMajorRecord>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISkyrimMajorRecordGetter> IMagicEffectGetter.Unknown2 => this.Unknown2.ToGetter<SkyrimMajorRecord, ISkyrimMajorRecordGetter>();
+        public FormLink<ISkyrimMajorRecordGetter> Unknown2 { get; set; } = new FormLink<ISkyrimMajorRecordGetter>();
         #endregion
         #region Unknown3
-        public FormLink<SkyrimMajorRecord> Unknown3 { get; set; } = new FormLink<SkyrimMajorRecord>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISkyrimMajorRecordGetter> IMagicEffectGetter.Unknown3 => this.Unknown3.ToGetter<SkyrimMajorRecord, ISkyrimMajorRecordGetter>();
+        public FormLink<ISkyrimMajorRecordGetter> Unknown3 { get; set; } = new FormLink<ISkyrimMajorRecordGetter>();
         #endregion
         #region EquipAbility
-        public FormLink<Spell> EquipAbility { get; set; } = new FormLink<Spell>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISpellGetter> IMagicEffectGetter.EquipAbility => this.EquipAbility.ToGetter<Spell, ISpellGetter>();
+        public FormLink<ISpellGetter> EquipAbility { get; set; } = new FormLink<ISpellGetter>();
         #endregion
         #region ImageSpaceModifier
-        public FormLink<ImageSpaceAdapter> ImageSpaceModifier { get; set; } = new FormLink<ImageSpaceAdapter>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IImageSpaceAdapterGetter> IMagicEffectGetter.ImageSpaceModifier => this.ImageSpaceModifier.ToGetter<ImageSpaceAdapter, IImageSpaceAdapterGetter>();
+        public FormLink<IImageSpaceAdapterGetter> ImageSpaceModifier { get; set; } = new FormLink<IImageSpaceAdapterGetter>();
         #endregion
         #region PerkToApply
-        public FormLink<Perk> PerkToApply { get; set; } = new FormLink<Perk>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IPerkGetter> IMagicEffectGetter.PerkToApply => this.PerkToApply.ToGetter<Perk, IPerkGetter>();
+        public FormLink<IPerkGetter> PerkToApply { get; set; } = new FormLink<IPerkGetter>();
         #endregion
         #region CastingSoundLevel
         public SoundLevel CastingSoundLevel { get; set; } = default;
@@ -225,8 +193,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region CounterEffects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<MagicEffect>> _CounterEffects = new ExtendedList<IFormLink<MagicEffect>>();
-        public IExtendedList<IFormLink<MagicEffect>> CounterEffects
+        private ExtendedList<IFormLink<IMagicEffectGetter>> _CounterEffects = new ExtendedList<IFormLink<IMagicEffectGetter>>();
+        public ExtendedList<IFormLink<IMagicEffectGetter>> CounterEffects
         {
             get => this._CounterEffects;
             protected set => this._CounterEffects = value;
@@ -239,8 +207,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<MagicEffectSound>? _Sounds;
-        public IExtendedList<MagicEffectSound>? Sounds
+        private ExtendedList<MagicEffectSound>? _Sounds;
+        public ExtendedList<MagicEffectSound>? Sounds
         {
             get => this._Sounds;
             set => this._Sounds = value;
@@ -258,8 +226,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public IExtendedList<Condition> Conditions
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -2244,18 +2212,18 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new TranslatedString? Name { get; set; }
-        new FormLinkNullable<Static> MenuDisplayObject { get; set; }
-        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new FormLinkNullable<IStaticGetter> MenuDisplayObject { get; set; }
+        new ExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
         new MagicEffect.Flag Flags { get; set; }
         new Single BaseCost { get; set; }
         new ActorValue MagicSkill { get; set; }
         new ActorValue ResistValue { get; set; }
         new UInt16 CounterEffectCount { get; set; }
         new UInt16 Unknown1 { get; set; }
-        new FormLink<Light> CastingLight { get; set; }
+        new FormLink<ILightGetter> CastingLight { get; set; }
         new Single TaperWeight { get; set; }
-        new FormLink<EffectShader> HitShader { get; set; }
-        new FormLink<EffectShader> EnchantShader { get; set; }
+        new FormLink<IEffectShaderGetter> HitShader { get; set; }
+        new FormLink<IEffectShaderGetter> EnchantShader { get; set; }
         new UInt32 MinimumSkillLevel { get; set; }
         new UInt32 SpellmakingArea { get; set; }
         new Single SpellmakingCastingTime { get; set; }
@@ -2263,30 +2231,30 @@ namespace Mutagen.Bethesda.Skyrim
         new Single TaperDuration { get; set; }
         new Single SecondActorValueWeight { get; set; }
         new MagicEffectArchetype Archetype { get; set; }
-        new FormLink<Projectile> Projectile { get; set; }
-        new FormLink<Explosion> Explosion { get; set; }
+        new FormLink<IProjectileGetter> Projectile { get; set; }
+        new FormLink<IExplosionGetter> Explosion { get; set; }
         new CastType CastType { get; set; }
         new TargetType TargetType { get; set; }
         new ActorValue SecondActorValue { get; set; }
-        new FormLink<ArtObject> CastingArt { get; set; }
-        new FormLink<ArtObject> HitEffectArt { get; set; }
-        new FormLink<ImpactDataSet> ImpactData { get; set; }
+        new FormLink<IArtObjectGetter> CastingArt { get; set; }
+        new FormLink<IArtObjectGetter> HitEffectArt { get; set; }
+        new FormLink<IImpactDataSetGetter> ImpactData { get; set; }
         new Single SkillUsageMultiplier { get; set; }
-        new FormLink<DualCastData> DualCastArt { get; set; }
+        new FormLink<IDualCastDataGetter> DualCastArt { get; set; }
         new Single DualCastScale { get; set; }
-        new FormLink<ArtObject> EnchantArt { get; set; }
-        new FormLink<SkyrimMajorRecord> Unknown2 { get; set; }
-        new FormLink<SkyrimMajorRecord> Unknown3 { get; set; }
-        new FormLink<Spell> EquipAbility { get; set; }
-        new FormLink<ImageSpaceAdapter> ImageSpaceModifier { get; set; }
-        new FormLink<Perk> PerkToApply { get; set; }
+        new FormLink<IArtObjectGetter> EnchantArt { get; set; }
+        new FormLink<ISkyrimMajorRecordGetter> Unknown2 { get; set; }
+        new FormLink<ISkyrimMajorRecordGetter> Unknown3 { get; set; }
+        new FormLink<ISpellGetter> EquipAbility { get; set; }
+        new FormLink<IImageSpaceAdapterGetter> ImageSpaceModifier { get; set; }
+        new FormLink<IPerkGetter> PerkToApply { get; set; }
         new SoundLevel CastingSoundLevel { get; set; }
         new Single ScriptEffectAIScore { get; set; }
         new Single ScriptEffectAIDelayTime { get; set; }
-        new IExtendedList<IFormLink<MagicEffect>> CounterEffects { get; }
-        new IExtendedList<MagicEffectSound>? Sounds { get; set; }
+        new ExtendedList<IFormLink<IMagicEffectGetter>> CounterEffects { get; }
+        new ExtendedList<MagicEffectSound>? Sounds { get; set; }
         new TranslatedString? Description { get; set; }
-        new IExtendedList<Condition> Conditions { get; }
+        new ExtendedList<Condition> Conditions { get; }
         new MagicEffect.DATADataType DATADataTypeState { get; set; }
     }
 
@@ -2590,598 +2558,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "VIRTUALMACHINEADAPTER":
-                    return (ushort)MagicEffect_FieldIndex.VirtualMachineAdapter;
-                case "NAME":
-                    return (ushort)MagicEffect_FieldIndex.Name;
-                case "MENUDISPLAYOBJECT":
-                    return (ushort)MagicEffect_FieldIndex.MenuDisplayObject;
-                case "KEYWORDS":
-                    return (ushort)MagicEffect_FieldIndex.Keywords;
-                case "FLAGS":
-                    return (ushort)MagicEffect_FieldIndex.Flags;
-                case "BASECOST":
-                    return (ushort)MagicEffect_FieldIndex.BaseCost;
-                case "MAGICSKILL":
-                    return (ushort)MagicEffect_FieldIndex.MagicSkill;
-                case "RESISTVALUE":
-                    return (ushort)MagicEffect_FieldIndex.ResistValue;
-                case "COUNTEREFFECTCOUNT":
-                    return (ushort)MagicEffect_FieldIndex.CounterEffectCount;
-                case "UNKNOWN1":
-                    return (ushort)MagicEffect_FieldIndex.Unknown1;
-                case "CASTINGLIGHT":
-                    return (ushort)MagicEffect_FieldIndex.CastingLight;
-                case "TAPERWEIGHT":
-                    return (ushort)MagicEffect_FieldIndex.TaperWeight;
-                case "HITSHADER":
-                    return (ushort)MagicEffect_FieldIndex.HitShader;
-                case "ENCHANTSHADER":
-                    return (ushort)MagicEffect_FieldIndex.EnchantShader;
-                case "MINIMUMSKILLLEVEL":
-                    return (ushort)MagicEffect_FieldIndex.MinimumSkillLevel;
-                case "SPELLMAKINGAREA":
-                    return (ushort)MagicEffect_FieldIndex.SpellmakingArea;
-                case "SPELLMAKINGCASTINGTIME":
-                    return (ushort)MagicEffect_FieldIndex.SpellmakingCastingTime;
-                case "TAPERCURVE":
-                    return (ushort)MagicEffect_FieldIndex.TaperCurve;
-                case "TAPERDURATION":
-                    return (ushort)MagicEffect_FieldIndex.TaperDuration;
-                case "SECONDACTORVALUEWEIGHT":
-                    return (ushort)MagicEffect_FieldIndex.SecondActorValueWeight;
-                case "ARCHETYPE":
-                    return (ushort)MagicEffect_FieldIndex.Archetype;
-                case "PROJECTILE":
-                    return (ushort)MagicEffect_FieldIndex.Projectile;
-                case "EXPLOSION":
-                    return (ushort)MagicEffect_FieldIndex.Explosion;
-                case "CASTTYPE":
-                    return (ushort)MagicEffect_FieldIndex.CastType;
-                case "TARGETTYPE":
-                    return (ushort)MagicEffect_FieldIndex.TargetType;
-                case "SECONDACTORVALUE":
-                    return (ushort)MagicEffect_FieldIndex.SecondActorValue;
-                case "CASTINGART":
-                    return (ushort)MagicEffect_FieldIndex.CastingArt;
-                case "HITEFFECTART":
-                    return (ushort)MagicEffect_FieldIndex.HitEffectArt;
-                case "IMPACTDATA":
-                    return (ushort)MagicEffect_FieldIndex.ImpactData;
-                case "SKILLUSAGEMULTIPLIER":
-                    return (ushort)MagicEffect_FieldIndex.SkillUsageMultiplier;
-                case "DUALCASTART":
-                    return (ushort)MagicEffect_FieldIndex.DualCastArt;
-                case "DUALCASTSCALE":
-                    return (ushort)MagicEffect_FieldIndex.DualCastScale;
-                case "ENCHANTART":
-                    return (ushort)MagicEffect_FieldIndex.EnchantArt;
-                case "UNKNOWN2":
-                    return (ushort)MagicEffect_FieldIndex.Unknown2;
-                case "UNKNOWN3":
-                    return (ushort)MagicEffect_FieldIndex.Unknown3;
-                case "EQUIPABILITY":
-                    return (ushort)MagicEffect_FieldIndex.EquipAbility;
-                case "IMAGESPACEMODIFIER":
-                    return (ushort)MagicEffect_FieldIndex.ImageSpaceModifier;
-                case "PERKTOAPPLY":
-                    return (ushort)MagicEffect_FieldIndex.PerkToApply;
-                case "CASTINGSOUNDLEVEL":
-                    return (ushort)MagicEffect_FieldIndex.CastingSoundLevel;
-                case "SCRIPTEFFECTAISCORE":
-                    return (ushort)MagicEffect_FieldIndex.ScriptEffectAIScore;
-                case "SCRIPTEFFECTAIDELAYTIME":
-                    return (ushort)MagicEffect_FieldIndex.ScriptEffectAIDelayTime;
-                case "COUNTEREFFECTS":
-                    return (ushort)MagicEffect_FieldIndex.CounterEffects;
-                case "SOUNDS":
-                    return (ushort)MagicEffect_FieldIndex.Sounds;
-                case "DESCRIPTION":
-                    return (ushort)MagicEffect_FieldIndex.Description;
-                case "CONDITIONS":
-                    return (ushort)MagicEffect_FieldIndex.Conditions;
-                case "DATADATATYPESTATE":
-                    return (ushort)MagicEffect_FieldIndex.DATADataTypeState;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffect_FieldIndex.Keywords:
-                case MagicEffect_FieldIndex.CounterEffects:
-                case MagicEffect_FieldIndex.Sounds:
-                case MagicEffect_FieldIndex.Conditions:
-                    return true;
-                case MagicEffect_FieldIndex.VirtualMachineAdapter:
-                case MagicEffect_FieldIndex.Name:
-                case MagicEffect_FieldIndex.MenuDisplayObject:
-                case MagicEffect_FieldIndex.Flags:
-                case MagicEffect_FieldIndex.BaseCost:
-                case MagicEffect_FieldIndex.MagicSkill:
-                case MagicEffect_FieldIndex.ResistValue:
-                case MagicEffect_FieldIndex.CounterEffectCount:
-                case MagicEffect_FieldIndex.Unknown1:
-                case MagicEffect_FieldIndex.CastingLight:
-                case MagicEffect_FieldIndex.TaperWeight:
-                case MagicEffect_FieldIndex.HitShader:
-                case MagicEffect_FieldIndex.EnchantShader:
-                case MagicEffect_FieldIndex.MinimumSkillLevel:
-                case MagicEffect_FieldIndex.SpellmakingArea:
-                case MagicEffect_FieldIndex.SpellmakingCastingTime:
-                case MagicEffect_FieldIndex.TaperCurve:
-                case MagicEffect_FieldIndex.TaperDuration:
-                case MagicEffect_FieldIndex.SecondActorValueWeight:
-                case MagicEffect_FieldIndex.Archetype:
-                case MagicEffect_FieldIndex.Projectile:
-                case MagicEffect_FieldIndex.Explosion:
-                case MagicEffect_FieldIndex.CastType:
-                case MagicEffect_FieldIndex.TargetType:
-                case MagicEffect_FieldIndex.SecondActorValue:
-                case MagicEffect_FieldIndex.CastingArt:
-                case MagicEffect_FieldIndex.HitEffectArt:
-                case MagicEffect_FieldIndex.ImpactData:
-                case MagicEffect_FieldIndex.SkillUsageMultiplier:
-                case MagicEffect_FieldIndex.DualCastArt:
-                case MagicEffect_FieldIndex.DualCastScale:
-                case MagicEffect_FieldIndex.EnchantArt:
-                case MagicEffect_FieldIndex.Unknown2:
-                case MagicEffect_FieldIndex.Unknown3:
-                case MagicEffect_FieldIndex.EquipAbility:
-                case MagicEffect_FieldIndex.ImageSpaceModifier:
-                case MagicEffect_FieldIndex.PerkToApply:
-                case MagicEffect_FieldIndex.CastingSoundLevel:
-                case MagicEffect_FieldIndex.ScriptEffectAIScore:
-                case MagicEffect_FieldIndex.ScriptEffectAIDelayTime:
-                case MagicEffect_FieldIndex.Description:
-                case MagicEffect_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffect_FieldIndex.VirtualMachineAdapter:
-                case MagicEffect_FieldIndex.Archetype:
-                case MagicEffect_FieldIndex.Sounds:
-                case MagicEffect_FieldIndex.Conditions:
-                    return true;
-                case MagicEffect_FieldIndex.Name:
-                case MagicEffect_FieldIndex.MenuDisplayObject:
-                case MagicEffect_FieldIndex.Keywords:
-                case MagicEffect_FieldIndex.Flags:
-                case MagicEffect_FieldIndex.BaseCost:
-                case MagicEffect_FieldIndex.MagicSkill:
-                case MagicEffect_FieldIndex.ResistValue:
-                case MagicEffect_FieldIndex.CounterEffectCount:
-                case MagicEffect_FieldIndex.Unknown1:
-                case MagicEffect_FieldIndex.CastingLight:
-                case MagicEffect_FieldIndex.TaperWeight:
-                case MagicEffect_FieldIndex.HitShader:
-                case MagicEffect_FieldIndex.EnchantShader:
-                case MagicEffect_FieldIndex.MinimumSkillLevel:
-                case MagicEffect_FieldIndex.SpellmakingArea:
-                case MagicEffect_FieldIndex.SpellmakingCastingTime:
-                case MagicEffect_FieldIndex.TaperCurve:
-                case MagicEffect_FieldIndex.TaperDuration:
-                case MagicEffect_FieldIndex.SecondActorValueWeight:
-                case MagicEffect_FieldIndex.Projectile:
-                case MagicEffect_FieldIndex.Explosion:
-                case MagicEffect_FieldIndex.CastType:
-                case MagicEffect_FieldIndex.TargetType:
-                case MagicEffect_FieldIndex.SecondActorValue:
-                case MagicEffect_FieldIndex.CastingArt:
-                case MagicEffect_FieldIndex.HitEffectArt:
-                case MagicEffect_FieldIndex.ImpactData:
-                case MagicEffect_FieldIndex.SkillUsageMultiplier:
-                case MagicEffect_FieldIndex.DualCastArt:
-                case MagicEffect_FieldIndex.DualCastScale:
-                case MagicEffect_FieldIndex.EnchantArt:
-                case MagicEffect_FieldIndex.Unknown2:
-                case MagicEffect_FieldIndex.Unknown3:
-                case MagicEffect_FieldIndex.EquipAbility:
-                case MagicEffect_FieldIndex.ImageSpaceModifier:
-                case MagicEffect_FieldIndex.PerkToApply:
-                case MagicEffect_FieldIndex.CastingSoundLevel:
-                case MagicEffect_FieldIndex.ScriptEffectAIScore:
-                case MagicEffect_FieldIndex.ScriptEffectAIDelayTime:
-                case MagicEffect_FieldIndex.CounterEffects:
-                case MagicEffect_FieldIndex.Description:
-                case MagicEffect_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffect_FieldIndex.VirtualMachineAdapter:
-                case MagicEffect_FieldIndex.Name:
-                case MagicEffect_FieldIndex.MenuDisplayObject:
-                case MagicEffect_FieldIndex.Keywords:
-                case MagicEffect_FieldIndex.Flags:
-                case MagicEffect_FieldIndex.BaseCost:
-                case MagicEffect_FieldIndex.MagicSkill:
-                case MagicEffect_FieldIndex.ResistValue:
-                case MagicEffect_FieldIndex.CounterEffectCount:
-                case MagicEffect_FieldIndex.Unknown1:
-                case MagicEffect_FieldIndex.CastingLight:
-                case MagicEffect_FieldIndex.TaperWeight:
-                case MagicEffect_FieldIndex.HitShader:
-                case MagicEffect_FieldIndex.EnchantShader:
-                case MagicEffect_FieldIndex.MinimumSkillLevel:
-                case MagicEffect_FieldIndex.SpellmakingArea:
-                case MagicEffect_FieldIndex.SpellmakingCastingTime:
-                case MagicEffect_FieldIndex.TaperCurve:
-                case MagicEffect_FieldIndex.TaperDuration:
-                case MagicEffect_FieldIndex.SecondActorValueWeight:
-                case MagicEffect_FieldIndex.Archetype:
-                case MagicEffect_FieldIndex.Projectile:
-                case MagicEffect_FieldIndex.Explosion:
-                case MagicEffect_FieldIndex.CastType:
-                case MagicEffect_FieldIndex.TargetType:
-                case MagicEffect_FieldIndex.SecondActorValue:
-                case MagicEffect_FieldIndex.CastingArt:
-                case MagicEffect_FieldIndex.HitEffectArt:
-                case MagicEffect_FieldIndex.ImpactData:
-                case MagicEffect_FieldIndex.SkillUsageMultiplier:
-                case MagicEffect_FieldIndex.DualCastArt:
-                case MagicEffect_FieldIndex.DualCastScale:
-                case MagicEffect_FieldIndex.EnchantArt:
-                case MagicEffect_FieldIndex.Unknown2:
-                case MagicEffect_FieldIndex.Unknown3:
-                case MagicEffect_FieldIndex.EquipAbility:
-                case MagicEffect_FieldIndex.ImageSpaceModifier:
-                case MagicEffect_FieldIndex.PerkToApply:
-                case MagicEffect_FieldIndex.CastingSoundLevel:
-                case MagicEffect_FieldIndex.ScriptEffectAIScore:
-                case MagicEffect_FieldIndex.ScriptEffectAIDelayTime:
-                case MagicEffect_FieldIndex.CounterEffects:
-                case MagicEffect_FieldIndex.Sounds:
-                case MagicEffect_FieldIndex.Description:
-                case MagicEffect_FieldIndex.Conditions:
-                case MagicEffect_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffect_FieldIndex.VirtualMachineAdapter:
-                    return "VirtualMachineAdapter";
-                case MagicEffect_FieldIndex.Name:
-                    return "Name";
-                case MagicEffect_FieldIndex.MenuDisplayObject:
-                    return "MenuDisplayObject";
-                case MagicEffect_FieldIndex.Keywords:
-                    return "Keywords";
-                case MagicEffect_FieldIndex.Flags:
-                    return "Flags";
-                case MagicEffect_FieldIndex.BaseCost:
-                    return "BaseCost";
-                case MagicEffect_FieldIndex.MagicSkill:
-                    return "MagicSkill";
-                case MagicEffect_FieldIndex.ResistValue:
-                    return "ResistValue";
-                case MagicEffect_FieldIndex.CounterEffectCount:
-                    return "CounterEffectCount";
-                case MagicEffect_FieldIndex.Unknown1:
-                    return "Unknown1";
-                case MagicEffect_FieldIndex.CastingLight:
-                    return "CastingLight";
-                case MagicEffect_FieldIndex.TaperWeight:
-                    return "TaperWeight";
-                case MagicEffect_FieldIndex.HitShader:
-                    return "HitShader";
-                case MagicEffect_FieldIndex.EnchantShader:
-                    return "EnchantShader";
-                case MagicEffect_FieldIndex.MinimumSkillLevel:
-                    return "MinimumSkillLevel";
-                case MagicEffect_FieldIndex.SpellmakingArea:
-                    return "SpellmakingArea";
-                case MagicEffect_FieldIndex.SpellmakingCastingTime:
-                    return "SpellmakingCastingTime";
-                case MagicEffect_FieldIndex.TaperCurve:
-                    return "TaperCurve";
-                case MagicEffect_FieldIndex.TaperDuration:
-                    return "TaperDuration";
-                case MagicEffect_FieldIndex.SecondActorValueWeight:
-                    return "SecondActorValueWeight";
-                case MagicEffect_FieldIndex.Archetype:
-                    return "Archetype";
-                case MagicEffect_FieldIndex.Projectile:
-                    return "Projectile";
-                case MagicEffect_FieldIndex.Explosion:
-                    return "Explosion";
-                case MagicEffect_FieldIndex.CastType:
-                    return "CastType";
-                case MagicEffect_FieldIndex.TargetType:
-                    return "TargetType";
-                case MagicEffect_FieldIndex.SecondActorValue:
-                    return "SecondActorValue";
-                case MagicEffect_FieldIndex.CastingArt:
-                    return "CastingArt";
-                case MagicEffect_FieldIndex.HitEffectArt:
-                    return "HitEffectArt";
-                case MagicEffect_FieldIndex.ImpactData:
-                    return "ImpactData";
-                case MagicEffect_FieldIndex.SkillUsageMultiplier:
-                    return "SkillUsageMultiplier";
-                case MagicEffect_FieldIndex.DualCastArt:
-                    return "DualCastArt";
-                case MagicEffect_FieldIndex.DualCastScale:
-                    return "DualCastScale";
-                case MagicEffect_FieldIndex.EnchantArt:
-                    return "EnchantArt";
-                case MagicEffect_FieldIndex.Unknown2:
-                    return "Unknown2";
-                case MagicEffect_FieldIndex.Unknown3:
-                    return "Unknown3";
-                case MagicEffect_FieldIndex.EquipAbility:
-                    return "EquipAbility";
-                case MagicEffect_FieldIndex.ImageSpaceModifier:
-                    return "ImageSpaceModifier";
-                case MagicEffect_FieldIndex.PerkToApply:
-                    return "PerkToApply";
-                case MagicEffect_FieldIndex.CastingSoundLevel:
-                    return "CastingSoundLevel";
-                case MagicEffect_FieldIndex.ScriptEffectAIScore:
-                    return "ScriptEffectAIScore";
-                case MagicEffect_FieldIndex.ScriptEffectAIDelayTime:
-                    return "ScriptEffectAIDelayTime";
-                case MagicEffect_FieldIndex.CounterEffects:
-                    return "CounterEffects";
-                case MagicEffect_FieldIndex.Sounds:
-                    return "Sounds";
-                case MagicEffect_FieldIndex.Description:
-                    return "Description";
-                case MagicEffect_FieldIndex.Conditions:
-                    return "Conditions";
-                case MagicEffect_FieldIndex.DATADataTypeState:
-                    return "DATADataTypeState";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffect_FieldIndex.VirtualMachineAdapter:
-                case MagicEffect_FieldIndex.Name:
-                case MagicEffect_FieldIndex.MenuDisplayObject:
-                case MagicEffect_FieldIndex.Keywords:
-                case MagicEffect_FieldIndex.Flags:
-                case MagicEffect_FieldIndex.BaseCost:
-                case MagicEffect_FieldIndex.MagicSkill:
-                case MagicEffect_FieldIndex.ResistValue:
-                case MagicEffect_FieldIndex.CounterEffectCount:
-                case MagicEffect_FieldIndex.Unknown1:
-                case MagicEffect_FieldIndex.CastingLight:
-                case MagicEffect_FieldIndex.TaperWeight:
-                case MagicEffect_FieldIndex.HitShader:
-                case MagicEffect_FieldIndex.EnchantShader:
-                case MagicEffect_FieldIndex.MinimumSkillLevel:
-                case MagicEffect_FieldIndex.SpellmakingArea:
-                case MagicEffect_FieldIndex.SpellmakingCastingTime:
-                case MagicEffect_FieldIndex.TaperCurve:
-                case MagicEffect_FieldIndex.TaperDuration:
-                case MagicEffect_FieldIndex.SecondActorValueWeight:
-                case MagicEffect_FieldIndex.Archetype:
-                case MagicEffect_FieldIndex.Projectile:
-                case MagicEffect_FieldIndex.Explosion:
-                case MagicEffect_FieldIndex.CastType:
-                case MagicEffect_FieldIndex.TargetType:
-                case MagicEffect_FieldIndex.SecondActorValue:
-                case MagicEffect_FieldIndex.CastingArt:
-                case MagicEffect_FieldIndex.HitEffectArt:
-                case MagicEffect_FieldIndex.ImpactData:
-                case MagicEffect_FieldIndex.SkillUsageMultiplier:
-                case MagicEffect_FieldIndex.DualCastArt:
-                case MagicEffect_FieldIndex.DualCastScale:
-                case MagicEffect_FieldIndex.EnchantArt:
-                case MagicEffect_FieldIndex.Unknown2:
-                case MagicEffect_FieldIndex.Unknown3:
-                case MagicEffect_FieldIndex.EquipAbility:
-                case MagicEffect_FieldIndex.ImageSpaceModifier:
-                case MagicEffect_FieldIndex.PerkToApply:
-                case MagicEffect_FieldIndex.CastingSoundLevel:
-                case MagicEffect_FieldIndex.ScriptEffectAIScore:
-                case MagicEffect_FieldIndex.ScriptEffectAIDelayTime:
-                case MagicEffect_FieldIndex.CounterEffects:
-                case MagicEffect_FieldIndex.Sounds:
-                case MagicEffect_FieldIndex.Description:
-                case MagicEffect_FieldIndex.Conditions:
-                case MagicEffect_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffect_FieldIndex.VirtualMachineAdapter:
-                case MagicEffect_FieldIndex.Name:
-                case MagicEffect_FieldIndex.MenuDisplayObject:
-                case MagicEffect_FieldIndex.Keywords:
-                case MagicEffect_FieldIndex.Flags:
-                case MagicEffect_FieldIndex.BaseCost:
-                case MagicEffect_FieldIndex.MagicSkill:
-                case MagicEffect_FieldIndex.ResistValue:
-                case MagicEffect_FieldIndex.CounterEffectCount:
-                case MagicEffect_FieldIndex.Unknown1:
-                case MagicEffect_FieldIndex.CastingLight:
-                case MagicEffect_FieldIndex.TaperWeight:
-                case MagicEffect_FieldIndex.HitShader:
-                case MagicEffect_FieldIndex.EnchantShader:
-                case MagicEffect_FieldIndex.MinimumSkillLevel:
-                case MagicEffect_FieldIndex.SpellmakingArea:
-                case MagicEffect_FieldIndex.SpellmakingCastingTime:
-                case MagicEffect_FieldIndex.TaperCurve:
-                case MagicEffect_FieldIndex.TaperDuration:
-                case MagicEffect_FieldIndex.SecondActorValueWeight:
-                case MagicEffect_FieldIndex.Archetype:
-                case MagicEffect_FieldIndex.Projectile:
-                case MagicEffect_FieldIndex.Explosion:
-                case MagicEffect_FieldIndex.CastType:
-                case MagicEffect_FieldIndex.TargetType:
-                case MagicEffect_FieldIndex.SecondActorValue:
-                case MagicEffect_FieldIndex.CastingArt:
-                case MagicEffect_FieldIndex.HitEffectArt:
-                case MagicEffect_FieldIndex.ImpactData:
-                case MagicEffect_FieldIndex.SkillUsageMultiplier:
-                case MagicEffect_FieldIndex.DualCastArt:
-                case MagicEffect_FieldIndex.DualCastScale:
-                case MagicEffect_FieldIndex.EnchantArt:
-                case MagicEffect_FieldIndex.Unknown2:
-                case MagicEffect_FieldIndex.Unknown3:
-                case MagicEffect_FieldIndex.EquipAbility:
-                case MagicEffect_FieldIndex.ImageSpaceModifier:
-                case MagicEffect_FieldIndex.PerkToApply:
-                case MagicEffect_FieldIndex.CastingSoundLevel:
-                case MagicEffect_FieldIndex.ScriptEffectAIScore:
-                case MagicEffect_FieldIndex.ScriptEffectAIDelayTime:
-                case MagicEffect_FieldIndex.CounterEffects:
-                case MagicEffect_FieldIndex.Sounds:
-                case MagicEffect_FieldIndex.Description:
-                case MagicEffect_FieldIndex.Conditions:
-                case MagicEffect_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffect_FieldIndex.VirtualMachineAdapter:
-                    return typeof(VirtualMachineAdapter);
-                case MagicEffect_FieldIndex.Name:
-                    return typeof(TranslatedString);
-                case MagicEffect_FieldIndex.MenuDisplayObject:
-                    return typeof(FormLinkNullable<Static>);
-                case MagicEffect_FieldIndex.Keywords:
-                    return typeof(IExtendedList<IFormLink<Keyword>>);
-                case MagicEffect_FieldIndex.Flags:
-                    return typeof(MagicEffect.Flag);
-                case MagicEffect_FieldIndex.BaseCost:
-                    return typeof(Single);
-                case MagicEffect_FieldIndex.MagicSkill:
-                    return typeof(ActorValue);
-                case MagicEffect_FieldIndex.ResistValue:
-                    return typeof(ActorValue);
-                case MagicEffect_FieldIndex.CounterEffectCount:
-                    return typeof(UInt16);
-                case MagicEffect_FieldIndex.Unknown1:
-                    return typeof(UInt16);
-                case MagicEffect_FieldIndex.CastingLight:
-                    return typeof(FormLink<Light>);
-                case MagicEffect_FieldIndex.TaperWeight:
-                    return typeof(Single);
-                case MagicEffect_FieldIndex.HitShader:
-                    return typeof(FormLink<EffectShader>);
-                case MagicEffect_FieldIndex.EnchantShader:
-                    return typeof(FormLink<EffectShader>);
-                case MagicEffect_FieldIndex.MinimumSkillLevel:
-                    return typeof(UInt32);
-                case MagicEffect_FieldIndex.SpellmakingArea:
-                    return typeof(UInt32);
-                case MagicEffect_FieldIndex.SpellmakingCastingTime:
-                    return typeof(Single);
-                case MagicEffect_FieldIndex.TaperCurve:
-                    return typeof(Single);
-                case MagicEffect_FieldIndex.TaperDuration:
-                    return typeof(Single);
-                case MagicEffect_FieldIndex.SecondActorValueWeight:
-                    return typeof(Single);
-                case MagicEffect_FieldIndex.Archetype:
-                    return typeof(MagicEffectArchetype);
-                case MagicEffect_FieldIndex.Projectile:
-                    return typeof(FormLink<Projectile>);
-                case MagicEffect_FieldIndex.Explosion:
-                    return typeof(FormLink<Explosion>);
-                case MagicEffect_FieldIndex.CastType:
-                    return typeof(CastType);
-                case MagicEffect_FieldIndex.TargetType:
-                    return typeof(TargetType);
-                case MagicEffect_FieldIndex.SecondActorValue:
-                    return typeof(ActorValue);
-                case MagicEffect_FieldIndex.CastingArt:
-                    return typeof(FormLink<ArtObject>);
-                case MagicEffect_FieldIndex.HitEffectArt:
-                    return typeof(FormLink<ArtObject>);
-                case MagicEffect_FieldIndex.ImpactData:
-                    return typeof(FormLink<ImpactDataSet>);
-                case MagicEffect_FieldIndex.SkillUsageMultiplier:
-                    return typeof(Single);
-                case MagicEffect_FieldIndex.DualCastArt:
-                    return typeof(FormLink<DualCastData>);
-                case MagicEffect_FieldIndex.DualCastScale:
-                    return typeof(Single);
-                case MagicEffect_FieldIndex.EnchantArt:
-                    return typeof(FormLink<ArtObject>);
-                case MagicEffect_FieldIndex.Unknown2:
-                    return typeof(FormLink<SkyrimMajorRecord>);
-                case MagicEffect_FieldIndex.Unknown3:
-                    return typeof(FormLink<SkyrimMajorRecord>);
-                case MagicEffect_FieldIndex.EquipAbility:
-                    return typeof(FormLink<Spell>);
-                case MagicEffect_FieldIndex.ImageSpaceModifier:
-                    return typeof(FormLink<ImageSpaceAdapter>);
-                case MagicEffect_FieldIndex.PerkToApply:
-                    return typeof(FormLink<Perk>);
-                case MagicEffect_FieldIndex.CastingSoundLevel:
-                    return typeof(SoundLevel);
-                case MagicEffect_FieldIndex.ScriptEffectAIScore:
-                    return typeof(Single);
-                case MagicEffect_FieldIndex.ScriptEffectAIDelayTime:
-                    return typeof(Single);
-                case MagicEffect_FieldIndex.CounterEffects:
-                    return typeof(IExtendedList<IFormLink<MagicEffect>>);
-                case MagicEffect_FieldIndex.Sounds:
-                    return typeof(IExtendedList<MagicEffectSound>);
-                case MagicEffect_FieldIndex.Description:
-                    return typeof(TranslatedString);
-                case MagicEffect_FieldIndex.Conditions:
-                    return typeof(IExtendedList<Condition>);
-                case MagicEffect_FieldIndex.DATADataTypeState:
-                    return typeof(MagicEffect.DATADataType);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.MGEF;
         public static readonly Type BinaryWriteTranslation = typeof(MagicEffectBinaryWriteTranslation);
         #region Interface
@@ -3202,14 +2578,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -3227,7 +2603,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.VirtualMachineAdapter = null;
             item.Name = default;
-            item.MenuDisplayObject = FormLinkNullable<Static>.Null;
+            item.MenuDisplayObject = FormLinkNullable<IStaticGetter>.Null;
             item.Keywords = null;
             item.Flags = default;
             item.BaseCost = default;
@@ -3235,10 +2611,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ResistValue = MagicEffect._ResistValue_Default;
             item.CounterEffectCount = default;
             item.Unknown1 = default;
-            item.CastingLight = FormLink<Light>.Null;
+            item.CastingLight = FormLink<ILightGetter>.Null;
             item.TaperWeight = default;
-            item.HitShader = FormLink<EffectShader>.Null;
-            item.EnchantShader = FormLink<EffectShader>.Null;
+            item.HitShader = FormLink<IEffectShaderGetter>.Null;
+            item.EnchantShader = FormLink<IEffectShaderGetter>.Null;
             item.MinimumSkillLevel = default;
             item.SpellmakingArea = default;
             item.SpellmakingCastingTime = default;
@@ -3246,23 +2622,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.TaperDuration = default;
             item.SecondActorValueWeight = default;
             item.Archetype.Clear();
-            item.Projectile = FormLink<Projectile>.Null;
-            item.Explosion = FormLink<Explosion>.Null;
+            item.Projectile = FormLink<IProjectileGetter>.Null;
+            item.Explosion = FormLink<IExplosionGetter>.Null;
             item.CastType = default;
             item.TargetType = default;
             item.SecondActorValue = MagicEffect._SecondActorValue_Default;
-            item.CastingArt = FormLink<ArtObject>.Null;
-            item.HitEffectArt = FormLink<ArtObject>.Null;
-            item.ImpactData = FormLink<ImpactDataSet>.Null;
+            item.CastingArt = FormLink<IArtObjectGetter>.Null;
+            item.HitEffectArt = FormLink<IArtObjectGetter>.Null;
+            item.ImpactData = FormLink<IImpactDataSetGetter>.Null;
             item.SkillUsageMultiplier = default;
-            item.DualCastArt = FormLink<DualCastData>.Null;
+            item.DualCastArt = FormLink<IDualCastDataGetter>.Null;
             item.DualCastScale = default;
-            item.EnchantArt = FormLink<ArtObject>.Null;
-            item.Unknown2 = FormLink<SkyrimMajorRecord>.Null;
-            item.Unknown3 = FormLink<SkyrimMajorRecord>.Null;
-            item.EquipAbility = FormLink<Spell>.Null;
-            item.ImageSpaceModifier = FormLink<ImageSpaceAdapter>.Null;
-            item.PerkToApply = FormLink<Perk>.Null;
+            item.EnchantArt = FormLink<IArtObjectGetter>.Null;
+            item.Unknown2 = FormLink<ISkyrimMajorRecordGetter>.Null;
+            item.Unknown3 = FormLink<ISkyrimMajorRecordGetter>.Null;
+            item.EquipAbility = FormLink<ISpellGetter>.Null;
+            item.ImageSpaceModifier = FormLink<IImageSpaceAdapterGetter>.Null;
+            item.PerkToApply = FormLink<IPerkGetter>.Null;
             item.CastingSoundLevel = default;
             item.ScriptEffectAIScore = default;
             item.ScriptEffectAIDelayTime = default;
@@ -4040,7 +3416,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.MenuDisplayObject) ?? true))
             {
-                item.MenuDisplayObject = new FormLinkNullable<Static>(rhs.MenuDisplayObject.FormKey);
+                item.MenuDisplayObject = new FormLinkNullable<IStaticGetter>(rhs.MenuDisplayObject.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Keywords) ?? true))
             {
@@ -4051,8 +3427,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLink<Keyword>)new FormLink<Keyword>(r.FormKey))
-                            .ToExtendedList<IFormLink<Keyword>>();
+                            .Select(r => (IFormLink<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IKeywordGetter>>();
                     }
                     else
                     {
@@ -4095,7 +3471,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastingLight) ?? true))
             {
-                item.CastingLight = new FormLink<Light>(rhs.CastingLight.FormKey);
+                item.CastingLight = new FormLink<ILightGetter>(rhs.CastingLight.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.TaperWeight) ?? true))
             {
@@ -4103,11 +3479,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.HitShader) ?? true))
             {
-                item.HitShader = new FormLink<EffectShader>(rhs.HitShader.FormKey);
+                item.HitShader = new FormLink<IEffectShaderGetter>(rhs.HitShader.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.EnchantShader) ?? true))
             {
-                item.EnchantShader = new FormLink<EffectShader>(rhs.EnchantShader.FormKey);
+                item.EnchantShader = new FormLink<IEffectShaderGetter>(rhs.EnchantShader.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.MinimumSkillLevel) ?? true))
             {
@@ -4157,11 +3533,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Projectile) ?? true))
             {
-                item.Projectile = new FormLink<Projectile>(rhs.Projectile.FormKey);
+                item.Projectile = new FormLink<IProjectileGetter>(rhs.Projectile.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Explosion) ?? true))
             {
-                item.Explosion = new FormLink<Explosion>(rhs.Explosion.FormKey);
+                item.Explosion = new FormLink<IExplosionGetter>(rhs.Explosion.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastType) ?? true))
             {
@@ -4177,15 +3553,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastingArt) ?? true))
             {
-                item.CastingArt = new FormLink<ArtObject>(rhs.CastingArt.FormKey);
+                item.CastingArt = new FormLink<IArtObjectGetter>(rhs.CastingArt.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.HitEffectArt) ?? true))
             {
-                item.HitEffectArt = new FormLink<ArtObject>(rhs.HitEffectArt.FormKey);
+                item.HitEffectArt = new FormLink<IArtObjectGetter>(rhs.HitEffectArt.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ImpactData) ?? true))
             {
-                item.ImpactData = new FormLink<ImpactDataSet>(rhs.ImpactData.FormKey);
+                item.ImpactData = new FormLink<IImpactDataSetGetter>(rhs.ImpactData.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SkillUsageMultiplier) ?? true))
             {
@@ -4193,7 +3569,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.DualCastArt) ?? true))
             {
-                item.DualCastArt = new FormLink<DualCastData>(rhs.DualCastArt.FormKey);
+                item.DualCastArt = new FormLink<IDualCastDataGetter>(rhs.DualCastArt.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.DualCastScale) ?? true))
             {
@@ -4201,27 +3577,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.EnchantArt) ?? true))
             {
-                item.EnchantArt = new FormLink<ArtObject>(rhs.EnchantArt.FormKey);
+                item.EnchantArt = new FormLink<IArtObjectGetter>(rhs.EnchantArt.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown2) ?? true))
             {
-                item.Unknown2 = new FormLink<SkyrimMajorRecord>(rhs.Unknown2.FormKey);
+                item.Unknown2 = new FormLink<ISkyrimMajorRecordGetter>(rhs.Unknown2.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown3) ?? true))
             {
-                item.Unknown3 = new FormLink<SkyrimMajorRecord>(rhs.Unknown3.FormKey);
+                item.Unknown3 = new FormLink<ISkyrimMajorRecordGetter>(rhs.Unknown3.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.EquipAbility) ?? true))
             {
-                item.EquipAbility = new FormLink<Spell>(rhs.EquipAbility.FormKey);
+                item.EquipAbility = new FormLink<ISpellGetter>(rhs.EquipAbility.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ImageSpaceModifier) ?? true))
             {
-                item.ImageSpaceModifier = new FormLink<ImageSpaceAdapter>(rhs.ImageSpaceModifier.FormKey);
+                item.ImageSpaceModifier = new FormLink<IImageSpaceAdapterGetter>(rhs.ImageSpaceModifier.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.PerkToApply) ?? true))
             {
-                item.PerkToApply = new FormLink<Perk>(rhs.PerkToApply.FormKey);
+                item.PerkToApply = new FormLink<IPerkGetter>(rhs.PerkToApply.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastingSoundLevel) ?? true))
             {
@@ -4242,7 +3618,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.CounterEffects.SetTo(
                         rhs.CounterEffects
-                        .Select(r => (IFormLink<MagicEffect>)new FormLink<MagicEffect>(r.FormKey)));
+                        .Select(r => (IFormLink<IMagicEffectGetter>)new FormLink<IMagicEffectGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4809,13 +4185,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KSIZ:
                 {
                     item.Keywords = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<Keyword>>();
+                        .CastExtendedList<IFormLink<IKeywordGetter>>();
                     return (int)MagicEffect_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DATA:
@@ -4899,7 +4275,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.ESCE:
                 {
                     item.CounterEffects.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<MagicEffect>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IMagicEffectGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.ESCE),
                             transl: FormLinkBinaryTranslation.Instance.Parse));

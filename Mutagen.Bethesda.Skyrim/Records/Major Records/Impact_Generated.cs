@@ -89,29 +89,19 @@ namespace Mutagen.Bethesda.Skyrim
         IDecalGetter? IImpactGetter.Decal => this.Decal;
         #endregion
         #region TextureSet
-        public FormLinkNullable<TextureSet> TextureSet { get; set; } = new FormLinkNullable<TextureSet>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ITextureSetGetter> IImpactGetter.TextureSet => this.TextureSet.ToGetter<TextureSet, ITextureSetGetter>();
+        public FormLinkNullable<ITextureSetGetter> TextureSet { get; set; } = new FormLinkNullable<ITextureSetGetter>();
         #endregion
         #region SecondaryTextureSet
-        public FormLinkNullable<TextureSet> SecondaryTextureSet { get; set; } = new FormLinkNullable<TextureSet>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ITextureSetGetter> IImpactGetter.SecondaryTextureSet => this.SecondaryTextureSet.ToGetter<TextureSet, ITextureSetGetter>();
+        public FormLinkNullable<ITextureSetGetter> SecondaryTextureSet { get; set; } = new FormLinkNullable<ITextureSetGetter>();
         #endregion
         #region Sound1
-        public FormLinkNullable<ISound> Sound1 { get; set; } = new FormLinkNullable<ISound>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundGetter> IImpactGetter.Sound1 => this.Sound1.ToGetter<ISound, ISoundGetter>();
+        public FormLinkNullable<ISoundGetter> Sound1 { get; set; } = new FormLinkNullable<ISoundGetter>();
         #endregion
         #region Sound2
-        public FormLinkNullable<ISound> Sound2 { get; set; } = new FormLinkNullable<ISound>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundGetter> IImpactGetter.Sound2 => this.Sound2.ToGetter<ISound, ISoundGetter>();
+        public FormLinkNullable<ISoundGetter> Sound2 { get; set; } = new FormLinkNullable<ISoundGetter>();
         #endregion
         #region Hazard
-        public FormLinkNullable<Hazard> Hazard { get; set; } = new FormLinkNullable<Hazard>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IHazardGetter> IImpactGetter.Hazard => this.Hazard.ToGetter<Hazard, IHazardGetter>();
+        public FormLinkNullable<IHazardGetter> Hazard { get; set; } = new FormLinkNullable<IHazardGetter>();
         #endregion
         #region DATADataTypeState
         public Impact.DATADataType DATADataTypeState { get; set; } = default;
@@ -959,11 +949,11 @@ namespace Mutagen.Bethesda.Skyrim
         new Impact.ResultType Result { get; set; }
         new Int16 Unknown { get; set; }
         new Decal? Decal { get; set; }
-        new FormLinkNullable<TextureSet> TextureSet { get; set; }
-        new FormLinkNullable<TextureSet> SecondaryTextureSet { get; set; }
-        new FormLinkNullable<ISound> Sound1 { get; set; }
-        new FormLinkNullable<ISound> Sound2 { get; set; }
-        new FormLinkNullable<Hazard> Hazard { get; set; }
+        new FormLinkNullable<ITextureSetGetter> TextureSet { get; set; }
+        new FormLinkNullable<ITextureSetGetter> SecondaryTextureSet { get; set; }
+        new FormLinkNullable<ISoundGetter> Sound1 { get; set; }
+        new FormLinkNullable<ISoundGetter> Sound2 { get; set; }
+        new FormLinkNullable<IHazardGetter> Hazard { get; set; }
         new Impact.DATADataType DATADataTypeState { get; set; }
     }
 
@@ -1207,267 +1197,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "MODEL":
-                    return (ushort)Impact_FieldIndex.Model;
-                case "DURATION":
-                    return (ushort)Impact_FieldIndex.Duration;
-                case "ORIENTATION":
-                    return (ushort)Impact_FieldIndex.Orientation;
-                case "ANGLETHRESHOLD":
-                    return (ushort)Impact_FieldIndex.AngleThreshold;
-                case "PLACEMENTRADIUS":
-                    return (ushort)Impact_FieldIndex.PlacementRadius;
-                case "SOUNDLEVEL":
-                    return (ushort)Impact_FieldIndex.SoundLevel;
-                case "FLAGS":
-                    return (ushort)Impact_FieldIndex.Flags;
-                case "RESULT":
-                    return (ushort)Impact_FieldIndex.Result;
-                case "UNKNOWN":
-                    return (ushort)Impact_FieldIndex.Unknown;
-                case "DECAL":
-                    return (ushort)Impact_FieldIndex.Decal;
-                case "TEXTURESET":
-                    return (ushort)Impact_FieldIndex.TextureSet;
-                case "SECONDARYTEXTURESET":
-                    return (ushort)Impact_FieldIndex.SecondaryTextureSet;
-                case "SOUND1":
-                    return (ushort)Impact_FieldIndex.Sound1;
-                case "SOUND2":
-                    return (ushort)Impact_FieldIndex.Sound2;
-                case "HAZARD":
-                    return (ushort)Impact_FieldIndex.Hazard;
-                case "DATADATATYPESTATE":
-                    return (ushort)Impact_FieldIndex.DATADataTypeState;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Impact_FieldIndex enu = (Impact_FieldIndex)index;
-            switch (enu)
-            {
-                case Impact_FieldIndex.Model:
-                case Impact_FieldIndex.Duration:
-                case Impact_FieldIndex.Orientation:
-                case Impact_FieldIndex.AngleThreshold:
-                case Impact_FieldIndex.PlacementRadius:
-                case Impact_FieldIndex.SoundLevel:
-                case Impact_FieldIndex.Flags:
-                case Impact_FieldIndex.Result:
-                case Impact_FieldIndex.Unknown:
-                case Impact_FieldIndex.Decal:
-                case Impact_FieldIndex.TextureSet:
-                case Impact_FieldIndex.SecondaryTextureSet:
-                case Impact_FieldIndex.Sound1:
-                case Impact_FieldIndex.Sound2:
-                case Impact_FieldIndex.Hazard:
-                case Impact_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Impact_FieldIndex enu = (Impact_FieldIndex)index;
-            switch (enu)
-            {
-                case Impact_FieldIndex.Model:
-                case Impact_FieldIndex.Decal:
-                    return true;
-                case Impact_FieldIndex.Duration:
-                case Impact_FieldIndex.Orientation:
-                case Impact_FieldIndex.AngleThreshold:
-                case Impact_FieldIndex.PlacementRadius:
-                case Impact_FieldIndex.SoundLevel:
-                case Impact_FieldIndex.Flags:
-                case Impact_FieldIndex.Result:
-                case Impact_FieldIndex.Unknown:
-                case Impact_FieldIndex.TextureSet:
-                case Impact_FieldIndex.SecondaryTextureSet:
-                case Impact_FieldIndex.Sound1:
-                case Impact_FieldIndex.Sound2:
-                case Impact_FieldIndex.Hazard:
-                case Impact_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Impact_FieldIndex enu = (Impact_FieldIndex)index;
-            switch (enu)
-            {
-                case Impact_FieldIndex.Model:
-                case Impact_FieldIndex.Duration:
-                case Impact_FieldIndex.Orientation:
-                case Impact_FieldIndex.AngleThreshold:
-                case Impact_FieldIndex.PlacementRadius:
-                case Impact_FieldIndex.SoundLevel:
-                case Impact_FieldIndex.Flags:
-                case Impact_FieldIndex.Result:
-                case Impact_FieldIndex.Unknown:
-                case Impact_FieldIndex.Decal:
-                case Impact_FieldIndex.TextureSet:
-                case Impact_FieldIndex.SecondaryTextureSet:
-                case Impact_FieldIndex.Sound1:
-                case Impact_FieldIndex.Sound2:
-                case Impact_FieldIndex.Hazard:
-                case Impact_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Impact_FieldIndex enu = (Impact_FieldIndex)index;
-            switch (enu)
-            {
-                case Impact_FieldIndex.Model:
-                    return "Model";
-                case Impact_FieldIndex.Duration:
-                    return "Duration";
-                case Impact_FieldIndex.Orientation:
-                    return "Orientation";
-                case Impact_FieldIndex.AngleThreshold:
-                    return "AngleThreshold";
-                case Impact_FieldIndex.PlacementRadius:
-                    return "PlacementRadius";
-                case Impact_FieldIndex.SoundLevel:
-                    return "SoundLevel";
-                case Impact_FieldIndex.Flags:
-                    return "Flags";
-                case Impact_FieldIndex.Result:
-                    return "Result";
-                case Impact_FieldIndex.Unknown:
-                    return "Unknown";
-                case Impact_FieldIndex.Decal:
-                    return "Decal";
-                case Impact_FieldIndex.TextureSet:
-                    return "TextureSet";
-                case Impact_FieldIndex.SecondaryTextureSet:
-                    return "SecondaryTextureSet";
-                case Impact_FieldIndex.Sound1:
-                    return "Sound1";
-                case Impact_FieldIndex.Sound2:
-                    return "Sound2";
-                case Impact_FieldIndex.Hazard:
-                    return "Hazard";
-                case Impact_FieldIndex.DATADataTypeState:
-                    return "DATADataTypeState";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Impact_FieldIndex enu = (Impact_FieldIndex)index;
-            switch (enu)
-            {
-                case Impact_FieldIndex.Model:
-                case Impact_FieldIndex.Duration:
-                case Impact_FieldIndex.Orientation:
-                case Impact_FieldIndex.AngleThreshold:
-                case Impact_FieldIndex.PlacementRadius:
-                case Impact_FieldIndex.SoundLevel:
-                case Impact_FieldIndex.Flags:
-                case Impact_FieldIndex.Result:
-                case Impact_FieldIndex.Unknown:
-                case Impact_FieldIndex.Decal:
-                case Impact_FieldIndex.TextureSet:
-                case Impact_FieldIndex.SecondaryTextureSet:
-                case Impact_FieldIndex.Sound1:
-                case Impact_FieldIndex.Sound2:
-                case Impact_FieldIndex.Hazard:
-                case Impact_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Impact_FieldIndex enu = (Impact_FieldIndex)index;
-            switch (enu)
-            {
-                case Impact_FieldIndex.Model:
-                case Impact_FieldIndex.Duration:
-                case Impact_FieldIndex.Orientation:
-                case Impact_FieldIndex.AngleThreshold:
-                case Impact_FieldIndex.PlacementRadius:
-                case Impact_FieldIndex.SoundLevel:
-                case Impact_FieldIndex.Flags:
-                case Impact_FieldIndex.Result:
-                case Impact_FieldIndex.Unknown:
-                case Impact_FieldIndex.Decal:
-                case Impact_FieldIndex.TextureSet:
-                case Impact_FieldIndex.SecondaryTextureSet:
-                case Impact_FieldIndex.Sound1:
-                case Impact_FieldIndex.Sound2:
-                case Impact_FieldIndex.Hazard:
-                case Impact_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Impact_FieldIndex enu = (Impact_FieldIndex)index;
-            switch (enu)
-            {
-                case Impact_FieldIndex.Model:
-                    return typeof(Model);
-                case Impact_FieldIndex.Duration:
-                    return typeof(Single);
-                case Impact_FieldIndex.Orientation:
-                    return typeof(Impact.OrientationType);
-                case Impact_FieldIndex.AngleThreshold:
-                    return typeof(Single);
-                case Impact_FieldIndex.PlacementRadius:
-                    return typeof(Single);
-                case Impact_FieldIndex.SoundLevel:
-                    return typeof(SoundLevel);
-                case Impact_FieldIndex.Flags:
-                    return typeof(Impact.Flag);
-                case Impact_FieldIndex.Result:
-                    return typeof(Impact.ResultType);
-                case Impact_FieldIndex.Unknown:
-                    return typeof(Int16);
-                case Impact_FieldIndex.Decal:
-                    return typeof(Decal);
-                case Impact_FieldIndex.TextureSet:
-                    return typeof(FormLinkNullable<TextureSet>);
-                case Impact_FieldIndex.SecondaryTextureSet:
-                    return typeof(FormLinkNullable<TextureSet>);
-                case Impact_FieldIndex.Sound1:
-                    return typeof(FormLinkNullable<ISound>);
-                case Impact_FieldIndex.Sound2:
-                    return typeof(FormLinkNullable<ISound>);
-                case Impact_FieldIndex.Hazard:
-                    return typeof(FormLinkNullable<Hazard>);
-                case Impact_FieldIndex.DATADataTypeState:
-                    return typeof(Impact.DATADataType);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.IPCT;
         public static readonly Type BinaryWriteTranslation = typeof(ImpactBinaryWriteTranslation);
         #region Interface
@@ -1488,14 +1217,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1521,11 +1250,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Result = default;
             item.Unknown = default;
             item.Decal = null;
-            item.TextureSet = FormLinkNullable<TextureSet>.Null;
-            item.SecondaryTextureSet = FormLinkNullable<TextureSet>.Null;
-            item.Sound1 = FormLinkNullable<ISound>.Null;
-            item.Sound2 = FormLinkNullable<ISound>.Null;
-            item.Hazard = FormLinkNullable<Hazard>.Null;
+            item.TextureSet = FormLinkNullable<ITextureSetGetter>.Null;
+            item.SecondaryTextureSet = FormLinkNullable<ITextureSetGetter>.Null;
+            item.Sound1 = FormLinkNullable<ISoundGetter>.Null;
+            item.Sound2 = FormLinkNullable<ISoundGetter>.Null;
+            item.Hazard = FormLinkNullable<IHazardGetter>.Null;
             item.DATADataTypeState = default;
             base.Clear(item);
         }
@@ -2048,23 +1777,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.TextureSet) ?? true))
             {
-                item.TextureSet = new FormLinkNullable<TextureSet>(rhs.TextureSet.FormKey);
+                item.TextureSet = new FormLinkNullable<ITextureSetGetter>(rhs.TextureSet.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.SecondaryTextureSet) ?? true))
             {
-                item.SecondaryTextureSet = new FormLinkNullable<TextureSet>(rhs.SecondaryTextureSet.FormKey);
+                item.SecondaryTextureSet = new FormLinkNullable<ITextureSetGetter>(rhs.SecondaryTextureSet.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.Sound1) ?? true))
             {
-                item.Sound1 = new FormLinkNullable<ISound>(rhs.Sound1.FormKey);
+                item.Sound1 = new FormLinkNullable<ISoundGetter>(rhs.Sound1.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.Sound2) ?? true))
             {
-                item.Sound2 = new FormLinkNullable<ISound>(rhs.Sound2.FormKey);
+                item.Sound2 = new FormLinkNullable<ISoundGetter>(rhs.Sound2.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.Hazard) ?? true))
             {
-                item.Hazard = new FormLinkNullable<Hazard>(rhs.Hazard.FormKey);
+                item.Hazard = new FormLinkNullable<IHazardGetter>(rhs.Hazard.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.DATADataTypeState) ?? true))
             {

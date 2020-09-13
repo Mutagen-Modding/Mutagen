@@ -896,178 +896,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "COMPAREOPERATOR":
-                    return (ushort)Condition_FieldIndex.CompareOperator;
-                case "FLAGS":
-                    return (ushort)Condition_FieldIndex.Flags;
-                case "FLUFF":
-                    return (ushort)Condition_FieldIndex.Fluff;
-                case "COMPARISONVALUE":
-                    return (ushort)Condition_FieldIndex.ComparisonValue;
-                case "FUNCTION":
-                    return (ushort)Condition_FieldIndex.Function;
-                case "FIRSTPARAMETER":
-                    return (ushort)Condition_FieldIndex.FirstParameter;
-                case "SECONDPARAMETER":
-                    return (ushort)Condition_FieldIndex.SecondParameter;
-                case "THIRDPARAMETER":
-                    return (ushort)Condition_FieldIndex.ThirdParameter;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Condition_FieldIndex enu = (Condition_FieldIndex)index;
-            switch (enu)
-            {
-                case Condition_FieldIndex.CompareOperator:
-                case Condition_FieldIndex.Flags:
-                case Condition_FieldIndex.Fluff:
-                case Condition_FieldIndex.ComparisonValue:
-                case Condition_FieldIndex.Function:
-                case Condition_FieldIndex.FirstParameter:
-                case Condition_FieldIndex.SecondParameter:
-                case Condition_FieldIndex.ThirdParameter:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Condition_FieldIndex enu = (Condition_FieldIndex)index;
-            switch (enu)
-            {
-                case Condition_FieldIndex.CompareOperator:
-                case Condition_FieldIndex.Flags:
-                case Condition_FieldIndex.Fluff:
-                case Condition_FieldIndex.ComparisonValue:
-                case Condition_FieldIndex.Function:
-                case Condition_FieldIndex.FirstParameter:
-                case Condition_FieldIndex.SecondParameter:
-                case Condition_FieldIndex.ThirdParameter:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Condition_FieldIndex enu = (Condition_FieldIndex)index;
-            switch (enu)
-            {
-                case Condition_FieldIndex.CompareOperator:
-                case Condition_FieldIndex.Flags:
-                case Condition_FieldIndex.Fluff:
-                case Condition_FieldIndex.ComparisonValue:
-                case Condition_FieldIndex.Function:
-                case Condition_FieldIndex.FirstParameter:
-                case Condition_FieldIndex.SecondParameter:
-                case Condition_FieldIndex.ThirdParameter:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Condition_FieldIndex enu = (Condition_FieldIndex)index;
-            switch (enu)
-            {
-                case Condition_FieldIndex.CompareOperator:
-                    return "CompareOperator";
-                case Condition_FieldIndex.Flags:
-                    return "Flags";
-                case Condition_FieldIndex.Fluff:
-                    return "Fluff";
-                case Condition_FieldIndex.ComparisonValue:
-                    return "ComparisonValue";
-                case Condition_FieldIndex.Function:
-                    return "Function";
-                case Condition_FieldIndex.FirstParameter:
-                    return "FirstParameter";
-                case Condition_FieldIndex.SecondParameter:
-                    return "SecondParameter";
-                case Condition_FieldIndex.ThirdParameter:
-                    return "ThirdParameter";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Condition_FieldIndex enu = (Condition_FieldIndex)index;
-            switch (enu)
-            {
-                case Condition_FieldIndex.CompareOperator:
-                case Condition_FieldIndex.Flags:
-                case Condition_FieldIndex.Fluff:
-                case Condition_FieldIndex.ComparisonValue:
-                case Condition_FieldIndex.Function:
-                case Condition_FieldIndex.FirstParameter:
-                case Condition_FieldIndex.SecondParameter:
-                case Condition_FieldIndex.ThirdParameter:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Condition_FieldIndex enu = (Condition_FieldIndex)index;
-            switch (enu)
-            {
-                case Condition_FieldIndex.CompareOperator:
-                case Condition_FieldIndex.Flags:
-                case Condition_FieldIndex.Fluff:
-                case Condition_FieldIndex.ComparisonValue:
-                case Condition_FieldIndex.Function:
-                case Condition_FieldIndex.FirstParameter:
-                case Condition_FieldIndex.SecondParameter:
-                case Condition_FieldIndex.ThirdParameter:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Condition_FieldIndex enu = (Condition_FieldIndex)index;
-            switch (enu)
-            {
-                case Condition_FieldIndex.CompareOperator:
-                    return typeof(CompareOperator);
-                case Condition_FieldIndex.Flags:
-                    return typeof(Condition.Flag);
-                case Condition_FieldIndex.Fluff:
-                    return typeof(MemorySlice<Byte>);
-                case Condition_FieldIndex.ComparisonValue:
-                    return typeof(Single);
-                case Condition_FieldIndex.Function:
-                    return typeof(Function);
-                case Condition_FieldIndex.FirstParameter:
-                    return typeof(Int32);
-                case Condition_FieldIndex.SecondParameter:
-                    return typeof(Int32);
-                case Condition_FieldIndex.ThirdParameter:
-                    return typeof(Int32);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1099,14 +927,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

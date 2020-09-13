@@ -776,145 +776,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "ACTION":
-                    return (ushort)SkillData_FieldIndex.Action;
-                case "ATTRIBUTE":
-                    return (ushort)SkillData_FieldIndex.Attribute;
-                case "SPECIALIZATION":
-                    return (ushort)SkillData_FieldIndex.Specialization;
-                case "USEVALUEFIRST":
-                    return (ushort)SkillData_FieldIndex.UseValueFirst;
-                case "USEVALUESECOND":
-                    return (ushort)SkillData_FieldIndex.UseValueSecond;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            SkillData_FieldIndex enu = (SkillData_FieldIndex)index;
-            switch (enu)
-            {
-                case SkillData_FieldIndex.Action:
-                case SkillData_FieldIndex.Attribute:
-                case SkillData_FieldIndex.Specialization:
-                case SkillData_FieldIndex.UseValueFirst:
-                case SkillData_FieldIndex.UseValueSecond:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            SkillData_FieldIndex enu = (SkillData_FieldIndex)index;
-            switch (enu)
-            {
-                case SkillData_FieldIndex.Action:
-                case SkillData_FieldIndex.Attribute:
-                case SkillData_FieldIndex.Specialization:
-                case SkillData_FieldIndex.UseValueFirst:
-                case SkillData_FieldIndex.UseValueSecond:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            SkillData_FieldIndex enu = (SkillData_FieldIndex)index;
-            switch (enu)
-            {
-                case SkillData_FieldIndex.Action:
-                case SkillData_FieldIndex.Attribute:
-                case SkillData_FieldIndex.Specialization:
-                case SkillData_FieldIndex.UseValueFirst:
-                case SkillData_FieldIndex.UseValueSecond:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            SkillData_FieldIndex enu = (SkillData_FieldIndex)index;
-            switch (enu)
-            {
-                case SkillData_FieldIndex.Action:
-                    return "Action";
-                case SkillData_FieldIndex.Attribute:
-                    return "Attribute";
-                case SkillData_FieldIndex.Specialization:
-                    return "Specialization";
-                case SkillData_FieldIndex.UseValueFirst:
-                    return "UseValueFirst";
-                case SkillData_FieldIndex.UseValueSecond:
-                    return "UseValueSecond";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            SkillData_FieldIndex enu = (SkillData_FieldIndex)index;
-            switch (enu)
-            {
-                case SkillData_FieldIndex.Action:
-                case SkillData_FieldIndex.Attribute:
-                case SkillData_FieldIndex.Specialization:
-                case SkillData_FieldIndex.UseValueFirst:
-                case SkillData_FieldIndex.UseValueSecond:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            SkillData_FieldIndex enu = (SkillData_FieldIndex)index;
-            switch (enu)
-            {
-                case SkillData_FieldIndex.Action:
-                case SkillData_FieldIndex.Attribute:
-                case SkillData_FieldIndex.Specialization:
-                case SkillData_FieldIndex.UseValueFirst:
-                case SkillData_FieldIndex.UseValueSecond:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            SkillData_FieldIndex enu = (SkillData_FieldIndex)index;
-            switch (enu)
-            {
-                case SkillData_FieldIndex.Action:
-                    return typeof(ActorValue);
-                case SkillData_FieldIndex.Attribute:
-                    return typeof(ActorValue);
-                case SkillData_FieldIndex.Specialization:
-                    return typeof(Specialization);
-                case SkillData_FieldIndex.UseValueFirst:
-                    return typeof(Single);
-                case SkillData_FieldIndex.UseValueSecond:
-                    return typeof(Single);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.DATA;
         public static readonly Type BinaryWriteTranslation = typeof(SkillDataBinaryWriteTranslation);
         #region Interface
@@ -935,14 +796,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

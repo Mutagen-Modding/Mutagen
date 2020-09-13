@@ -68,8 +68,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ExtraParts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<HeadPart>> _ExtraParts = new ExtendedList<IFormLink<HeadPart>>();
-        public IExtendedList<IFormLink<HeadPart>> ExtraParts
+        private ExtendedList<IFormLink<IHeadPartGetter>> _ExtraParts = new ExtendedList<IFormLink<IHeadPartGetter>>();
+        public ExtendedList<IFormLink<IHeadPartGetter>> ExtraParts
         {
             get => this._ExtraParts;
             protected set => this._ExtraParts = value;
@@ -82,8 +82,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Parts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Part> _Parts = new ExtendedList<Part>();
-        public IExtendedList<Part> Parts
+        private ExtendedList<Part> _Parts = new ExtendedList<Part>();
+        public ExtendedList<Part> Parts
         {
             get => this._Parts;
             protected set => this._Parts = value;
@@ -95,19 +95,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region TextureSet
-        public FormLinkNullable<TextureSet> TextureSet { get; set; } = new FormLinkNullable<TextureSet>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ITextureSetGetter> IHeadPartGetter.TextureSet => this.TextureSet.ToGetter<TextureSet, ITextureSetGetter>();
+        public FormLinkNullable<ITextureSetGetter> TextureSet { get; set; } = new FormLinkNullable<ITextureSetGetter>();
         #endregion
         #region Color
-        public FormLinkNullable<ColorRecord> Color { get; set; } = new FormLinkNullable<ColorRecord>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IColorRecordGetter> IHeadPartGetter.Color => this.Color.ToGetter<ColorRecord, IColorRecordGetter>();
+        public FormLinkNullable<IColorRecordGetter> Color { get; set; } = new FormLinkNullable<IColorRecordGetter>();
         #endregion
         #region ValidRaces
-        public FormLinkNullable<FormList> ValidRaces { get; set; } = new FormLinkNullable<FormList>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IFormListGetter> IHeadPartGetter.ValidRaces => this.ValidRaces.ToGetter<FormList, IFormListGetter>();
+        public FormLinkNullable<IFormListGetter> ValidRaces { get; set; } = new FormLinkNullable<IFormListGetter>();
         #endregion
 
         #region To String
@@ -893,11 +887,11 @@ namespace Mutagen.Bethesda.Skyrim
         new Model? Model { get; set; }
         new HeadPart.Flag Flags { get; set; }
         new HeadPart.TypeEnum? Type { get; set; }
-        new IExtendedList<IFormLink<HeadPart>> ExtraParts { get; }
-        new IExtendedList<Part> Parts { get; }
-        new FormLinkNullable<TextureSet> TextureSet { get; set; }
-        new FormLinkNullable<ColorRecord> Color { get; set; }
-        new FormLinkNullable<FormList> ValidRaces { get; set; }
+        new ExtendedList<IFormLink<IHeadPartGetter>> ExtraParts { get; }
+        new ExtendedList<Part> Parts { get; }
+        new FormLinkNullable<ITextureSetGetter> TextureSet { get; set; }
+        new FormLinkNullable<IColorRecordGetter> Color { get; set; }
+        new FormLinkNullable<IFormListGetter> ValidRaces { get; set; }
         #region Mutagen
         new HeadPart.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1135,191 +1129,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "NAME":
-                    return (ushort)HeadPart_FieldIndex.Name;
-                case "MODEL":
-                    return (ushort)HeadPart_FieldIndex.Model;
-                case "FLAGS":
-                    return (ushort)HeadPart_FieldIndex.Flags;
-                case "TYPE":
-                    return (ushort)HeadPart_FieldIndex.Type;
-                case "EXTRAPARTS":
-                    return (ushort)HeadPart_FieldIndex.ExtraParts;
-                case "PARTS":
-                    return (ushort)HeadPart_FieldIndex.Parts;
-                case "TEXTURESET":
-                    return (ushort)HeadPart_FieldIndex.TextureSet;
-                case "COLOR":
-                    return (ushort)HeadPart_FieldIndex.Color;
-                case "VALIDRACES":
-                    return (ushort)HeadPart_FieldIndex.ValidRaces;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            HeadPart_FieldIndex enu = (HeadPart_FieldIndex)index;
-            switch (enu)
-            {
-                case HeadPart_FieldIndex.ExtraParts:
-                case HeadPart_FieldIndex.Parts:
-                    return true;
-                case HeadPart_FieldIndex.Name:
-                case HeadPart_FieldIndex.Model:
-                case HeadPart_FieldIndex.Flags:
-                case HeadPart_FieldIndex.Type:
-                case HeadPart_FieldIndex.TextureSet:
-                case HeadPart_FieldIndex.Color:
-                case HeadPart_FieldIndex.ValidRaces:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            HeadPart_FieldIndex enu = (HeadPart_FieldIndex)index;
-            switch (enu)
-            {
-                case HeadPart_FieldIndex.Model:
-                case HeadPart_FieldIndex.Parts:
-                    return true;
-                case HeadPart_FieldIndex.Name:
-                case HeadPart_FieldIndex.Flags:
-                case HeadPart_FieldIndex.Type:
-                case HeadPart_FieldIndex.ExtraParts:
-                case HeadPart_FieldIndex.TextureSet:
-                case HeadPart_FieldIndex.Color:
-                case HeadPart_FieldIndex.ValidRaces:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            HeadPart_FieldIndex enu = (HeadPart_FieldIndex)index;
-            switch (enu)
-            {
-                case HeadPart_FieldIndex.Name:
-                case HeadPart_FieldIndex.Model:
-                case HeadPart_FieldIndex.Flags:
-                case HeadPart_FieldIndex.Type:
-                case HeadPart_FieldIndex.ExtraParts:
-                case HeadPart_FieldIndex.Parts:
-                case HeadPart_FieldIndex.TextureSet:
-                case HeadPart_FieldIndex.Color:
-                case HeadPart_FieldIndex.ValidRaces:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            HeadPart_FieldIndex enu = (HeadPart_FieldIndex)index;
-            switch (enu)
-            {
-                case HeadPart_FieldIndex.Name:
-                    return "Name";
-                case HeadPart_FieldIndex.Model:
-                    return "Model";
-                case HeadPart_FieldIndex.Flags:
-                    return "Flags";
-                case HeadPart_FieldIndex.Type:
-                    return "Type";
-                case HeadPart_FieldIndex.ExtraParts:
-                    return "ExtraParts";
-                case HeadPart_FieldIndex.Parts:
-                    return "Parts";
-                case HeadPart_FieldIndex.TextureSet:
-                    return "TextureSet";
-                case HeadPart_FieldIndex.Color:
-                    return "Color";
-                case HeadPart_FieldIndex.ValidRaces:
-                    return "ValidRaces";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            HeadPart_FieldIndex enu = (HeadPart_FieldIndex)index;
-            switch (enu)
-            {
-                case HeadPart_FieldIndex.Name:
-                case HeadPart_FieldIndex.Model:
-                case HeadPart_FieldIndex.Flags:
-                case HeadPart_FieldIndex.Type:
-                case HeadPart_FieldIndex.ExtraParts:
-                case HeadPart_FieldIndex.Parts:
-                case HeadPart_FieldIndex.TextureSet:
-                case HeadPart_FieldIndex.Color:
-                case HeadPart_FieldIndex.ValidRaces:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            HeadPart_FieldIndex enu = (HeadPart_FieldIndex)index;
-            switch (enu)
-            {
-                case HeadPart_FieldIndex.Name:
-                case HeadPart_FieldIndex.Model:
-                case HeadPart_FieldIndex.Flags:
-                case HeadPart_FieldIndex.Type:
-                case HeadPart_FieldIndex.ExtraParts:
-                case HeadPart_FieldIndex.Parts:
-                case HeadPart_FieldIndex.TextureSet:
-                case HeadPart_FieldIndex.Color:
-                case HeadPart_FieldIndex.ValidRaces:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            HeadPart_FieldIndex enu = (HeadPart_FieldIndex)index;
-            switch (enu)
-            {
-                case HeadPart_FieldIndex.Name:
-                    return typeof(TranslatedString);
-                case HeadPart_FieldIndex.Model:
-                    return typeof(Model);
-                case HeadPart_FieldIndex.Flags:
-                    return typeof(HeadPart.Flag);
-                case HeadPart_FieldIndex.Type:
-                    return typeof(HeadPart.TypeEnum);
-                case HeadPart_FieldIndex.ExtraParts:
-                    return typeof(IExtendedList<IFormLink<HeadPart>>);
-                case HeadPart_FieldIndex.Parts:
-                    return typeof(IExtendedList<Part>);
-                case HeadPart_FieldIndex.TextureSet:
-                    return typeof(FormLinkNullable<TextureSet>);
-                case HeadPart_FieldIndex.Color:
-                    return typeof(FormLinkNullable<ColorRecord>);
-                case HeadPart_FieldIndex.ValidRaces:
-                    return typeof(FormLinkNullable<FormList>);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.HDPT;
         public static readonly Type BinaryWriteTranslation = typeof(HeadPartBinaryWriteTranslation);
         #region Interface
@@ -1340,14 +1149,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1369,9 +1178,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Type = default;
             item.ExtraParts.Clear();
             item.Parts.Clear();
-            item.TextureSet = FormLinkNullable<TextureSet>.Null;
-            item.Color = FormLinkNullable<ColorRecord>.Null;
-            item.ValidRaces = FormLinkNullable<FormList>.Null;
+            item.TextureSet = FormLinkNullable<ITextureSetGetter>.Null;
+            item.Color = FormLinkNullable<IColorRecordGetter>.Null;
+            item.ValidRaces = FormLinkNullable<IFormListGetter>.Null;
             base.Clear(item);
         }
         
@@ -1833,7 +1642,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.ExtraParts.SetTo(
                         rhs.ExtraParts
-                        .Select(r => (IFormLink<HeadPart>)new FormLink<HeadPart>(r.FormKey)));
+                        .Select(r => (IFormLink<IHeadPartGetter>)new FormLink<IHeadPartGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1871,15 +1680,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)HeadPart_FieldIndex.TextureSet) ?? true))
             {
-                item.TextureSet = new FormLinkNullable<TextureSet>(rhs.TextureSet.FormKey);
+                item.TextureSet = new FormLinkNullable<ITextureSetGetter>(rhs.TextureSet.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)HeadPart_FieldIndex.Color) ?? true))
             {
-                item.Color = new FormLinkNullable<ColorRecord>(rhs.Color.FormKey);
+                item.Color = new FormLinkNullable<IColorRecordGetter>(rhs.Color.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)HeadPart_FieldIndex.ValidRaces) ?? true))
             {
-                item.ValidRaces = new FormLinkNullable<FormList>(rhs.ValidRaces.FormKey);
+                item.ValidRaces = new FormLinkNullable<IFormListGetter>(rhs.ValidRaces.FormKey);
             }
         }
         
@@ -2209,7 +2018,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.HNAM:
                 {
                     item.ExtraParts.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<HeadPart>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IHeadPartGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.HNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));

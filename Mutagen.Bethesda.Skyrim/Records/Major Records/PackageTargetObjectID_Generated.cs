@@ -42,9 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Reference
-        public FormLink<IObjectId> Reference { get; set; } = new FormLink<IObjectId>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IObjectIdGetter> IPackageTargetObjectIDGetter.Reference => this.Reference.ToGetter<IObjectId, IObjectIdGetter>();
+        public FormLink<IObjectIdGetter> Reference { get; set; } = new FormLink<IObjectIdGetter>();
         #endregion
 
         #region To String
@@ -411,7 +409,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPackageTargetObjectID>,
         ILinkedFormKeyContainer
     {
-        new FormLink<IObjectId> Reference { get; set; }
+        new FormLink<IObjectIdGetter> Reference { get; set; }
     }
 
     public partial interface IPackageTargetObjectIDGetter :
@@ -611,101 +609,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "REFERENCE":
-                    return (ushort)PackageTargetObjectID_FieldIndex.Reference;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            PackageTargetObjectID_FieldIndex enu = (PackageTargetObjectID_FieldIndex)index;
-            switch (enu)
-            {
-                case PackageTargetObjectID_FieldIndex.Reference:
-                    return false;
-                default:
-                    return APackageTarget_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            PackageTargetObjectID_FieldIndex enu = (PackageTargetObjectID_FieldIndex)index;
-            switch (enu)
-            {
-                case PackageTargetObjectID_FieldIndex.Reference:
-                    return false;
-                default:
-                    return APackageTarget_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            PackageTargetObjectID_FieldIndex enu = (PackageTargetObjectID_FieldIndex)index;
-            switch (enu)
-            {
-                case PackageTargetObjectID_FieldIndex.Reference:
-                    return false;
-                default:
-                    return APackageTarget_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            PackageTargetObjectID_FieldIndex enu = (PackageTargetObjectID_FieldIndex)index;
-            switch (enu)
-            {
-                case PackageTargetObjectID_FieldIndex.Reference:
-                    return "Reference";
-                default:
-                    return APackageTarget_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            PackageTargetObjectID_FieldIndex enu = (PackageTargetObjectID_FieldIndex)index;
-            switch (enu)
-            {
-                case PackageTargetObjectID_FieldIndex.Reference:
-                    return false;
-                default:
-                    return APackageTarget_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            PackageTargetObjectID_FieldIndex enu = (PackageTargetObjectID_FieldIndex)index;
-            switch (enu)
-            {
-                case PackageTargetObjectID_FieldIndex.Reference:
-                    return false;
-                default:
-                    return APackageTarget_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            PackageTargetObjectID_FieldIndex enu = (PackageTargetObjectID_FieldIndex)index;
-            switch (enu)
-            {
-                case PackageTargetObjectID_FieldIndex.Reference:
-                    return typeof(FormLink<IObjectId>);
-                default:
-                    return APackageTarget_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly Type BinaryWriteTranslation = typeof(PackageTargetObjectIDBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -725,14 +628,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -748,7 +651,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IPackageTargetObjectID item)
         {
             ClearPartial();
-            item.Reference = FormLink<IObjectId>.Null;
+            item.Reference = FormLink<IObjectIdGetter>.Null;
             base.Clear(item);
         }
         
@@ -955,7 +858,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PackageTargetObjectID_FieldIndex.Reference) ?? true))
             {
-                item.Reference = new FormLink<IObjectId>(rhs.Reference.FormKey);
+                item.Reference = new FormLink<IObjectIdGetter>(rhs.Reference.FormKey);
             }
         }
         

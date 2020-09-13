@@ -40,24 +40,16 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Sunrise
-        public FormLink<ImageSpaceAdapter> Sunrise { get; set; } = new FormLink<ImageSpaceAdapter>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IImageSpaceAdapterGetter> IWeatherImageSpacesGetter.Sunrise => this.Sunrise.ToGetter<ImageSpaceAdapter, IImageSpaceAdapterGetter>();
+        public FormLink<IImageSpaceAdapterGetter> Sunrise { get; set; } = new FormLink<IImageSpaceAdapterGetter>();
         #endregion
         #region Day
-        public FormLink<ImageSpaceAdapter> Day { get; set; } = new FormLink<ImageSpaceAdapter>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IImageSpaceAdapterGetter> IWeatherImageSpacesGetter.Day => this.Day.ToGetter<ImageSpaceAdapter, IImageSpaceAdapterGetter>();
+        public FormLink<IImageSpaceAdapterGetter> Day { get; set; } = new FormLink<IImageSpaceAdapterGetter>();
         #endregion
         #region Sunset
-        public FormLink<ImageSpaceAdapter> Sunset { get; set; } = new FormLink<ImageSpaceAdapter>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IImageSpaceAdapterGetter> IWeatherImageSpacesGetter.Sunset => this.Sunset.ToGetter<ImageSpaceAdapter, IImageSpaceAdapterGetter>();
+        public FormLink<IImageSpaceAdapterGetter> Sunset { get; set; } = new FormLink<IImageSpaceAdapterGetter>();
         #endregion
         #region Night
-        public FormLink<ImageSpaceAdapter> Night { get; set; } = new FormLink<ImageSpaceAdapter>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IImageSpaceAdapterGetter> IWeatherImageSpacesGetter.Night => this.Night.ToGetter<ImageSpaceAdapter, IImageSpaceAdapterGetter>();
+        public FormLink<IImageSpaceAdapterGetter> Night { get; set; } = new FormLink<IImageSpaceAdapterGetter>();
         #endregion
 
         #region To String
@@ -519,10 +511,10 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IWeatherImageSpaces>,
         ILinkedFormKeyContainer
     {
-        new FormLink<ImageSpaceAdapter> Sunrise { get; set; }
-        new FormLink<ImageSpaceAdapter> Day { get; set; }
-        new FormLink<ImageSpaceAdapter> Sunset { get; set; }
-        new FormLink<ImageSpaceAdapter> Night { get; set; }
+        new FormLink<IImageSpaceAdapterGetter> Sunrise { get; set; }
+        new FormLink<IImageSpaceAdapterGetter> Day { get; set; }
+        new FormLink<IImageSpaceAdapterGetter> Sunset { get; set; }
+        new FormLink<IImageSpaceAdapterGetter> Night { get; set; }
     }
 
     public partial interface IWeatherImageSpacesGetter :
@@ -758,134 +750,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "SUNRISE":
-                    return (ushort)WeatherImageSpaces_FieldIndex.Sunrise;
-                case "DAY":
-                    return (ushort)WeatherImageSpaces_FieldIndex.Day;
-                case "SUNSET":
-                    return (ushort)WeatherImageSpaces_FieldIndex.Sunset;
-                case "NIGHT":
-                    return (ushort)WeatherImageSpaces_FieldIndex.Night;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            WeatherImageSpaces_FieldIndex enu = (WeatherImageSpaces_FieldIndex)index;
-            switch (enu)
-            {
-                case WeatherImageSpaces_FieldIndex.Sunrise:
-                case WeatherImageSpaces_FieldIndex.Day:
-                case WeatherImageSpaces_FieldIndex.Sunset:
-                case WeatherImageSpaces_FieldIndex.Night:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            WeatherImageSpaces_FieldIndex enu = (WeatherImageSpaces_FieldIndex)index;
-            switch (enu)
-            {
-                case WeatherImageSpaces_FieldIndex.Sunrise:
-                case WeatherImageSpaces_FieldIndex.Day:
-                case WeatherImageSpaces_FieldIndex.Sunset:
-                case WeatherImageSpaces_FieldIndex.Night:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            WeatherImageSpaces_FieldIndex enu = (WeatherImageSpaces_FieldIndex)index;
-            switch (enu)
-            {
-                case WeatherImageSpaces_FieldIndex.Sunrise:
-                case WeatherImageSpaces_FieldIndex.Day:
-                case WeatherImageSpaces_FieldIndex.Sunset:
-                case WeatherImageSpaces_FieldIndex.Night:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            WeatherImageSpaces_FieldIndex enu = (WeatherImageSpaces_FieldIndex)index;
-            switch (enu)
-            {
-                case WeatherImageSpaces_FieldIndex.Sunrise:
-                    return "Sunrise";
-                case WeatherImageSpaces_FieldIndex.Day:
-                    return "Day";
-                case WeatherImageSpaces_FieldIndex.Sunset:
-                    return "Sunset";
-                case WeatherImageSpaces_FieldIndex.Night:
-                    return "Night";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            WeatherImageSpaces_FieldIndex enu = (WeatherImageSpaces_FieldIndex)index;
-            switch (enu)
-            {
-                case WeatherImageSpaces_FieldIndex.Sunrise:
-                case WeatherImageSpaces_FieldIndex.Day:
-                case WeatherImageSpaces_FieldIndex.Sunset:
-                case WeatherImageSpaces_FieldIndex.Night:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            WeatherImageSpaces_FieldIndex enu = (WeatherImageSpaces_FieldIndex)index;
-            switch (enu)
-            {
-                case WeatherImageSpaces_FieldIndex.Sunrise:
-                case WeatherImageSpaces_FieldIndex.Day:
-                case WeatherImageSpaces_FieldIndex.Sunset:
-                case WeatherImageSpaces_FieldIndex.Night:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            WeatherImageSpaces_FieldIndex enu = (WeatherImageSpaces_FieldIndex)index;
-            switch (enu)
-            {
-                case WeatherImageSpaces_FieldIndex.Sunrise:
-                    return typeof(FormLink<ImageSpaceAdapter>);
-                case WeatherImageSpaces_FieldIndex.Day:
-                    return typeof(FormLink<ImageSpaceAdapter>);
-                case WeatherImageSpaces_FieldIndex.Sunset:
-                    return typeof(FormLink<ImageSpaceAdapter>);
-                case WeatherImageSpaces_FieldIndex.Night:
-                    return typeof(FormLink<ImageSpaceAdapter>);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.IMSP;
         public static readonly Type BinaryWriteTranslation = typeof(WeatherImageSpacesBinaryWriteTranslation);
         #region Interface
@@ -906,14 +770,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -929,10 +793,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IWeatherImageSpaces item)
         {
             ClearPartial();
-            item.Sunrise = FormLink<ImageSpaceAdapter>.Null;
-            item.Day = FormLink<ImageSpaceAdapter>.Null;
-            item.Sunset = FormLink<ImageSpaceAdapter>.Null;
-            item.Night = FormLink<ImageSpaceAdapter>.Null;
+            item.Sunrise = FormLink<IImageSpaceAdapterGetter>.Null;
+            item.Day = FormLink<IImageSpaceAdapterGetter>.Null;
+            item.Sunset = FormLink<IImageSpaceAdapterGetter>.Null;
+            item.Night = FormLink<IImageSpaceAdapterGetter>.Null;
         }
         
         #region Binary Translation
@@ -1107,19 +971,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)WeatherImageSpaces_FieldIndex.Sunrise) ?? true))
             {
-                item.Sunrise = new FormLink<ImageSpaceAdapter>(rhs.Sunrise.FormKey);
+                item.Sunrise = new FormLink<IImageSpaceAdapterGetter>(rhs.Sunrise.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)WeatherImageSpaces_FieldIndex.Day) ?? true))
             {
-                item.Day = new FormLink<ImageSpaceAdapter>(rhs.Day.FormKey);
+                item.Day = new FormLink<IImageSpaceAdapterGetter>(rhs.Day.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)WeatherImageSpaces_FieldIndex.Sunset) ?? true))
             {
-                item.Sunset = new FormLink<ImageSpaceAdapter>(rhs.Sunset.FormKey);
+                item.Sunset = new FormLink<IImageSpaceAdapterGetter>(rhs.Sunset.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)WeatherImageSpaces_FieldIndex.Night) ?? true))
             {
-                item.Night = new FormLink<ImageSpaceAdapter>(rhs.Night.FormKey);
+                item.Night = new FormLink<IImageSpaceAdapterGetter>(rhs.Night.FormKey);
             }
         }
         

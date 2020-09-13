@@ -76,14 +76,10 @@ namespace Mutagen.Bethesda.Skyrim
         IDialogResponseFlagsGetter? IDialogResponsesGetter.Flags => this.Flags;
         #endregion
         #region Topic
-        public FormLinkNullable<DialogTopic> Topic { get; set; } = new FormLinkNullable<DialogTopic>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IDialogTopicGetter> IDialogResponsesGetter.Topic => this.Topic.ToGetter<DialogTopic, IDialogTopicGetter>();
+        public FormLinkNullable<IDialogTopicGetter> Topic { get; set; } = new FormLinkNullable<IDialogTopicGetter>();
         #endregion
         #region PreviousDialog
-        public FormLinkNullable<DialogResponses> PreviousDialog { get; set; } = new FormLinkNullable<DialogResponses>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IDialogResponsesGetter> IDialogResponsesGetter.PreviousDialog => this.PreviousDialog.ToGetter<DialogResponses, IDialogResponsesGetter>();
+        public FormLinkNullable<IDialogResponsesGetter> PreviousDialog { get; set; } = new FormLinkNullable<IDialogResponsesGetter>();
         #endregion
         #region FavorLevel
         public FavorLevel? FavorLevel { get; set; }
@@ -92,8 +88,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LinkTo
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IDialog>> _LinkTo = new ExtendedList<IFormLink<IDialog>>();
-        public IExtendedList<IFormLink<IDialog>> LinkTo
+        private ExtendedList<IFormLink<IDialogGetter>> _LinkTo = new ExtendedList<IFormLink<IDialogGetter>>();
+        public ExtendedList<IFormLink<IDialogGetter>> LinkTo
         {
             get => this._LinkTo;
             protected set => this._LinkTo = value;
@@ -105,14 +101,12 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region ResponseData
-        public FormLinkNullable<DialogResponses> ResponseData { get; set; } = new FormLinkNullable<DialogResponses>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IDialogResponsesGetter> IDialogResponsesGetter.ResponseData => this.ResponseData.ToGetter<DialogResponses, IDialogResponsesGetter>();
+        public FormLinkNullable<IDialogResponsesGetter> ResponseData { get; set; } = new FormLinkNullable<IDialogResponsesGetter>();
         #endregion
         #region Responses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<DialogResponse> _Responses = new ExtendedList<DialogResponse>();
-        public IExtendedList<DialogResponse> Responses
+        private ExtendedList<DialogResponse> _Responses = new ExtendedList<DialogResponse>();
+        public ExtendedList<DialogResponse> Responses
         {
             get => this._Responses;
             protected set => this._Responses = value;
@@ -125,8 +119,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public IExtendedList<Condition> Conditions
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -139,8 +133,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region UnknownData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<DialogResponsesUnknownData> _UnknownData = new ExtendedList<DialogResponsesUnknownData>();
-        public IExtendedList<DialogResponsesUnknownData> UnknownData
+        private ExtendedList<DialogResponsesUnknownData> _UnknownData = new ExtendedList<DialogResponsesUnknownData>();
+        public ExtendedList<DialogResponsesUnknownData> UnknownData
         {
             get => this._UnknownData;
             protected set => this._UnknownData = value;
@@ -157,19 +151,13 @@ namespace Mutagen.Bethesda.Skyrim
         TranslatedString? IDialogResponsesGetter.Prompt => this.Prompt;
         #endregion
         #region Speaker
-        public FormLinkNullable<Npc> Speaker { get; set; } = new FormLinkNullable<Npc>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<INpcGetter> IDialogResponsesGetter.Speaker => this.Speaker.ToGetter<Npc, INpcGetter>();
+        public FormLinkNullable<INpcGetter> Speaker { get; set; } = new FormLinkNullable<INpcGetter>();
         #endregion
         #region WalkAwayTopic
-        public FormLinkNullable<DialogTopic> WalkAwayTopic { get; set; } = new FormLinkNullable<DialogTopic>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IDialogTopicGetter> IDialogResponsesGetter.WalkAwayTopic => this.WalkAwayTopic.ToGetter<DialogTopic, IDialogTopicGetter>();
+        public FormLinkNullable<IDialogTopicGetter> WalkAwayTopic { get; set; } = new FormLinkNullable<IDialogTopicGetter>();
         #endregion
         #region AudioOutputOverride
-        public FormLinkNullable<SoundOutputModel> AudioOutputOverride { get; set; } = new FormLinkNullable<SoundOutputModel>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundOutputModelGetter> IDialogResponsesGetter.AudioOutputOverride => this.AudioOutputOverride.ToGetter<SoundOutputModel, ISoundOutputModelGetter>();
+        public FormLinkNullable<ISoundOutputModelGetter> AudioOutputOverride { get; set; } = new FormLinkNullable<ISoundOutputModelGetter>();
         #endregion
 
         #region To String
@@ -1278,18 +1266,18 @@ namespace Mutagen.Bethesda.Skyrim
         new DialogResponsesAdapter? VirtualMachineAdapter { get; set; }
         new MemorySlice<Byte>? DATA { get; set; }
         new DialogResponseFlags? Flags { get; set; }
-        new FormLinkNullable<DialogTopic> Topic { get; set; }
-        new FormLinkNullable<DialogResponses> PreviousDialog { get; set; }
+        new FormLinkNullable<IDialogTopicGetter> Topic { get; set; }
+        new FormLinkNullable<IDialogResponsesGetter> PreviousDialog { get; set; }
         new FavorLevel? FavorLevel { get; set; }
-        new IExtendedList<IFormLink<IDialog>> LinkTo { get; }
-        new FormLinkNullable<DialogResponses> ResponseData { get; set; }
-        new IExtendedList<DialogResponse> Responses { get; }
-        new IExtendedList<Condition> Conditions { get; }
-        new IExtendedList<DialogResponsesUnknownData> UnknownData { get; }
+        new ExtendedList<IFormLink<IDialogGetter>> LinkTo { get; }
+        new FormLinkNullable<IDialogResponsesGetter> ResponseData { get; set; }
+        new ExtendedList<DialogResponse> Responses { get; }
+        new ExtendedList<Condition> Conditions { get; }
+        new ExtendedList<DialogResponsesUnknownData> UnknownData { get; }
         new TranslatedString? Prompt { get; set; }
-        new FormLinkNullable<Npc> Speaker { get; set; }
-        new FormLinkNullable<DialogTopic> WalkAwayTopic { get; set; }
-        new FormLinkNullable<SoundOutputModel> AudioOutputOverride { get; set; }
+        new FormLinkNullable<INpcGetter> Speaker { get; set; }
+        new FormLinkNullable<IDialogTopicGetter> WalkAwayTopic { get; set; }
+        new FormLinkNullable<ISoundOutputModelGetter> AudioOutputOverride { get; set; }
         #region Mutagen
         new DialogResponses.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1538,257 +1526,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "VIRTUALMACHINEADAPTER":
-                    return (ushort)DialogResponses_FieldIndex.VirtualMachineAdapter;
-                case "DATA":
-                    return (ushort)DialogResponses_FieldIndex.DATA;
-                case "FLAGS":
-                    return (ushort)DialogResponses_FieldIndex.Flags;
-                case "TOPIC":
-                    return (ushort)DialogResponses_FieldIndex.Topic;
-                case "PREVIOUSDIALOG":
-                    return (ushort)DialogResponses_FieldIndex.PreviousDialog;
-                case "FAVORLEVEL":
-                    return (ushort)DialogResponses_FieldIndex.FavorLevel;
-                case "LINKTO":
-                    return (ushort)DialogResponses_FieldIndex.LinkTo;
-                case "RESPONSEDATA":
-                    return (ushort)DialogResponses_FieldIndex.ResponseData;
-                case "RESPONSES":
-                    return (ushort)DialogResponses_FieldIndex.Responses;
-                case "CONDITIONS":
-                    return (ushort)DialogResponses_FieldIndex.Conditions;
-                case "UNKNOWNDATA":
-                    return (ushort)DialogResponses_FieldIndex.UnknownData;
-                case "PROMPT":
-                    return (ushort)DialogResponses_FieldIndex.Prompt;
-                case "SPEAKER":
-                    return (ushort)DialogResponses_FieldIndex.Speaker;
-                case "WALKAWAYTOPIC":
-                    return (ushort)DialogResponses_FieldIndex.WalkAwayTopic;
-                case "AUDIOOUTPUTOVERRIDE":
-                    return (ushort)DialogResponses_FieldIndex.AudioOutputOverride;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            DialogResponses_FieldIndex enu = (DialogResponses_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogResponses_FieldIndex.LinkTo:
-                case DialogResponses_FieldIndex.Responses:
-                case DialogResponses_FieldIndex.Conditions:
-                case DialogResponses_FieldIndex.UnknownData:
-                    return true;
-                case DialogResponses_FieldIndex.VirtualMachineAdapter:
-                case DialogResponses_FieldIndex.DATA:
-                case DialogResponses_FieldIndex.Flags:
-                case DialogResponses_FieldIndex.Topic:
-                case DialogResponses_FieldIndex.PreviousDialog:
-                case DialogResponses_FieldIndex.FavorLevel:
-                case DialogResponses_FieldIndex.ResponseData:
-                case DialogResponses_FieldIndex.Prompt:
-                case DialogResponses_FieldIndex.Speaker:
-                case DialogResponses_FieldIndex.WalkAwayTopic:
-                case DialogResponses_FieldIndex.AudioOutputOverride:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            DialogResponses_FieldIndex enu = (DialogResponses_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogResponses_FieldIndex.VirtualMachineAdapter:
-                case DialogResponses_FieldIndex.Flags:
-                case DialogResponses_FieldIndex.Responses:
-                case DialogResponses_FieldIndex.Conditions:
-                case DialogResponses_FieldIndex.UnknownData:
-                    return true;
-                case DialogResponses_FieldIndex.DATA:
-                case DialogResponses_FieldIndex.Topic:
-                case DialogResponses_FieldIndex.PreviousDialog:
-                case DialogResponses_FieldIndex.FavorLevel:
-                case DialogResponses_FieldIndex.LinkTo:
-                case DialogResponses_FieldIndex.ResponseData:
-                case DialogResponses_FieldIndex.Prompt:
-                case DialogResponses_FieldIndex.Speaker:
-                case DialogResponses_FieldIndex.WalkAwayTopic:
-                case DialogResponses_FieldIndex.AudioOutputOverride:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            DialogResponses_FieldIndex enu = (DialogResponses_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogResponses_FieldIndex.VirtualMachineAdapter:
-                case DialogResponses_FieldIndex.DATA:
-                case DialogResponses_FieldIndex.Flags:
-                case DialogResponses_FieldIndex.Topic:
-                case DialogResponses_FieldIndex.PreviousDialog:
-                case DialogResponses_FieldIndex.FavorLevel:
-                case DialogResponses_FieldIndex.LinkTo:
-                case DialogResponses_FieldIndex.ResponseData:
-                case DialogResponses_FieldIndex.Responses:
-                case DialogResponses_FieldIndex.Conditions:
-                case DialogResponses_FieldIndex.UnknownData:
-                case DialogResponses_FieldIndex.Prompt:
-                case DialogResponses_FieldIndex.Speaker:
-                case DialogResponses_FieldIndex.WalkAwayTopic:
-                case DialogResponses_FieldIndex.AudioOutputOverride:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            DialogResponses_FieldIndex enu = (DialogResponses_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogResponses_FieldIndex.VirtualMachineAdapter:
-                    return "VirtualMachineAdapter";
-                case DialogResponses_FieldIndex.DATA:
-                    return "DATA";
-                case DialogResponses_FieldIndex.Flags:
-                    return "Flags";
-                case DialogResponses_FieldIndex.Topic:
-                    return "Topic";
-                case DialogResponses_FieldIndex.PreviousDialog:
-                    return "PreviousDialog";
-                case DialogResponses_FieldIndex.FavorLevel:
-                    return "FavorLevel";
-                case DialogResponses_FieldIndex.LinkTo:
-                    return "LinkTo";
-                case DialogResponses_FieldIndex.ResponseData:
-                    return "ResponseData";
-                case DialogResponses_FieldIndex.Responses:
-                    return "Responses";
-                case DialogResponses_FieldIndex.Conditions:
-                    return "Conditions";
-                case DialogResponses_FieldIndex.UnknownData:
-                    return "UnknownData";
-                case DialogResponses_FieldIndex.Prompt:
-                    return "Prompt";
-                case DialogResponses_FieldIndex.Speaker:
-                    return "Speaker";
-                case DialogResponses_FieldIndex.WalkAwayTopic:
-                    return "WalkAwayTopic";
-                case DialogResponses_FieldIndex.AudioOutputOverride:
-                    return "AudioOutputOverride";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            DialogResponses_FieldIndex enu = (DialogResponses_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogResponses_FieldIndex.VirtualMachineAdapter:
-                case DialogResponses_FieldIndex.DATA:
-                case DialogResponses_FieldIndex.Flags:
-                case DialogResponses_FieldIndex.Topic:
-                case DialogResponses_FieldIndex.PreviousDialog:
-                case DialogResponses_FieldIndex.FavorLevel:
-                case DialogResponses_FieldIndex.LinkTo:
-                case DialogResponses_FieldIndex.ResponseData:
-                case DialogResponses_FieldIndex.Responses:
-                case DialogResponses_FieldIndex.Conditions:
-                case DialogResponses_FieldIndex.UnknownData:
-                case DialogResponses_FieldIndex.Prompt:
-                case DialogResponses_FieldIndex.Speaker:
-                case DialogResponses_FieldIndex.WalkAwayTopic:
-                case DialogResponses_FieldIndex.AudioOutputOverride:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            DialogResponses_FieldIndex enu = (DialogResponses_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogResponses_FieldIndex.VirtualMachineAdapter:
-                case DialogResponses_FieldIndex.DATA:
-                case DialogResponses_FieldIndex.Flags:
-                case DialogResponses_FieldIndex.Topic:
-                case DialogResponses_FieldIndex.PreviousDialog:
-                case DialogResponses_FieldIndex.FavorLevel:
-                case DialogResponses_FieldIndex.LinkTo:
-                case DialogResponses_FieldIndex.ResponseData:
-                case DialogResponses_FieldIndex.Responses:
-                case DialogResponses_FieldIndex.Conditions:
-                case DialogResponses_FieldIndex.UnknownData:
-                case DialogResponses_FieldIndex.Prompt:
-                case DialogResponses_FieldIndex.Speaker:
-                case DialogResponses_FieldIndex.WalkAwayTopic:
-                case DialogResponses_FieldIndex.AudioOutputOverride:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            DialogResponses_FieldIndex enu = (DialogResponses_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogResponses_FieldIndex.VirtualMachineAdapter:
-                    return typeof(DialogResponsesAdapter);
-                case DialogResponses_FieldIndex.DATA:
-                    return typeof(MemorySlice<Byte>);
-                case DialogResponses_FieldIndex.Flags:
-                    return typeof(DialogResponseFlags);
-                case DialogResponses_FieldIndex.Topic:
-                    return typeof(FormLinkNullable<DialogTopic>);
-                case DialogResponses_FieldIndex.PreviousDialog:
-                    return typeof(FormLinkNullable<DialogResponses>);
-                case DialogResponses_FieldIndex.FavorLevel:
-                    return typeof(FavorLevel);
-                case DialogResponses_FieldIndex.LinkTo:
-                    return typeof(IExtendedList<IFormLink<IDialog>>);
-                case DialogResponses_FieldIndex.ResponseData:
-                    return typeof(FormLinkNullable<DialogResponses>);
-                case DialogResponses_FieldIndex.Responses:
-                    return typeof(IExtendedList<DialogResponse>);
-                case DialogResponses_FieldIndex.Conditions:
-                    return typeof(IExtendedList<Condition>);
-                case DialogResponses_FieldIndex.UnknownData:
-                    return typeof(IExtendedList<DialogResponsesUnknownData>);
-                case DialogResponses_FieldIndex.Prompt:
-                    return typeof(TranslatedString);
-                case DialogResponses_FieldIndex.Speaker:
-                    return typeof(FormLinkNullable<Npc>);
-                case DialogResponses_FieldIndex.WalkAwayTopic:
-                    return typeof(FormLinkNullable<DialogTopic>);
-                case DialogResponses_FieldIndex.AudioOutputOverride:
-                    return typeof(FormLinkNullable<SoundOutputModel>);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.INFO;
         public static readonly Type BinaryWriteTranslation = typeof(DialogResponsesBinaryWriteTranslation);
         #region Interface
@@ -1809,14 +1546,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1835,18 +1572,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.VirtualMachineAdapter = null;
             item.DATA = default;
             item.Flags = null;
-            item.Topic = FormLinkNullable<DialogTopic>.Null;
-            item.PreviousDialog = FormLinkNullable<DialogResponses>.Null;
+            item.Topic = FormLinkNullable<IDialogTopicGetter>.Null;
+            item.PreviousDialog = FormLinkNullable<IDialogResponsesGetter>.Null;
             item.FavorLevel = default;
             item.LinkTo.Clear();
-            item.ResponseData = FormLinkNullable<DialogResponses>.Null;
+            item.ResponseData = FormLinkNullable<IDialogResponsesGetter>.Null;
             item.Responses.Clear();
             item.Conditions.Clear();
             item.UnknownData.Clear();
             item.Prompt = default;
-            item.Speaker = FormLinkNullable<Npc>.Null;
-            item.WalkAwayTopic = FormLinkNullable<DialogTopic>.Null;
-            item.AudioOutputOverride = FormLinkNullable<SoundOutputModel>.Null;
+            item.Speaker = FormLinkNullable<INpcGetter>.Null;
+            item.WalkAwayTopic = FormLinkNullable<IDialogTopicGetter>.Null;
+            item.AudioOutputOverride = FormLinkNullable<ISoundOutputModelGetter>.Null;
             base.Clear(item);
         }
         
@@ -2441,11 +2178,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Topic) ?? true))
             {
-                item.Topic = new FormLinkNullable<DialogTopic>(rhs.Topic.FormKey);
+                item.Topic = new FormLinkNullable<IDialogTopicGetter>(rhs.Topic.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.PreviousDialog) ?? true))
             {
-                item.PreviousDialog = new FormLinkNullable<DialogResponses>(rhs.PreviousDialog.FormKey);
+                item.PreviousDialog = new FormLinkNullable<IDialogResponsesGetter>(rhs.PreviousDialog.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.FavorLevel) ?? true))
             {
@@ -2458,7 +2195,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.LinkTo.SetTo(
                         rhs.LinkTo
-                        .Select(r => (IFormLink<IDialog>)new FormLink<IDialog>(r.FormKey)));
+                        .Select(r => (IFormLink<IDialogGetter>)new FormLink<IDialogGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2472,7 +2209,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.ResponseData) ?? true))
             {
-                item.ResponseData = new FormLinkNullable<DialogResponses>(rhs.ResponseData.FormKey);
+                item.ResponseData = new FormLinkNullable<IDialogResponsesGetter>(rhs.ResponseData.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Responses) ?? true))
             {
@@ -2552,15 +2289,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Speaker) ?? true))
             {
-                item.Speaker = new FormLinkNullable<Npc>(rhs.Speaker.FormKey);
+                item.Speaker = new FormLinkNullable<INpcGetter>(rhs.Speaker.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.WalkAwayTopic) ?? true))
             {
-                item.WalkAwayTopic = new FormLinkNullable<DialogTopic>(rhs.WalkAwayTopic.FormKey);
+                item.WalkAwayTopic = new FormLinkNullable<IDialogTopicGetter>(rhs.WalkAwayTopic.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.AudioOutputOverride) ?? true))
             {
-                item.AudioOutputOverride = new FormLinkNullable<SoundOutputModel>(rhs.AudioOutputOverride.FormKey);
+                item.AudioOutputOverride = new FormLinkNullable<ISoundOutputModelGetter>(rhs.AudioOutputOverride.FormKey);
             }
         }
         
@@ -2945,7 +2682,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.TCLT:
                 {
                     item.LinkTo.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IDialog>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IDialogGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.TCLT),
                             transl: FormLinkBinaryTranslation.Instance.Parse));

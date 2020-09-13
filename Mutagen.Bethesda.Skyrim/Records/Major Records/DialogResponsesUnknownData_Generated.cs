@@ -51,9 +51,7 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? IDialogResponsesUnknownDataGetter.SCHR => this.SCHR;
         #endregion
         #region QNAM
-        public FormLinkNullable<SkyrimMajorRecord> QNAM { get; set; } = new FormLinkNullable<SkyrimMajorRecord>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISkyrimMajorRecordGetter> IDialogResponsesUnknownDataGetter.QNAM => this.QNAM.ToGetter<SkyrimMajorRecord, ISkyrimMajorRecordGetter>();
+        public FormLinkNullable<ISkyrimMajorRecordGetter> QNAM { get; set; } = new FormLinkNullable<ISkyrimMajorRecordGetter>();
         #endregion
         #region NEXT
         public Boolean NEXT { get; set; } = default;
@@ -490,7 +488,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new MemorySlice<Byte>? SCHR { get; set; }
-        new FormLinkNullable<SkyrimMajorRecord> QNAM { get; set; }
+        new FormLinkNullable<ISkyrimMajorRecordGetter> QNAM { get; set; }
         new Boolean NEXT { get; set; }
     }
 
@@ -725,123 +723,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "SCHR":
-                    return (ushort)DialogResponsesUnknownData_FieldIndex.SCHR;
-                case "QNAM":
-                    return (ushort)DialogResponsesUnknownData_FieldIndex.QNAM;
-                case "NEXT":
-                    return (ushort)DialogResponsesUnknownData_FieldIndex.NEXT;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            DialogResponsesUnknownData_FieldIndex enu = (DialogResponsesUnknownData_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogResponsesUnknownData_FieldIndex.SCHR:
-                case DialogResponsesUnknownData_FieldIndex.QNAM:
-                case DialogResponsesUnknownData_FieldIndex.NEXT:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            DialogResponsesUnknownData_FieldIndex enu = (DialogResponsesUnknownData_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogResponsesUnknownData_FieldIndex.SCHR:
-                case DialogResponsesUnknownData_FieldIndex.QNAM:
-                case DialogResponsesUnknownData_FieldIndex.NEXT:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            DialogResponsesUnknownData_FieldIndex enu = (DialogResponsesUnknownData_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogResponsesUnknownData_FieldIndex.SCHR:
-                case DialogResponsesUnknownData_FieldIndex.QNAM:
-                case DialogResponsesUnknownData_FieldIndex.NEXT:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            DialogResponsesUnknownData_FieldIndex enu = (DialogResponsesUnknownData_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogResponsesUnknownData_FieldIndex.SCHR:
-                    return "SCHR";
-                case DialogResponsesUnknownData_FieldIndex.QNAM:
-                    return "QNAM";
-                case DialogResponsesUnknownData_FieldIndex.NEXT:
-                    return "NEXT";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            DialogResponsesUnknownData_FieldIndex enu = (DialogResponsesUnknownData_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogResponsesUnknownData_FieldIndex.SCHR:
-                case DialogResponsesUnknownData_FieldIndex.QNAM:
-                case DialogResponsesUnknownData_FieldIndex.NEXT:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            DialogResponsesUnknownData_FieldIndex enu = (DialogResponsesUnknownData_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogResponsesUnknownData_FieldIndex.SCHR:
-                case DialogResponsesUnknownData_FieldIndex.QNAM:
-                case DialogResponsesUnknownData_FieldIndex.NEXT:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            DialogResponsesUnknownData_FieldIndex enu = (DialogResponsesUnknownData_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogResponsesUnknownData_FieldIndex.SCHR:
-                    return typeof(MemorySlice<Byte>);
-                case DialogResponsesUnknownData_FieldIndex.QNAM:
-                    return typeof(FormLinkNullable<SkyrimMajorRecord>);
-                case DialogResponsesUnknownData_FieldIndex.NEXT:
-                    return typeof(Boolean);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -874,14 +755,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -898,7 +779,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.SCHR = default;
-            item.QNAM = FormLinkNullable<SkyrimMajorRecord>.Null;
+            item.QNAM = FormLinkNullable<ISkyrimMajorRecordGetter>.Null;
             item.NEXT = default;
         }
         
@@ -1080,7 +961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.QNAM) ?? true))
             {
-                item.QNAM = new FormLinkNullable<SkyrimMajorRecord>(rhs.QNAM.FormKey);
+                item.QNAM = new FormLinkNullable<ISkyrimMajorRecordGetter>(rhs.QNAM.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.NEXT) ?? true))
             {

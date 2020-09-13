@@ -40,9 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Sound
-        public FormLinkNullable<Sound> Sound { get; set; } = new FormLinkNullable<Sound>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundGetter> ISoundItemGetter.Sound => this.Sound.ToGetter<Sound, ISoundGetter>();
+        public FormLinkNullable<ISoundGetter> Sound { get; set; } = new FormLinkNullable<ISoundGetter>();
         #endregion
         #region Chance
         public Byte? Chance { get; set; }
@@ -452,7 +450,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<ISoundItem>,
         ILinkedFormKeyContainer
     {
-        new FormLinkNullable<Sound> Sound { get; set; }
+        new FormLinkNullable<ISoundGetter> Sound { get; set; }
         new Byte? Chance { get; set; }
     }
 
@@ -685,112 +683,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "SOUND":
-                    return (ushort)SoundItem_FieldIndex.Sound;
-                case "CHANCE":
-                    return (ushort)SoundItem_FieldIndex.Chance;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            SoundItem_FieldIndex enu = (SoundItem_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundItem_FieldIndex.Sound:
-                case SoundItem_FieldIndex.Chance:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            SoundItem_FieldIndex enu = (SoundItem_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundItem_FieldIndex.Sound:
-                case SoundItem_FieldIndex.Chance:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            SoundItem_FieldIndex enu = (SoundItem_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundItem_FieldIndex.Sound:
-                case SoundItem_FieldIndex.Chance:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            SoundItem_FieldIndex enu = (SoundItem_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundItem_FieldIndex.Sound:
-                    return "Sound";
-                case SoundItem_FieldIndex.Chance:
-                    return "Chance";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            SoundItem_FieldIndex enu = (SoundItem_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundItem_FieldIndex.Sound:
-                case SoundItem_FieldIndex.Chance:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            SoundItem_FieldIndex enu = (SoundItem_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundItem_FieldIndex.Sound:
-                case SoundItem_FieldIndex.Chance:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            SoundItem_FieldIndex enu = (SoundItem_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundItem_FieldIndex.Sound:
-                    return typeof(FormLinkNullable<Sound>);
-                case SoundItem_FieldIndex.Chance:
-                    return typeof(Byte);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -822,14 +714,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -845,7 +737,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(ISoundItem item)
         {
             ClearPartial();
-            item.Sound = FormLinkNullable<Sound>.Null;
+            item.Sound = FormLinkNullable<ISoundGetter>.Null;
             item.Chance = default;
         }
         
@@ -1009,7 +901,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)SoundItem_FieldIndex.Sound) ?? true))
             {
-                item.Sound = new FormLinkNullable<Sound>(rhs.Sound.FormKey);
+                item.Sound = new FormLinkNullable<ISoundGetter>(rhs.Sound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)SoundItem_FieldIndex.Chance) ?? true))
             {

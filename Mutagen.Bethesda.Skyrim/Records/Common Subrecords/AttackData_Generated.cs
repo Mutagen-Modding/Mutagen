@@ -46,9 +46,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Single Chance { get; set; } = default;
         #endregion
         #region Spell
-        public FormLink<ASpell> Spell { get; set; } = new FormLink<ASpell>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IASpellGetter> IAttackDataGetter.Spell => this.Spell.ToGetter<ASpell, IASpellGetter>();
+        public FormLink<IASpellGetter> Spell { get; set; } = new FormLink<IASpellGetter>();
         #endregion
         #region Flags
         public AttackData.Flag Flags { get; set; } = default;
@@ -63,9 +61,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Single Stagger { get; set; } = default;
         #endregion
         #region AttackType
-        public FormLink<Keyword> AttackType { get; set; } = new FormLink<Keyword>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IKeywordGetter> IAttackDataGetter.AttackType => this.AttackType.ToGetter<Keyword, IKeywordGetter>();
+        public FormLink<IKeywordGetter> AttackType { get; set; } = new FormLink<IKeywordGetter>();
         #endregion
         #region Knockdown
         public Single Knockdown { get; set; } = default;
@@ -734,12 +730,12 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Single DamageMult { get; set; }
         new Single Chance { get; set; }
-        new FormLink<ASpell> Spell { get; set; }
+        new FormLink<IASpellGetter> Spell { get; set; }
         new AttackData.Flag Flags { get; set; }
         new Single AttackAngle { get; set; }
         new Single StrikeAngle { get; set; }
         new Single Stagger { get; set; }
-        new FormLink<Keyword> AttackType { get; set; }
+        new FormLink<IKeywordGetter> AttackType { get; set; }
         new Single Knockdown { get; set; }
         new Single RecoveryTime { get; set; }
         new Single StaminaMult { get; set; }
@@ -992,211 +988,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "DAMAGEMULT":
-                    return (ushort)AttackData_FieldIndex.DamageMult;
-                case "CHANCE":
-                    return (ushort)AttackData_FieldIndex.Chance;
-                case "SPELL":
-                    return (ushort)AttackData_FieldIndex.Spell;
-                case "FLAGS":
-                    return (ushort)AttackData_FieldIndex.Flags;
-                case "ATTACKANGLE":
-                    return (ushort)AttackData_FieldIndex.AttackAngle;
-                case "STRIKEANGLE":
-                    return (ushort)AttackData_FieldIndex.StrikeAngle;
-                case "STAGGER":
-                    return (ushort)AttackData_FieldIndex.Stagger;
-                case "ATTACKTYPE":
-                    return (ushort)AttackData_FieldIndex.AttackType;
-                case "KNOCKDOWN":
-                    return (ushort)AttackData_FieldIndex.Knockdown;
-                case "RECOVERYTIME":
-                    return (ushort)AttackData_FieldIndex.RecoveryTime;
-                case "STAMINAMULT":
-                    return (ushort)AttackData_FieldIndex.StaminaMult;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            AttackData_FieldIndex enu = (AttackData_FieldIndex)index;
-            switch (enu)
-            {
-                case AttackData_FieldIndex.DamageMult:
-                case AttackData_FieldIndex.Chance:
-                case AttackData_FieldIndex.Spell:
-                case AttackData_FieldIndex.Flags:
-                case AttackData_FieldIndex.AttackAngle:
-                case AttackData_FieldIndex.StrikeAngle:
-                case AttackData_FieldIndex.Stagger:
-                case AttackData_FieldIndex.AttackType:
-                case AttackData_FieldIndex.Knockdown:
-                case AttackData_FieldIndex.RecoveryTime:
-                case AttackData_FieldIndex.StaminaMult:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            AttackData_FieldIndex enu = (AttackData_FieldIndex)index;
-            switch (enu)
-            {
-                case AttackData_FieldIndex.DamageMult:
-                case AttackData_FieldIndex.Chance:
-                case AttackData_FieldIndex.Spell:
-                case AttackData_FieldIndex.Flags:
-                case AttackData_FieldIndex.AttackAngle:
-                case AttackData_FieldIndex.StrikeAngle:
-                case AttackData_FieldIndex.Stagger:
-                case AttackData_FieldIndex.AttackType:
-                case AttackData_FieldIndex.Knockdown:
-                case AttackData_FieldIndex.RecoveryTime:
-                case AttackData_FieldIndex.StaminaMult:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            AttackData_FieldIndex enu = (AttackData_FieldIndex)index;
-            switch (enu)
-            {
-                case AttackData_FieldIndex.DamageMult:
-                case AttackData_FieldIndex.Chance:
-                case AttackData_FieldIndex.Spell:
-                case AttackData_FieldIndex.Flags:
-                case AttackData_FieldIndex.AttackAngle:
-                case AttackData_FieldIndex.StrikeAngle:
-                case AttackData_FieldIndex.Stagger:
-                case AttackData_FieldIndex.AttackType:
-                case AttackData_FieldIndex.Knockdown:
-                case AttackData_FieldIndex.RecoveryTime:
-                case AttackData_FieldIndex.StaminaMult:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            AttackData_FieldIndex enu = (AttackData_FieldIndex)index;
-            switch (enu)
-            {
-                case AttackData_FieldIndex.DamageMult:
-                    return "DamageMult";
-                case AttackData_FieldIndex.Chance:
-                    return "Chance";
-                case AttackData_FieldIndex.Spell:
-                    return "Spell";
-                case AttackData_FieldIndex.Flags:
-                    return "Flags";
-                case AttackData_FieldIndex.AttackAngle:
-                    return "AttackAngle";
-                case AttackData_FieldIndex.StrikeAngle:
-                    return "StrikeAngle";
-                case AttackData_FieldIndex.Stagger:
-                    return "Stagger";
-                case AttackData_FieldIndex.AttackType:
-                    return "AttackType";
-                case AttackData_FieldIndex.Knockdown:
-                    return "Knockdown";
-                case AttackData_FieldIndex.RecoveryTime:
-                    return "RecoveryTime";
-                case AttackData_FieldIndex.StaminaMult:
-                    return "StaminaMult";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            AttackData_FieldIndex enu = (AttackData_FieldIndex)index;
-            switch (enu)
-            {
-                case AttackData_FieldIndex.DamageMult:
-                case AttackData_FieldIndex.Chance:
-                case AttackData_FieldIndex.Spell:
-                case AttackData_FieldIndex.Flags:
-                case AttackData_FieldIndex.AttackAngle:
-                case AttackData_FieldIndex.StrikeAngle:
-                case AttackData_FieldIndex.Stagger:
-                case AttackData_FieldIndex.AttackType:
-                case AttackData_FieldIndex.Knockdown:
-                case AttackData_FieldIndex.RecoveryTime:
-                case AttackData_FieldIndex.StaminaMult:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            AttackData_FieldIndex enu = (AttackData_FieldIndex)index;
-            switch (enu)
-            {
-                case AttackData_FieldIndex.DamageMult:
-                case AttackData_FieldIndex.Chance:
-                case AttackData_FieldIndex.Spell:
-                case AttackData_FieldIndex.Flags:
-                case AttackData_FieldIndex.AttackAngle:
-                case AttackData_FieldIndex.StrikeAngle:
-                case AttackData_FieldIndex.Stagger:
-                case AttackData_FieldIndex.AttackType:
-                case AttackData_FieldIndex.Knockdown:
-                case AttackData_FieldIndex.RecoveryTime:
-                case AttackData_FieldIndex.StaminaMult:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            AttackData_FieldIndex enu = (AttackData_FieldIndex)index;
-            switch (enu)
-            {
-                case AttackData_FieldIndex.DamageMult:
-                    return typeof(Single);
-                case AttackData_FieldIndex.Chance:
-                    return typeof(Single);
-                case AttackData_FieldIndex.Spell:
-                    return typeof(FormLink<ASpell>);
-                case AttackData_FieldIndex.Flags:
-                    return typeof(AttackData.Flag);
-                case AttackData_FieldIndex.AttackAngle:
-                    return typeof(Single);
-                case AttackData_FieldIndex.StrikeAngle:
-                    return typeof(Single);
-                case AttackData_FieldIndex.Stagger:
-                    return typeof(Single);
-                case AttackData_FieldIndex.AttackType:
-                    return typeof(FormLink<Keyword>);
-                case AttackData_FieldIndex.Knockdown:
-                    return typeof(Single);
-                case AttackData_FieldIndex.RecoveryTime:
-                    return typeof(Single);
-                case AttackData_FieldIndex.StaminaMult:
-                    return typeof(Single);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.ATKD;
         public static readonly Type BinaryWriteTranslation = typeof(AttackDataBinaryWriteTranslation);
         #region Interface
@@ -1217,14 +1008,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1242,12 +1033,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.DamageMult = default;
             item.Chance = default;
-            item.Spell = FormLink<ASpell>.Null;
+            item.Spell = FormLink<IASpellGetter>.Null;
             item.Flags = default;
             item.AttackAngle = default;
             item.StrikeAngle = default;
             item.Stagger = default;
-            item.AttackType = FormLink<Keyword>.Null;
+            item.AttackType = FormLink<IKeywordGetter>.Null;
             item.Knockdown = default;
             item.RecoveryTime = default;
             item.StaminaMult = default;
@@ -1480,7 +1271,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AttackData_FieldIndex.Spell) ?? true))
             {
-                item.Spell = new FormLink<ASpell>(rhs.Spell.FormKey);
+                item.Spell = new FormLink<IASpellGetter>(rhs.Spell.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)AttackData_FieldIndex.Flags) ?? true))
             {
@@ -1500,7 +1291,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AttackData_FieldIndex.AttackType) ?? true))
             {
-                item.AttackType = new FormLink<Keyword>(rhs.AttackType.FormKey);
+                item.AttackType = new FormLink<IKeywordGetter>(rhs.AttackType.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)AttackData_FieldIndex.Knockdown) ?? true))
             {

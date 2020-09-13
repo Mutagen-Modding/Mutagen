@@ -727,124 +727,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "FILLTEXTURE":
-                    return (ushort)EffectShader_FieldIndex.FillTexture;
-                case "PARTICLESHADERTEXTURE":
-                    return (ushort)EffectShader_FieldIndex.ParticleShaderTexture;
-                case "DATA":
-                    return (ushort)EffectShader_FieldIndex.Data;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            EffectShader_FieldIndex enu = (EffectShader_FieldIndex)index;
-            switch (enu)
-            {
-                case EffectShader_FieldIndex.FillTexture:
-                case EffectShader_FieldIndex.ParticleShaderTexture:
-                case EffectShader_FieldIndex.Data:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            EffectShader_FieldIndex enu = (EffectShader_FieldIndex)index;
-            switch (enu)
-            {
-                case EffectShader_FieldIndex.Data:
-                    return true;
-                case EffectShader_FieldIndex.FillTexture:
-                case EffectShader_FieldIndex.ParticleShaderTexture:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            EffectShader_FieldIndex enu = (EffectShader_FieldIndex)index;
-            switch (enu)
-            {
-                case EffectShader_FieldIndex.FillTexture:
-                case EffectShader_FieldIndex.ParticleShaderTexture:
-                case EffectShader_FieldIndex.Data:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            EffectShader_FieldIndex enu = (EffectShader_FieldIndex)index;
-            switch (enu)
-            {
-                case EffectShader_FieldIndex.FillTexture:
-                    return "FillTexture";
-                case EffectShader_FieldIndex.ParticleShaderTexture:
-                    return "ParticleShaderTexture";
-                case EffectShader_FieldIndex.Data:
-                    return "Data";
-                default:
-                    return OblivionMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            EffectShader_FieldIndex enu = (EffectShader_FieldIndex)index;
-            switch (enu)
-            {
-                case EffectShader_FieldIndex.FillTexture:
-                case EffectShader_FieldIndex.ParticleShaderTexture:
-                case EffectShader_FieldIndex.Data:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            EffectShader_FieldIndex enu = (EffectShader_FieldIndex)index;
-            switch (enu)
-            {
-                case EffectShader_FieldIndex.FillTexture:
-                case EffectShader_FieldIndex.ParticleShaderTexture:
-                case EffectShader_FieldIndex.Data:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            EffectShader_FieldIndex enu = (EffectShader_FieldIndex)index;
-            switch (enu)
-            {
-                case EffectShader_FieldIndex.FillTexture:
-                    return typeof(String);
-                case EffectShader_FieldIndex.ParticleShaderTexture:
-                    return typeof(String);
-                case EffectShader_FieldIndex.Data:
-                    return typeof(EffectShaderData);
-                default:
-                    return OblivionMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.EFSH;
         public static readonly Type BinaryWriteTranslation = typeof(EffectShaderBinaryWriteTranslation);
         #region Interface
@@ -865,14 +747,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

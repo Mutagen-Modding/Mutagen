@@ -49,8 +49,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Relations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Relation> _Relations = new ExtendedList<Relation>();
-        public IExtendedList<Relation> Relations
+        private ExtendedList<Relation> _Relations = new ExtendedList<Relation>();
+        public ExtendedList<Relation> Relations
         {
             get => this._Relations;
             protected set => this._Relations = value;
@@ -65,34 +65,22 @@ namespace Mutagen.Bethesda.Skyrim
         public Faction.FactionFlag Flags { get; set; } = default;
         #endregion
         #region ExteriorJailMarker
-        public FormLinkNullable<PlacedObject> ExteriorJailMarker { get; set; } = new FormLinkNullable<PlacedObject>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IPlacedObjectGetter> IFactionGetter.ExteriorJailMarker => this.ExteriorJailMarker.ToGetter<PlacedObject, IPlacedObjectGetter>();
+        public FormLinkNullable<IPlacedObjectGetter> ExteriorJailMarker { get; set; } = new FormLinkNullable<IPlacedObjectGetter>();
         #endregion
         #region FollowerWaitMarker
-        public FormLinkNullable<PlacedObject> FollowerWaitMarker { get; set; } = new FormLinkNullable<PlacedObject>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IPlacedObjectGetter> IFactionGetter.FollowerWaitMarker => this.FollowerWaitMarker.ToGetter<PlacedObject, IPlacedObjectGetter>();
+        public FormLinkNullable<IPlacedObjectGetter> FollowerWaitMarker { get; set; } = new FormLinkNullable<IPlacedObjectGetter>();
         #endregion
         #region StolenGoodsContainer
-        public FormLinkNullable<PlacedObject> StolenGoodsContainer { get; set; } = new FormLinkNullable<PlacedObject>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IPlacedObjectGetter> IFactionGetter.StolenGoodsContainer => this.StolenGoodsContainer.ToGetter<PlacedObject, IPlacedObjectGetter>();
+        public FormLinkNullable<IPlacedObjectGetter> StolenGoodsContainer { get; set; } = new FormLinkNullable<IPlacedObjectGetter>();
         #endregion
         #region PlayerInventoryContainer
-        public FormLinkNullable<PlacedObject> PlayerInventoryContainer { get; set; } = new FormLinkNullable<PlacedObject>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IPlacedObjectGetter> IFactionGetter.PlayerInventoryContainer => this.PlayerInventoryContainer.ToGetter<PlacedObject, IPlacedObjectGetter>();
+        public FormLinkNullable<IPlacedObjectGetter> PlayerInventoryContainer { get; set; } = new FormLinkNullable<IPlacedObjectGetter>();
         #endregion
         #region SharedCrimeFactionList
-        public FormLinkNullable<FormList> SharedCrimeFactionList { get; set; } = new FormLinkNullable<FormList>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IFormListGetter> IFactionGetter.SharedCrimeFactionList => this.SharedCrimeFactionList.ToGetter<FormList, IFormListGetter>();
+        public FormLinkNullable<IFormListGetter> SharedCrimeFactionList { get; set; } = new FormLinkNullable<IFormListGetter>();
         #endregion
         #region JailOutfit
-        public FormLinkNullable<Outfit> JailOutfit { get; set; } = new FormLinkNullable<Outfit>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IOutfitGetter> IFactionGetter.JailOutfit => this.JailOutfit.ToGetter<Outfit, IOutfitGetter>();
+        public FormLinkNullable<IOutfitGetter> JailOutfit { get; set; } = new FormLinkNullable<IOutfitGetter>();
         #endregion
         #region CrimeValues
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -107,8 +95,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Ranks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Rank> _Ranks = new ExtendedList<Rank>();
-        public IExtendedList<Rank> Ranks
+        private ExtendedList<Rank> _Ranks = new ExtendedList<Rank>();
+        public ExtendedList<Rank> Ranks
         {
             get => this._Ranks;
             protected set => this._Ranks = value;
@@ -120,14 +108,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region VendorBuySellList
-        public FormLinkNullable<FormList> VendorBuySellList { get; set; } = new FormLinkNullable<FormList>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IFormListGetter> IFactionGetter.VendorBuySellList => this.VendorBuySellList.ToGetter<FormList, IFormListGetter>();
+        public FormLinkNullable<IFormListGetter> VendorBuySellList { get; set; } = new FormLinkNullable<IFormListGetter>();
         #endregion
         #region MerchantContainer
-        public FormLinkNullable<PlacedObject> MerchantContainer { get; set; } = new FormLinkNullable<PlacedObject>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IPlacedObjectGetter> IFactionGetter.MerchantContainer => this.MerchantContainer.ToGetter<PlacedObject, IPlacedObjectGetter>();
+        public FormLinkNullable<IPlacedObjectGetter> MerchantContainer { get; set; } = new FormLinkNullable<IPlacedObjectGetter>();
         #endregion
         #region VendorValues
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -153,8 +137,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition>? _Conditions;
-        public IExtendedList<Condition>? Conditions
+        private ExtendedList<Condition>? _Conditions;
+        public ExtendedList<Condition>? Conditions
         {
             get => this._Conditions;
             set => this._Conditions = value;
@@ -1230,21 +1214,21 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new TranslatedString? Name { get; set; }
-        new IExtendedList<Relation> Relations { get; }
+        new ExtendedList<Relation> Relations { get; }
         new Faction.FactionFlag Flags { get; set; }
-        new FormLinkNullable<PlacedObject> ExteriorJailMarker { get; set; }
-        new FormLinkNullable<PlacedObject> FollowerWaitMarker { get; set; }
-        new FormLinkNullable<PlacedObject> StolenGoodsContainer { get; set; }
-        new FormLinkNullable<PlacedObject> PlayerInventoryContainer { get; set; }
-        new FormLinkNullable<FormList> SharedCrimeFactionList { get; set; }
-        new FormLinkNullable<Outfit> JailOutfit { get; set; }
+        new FormLinkNullable<IPlacedObjectGetter> ExteriorJailMarker { get; set; }
+        new FormLinkNullable<IPlacedObjectGetter> FollowerWaitMarker { get; set; }
+        new FormLinkNullable<IPlacedObjectGetter> StolenGoodsContainer { get; set; }
+        new FormLinkNullable<IPlacedObjectGetter> PlayerInventoryContainer { get; set; }
+        new FormLinkNullable<IFormListGetter> SharedCrimeFactionList { get; set; }
+        new FormLinkNullable<IOutfitGetter> JailOutfit { get; set; }
         new CrimeValues? CrimeValues { get; set; }
-        new IExtendedList<Rank> Ranks { get; }
-        new FormLinkNullable<FormList> VendorBuySellList { get; set; }
-        new FormLinkNullable<PlacedObject> MerchantContainer { get; set; }
+        new ExtendedList<Rank> Ranks { get; }
+        new FormLinkNullable<IFormListGetter> VendorBuySellList { get; set; }
+        new FormLinkNullable<IPlacedObjectGetter> MerchantContainer { get; set; }
         new VendorValues? VendorValues { get; set; }
         new LocationTargetRadius? VendorLocation { get; set; }
-        new IExtendedList<Condition>? Conditions { get; set; }
+        new ExtendedList<Condition>? Conditions { get; set; }
     }
 
     public partial interface IFactionInternal :
@@ -1490,268 +1474,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "NAME":
-                    return (ushort)Faction_FieldIndex.Name;
-                case "RELATIONS":
-                    return (ushort)Faction_FieldIndex.Relations;
-                case "FLAGS":
-                    return (ushort)Faction_FieldIndex.Flags;
-                case "EXTERIORJAILMARKER":
-                    return (ushort)Faction_FieldIndex.ExteriorJailMarker;
-                case "FOLLOWERWAITMARKER":
-                    return (ushort)Faction_FieldIndex.FollowerWaitMarker;
-                case "STOLENGOODSCONTAINER":
-                    return (ushort)Faction_FieldIndex.StolenGoodsContainer;
-                case "PLAYERINVENTORYCONTAINER":
-                    return (ushort)Faction_FieldIndex.PlayerInventoryContainer;
-                case "SHAREDCRIMEFACTIONLIST":
-                    return (ushort)Faction_FieldIndex.SharedCrimeFactionList;
-                case "JAILOUTFIT":
-                    return (ushort)Faction_FieldIndex.JailOutfit;
-                case "CRIMEVALUES":
-                    return (ushort)Faction_FieldIndex.CrimeValues;
-                case "RANKS":
-                    return (ushort)Faction_FieldIndex.Ranks;
-                case "VENDORBUYSELLLIST":
-                    return (ushort)Faction_FieldIndex.VendorBuySellList;
-                case "MERCHANTCONTAINER":
-                    return (ushort)Faction_FieldIndex.MerchantContainer;
-                case "VENDORVALUES":
-                    return (ushort)Faction_FieldIndex.VendorValues;
-                case "VENDORLOCATION":
-                    return (ushort)Faction_FieldIndex.VendorLocation;
-                case "CONDITIONS":
-                    return (ushort)Faction_FieldIndex.Conditions;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Faction_FieldIndex enu = (Faction_FieldIndex)index;
-            switch (enu)
-            {
-                case Faction_FieldIndex.Relations:
-                case Faction_FieldIndex.Ranks:
-                case Faction_FieldIndex.Conditions:
-                    return true;
-                case Faction_FieldIndex.Name:
-                case Faction_FieldIndex.Flags:
-                case Faction_FieldIndex.ExteriorJailMarker:
-                case Faction_FieldIndex.FollowerWaitMarker:
-                case Faction_FieldIndex.StolenGoodsContainer:
-                case Faction_FieldIndex.PlayerInventoryContainer:
-                case Faction_FieldIndex.SharedCrimeFactionList:
-                case Faction_FieldIndex.JailOutfit:
-                case Faction_FieldIndex.CrimeValues:
-                case Faction_FieldIndex.VendorBuySellList:
-                case Faction_FieldIndex.MerchantContainer:
-                case Faction_FieldIndex.VendorValues:
-                case Faction_FieldIndex.VendorLocation:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Faction_FieldIndex enu = (Faction_FieldIndex)index;
-            switch (enu)
-            {
-                case Faction_FieldIndex.Relations:
-                case Faction_FieldIndex.CrimeValues:
-                case Faction_FieldIndex.Ranks:
-                case Faction_FieldIndex.VendorValues:
-                case Faction_FieldIndex.VendorLocation:
-                case Faction_FieldIndex.Conditions:
-                    return true;
-                case Faction_FieldIndex.Name:
-                case Faction_FieldIndex.Flags:
-                case Faction_FieldIndex.ExteriorJailMarker:
-                case Faction_FieldIndex.FollowerWaitMarker:
-                case Faction_FieldIndex.StolenGoodsContainer:
-                case Faction_FieldIndex.PlayerInventoryContainer:
-                case Faction_FieldIndex.SharedCrimeFactionList:
-                case Faction_FieldIndex.JailOutfit:
-                case Faction_FieldIndex.VendorBuySellList:
-                case Faction_FieldIndex.MerchantContainer:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Faction_FieldIndex enu = (Faction_FieldIndex)index;
-            switch (enu)
-            {
-                case Faction_FieldIndex.Name:
-                case Faction_FieldIndex.Relations:
-                case Faction_FieldIndex.Flags:
-                case Faction_FieldIndex.ExteriorJailMarker:
-                case Faction_FieldIndex.FollowerWaitMarker:
-                case Faction_FieldIndex.StolenGoodsContainer:
-                case Faction_FieldIndex.PlayerInventoryContainer:
-                case Faction_FieldIndex.SharedCrimeFactionList:
-                case Faction_FieldIndex.JailOutfit:
-                case Faction_FieldIndex.CrimeValues:
-                case Faction_FieldIndex.Ranks:
-                case Faction_FieldIndex.VendorBuySellList:
-                case Faction_FieldIndex.MerchantContainer:
-                case Faction_FieldIndex.VendorValues:
-                case Faction_FieldIndex.VendorLocation:
-                case Faction_FieldIndex.Conditions:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Faction_FieldIndex enu = (Faction_FieldIndex)index;
-            switch (enu)
-            {
-                case Faction_FieldIndex.Name:
-                    return "Name";
-                case Faction_FieldIndex.Relations:
-                    return "Relations";
-                case Faction_FieldIndex.Flags:
-                    return "Flags";
-                case Faction_FieldIndex.ExteriorJailMarker:
-                    return "ExteriorJailMarker";
-                case Faction_FieldIndex.FollowerWaitMarker:
-                    return "FollowerWaitMarker";
-                case Faction_FieldIndex.StolenGoodsContainer:
-                    return "StolenGoodsContainer";
-                case Faction_FieldIndex.PlayerInventoryContainer:
-                    return "PlayerInventoryContainer";
-                case Faction_FieldIndex.SharedCrimeFactionList:
-                    return "SharedCrimeFactionList";
-                case Faction_FieldIndex.JailOutfit:
-                    return "JailOutfit";
-                case Faction_FieldIndex.CrimeValues:
-                    return "CrimeValues";
-                case Faction_FieldIndex.Ranks:
-                    return "Ranks";
-                case Faction_FieldIndex.VendorBuySellList:
-                    return "VendorBuySellList";
-                case Faction_FieldIndex.MerchantContainer:
-                    return "MerchantContainer";
-                case Faction_FieldIndex.VendorValues:
-                    return "VendorValues";
-                case Faction_FieldIndex.VendorLocation:
-                    return "VendorLocation";
-                case Faction_FieldIndex.Conditions:
-                    return "Conditions";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Faction_FieldIndex enu = (Faction_FieldIndex)index;
-            switch (enu)
-            {
-                case Faction_FieldIndex.Name:
-                case Faction_FieldIndex.Relations:
-                case Faction_FieldIndex.Flags:
-                case Faction_FieldIndex.ExteriorJailMarker:
-                case Faction_FieldIndex.FollowerWaitMarker:
-                case Faction_FieldIndex.StolenGoodsContainer:
-                case Faction_FieldIndex.PlayerInventoryContainer:
-                case Faction_FieldIndex.SharedCrimeFactionList:
-                case Faction_FieldIndex.JailOutfit:
-                case Faction_FieldIndex.CrimeValues:
-                case Faction_FieldIndex.Ranks:
-                case Faction_FieldIndex.VendorBuySellList:
-                case Faction_FieldIndex.MerchantContainer:
-                case Faction_FieldIndex.VendorValues:
-                case Faction_FieldIndex.VendorLocation:
-                case Faction_FieldIndex.Conditions:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Faction_FieldIndex enu = (Faction_FieldIndex)index;
-            switch (enu)
-            {
-                case Faction_FieldIndex.Name:
-                case Faction_FieldIndex.Relations:
-                case Faction_FieldIndex.Flags:
-                case Faction_FieldIndex.ExteriorJailMarker:
-                case Faction_FieldIndex.FollowerWaitMarker:
-                case Faction_FieldIndex.StolenGoodsContainer:
-                case Faction_FieldIndex.PlayerInventoryContainer:
-                case Faction_FieldIndex.SharedCrimeFactionList:
-                case Faction_FieldIndex.JailOutfit:
-                case Faction_FieldIndex.CrimeValues:
-                case Faction_FieldIndex.Ranks:
-                case Faction_FieldIndex.VendorBuySellList:
-                case Faction_FieldIndex.MerchantContainer:
-                case Faction_FieldIndex.VendorValues:
-                case Faction_FieldIndex.VendorLocation:
-                case Faction_FieldIndex.Conditions:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Faction_FieldIndex enu = (Faction_FieldIndex)index;
-            switch (enu)
-            {
-                case Faction_FieldIndex.Name:
-                    return typeof(TranslatedString);
-                case Faction_FieldIndex.Relations:
-                    return typeof(IExtendedList<Relation>);
-                case Faction_FieldIndex.Flags:
-                    return typeof(Faction.FactionFlag);
-                case Faction_FieldIndex.ExteriorJailMarker:
-                    return typeof(FormLinkNullable<PlacedObject>);
-                case Faction_FieldIndex.FollowerWaitMarker:
-                    return typeof(FormLinkNullable<PlacedObject>);
-                case Faction_FieldIndex.StolenGoodsContainer:
-                    return typeof(FormLinkNullable<PlacedObject>);
-                case Faction_FieldIndex.PlayerInventoryContainer:
-                    return typeof(FormLinkNullable<PlacedObject>);
-                case Faction_FieldIndex.SharedCrimeFactionList:
-                    return typeof(FormLinkNullable<FormList>);
-                case Faction_FieldIndex.JailOutfit:
-                    return typeof(FormLinkNullable<Outfit>);
-                case Faction_FieldIndex.CrimeValues:
-                    return typeof(CrimeValues);
-                case Faction_FieldIndex.Ranks:
-                    return typeof(IExtendedList<Rank>);
-                case Faction_FieldIndex.VendorBuySellList:
-                    return typeof(FormLinkNullable<FormList>);
-                case Faction_FieldIndex.MerchantContainer:
-                    return typeof(FormLinkNullable<PlacedObject>);
-                case Faction_FieldIndex.VendorValues:
-                    return typeof(VendorValues);
-                case Faction_FieldIndex.VendorLocation:
-                    return typeof(LocationTargetRadius);
-                case Faction_FieldIndex.Conditions:
-                    return typeof(IExtendedList<Condition>);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.FACT;
         public static readonly Type BinaryWriteTranslation = typeof(FactionBinaryWriteTranslation);
         #region Interface
@@ -1772,14 +1494,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1798,16 +1520,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Name = default;
             item.Relations.Clear();
             item.Flags = default;
-            item.ExteriorJailMarker = FormLinkNullable<PlacedObject>.Null;
-            item.FollowerWaitMarker = FormLinkNullable<PlacedObject>.Null;
-            item.StolenGoodsContainer = FormLinkNullable<PlacedObject>.Null;
-            item.PlayerInventoryContainer = FormLinkNullable<PlacedObject>.Null;
-            item.SharedCrimeFactionList = FormLinkNullable<FormList>.Null;
-            item.JailOutfit = FormLinkNullable<Outfit>.Null;
+            item.ExteriorJailMarker = FormLinkNullable<IPlacedObjectGetter>.Null;
+            item.FollowerWaitMarker = FormLinkNullable<IPlacedObjectGetter>.Null;
+            item.StolenGoodsContainer = FormLinkNullable<IPlacedObjectGetter>.Null;
+            item.PlayerInventoryContainer = FormLinkNullable<IPlacedObjectGetter>.Null;
+            item.SharedCrimeFactionList = FormLinkNullable<IFormListGetter>.Null;
+            item.JailOutfit = FormLinkNullable<IOutfitGetter>.Null;
             item.CrimeValues = null;
             item.Ranks.Clear();
-            item.VendorBuySellList = FormLinkNullable<FormList>.Null;
-            item.MerchantContainer = FormLinkNullable<PlacedObject>.Null;
+            item.VendorBuySellList = FormLinkNullable<IFormListGetter>.Null;
+            item.MerchantContainer = FormLinkNullable<IPlacedObjectGetter>.Null;
             item.VendorValues = null;
             item.VendorLocation = null;
             item.Conditions = null;
@@ -2368,27 +2090,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.ExteriorJailMarker) ?? true))
             {
-                item.ExteriorJailMarker = new FormLinkNullable<PlacedObject>(rhs.ExteriorJailMarker.FormKey);
+                item.ExteriorJailMarker = new FormLinkNullable<IPlacedObjectGetter>(rhs.ExteriorJailMarker.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.FollowerWaitMarker) ?? true))
             {
-                item.FollowerWaitMarker = new FormLinkNullable<PlacedObject>(rhs.FollowerWaitMarker.FormKey);
+                item.FollowerWaitMarker = new FormLinkNullable<IPlacedObjectGetter>(rhs.FollowerWaitMarker.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.StolenGoodsContainer) ?? true))
             {
-                item.StolenGoodsContainer = new FormLinkNullable<PlacedObject>(rhs.StolenGoodsContainer.FormKey);
+                item.StolenGoodsContainer = new FormLinkNullable<IPlacedObjectGetter>(rhs.StolenGoodsContainer.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.PlayerInventoryContainer) ?? true))
             {
-                item.PlayerInventoryContainer = new FormLinkNullable<PlacedObject>(rhs.PlayerInventoryContainer.FormKey);
+                item.PlayerInventoryContainer = new FormLinkNullable<IPlacedObjectGetter>(rhs.PlayerInventoryContainer.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.SharedCrimeFactionList) ?? true))
             {
-                item.SharedCrimeFactionList = new FormLinkNullable<FormList>(rhs.SharedCrimeFactionList.FormKey);
+                item.SharedCrimeFactionList = new FormLinkNullable<IFormListGetter>(rhs.SharedCrimeFactionList.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.JailOutfit) ?? true))
             {
-                item.JailOutfit = new FormLinkNullable<Outfit>(rhs.JailOutfit.FormKey);
+                item.JailOutfit = new FormLinkNullable<IOutfitGetter>(rhs.JailOutfit.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.CrimeValues) ?? true))
             {
@@ -2442,11 +2164,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorBuySellList) ?? true))
             {
-                item.VendorBuySellList = new FormLinkNullable<FormList>(rhs.VendorBuySellList.FormKey);
+                item.VendorBuySellList = new FormLinkNullable<IFormListGetter>(rhs.VendorBuySellList.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.MerchantContainer) ?? true))
             {
-                item.MerchantContainer = new FormLinkNullable<PlacedObject>(rhs.MerchantContainer.FormKey);
+                item.MerchantContainer = new FormLinkNullable<IPlacedObjectGetter>(rhs.MerchantContainer.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorValues) ?? true))
             {

@@ -40,9 +40,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Color
-        public FormLinkNullable<ColorRecord> Color { get; set; } = new FormLinkNullable<ColorRecord>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IColorRecordGetter> ITintPresetGetter.Color => this.Color.ToGetter<ColorRecord, IColorRecordGetter>();
+        public FormLinkNullable<IColorRecordGetter> Color { get; set; } = new FormLinkNullable<IColorRecordGetter>();
         #endregion
         #region DefaultValue
         public Single? DefaultValue { get; set; }
@@ -485,7 +483,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ITintPreset>,
         ILinkedFormKeyContainer
     {
-        new FormLinkNullable<ColorRecord> Color { get; set; }
+        new FormLinkNullable<IColorRecordGetter> Color { get; set; }
         new Single? DefaultValue { get; set; }
         new UInt16? Index { get; set; }
     }
@@ -721,123 +719,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "COLOR":
-                    return (ushort)TintPreset_FieldIndex.Color;
-                case "DEFAULTVALUE":
-                    return (ushort)TintPreset_FieldIndex.DefaultValue;
-                case "INDEX":
-                    return (ushort)TintPreset_FieldIndex.Index;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            TintPreset_FieldIndex enu = (TintPreset_FieldIndex)index;
-            switch (enu)
-            {
-                case TintPreset_FieldIndex.Color:
-                case TintPreset_FieldIndex.DefaultValue:
-                case TintPreset_FieldIndex.Index:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            TintPreset_FieldIndex enu = (TintPreset_FieldIndex)index;
-            switch (enu)
-            {
-                case TintPreset_FieldIndex.Color:
-                case TintPreset_FieldIndex.DefaultValue:
-                case TintPreset_FieldIndex.Index:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            TintPreset_FieldIndex enu = (TintPreset_FieldIndex)index;
-            switch (enu)
-            {
-                case TintPreset_FieldIndex.Color:
-                case TintPreset_FieldIndex.DefaultValue:
-                case TintPreset_FieldIndex.Index:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            TintPreset_FieldIndex enu = (TintPreset_FieldIndex)index;
-            switch (enu)
-            {
-                case TintPreset_FieldIndex.Color:
-                    return "Color";
-                case TintPreset_FieldIndex.DefaultValue:
-                    return "DefaultValue";
-                case TintPreset_FieldIndex.Index:
-                    return "Index";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            TintPreset_FieldIndex enu = (TintPreset_FieldIndex)index;
-            switch (enu)
-            {
-                case TintPreset_FieldIndex.Color:
-                case TintPreset_FieldIndex.DefaultValue:
-                case TintPreset_FieldIndex.Index:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            TintPreset_FieldIndex enu = (TintPreset_FieldIndex)index;
-            switch (enu)
-            {
-                case TintPreset_FieldIndex.Color:
-                case TintPreset_FieldIndex.DefaultValue:
-                case TintPreset_FieldIndex.Index:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            TintPreset_FieldIndex enu = (TintPreset_FieldIndex)index;
-            switch (enu)
-            {
-                case TintPreset_FieldIndex.Color:
-                    return typeof(FormLinkNullable<ColorRecord>);
-                case TintPreset_FieldIndex.DefaultValue:
-                    return typeof(Single);
-                case TintPreset_FieldIndex.Index:
-                    return typeof(UInt16);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -870,14 +751,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -893,7 +774,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ITintPreset item)
         {
             ClearPartial();
-            item.Color = FormLinkNullable<ColorRecord>.Null;
+            item.Color = FormLinkNullable<IColorRecordGetter>.Null;
             item.DefaultValue = default;
             item.Index = default;
         }
@@ -1069,7 +950,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)TintPreset_FieldIndex.Color) ?? true))
             {
-                item.Color = new FormLinkNullable<ColorRecord>(rhs.Color.FormKey);
+                item.Color = new FormLinkNullable<IColorRecordGetter>(rhs.Color.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)TintPreset_FieldIndex.DefaultValue) ?? true))
             {

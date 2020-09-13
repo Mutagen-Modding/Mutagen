@@ -43,9 +43,7 @@ namespace Mutagen.Bethesda.Skyrim
         public String Name { get; set; } = string.Empty;
         #endregion
         #region NewTexture
-        public FormLink<TextureSet> NewTexture { get; set; } = new FormLink<TextureSet>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ITextureSetGetter> IAlternateTextureGetter.NewTexture => this.NewTexture.ToGetter<TextureSet, ITextureSetGetter>();
+        public FormLink<ITextureSetGetter> NewTexture { get; set; } = new FormLink<ITextureSetGetter>();
         #endregion
         #region Index
         public Int32 Index { get; set; } = default;
@@ -482,7 +480,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new String Name { get; set; }
-        new FormLink<TextureSet> NewTexture { get; set; }
+        new FormLink<ITextureSetGetter> NewTexture { get; set; }
         new Int32 Index { get; set; }
     }
 
@@ -717,123 +715,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "NAME":
-                    return (ushort)AlternateTexture_FieldIndex.Name;
-                case "NEWTEXTURE":
-                    return (ushort)AlternateTexture_FieldIndex.NewTexture;
-                case "INDEX":
-                    return (ushort)AlternateTexture_FieldIndex.Index;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            AlternateTexture_FieldIndex enu = (AlternateTexture_FieldIndex)index;
-            switch (enu)
-            {
-                case AlternateTexture_FieldIndex.Name:
-                case AlternateTexture_FieldIndex.NewTexture:
-                case AlternateTexture_FieldIndex.Index:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            AlternateTexture_FieldIndex enu = (AlternateTexture_FieldIndex)index;
-            switch (enu)
-            {
-                case AlternateTexture_FieldIndex.Name:
-                case AlternateTexture_FieldIndex.NewTexture:
-                case AlternateTexture_FieldIndex.Index:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            AlternateTexture_FieldIndex enu = (AlternateTexture_FieldIndex)index;
-            switch (enu)
-            {
-                case AlternateTexture_FieldIndex.Name:
-                case AlternateTexture_FieldIndex.NewTexture:
-                case AlternateTexture_FieldIndex.Index:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            AlternateTexture_FieldIndex enu = (AlternateTexture_FieldIndex)index;
-            switch (enu)
-            {
-                case AlternateTexture_FieldIndex.Name:
-                    return "Name";
-                case AlternateTexture_FieldIndex.NewTexture:
-                    return "NewTexture";
-                case AlternateTexture_FieldIndex.Index:
-                    return "Index";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            AlternateTexture_FieldIndex enu = (AlternateTexture_FieldIndex)index;
-            switch (enu)
-            {
-                case AlternateTexture_FieldIndex.Name:
-                case AlternateTexture_FieldIndex.NewTexture:
-                case AlternateTexture_FieldIndex.Index:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            AlternateTexture_FieldIndex enu = (AlternateTexture_FieldIndex)index;
-            switch (enu)
-            {
-                case AlternateTexture_FieldIndex.Name:
-                case AlternateTexture_FieldIndex.NewTexture:
-                case AlternateTexture_FieldIndex.Index:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            AlternateTexture_FieldIndex enu = (AlternateTexture_FieldIndex)index;
-            switch (enu)
-            {
-                case AlternateTexture_FieldIndex.Name:
-                    return typeof(String);
-                case AlternateTexture_FieldIndex.NewTexture:
-                    return typeof(FormLink<TextureSet>);
-                case AlternateTexture_FieldIndex.Index:
-                    return typeof(Int32);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly Type BinaryWriteTranslation = typeof(AlternateTextureBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -853,14 +734,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -877,7 +758,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Name = string.Empty;
-            item.NewTexture = FormLink<TextureSet>.Null;
+            item.NewTexture = FormLink<ITextureSetGetter>.Null;
             item.Index = default;
         }
         
@@ -1044,7 +925,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AlternateTexture_FieldIndex.NewTexture) ?? true))
             {
-                item.NewTexture = new FormLink<TextureSet>(rhs.NewTexture.FormKey);
+                item.NewTexture = new FormLink<ITextureSetGetter>(rhs.NewTexture.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)AlternateTexture_FieldIndex.Index) ?? true))
             {

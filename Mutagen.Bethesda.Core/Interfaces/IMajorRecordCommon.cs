@@ -1,3 +1,4 @@
+using Loqui;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,7 +24,7 @@ namespace Mutagen.Bethesda
     /// <summary>
     /// An interface that Major Record objects implement to hook into the common getter systems
     /// </summary>
-    public interface IMajorRecordCommonGetter : IDuplicatable, IFormVersionGetter, ILinkedFormKeyContainerGetter
+    public interface IMajorRecordCommonGetter : IDuplicatable, IFormVersionGetter, ILinkedFormKeyContainerGetter, ILoquiObject
     {
         /// <summary>
         /// The usually unique string identifier assigned to the Major Record

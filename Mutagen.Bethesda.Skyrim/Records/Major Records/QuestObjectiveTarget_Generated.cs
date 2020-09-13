@@ -48,8 +48,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public IExtendedList<Condition> Conditions
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -604,7 +604,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Int32 AliasIndex { get; set; }
         new Quest.TargetFlag Flags { get; set; }
-        new IExtendedList<Condition> Conditions { get; }
+        new ExtendedList<Condition> Conditions { get; }
         new QuestObjectiveTarget.QSTADataType QSTADataTypeState { get; set; }
     }
 
@@ -841,136 +841,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "ALIASINDEX":
-                    return (ushort)QuestObjectiveTarget_FieldIndex.AliasIndex;
-                case "FLAGS":
-                    return (ushort)QuestObjectiveTarget_FieldIndex.Flags;
-                case "CONDITIONS":
-                    return (ushort)QuestObjectiveTarget_FieldIndex.Conditions;
-                case "QSTADATATYPESTATE":
-                    return (ushort)QuestObjectiveTarget_FieldIndex.QSTADataTypeState;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            QuestObjectiveTarget_FieldIndex enu = (QuestObjectiveTarget_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestObjectiveTarget_FieldIndex.Conditions:
-                    return true;
-                case QuestObjectiveTarget_FieldIndex.AliasIndex:
-                case QuestObjectiveTarget_FieldIndex.Flags:
-                case QuestObjectiveTarget_FieldIndex.QSTADataTypeState:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            QuestObjectiveTarget_FieldIndex enu = (QuestObjectiveTarget_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestObjectiveTarget_FieldIndex.Conditions:
-                    return true;
-                case QuestObjectiveTarget_FieldIndex.AliasIndex:
-                case QuestObjectiveTarget_FieldIndex.Flags:
-                case QuestObjectiveTarget_FieldIndex.QSTADataTypeState:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            QuestObjectiveTarget_FieldIndex enu = (QuestObjectiveTarget_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestObjectiveTarget_FieldIndex.AliasIndex:
-                case QuestObjectiveTarget_FieldIndex.Flags:
-                case QuestObjectiveTarget_FieldIndex.Conditions:
-                case QuestObjectiveTarget_FieldIndex.QSTADataTypeState:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            QuestObjectiveTarget_FieldIndex enu = (QuestObjectiveTarget_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestObjectiveTarget_FieldIndex.AliasIndex:
-                    return "AliasIndex";
-                case QuestObjectiveTarget_FieldIndex.Flags:
-                    return "Flags";
-                case QuestObjectiveTarget_FieldIndex.Conditions:
-                    return "Conditions";
-                case QuestObjectiveTarget_FieldIndex.QSTADataTypeState:
-                    return "QSTADataTypeState";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            QuestObjectiveTarget_FieldIndex enu = (QuestObjectiveTarget_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestObjectiveTarget_FieldIndex.AliasIndex:
-                case QuestObjectiveTarget_FieldIndex.Flags:
-                case QuestObjectiveTarget_FieldIndex.Conditions:
-                case QuestObjectiveTarget_FieldIndex.QSTADataTypeState:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            QuestObjectiveTarget_FieldIndex enu = (QuestObjectiveTarget_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestObjectiveTarget_FieldIndex.AliasIndex:
-                case QuestObjectiveTarget_FieldIndex.Flags:
-                case QuestObjectiveTarget_FieldIndex.Conditions:
-                case QuestObjectiveTarget_FieldIndex.QSTADataTypeState:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            QuestObjectiveTarget_FieldIndex enu = (QuestObjectiveTarget_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestObjectiveTarget_FieldIndex.AliasIndex:
-                    return typeof(Int32);
-                case QuestObjectiveTarget_FieldIndex.Flags:
-                    return typeof(Quest.TargetFlag);
-                case QuestObjectiveTarget_FieldIndex.Conditions:
-                    return typeof(IExtendedList<Condition>);
-                case QuestObjectiveTarget_FieldIndex.QSTADataTypeState:
-                    return typeof(QuestObjectiveTarget.QSTADataType);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.QSTA;
         public static readonly Type BinaryWriteTranslation = typeof(QuestObjectiveTargetBinaryWriteTranslation);
         #region Interface
@@ -991,14 +861,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

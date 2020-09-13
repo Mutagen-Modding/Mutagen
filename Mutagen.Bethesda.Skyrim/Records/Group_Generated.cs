@@ -702,118 +702,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = typeof(Group_Registration<>);
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "TYPE":
-                    return (ushort)Group_FieldIndex.Type;
-                case "LASTMODIFIED":
-                    return (ushort)Group_FieldIndex.LastModified;
-                case "UNKNOWN":
-                    return (ushort)Group_FieldIndex.Unknown;
-                case "RECORDCACHE":
-                    return (ushort)Group_FieldIndex.RecordCache;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Group_FieldIndex enu = (Group_FieldIndex)index;
-            switch (enu)
-            {
-                case Group_FieldIndex.Type:
-                case Group_FieldIndex.LastModified:
-                case Group_FieldIndex.Unknown:
-                case Group_FieldIndex.RecordCache:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Group_FieldIndex enu = (Group_FieldIndex)index;
-            switch (enu)
-            {
-                case Group_FieldIndex.Type:
-                case Group_FieldIndex.LastModified:
-                case Group_FieldIndex.Unknown:
-                case Group_FieldIndex.RecordCache:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Group_FieldIndex enu = (Group_FieldIndex)index;
-            switch (enu)
-            {
-                case Group_FieldIndex.Type:
-                case Group_FieldIndex.LastModified:
-                case Group_FieldIndex.Unknown:
-                case Group_FieldIndex.RecordCache:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Group_FieldIndex enu = (Group_FieldIndex)index;
-            switch (enu)
-            {
-                case Group_FieldIndex.Type:
-                    return "Type";
-                case Group_FieldIndex.LastModified:
-                    return "LastModified";
-                case Group_FieldIndex.Unknown:
-                    return "Unknown";
-                case Group_FieldIndex.RecordCache:
-                    return "RecordCache";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Group_FieldIndex enu = (Group_FieldIndex)index;
-            switch (enu)
-            {
-                case Group_FieldIndex.Type:
-                case Group_FieldIndex.LastModified:
-                case Group_FieldIndex.Unknown:
-                case Group_FieldIndex.RecordCache:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Group_FieldIndex enu = (Group_FieldIndex)index;
-            switch (enu)
-            {
-                case Group_FieldIndex.Type:
-                case Group_FieldIndex.LastModified:
-                case Group_FieldIndex.Unknown:
-                case Group_FieldIndex.RecordCache:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index) => throw new ArgumentException("Cannot get nth type for a generic object here.  Use generic registration instead.");
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.GRUP;
         public static readonly Type BinaryWriteTranslation = typeof(GroupBinaryWriteTranslation);
         #region Interface
@@ -834,14 +722,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

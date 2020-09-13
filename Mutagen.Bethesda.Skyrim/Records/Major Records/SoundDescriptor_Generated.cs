@@ -54,19 +54,15 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? ISoundDescriptorGetter.CNAM => this.CNAM;
         #endregion
         #region Category
-        public FormLinkNullable<SoundCategory> Category { get; set; } = new FormLinkNullable<SoundCategory>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundCategoryGetter> ISoundDescriptorGetter.Category => this.Category.ToGetter<SoundCategory, ISoundCategoryGetter>();
+        public FormLinkNullable<ISoundCategoryGetter> Category { get; set; } = new FormLinkNullable<ISoundCategoryGetter>();
         #endregion
         #region AlternateSoundFor
-        public FormLinkNullable<SoundDescriptor> AlternateSoundFor { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> ISoundDescriptorGetter.AlternateSoundFor => this.AlternateSoundFor.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> AlternateSoundFor { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region SoundFiles
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<String> _SoundFiles = new ExtendedList<String>();
-        public IExtendedList<String> SoundFiles
+        private ExtendedList<String> _SoundFiles = new ExtendedList<String>();
+        public ExtendedList<String> SoundFiles
         {
             get => this._SoundFiles;
             protected set => this._SoundFiles = value;
@@ -78,9 +74,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region OutputModel
-        public FormLinkNullable<SoundOutputModel> OutputModel { get; set; } = new FormLinkNullable<SoundOutputModel>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundOutputModelGetter> ISoundDescriptorGetter.OutputModel => this.OutputModel.ToGetter<SoundOutputModel, ISoundOutputModelGetter>();
+        public FormLinkNullable<ISoundOutputModelGetter> OutputModel { get; set; } = new FormLinkNullable<ISoundOutputModelGetter>();
         #endregion
         #region String
         public String? String { get; set; }
@@ -89,8 +83,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public IExtendedList<Condition> Conditions
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -1049,12 +1043,12 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new MemorySlice<Byte>? CNAM { get; set; }
-        new FormLinkNullable<SoundCategory> Category { get; set; }
-        new FormLinkNullable<SoundDescriptor> AlternateSoundFor { get; set; }
-        new IExtendedList<String> SoundFiles { get; }
-        new FormLinkNullable<SoundOutputModel> OutputModel { get; set; }
+        new FormLinkNullable<ISoundCategoryGetter> Category { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> AlternateSoundFor { get; set; }
+        new ExtendedList<String> SoundFiles { get; }
+        new FormLinkNullable<ISoundOutputModelGetter> OutputModel { get; set; }
         new String? String { get; set; }
-        new IExtendedList<Condition> Conditions { get; }
+        new ExtendedList<Condition> Conditions { get; }
         new SoundLoopAndRumble? LoopAndRumble { get; set; }
         new SByte PercentFrequencyShift { get; set; }
         new SByte PercentFrequencyVariance { get; set; }
@@ -1300,246 +1294,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "CNAM":
-                    return (ushort)SoundDescriptor_FieldIndex.CNAM;
-                case "CATEGORY":
-                    return (ushort)SoundDescriptor_FieldIndex.Category;
-                case "ALTERNATESOUNDFOR":
-                    return (ushort)SoundDescriptor_FieldIndex.AlternateSoundFor;
-                case "SOUNDFILES":
-                    return (ushort)SoundDescriptor_FieldIndex.SoundFiles;
-                case "OUTPUTMODEL":
-                    return (ushort)SoundDescriptor_FieldIndex.OutputModel;
-                case "STRING":
-                    return (ushort)SoundDescriptor_FieldIndex.String;
-                case "CONDITIONS":
-                    return (ushort)SoundDescriptor_FieldIndex.Conditions;
-                case "LOOPANDRUMBLE":
-                    return (ushort)SoundDescriptor_FieldIndex.LoopAndRumble;
-                case "PERCENTFREQUENCYSHIFT":
-                    return (ushort)SoundDescriptor_FieldIndex.PercentFrequencyShift;
-                case "PERCENTFREQUENCYVARIANCE":
-                    return (ushort)SoundDescriptor_FieldIndex.PercentFrequencyVariance;
-                case "PRIORITY":
-                    return (ushort)SoundDescriptor_FieldIndex.Priority;
-                case "VARIANCE":
-                    return (ushort)SoundDescriptor_FieldIndex.Variance;
-                case "STATICATTENUATION":
-                    return (ushort)SoundDescriptor_FieldIndex.StaticAttenuation;
-                case "BNAMDATATYPESTATE":
-                    return (ushort)SoundDescriptor_FieldIndex.BNAMDataTypeState;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            SoundDescriptor_FieldIndex enu = (SoundDescriptor_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundDescriptor_FieldIndex.SoundFiles:
-                case SoundDescriptor_FieldIndex.Conditions:
-                    return true;
-                case SoundDescriptor_FieldIndex.CNAM:
-                case SoundDescriptor_FieldIndex.Category:
-                case SoundDescriptor_FieldIndex.AlternateSoundFor:
-                case SoundDescriptor_FieldIndex.OutputModel:
-                case SoundDescriptor_FieldIndex.String:
-                case SoundDescriptor_FieldIndex.LoopAndRumble:
-                case SoundDescriptor_FieldIndex.PercentFrequencyShift:
-                case SoundDescriptor_FieldIndex.PercentFrequencyVariance:
-                case SoundDescriptor_FieldIndex.Priority:
-                case SoundDescriptor_FieldIndex.Variance:
-                case SoundDescriptor_FieldIndex.StaticAttenuation:
-                case SoundDescriptor_FieldIndex.BNAMDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            SoundDescriptor_FieldIndex enu = (SoundDescriptor_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundDescriptor_FieldIndex.Conditions:
-                case SoundDescriptor_FieldIndex.LoopAndRumble:
-                    return true;
-                case SoundDescriptor_FieldIndex.CNAM:
-                case SoundDescriptor_FieldIndex.Category:
-                case SoundDescriptor_FieldIndex.AlternateSoundFor:
-                case SoundDescriptor_FieldIndex.SoundFiles:
-                case SoundDescriptor_FieldIndex.OutputModel:
-                case SoundDescriptor_FieldIndex.String:
-                case SoundDescriptor_FieldIndex.PercentFrequencyShift:
-                case SoundDescriptor_FieldIndex.PercentFrequencyVariance:
-                case SoundDescriptor_FieldIndex.Priority:
-                case SoundDescriptor_FieldIndex.Variance:
-                case SoundDescriptor_FieldIndex.StaticAttenuation:
-                case SoundDescriptor_FieldIndex.BNAMDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            SoundDescriptor_FieldIndex enu = (SoundDescriptor_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundDescriptor_FieldIndex.CNAM:
-                case SoundDescriptor_FieldIndex.Category:
-                case SoundDescriptor_FieldIndex.AlternateSoundFor:
-                case SoundDescriptor_FieldIndex.SoundFiles:
-                case SoundDescriptor_FieldIndex.OutputModel:
-                case SoundDescriptor_FieldIndex.String:
-                case SoundDescriptor_FieldIndex.Conditions:
-                case SoundDescriptor_FieldIndex.LoopAndRumble:
-                case SoundDescriptor_FieldIndex.PercentFrequencyShift:
-                case SoundDescriptor_FieldIndex.PercentFrequencyVariance:
-                case SoundDescriptor_FieldIndex.Priority:
-                case SoundDescriptor_FieldIndex.Variance:
-                case SoundDescriptor_FieldIndex.StaticAttenuation:
-                case SoundDescriptor_FieldIndex.BNAMDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            SoundDescriptor_FieldIndex enu = (SoundDescriptor_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundDescriptor_FieldIndex.CNAM:
-                    return "CNAM";
-                case SoundDescriptor_FieldIndex.Category:
-                    return "Category";
-                case SoundDescriptor_FieldIndex.AlternateSoundFor:
-                    return "AlternateSoundFor";
-                case SoundDescriptor_FieldIndex.SoundFiles:
-                    return "SoundFiles";
-                case SoundDescriptor_FieldIndex.OutputModel:
-                    return "OutputModel";
-                case SoundDescriptor_FieldIndex.String:
-                    return "String";
-                case SoundDescriptor_FieldIndex.Conditions:
-                    return "Conditions";
-                case SoundDescriptor_FieldIndex.LoopAndRumble:
-                    return "LoopAndRumble";
-                case SoundDescriptor_FieldIndex.PercentFrequencyShift:
-                    return "PercentFrequencyShift";
-                case SoundDescriptor_FieldIndex.PercentFrequencyVariance:
-                    return "PercentFrequencyVariance";
-                case SoundDescriptor_FieldIndex.Priority:
-                    return "Priority";
-                case SoundDescriptor_FieldIndex.Variance:
-                    return "Variance";
-                case SoundDescriptor_FieldIndex.StaticAttenuation:
-                    return "StaticAttenuation";
-                case SoundDescriptor_FieldIndex.BNAMDataTypeState:
-                    return "BNAMDataTypeState";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            SoundDescriptor_FieldIndex enu = (SoundDescriptor_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundDescriptor_FieldIndex.CNAM:
-                case SoundDescriptor_FieldIndex.Category:
-                case SoundDescriptor_FieldIndex.AlternateSoundFor:
-                case SoundDescriptor_FieldIndex.SoundFiles:
-                case SoundDescriptor_FieldIndex.OutputModel:
-                case SoundDescriptor_FieldIndex.String:
-                case SoundDescriptor_FieldIndex.Conditions:
-                case SoundDescriptor_FieldIndex.LoopAndRumble:
-                case SoundDescriptor_FieldIndex.PercentFrequencyShift:
-                case SoundDescriptor_FieldIndex.PercentFrequencyVariance:
-                case SoundDescriptor_FieldIndex.Priority:
-                case SoundDescriptor_FieldIndex.Variance:
-                case SoundDescriptor_FieldIndex.StaticAttenuation:
-                case SoundDescriptor_FieldIndex.BNAMDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            SoundDescriptor_FieldIndex enu = (SoundDescriptor_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundDescriptor_FieldIndex.CNAM:
-                case SoundDescriptor_FieldIndex.Category:
-                case SoundDescriptor_FieldIndex.AlternateSoundFor:
-                case SoundDescriptor_FieldIndex.SoundFiles:
-                case SoundDescriptor_FieldIndex.OutputModel:
-                case SoundDescriptor_FieldIndex.String:
-                case SoundDescriptor_FieldIndex.Conditions:
-                case SoundDescriptor_FieldIndex.LoopAndRumble:
-                case SoundDescriptor_FieldIndex.PercentFrequencyShift:
-                case SoundDescriptor_FieldIndex.PercentFrequencyVariance:
-                case SoundDescriptor_FieldIndex.Priority:
-                case SoundDescriptor_FieldIndex.Variance:
-                case SoundDescriptor_FieldIndex.StaticAttenuation:
-                case SoundDescriptor_FieldIndex.BNAMDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            SoundDescriptor_FieldIndex enu = (SoundDescriptor_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundDescriptor_FieldIndex.CNAM:
-                    return typeof(MemorySlice<Byte>);
-                case SoundDescriptor_FieldIndex.Category:
-                    return typeof(FormLinkNullable<SoundCategory>);
-                case SoundDescriptor_FieldIndex.AlternateSoundFor:
-                    return typeof(FormLinkNullable<SoundDescriptor>);
-                case SoundDescriptor_FieldIndex.SoundFiles:
-                    return typeof(IExtendedList<String>);
-                case SoundDescriptor_FieldIndex.OutputModel:
-                    return typeof(FormLinkNullable<SoundOutputModel>);
-                case SoundDescriptor_FieldIndex.String:
-                    return typeof(String);
-                case SoundDescriptor_FieldIndex.Conditions:
-                    return typeof(IExtendedList<Condition>);
-                case SoundDescriptor_FieldIndex.LoopAndRumble:
-                    return typeof(SoundLoopAndRumble);
-                case SoundDescriptor_FieldIndex.PercentFrequencyShift:
-                    return typeof(SByte);
-                case SoundDescriptor_FieldIndex.PercentFrequencyVariance:
-                    return typeof(SByte);
-                case SoundDescriptor_FieldIndex.Priority:
-                    return typeof(SByte);
-                case SoundDescriptor_FieldIndex.Variance:
-                    return typeof(SByte);
-                case SoundDescriptor_FieldIndex.StaticAttenuation:
-                    return typeof(Single);
-                case SoundDescriptor_FieldIndex.BNAMDataTypeState:
-                    return typeof(SoundDescriptor.BNAMDataType);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.SNDR;
         public static readonly Type BinaryWriteTranslation = typeof(SoundDescriptorBinaryWriteTranslation);
         #region Interface
@@ -1560,14 +1314,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1584,10 +1338,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.CNAM = default;
-            item.Category = FormLinkNullable<SoundCategory>.Null;
-            item.AlternateSoundFor = FormLinkNullable<SoundDescriptor>.Null;
+            item.Category = FormLinkNullable<ISoundCategoryGetter>.Null;
+            item.AlternateSoundFor = FormLinkNullable<ISoundDescriptorGetter>.Null;
             item.SoundFiles.Clear();
-            item.OutputModel = FormLinkNullable<SoundOutputModel>.Null;
+            item.OutputModel = FormLinkNullable<ISoundOutputModelGetter>.Null;
             item.String = default;
             item.Conditions.Clear();
             item.LoopAndRumble = null;
@@ -2055,11 +1809,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.Category) ?? true))
             {
-                item.Category = new FormLinkNullable<SoundCategory>(rhs.Category.FormKey);
+                item.Category = new FormLinkNullable<ISoundCategoryGetter>(rhs.Category.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.AlternateSoundFor) ?? true))
             {
-                item.AlternateSoundFor = new FormLinkNullable<SoundDescriptor>(rhs.AlternateSoundFor.FormKey);
+                item.AlternateSoundFor = new FormLinkNullable<ISoundDescriptorGetter>(rhs.AlternateSoundFor.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.SoundFiles) ?? true))
             {
@@ -2080,7 +1834,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.OutputModel) ?? true))
             {
-                item.OutputModel = new FormLinkNullable<SoundOutputModel>(rhs.OutputModel.FormKey);
+                item.OutputModel = new FormLinkNullable<ISoundOutputModelGetter>(rhs.OutputModel.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.String) ?? true))
             {

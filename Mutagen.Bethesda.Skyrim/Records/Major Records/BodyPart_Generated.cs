@@ -81,14 +81,10 @@ namespace Mutagen.Bethesda.Skyrim
         public UInt16 ExplodableDebrisCount { get; set; } = default;
         #endregion
         #region ExplodableDebris
-        public FormLink<Debris> ExplodableDebris { get; set; } = new FormLink<Debris>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IDebrisGetter> IBodyPartGetter.ExplodableDebris => this.ExplodableDebris.ToGetter<Debris, IDebrisGetter>();
+        public FormLink<IDebrisGetter> ExplodableDebris { get; set; } = new FormLink<IDebrisGetter>();
         #endregion
         #region ExplodableExplosion
-        public FormLink<Explosion> ExplodableExplosion { get; set; } = new FormLink<Explosion>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IExplosionGetter> IBodyPartGetter.ExplodableExplosion => this.ExplodableExplosion.ToGetter<Explosion, IExplosionGetter>();
+        public FormLink<IExplosionGetter> ExplodableExplosion { get; set; } = new FormLink<IExplosionGetter>();
         #endregion
         #region TrackingMaxAngle
         public Single TrackingMaxAngle { get; set; } = default;
@@ -100,14 +96,10 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 SeverableDebrisCount { get; set; } = default;
         #endregion
         #region SeverableDebris
-        public FormLink<Debris> SeverableDebris { get; set; } = new FormLink<Debris>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IDebrisGetter> IBodyPartGetter.SeverableDebris => this.SeverableDebris.ToGetter<Debris, IDebrisGetter>();
+        public FormLink<IDebrisGetter> SeverableDebris { get; set; } = new FormLink<IDebrisGetter>();
         #endregion
         #region SeverableExplosion
-        public FormLink<Explosion> SeverableExplosion { get; set; } = new FormLink<Explosion>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IExplosionGetter> IBodyPartGetter.SeverableExplosion => this.SeverableExplosion.ToGetter<Explosion, IExplosionGetter>();
+        public FormLink<IExplosionGetter> SeverableExplosion { get; set; } = new FormLink<IExplosionGetter>();
         #endregion
         #region SeverableDebrisScale
         public Single SeverableDebrisScale { get; set; } = default;
@@ -119,14 +111,10 @@ namespace Mutagen.Bethesda.Skyrim
         public P3Float GoreRotation { get; set; } = default;
         #endregion
         #region SeverableImpactData
-        public FormLink<ImpactDataSet> SeverableImpactData { get; set; } = new FormLink<ImpactDataSet>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IImpactDataSetGetter> IBodyPartGetter.SeverableImpactData => this.SeverableImpactData.ToGetter<ImpactDataSet, IImpactDataSetGetter>();
+        public FormLink<IImpactDataSetGetter> SeverableImpactData { get; set; } = new FormLink<IImpactDataSetGetter>();
         #endregion
         #region ExplodableImpactData
-        public FormLink<ImpactDataSet> ExplodableImpactData { get; set; } = new FormLink<ImpactDataSet>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IImpactDataSetGetter> IBodyPartGetter.ExplodableImpactData => this.ExplodableImpactData.ToGetter<ImpactDataSet, IImpactDataSetGetter>();
+        public FormLink<IImpactDataSetGetter> ExplodableImpactData { get; set; } = new FormLink<IImpactDataSetGetter>();
         #endregion
         #region SeverableDecalCount
         public Byte SeverableDecalCount { get; set; } = default;
@@ -1450,18 +1438,18 @@ namespace Mutagen.Bethesda.Skyrim
         new Byte ToHitChance { get; set; }
         new Byte ExplodableExplosionChance { get; set; }
         new UInt16 ExplodableDebrisCount { get; set; }
-        new FormLink<Debris> ExplodableDebris { get; set; }
-        new FormLink<Explosion> ExplodableExplosion { get; set; }
+        new FormLink<IDebrisGetter> ExplodableDebris { get; set; }
+        new FormLink<IExplosionGetter> ExplodableExplosion { get; set; }
         new Single TrackingMaxAngle { get; set; }
         new Single ExplodableDebrisScale { get; set; }
         new Int32 SeverableDebrisCount { get; set; }
-        new FormLink<Debris> SeverableDebris { get; set; }
-        new FormLink<Explosion> SeverableExplosion { get; set; }
+        new FormLink<IDebrisGetter> SeverableDebris { get; set; }
+        new FormLink<IExplosionGetter> SeverableExplosion { get; set; }
         new Single SeverableDebrisScale { get; set; }
         new P3Float GorePositioning { get; set; }
         new P3Float GoreRotation { get; set; }
-        new FormLink<ImpactDataSet> SeverableImpactData { get; set; }
-        new FormLink<ImpactDataSet> ExplodableImpactData { get; set; }
+        new FormLink<IImpactDataSetGetter> SeverableImpactData { get; set; }
+        new FormLink<IImpactDataSetGetter> ExplodableImpactData { get; set; }
         new Byte SeverableDecalCount { get; set; }
         new Byte ExplodableDecalCount { get; set; }
         new UInt16 Unknown { get; set; }
@@ -1764,453 +1752,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "NAME":
-                    return (ushort)BodyPart_FieldIndex.Name;
-                case "POSEMATCHING":
-                    return (ushort)BodyPart_FieldIndex.PoseMatching;
-                case "PARTNODE":
-                    return (ushort)BodyPart_FieldIndex.PartNode;
-                case "VATSTARGET":
-                    return (ushort)BodyPart_FieldIndex.VatsTarget;
-                case "IKSTARTNODE":
-                    return (ushort)BodyPart_FieldIndex.IkStartNode;
-                case "DAMAGEMULT":
-                    return (ushort)BodyPart_FieldIndex.DamageMult;
-                case "FLAGS":
-                    return (ushort)BodyPart_FieldIndex.Flags;
-                case "TYPE":
-                    return (ushort)BodyPart_FieldIndex.Type;
-                case "HEALTHPERCENT":
-                    return (ushort)BodyPart_FieldIndex.HealthPercent;
-                case "ACTORVALUE":
-                    return (ushort)BodyPart_FieldIndex.ActorValue;
-                case "TOHITCHANCE":
-                    return (ushort)BodyPart_FieldIndex.ToHitChance;
-                case "EXPLODABLEEXPLOSIONCHANCE":
-                    return (ushort)BodyPart_FieldIndex.ExplodableExplosionChance;
-                case "EXPLODABLEDEBRISCOUNT":
-                    return (ushort)BodyPart_FieldIndex.ExplodableDebrisCount;
-                case "EXPLODABLEDEBRIS":
-                    return (ushort)BodyPart_FieldIndex.ExplodableDebris;
-                case "EXPLODABLEEXPLOSION":
-                    return (ushort)BodyPart_FieldIndex.ExplodableExplosion;
-                case "TRACKINGMAXANGLE":
-                    return (ushort)BodyPart_FieldIndex.TrackingMaxAngle;
-                case "EXPLODABLEDEBRISSCALE":
-                    return (ushort)BodyPart_FieldIndex.ExplodableDebrisScale;
-                case "SEVERABLEDEBRISCOUNT":
-                    return (ushort)BodyPart_FieldIndex.SeverableDebrisCount;
-                case "SEVERABLEDEBRIS":
-                    return (ushort)BodyPart_FieldIndex.SeverableDebris;
-                case "SEVERABLEEXPLOSION":
-                    return (ushort)BodyPart_FieldIndex.SeverableExplosion;
-                case "SEVERABLEDEBRISSCALE":
-                    return (ushort)BodyPart_FieldIndex.SeverableDebrisScale;
-                case "GOREPOSITIONING":
-                    return (ushort)BodyPart_FieldIndex.GorePositioning;
-                case "GOREROTATION":
-                    return (ushort)BodyPart_FieldIndex.GoreRotation;
-                case "SEVERABLEIMPACTDATA":
-                    return (ushort)BodyPart_FieldIndex.SeverableImpactData;
-                case "EXPLODABLEIMPACTDATA":
-                    return (ushort)BodyPart_FieldIndex.ExplodableImpactData;
-                case "SEVERABLEDECALCOUNT":
-                    return (ushort)BodyPart_FieldIndex.SeverableDecalCount;
-                case "EXPLODABLEDECALCOUNT":
-                    return (ushort)BodyPart_FieldIndex.ExplodableDecalCount;
-                case "UNKNOWN":
-                    return (ushort)BodyPart_FieldIndex.Unknown;
-                case "LIMBREPLACEMENTSCALE":
-                    return (ushort)BodyPart_FieldIndex.LimbReplacementScale;
-                case "LIMBREPLACEMENTMODEL":
-                    return (ushort)BodyPart_FieldIndex.LimbReplacementModel;
-                case "GORETARGETBONE":
-                    return (ushort)BodyPart_FieldIndex.GoreTargetBone;
-                case "TEXTUREFILESHASHES":
-                    return (ushort)BodyPart_FieldIndex.TextureFilesHashes;
-                case "BPNDDATATYPESTATE":
-                    return (ushort)BodyPart_FieldIndex.BPNDDataTypeState;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            BodyPart_FieldIndex enu = (BodyPart_FieldIndex)index;
-            switch (enu)
-            {
-                case BodyPart_FieldIndex.Name:
-                case BodyPart_FieldIndex.PoseMatching:
-                case BodyPart_FieldIndex.PartNode:
-                case BodyPart_FieldIndex.VatsTarget:
-                case BodyPart_FieldIndex.IkStartNode:
-                case BodyPart_FieldIndex.DamageMult:
-                case BodyPart_FieldIndex.Flags:
-                case BodyPart_FieldIndex.Type:
-                case BodyPart_FieldIndex.HealthPercent:
-                case BodyPart_FieldIndex.ActorValue:
-                case BodyPart_FieldIndex.ToHitChance:
-                case BodyPart_FieldIndex.ExplodableExplosionChance:
-                case BodyPart_FieldIndex.ExplodableDebrisCount:
-                case BodyPart_FieldIndex.ExplodableDebris:
-                case BodyPart_FieldIndex.ExplodableExplosion:
-                case BodyPart_FieldIndex.TrackingMaxAngle:
-                case BodyPart_FieldIndex.ExplodableDebrisScale:
-                case BodyPart_FieldIndex.SeverableDebrisCount:
-                case BodyPart_FieldIndex.SeverableDebris:
-                case BodyPart_FieldIndex.SeverableExplosion:
-                case BodyPart_FieldIndex.SeverableDebrisScale:
-                case BodyPart_FieldIndex.GorePositioning:
-                case BodyPart_FieldIndex.GoreRotation:
-                case BodyPart_FieldIndex.SeverableImpactData:
-                case BodyPart_FieldIndex.ExplodableImpactData:
-                case BodyPart_FieldIndex.SeverableDecalCount:
-                case BodyPart_FieldIndex.ExplodableDecalCount:
-                case BodyPart_FieldIndex.Unknown:
-                case BodyPart_FieldIndex.LimbReplacementScale:
-                case BodyPart_FieldIndex.LimbReplacementModel:
-                case BodyPart_FieldIndex.GoreTargetBone:
-                case BodyPart_FieldIndex.TextureFilesHashes:
-                case BodyPart_FieldIndex.BPNDDataTypeState:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            BodyPart_FieldIndex enu = (BodyPart_FieldIndex)index;
-            switch (enu)
-            {
-                case BodyPart_FieldIndex.Name:
-                case BodyPart_FieldIndex.PoseMatching:
-                case BodyPart_FieldIndex.PartNode:
-                case BodyPart_FieldIndex.VatsTarget:
-                case BodyPart_FieldIndex.IkStartNode:
-                case BodyPart_FieldIndex.DamageMult:
-                case BodyPart_FieldIndex.Flags:
-                case BodyPart_FieldIndex.Type:
-                case BodyPart_FieldIndex.HealthPercent:
-                case BodyPart_FieldIndex.ActorValue:
-                case BodyPart_FieldIndex.ToHitChance:
-                case BodyPart_FieldIndex.ExplodableExplosionChance:
-                case BodyPart_FieldIndex.ExplodableDebrisCount:
-                case BodyPart_FieldIndex.ExplodableDebris:
-                case BodyPart_FieldIndex.ExplodableExplosion:
-                case BodyPart_FieldIndex.TrackingMaxAngle:
-                case BodyPart_FieldIndex.ExplodableDebrisScale:
-                case BodyPart_FieldIndex.SeverableDebrisCount:
-                case BodyPart_FieldIndex.SeverableDebris:
-                case BodyPart_FieldIndex.SeverableExplosion:
-                case BodyPart_FieldIndex.SeverableDebrisScale:
-                case BodyPart_FieldIndex.GorePositioning:
-                case BodyPart_FieldIndex.GoreRotation:
-                case BodyPart_FieldIndex.SeverableImpactData:
-                case BodyPart_FieldIndex.ExplodableImpactData:
-                case BodyPart_FieldIndex.SeverableDecalCount:
-                case BodyPart_FieldIndex.ExplodableDecalCount:
-                case BodyPart_FieldIndex.Unknown:
-                case BodyPart_FieldIndex.LimbReplacementScale:
-                case BodyPart_FieldIndex.LimbReplacementModel:
-                case BodyPart_FieldIndex.GoreTargetBone:
-                case BodyPart_FieldIndex.TextureFilesHashes:
-                case BodyPart_FieldIndex.BPNDDataTypeState:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            BodyPart_FieldIndex enu = (BodyPart_FieldIndex)index;
-            switch (enu)
-            {
-                case BodyPart_FieldIndex.Name:
-                case BodyPart_FieldIndex.PoseMatching:
-                case BodyPart_FieldIndex.PartNode:
-                case BodyPart_FieldIndex.VatsTarget:
-                case BodyPart_FieldIndex.IkStartNode:
-                case BodyPart_FieldIndex.DamageMult:
-                case BodyPart_FieldIndex.Flags:
-                case BodyPart_FieldIndex.Type:
-                case BodyPart_FieldIndex.HealthPercent:
-                case BodyPart_FieldIndex.ActorValue:
-                case BodyPart_FieldIndex.ToHitChance:
-                case BodyPart_FieldIndex.ExplodableExplosionChance:
-                case BodyPart_FieldIndex.ExplodableDebrisCount:
-                case BodyPart_FieldIndex.ExplodableDebris:
-                case BodyPart_FieldIndex.ExplodableExplosion:
-                case BodyPart_FieldIndex.TrackingMaxAngle:
-                case BodyPart_FieldIndex.ExplodableDebrisScale:
-                case BodyPart_FieldIndex.SeverableDebrisCount:
-                case BodyPart_FieldIndex.SeverableDebris:
-                case BodyPart_FieldIndex.SeverableExplosion:
-                case BodyPart_FieldIndex.SeverableDebrisScale:
-                case BodyPart_FieldIndex.GorePositioning:
-                case BodyPart_FieldIndex.GoreRotation:
-                case BodyPart_FieldIndex.SeverableImpactData:
-                case BodyPart_FieldIndex.ExplodableImpactData:
-                case BodyPart_FieldIndex.SeverableDecalCount:
-                case BodyPart_FieldIndex.ExplodableDecalCount:
-                case BodyPart_FieldIndex.Unknown:
-                case BodyPart_FieldIndex.LimbReplacementScale:
-                case BodyPart_FieldIndex.LimbReplacementModel:
-                case BodyPart_FieldIndex.GoreTargetBone:
-                case BodyPart_FieldIndex.TextureFilesHashes:
-                case BodyPart_FieldIndex.BPNDDataTypeState:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            BodyPart_FieldIndex enu = (BodyPart_FieldIndex)index;
-            switch (enu)
-            {
-                case BodyPart_FieldIndex.Name:
-                    return "Name";
-                case BodyPart_FieldIndex.PoseMatching:
-                    return "PoseMatching";
-                case BodyPart_FieldIndex.PartNode:
-                    return "PartNode";
-                case BodyPart_FieldIndex.VatsTarget:
-                    return "VatsTarget";
-                case BodyPart_FieldIndex.IkStartNode:
-                    return "IkStartNode";
-                case BodyPart_FieldIndex.DamageMult:
-                    return "DamageMult";
-                case BodyPart_FieldIndex.Flags:
-                    return "Flags";
-                case BodyPart_FieldIndex.Type:
-                    return "Type";
-                case BodyPart_FieldIndex.HealthPercent:
-                    return "HealthPercent";
-                case BodyPart_FieldIndex.ActorValue:
-                    return "ActorValue";
-                case BodyPart_FieldIndex.ToHitChance:
-                    return "ToHitChance";
-                case BodyPart_FieldIndex.ExplodableExplosionChance:
-                    return "ExplodableExplosionChance";
-                case BodyPart_FieldIndex.ExplodableDebrisCount:
-                    return "ExplodableDebrisCount";
-                case BodyPart_FieldIndex.ExplodableDebris:
-                    return "ExplodableDebris";
-                case BodyPart_FieldIndex.ExplodableExplosion:
-                    return "ExplodableExplosion";
-                case BodyPart_FieldIndex.TrackingMaxAngle:
-                    return "TrackingMaxAngle";
-                case BodyPart_FieldIndex.ExplodableDebrisScale:
-                    return "ExplodableDebrisScale";
-                case BodyPart_FieldIndex.SeverableDebrisCount:
-                    return "SeverableDebrisCount";
-                case BodyPart_FieldIndex.SeverableDebris:
-                    return "SeverableDebris";
-                case BodyPart_FieldIndex.SeverableExplosion:
-                    return "SeverableExplosion";
-                case BodyPart_FieldIndex.SeverableDebrisScale:
-                    return "SeverableDebrisScale";
-                case BodyPart_FieldIndex.GorePositioning:
-                    return "GorePositioning";
-                case BodyPart_FieldIndex.GoreRotation:
-                    return "GoreRotation";
-                case BodyPart_FieldIndex.SeverableImpactData:
-                    return "SeverableImpactData";
-                case BodyPart_FieldIndex.ExplodableImpactData:
-                    return "ExplodableImpactData";
-                case BodyPart_FieldIndex.SeverableDecalCount:
-                    return "SeverableDecalCount";
-                case BodyPart_FieldIndex.ExplodableDecalCount:
-                    return "ExplodableDecalCount";
-                case BodyPart_FieldIndex.Unknown:
-                    return "Unknown";
-                case BodyPart_FieldIndex.LimbReplacementScale:
-                    return "LimbReplacementScale";
-                case BodyPart_FieldIndex.LimbReplacementModel:
-                    return "LimbReplacementModel";
-                case BodyPart_FieldIndex.GoreTargetBone:
-                    return "GoreTargetBone";
-                case BodyPart_FieldIndex.TextureFilesHashes:
-                    return "TextureFilesHashes";
-                case BodyPart_FieldIndex.BPNDDataTypeState:
-                    return "BPNDDataTypeState";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            BodyPart_FieldIndex enu = (BodyPart_FieldIndex)index;
-            switch (enu)
-            {
-                case BodyPart_FieldIndex.Name:
-                case BodyPart_FieldIndex.PoseMatching:
-                case BodyPart_FieldIndex.PartNode:
-                case BodyPart_FieldIndex.VatsTarget:
-                case BodyPart_FieldIndex.IkStartNode:
-                case BodyPart_FieldIndex.DamageMult:
-                case BodyPart_FieldIndex.Flags:
-                case BodyPart_FieldIndex.Type:
-                case BodyPart_FieldIndex.HealthPercent:
-                case BodyPart_FieldIndex.ActorValue:
-                case BodyPart_FieldIndex.ToHitChance:
-                case BodyPart_FieldIndex.ExplodableExplosionChance:
-                case BodyPart_FieldIndex.ExplodableDebrisCount:
-                case BodyPart_FieldIndex.ExplodableDebris:
-                case BodyPart_FieldIndex.ExplodableExplosion:
-                case BodyPart_FieldIndex.TrackingMaxAngle:
-                case BodyPart_FieldIndex.ExplodableDebrisScale:
-                case BodyPart_FieldIndex.SeverableDebrisCount:
-                case BodyPart_FieldIndex.SeverableDebris:
-                case BodyPart_FieldIndex.SeverableExplosion:
-                case BodyPart_FieldIndex.SeverableDebrisScale:
-                case BodyPart_FieldIndex.GorePositioning:
-                case BodyPart_FieldIndex.GoreRotation:
-                case BodyPart_FieldIndex.SeverableImpactData:
-                case BodyPart_FieldIndex.ExplodableImpactData:
-                case BodyPart_FieldIndex.SeverableDecalCount:
-                case BodyPart_FieldIndex.ExplodableDecalCount:
-                case BodyPart_FieldIndex.Unknown:
-                case BodyPart_FieldIndex.LimbReplacementScale:
-                case BodyPart_FieldIndex.LimbReplacementModel:
-                case BodyPart_FieldIndex.GoreTargetBone:
-                case BodyPart_FieldIndex.TextureFilesHashes:
-                case BodyPart_FieldIndex.BPNDDataTypeState:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            BodyPart_FieldIndex enu = (BodyPart_FieldIndex)index;
-            switch (enu)
-            {
-                case BodyPart_FieldIndex.Name:
-                case BodyPart_FieldIndex.PoseMatching:
-                case BodyPart_FieldIndex.PartNode:
-                case BodyPart_FieldIndex.VatsTarget:
-                case BodyPart_FieldIndex.IkStartNode:
-                case BodyPart_FieldIndex.DamageMult:
-                case BodyPart_FieldIndex.Flags:
-                case BodyPart_FieldIndex.Type:
-                case BodyPart_FieldIndex.HealthPercent:
-                case BodyPart_FieldIndex.ActorValue:
-                case BodyPart_FieldIndex.ToHitChance:
-                case BodyPart_FieldIndex.ExplodableExplosionChance:
-                case BodyPart_FieldIndex.ExplodableDebrisCount:
-                case BodyPart_FieldIndex.ExplodableDebris:
-                case BodyPart_FieldIndex.ExplodableExplosion:
-                case BodyPart_FieldIndex.TrackingMaxAngle:
-                case BodyPart_FieldIndex.ExplodableDebrisScale:
-                case BodyPart_FieldIndex.SeverableDebrisCount:
-                case BodyPart_FieldIndex.SeverableDebris:
-                case BodyPart_FieldIndex.SeverableExplosion:
-                case BodyPart_FieldIndex.SeverableDebrisScale:
-                case BodyPart_FieldIndex.GorePositioning:
-                case BodyPart_FieldIndex.GoreRotation:
-                case BodyPart_FieldIndex.SeverableImpactData:
-                case BodyPart_FieldIndex.ExplodableImpactData:
-                case BodyPart_FieldIndex.SeverableDecalCount:
-                case BodyPart_FieldIndex.ExplodableDecalCount:
-                case BodyPart_FieldIndex.Unknown:
-                case BodyPart_FieldIndex.LimbReplacementScale:
-                case BodyPart_FieldIndex.LimbReplacementModel:
-                case BodyPart_FieldIndex.GoreTargetBone:
-                case BodyPart_FieldIndex.TextureFilesHashes:
-                case BodyPart_FieldIndex.BPNDDataTypeState:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            BodyPart_FieldIndex enu = (BodyPart_FieldIndex)index;
-            switch (enu)
-            {
-                case BodyPart_FieldIndex.Name:
-                    return typeof(TranslatedString);
-                case BodyPart_FieldIndex.PoseMatching:
-                    return typeof(String);
-                case BodyPart_FieldIndex.PartNode:
-                    return typeof(String);
-                case BodyPart_FieldIndex.VatsTarget:
-                    return typeof(String);
-                case BodyPart_FieldIndex.IkStartNode:
-                    return typeof(String);
-                case BodyPart_FieldIndex.DamageMult:
-                    return typeof(Single);
-                case BodyPart_FieldIndex.Flags:
-                    return typeof(BodyPart.Flag);
-                case BodyPart_FieldIndex.Type:
-                    return typeof(BodyPart.PartType);
-                case BodyPart_FieldIndex.HealthPercent:
-                    return typeof(Byte);
-                case BodyPart_FieldIndex.ActorValue:
-                    return typeof(ActorValue);
-                case BodyPart_FieldIndex.ToHitChance:
-                    return typeof(Byte);
-                case BodyPart_FieldIndex.ExplodableExplosionChance:
-                    return typeof(Byte);
-                case BodyPart_FieldIndex.ExplodableDebrisCount:
-                    return typeof(UInt16);
-                case BodyPart_FieldIndex.ExplodableDebris:
-                    return typeof(FormLink<Debris>);
-                case BodyPart_FieldIndex.ExplodableExplosion:
-                    return typeof(FormLink<Explosion>);
-                case BodyPart_FieldIndex.TrackingMaxAngle:
-                    return typeof(Single);
-                case BodyPart_FieldIndex.ExplodableDebrisScale:
-                    return typeof(Single);
-                case BodyPart_FieldIndex.SeverableDebrisCount:
-                    return typeof(Int32);
-                case BodyPart_FieldIndex.SeverableDebris:
-                    return typeof(FormLink<Debris>);
-                case BodyPart_FieldIndex.SeverableExplosion:
-                    return typeof(FormLink<Explosion>);
-                case BodyPart_FieldIndex.SeverableDebrisScale:
-                    return typeof(Single);
-                case BodyPart_FieldIndex.GorePositioning:
-                    return typeof(P3Float);
-                case BodyPart_FieldIndex.GoreRotation:
-                    return typeof(P3Float);
-                case BodyPart_FieldIndex.SeverableImpactData:
-                    return typeof(FormLink<ImpactDataSet>);
-                case BodyPart_FieldIndex.ExplodableImpactData:
-                    return typeof(FormLink<ImpactDataSet>);
-                case BodyPart_FieldIndex.SeverableDecalCount:
-                    return typeof(Byte);
-                case BodyPart_FieldIndex.ExplodableDecalCount:
-                    return typeof(Byte);
-                case BodyPart_FieldIndex.Unknown:
-                    return typeof(UInt16);
-                case BodyPart_FieldIndex.LimbReplacementScale:
-                    return typeof(Single);
-                case BodyPart_FieldIndex.LimbReplacementModel:
-                    return typeof(String);
-                case BodyPart_FieldIndex.GoreTargetBone:
-                    return typeof(String);
-                case BodyPart_FieldIndex.TextureFilesHashes:
-                    return typeof(MemorySlice<Byte>);
-                case BodyPart_FieldIndex.BPNDDataTypeState:
-                    return typeof(BodyPart.BPNDDataType);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.BPTN;
         public static readonly Type BinaryWriteTranslation = typeof(BodyPartBinaryWriteTranslation);
         #region Interface
@@ -2231,14 +1772,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -2267,18 +1808,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ToHitChance = default;
             item.ExplodableExplosionChance = default;
             item.ExplodableDebrisCount = default;
-            item.ExplodableDebris = FormLink<Debris>.Null;
-            item.ExplodableExplosion = FormLink<Explosion>.Null;
+            item.ExplodableDebris = FormLink<IDebrisGetter>.Null;
+            item.ExplodableExplosion = FormLink<IExplosionGetter>.Null;
             item.TrackingMaxAngle = default;
             item.ExplodableDebrisScale = default;
             item.SeverableDebrisCount = default;
-            item.SeverableDebris = FormLink<Debris>.Null;
-            item.SeverableExplosion = FormLink<Explosion>.Null;
+            item.SeverableDebris = FormLink<IDebrisGetter>.Null;
+            item.SeverableExplosion = FormLink<IExplosionGetter>.Null;
             item.SeverableDebrisScale = default;
             item.GorePositioning = default;
             item.GoreRotation = default;
-            item.SeverableImpactData = FormLink<ImpactDataSet>.Null;
-            item.ExplodableImpactData = FormLink<ImpactDataSet>.Null;
+            item.SeverableImpactData = FormLink<IImpactDataSetGetter>.Null;
+            item.ExplodableImpactData = FormLink<IImpactDataSetGetter>.Null;
             item.SeverableDecalCount = default;
             item.ExplodableDecalCount = default;
             item.Unknown = default;
@@ -2724,11 +2265,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableDebris) ?? true))
             {
-                item.ExplodableDebris = new FormLink<Debris>(rhs.ExplodableDebris.FormKey);
+                item.ExplodableDebris = new FormLink<IDebrisGetter>(rhs.ExplodableDebris.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableExplosion) ?? true))
             {
-                item.ExplodableExplosion = new FormLink<Explosion>(rhs.ExplodableExplosion.FormKey);
+                item.ExplodableExplosion = new FormLink<IExplosionGetter>(rhs.ExplodableExplosion.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.TrackingMaxAngle) ?? true))
             {
@@ -2744,11 +2285,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableDebris) ?? true))
             {
-                item.SeverableDebris = new FormLink<Debris>(rhs.SeverableDebris.FormKey);
+                item.SeverableDebris = new FormLink<IDebrisGetter>(rhs.SeverableDebris.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableExplosion) ?? true))
             {
-                item.SeverableExplosion = new FormLink<Explosion>(rhs.SeverableExplosion.FormKey);
+                item.SeverableExplosion = new FormLink<IExplosionGetter>(rhs.SeverableExplosion.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableDebrisScale) ?? true))
             {
@@ -2764,11 +2305,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableImpactData) ?? true))
             {
-                item.SeverableImpactData = new FormLink<ImpactDataSet>(rhs.SeverableImpactData.FormKey);
+                item.SeverableImpactData = new FormLink<IImpactDataSetGetter>(rhs.SeverableImpactData.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableImpactData) ?? true))
             {
-                item.ExplodableImpactData = new FormLink<ImpactDataSet>(rhs.ExplodableImpactData.FormKey);
+                item.ExplodableImpactData = new FormLink<IImpactDataSetGetter>(rhs.ExplodableImpactData.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableDecalCount) ?? true))
             {

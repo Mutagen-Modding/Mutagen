@@ -840,167 +840,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "VERTICES":
-                    return (ushort)NavmeshTriangle_FieldIndex.Vertices;
-                case "EDGELINK_0_1":
-                    return (ushort)NavmeshTriangle_FieldIndex.EdgeLink_0_1;
-                case "EDGELINK_1_2":
-                    return (ushort)NavmeshTriangle_FieldIndex.EdgeLink_1_2;
-                case "EDGELINK_2_0":
-                    return (ushort)NavmeshTriangle_FieldIndex.EdgeLink_2_0;
-                case "FLAGS":
-                    return (ushort)NavmeshTriangle_FieldIndex.Flags;
-                case "COVERFLAGS":
-                    return (ushort)NavmeshTriangle_FieldIndex.CoverFlags;
-                case "ISCOVER":
-                    return (ushort)NavmeshTriangle_FieldIndex.IsCover;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            NavmeshTriangle_FieldIndex enu = (NavmeshTriangle_FieldIndex)index;
-            switch (enu)
-            {
-                case NavmeshTriangle_FieldIndex.Vertices:
-                case NavmeshTriangle_FieldIndex.EdgeLink_0_1:
-                case NavmeshTriangle_FieldIndex.EdgeLink_1_2:
-                case NavmeshTriangle_FieldIndex.EdgeLink_2_0:
-                case NavmeshTriangle_FieldIndex.Flags:
-                case NavmeshTriangle_FieldIndex.CoverFlags:
-                case NavmeshTriangle_FieldIndex.IsCover:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            NavmeshTriangle_FieldIndex enu = (NavmeshTriangle_FieldIndex)index;
-            switch (enu)
-            {
-                case NavmeshTriangle_FieldIndex.Vertices:
-                case NavmeshTriangle_FieldIndex.EdgeLink_0_1:
-                case NavmeshTriangle_FieldIndex.EdgeLink_1_2:
-                case NavmeshTriangle_FieldIndex.EdgeLink_2_0:
-                case NavmeshTriangle_FieldIndex.Flags:
-                case NavmeshTriangle_FieldIndex.CoverFlags:
-                case NavmeshTriangle_FieldIndex.IsCover:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            NavmeshTriangle_FieldIndex enu = (NavmeshTriangle_FieldIndex)index;
-            switch (enu)
-            {
-                case NavmeshTriangle_FieldIndex.Vertices:
-                case NavmeshTriangle_FieldIndex.EdgeLink_0_1:
-                case NavmeshTriangle_FieldIndex.EdgeLink_1_2:
-                case NavmeshTriangle_FieldIndex.EdgeLink_2_0:
-                case NavmeshTriangle_FieldIndex.Flags:
-                case NavmeshTriangle_FieldIndex.CoverFlags:
-                case NavmeshTriangle_FieldIndex.IsCover:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            NavmeshTriangle_FieldIndex enu = (NavmeshTriangle_FieldIndex)index;
-            switch (enu)
-            {
-                case NavmeshTriangle_FieldIndex.Vertices:
-                    return "Vertices";
-                case NavmeshTriangle_FieldIndex.EdgeLink_0_1:
-                    return "EdgeLink_0_1";
-                case NavmeshTriangle_FieldIndex.EdgeLink_1_2:
-                    return "EdgeLink_1_2";
-                case NavmeshTriangle_FieldIndex.EdgeLink_2_0:
-                    return "EdgeLink_2_0";
-                case NavmeshTriangle_FieldIndex.Flags:
-                    return "Flags";
-                case NavmeshTriangle_FieldIndex.CoverFlags:
-                    return "CoverFlags";
-                case NavmeshTriangle_FieldIndex.IsCover:
-                    return "IsCover";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            NavmeshTriangle_FieldIndex enu = (NavmeshTriangle_FieldIndex)index;
-            switch (enu)
-            {
-                case NavmeshTriangle_FieldIndex.Vertices:
-                case NavmeshTriangle_FieldIndex.EdgeLink_0_1:
-                case NavmeshTriangle_FieldIndex.EdgeLink_1_2:
-                case NavmeshTriangle_FieldIndex.EdgeLink_2_0:
-                case NavmeshTriangle_FieldIndex.Flags:
-                case NavmeshTriangle_FieldIndex.CoverFlags:
-                case NavmeshTriangle_FieldIndex.IsCover:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            NavmeshTriangle_FieldIndex enu = (NavmeshTriangle_FieldIndex)index;
-            switch (enu)
-            {
-                case NavmeshTriangle_FieldIndex.Vertices:
-                case NavmeshTriangle_FieldIndex.EdgeLink_0_1:
-                case NavmeshTriangle_FieldIndex.EdgeLink_1_2:
-                case NavmeshTriangle_FieldIndex.EdgeLink_2_0:
-                case NavmeshTriangle_FieldIndex.Flags:
-                case NavmeshTriangle_FieldIndex.CoverFlags:
-                case NavmeshTriangle_FieldIndex.IsCover:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            NavmeshTriangle_FieldIndex enu = (NavmeshTriangle_FieldIndex)index;
-            switch (enu)
-            {
-                case NavmeshTriangle_FieldIndex.Vertices:
-                    return typeof(P3Int16);
-                case NavmeshTriangle_FieldIndex.EdgeLink_0_1:
-                    return typeof(Int16);
-                case NavmeshTriangle_FieldIndex.EdgeLink_1_2:
-                    return typeof(Int16);
-                case NavmeshTriangle_FieldIndex.EdgeLink_2_0:
-                    return typeof(Int16);
-                case NavmeshTriangle_FieldIndex.Flags:
-                    return typeof(NavmeshTriangle.Flag);
-                case NavmeshTriangle_FieldIndex.CoverFlags:
-                    return typeof(UInt16);
-                case NavmeshTriangle_FieldIndex.IsCover:
-                    return typeof(Boolean);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly Type BinaryWriteTranslation = typeof(NavmeshTriangleBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1020,14 +859,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

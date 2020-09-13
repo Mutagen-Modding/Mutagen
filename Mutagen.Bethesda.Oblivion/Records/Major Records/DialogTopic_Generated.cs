@@ -44,8 +44,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Quests
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Quest>> _Quests = new ExtendedList<IFormLink<Quest>>();
-        public IExtendedList<IFormLink<Quest>> Quests
+        private ExtendedList<IFormLink<IQuestGetter>> _Quests = new ExtendedList<IFormLink<IQuestGetter>>();
+        public ExtendedList<IFormLink<IQuestGetter>> Quests
         {
             get => this._Quests;
             protected set => this._Quests = value;
@@ -71,8 +71,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<DialogItem> _Items = new ExtendedList<DialogItem>();
-        public IExtendedList<DialogItem> Items
+        private ExtendedList<DialogItem> _Items = new ExtendedList<DialogItem>();
+        public ExtendedList<DialogItem> Items
         {
             get => this._Items;
             protected set => this._Items = value;
@@ -771,11 +771,11 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IDialogTopicInternal>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<IFormLink<Quest>> Quests { get; }
+        new ExtendedList<IFormLink<IQuestGetter>> Quests { get; }
         new String? Name { get; set; }
         new DialogType? DialogType { get; set; }
         new Int32 Timestamp { get; set; }
-        new IExtendedList<DialogItem> Items { get; }
+        new ExtendedList<DialogItem> Items { get; }
     }
 
     public partial interface IDialogTopicInternal :
@@ -1211,147 +1211,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "QUESTS":
-                    return (ushort)DialogTopic_FieldIndex.Quests;
-                case "NAME":
-                    return (ushort)DialogTopic_FieldIndex.Name;
-                case "DIALOGTYPE":
-                    return (ushort)DialogTopic_FieldIndex.DialogType;
-                case "TIMESTAMP":
-                    return (ushort)DialogTopic_FieldIndex.Timestamp;
-                case "ITEMS":
-                    return (ushort)DialogTopic_FieldIndex.Items;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            DialogTopic_FieldIndex enu = (DialogTopic_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogTopic_FieldIndex.Quests:
-                case DialogTopic_FieldIndex.Items:
-                    return true;
-                case DialogTopic_FieldIndex.Name:
-                case DialogTopic_FieldIndex.DialogType:
-                case DialogTopic_FieldIndex.Timestamp:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            DialogTopic_FieldIndex enu = (DialogTopic_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogTopic_FieldIndex.Items:
-                    return true;
-                case DialogTopic_FieldIndex.Quests:
-                case DialogTopic_FieldIndex.Name:
-                case DialogTopic_FieldIndex.DialogType:
-                case DialogTopic_FieldIndex.Timestamp:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            DialogTopic_FieldIndex enu = (DialogTopic_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogTopic_FieldIndex.Quests:
-                case DialogTopic_FieldIndex.Name:
-                case DialogTopic_FieldIndex.DialogType:
-                case DialogTopic_FieldIndex.Timestamp:
-                case DialogTopic_FieldIndex.Items:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            DialogTopic_FieldIndex enu = (DialogTopic_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogTopic_FieldIndex.Quests:
-                    return "Quests";
-                case DialogTopic_FieldIndex.Name:
-                    return "Name";
-                case DialogTopic_FieldIndex.DialogType:
-                    return "DialogType";
-                case DialogTopic_FieldIndex.Timestamp:
-                    return "Timestamp";
-                case DialogTopic_FieldIndex.Items:
-                    return "Items";
-                default:
-                    return OblivionMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            DialogTopic_FieldIndex enu = (DialogTopic_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogTopic_FieldIndex.Quests:
-                case DialogTopic_FieldIndex.Name:
-                case DialogTopic_FieldIndex.DialogType:
-                case DialogTopic_FieldIndex.Timestamp:
-                case DialogTopic_FieldIndex.Items:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            DialogTopic_FieldIndex enu = (DialogTopic_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogTopic_FieldIndex.Quests:
-                case DialogTopic_FieldIndex.Name:
-                case DialogTopic_FieldIndex.DialogType:
-                case DialogTopic_FieldIndex.Timestamp:
-                case DialogTopic_FieldIndex.Items:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            DialogTopic_FieldIndex enu = (DialogTopic_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogTopic_FieldIndex.Quests:
-                    return typeof(IExtendedList<IFormLink<Quest>>);
-                case DialogTopic_FieldIndex.Name:
-                    return typeof(String);
-                case DialogTopic_FieldIndex.DialogType:
-                    return typeof(DialogType);
-                case DialogTopic_FieldIndex.Timestamp:
-                    return typeof(Int32);
-                case DialogTopic_FieldIndex.Items:
-                    return typeof(IExtendedList<DialogItem>);
-                default:
-                    return OblivionMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.DIAL;
         public static readonly Type BinaryWriteTranslation = typeof(DialogTopicBinaryWriteTranslation);
         #region Interface
@@ -1372,14 +1231,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1944,7 +1803,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Quests.SetTo(
                         rhs.Quests
-                        .Select(r => (IFormLink<Quest>)new FormLink<Quest>(r.FormKey)));
+                        .Select(r => (IFormLink<IQuestGetter>)new FormLink<IQuestGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2279,7 +2138,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.QSTI:
                 {
                     item.Quests.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Quest>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IQuestGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.QSTI),
                             transl: FormLinkBinaryTranslation.Instance.Parse));

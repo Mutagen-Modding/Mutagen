@@ -45,9 +45,7 @@ namespace Mutagen.Bethesda.Skyrim
         Int32? IHeadPartReferenceGetter.Number => this.Number;
         #endregion
         #region Head
-        public FormLinkNullable<HeadPart> Head { get; set; } = new FormLinkNullable<HeadPart>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IHeadPartGetter> IHeadPartReferenceGetter.Head => this.Head.ToGetter<HeadPart, IHeadPartGetter>();
+        public FormLinkNullable<IHeadPartGetter> Head { get; set; } = new FormLinkNullable<IHeadPartGetter>();
         #endregion
 
         #region To String
@@ -453,7 +451,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new Int32? Number { get; set; }
-        new FormLinkNullable<HeadPart> Head { get; set; }
+        new FormLinkNullable<IHeadPartGetter> Head { get; set; }
     }
 
     public partial interface IHeadPartReferenceGetter :
@@ -685,112 +683,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "NUMBER":
-                    return (ushort)HeadPartReference_FieldIndex.Number;
-                case "HEAD":
-                    return (ushort)HeadPartReference_FieldIndex.Head;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            HeadPartReference_FieldIndex enu = (HeadPartReference_FieldIndex)index;
-            switch (enu)
-            {
-                case HeadPartReference_FieldIndex.Number:
-                case HeadPartReference_FieldIndex.Head:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            HeadPartReference_FieldIndex enu = (HeadPartReference_FieldIndex)index;
-            switch (enu)
-            {
-                case HeadPartReference_FieldIndex.Number:
-                case HeadPartReference_FieldIndex.Head:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            HeadPartReference_FieldIndex enu = (HeadPartReference_FieldIndex)index;
-            switch (enu)
-            {
-                case HeadPartReference_FieldIndex.Number:
-                case HeadPartReference_FieldIndex.Head:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            HeadPartReference_FieldIndex enu = (HeadPartReference_FieldIndex)index;
-            switch (enu)
-            {
-                case HeadPartReference_FieldIndex.Number:
-                    return "Number";
-                case HeadPartReference_FieldIndex.Head:
-                    return "Head";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            HeadPartReference_FieldIndex enu = (HeadPartReference_FieldIndex)index;
-            switch (enu)
-            {
-                case HeadPartReference_FieldIndex.Number:
-                case HeadPartReference_FieldIndex.Head:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            HeadPartReference_FieldIndex enu = (HeadPartReference_FieldIndex)index;
-            switch (enu)
-            {
-                case HeadPartReference_FieldIndex.Number:
-                case HeadPartReference_FieldIndex.Head:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            HeadPartReference_FieldIndex enu = (HeadPartReference_FieldIndex)index;
-            switch (enu)
-            {
-                case HeadPartReference_FieldIndex.Number:
-                    return typeof(Int32);
-                case HeadPartReference_FieldIndex.Head:
-                    return typeof(FormLinkNullable<HeadPart>);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -822,14 +714,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -846,7 +738,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Number = default;
-            item.Head = FormLinkNullable<HeadPart>.Null;
+            item.Head = FormLinkNullable<IHeadPartGetter>.Null;
         }
         
         #region Binary Translation
@@ -1013,7 +905,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)HeadPartReference_FieldIndex.Head) ?? true))
             {
-                item.Head = new FormLinkNullable<HeadPart>(rhs.Head.FormKey);
+                item.Head = new FormLinkNullable<IHeadPartGetter>(rhs.Head.FormKey);
             }
         }
         

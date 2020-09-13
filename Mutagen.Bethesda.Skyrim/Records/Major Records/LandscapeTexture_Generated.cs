@@ -43,14 +43,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region TextureSet
-        public FormLinkNullable<TextureSet> TextureSet { get; set; } = new FormLinkNullable<TextureSet>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ITextureSetGetter> ILandscapeTextureGetter.TextureSet => this.TextureSet.ToGetter<TextureSet, ITextureSetGetter>();
+        public FormLinkNullable<ITextureSetGetter> TextureSet { get; set; } = new FormLinkNullable<ITextureSetGetter>();
         #endregion
         #region MaterialType
-        public FormLink<MaterialType> MaterialType { get; set; } = new FormLink<MaterialType>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IMaterialTypeGetter> ILandscapeTextureGetter.MaterialType => this.MaterialType.ToGetter<MaterialType, IMaterialTypeGetter>();
+        public FormLink<IMaterialTypeGetter> MaterialType { get; set; } = new FormLink<IMaterialTypeGetter>();
         #endregion
         #region HavokFriction
         public Byte HavokFriction { get; set; } = default;
@@ -63,8 +59,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Grasses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Grass>> _Grasses = new ExtendedList<IFormLink<Grass>>();
-        public IExtendedList<IFormLink<Grass>> Grasses
+        private ExtendedList<IFormLink<IGrassGetter>> _Grasses = new ExtendedList<IFormLink<IGrassGetter>>();
+        public ExtendedList<IFormLink<IGrassGetter>> Grasses
         {
             get => this._Grasses;
             protected set => this._Grasses = value;
@@ -751,12 +747,12 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ILandscapeTextureInternal>,
         ILinkedFormKeyContainer
     {
-        new FormLinkNullable<TextureSet> TextureSet { get; set; }
-        new FormLink<MaterialType> MaterialType { get; set; }
+        new FormLinkNullable<ITextureSetGetter> TextureSet { get; set; }
+        new FormLink<IMaterialTypeGetter> MaterialType { get; set; }
         new Byte HavokFriction { get; set; }
         new Byte HavokRestitution { get; set; }
         new Byte TextureSpecularExponent { get; set; }
-        new IExtendedList<IFormLink<Grass>> Grasses { get; }
+        new ExtendedList<IFormLink<IGrassGetter>> Grasses { get; }
         new LandscapeTexture.Flag? Flags { get; set; }
         new LandscapeTexture.HNAMDataType HNAMDataTypeState { get; set; }
     }
@@ -985,179 +981,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "TEXTURESET":
-                    return (ushort)LandscapeTexture_FieldIndex.TextureSet;
-                case "MATERIALTYPE":
-                    return (ushort)LandscapeTexture_FieldIndex.MaterialType;
-                case "HAVOKFRICTION":
-                    return (ushort)LandscapeTexture_FieldIndex.HavokFriction;
-                case "HAVOKRESTITUTION":
-                    return (ushort)LandscapeTexture_FieldIndex.HavokRestitution;
-                case "TEXTURESPECULAREXPONENT":
-                    return (ushort)LandscapeTexture_FieldIndex.TextureSpecularExponent;
-                case "GRASSES":
-                    return (ushort)LandscapeTexture_FieldIndex.Grasses;
-                case "FLAGS":
-                    return (ushort)LandscapeTexture_FieldIndex.Flags;
-                case "HNAMDATATYPESTATE":
-                    return (ushort)LandscapeTexture_FieldIndex.HNAMDataTypeState;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            LandscapeTexture_FieldIndex enu = (LandscapeTexture_FieldIndex)index;
-            switch (enu)
-            {
-                case LandscapeTexture_FieldIndex.Grasses:
-                    return true;
-                case LandscapeTexture_FieldIndex.TextureSet:
-                case LandscapeTexture_FieldIndex.MaterialType:
-                case LandscapeTexture_FieldIndex.HavokFriction:
-                case LandscapeTexture_FieldIndex.HavokRestitution:
-                case LandscapeTexture_FieldIndex.TextureSpecularExponent:
-                case LandscapeTexture_FieldIndex.Flags:
-                case LandscapeTexture_FieldIndex.HNAMDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            LandscapeTexture_FieldIndex enu = (LandscapeTexture_FieldIndex)index;
-            switch (enu)
-            {
-                case LandscapeTexture_FieldIndex.TextureSet:
-                case LandscapeTexture_FieldIndex.MaterialType:
-                case LandscapeTexture_FieldIndex.HavokFriction:
-                case LandscapeTexture_FieldIndex.HavokRestitution:
-                case LandscapeTexture_FieldIndex.TextureSpecularExponent:
-                case LandscapeTexture_FieldIndex.Grasses:
-                case LandscapeTexture_FieldIndex.Flags:
-                case LandscapeTexture_FieldIndex.HNAMDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            LandscapeTexture_FieldIndex enu = (LandscapeTexture_FieldIndex)index;
-            switch (enu)
-            {
-                case LandscapeTexture_FieldIndex.TextureSet:
-                case LandscapeTexture_FieldIndex.MaterialType:
-                case LandscapeTexture_FieldIndex.HavokFriction:
-                case LandscapeTexture_FieldIndex.HavokRestitution:
-                case LandscapeTexture_FieldIndex.TextureSpecularExponent:
-                case LandscapeTexture_FieldIndex.Grasses:
-                case LandscapeTexture_FieldIndex.Flags:
-                case LandscapeTexture_FieldIndex.HNAMDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            LandscapeTexture_FieldIndex enu = (LandscapeTexture_FieldIndex)index;
-            switch (enu)
-            {
-                case LandscapeTexture_FieldIndex.TextureSet:
-                    return "TextureSet";
-                case LandscapeTexture_FieldIndex.MaterialType:
-                    return "MaterialType";
-                case LandscapeTexture_FieldIndex.HavokFriction:
-                    return "HavokFriction";
-                case LandscapeTexture_FieldIndex.HavokRestitution:
-                    return "HavokRestitution";
-                case LandscapeTexture_FieldIndex.TextureSpecularExponent:
-                    return "TextureSpecularExponent";
-                case LandscapeTexture_FieldIndex.Grasses:
-                    return "Grasses";
-                case LandscapeTexture_FieldIndex.Flags:
-                    return "Flags";
-                case LandscapeTexture_FieldIndex.HNAMDataTypeState:
-                    return "HNAMDataTypeState";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            LandscapeTexture_FieldIndex enu = (LandscapeTexture_FieldIndex)index;
-            switch (enu)
-            {
-                case LandscapeTexture_FieldIndex.TextureSet:
-                case LandscapeTexture_FieldIndex.MaterialType:
-                case LandscapeTexture_FieldIndex.HavokFriction:
-                case LandscapeTexture_FieldIndex.HavokRestitution:
-                case LandscapeTexture_FieldIndex.TextureSpecularExponent:
-                case LandscapeTexture_FieldIndex.Grasses:
-                case LandscapeTexture_FieldIndex.Flags:
-                case LandscapeTexture_FieldIndex.HNAMDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            LandscapeTexture_FieldIndex enu = (LandscapeTexture_FieldIndex)index;
-            switch (enu)
-            {
-                case LandscapeTexture_FieldIndex.TextureSet:
-                case LandscapeTexture_FieldIndex.MaterialType:
-                case LandscapeTexture_FieldIndex.HavokFriction:
-                case LandscapeTexture_FieldIndex.HavokRestitution:
-                case LandscapeTexture_FieldIndex.TextureSpecularExponent:
-                case LandscapeTexture_FieldIndex.Grasses:
-                case LandscapeTexture_FieldIndex.Flags:
-                case LandscapeTexture_FieldIndex.HNAMDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            LandscapeTexture_FieldIndex enu = (LandscapeTexture_FieldIndex)index;
-            switch (enu)
-            {
-                case LandscapeTexture_FieldIndex.TextureSet:
-                    return typeof(FormLinkNullable<TextureSet>);
-                case LandscapeTexture_FieldIndex.MaterialType:
-                    return typeof(FormLink<MaterialType>);
-                case LandscapeTexture_FieldIndex.HavokFriction:
-                    return typeof(Byte);
-                case LandscapeTexture_FieldIndex.HavokRestitution:
-                    return typeof(Byte);
-                case LandscapeTexture_FieldIndex.TextureSpecularExponent:
-                    return typeof(Byte);
-                case LandscapeTexture_FieldIndex.Grasses:
-                    return typeof(IExtendedList<IFormLink<Grass>>);
-                case LandscapeTexture_FieldIndex.Flags:
-                    return typeof(LandscapeTexture.Flag);
-                case LandscapeTexture_FieldIndex.HNAMDataTypeState:
-                    return typeof(LandscapeTexture.HNAMDataType);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.LTEX;
         public static readonly Type BinaryWriteTranslation = typeof(LandscapeTextureBinaryWriteTranslation);
         #region Interface
@@ -1178,14 +1001,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1201,8 +1024,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ILandscapeTextureInternal item)
         {
             ClearPartial();
-            item.TextureSet = FormLinkNullable<TextureSet>.Null;
-            item.MaterialType = FormLink<MaterialType>.Null;
+            item.TextureSet = FormLinkNullable<ITextureSetGetter>.Null;
+            item.MaterialType = FormLink<IMaterialTypeGetter>.Null;
             item.HavokFriction = default;
             item.HavokRestitution = default;
             item.TextureSpecularExponent = default;
@@ -1577,11 +1400,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.TextureSet) ?? true))
             {
-                item.TextureSet = new FormLinkNullable<TextureSet>(rhs.TextureSet.FormKey);
+                item.TextureSet = new FormLinkNullable<ITextureSetGetter>(rhs.TextureSet.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.MaterialType) ?? true))
             {
-                item.MaterialType = new FormLink<MaterialType>(rhs.MaterialType.FormKey);
+                item.MaterialType = new FormLink<IMaterialTypeGetter>(rhs.MaterialType.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.HavokFriction) ?? true))
             {
@@ -1602,7 +1425,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Grasses.SetTo(
                         rhs.Grasses
-                        .Select(r => (IFormLink<Grass>)new FormLink<Grass>(r.FormKey)));
+                        .Select(r => (IFormLink<IGrassGetter>)new FormLink<IGrassGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1940,7 +1763,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.GNAM:
                 {
                     item.Grasses.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Grass>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IGrassGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.GNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));

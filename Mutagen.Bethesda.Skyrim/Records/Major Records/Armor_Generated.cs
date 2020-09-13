@@ -64,9 +64,7 @@ namespace Mutagen.Bethesda.Skyrim
         TranslatedString? IArmorGetter.Name => this.Name;
         #endregion
         #region ObjectEffect
-        public FormLinkNullable<IEffectRecord> ObjectEffect { get; set; } = new FormLinkNullable<IEffectRecord>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IEffectRecordGetter> IArmorGetter.ObjectEffect => this.ObjectEffect.ToGetter<IEffectRecord, IEffectRecordGetter>();
+        public FormLinkNullable<IEffectRecordGetter> ObjectEffect { get; set; } = new FormLinkNullable<IEffectRecordGetter>();
         #endregion
         #region EnchantmentAmount
         public UInt16? EnchantmentAmount { get; set; }
@@ -100,14 +98,10 @@ namespace Mutagen.Bethesda.Skyrim
         IDestructibleGetter? IArmorGetter.Destructible => this.Destructible;
         #endregion
         #region PickUpSound
-        public FormLinkNullable<SoundDescriptor> PickUpSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IArmorGetter.PickUpSound => this.PickUpSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region PutDownSound
-        public FormLinkNullable<SoundDescriptor> PutDownSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IArmorGetter.PutDownSound => this.PutDownSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region RagdollConstraintTemplate
         public String? RagdollConstraintTemplate { get; set; }
@@ -115,29 +109,21 @@ namespace Mutagen.Bethesda.Skyrim
         String? IArmorGetter.RagdollConstraintTemplate => this.RagdollConstraintTemplate;
         #endregion
         #region EquipmentType
-        public FormLinkNullable<EquipType> EquipmentType { get; set; } = new FormLinkNullable<EquipType>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IEquipTypeGetter> IArmorGetter.EquipmentType => this.EquipmentType.ToGetter<EquipType, IEquipTypeGetter>();
+        public FormLinkNullable<IEquipTypeGetter> EquipmentType { get; set; } = new FormLinkNullable<IEquipTypeGetter>();
         #endregion
         #region BashImpactDataSet
-        public FormLinkNullable<ImpactDataSet> BashImpactDataSet { get; set; } = new FormLinkNullable<ImpactDataSet>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IImpactDataSetGetter> IArmorGetter.BashImpactDataSet => this.BashImpactDataSet.ToGetter<ImpactDataSet, IImpactDataSetGetter>();
+        public FormLinkNullable<IImpactDataSetGetter> BashImpactDataSet { get; set; } = new FormLinkNullable<IImpactDataSetGetter>();
         #endregion
         #region AlternateBlockMaterial
-        public FormLinkNullable<MaterialType> AlternateBlockMaterial { get; set; } = new FormLinkNullable<MaterialType>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IMaterialTypeGetter> IArmorGetter.AlternateBlockMaterial => this.AlternateBlockMaterial.ToGetter<MaterialType, IMaterialTypeGetter>();
+        public FormLinkNullable<IMaterialTypeGetter> AlternateBlockMaterial { get; set; } = new FormLinkNullable<IMaterialTypeGetter>();
         #endregion
         #region Race
-        public FormLinkNullable<Race> Race { get; set; } = new FormLinkNullable<Race>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IRaceGetter> IArmorGetter.Race => this.Race.ToGetter<Race, IRaceGetter>();
+        public FormLinkNullable<IRaceGetter> Race { get; set; } = new FormLinkNullable<IRaceGetter>();
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Keyword>>? _Keywords;
-        public IExtendedList<IFormLink<Keyword>>? Keywords
+        private ExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
+        public ExtendedList<IFormLink<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -155,8 +141,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Armature
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<ArmorAddon>> _Armature = new ExtendedList<IFormLink<ArmorAddon>>();
-        public IExtendedList<IFormLink<ArmorAddon>> Armature
+        private ExtendedList<IFormLink<IArmorAddonGetter>> _Armature = new ExtendedList<IFormLink<IArmorAddonGetter>>();
+        public ExtendedList<IFormLink<IArmorAddonGetter>> Armature
         {
             get => this._Armature;
             protected set => this._Armature = value;
@@ -177,9 +163,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Single ArmorRating { get; set; } = default;
         #endregion
         #region TemplateArmor
-        public FormLinkNullable<Armor> TemplateArmor { get; set; } = new FormLinkNullable<Armor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IArmorGetter> IArmorGetter.TemplateArmor => this.TemplateArmor.ToGetter<Armor, IArmorGetter>();
+        public FormLinkNullable<IArmorGetter> TemplateArmor { get; set; } = new FormLinkNullable<IArmorGetter>();
         #endregion
         #region DATADataTypeState
         public Armor.DATADataType DATADataTypeState { get; set; } = default;
@@ -1396,25 +1380,25 @@ namespace Mutagen.Bethesda.Skyrim
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
-        new FormLinkNullable<IEffectRecord> ObjectEffect { get; set; }
+        new FormLinkNullable<IEffectRecordGetter> ObjectEffect { get; set; }
         new UInt16? EnchantmentAmount { get; set; }
         new GenderedItem<ArmorModel?>? WorldModel { get; set; }
         new BodyTemplate? BodyTemplate { get; set; }
         new Destructible? Destructible { get; set; }
-        new FormLinkNullable<SoundDescriptor> PickUpSound { get; set; }
-        new FormLinkNullable<SoundDescriptor> PutDownSound { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; set; }
         new String? RagdollConstraintTemplate { get; set; }
-        new FormLinkNullable<EquipType> EquipmentType { get; set; }
-        new FormLinkNullable<ImpactDataSet> BashImpactDataSet { get; set; }
-        new FormLinkNullable<MaterialType> AlternateBlockMaterial { get; set; }
-        new FormLinkNullable<Race> Race { get; set; }
-        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new FormLinkNullable<IEquipTypeGetter> EquipmentType { get; set; }
+        new FormLinkNullable<IImpactDataSetGetter> BashImpactDataSet { get; set; }
+        new FormLinkNullable<IMaterialTypeGetter> AlternateBlockMaterial { get; set; }
+        new FormLinkNullable<IRaceGetter> Race { get; set; }
+        new ExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
         new TranslatedString? Description { get; set; }
-        new IExtendedList<IFormLink<ArmorAddon>> Armature { get; }
+        new ExtendedList<IFormLink<IArmorAddonGetter>> Armature { get; }
         new UInt32 Value { get; set; }
         new Single Weight { get; set; }
         new Single ArmorRating { get; set; }
-        new FormLinkNullable<Armor> TemplateArmor { get; set; }
+        new FormLinkNullable<IArmorGetter> TemplateArmor { get; set; }
         new Armor.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
         new Armor.MajorFlag MajorFlags { get; set; }
@@ -1686,345 +1670,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "VIRTUALMACHINEADAPTER":
-                    return (ushort)Armor_FieldIndex.VirtualMachineAdapter;
-                case "OBJECTBOUNDS":
-                    return (ushort)Armor_FieldIndex.ObjectBounds;
-                case "NAME":
-                    return (ushort)Armor_FieldIndex.Name;
-                case "OBJECTEFFECT":
-                    return (ushort)Armor_FieldIndex.ObjectEffect;
-                case "ENCHANTMENTAMOUNT":
-                    return (ushort)Armor_FieldIndex.EnchantmentAmount;
-                case "WORLDMODEL":
-                    return (ushort)Armor_FieldIndex.WorldModel;
-                case "BODYTEMPLATE":
-                    return (ushort)Armor_FieldIndex.BodyTemplate;
-                case "DESTRUCTIBLE":
-                    return (ushort)Armor_FieldIndex.Destructible;
-                case "PICKUPSOUND":
-                    return (ushort)Armor_FieldIndex.PickUpSound;
-                case "PUTDOWNSOUND":
-                    return (ushort)Armor_FieldIndex.PutDownSound;
-                case "RAGDOLLCONSTRAINTTEMPLATE":
-                    return (ushort)Armor_FieldIndex.RagdollConstraintTemplate;
-                case "EQUIPMENTTYPE":
-                    return (ushort)Armor_FieldIndex.EquipmentType;
-                case "BASHIMPACTDATASET":
-                    return (ushort)Armor_FieldIndex.BashImpactDataSet;
-                case "ALTERNATEBLOCKMATERIAL":
-                    return (ushort)Armor_FieldIndex.AlternateBlockMaterial;
-                case "RACE":
-                    return (ushort)Armor_FieldIndex.Race;
-                case "KEYWORDS":
-                    return (ushort)Armor_FieldIndex.Keywords;
-                case "DESCRIPTION":
-                    return (ushort)Armor_FieldIndex.Description;
-                case "ARMATURE":
-                    return (ushort)Armor_FieldIndex.Armature;
-                case "VALUE":
-                    return (ushort)Armor_FieldIndex.Value;
-                case "WEIGHT":
-                    return (ushort)Armor_FieldIndex.Weight;
-                case "ARMORRATING":
-                    return (ushort)Armor_FieldIndex.ArmorRating;
-                case "TEMPLATEARMOR":
-                    return (ushort)Armor_FieldIndex.TemplateArmor;
-                case "DATADATATYPESTATE":
-                    return (ushort)Armor_FieldIndex.DATADataTypeState;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Armor_FieldIndex enu = (Armor_FieldIndex)index;
-            switch (enu)
-            {
-                case Armor_FieldIndex.Keywords:
-                case Armor_FieldIndex.Armature:
-                    return true;
-                case Armor_FieldIndex.VirtualMachineAdapter:
-                case Armor_FieldIndex.ObjectBounds:
-                case Armor_FieldIndex.Name:
-                case Armor_FieldIndex.ObjectEffect:
-                case Armor_FieldIndex.EnchantmentAmount:
-                case Armor_FieldIndex.WorldModel:
-                case Armor_FieldIndex.BodyTemplate:
-                case Armor_FieldIndex.Destructible:
-                case Armor_FieldIndex.PickUpSound:
-                case Armor_FieldIndex.PutDownSound:
-                case Armor_FieldIndex.RagdollConstraintTemplate:
-                case Armor_FieldIndex.EquipmentType:
-                case Armor_FieldIndex.BashImpactDataSet:
-                case Armor_FieldIndex.AlternateBlockMaterial:
-                case Armor_FieldIndex.Race:
-                case Armor_FieldIndex.Description:
-                case Armor_FieldIndex.Value:
-                case Armor_FieldIndex.Weight:
-                case Armor_FieldIndex.ArmorRating:
-                case Armor_FieldIndex.TemplateArmor:
-                case Armor_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Armor_FieldIndex enu = (Armor_FieldIndex)index;
-            switch (enu)
-            {
-                case Armor_FieldIndex.VirtualMachineAdapter:
-                case Armor_FieldIndex.ObjectBounds:
-                case Armor_FieldIndex.WorldModel:
-                case Armor_FieldIndex.BodyTemplate:
-                case Armor_FieldIndex.Destructible:
-                    return true;
-                case Armor_FieldIndex.Name:
-                case Armor_FieldIndex.ObjectEffect:
-                case Armor_FieldIndex.EnchantmentAmount:
-                case Armor_FieldIndex.PickUpSound:
-                case Armor_FieldIndex.PutDownSound:
-                case Armor_FieldIndex.RagdollConstraintTemplate:
-                case Armor_FieldIndex.EquipmentType:
-                case Armor_FieldIndex.BashImpactDataSet:
-                case Armor_FieldIndex.AlternateBlockMaterial:
-                case Armor_FieldIndex.Race:
-                case Armor_FieldIndex.Keywords:
-                case Armor_FieldIndex.Description:
-                case Armor_FieldIndex.Armature:
-                case Armor_FieldIndex.Value:
-                case Armor_FieldIndex.Weight:
-                case Armor_FieldIndex.ArmorRating:
-                case Armor_FieldIndex.TemplateArmor:
-                case Armor_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Armor_FieldIndex enu = (Armor_FieldIndex)index;
-            switch (enu)
-            {
-                case Armor_FieldIndex.VirtualMachineAdapter:
-                case Armor_FieldIndex.ObjectBounds:
-                case Armor_FieldIndex.Name:
-                case Armor_FieldIndex.ObjectEffect:
-                case Armor_FieldIndex.EnchantmentAmount:
-                case Armor_FieldIndex.WorldModel:
-                case Armor_FieldIndex.BodyTemplate:
-                case Armor_FieldIndex.Destructible:
-                case Armor_FieldIndex.PickUpSound:
-                case Armor_FieldIndex.PutDownSound:
-                case Armor_FieldIndex.RagdollConstraintTemplate:
-                case Armor_FieldIndex.EquipmentType:
-                case Armor_FieldIndex.BashImpactDataSet:
-                case Armor_FieldIndex.AlternateBlockMaterial:
-                case Armor_FieldIndex.Race:
-                case Armor_FieldIndex.Keywords:
-                case Armor_FieldIndex.Description:
-                case Armor_FieldIndex.Armature:
-                case Armor_FieldIndex.Value:
-                case Armor_FieldIndex.Weight:
-                case Armor_FieldIndex.ArmorRating:
-                case Armor_FieldIndex.TemplateArmor:
-                case Armor_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Armor_FieldIndex enu = (Armor_FieldIndex)index;
-            switch (enu)
-            {
-                case Armor_FieldIndex.VirtualMachineAdapter:
-                    return "VirtualMachineAdapter";
-                case Armor_FieldIndex.ObjectBounds:
-                    return "ObjectBounds";
-                case Armor_FieldIndex.Name:
-                    return "Name";
-                case Armor_FieldIndex.ObjectEffect:
-                    return "ObjectEffect";
-                case Armor_FieldIndex.EnchantmentAmount:
-                    return "EnchantmentAmount";
-                case Armor_FieldIndex.WorldModel:
-                    return "WorldModel";
-                case Armor_FieldIndex.BodyTemplate:
-                    return "BodyTemplate";
-                case Armor_FieldIndex.Destructible:
-                    return "Destructible";
-                case Armor_FieldIndex.PickUpSound:
-                    return "PickUpSound";
-                case Armor_FieldIndex.PutDownSound:
-                    return "PutDownSound";
-                case Armor_FieldIndex.RagdollConstraintTemplate:
-                    return "RagdollConstraintTemplate";
-                case Armor_FieldIndex.EquipmentType:
-                    return "EquipmentType";
-                case Armor_FieldIndex.BashImpactDataSet:
-                    return "BashImpactDataSet";
-                case Armor_FieldIndex.AlternateBlockMaterial:
-                    return "AlternateBlockMaterial";
-                case Armor_FieldIndex.Race:
-                    return "Race";
-                case Armor_FieldIndex.Keywords:
-                    return "Keywords";
-                case Armor_FieldIndex.Description:
-                    return "Description";
-                case Armor_FieldIndex.Armature:
-                    return "Armature";
-                case Armor_FieldIndex.Value:
-                    return "Value";
-                case Armor_FieldIndex.Weight:
-                    return "Weight";
-                case Armor_FieldIndex.ArmorRating:
-                    return "ArmorRating";
-                case Armor_FieldIndex.TemplateArmor:
-                    return "TemplateArmor";
-                case Armor_FieldIndex.DATADataTypeState:
-                    return "DATADataTypeState";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Armor_FieldIndex enu = (Armor_FieldIndex)index;
-            switch (enu)
-            {
-                case Armor_FieldIndex.VirtualMachineAdapter:
-                case Armor_FieldIndex.ObjectBounds:
-                case Armor_FieldIndex.Name:
-                case Armor_FieldIndex.ObjectEffect:
-                case Armor_FieldIndex.EnchantmentAmount:
-                case Armor_FieldIndex.WorldModel:
-                case Armor_FieldIndex.BodyTemplate:
-                case Armor_FieldIndex.Destructible:
-                case Armor_FieldIndex.PickUpSound:
-                case Armor_FieldIndex.PutDownSound:
-                case Armor_FieldIndex.RagdollConstraintTemplate:
-                case Armor_FieldIndex.EquipmentType:
-                case Armor_FieldIndex.BashImpactDataSet:
-                case Armor_FieldIndex.AlternateBlockMaterial:
-                case Armor_FieldIndex.Race:
-                case Armor_FieldIndex.Keywords:
-                case Armor_FieldIndex.Description:
-                case Armor_FieldIndex.Armature:
-                case Armor_FieldIndex.Value:
-                case Armor_FieldIndex.Weight:
-                case Armor_FieldIndex.ArmorRating:
-                case Armor_FieldIndex.TemplateArmor:
-                case Armor_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Armor_FieldIndex enu = (Armor_FieldIndex)index;
-            switch (enu)
-            {
-                case Armor_FieldIndex.VirtualMachineAdapter:
-                case Armor_FieldIndex.ObjectBounds:
-                case Armor_FieldIndex.Name:
-                case Armor_FieldIndex.ObjectEffect:
-                case Armor_FieldIndex.EnchantmentAmount:
-                case Armor_FieldIndex.WorldModel:
-                case Armor_FieldIndex.BodyTemplate:
-                case Armor_FieldIndex.Destructible:
-                case Armor_FieldIndex.PickUpSound:
-                case Armor_FieldIndex.PutDownSound:
-                case Armor_FieldIndex.RagdollConstraintTemplate:
-                case Armor_FieldIndex.EquipmentType:
-                case Armor_FieldIndex.BashImpactDataSet:
-                case Armor_FieldIndex.AlternateBlockMaterial:
-                case Armor_FieldIndex.Race:
-                case Armor_FieldIndex.Keywords:
-                case Armor_FieldIndex.Description:
-                case Armor_FieldIndex.Armature:
-                case Armor_FieldIndex.Value:
-                case Armor_FieldIndex.Weight:
-                case Armor_FieldIndex.ArmorRating:
-                case Armor_FieldIndex.TemplateArmor:
-                case Armor_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Armor_FieldIndex enu = (Armor_FieldIndex)index;
-            switch (enu)
-            {
-                case Armor_FieldIndex.VirtualMachineAdapter:
-                    return typeof(VirtualMachineAdapter);
-                case Armor_FieldIndex.ObjectBounds:
-                    return typeof(ObjectBounds);
-                case Armor_FieldIndex.Name:
-                    return typeof(TranslatedString);
-                case Armor_FieldIndex.ObjectEffect:
-                    return typeof(FormLinkNullable<IEffectRecord>);
-                case Armor_FieldIndex.EnchantmentAmount:
-                    return typeof(UInt16);
-                case Armor_FieldIndex.WorldModel:
-                    return typeof(GenderedItem<ArmorModel?>);
-                case Armor_FieldIndex.BodyTemplate:
-                    return typeof(BodyTemplate);
-                case Armor_FieldIndex.Destructible:
-                    return typeof(Destructible);
-                case Armor_FieldIndex.PickUpSound:
-                    return typeof(FormLinkNullable<SoundDescriptor>);
-                case Armor_FieldIndex.PutDownSound:
-                    return typeof(FormLinkNullable<SoundDescriptor>);
-                case Armor_FieldIndex.RagdollConstraintTemplate:
-                    return typeof(String);
-                case Armor_FieldIndex.EquipmentType:
-                    return typeof(FormLinkNullable<EquipType>);
-                case Armor_FieldIndex.BashImpactDataSet:
-                    return typeof(FormLinkNullable<ImpactDataSet>);
-                case Armor_FieldIndex.AlternateBlockMaterial:
-                    return typeof(FormLinkNullable<MaterialType>);
-                case Armor_FieldIndex.Race:
-                    return typeof(FormLinkNullable<Race>);
-                case Armor_FieldIndex.Keywords:
-                    return typeof(IExtendedList<IFormLink<Keyword>>);
-                case Armor_FieldIndex.Description:
-                    return typeof(TranslatedString);
-                case Armor_FieldIndex.Armature:
-                    return typeof(IExtendedList<IFormLink<ArmorAddon>>);
-                case Armor_FieldIndex.Value:
-                    return typeof(UInt32);
-                case Armor_FieldIndex.Weight:
-                    return typeof(Single);
-                case Armor_FieldIndex.ArmorRating:
-                    return typeof(Single);
-                case Armor_FieldIndex.TemplateArmor:
-                    return typeof(FormLinkNullable<Armor>);
-                case Armor_FieldIndex.DATADataTypeState:
-                    return typeof(Armor.DATADataType);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.ARMO;
         public static readonly Type BinaryWriteTranslation = typeof(ArmorBinaryWriteTranslation);
         public static RecordTypeConverter WorldModelFemaleConverter = new RecordTypeConverter(
@@ -2071,14 +1716,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -2097,25 +1742,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.VirtualMachineAdapter = null;
             item.ObjectBounds.Clear();
             item.Name = default;
-            item.ObjectEffect = FormLinkNullable<IEffectRecord>.Null;
+            item.ObjectEffect = FormLinkNullable<IEffectRecordGetter>.Null;
             item.EnchantmentAmount = default;
             item.WorldModel = null;
             item.BodyTemplate = null;
             item.Destructible = null;
-            item.PickUpSound = FormLinkNullable<SoundDescriptor>.Null;
-            item.PutDownSound = FormLinkNullable<SoundDescriptor>.Null;
+            item.PickUpSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
+            item.PutDownSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
             item.RagdollConstraintTemplate = default;
-            item.EquipmentType = FormLinkNullable<EquipType>.Null;
-            item.BashImpactDataSet = FormLinkNullable<ImpactDataSet>.Null;
-            item.AlternateBlockMaterial = FormLinkNullable<MaterialType>.Null;
-            item.Race = FormLinkNullable<Race>.Null;
+            item.EquipmentType = FormLinkNullable<IEquipTypeGetter>.Null;
+            item.BashImpactDataSet = FormLinkNullable<IImpactDataSetGetter>.Null;
+            item.AlternateBlockMaterial = FormLinkNullable<IMaterialTypeGetter>.Null;
+            item.Race = FormLinkNullable<IRaceGetter>.Null;
             item.Keywords = null;
             item.Description = default;
             item.Armature.Clear();
             item.Value = default;
             item.Weight = default;
             item.ArmorRating = default;
-            item.TemplateArmor = FormLinkNullable<Armor>.Null;
+            item.TemplateArmor = FormLinkNullable<IArmorGetter>.Null;
             item.DATADataTypeState = default;
             base.Clear(item);
         }
@@ -2759,7 +2404,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.ObjectEffect) ?? true))
             {
-                item.ObjectEffect = new FormLinkNullable<IEffectRecord>(rhs.ObjectEffect.FormKey);
+                item.ObjectEffect = new FormLinkNullable<IEffectRecordGetter>(rhs.ObjectEffect.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.EnchantmentAmount) ?? true))
             {
@@ -2833,11 +2478,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.PickUpSound) ?? true))
             {
-                item.PickUpSound = new FormLinkNullable<SoundDescriptor>(rhs.PickUpSound.FormKey);
+                item.PickUpSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.PickUpSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.PutDownSound) ?? true))
             {
-                item.PutDownSound = new FormLinkNullable<SoundDescriptor>(rhs.PutDownSound.FormKey);
+                item.PutDownSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.PutDownSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.RagdollConstraintTemplate) ?? true))
             {
@@ -2845,19 +2490,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.EquipmentType) ?? true))
             {
-                item.EquipmentType = new FormLinkNullable<EquipType>(rhs.EquipmentType.FormKey);
+                item.EquipmentType = new FormLinkNullable<IEquipTypeGetter>(rhs.EquipmentType.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.BashImpactDataSet) ?? true))
             {
-                item.BashImpactDataSet = new FormLinkNullable<ImpactDataSet>(rhs.BashImpactDataSet.FormKey);
+                item.BashImpactDataSet = new FormLinkNullable<IImpactDataSetGetter>(rhs.BashImpactDataSet.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.AlternateBlockMaterial) ?? true))
             {
-                item.AlternateBlockMaterial = new FormLinkNullable<MaterialType>(rhs.AlternateBlockMaterial.FormKey);
+                item.AlternateBlockMaterial = new FormLinkNullable<IMaterialTypeGetter>(rhs.AlternateBlockMaterial.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.Race) ?? true))
             {
-                item.Race = new FormLinkNullable<Race>(rhs.Race.FormKey);
+                item.Race = new FormLinkNullable<IRaceGetter>(rhs.Race.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.Keywords) ?? true))
             {
@@ -2868,8 +2513,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLink<Keyword>)new FormLink<Keyword>(r.FormKey))
-                            .ToExtendedList<IFormLink<Keyword>>();
+                            .Select(r => (IFormLink<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IKeywordGetter>>();
                     }
                     else
                     {
@@ -2897,7 +2542,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Armature.SetTo(
                         rhs.Armature
-                        .Select(r => (IFormLink<ArmorAddon>)new FormLink<ArmorAddon>(r.FormKey)));
+                        .Select(r => (IFormLink<IArmorAddonGetter>)new FormLink<IArmorAddonGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2923,7 +2568,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.TemplateArmor) ?? true))
             {
-                item.TemplateArmor = new FormLinkNullable<Armor>(rhs.TemplateArmor.FormKey);
+                item.TemplateArmor = new FormLinkNullable<IArmorGetter>(rhs.TemplateArmor.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.DATADataTypeState) ?? true))
             {
@@ -3439,13 +3084,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KSIZ:
                 {
                     item.Keywords = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<Keyword>>();
+                        .CastExtendedList<IFormLink<IKeywordGetter>>();
                     return (int)Armor_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DESC:
@@ -3460,7 +3105,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.MODL:
                 {
                     item.Armature.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ArmorAddon>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IArmorAddonGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.MODL),
                             transl: FormLinkBinaryTranslation.Instance.Parse));

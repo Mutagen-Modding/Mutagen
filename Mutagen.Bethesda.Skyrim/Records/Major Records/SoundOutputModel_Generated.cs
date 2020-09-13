@@ -918,168 +918,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "DATA":
-                    return (ushort)SoundOutputModel_FieldIndex.Data;
-                case "FNAM":
-                    return (ushort)SoundOutputModel_FieldIndex.FNAM;
-                case "TYPE":
-                    return (ushort)SoundOutputModel_FieldIndex.Type;
-                case "CNAM":
-                    return (ushort)SoundOutputModel_FieldIndex.CNAM;
-                case "SNAM":
-                    return (ushort)SoundOutputModel_FieldIndex.SNAM;
-                case "OUTPUTCHANNELS":
-                    return (ushort)SoundOutputModel_FieldIndex.OutputChannels;
-                case "ATTENUATION":
-                    return (ushort)SoundOutputModel_FieldIndex.Attenuation;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            SoundOutputModel_FieldIndex enu = (SoundOutputModel_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundOutputModel_FieldIndex.Data:
-                case SoundOutputModel_FieldIndex.FNAM:
-                case SoundOutputModel_FieldIndex.Type:
-                case SoundOutputModel_FieldIndex.CNAM:
-                case SoundOutputModel_FieldIndex.SNAM:
-                case SoundOutputModel_FieldIndex.OutputChannels:
-                case SoundOutputModel_FieldIndex.Attenuation:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            SoundOutputModel_FieldIndex enu = (SoundOutputModel_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundOutputModel_FieldIndex.Data:
-                case SoundOutputModel_FieldIndex.OutputChannels:
-                case SoundOutputModel_FieldIndex.Attenuation:
-                    return true;
-                case SoundOutputModel_FieldIndex.FNAM:
-                case SoundOutputModel_FieldIndex.Type:
-                case SoundOutputModel_FieldIndex.CNAM:
-                case SoundOutputModel_FieldIndex.SNAM:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            SoundOutputModel_FieldIndex enu = (SoundOutputModel_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundOutputModel_FieldIndex.Data:
-                case SoundOutputModel_FieldIndex.FNAM:
-                case SoundOutputModel_FieldIndex.Type:
-                case SoundOutputModel_FieldIndex.CNAM:
-                case SoundOutputModel_FieldIndex.SNAM:
-                case SoundOutputModel_FieldIndex.OutputChannels:
-                case SoundOutputModel_FieldIndex.Attenuation:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            SoundOutputModel_FieldIndex enu = (SoundOutputModel_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundOutputModel_FieldIndex.Data:
-                    return "Data";
-                case SoundOutputModel_FieldIndex.FNAM:
-                    return "FNAM";
-                case SoundOutputModel_FieldIndex.Type:
-                    return "Type";
-                case SoundOutputModel_FieldIndex.CNAM:
-                    return "CNAM";
-                case SoundOutputModel_FieldIndex.SNAM:
-                    return "SNAM";
-                case SoundOutputModel_FieldIndex.OutputChannels:
-                    return "OutputChannels";
-                case SoundOutputModel_FieldIndex.Attenuation:
-                    return "Attenuation";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            SoundOutputModel_FieldIndex enu = (SoundOutputModel_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundOutputModel_FieldIndex.Data:
-                case SoundOutputModel_FieldIndex.FNAM:
-                case SoundOutputModel_FieldIndex.Type:
-                case SoundOutputModel_FieldIndex.CNAM:
-                case SoundOutputModel_FieldIndex.SNAM:
-                case SoundOutputModel_FieldIndex.OutputChannels:
-                case SoundOutputModel_FieldIndex.Attenuation:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            SoundOutputModel_FieldIndex enu = (SoundOutputModel_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundOutputModel_FieldIndex.Data:
-                case SoundOutputModel_FieldIndex.FNAM:
-                case SoundOutputModel_FieldIndex.Type:
-                case SoundOutputModel_FieldIndex.CNAM:
-                case SoundOutputModel_FieldIndex.SNAM:
-                case SoundOutputModel_FieldIndex.OutputChannels:
-                case SoundOutputModel_FieldIndex.Attenuation:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            SoundOutputModel_FieldIndex enu = (SoundOutputModel_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundOutputModel_FieldIndex.Data:
-                    return typeof(SoundOutputData);
-                case SoundOutputModel_FieldIndex.FNAM:
-                    return typeof(MemorySlice<Byte>);
-                case SoundOutputModel_FieldIndex.Type:
-                    return typeof(SoundOutputModel.TypeEnum);
-                case SoundOutputModel_FieldIndex.CNAM:
-                    return typeof(MemorySlice<Byte>);
-                case SoundOutputModel_FieldIndex.SNAM:
-                    return typeof(MemorySlice<Byte>);
-                case SoundOutputModel_FieldIndex.OutputChannels:
-                    return typeof(SoundOutputChannels);
-                case SoundOutputModel_FieldIndex.Attenuation:
-                    return typeof(SoundOutputAttenuation);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.SOPM;
         public static readonly Type BinaryWriteTranslation = typeof(SoundOutputModelBinaryWriteTranslation);
         #region Interface
@@ -1100,14 +938,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

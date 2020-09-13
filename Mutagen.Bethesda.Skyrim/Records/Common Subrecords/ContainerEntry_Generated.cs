@@ -707,112 +707,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "ITEM":
-                    return (ushort)ContainerEntry_FieldIndex.Item;
-                case "DATA":
-                    return (ushort)ContainerEntry_FieldIndex.Data;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            ContainerEntry_FieldIndex enu = (ContainerEntry_FieldIndex)index;
-            switch (enu)
-            {
-                case ContainerEntry_FieldIndex.Item:
-                case ContainerEntry_FieldIndex.Data:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            ContainerEntry_FieldIndex enu = (ContainerEntry_FieldIndex)index;
-            switch (enu)
-            {
-                case ContainerEntry_FieldIndex.Item:
-                case ContainerEntry_FieldIndex.Data:
-                    return true;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            ContainerEntry_FieldIndex enu = (ContainerEntry_FieldIndex)index;
-            switch (enu)
-            {
-                case ContainerEntry_FieldIndex.Item:
-                case ContainerEntry_FieldIndex.Data:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            ContainerEntry_FieldIndex enu = (ContainerEntry_FieldIndex)index;
-            switch (enu)
-            {
-                case ContainerEntry_FieldIndex.Item:
-                    return "Item";
-                case ContainerEntry_FieldIndex.Data:
-                    return "Data";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            ContainerEntry_FieldIndex enu = (ContainerEntry_FieldIndex)index;
-            switch (enu)
-            {
-                case ContainerEntry_FieldIndex.Item:
-                case ContainerEntry_FieldIndex.Data:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            ContainerEntry_FieldIndex enu = (ContainerEntry_FieldIndex)index;
-            switch (enu)
-            {
-                case ContainerEntry_FieldIndex.Item:
-                case ContainerEntry_FieldIndex.Data:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            ContainerEntry_FieldIndex enu = (ContainerEntry_FieldIndex)index;
-            switch (enu)
-            {
-                case ContainerEntry_FieldIndex.Item:
-                    return typeof(ContainerItem);
-                case ContainerEntry_FieldIndex.Data:
-                    return typeof(ExtraData);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.CNTO;
         public static readonly Type BinaryWriteTranslation = typeof(ContainerEntryBinaryWriteTranslation);
         #region Interface
@@ -833,14 +727,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

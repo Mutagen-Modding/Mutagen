@@ -44,8 +44,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public IExtendedList<Condition> Conditions
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -58,8 +58,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RelatedPaths
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<CameraPath>> _RelatedPaths = new ExtendedList<IFormLink<CameraPath>>();
-        public IExtendedList<IFormLink<CameraPath>> RelatedPaths
+        private ExtendedList<IFormLink<ICameraPathGetter>> _RelatedPaths = new ExtendedList<IFormLink<ICameraPathGetter>>();
+        public ExtendedList<IFormLink<ICameraPathGetter>> RelatedPaths
         {
             get => this._RelatedPaths;
             protected set => this._RelatedPaths = value;
@@ -78,8 +78,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Shots
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<CameraShot>> _Shots = new ExtendedList<IFormLink<CameraShot>>();
-        public IExtendedList<IFormLink<CameraShot>> Shots
+        private ExtendedList<IFormLink<ICameraShotGetter>> _Shots = new ExtendedList<IFormLink<ICameraShotGetter>>();
+        public ExtendedList<IFormLink<ICameraShotGetter>> Shots
         {
             get => this._Shots;
             protected set => this._Shots = value;
@@ -817,11 +817,11 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ICameraPathInternal>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<Condition> Conditions { get; }
-        new IExtendedList<IFormLink<CameraPath>> RelatedPaths { get; }
+        new ExtendedList<Condition> Conditions { get; }
+        new ExtendedList<IFormLink<ICameraPathGetter>> RelatedPaths { get; }
         new CameraPath.ZoomType Zoom { get; set; }
         new Boolean ZoomMustHaveCameraShots { get; set; }
-        new IExtendedList<IFormLink<CameraShot>> Shots { get; }
+        new ExtendedList<IFormLink<ICameraShotGetter>> Shots { get; }
     }
 
     public partial interface ICameraPathInternal :
@@ -1041,147 +1041,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "CONDITIONS":
-                    return (ushort)CameraPath_FieldIndex.Conditions;
-                case "RELATEDPATHS":
-                    return (ushort)CameraPath_FieldIndex.RelatedPaths;
-                case "ZOOM":
-                    return (ushort)CameraPath_FieldIndex.Zoom;
-                case "ZOOMMUSTHAVECAMERASHOTS":
-                    return (ushort)CameraPath_FieldIndex.ZoomMustHaveCameraShots;
-                case "SHOTS":
-                    return (ushort)CameraPath_FieldIndex.Shots;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            CameraPath_FieldIndex enu = (CameraPath_FieldIndex)index;
-            switch (enu)
-            {
-                case CameraPath_FieldIndex.Conditions:
-                case CameraPath_FieldIndex.RelatedPaths:
-                case CameraPath_FieldIndex.Shots:
-                    return true;
-                case CameraPath_FieldIndex.Zoom:
-                case CameraPath_FieldIndex.ZoomMustHaveCameraShots:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            CameraPath_FieldIndex enu = (CameraPath_FieldIndex)index;
-            switch (enu)
-            {
-                case CameraPath_FieldIndex.Conditions:
-                    return true;
-                case CameraPath_FieldIndex.RelatedPaths:
-                case CameraPath_FieldIndex.Zoom:
-                case CameraPath_FieldIndex.ZoomMustHaveCameraShots:
-                case CameraPath_FieldIndex.Shots:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            CameraPath_FieldIndex enu = (CameraPath_FieldIndex)index;
-            switch (enu)
-            {
-                case CameraPath_FieldIndex.Conditions:
-                case CameraPath_FieldIndex.RelatedPaths:
-                case CameraPath_FieldIndex.Zoom:
-                case CameraPath_FieldIndex.ZoomMustHaveCameraShots:
-                case CameraPath_FieldIndex.Shots:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            CameraPath_FieldIndex enu = (CameraPath_FieldIndex)index;
-            switch (enu)
-            {
-                case CameraPath_FieldIndex.Conditions:
-                    return "Conditions";
-                case CameraPath_FieldIndex.RelatedPaths:
-                    return "RelatedPaths";
-                case CameraPath_FieldIndex.Zoom:
-                    return "Zoom";
-                case CameraPath_FieldIndex.ZoomMustHaveCameraShots:
-                    return "ZoomMustHaveCameraShots";
-                case CameraPath_FieldIndex.Shots:
-                    return "Shots";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            CameraPath_FieldIndex enu = (CameraPath_FieldIndex)index;
-            switch (enu)
-            {
-                case CameraPath_FieldIndex.Conditions:
-                case CameraPath_FieldIndex.RelatedPaths:
-                case CameraPath_FieldIndex.Zoom:
-                case CameraPath_FieldIndex.ZoomMustHaveCameraShots:
-                case CameraPath_FieldIndex.Shots:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            CameraPath_FieldIndex enu = (CameraPath_FieldIndex)index;
-            switch (enu)
-            {
-                case CameraPath_FieldIndex.Conditions:
-                case CameraPath_FieldIndex.RelatedPaths:
-                case CameraPath_FieldIndex.Zoom:
-                case CameraPath_FieldIndex.ZoomMustHaveCameraShots:
-                case CameraPath_FieldIndex.Shots:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            CameraPath_FieldIndex enu = (CameraPath_FieldIndex)index;
-            switch (enu)
-            {
-                case CameraPath_FieldIndex.Conditions:
-                    return typeof(IExtendedList<Condition>);
-                case CameraPath_FieldIndex.RelatedPaths:
-                    return typeof(IExtendedList<IFormLink<CameraPath>>);
-                case CameraPath_FieldIndex.Zoom:
-                    return typeof(CameraPath.ZoomType);
-                case CameraPath_FieldIndex.ZoomMustHaveCameraShots:
-                    return typeof(Boolean);
-                case CameraPath_FieldIndex.Shots:
-                    return typeof(IExtendedList<IFormLink<CameraShot>>);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.CPTH;
         public static readonly Type BinaryWriteTranslation = typeof(CameraPathBinaryWriteTranslation);
         #region Interface
@@ -1202,14 +1061,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1640,7 +1499,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.RelatedPaths.SetTo(
                         rhs.RelatedPaths
-                        .Select(r => (IFormLink<CameraPath>)new FormLink<CameraPath>(r.FormKey)));
+                        .Select(r => (IFormLink<ICameraPathGetter>)new FormLink<ICameraPathGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1667,7 +1526,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Shots.SetTo(
                         rhs.Shots
-                        .Select(r => (IFormLink<CameraShot>)new FormLink<CameraShot>(r.FormKey)));
+                        .Select(r => (IFormLink<ICameraShotGetter>)new FormLink<ICameraShotGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1992,7 +1851,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RelatedPaths.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<CameraPath>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ICameraPathGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)CameraPath_FieldIndex.RelatedPaths;
@@ -2007,7 +1866,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.SNAM:
                 {
                     item.Shots.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<CameraShot>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ICameraShotGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));

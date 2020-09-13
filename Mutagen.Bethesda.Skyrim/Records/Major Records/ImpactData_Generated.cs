@@ -40,14 +40,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Material
-        public FormLink<MaterialType> Material { get; set; } = new FormLink<MaterialType>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IMaterialTypeGetter> IImpactDataGetter.Material => this.Material.ToGetter<MaterialType, IMaterialTypeGetter>();
+        public FormLink<IMaterialTypeGetter> Material { get; set; } = new FormLink<IMaterialTypeGetter>();
         #endregion
         #region Impact
-        public FormLink<Impact> Impact { get; set; } = new FormLink<Impact>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IImpactGetter> IImpactDataGetter.Impact => this.Impact.ToGetter<Impact, IImpactGetter>();
+        public FormLink<IImpactGetter> Impact { get; set; } = new FormLink<IImpactGetter>();
         #endregion
 
         #region To String
@@ -453,8 +449,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IImpactData>,
         ILinkedFormKeyContainer
     {
-        new FormLink<MaterialType> Material { get; set; }
-        new FormLink<Impact> Impact { get; set; }
+        new FormLink<IMaterialTypeGetter> Material { get; set; }
+        new FormLink<IImpactGetter> Impact { get; set; }
     }
 
     public partial interface IImpactDataGetter :
@@ -686,112 +682,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "MATERIAL":
-                    return (ushort)ImpactData_FieldIndex.Material;
-                case "IMPACT":
-                    return (ushort)ImpactData_FieldIndex.Impact;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            ImpactData_FieldIndex enu = (ImpactData_FieldIndex)index;
-            switch (enu)
-            {
-                case ImpactData_FieldIndex.Material:
-                case ImpactData_FieldIndex.Impact:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            ImpactData_FieldIndex enu = (ImpactData_FieldIndex)index;
-            switch (enu)
-            {
-                case ImpactData_FieldIndex.Material:
-                case ImpactData_FieldIndex.Impact:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            ImpactData_FieldIndex enu = (ImpactData_FieldIndex)index;
-            switch (enu)
-            {
-                case ImpactData_FieldIndex.Material:
-                case ImpactData_FieldIndex.Impact:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            ImpactData_FieldIndex enu = (ImpactData_FieldIndex)index;
-            switch (enu)
-            {
-                case ImpactData_FieldIndex.Material:
-                    return "Material";
-                case ImpactData_FieldIndex.Impact:
-                    return "Impact";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            ImpactData_FieldIndex enu = (ImpactData_FieldIndex)index;
-            switch (enu)
-            {
-                case ImpactData_FieldIndex.Material:
-                case ImpactData_FieldIndex.Impact:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            ImpactData_FieldIndex enu = (ImpactData_FieldIndex)index;
-            switch (enu)
-            {
-                case ImpactData_FieldIndex.Material:
-                case ImpactData_FieldIndex.Impact:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            ImpactData_FieldIndex enu = (ImpactData_FieldIndex)index;
-            switch (enu)
-            {
-                case ImpactData_FieldIndex.Material:
-                    return typeof(FormLink<MaterialType>);
-                case ImpactData_FieldIndex.Impact:
-                    return typeof(FormLink<Impact>);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.PNAM;
         public static readonly Type BinaryWriteTranslation = typeof(ImpactDataBinaryWriteTranslation);
         #region Interface
@@ -812,14 +702,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -835,8 +725,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IImpactData item)
         {
             ClearPartial();
-            item.Material = FormLink<MaterialType>.Null;
-            item.Impact = FormLink<Impact>.Null;
+            item.Material = FormLink<IMaterialTypeGetter>.Null;
+            item.Impact = FormLink<IImpactGetter>.Null;
         }
         
         #region Binary Translation
@@ -995,11 +885,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)ImpactData_FieldIndex.Material) ?? true))
             {
-                item.Material = new FormLink<MaterialType>(rhs.Material.FormKey);
+                item.Material = new FormLink<IMaterialTypeGetter>(rhs.Material.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ImpactData_FieldIndex.Impact) ?? true))
             {
-                item.Impact = new FormLink<Impact>(rhs.Impact.FormKey);
+                item.Impact = new FormLink<IImpactGetter>(rhs.Impact.FormKey);
             }
         }
         

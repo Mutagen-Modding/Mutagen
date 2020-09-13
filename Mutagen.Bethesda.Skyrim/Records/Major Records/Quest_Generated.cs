@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region TextDisplayGlobals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Global>> _TextDisplayGlobals = new ExtendedList<IFormLink<Global>>();
-        public IExtendedList<IFormLink<Global>> TextDisplayGlobals
+        private ExtendedList<IFormLink<IGlobalGetter>> _TextDisplayGlobals = new ExtendedList<IFormLink<IGlobalGetter>>();
+        public ExtendedList<IFormLink<IGlobalGetter>> TextDisplayGlobals
         {
             get => this._TextDisplayGlobals;
             protected set => this._TextDisplayGlobals = value;
@@ -99,8 +99,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region DialogConditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition> _DialogConditions = new ExtendedList<Condition>();
-        public IExtendedList<Condition> DialogConditions
+        private ExtendedList<Condition> _DialogConditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> DialogConditions
         {
             get => this._DialogConditions;
             protected set => this._DialogConditions = value;
@@ -113,8 +113,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region UnusedConditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition> _UnusedConditions = new ExtendedList<Condition>();
-        public IExtendedList<Condition> UnusedConditions
+        private ExtendedList<Condition> _UnusedConditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> UnusedConditions
         {
             get => this._UnusedConditions;
             protected set => this._UnusedConditions = value;
@@ -127,8 +127,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Stages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<QuestStage> _Stages = new ExtendedList<QuestStage>();
-        public IExtendedList<QuestStage> Stages
+        private ExtendedList<QuestStage> _Stages = new ExtendedList<QuestStage>();
+        public ExtendedList<QuestStage> Stages
         {
             get => this._Stages;
             protected set => this._Stages = value;
@@ -141,8 +141,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Objectives
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<QuestObjective> _Objectives = new ExtendedList<QuestObjective>();
-        public IExtendedList<QuestObjective> Objectives
+        private ExtendedList<QuestObjective> _Objectives = new ExtendedList<QuestObjective>();
+        public ExtendedList<QuestObjective> Objectives
         {
             get => this._Objectives;
             protected set => this._Objectives = value;
@@ -155,8 +155,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Aliases
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<QuestAlias> _Aliases = new ExtendedList<QuestAlias>();
-        public IExtendedList<QuestAlias> Aliases
+        private ExtendedList<QuestAlias> _Aliases = new ExtendedList<QuestAlias>();
+        public ExtendedList<QuestAlias> Aliases
         {
             get => this._Aliases;
             protected set => this._Aliases = value;
@@ -1485,13 +1485,13 @@ namespace Mutagen.Bethesda.Skyrim
         new Int32 Unknown { get; set; }
         new Quest.TypeEnum Type { get; set; }
         new RecordType? Event { get; set; }
-        new IExtendedList<IFormLink<Global>> TextDisplayGlobals { get; }
+        new ExtendedList<IFormLink<IGlobalGetter>> TextDisplayGlobals { get; }
         new String? ObjectWindowFilter { get; set; }
-        new IExtendedList<Condition> DialogConditions { get; }
-        new IExtendedList<Condition> UnusedConditions { get; }
-        new IExtendedList<QuestStage> Stages { get; }
-        new IExtendedList<QuestObjective> Objectives { get; }
-        new IExtendedList<QuestAlias> Aliases { get; }
+        new ExtendedList<Condition> DialogConditions { get; }
+        new ExtendedList<Condition> UnusedConditions { get; }
+        new ExtendedList<QuestStage> Stages { get; }
+        new ExtendedList<QuestObjective> Objectives { get; }
+        new ExtendedList<QuestAlias> Aliases { get; }
         new TranslatedString? Description { get; set; }
         new Quest.DNAMDataType DNAMDataTypeState { get; set; }
     }
@@ -1738,279 +1738,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "VIRTUALMACHINEADAPTER":
-                    return (ushort)Quest_FieldIndex.VirtualMachineAdapter;
-                case "NAME":
-                    return (ushort)Quest_FieldIndex.Name;
-                case "FLAGS":
-                    return (ushort)Quest_FieldIndex.Flags;
-                case "PRIORITY":
-                    return (ushort)Quest_FieldIndex.Priority;
-                case "QUESTFORMVERSION":
-                    return (ushort)Quest_FieldIndex.QuestFormVersion;
-                case "UNKNOWN":
-                    return (ushort)Quest_FieldIndex.Unknown;
-                case "TYPE":
-                    return (ushort)Quest_FieldIndex.Type;
-                case "EVENT":
-                    return (ushort)Quest_FieldIndex.Event;
-                case "TEXTDISPLAYGLOBALS":
-                    return (ushort)Quest_FieldIndex.TextDisplayGlobals;
-                case "OBJECTWINDOWFILTER":
-                    return (ushort)Quest_FieldIndex.ObjectWindowFilter;
-                case "DIALOGCONDITIONS":
-                    return (ushort)Quest_FieldIndex.DialogConditions;
-                case "UNUSEDCONDITIONS":
-                    return (ushort)Quest_FieldIndex.UnusedConditions;
-                case "STAGES":
-                    return (ushort)Quest_FieldIndex.Stages;
-                case "OBJECTIVES":
-                    return (ushort)Quest_FieldIndex.Objectives;
-                case "ALIASES":
-                    return (ushort)Quest_FieldIndex.Aliases;
-                case "DESCRIPTION":
-                    return (ushort)Quest_FieldIndex.Description;
-                case "DNAMDATATYPESTATE":
-                    return (ushort)Quest_FieldIndex.DNAMDataTypeState;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Quest_FieldIndex enu = (Quest_FieldIndex)index;
-            switch (enu)
-            {
-                case Quest_FieldIndex.TextDisplayGlobals:
-                case Quest_FieldIndex.DialogConditions:
-                case Quest_FieldIndex.UnusedConditions:
-                case Quest_FieldIndex.Stages:
-                case Quest_FieldIndex.Objectives:
-                case Quest_FieldIndex.Aliases:
-                    return true;
-                case Quest_FieldIndex.VirtualMachineAdapter:
-                case Quest_FieldIndex.Name:
-                case Quest_FieldIndex.Flags:
-                case Quest_FieldIndex.Priority:
-                case Quest_FieldIndex.QuestFormVersion:
-                case Quest_FieldIndex.Unknown:
-                case Quest_FieldIndex.Type:
-                case Quest_FieldIndex.Event:
-                case Quest_FieldIndex.ObjectWindowFilter:
-                case Quest_FieldIndex.Description:
-                case Quest_FieldIndex.DNAMDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Quest_FieldIndex enu = (Quest_FieldIndex)index;
-            switch (enu)
-            {
-                case Quest_FieldIndex.VirtualMachineAdapter:
-                case Quest_FieldIndex.DialogConditions:
-                case Quest_FieldIndex.UnusedConditions:
-                case Quest_FieldIndex.Stages:
-                case Quest_FieldIndex.Objectives:
-                case Quest_FieldIndex.Aliases:
-                    return true;
-                case Quest_FieldIndex.Name:
-                case Quest_FieldIndex.Flags:
-                case Quest_FieldIndex.Priority:
-                case Quest_FieldIndex.QuestFormVersion:
-                case Quest_FieldIndex.Unknown:
-                case Quest_FieldIndex.Type:
-                case Quest_FieldIndex.Event:
-                case Quest_FieldIndex.TextDisplayGlobals:
-                case Quest_FieldIndex.ObjectWindowFilter:
-                case Quest_FieldIndex.Description:
-                case Quest_FieldIndex.DNAMDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Quest_FieldIndex enu = (Quest_FieldIndex)index;
-            switch (enu)
-            {
-                case Quest_FieldIndex.VirtualMachineAdapter:
-                case Quest_FieldIndex.Name:
-                case Quest_FieldIndex.Flags:
-                case Quest_FieldIndex.Priority:
-                case Quest_FieldIndex.QuestFormVersion:
-                case Quest_FieldIndex.Unknown:
-                case Quest_FieldIndex.Type:
-                case Quest_FieldIndex.Event:
-                case Quest_FieldIndex.TextDisplayGlobals:
-                case Quest_FieldIndex.ObjectWindowFilter:
-                case Quest_FieldIndex.DialogConditions:
-                case Quest_FieldIndex.UnusedConditions:
-                case Quest_FieldIndex.Stages:
-                case Quest_FieldIndex.Objectives:
-                case Quest_FieldIndex.Aliases:
-                case Quest_FieldIndex.Description:
-                case Quest_FieldIndex.DNAMDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Quest_FieldIndex enu = (Quest_FieldIndex)index;
-            switch (enu)
-            {
-                case Quest_FieldIndex.VirtualMachineAdapter:
-                    return "VirtualMachineAdapter";
-                case Quest_FieldIndex.Name:
-                    return "Name";
-                case Quest_FieldIndex.Flags:
-                    return "Flags";
-                case Quest_FieldIndex.Priority:
-                    return "Priority";
-                case Quest_FieldIndex.QuestFormVersion:
-                    return "QuestFormVersion";
-                case Quest_FieldIndex.Unknown:
-                    return "Unknown";
-                case Quest_FieldIndex.Type:
-                    return "Type";
-                case Quest_FieldIndex.Event:
-                    return "Event";
-                case Quest_FieldIndex.TextDisplayGlobals:
-                    return "TextDisplayGlobals";
-                case Quest_FieldIndex.ObjectWindowFilter:
-                    return "ObjectWindowFilter";
-                case Quest_FieldIndex.DialogConditions:
-                    return "DialogConditions";
-                case Quest_FieldIndex.UnusedConditions:
-                    return "UnusedConditions";
-                case Quest_FieldIndex.Stages:
-                    return "Stages";
-                case Quest_FieldIndex.Objectives:
-                    return "Objectives";
-                case Quest_FieldIndex.Aliases:
-                    return "Aliases";
-                case Quest_FieldIndex.Description:
-                    return "Description";
-                case Quest_FieldIndex.DNAMDataTypeState:
-                    return "DNAMDataTypeState";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Quest_FieldIndex enu = (Quest_FieldIndex)index;
-            switch (enu)
-            {
-                case Quest_FieldIndex.VirtualMachineAdapter:
-                case Quest_FieldIndex.Name:
-                case Quest_FieldIndex.Flags:
-                case Quest_FieldIndex.Priority:
-                case Quest_FieldIndex.QuestFormVersion:
-                case Quest_FieldIndex.Unknown:
-                case Quest_FieldIndex.Type:
-                case Quest_FieldIndex.Event:
-                case Quest_FieldIndex.TextDisplayGlobals:
-                case Quest_FieldIndex.ObjectWindowFilter:
-                case Quest_FieldIndex.DialogConditions:
-                case Quest_FieldIndex.UnusedConditions:
-                case Quest_FieldIndex.Stages:
-                case Quest_FieldIndex.Objectives:
-                case Quest_FieldIndex.Aliases:
-                case Quest_FieldIndex.Description:
-                case Quest_FieldIndex.DNAMDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Quest_FieldIndex enu = (Quest_FieldIndex)index;
-            switch (enu)
-            {
-                case Quest_FieldIndex.VirtualMachineAdapter:
-                case Quest_FieldIndex.Name:
-                case Quest_FieldIndex.Flags:
-                case Quest_FieldIndex.Priority:
-                case Quest_FieldIndex.QuestFormVersion:
-                case Quest_FieldIndex.Unknown:
-                case Quest_FieldIndex.Type:
-                case Quest_FieldIndex.Event:
-                case Quest_FieldIndex.TextDisplayGlobals:
-                case Quest_FieldIndex.ObjectWindowFilter:
-                case Quest_FieldIndex.DialogConditions:
-                case Quest_FieldIndex.UnusedConditions:
-                case Quest_FieldIndex.Stages:
-                case Quest_FieldIndex.Objectives:
-                case Quest_FieldIndex.Aliases:
-                case Quest_FieldIndex.Description:
-                case Quest_FieldIndex.DNAMDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Quest_FieldIndex enu = (Quest_FieldIndex)index;
-            switch (enu)
-            {
-                case Quest_FieldIndex.VirtualMachineAdapter:
-                    return typeof(QuestAdapter);
-                case Quest_FieldIndex.Name:
-                    return typeof(TranslatedString);
-                case Quest_FieldIndex.Flags:
-                    return typeof(Quest.Flag);
-                case Quest_FieldIndex.Priority:
-                    return typeof(Byte);
-                case Quest_FieldIndex.QuestFormVersion:
-                    return typeof(Byte);
-                case Quest_FieldIndex.Unknown:
-                    return typeof(Int32);
-                case Quest_FieldIndex.Type:
-                    return typeof(Quest.TypeEnum);
-                case Quest_FieldIndex.Event:
-                    return typeof(RecordType);
-                case Quest_FieldIndex.TextDisplayGlobals:
-                    return typeof(IExtendedList<IFormLink<Global>>);
-                case Quest_FieldIndex.ObjectWindowFilter:
-                    return typeof(String);
-                case Quest_FieldIndex.DialogConditions:
-                    return typeof(IExtendedList<Condition>);
-                case Quest_FieldIndex.UnusedConditions:
-                    return typeof(IExtendedList<Condition>);
-                case Quest_FieldIndex.Stages:
-                    return typeof(IExtendedList<QuestStage>);
-                case Quest_FieldIndex.Objectives:
-                    return typeof(IExtendedList<QuestObjective>);
-                case Quest_FieldIndex.Aliases:
-                    return typeof(IExtendedList<QuestAlias>);
-                case Quest_FieldIndex.Description:
-                    return typeof(TranslatedString);
-                case Quest_FieldIndex.DNAMDataTypeState:
-                    return typeof(Quest.DNAMDataType);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.QUST;
         public static readonly Type BinaryWriteTranslation = typeof(QuestBinaryWriteTranslation);
         #region Interface
@@ -2031,14 +1758,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -2691,7 +2418,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.TextDisplayGlobals.SetTo(
                         rhs.TextDisplayGlobals
-                        .Select(r => (IFormLink<Global>)new FormLink<Global>(r.FormKey)));
+                        .Select(r => (IFormLink<IGlobalGetter>)new FormLink<IGlobalGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3252,7 +2979,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.QTGL:
                 {
                     item.TextDisplayGlobals.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Global>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IGlobalGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.QTGL),
                             transl: FormLinkBinaryTranslation.Instance.Parse));

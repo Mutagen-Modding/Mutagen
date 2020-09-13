@@ -40,9 +40,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Object
-        public FormLink<SkyrimMajorRecord> Object { get; set; } = new FormLink<SkyrimMajorRecord>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISkyrimMajorRecordGetter> ICreateReferenceToObjectGetter.Object => this.Object.ToGetter<SkyrimMajorRecord, ISkyrimMajorRecordGetter>();
+        public FormLink<ISkyrimMajorRecordGetter> Object { get; set; } = new FormLink<ISkyrimMajorRecordGetter>();
         #endregion
         #region AliasIndex
         public Int16 AliasIndex { get; set; } = default;
@@ -548,7 +546,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ICreateReferenceToObject>,
         ILinkedFormKeyContainer
     {
-        new FormLink<SkyrimMajorRecord> Object { get; set; }
+        new FormLink<ISkyrimMajorRecordGetter> Object { get; set; }
         new Int16 AliasIndex { get; set; }
         new CreateReferenceToObject.CreateEnum Create { get; set; }
         new Level Level { get; set; }
@@ -790,145 +788,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "OBJECT":
-                    return (ushort)CreateReferenceToObject_FieldIndex.Object;
-                case "ALIASINDEX":
-                    return (ushort)CreateReferenceToObject_FieldIndex.AliasIndex;
-                case "CREATE":
-                    return (ushort)CreateReferenceToObject_FieldIndex.Create;
-                case "LEVEL":
-                    return (ushort)CreateReferenceToObject_FieldIndex.Level;
-                case "ALCADATATYPESTATE":
-                    return (ushort)CreateReferenceToObject_FieldIndex.ALCADataTypeState;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            CreateReferenceToObject_FieldIndex enu = (CreateReferenceToObject_FieldIndex)index;
-            switch (enu)
-            {
-                case CreateReferenceToObject_FieldIndex.Object:
-                case CreateReferenceToObject_FieldIndex.AliasIndex:
-                case CreateReferenceToObject_FieldIndex.Create:
-                case CreateReferenceToObject_FieldIndex.Level:
-                case CreateReferenceToObject_FieldIndex.ALCADataTypeState:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            CreateReferenceToObject_FieldIndex enu = (CreateReferenceToObject_FieldIndex)index;
-            switch (enu)
-            {
-                case CreateReferenceToObject_FieldIndex.Object:
-                case CreateReferenceToObject_FieldIndex.AliasIndex:
-                case CreateReferenceToObject_FieldIndex.Create:
-                case CreateReferenceToObject_FieldIndex.Level:
-                case CreateReferenceToObject_FieldIndex.ALCADataTypeState:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            CreateReferenceToObject_FieldIndex enu = (CreateReferenceToObject_FieldIndex)index;
-            switch (enu)
-            {
-                case CreateReferenceToObject_FieldIndex.Object:
-                case CreateReferenceToObject_FieldIndex.AliasIndex:
-                case CreateReferenceToObject_FieldIndex.Create:
-                case CreateReferenceToObject_FieldIndex.Level:
-                case CreateReferenceToObject_FieldIndex.ALCADataTypeState:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            CreateReferenceToObject_FieldIndex enu = (CreateReferenceToObject_FieldIndex)index;
-            switch (enu)
-            {
-                case CreateReferenceToObject_FieldIndex.Object:
-                    return "Object";
-                case CreateReferenceToObject_FieldIndex.AliasIndex:
-                    return "AliasIndex";
-                case CreateReferenceToObject_FieldIndex.Create:
-                    return "Create";
-                case CreateReferenceToObject_FieldIndex.Level:
-                    return "Level";
-                case CreateReferenceToObject_FieldIndex.ALCADataTypeState:
-                    return "ALCADataTypeState";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            CreateReferenceToObject_FieldIndex enu = (CreateReferenceToObject_FieldIndex)index;
-            switch (enu)
-            {
-                case CreateReferenceToObject_FieldIndex.Object:
-                case CreateReferenceToObject_FieldIndex.AliasIndex:
-                case CreateReferenceToObject_FieldIndex.Create:
-                case CreateReferenceToObject_FieldIndex.Level:
-                case CreateReferenceToObject_FieldIndex.ALCADataTypeState:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            CreateReferenceToObject_FieldIndex enu = (CreateReferenceToObject_FieldIndex)index;
-            switch (enu)
-            {
-                case CreateReferenceToObject_FieldIndex.Object:
-                case CreateReferenceToObject_FieldIndex.AliasIndex:
-                case CreateReferenceToObject_FieldIndex.Create:
-                case CreateReferenceToObject_FieldIndex.Level:
-                case CreateReferenceToObject_FieldIndex.ALCADataTypeState:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            CreateReferenceToObject_FieldIndex enu = (CreateReferenceToObject_FieldIndex)index;
-            switch (enu)
-            {
-                case CreateReferenceToObject_FieldIndex.Object:
-                    return typeof(FormLink<SkyrimMajorRecord>);
-                case CreateReferenceToObject_FieldIndex.AliasIndex:
-                    return typeof(Int16);
-                case CreateReferenceToObject_FieldIndex.Create:
-                    return typeof(CreateReferenceToObject.CreateEnum);
-                case CreateReferenceToObject_FieldIndex.Level:
-                    return typeof(Level);
-                case CreateReferenceToObject_FieldIndex.ALCADataTypeState:
-                    return typeof(CreateReferenceToObject.ALCADataType);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.ALCO;
         public static readonly Type BinaryWriteTranslation = typeof(CreateReferenceToObjectBinaryWriteTranslation);
         #region Interface
@@ -949,14 +808,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -972,7 +831,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ICreateReferenceToObject item)
         {
             ClearPartial();
-            item.Object = FormLink<SkyrimMajorRecord>.Null;
+            item.Object = FormLink<ISkyrimMajorRecordGetter>.Null;
             item.AliasIndex = default;
             item.Create = default;
             item.Level = default;
@@ -1153,7 +1012,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)CreateReferenceToObject_FieldIndex.Object) ?? true))
             {
-                item.Object = new FormLink<SkyrimMajorRecord>(rhs.Object.FormKey);
+                item.Object = new FormLink<ISkyrimMajorRecordGetter>(rhs.Object.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)CreateReferenceToObject_FieldIndex.AliasIndex) ?? true))
             {

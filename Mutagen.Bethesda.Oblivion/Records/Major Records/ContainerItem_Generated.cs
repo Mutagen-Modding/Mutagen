@@ -40,9 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Item
-        public FormLink<AItem> Item { get; set; } = new FormLink<AItem>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IAItemGetter> IContainerItemGetter.Item => this.Item.ToGetter<AItem, IAItemGetter>();
+        public FormLink<IAItemGetter> Item { get; set; } = new FormLink<IAItemGetter>();
         #endregion
         #region Count
         public UInt32 Count { get; set; } = default;
@@ -451,7 +449,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IContainerItem>,
         ILinkedFormKeyContainer
     {
-        new FormLink<AItem> Item { get; set; }
+        new FormLink<IAItemGetter> Item { get; set; }
         new UInt32 Count { get; set; }
     }
 
@@ -684,112 +682,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "ITEM":
-                    return (ushort)ContainerItem_FieldIndex.Item;
-                case "COUNT":
-                    return (ushort)ContainerItem_FieldIndex.Count;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            ContainerItem_FieldIndex enu = (ContainerItem_FieldIndex)index;
-            switch (enu)
-            {
-                case ContainerItem_FieldIndex.Item:
-                case ContainerItem_FieldIndex.Count:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            ContainerItem_FieldIndex enu = (ContainerItem_FieldIndex)index;
-            switch (enu)
-            {
-                case ContainerItem_FieldIndex.Item:
-                case ContainerItem_FieldIndex.Count:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            ContainerItem_FieldIndex enu = (ContainerItem_FieldIndex)index;
-            switch (enu)
-            {
-                case ContainerItem_FieldIndex.Item:
-                case ContainerItem_FieldIndex.Count:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            ContainerItem_FieldIndex enu = (ContainerItem_FieldIndex)index;
-            switch (enu)
-            {
-                case ContainerItem_FieldIndex.Item:
-                    return "Item";
-                case ContainerItem_FieldIndex.Count:
-                    return "Count";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            ContainerItem_FieldIndex enu = (ContainerItem_FieldIndex)index;
-            switch (enu)
-            {
-                case ContainerItem_FieldIndex.Item:
-                case ContainerItem_FieldIndex.Count:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            ContainerItem_FieldIndex enu = (ContainerItem_FieldIndex)index;
-            switch (enu)
-            {
-                case ContainerItem_FieldIndex.Item:
-                case ContainerItem_FieldIndex.Count:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            ContainerItem_FieldIndex enu = (ContainerItem_FieldIndex)index;
-            switch (enu)
-            {
-                case ContainerItem_FieldIndex.Item:
-                    return typeof(FormLink<AItem>);
-                case ContainerItem_FieldIndex.Count:
-                    return typeof(UInt32);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.CNTO;
         public static readonly Type BinaryWriteTranslation = typeof(ContainerItemBinaryWriteTranslation);
         #region Interface
@@ -810,14 +702,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -833,7 +725,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IContainerItem item)
         {
             ClearPartial();
-            item.Item = FormLink<AItem>.Null;
+            item.Item = FormLink<IAItemGetter>.Null;
             item.Count = default;
         }
         
@@ -992,7 +884,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)ContainerItem_FieldIndex.Item) ?? true))
             {
-                item.Item = new FormLink<AItem>(rhs.Item.FormKey);
+                item.Item = new FormLink<IAItemGetter>(rhs.Item.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ContainerItem_FieldIndex.Count) ?? true))
             {

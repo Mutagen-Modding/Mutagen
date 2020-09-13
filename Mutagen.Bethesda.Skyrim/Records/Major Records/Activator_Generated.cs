@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Keyword>>? _Keywords;
-        public IExtendedList<IFormLink<Keyword>>? Keywords
+        private ExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
+        public ExtendedList<IFormLink<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -106,19 +106,13 @@ namespace Mutagen.Bethesda.Skyrim
         Color? IActivatorGetter.MarkerColor => this.MarkerColor;
         #endregion
         #region LoopingSound
-        public FormLinkNullable<SoundDescriptor> LoopingSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IActivatorGetter.LoopingSound => this.LoopingSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> LoopingSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region ActivationSound
-        public FormLinkNullable<SoundDescriptor> ActivationSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IActivatorGetter.ActivationSound => this.ActivationSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> ActivationSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region WaterType
-        public FormLinkNullable<Water> WaterType { get; set; } = new FormLinkNullable<Water>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IWaterGetter> IActivatorGetter.WaterType => this.WaterType.ToGetter<Water, IWaterGetter>();
+        public FormLinkNullable<IWaterGetter> WaterType { get; set; } = new FormLinkNullable<IWaterGetter>();
         #endregion
         #region ActivateTextOverride
         public TranslatedString? ActivateTextOverride { get; set; }
@@ -131,9 +125,7 @@ namespace Mutagen.Bethesda.Skyrim
         Activator.Flag? IActivatorGetter.Flags => this.Flags;
         #endregion
         #region InteractionKeyword
-        public FormLinkNullable<Keyword> InteractionKeyword { get; set; } = new FormLinkNullable<Keyword>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IKeywordGetter> IActivatorGetter.InteractionKeyword => this.InteractionKeyword.ToGetter<Keyword, IKeywordGetter>();
+        public FormLinkNullable<IKeywordGetter> InteractionKeyword { get; set; } = new FormLinkNullable<IKeywordGetter>();
         #endregion
 
         #region To String
@@ -980,14 +972,14 @@ namespace Mutagen.Bethesda.Skyrim
         new TranslatedString? Name { get; set; }
         new Model? Model { get; set; }
         new Destructible? Destructible { get; set; }
-        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new ExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
         new Color? MarkerColor { get; set; }
-        new FormLinkNullable<SoundDescriptor> LoopingSound { get; set; }
-        new FormLinkNullable<SoundDescriptor> ActivationSound { get; set; }
-        new FormLinkNullable<Water> WaterType { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> LoopingSound { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> ActivationSound { get; set; }
+        new FormLinkNullable<IWaterGetter> WaterType { get; set; }
         new TranslatedString? ActivateTextOverride { get; set; }
         new Activator.Flag? Flags { get; set; }
-        new FormLinkNullable<Keyword> InteractionKeyword { get; set; }
+        new FormLinkNullable<IKeywordGetter> InteractionKeyword { get; set; }
         #region Mutagen
         new Activator.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1235,235 +1227,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "VIRTUALMACHINEADAPTER":
-                    return (ushort)Activator_FieldIndex.VirtualMachineAdapter;
-                case "OBJECTBOUNDS":
-                    return (ushort)Activator_FieldIndex.ObjectBounds;
-                case "NAME":
-                    return (ushort)Activator_FieldIndex.Name;
-                case "MODEL":
-                    return (ushort)Activator_FieldIndex.Model;
-                case "DESTRUCTIBLE":
-                    return (ushort)Activator_FieldIndex.Destructible;
-                case "KEYWORDS":
-                    return (ushort)Activator_FieldIndex.Keywords;
-                case "MARKERCOLOR":
-                    return (ushort)Activator_FieldIndex.MarkerColor;
-                case "LOOPINGSOUND":
-                    return (ushort)Activator_FieldIndex.LoopingSound;
-                case "ACTIVATIONSOUND":
-                    return (ushort)Activator_FieldIndex.ActivationSound;
-                case "WATERTYPE":
-                    return (ushort)Activator_FieldIndex.WaterType;
-                case "ACTIVATETEXTOVERRIDE":
-                    return (ushort)Activator_FieldIndex.ActivateTextOverride;
-                case "FLAGS":
-                    return (ushort)Activator_FieldIndex.Flags;
-                case "INTERACTIONKEYWORD":
-                    return (ushort)Activator_FieldIndex.InteractionKeyword;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Activator_FieldIndex enu = (Activator_FieldIndex)index;
-            switch (enu)
-            {
-                case Activator_FieldIndex.Keywords:
-                    return true;
-                case Activator_FieldIndex.VirtualMachineAdapter:
-                case Activator_FieldIndex.ObjectBounds:
-                case Activator_FieldIndex.Name:
-                case Activator_FieldIndex.Model:
-                case Activator_FieldIndex.Destructible:
-                case Activator_FieldIndex.MarkerColor:
-                case Activator_FieldIndex.LoopingSound:
-                case Activator_FieldIndex.ActivationSound:
-                case Activator_FieldIndex.WaterType:
-                case Activator_FieldIndex.ActivateTextOverride:
-                case Activator_FieldIndex.Flags:
-                case Activator_FieldIndex.InteractionKeyword:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Activator_FieldIndex enu = (Activator_FieldIndex)index;
-            switch (enu)
-            {
-                case Activator_FieldIndex.VirtualMachineAdapter:
-                case Activator_FieldIndex.ObjectBounds:
-                case Activator_FieldIndex.Model:
-                case Activator_FieldIndex.Destructible:
-                    return true;
-                case Activator_FieldIndex.Name:
-                case Activator_FieldIndex.Keywords:
-                case Activator_FieldIndex.MarkerColor:
-                case Activator_FieldIndex.LoopingSound:
-                case Activator_FieldIndex.ActivationSound:
-                case Activator_FieldIndex.WaterType:
-                case Activator_FieldIndex.ActivateTextOverride:
-                case Activator_FieldIndex.Flags:
-                case Activator_FieldIndex.InteractionKeyword:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Activator_FieldIndex enu = (Activator_FieldIndex)index;
-            switch (enu)
-            {
-                case Activator_FieldIndex.VirtualMachineAdapter:
-                case Activator_FieldIndex.ObjectBounds:
-                case Activator_FieldIndex.Name:
-                case Activator_FieldIndex.Model:
-                case Activator_FieldIndex.Destructible:
-                case Activator_FieldIndex.Keywords:
-                case Activator_FieldIndex.MarkerColor:
-                case Activator_FieldIndex.LoopingSound:
-                case Activator_FieldIndex.ActivationSound:
-                case Activator_FieldIndex.WaterType:
-                case Activator_FieldIndex.ActivateTextOverride:
-                case Activator_FieldIndex.Flags:
-                case Activator_FieldIndex.InteractionKeyword:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Activator_FieldIndex enu = (Activator_FieldIndex)index;
-            switch (enu)
-            {
-                case Activator_FieldIndex.VirtualMachineAdapter:
-                    return "VirtualMachineAdapter";
-                case Activator_FieldIndex.ObjectBounds:
-                    return "ObjectBounds";
-                case Activator_FieldIndex.Name:
-                    return "Name";
-                case Activator_FieldIndex.Model:
-                    return "Model";
-                case Activator_FieldIndex.Destructible:
-                    return "Destructible";
-                case Activator_FieldIndex.Keywords:
-                    return "Keywords";
-                case Activator_FieldIndex.MarkerColor:
-                    return "MarkerColor";
-                case Activator_FieldIndex.LoopingSound:
-                    return "LoopingSound";
-                case Activator_FieldIndex.ActivationSound:
-                    return "ActivationSound";
-                case Activator_FieldIndex.WaterType:
-                    return "WaterType";
-                case Activator_FieldIndex.ActivateTextOverride:
-                    return "ActivateTextOverride";
-                case Activator_FieldIndex.Flags:
-                    return "Flags";
-                case Activator_FieldIndex.InteractionKeyword:
-                    return "InteractionKeyword";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Activator_FieldIndex enu = (Activator_FieldIndex)index;
-            switch (enu)
-            {
-                case Activator_FieldIndex.VirtualMachineAdapter:
-                case Activator_FieldIndex.ObjectBounds:
-                case Activator_FieldIndex.Name:
-                case Activator_FieldIndex.Model:
-                case Activator_FieldIndex.Destructible:
-                case Activator_FieldIndex.Keywords:
-                case Activator_FieldIndex.MarkerColor:
-                case Activator_FieldIndex.LoopingSound:
-                case Activator_FieldIndex.ActivationSound:
-                case Activator_FieldIndex.WaterType:
-                case Activator_FieldIndex.ActivateTextOverride:
-                case Activator_FieldIndex.Flags:
-                case Activator_FieldIndex.InteractionKeyword:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Activator_FieldIndex enu = (Activator_FieldIndex)index;
-            switch (enu)
-            {
-                case Activator_FieldIndex.VirtualMachineAdapter:
-                case Activator_FieldIndex.ObjectBounds:
-                case Activator_FieldIndex.Name:
-                case Activator_FieldIndex.Model:
-                case Activator_FieldIndex.Destructible:
-                case Activator_FieldIndex.Keywords:
-                case Activator_FieldIndex.MarkerColor:
-                case Activator_FieldIndex.LoopingSound:
-                case Activator_FieldIndex.ActivationSound:
-                case Activator_FieldIndex.WaterType:
-                case Activator_FieldIndex.ActivateTextOverride:
-                case Activator_FieldIndex.Flags:
-                case Activator_FieldIndex.InteractionKeyword:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Activator_FieldIndex enu = (Activator_FieldIndex)index;
-            switch (enu)
-            {
-                case Activator_FieldIndex.VirtualMachineAdapter:
-                    return typeof(VirtualMachineAdapter);
-                case Activator_FieldIndex.ObjectBounds:
-                    return typeof(ObjectBounds);
-                case Activator_FieldIndex.Name:
-                    return typeof(TranslatedString);
-                case Activator_FieldIndex.Model:
-                    return typeof(Model);
-                case Activator_FieldIndex.Destructible:
-                    return typeof(Destructible);
-                case Activator_FieldIndex.Keywords:
-                    return typeof(IExtendedList<IFormLink<Keyword>>);
-                case Activator_FieldIndex.MarkerColor:
-                    return typeof(Color);
-                case Activator_FieldIndex.LoopingSound:
-                    return typeof(FormLinkNullable<SoundDescriptor>);
-                case Activator_FieldIndex.ActivationSound:
-                    return typeof(FormLinkNullable<SoundDescriptor>);
-                case Activator_FieldIndex.WaterType:
-                    return typeof(FormLinkNullable<Water>);
-                case Activator_FieldIndex.ActivateTextOverride:
-                    return typeof(TranslatedString);
-                case Activator_FieldIndex.Flags:
-                    return typeof(Activator.Flag);
-                case Activator_FieldIndex.InteractionKeyword:
-                    return typeof(FormLinkNullable<Keyword>);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.ACTI;
         public static readonly Type BinaryWriteTranslation = typeof(ActivatorBinaryWriteTranslation);
         #region Interface
@@ -1484,14 +1247,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1514,12 +1277,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Destructible = null;
             item.Keywords = null;
             item.MarkerColor = default;
-            item.LoopingSound = FormLinkNullable<SoundDescriptor>.Null;
-            item.ActivationSound = FormLinkNullable<SoundDescriptor>.Null;
-            item.WaterType = FormLinkNullable<Water>.Null;
+            item.LoopingSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
+            item.ActivationSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
+            item.WaterType = FormLinkNullable<IWaterGetter>.Null;
             item.ActivateTextOverride = default;
             item.Flags = default;
-            item.InteractionKeyword = FormLinkNullable<Keyword>.Null;
+            item.InteractionKeyword = FormLinkNullable<IKeywordGetter>.Null;
             base.Clear(item);
         }
         
@@ -2106,8 +1869,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLink<Keyword>)new FormLink<Keyword>(r.FormKey))
-                            .ToExtendedList<IFormLink<Keyword>>();
+                            .Select(r => (IFormLink<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IKeywordGetter>>();
                     }
                     else
                     {
@@ -2130,15 +1893,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.LoopingSound) ?? true))
             {
-                item.LoopingSound = new FormLinkNullable<SoundDescriptor>(rhs.LoopingSound.FormKey);
+                item.LoopingSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.LoopingSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.ActivationSound) ?? true))
             {
-                item.ActivationSound = new FormLinkNullable<SoundDescriptor>(rhs.ActivationSound.FormKey);
+                item.ActivationSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.ActivationSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.WaterType) ?? true))
             {
-                item.WaterType = new FormLinkNullable<Water>(rhs.WaterType.FormKey);
+                item.WaterType = new FormLinkNullable<IWaterGetter>(rhs.WaterType.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.ActivateTextOverride) ?? true))
             {
@@ -2150,7 +1913,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.InteractionKeyword) ?? true))
             {
-                item.InteractionKeyword = new FormLinkNullable<Keyword>(rhs.InteractionKeyword.FormKey);
+                item.InteractionKeyword = new FormLinkNullable<IKeywordGetter>(rhs.InteractionKeyword.FormKey);
             }
         }
         
@@ -2507,13 +2270,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KSIZ:
                 {
                     item.Keywords = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<Keyword>>();
+                        .CastExtendedList<IFormLink<IKeywordGetter>>();
                     return (int)Activator_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.PNAM:

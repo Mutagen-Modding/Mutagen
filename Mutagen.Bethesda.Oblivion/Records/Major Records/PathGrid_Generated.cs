@@ -44,8 +44,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region PointToPointConnections
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<PathGridPoint>? _PointToPointConnections;
-        public IExtendedList<PathGridPoint>? PointToPointConnections
+        private ExtendedList<PathGridPoint>? _PointToPointConnections;
+        public ExtendedList<PathGridPoint>? PointToPointConnections
         {
             get => this._PointToPointConnections;
             set => this._PointToPointConnections = value;
@@ -69,8 +69,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region InterCellConnections
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<InterCellPoint>? _InterCellConnections;
-        public IExtendedList<InterCellPoint>? InterCellConnections
+        private ExtendedList<InterCellPoint>? _InterCellConnections;
+        public ExtendedList<InterCellPoint>? InterCellConnections
         {
             get => this._InterCellConnections;
             set => this._InterCellConnections = value;
@@ -83,8 +83,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region PointToReferenceMappings
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<PointToReferenceMapping> _PointToReferenceMappings = new ExtendedList<PointToReferenceMapping>();
-        public IExtendedList<PointToReferenceMapping> PointToReferenceMappings
+        private ExtendedList<PointToReferenceMapping> _PointToReferenceMappings = new ExtendedList<PointToReferenceMapping>();
+        public ExtendedList<PointToReferenceMapping> PointToReferenceMappings
         {
             get => this._PointToReferenceMappings;
             protected set => this._PointToReferenceMappings = value;
@@ -796,10 +796,10 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IPathGridInternal>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<PathGridPoint>? PointToPointConnections { get; set; }
+        new ExtendedList<PathGridPoint>? PointToPointConnections { get; set; }
         new MemorySlice<Byte>? PGAG { get; set; }
-        new IExtendedList<InterCellPoint>? InterCellConnections { get; set; }
-        new IExtendedList<PointToReferenceMapping> PointToReferenceMappings { get; }
+        new ExtendedList<InterCellPoint>? InterCellConnections { get; set; }
+        new ExtendedList<PointToReferenceMapping> PointToReferenceMappings { get; }
     }
 
     public partial interface IPathGridInternal :
@@ -1016,136 +1016,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "POINTTOPOINTCONNECTIONS":
-                    return (ushort)PathGrid_FieldIndex.PointToPointConnections;
-                case "PGAG":
-                    return (ushort)PathGrid_FieldIndex.PGAG;
-                case "INTERCELLCONNECTIONS":
-                    return (ushort)PathGrid_FieldIndex.InterCellConnections;
-                case "POINTTOREFERENCEMAPPINGS":
-                    return (ushort)PathGrid_FieldIndex.PointToReferenceMappings;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            PathGrid_FieldIndex enu = (PathGrid_FieldIndex)index;
-            switch (enu)
-            {
-                case PathGrid_FieldIndex.PointToPointConnections:
-                case PathGrid_FieldIndex.InterCellConnections:
-                case PathGrid_FieldIndex.PointToReferenceMappings:
-                    return true;
-                case PathGrid_FieldIndex.PGAG:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            PathGrid_FieldIndex enu = (PathGrid_FieldIndex)index;
-            switch (enu)
-            {
-                case PathGrid_FieldIndex.PointToPointConnections:
-                case PathGrid_FieldIndex.InterCellConnections:
-                case PathGrid_FieldIndex.PointToReferenceMappings:
-                    return true;
-                case PathGrid_FieldIndex.PGAG:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            PathGrid_FieldIndex enu = (PathGrid_FieldIndex)index;
-            switch (enu)
-            {
-                case PathGrid_FieldIndex.PointToPointConnections:
-                case PathGrid_FieldIndex.PGAG:
-                case PathGrid_FieldIndex.InterCellConnections:
-                case PathGrid_FieldIndex.PointToReferenceMappings:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            PathGrid_FieldIndex enu = (PathGrid_FieldIndex)index;
-            switch (enu)
-            {
-                case PathGrid_FieldIndex.PointToPointConnections:
-                    return "PointToPointConnections";
-                case PathGrid_FieldIndex.PGAG:
-                    return "PGAG";
-                case PathGrid_FieldIndex.InterCellConnections:
-                    return "InterCellConnections";
-                case PathGrid_FieldIndex.PointToReferenceMappings:
-                    return "PointToReferenceMappings";
-                default:
-                    return OblivionMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            PathGrid_FieldIndex enu = (PathGrid_FieldIndex)index;
-            switch (enu)
-            {
-                case PathGrid_FieldIndex.PointToPointConnections:
-                case PathGrid_FieldIndex.PGAG:
-                case PathGrid_FieldIndex.InterCellConnections:
-                case PathGrid_FieldIndex.PointToReferenceMappings:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            PathGrid_FieldIndex enu = (PathGrid_FieldIndex)index;
-            switch (enu)
-            {
-                case PathGrid_FieldIndex.PointToPointConnections:
-                case PathGrid_FieldIndex.PGAG:
-                case PathGrid_FieldIndex.InterCellConnections:
-                case PathGrid_FieldIndex.PointToReferenceMappings:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            PathGrid_FieldIndex enu = (PathGrid_FieldIndex)index;
-            switch (enu)
-            {
-                case PathGrid_FieldIndex.PointToPointConnections:
-                    return typeof(IExtendedList<PathGridPoint>);
-                case PathGrid_FieldIndex.PGAG:
-                    return typeof(MemorySlice<Byte>);
-                case PathGrid_FieldIndex.InterCellConnections:
-                    return typeof(IExtendedList<InterCellPoint>);
-                case PathGrid_FieldIndex.PointToReferenceMappings:
-                    return typeof(IExtendedList<PointToReferenceMapping>);
-                default:
-                    return OblivionMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.PGRD;
         public static readonly Type BinaryWriteTranslation = typeof(PathGridBinaryWriteTranslation);
         #region Interface
@@ -1166,14 +1036,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

@@ -43,8 +43,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Weathers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<WeatherType>? _Weathers;
-        public IExtendedList<WeatherType>? Weathers
+        private ExtendedList<WeatherType>? _Weathers;
+        public ExtendedList<WeatherType>? Weathers
         {
             get => this._Weathers;
             set => this._Weathers = value;
@@ -496,7 +496,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IRegionWeather>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<WeatherType>? Weathers { get; set; }
+        new ExtendedList<WeatherType>? Weathers { get; set; }
     }
 
     public partial interface IRegionWeatherGetter :
@@ -696,101 +696,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "WEATHERS":
-                    return (ushort)RegionWeather_FieldIndex.Weathers;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            RegionWeather_FieldIndex enu = (RegionWeather_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionWeather_FieldIndex.Weathers:
-                    return true;
-                default:
-                    return RegionData_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            RegionWeather_FieldIndex enu = (RegionWeather_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionWeather_FieldIndex.Weathers:
-                    return true;
-                default:
-                    return RegionData_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            RegionWeather_FieldIndex enu = (RegionWeather_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionWeather_FieldIndex.Weathers:
-                    return false;
-                default:
-                    return RegionData_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            RegionWeather_FieldIndex enu = (RegionWeather_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionWeather_FieldIndex.Weathers:
-                    return "Weathers";
-                default:
-                    return RegionData_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            RegionWeather_FieldIndex enu = (RegionWeather_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionWeather_FieldIndex.Weathers:
-                    return false;
-                default:
-                    return RegionData_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            RegionWeather_FieldIndex enu = (RegionWeather_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionWeather_FieldIndex.Weathers:
-                    return false;
-                default:
-                    return RegionData_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            RegionWeather_FieldIndex enu = (RegionWeather_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionWeather_FieldIndex.Weathers:
-                    return typeof(IExtendedList<WeatherType>);
-                default:
-                    return RegionData_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.RDAT;
         public static readonly Type BinaryWriteTranslation = typeof(RegionWeatherBinaryWriteTranslation);
         #region Interface
@@ -811,14 +716,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

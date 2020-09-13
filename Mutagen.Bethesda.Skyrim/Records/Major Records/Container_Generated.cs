@@ -76,8 +76,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<ContainerEntry>? _Items;
-        public IExtendedList<ContainerEntry>? Items
+        private ExtendedList<ContainerEntry>? _Items;
+        public ExtendedList<ContainerEntry>? Items
         {
             get => this._Items;
             set => this._Items = value;
@@ -106,14 +106,10 @@ namespace Mutagen.Bethesda.Skyrim
         public Single Weight { get; set; } = default;
         #endregion
         #region OpenSound
-        public FormLinkNullable<SoundDescriptor> OpenSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IContainerGetter.OpenSound => this.OpenSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> OpenSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region CloseSound
-        public FormLinkNullable<SoundDescriptor> CloseSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IContainerGetter.CloseSound => this.CloseSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> CloseSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region DATADataTypeState
         public Container.DATADataType DATADataTypeState { get; set; } = default;
@@ -912,12 +908,12 @@ namespace Mutagen.Bethesda.Skyrim
         new ObjectBounds ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
         new Model? Model { get; set; }
-        new IExtendedList<ContainerEntry>? Items { get; set; }
+        new ExtendedList<ContainerEntry>? Items { get; set; }
         new Destructible? Destructible { get; set; }
         new Container.Flag Flags { get; set; }
         new Single Weight { get; set; }
-        new FormLinkNullable<SoundDescriptor> OpenSound { get; set; }
-        new FormLinkNullable<SoundDescriptor> CloseSound { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> OpenSound { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> CloseSound { get; set; }
         new Container.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
         new Container.MajorFlag MajorFlags { get; set; }
@@ -1162,213 +1158,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "VIRTUALMACHINEADAPTER":
-                    return (ushort)Container_FieldIndex.VirtualMachineAdapter;
-                case "OBJECTBOUNDS":
-                    return (ushort)Container_FieldIndex.ObjectBounds;
-                case "NAME":
-                    return (ushort)Container_FieldIndex.Name;
-                case "MODEL":
-                    return (ushort)Container_FieldIndex.Model;
-                case "ITEMS":
-                    return (ushort)Container_FieldIndex.Items;
-                case "DESTRUCTIBLE":
-                    return (ushort)Container_FieldIndex.Destructible;
-                case "FLAGS":
-                    return (ushort)Container_FieldIndex.Flags;
-                case "WEIGHT":
-                    return (ushort)Container_FieldIndex.Weight;
-                case "OPENSOUND":
-                    return (ushort)Container_FieldIndex.OpenSound;
-                case "CLOSESOUND":
-                    return (ushort)Container_FieldIndex.CloseSound;
-                case "DATADATATYPESTATE":
-                    return (ushort)Container_FieldIndex.DATADataTypeState;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Container_FieldIndex enu = (Container_FieldIndex)index;
-            switch (enu)
-            {
-                case Container_FieldIndex.Items:
-                    return true;
-                case Container_FieldIndex.VirtualMachineAdapter:
-                case Container_FieldIndex.ObjectBounds:
-                case Container_FieldIndex.Name:
-                case Container_FieldIndex.Model:
-                case Container_FieldIndex.Destructible:
-                case Container_FieldIndex.Flags:
-                case Container_FieldIndex.Weight:
-                case Container_FieldIndex.OpenSound:
-                case Container_FieldIndex.CloseSound:
-                case Container_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Container_FieldIndex enu = (Container_FieldIndex)index;
-            switch (enu)
-            {
-                case Container_FieldIndex.VirtualMachineAdapter:
-                case Container_FieldIndex.ObjectBounds:
-                case Container_FieldIndex.Model:
-                case Container_FieldIndex.Items:
-                case Container_FieldIndex.Destructible:
-                    return true;
-                case Container_FieldIndex.Name:
-                case Container_FieldIndex.Flags:
-                case Container_FieldIndex.Weight:
-                case Container_FieldIndex.OpenSound:
-                case Container_FieldIndex.CloseSound:
-                case Container_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Container_FieldIndex enu = (Container_FieldIndex)index;
-            switch (enu)
-            {
-                case Container_FieldIndex.VirtualMachineAdapter:
-                case Container_FieldIndex.ObjectBounds:
-                case Container_FieldIndex.Name:
-                case Container_FieldIndex.Model:
-                case Container_FieldIndex.Items:
-                case Container_FieldIndex.Destructible:
-                case Container_FieldIndex.Flags:
-                case Container_FieldIndex.Weight:
-                case Container_FieldIndex.OpenSound:
-                case Container_FieldIndex.CloseSound:
-                case Container_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Container_FieldIndex enu = (Container_FieldIndex)index;
-            switch (enu)
-            {
-                case Container_FieldIndex.VirtualMachineAdapter:
-                    return "VirtualMachineAdapter";
-                case Container_FieldIndex.ObjectBounds:
-                    return "ObjectBounds";
-                case Container_FieldIndex.Name:
-                    return "Name";
-                case Container_FieldIndex.Model:
-                    return "Model";
-                case Container_FieldIndex.Items:
-                    return "Items";
-                case Container_FieldIndex.Destructible:
-                    return "Destructible";
-                case Container_FieldIndex.Flags:
-                    return "Flags";
-                case Container_FieldIndex.Weight:
-                    return "Weight";
-                case Container_FieldIndex.OpenSound:
-                    return "OpenSound";
-                case Container_FieldIndex.CloseSound:
-                    return "CloseSound";
-                case Container_FieldIndex.DATADataTypeState:
-                    return "DATADataTypeState";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Container_FieldIndex enu = (Container_FieldIndex)index;
-            switch (enu)
-            {
-                case Container_FieldIndex.VirtualMachineAdapter:
-                case Container_FieldIndex.ObjectBounds:
-                case Container_FieldIndex.Name:
-                case Container_FieldIndex.Model:
-                case Container_FieldIndex.Items:
-                case Container_FieldIndex.Destructible:
-                case Container_FieldIndex.Flags:
-                case Container_FieldIndex.Weight:
-                case Container_FieldIndex.OpenSound:
-                case Container_FieldIndex.CloseSound:
-                case Container_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Container_FieldIndex enu = (Container_FieldIndex)index;
-            switch (enu)
-            {
-                case Container_FieldIndex.VirtualMachineAdapter:
-                case Container_FieldIndex.ObjectBounds:
-                case Container_FieldIndex.Name:
-                case Container_FieldIndex.Model:
-                case Container_FieldIndex.Items:
-                case Container_FieldIndex.Destructible:
-                case Container_FieldIndex.Flags:
-                case Container_FieldIndex.Weight:
-                case Container_FieldIndex.OpenSound:
-                case Container_FieldIndex.CloseSound:
-                case Container_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Container_FieldIndex enu = (Container_FieldIndex)index;
-            switch (enu)
-            {
-                case Container_FieldIndex.VirtualMachineAdapter:
-                    return typeof(VirtualMachineAdapter);
-                case Container_FieldIndex.ObjectBounds:
-                    return typeof(ObjectBounds);
-                case Container_FieldIndex.Name:
-                    return typeof(TranslatedString);
-                case Container_FieldIndex.Model:
-                    return typeof(Model);
-                case Container_FieldIndex.Items:
-                    return typeof(IExtendedList<ContainerEntry>);
-                case Container_FieldIndex.Destructible:
-                    return typeof(Destructible);
-                case Container_FieldIndex.Flags:
-                    return typeof(Container.Flag);
-                case Container_FieldIndex.Weight:
-                    return typeof(Single);
-                case Container_FieldIndex.OpenSound:
-                    return typeof(FormLinkNullable<SoundDescriptor>);
-                case Container_FieldIndex.CloseSound:
-                    return typeof(FormLinkNullable<SoundDescriptor>);
-                case Container_FieldIndex.DATADataTypeState:
-                    return typeof(Container.DATADataType);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.CONT;
         public static readonly Type BinaryWriteTranslation = typeof(ContainerBinaryWriteTranslation);
         #region Interface
@@ -1389,14 +1178,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1420,8 +1209,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Destructible = null;
             item.Flags = default;
             item.Weight = default;
-            item.OpenSound = FormLinkNullable<SoundDescriptor>.Null;
-            item.CloseSound = FormLinkNullable<SoundDescriptor>.Null;
+            item.OpenSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
+            item.CloseSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
             item.DATADataTypeState = default;
             base.Clear(item);
         }
@@ -2009,11 +1798,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.OpenSound) ?? true))
             {
-                item.OpenSound = new FormLinkNullable<SoundDescriptor>(rhs.OpenSound.FormKey);
+                item.OpenSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.OpenSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.CloseSound) ?? true))
             {
-                item.CloseSound = new FormLinkNullable<SoundDescriptor>(rhs.CloseSound.FormKey);
+                item.CloseSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.CloseSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.DATADataTypeState) ?? true))
             {

@@ -742,134 +742,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "UNKNOWN":
-                    return (ushort)SoundLoopAndRumble_FieldIndex.Unknown;
-                case "LOOP":
-                    return (ushort)SoundLoopAndRumble_FieldIndex.Loop;
-                case "UNKNOWN2":
-                    return (ushort)SoundLoopAndRumble_FieldIndex.Unknown2;
-                case "RUMBLEVALUES":
-                    return (ushort)SoundLoopAndRumble_FieldIndex.RumbleValues;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            SoundLoopAndRumble_FieldIndex enu = (SoundLoopAndRumble_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundLoopAndRumble_FieldIndex.Unknown:
-                case SoundLoopAndRumble_FieldIndex.Loop:
-                case SoundLoopAndRumble_FieldIndex.Unknown2:
-                case SoundLoopAndRumble_FieldIndex.RumbleValues:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            SoundLoopAndRumble_FieldIndex enu = (SoundLoopAndRumble_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundLoopAndRumble_FieldIndex.Unknown:
-                case SoundLoopAndRumble_FieldIndex.Loop:
-                case SoundLoopAndRumble_FieldIndex.Unknown2:
-                case SoundLoopAndRumble_FieldIndex.RumbleValues:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            SoundLoopAndRumble_FieldIndex enu = (SoundLoopAndRumble_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundLoopAndRumble_FieldIndex.Unknown:
-                case SoundLoopAndRumble_FieldIndex.Loop:
-                case SoundLoopAndRumble_FieldIndex.Unknown2:
-                case SoundLoopAndRumble_FieldIndex.RumbleValues:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            SoundLoopAndRumble_FieldIndex enu = (SoundLoopAndRumble_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundLoopAndRumble_FieldIndex.Unknown:
-                    return "Unknown";
-                case SoundLoopAndRumble_FieldIndex.Loop:
-                    return "Loop";
-                case SoundLoopAndRumble_FieldIndex.Unknown2:
-                    return "Unknown2";
-                case SoundLoopAndRumble_FieldIndex.RumbleValues:
-                    return "RumbleValues";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            SoundLoopAndRumble_FieldIndex enu = (SoundLoopAndRumble_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundLoopAndRumble_FieldIndex.Unknown:
-                case SoundLoopAndRumble_FieldIndex.Loop:
-                case SoundLoopAndRumble_FieldIndex.Unknown2:
-                case SoundLoopAndRumble_FieldIndex.RumbleValues:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            SoundLoopAndRumble_FieldIndex enu = (SoundLoopAndRumble_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundLoopAndRumble_FieldIndex.Unknown:
-                case SoundLoopAndRumble_FieldIndex.Loop:
-                case SoundLoopAndRumble_FieldIndex.Unknown2:
-                case SoundLoopAndRumble_FieldIndex.RumbleValues:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            SoundLoopAndRumble_FieldIndex enu = (SoundLoopAndRumble_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundLoopAndRumble_FieldIndex.Unknown:
-                    return typeof(Byte);
-                case SoundLoopAndRumble_FieldIndex.Loop:
-                    return typeof(SoundDescriptor.LoopType);
-                case SoundLoopAndRumble_FieldIndex.Unknown2:
-                    return typeof(Byte);
-                case SoundLoopAndRumble_FieldIndex.RumbleValues:
-                    return typeof(Byte);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.LNAM;
         public static readonly Type BinaryWriteTranslation = typeof(SoundLoopAndRumbleBinaryWriteTranslation);
         #region Interface
@@ -890,14 +762,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

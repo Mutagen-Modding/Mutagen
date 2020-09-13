@@ -63,9 +63,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? IWaterGetter.MaterialID => this.MaterialID;
         #endregion
         #region Sound
-        public FormLinkNullable<Sound> Sound { get; set; } = new FormLinkNullable<Sound>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundGetter> IWaterGetter.Sound => this.Sound.ToGetter<Sound, ISoundGetter>();
+        public FormLinkNullable<ISoundGetter> Sound { get; set; } = new FormLinkNullable<ISoundGetter>();
         #endregion
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -667,7 +665,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Byte? Opacity { get; set; }
         new Water.Flag? Flags { get; set; }
         new String? MaterialID { get; set; }
-        new FormLinkNullable<Sound> Sound { get; set; }
+        new FormLinkNullable<ISoundGetter> Sound { get; set; }
         new WaterData? Data { get; set; }
         new RelatedWaters? RelatedWaters { get; set; }
     }
@@ -892,168 +890,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "TEXTURE":
-                    return (ushort)Water_FieldIndex.Texture;
-                case "OPACITY":
-                    return (ushort)Water_FieldIndex.Opacity;
-                case "FLAGS":
-                    return (ushort)Water_FieldIndex.Flags;
-                case "MATERIALID":
-                    return (ushort)Water_FieldIndex.MaterialID;
-                case "SOUND":
-                    return (ushort)Water_FieldIndex.Sound;
-                case "DATA":
-                    return (ushort)Water_FieldIndex.Data;
-                case "RELATEDWATERS":
-                    return (ushort)Water_FieldIndex.RelatedWaters;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Water_FieldIndex enu = (Water_FieldIndex)index;
-            switch (enu)
-            {
-                case Water_FieldIndex.Texture:
-                case Water_FieldIndex.Opacity:
-                case Water_FieldIndex.Flags:
-                case Water_FieldIndex.MaterialID:
-                case Water_FieldIndex.Sound:
-                case Water_FieldIndex.Data:
-                case Water_FieldIndex.RelatedWaters:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Water_FieldIndex enu = (Water_FieldIndex)index;
-            switch (enu)
-            {
-                case Water_FieldIndex.Data:
-                case Water_FieldIndex.RelatedWaters:
-                    return true;
-                case Water_FieldIndex.Texture:
-                case Water_FieldIndex.Opacity:
-                case Water_FieldIndex.Flags:
-                case Water_FieldIndex.MaterialID:
-                case Water_FieldIndex.Sound:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Water_FieldIndex enu = (Water_FieldIndex)index;
-            switch (enu)
-            {
-                case Water_FieldIndex.Texture:
-                case Water_FieldIndex.Opacity:
-                case Water_FieldIndex.Flags:
-                case Water_FieldIndex.MaterialID:
-                case Water_FieldIndex.Sound:
-                case Water_FieldIndex.Data:
-                case Water_FieldIndex.RelatedWaters:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Water_FieldIndex enu = (Water_FieldIndex)index;
-            switch (enu)
-            {
-                case Water_FieldIndex.Texture:
-                    return "Texture";
-                case Water_FieldIndex.Opacity:
-                    return "Opacity";
-                case Water_FieldIndex.Flags:
-                    return "Flags";
-                case Water_FieldIndex.MaterialID:
-                    return "MaterialID";
-                case Water_FieldIndex.Sound:
-                    return "Sound";
-                case Water_FieldIndex.Data:
-                    return "Data";
-                case Water_FieldIndex.RelatedWaters:
-                    return "RelatedWaters";
-                default:
-                    return OblivionMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Water_FieldIndex enu = (Water_FieldIndex)index;
-            switch (enu)
-            {
-                case Water_FieldIndex.Texture:
-                case Water_FieldIndex.Opacity:
-                case Water_FieldIndex.Flags:
-                case Water_FieldIndex.MaterialID:
-                case Water_FieldIndex.Sound:
-                case Water_FieldIndex.Data:
-                case Water_FieldIndex.RelatedWaters:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Water_FieldIndex enu = (Water_FieldIndex)index;
-            switch (enu)
-            {
-                case Water_FieldIndex.Texture:
-                case Water_FieldIndex.Opacity:
-                case Water_FieldIndex.Flags:
-                case Water_FieldIndex.MaterialID:
-                case Water_FieldIndex.Sound:
-                case Water_FieldIndex.Data:
-                case Water_FieldIndex.RelatedWaters:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Water_FieldIndex enu = (Water_FieldIndex)index;
-            switch (enu)
-            {
-                case Water_FieldIndex.Texture:
-                    return typeof(String);
-                case Water_FieldIndex.Opacity:
-                    return typeof(Byte);
-                case Water_FieldIndex.Flags:
-                    return typeof(Water.Flag);
-                case Water_FieldIndex.MaterialID:
-                    return typeof(String);
-                case Water_FieldIndex.Sound:
-                    return typeof(FormLinkNullable<Sound>);
-                case Water_FieldIndex.Data:
-                    return typeof(WaterData);
-                case Water_FieldIndex.RelatedWaters:
-                    return typeof(RelatedWaters);
-                default:
-                    return OblivionMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.WATR;
         public static readonly Type BinaryWriteTranslation = typeof(WaterBinaryWriteTranslation);
         #region Interface
@@ -1074,14 +910,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1101,7 +937,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Opacity = default;
             item.Flags = default;
             item.MaterialID = default;
-            item.Sound = FormLinkNullable<Sound>.Null;
+            item.Sound = FormLinkNullable<ISoundGetter>.Null;
             item.Data = null;
             item.RelatedWaters = null;
             base.Clear(item);
@@ -1492,7 +1328,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Sound) ?? true))
             {
-                item.Sound = new FormLinkNullable<Sound>(rhs.Sound.FormKey);
+                item.Sound = new FormLinkNullable<ISoundGetter>(rhs.Sound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Data) ?? true))
             {

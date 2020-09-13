@@ -40,9 +40,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Reference
-        public FormLink<ILinkedReference> Reference { get; set; } = new FormLink<ILinkedReference>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ILinkedReferenceGetter> IActivateParentGetter.Reference => this.Reference.ToGetter<ILinkedReference, ILinkedReferenceGetter>();
+        public FormLink<ILinkedReferenceGetter> Reference { get; set; } = new FormLink<ILinkedReferenceGetter>();
         #endregion
         #region Delay
         public Single Delay { get; set; } = default;
@@ -451,7 +449,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IActivateParent>,
         ILinkedFormKeyContainer
     {
-        new FormLink<ILinkedReference> Reference { get; set; }
+        new FormLink<ILinkedReferenceGetter> Reference { get; set; }
         new Single Delay { get; set; }
     }
 
@@ -684,112 +682,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "REFERENCE":
-                    return (ushort)ActivateParent_FieldIndex.Reference;
-                case "DELAY":
-                    return (ushort)ActivateParent_FieldIndex.Delay;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            ActivateParent_FieldIndex enu = (ActivateParent_FieldIndex)index;
-            switch (enu)
-            {
-                case ActivateParent_FieldIndex.Reference:
-                case ActivateParent_FieldIndex.Delay:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            ActivateParent_FieldIndex enu = (ActivateParent_FieldIndex)index;
-            switch (enu)
-            {
-                case ActivateParent_FieldIndex.Reference:
-                case ActivateParent_FieldIndex.Delay:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            ActivateParent_FieldIndex enu = (ActivateParent_FieldIndex)index;
-            switch (enu)
-            {
-                case ActivateParent_FieldIndex.Reference:
-                case ActivateParent_FieldIndex.Delay:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            ActivateParent_FieldIndex enu = (ActivateParent_FieldIndex)index;
-            switch (enu)
-            {
-                case ActivateParent_FieldIndex.Reference:
-                    return "Reference";
-                case ActivateParent_FieldIndex.Delay:
-                    return "Delay";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            ActivateParent_FieldIndex enu = (ActivateParent_FieldIndex)index;
-            switch (enu)
-            {
-                case ActivateParent_FieldIndex.Reference:
-                case ActivateParent_FieldIndex.Delay:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            ActivateParent_FieldIndex enu = (ActivateParent_FieldIndex)index;
-            switch (enu)
-            {
-                case ActivateParent_FieldIndex.Reference:
-                case ActivateParent_FieldIndex.Delay:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            ActivateParent_FieldIndex enu = (ActivateParent_FieldIndex)index;
-            switch (enu)
-            {
-                case ActivateParent_FieldIndex.Reference:
-                    return typeof(FormLink<ILinkedReference>);
-                case ActivateParent_FieldIndex.Delay:
-                    return typeof(Single);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.XAPR;
         public static readonly Type BinaryWriteTranslation = typeof(ActivateParentBinaryWriteTranslation);
         #region Interface
@@ -810,14 +702,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -833,7 +725,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IActivateParent item)
         {
             ClearPartial();
-            item.Reference = FormLink<ILinkedReference>.Null;
+            item.Reference = FormLink<ILinkedReferenceGetter>.Null;
             item.Delay = default;
         }
         
@@ -992,7 +884,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)ActivateParent_FieldIndex.Reference) ?? true))
             {
-                item.Reference = new FormLink<ILinkedReference>(rhs.Reference.FormKey);
+                item.Reference = new FormLink<ILinkedReferenceGetter>(rhs.Reference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ActivateParent_FieldIndex.Delay) ?? true))
             {

@@ -63,9 +63,7 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte> IDialogResponseGetter.Unknown2 => this.Unknown2;
         #endregion
         #region Sound
-        public FormLink<SoundDescriptor> Sound { get; set; } = new FormLink<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISoundDescriptorGetter> IDialogResponseGetter.Sound => this.Sound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLink<ISoundDescriptorGetter> Sound { get; set; } = new FormLink<ISoundDescriptorGetter>();
         #endregion
         #region Flags
         public DialogResponse.Flag Flags { get; set; } = default;
@@ -91,14 +89,10 @@ namespace Mutagen.Bethesda.Skyrim
         public String Edits { get; set; } = string.Empty;
         #endregion
         #region SpeakerIdleAnimation
-        public FormLinkNullable<IdleAnimation> SpeakerIdleAnimation { get; set; } = new FormLinkNullable<IdleAnimation>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IIdleAnimationGetter> IDialogResponseGetter.SpeakerIdleAnimation => this.SpeakerIdleAnimation.ToGetter<IdleAnimation, IIdleAnimationGetter>();
+        public FormLinkNullable<IIdleAnimationGetter> SpeakerIdleAnimation { get; set; } = new FormLinkNullable<IIdleAnimationGetter>();
         #endregion
         #region ListenerIdleAnimation
-        public FormLinkNullable<IdleAnimation> ListenerIdleAnimation { get; set; } = new FormLinkNullable<IdleAnimation>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IIdleAnimationGetter> IDialogResponseGetter.ListenerIdleAnimation => this.ListenerIdleAnimation.ToGetter<IdleAnimation, IIdleAnimationGetter>();
+        public FormLinkNullable<IIdleAnimationGetter> ListenerIdleAnimation { get; set; } = new FormLinkNullable<IIdleAnimationGetter>();
         #endregion
         #region TRDTDataTypeState
         public DialogResponse.TRDTDataType TRDTDataTypeState { get; set; } = default;
@@ -852,14 +846,14 @@ namespace Mutagen.Bethesda.Skyrim
         new Int32 Unknown { get; set; }
         new Byte ResponseNumber { get; set; }
         new MemorySlice<Byte> Unknown2 { get; set; }
-        new FormLink<SoundDescriptor> Sound { get; set; }
+        new FormLink<ISoundDescriptorGetter> Sound { get; set; }
         new DialogResponse.Flag Flags { get; set; }
         new MemorySlice<Byte> Unknown3 { get; set; }
         new TranslatedString Text { get; set; }
         new String ScriptNotes { get; set; }
         new String Edits { get; set; }
-        new FormLinkNullable<IdleAnimation> SpeakerIdleAnimation { get; set; }
-        new FormLinkNullable<IdleAnimation> ListenerIdleAnimation { get; set; }
+        new FormLinkNullable<IIdleAnimationGetter> SpeakerIdleAnimation { get; set; }
+        new FormLinkNullable<IIdleAnimationGetter> ListenerIdleAnimation { get; set; }
         new DialogResponse.TRDTDataType TRDTDataTypeState { get; set; }
     }
 
@@ -1116,244 +1110,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "EMOTION":
-                    return (ushort)DialogResponse_FieldIndex.Emotion;
-                case "EMOTIONVALUE":
-                    return (ushort)DialogResponse_FieldIndex.EmotionValue;
-                case "UNKNOWN":
-                    return (ushort)DialogResponse_FieldIndex.Unknown;
-                case "RESPONSENUMBER":
-                    return (ushort)DialogResponse_FieldIndex.ResponseNumber;
-                case "UNKNOWN2":
-                    return (ushort)DialogResponse_FieldIndex.Unknown2;
-                case "SOUND":
-                    return (ushort)DialogResponse_FieldIndex.Sound;
-                case "FLAGS":
-                    return (ushort)DialogResponse_FieldIndex.Flags;
-                case "UNKNOWN3":
-                    return (ushort)DialogResponse_FieldIndex.Unknown3;
-                case "TEXT":
-                    return (ushort)DialogResponse_FieldIndex.Text;
-                case "SCRIPTNOTES":
-                    return (ushort)DialogResponse_FieldIndex.ScriptNotes;
-                case "EDITS":
-                    return (ushort)DialogResponse_FieldIndex.Edits;
-                case "SPEAKERIDLEANIMATION":
-                    return (ushort)DialogResponse_FieldIndex.SpeakerIdleAnimation;
-                case "LISTENERIDLEANIMATION":
-                    return (ushort)DialogResponse_FieldIndex.ListenerIdleAnimation;
-                case "TRDTDATATYPESTATE":
-                    return (ushort)DialogResponse_FieldIndex.TRDTDataTypeState;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            DialogResponse_FieldIndex enu = (DialogResponse_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogResponse_FieldIndex.Emotion:
-                case DialogResponse_FieldIndex.EmotionValue:
-                case DialogResponse_FieldIndex.Unknown:
-                case DialogResponse_FieldIndex.ResponseNumber:
-                case DialogResponse_FieldIndex.Unknown2:
-                case DialogResponse_FieldIndex.Sound:
-                case DialogResponse_FieldIndex.Flags:
-                case DialogResponse_FieldIndex.Unknown3:
-                case DialogResponse_FieldIndex.Text:
-                case DialogResponse_FieldIndex.ScriptNotes:
-                case DialogResponse_FieldIndex.Edits:
-                case DialogResponse_FieldIndex.SpeakerIdleAnimation:
-                case DialogResponse_FieldIndex.ListenerIdleAnimation:
-                case DialogResponse_FieldIndex.TRDTDataTypeState:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            DialogResponse_FieldIndex enu = (DialogResponse_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogResponse_FieldIndex.Emotion:
-                case DialogResponse_FieldIndex.EmotionValue:
-                case DialogResponse_FieldIndex.Unknown:
-                case DialogResponse_FieldIndex.ResponseNumber:
-                case DialogResponse_FieldIndex.Unknown2:
-                case DialogResponse_FieldIndex.Sound:
-                case DialogResponse_FieldIndex.Flags:
-                case DialogResponse_FieldIndex.Unknown3:
-                case DialogResponse_FieldIndex.Text:
-                case DialogResponse_FieldIndex.ScriptNotes:
-                case DialogResponse_FieldIndex.Edits:
-                case DialogResponse_FieldIndex.SpeakerIdleAnimation:
-                case DialogResponse_FieldIndex.ListenerIdleAnimation:
-                case DialogResponse_FieldIndex.TRDTDataTypeState:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            DialogResponse_FieldIndex enu = (DialogResponse_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogResponse_FieldIndex.Emotion:
-                case DialogResponse_FieldIndex.EmotionValue:
-                case DialogResponse_FieldIndex.Unknown:
-                case DialogResponse_FieldIndex.ResponseNumber:
-                case DialogResponse_FieldIndex.Unknown2:
-                case DialogResponse_FieldIndex.Sound:
-                case DialogResponse_FieldIndex.Flags:
-                case DialogResponse_FieldIndex.Unknown3:
-                case DialogResponse_FieldIndex.Text:
-                case DialogResponse_FieldIndex.ScriptNotes:
-                case DialogResponse_FieldIndex.Edits:
-                case DialogResponse_FieldIndex.SpeakerIdleAnimation:
-                case DialogResponse_FieldIndex.ListenerIdleAnimation:
-                case DialogResponse_FieldIndex.TRDTDataTypeState:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            DialogResponse_FieldIndex enu = (DialogResponse_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogResponse_FieldIndex.Emotion:
-                    return "Emotion";
-                case DialogResponse_FieldIndex.EmotionValue:
-                    return "EmotionValue";
-                case DialogResponse_FieldIndex.Unknown:
-                    return "Unknown";
-                case DialogResponse_FieldIndex.ResponseNumber:
-                    return "ResponseNumber";
-                case DialogResponse_FieldIndex.Unknown2:
-                    return "Unknown2";
-                case DialogResponse_FieldIndex.Sound:
-                    return "Sound";
-                case DialogResponse_FieldIndex.Flags:
-                    return "Flags";
-                case DialogResponse_FieldIndex.Unknown3:
-                    return "Unknown3";
-                case DialogResponse_FieldIndex.Text:
-                    return "Text";
-                case DialogResponse_FieldIndex.ScriptNotes:
-                    return "ScriptNotes";
-                case DialogResponse_FieldIndex.Edits:
-                    return "Edits";
-                case DialogResponse_FieldIndex.SpeakerIdleAnimation:
-                    return "SpeakerIdleAnimation";
-                case DialogResponse_FieldIndex.ListenerIdleAnimation:
-                    return "ListenerIdleAnimation";
-                case DialogResponse_FieldIndex.TRDTDataTypeState:
-                    return "TRDTDataTypeState";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            DialogResponse_FieldIndex enu = (DialogResponse_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogResponse_FieldIndex.Emotion:
-                case DialogResponse_FieldIndex.EmotionValue:
-                case DialogResponse_FieldIndex.Unknown:
-                case DialogResponse_FieldIndex.ResponseNumber:
-                case DialogResponse_FieldIndex.Unknown2:
-                case DialogResponse_FieldIndex.Sound:
-                case DialogResponse_FieldIndex.Flags:
-                case DialogResponse_FieldIndex.Unknown3:
-                case DialogResponse_FieldIndex.Text:
-                case DialogResponse_FieldIndex.ScriptNotes:
-                case DialogResponse_FieldIndex.Edits:
-                case DialogResponse_FieldIndex.SpeakerIdleAnimation:
-                case DialogResponse_FieldIndex.ListenerIdleAnimation:
-                case DialogResponse_FieldIndex.TRDTDataTypeState:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            DialogResponse_FieldIndex enu = (DialogResponse_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogResponse_FieldIndex.Emotion:
-                case DialogResponse_FieldIndex.EmotionValue:
-                case DialogResponse_FieldIndex.Unknown:
-                case DialogResponse_FieldIndex.ResponseNumber:
-                case DialogResponse_FieldIndex.Unknown2:
-                case DialogResponse_FieldIndex.Sound:
-                case DialogResponse_FieldIndex.Flags:
-                case DialogResponse_FieldIndex.Unknown3:
-                case DialogResponse_FieldIndex.Text:
-                case DialogResponse_FieldIndex.ScriptNotes:
-                case DialogResponse_FieldIndex.Edits:
-                case DialogResponse_FieldIndex.SpeakerIdleAnimation:
-                case DialogResponse_FieldIndex.ListenerIdleAnimation:
-                case DialogResponse_FieldIndex.TRDTDataTypeState:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            DialogResponse_FieldIndex enu = (DialogResponse_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogResponse_FieldIndex.Emotion:
-                    return typeof(Emotion);
-                case DialogResponse_FieldIndex.EmotionValue:
-                    return typeof(UInt32);
-                case DialogResponse_FieldIndex.Unknown:
-                    return typeof(Int32);
-                case DialogResponse_FieldIndex.ResponseNumber:
-                    return typeof(Byte);
-                case DialogResponse_FieldIndex.Unknown2:
-                    return typeof(MemorySlice<Byte>);
-                case DialogResponse_FieldIndex.Sound:
-                    return typeof(FormLink<SoundDescriptor>);
-                case DialogResponse_FieldIndex.Flags:
-                    return typeof(DialogResponse.Flag);
-                case DialogResponse_FieldIndex.Unknown3:
-                    return typeof(MemorySlice<Byte>);
-                case DialogResponse_FieldIndex.Text:
-                    return typeof(TranslatedString);
-                case DialogResponse_FieldIndex.ScriptNotes:
-                    return typeof(String);
-                case DialogResponse_FieldIndex.Edits:
-                    return typeof(String);
-                case DialogResponse_FieldIndex.SpeakerIdleAnimation:
-                    return typeof(FormLinkNullable<IdleAnimation>);
-                case DialogResponse_FieldIndex.ListenerIdleAnimation:
-                    return typeof(FormLinkNullable<IdleAnimation>);
-                case DialogResponse_FieldIndex.TRDTDataTypeState:
-                    return typeof(DialogResponse.TRDTDataType);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.TRDT;
         public static readonly Type BinaryWriteTranslation = typeof(DialogResponseBinaryWriteTranslation);
         #region Interface
@@ -1374,14 +1130,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1402,14 +1158,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Unknown = default;
             item.ResponseNumber = default;
             item.Unknown2 = new byte[3];
-            item.Sound = FormLink<SoundDescriptor>.Null;
+            item.Sound = FormLink<ISoundDescriptorGetter>.Null;
             item.Flags = default;
             item.Unknown3 = new byte[3];
             item.Text.Clear();
             item.ScriptNotes = string.Empty;
             item.Edits = string.Empty;
-            item.SpeakerIdleAnimation = FormLinkNullable<IdleAnimation>.Null;
-            item.ListenerIdleAnimation = FormLinkNullable<IdleAnimation>.Null;
+            item.SpeakerIdleAnimation = FormLinkNullable<IIdleAnimationGetter>.Null;
+            item.ListenerIdleAnimation = FormLinkNullable<IIdleAnimationGetter>.Null;
             item.TRDTDataTypeState = default;
         }
         
@@ -1678,7 +1434,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Sound) ?? true))
             {
-                item.Sound = new FormLink<SoundDescriptor>(rhs.Sound.FormKey);
+                item.Sound = new FormLink<ISoundDescriptorGetter>(rhs.Sound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Flags) ?? true))
             {
@@ -1702,11 +1458,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.SpeakerIdleAnimation) ?? true))
             {
-                item.SpeakerIdleAnimation = new FormLinkNullable<IdleAnimation>(rhs.SpeakerIdleAnimation.FormKey);
+                item.SpeakerIdleAnimation = new FormLinkNullable<IIdleAnimationGetter>(rhs.SpeakerIdleAnimation.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ListenerIdleAnimation) ?? true))
             {
-                item.ListenerIdleAnimation = new FormLinkNullable<IdleAnimation>(rhs.ListenerIdleAnimation.FormKey);
+                item.ListenerIdleAnimation = new FormLinkNullable<IIdleAnimationGetter>(rhs.ListenerIdleAnimation.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.TRDTDataTypeState) ?? true))
             {

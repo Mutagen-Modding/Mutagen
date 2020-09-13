@@ -53,9 +53,7 @@ namespace Mutagen.Bethesda.Skyrim
         SoundCategory.Flag? ISoundCategoryGetter.Flags => this.Flags;
         #endregion
         #region Parent
-        public FormLinkNullable<SoundDescriptor> Parent { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> ISoundCategoryGetter.Parent => this.Parent.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> Parent { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region StaticVolumeMultiplier
         public Single? StaticVolumeMultiplier { get; set; }
@@ -576,7 +574,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new TranslatedString? Name { get; set; }
         new SoundCategory.Flag? Flags { get; set; }
-        new FormLinkNullable<SoundDescriptor> Parent { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> Parent { get; set; }
         new Single? StaticVolumeMultiplier { get; set; }
         new Single? DefaultMenuVolume { get; set; }
     }
@@ -799,145 +797,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "NAME":
-                    return (ushort)SoundCategory_FieldIndex.Name;
-                case "FLAGS":
-                    return (ushort)SoundCategory_FieldIndex.Flags;
-                case "PARENT":
-                    return (ushort)SoundCategory_FieldIndex.Parent;
-                case "STATICVOLUMEMULTIPLIER":
-                    return (ushort)SoundCategory_FieldIndex.StaticVolumeMultiplier;
-                case "DEFAULTMENUVOLUME":
-                    return (ushort)SoundCategory_FieldIndex.DefaultMenuVolume;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            SoundCategory_FieldIndex enu = (SoundCategory_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundCategory_FieldIndex.Name:
-                case SoundCategory_FieldIndex.Flags:
-                case SoundCategory_FieldIndex.Parent:
-                case SoundCategory_FieldIndex.StaticVolumeMultiplier:
-                case SoundCategory_FieldIndex.DefaultMenuVolume:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            SoundCategory_FieldIndex enu = (SoundCategory_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundCategory_FieldIndex.Name:
-                case SoundCategory_FieldIndex.Flags:
-                case SoundCategory_FieldIndex.Parent:
-                case SoundCategory_FieldIndex.StaticVolumeMultiplier:
-                case SoundCategory_FieldIndex.DefaultMenuVolume:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            SoundCategory_FieldIndex enu = (SoundCategory_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundCategory_FieldIndex.Name:
-                case SoundCategory_FieldIndex.Flags:
-                case SoundCategory_FieldIndex.Parent:
-                case SoundCategory_FieldIndex.StaticVolumeMultiplier:
-                case SoundCategory_FieldIndex.DefaultMenuVolume:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            SoundCategory_FieldIndex enu = (SoundCategory_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundCategory_FieldIndex.Name:
-                    return "Name";
-                case SoundCategory_FieldIndex.Flags:
-                    return "Flags";
-                case SoundCategory_FieldIndex.Parent:
-                    return "Parent";
-                case SoundCategory_FieldIndex.StaticVolumeMultiplier:
-                    return "StaticVolumeMultiplier";
-                case SoundCategory_FieldIndex.DefaultMenuVolume:
-                    return "DefaultMenuVolume";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            SoundCategory_FieldIndex enu = (SoundCategory_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundCategory_FieldIndex.Name:
-                case SoundCategory_FieldIndex.Flags:
-                case SoundCategory_FieldIndex.Parent:
-                case SoundCategory_FieldIndex.StaticVolumeMultiplier:
-                case SoundCategory_FieldIndex.DefaultMenuVolume:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            SoundCategory_FieldIndex enu = (SoundCategory_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundCategory_FieldIndex.Name:
-                case SoundCategory_FieldIndex.Flags:
-                case SoundCategory_FieldIndex.Parent:
-                case SoundCategory_FieldIndex.StaticVolumeMultiplier:
-                case SoundCategory_FieldIndex.DefaultMenuVolume:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            SoundCategory_FieldIndex enu = (SoundCategory_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundCategory_FieldIndex.Name:
-                    return typeof(TranslatedString);
-                case SoundCategory_FieldIndex.Flags:
-                    return typeof(SoundCategory.Flag);
-                case SoundCategory_FieldIndex.Parent:
-                    return typeof(FormLinkNullable<SoundDescriptor>);
-                case SoundCategory_FieldIndex.StaticVolumeMultiplier:
-                    return typeof(Single);
-                case SoundCategory_FieldIndex.DefaultMenuVolume:
-                    return typeof(Single);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.SNCT;
         public static readonly Type BinaryWriteTranslation = typeof(SoundCategoryBinaryWriteTranslation);
         #region Interface
@@ -958,14 +817,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -983,7 +842,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.Name = default;
             item.Flags = default;
-            item.Parent = FormLinkNullable<SoundDescriptor>.Null;
+            item.Parent = FormLinkNullable<ISoundDescriptorGetter>.Null;
             item.StaticVolumeMultiplier = default;
             item.DefaultMenuVolume = default;
             base.Clear(item);
@@ -1331,7 +1190,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SoundCategory_FieldIndex.Parent) ?? true))
             {
-                item.Parent = new FormLinkNullable<SoundDescriptor>(rhs.Parent.FormKey);
+                item.Parent = new FormLinkNullable<ISoundDescriptorGetter>(rhs.Parent.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)SoundCategory_FieldIndex.StaticVolumeMultiplier) ?? true))
             {

@@ -42,9 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region InheritsSoundsFrom
-        public FormLinkNullable<Npc> InheritsSoundsFrom { get; set; } = new FormLinkNullable<Npc>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<INpcGetter> INpcInheritSoundGetter.InheritsSoundsFrom => this.InheritsSoundsFrom.ToGetter<Npc, INpcGetter>();
+        public FormLinkNullable<INpcGetter> InheritsSoundsFrom { get; set; } = new FormLinkNullable<INpcGetter>();
         #endregion
 
         #region To String
@@ -404,7 +402,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<INpcInheritSound>,
         ILinkedFormKeyContainer
     {
-        new FormLinkNullable<Npc> InheritsSoundsFrom { get; set; }
+        new FormLinkNullable<INpcGetter> InheritsSoundsFrom { get; set; }
     }
 
     public partial interface INpcInheritSoundGetter :
@@ -603,101 +601,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "INHERITSSOUNDSFROM":
-                    return (ushort)NpcInheritSound_FieldIndex.InheritsSoundsFrom;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            NpcInheritSound_FieldIndex enu = (NpcInheritSound_FieldIndex)index;
-            switch (enu)
-            {
-                case NpcInheritSound_FieldIndex.InheritsSoundsFrom:
-                    return false;
-                default:
-                    return ANpcSoundDefinition_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            NpcInheritSound_FieldIndex enu = (NpcInheritSound_FieldIndex)index;
-            switch (enu)
-            {
-                case NpcInheritSound_FieldIndex.InheritsSoundsFrom:
-                    return false;
-                default:
-                    return ANpcSoundDefinition_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            NpcInheritSound_FieldIndex enu = (NpcInheritSound_FieldIndex)index;
-            switch (enu)
-            {
-                case NpcInheritSound_FieldIndex.InheritsSoundsFrom:
-                    return false;
-                default:
-                    return ANpcSoundDefinition_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            NpcInheritSound_FieldIndex enu = (NpcInheritSound_FieldIndex)index;
-            switch (enu)
-            {
-                case NpcInheritSound_FieldIndex.InheritsSoundsFrom:
-                    return "InheritsSoundsFrom";
-                default:
-                    return ANpcSoundDefinition_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            NpcInheritSound_FieldIndex enu = (NpcInheritSound_FieldIndex)index;
-            switch (enu)
-            {
-                case NpcInheritSound_FieldIndex.InheritsSoundsFrom:
-                    return false;
-                default:
-                    return ANpcSoundDefinition_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            NpcInheritSound_FieldIndex enu = (NpcInheritSound_FieldIndex)index;
-            switch (enu)
-            {
-                case NpcInheritSound_FieldIndex.InheritsSoundsFrom:
-                    return false;
-                default:
-                    return ANpcSoundDefinition_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            NpcInheritSound_FieldIndex enu = (NpcInheritSound_FieldIndex)index;
-            switch (enu)
-            {
-                case NpcInheritSound_FieldIndex.InheritsSoundsFrom:
-                    return typeof(FormLinkNullable<Npc>);
-                default:
-                    return ANpcSoundDefinition_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.CSCR;
         public static readonly Type BinaryWriteTranslation = typeof(NpcInheritSoundBinaryWriteTranslation);
         #region Interface
@@ -718,14 +621,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -741,7 +644,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(INpcInheritSound item)
         {
             ClearPartial();
-            item.InheritsSoundsFrom = FormLinkNullable<Npc>.Null;
+            item.InheritsSoundsFrom = FormLinkNullable<INpcGetter>.Null;
             base.Clear(item);
         }
         
@@ -950,7 +853,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)NpcInheritSound_FieldIndex.InheritsSoundsFrom) ?? true))
             {
-                item.InheritsSoundsFrom = new FormLinkNullable<Npc>(rhs.InheritsSoundsFrom.FormKey);
+                item.InheritsSoundsFrom = new FormLinkNullable<INpcGetter>(rhs.InheritsSoundsFrom.FormKey);
             }
         }
         

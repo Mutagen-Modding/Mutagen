@@ -43,14 +43,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Parent
-        public FormLink<Npc> Parent { get; set; } = new FormLink<Npc>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<INpcGetter> IRelationshipGetter.Parent => this.Parent.ToGetter<Npc, INpcGetter>();
+        public FormLink<INpcGetter> Parent { get; set; } = new FormLink<INpcGetter>();
         #endregion
         #region Child
-        public FormLink<Npc> Child { get; set; } = new FormLink<Npc>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<INpcGetter> IRelationshipGetter.Child => this.Child.ToGetter<Npc, INpcGetter>();
+        public FormLink<INpcGetter> Child { get; set; } = new FormLink<INpcGetter>();
         #endregion
         #region Rank
         public Relationship.RankType Rank { get; set; } = default;
@@ -62,9 +58,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Relationship.Flag Flags { get; set; } = default;
         #endregion
         #region AssociationType
-        public FormLink<AssociationType> AssociationType { get; set; } = new FormLink<AssociationType>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IAssociationTypeGetter> IRelationshipGetter.AssociationType => this.AssociationType.ToGetter<AssociationType, IAssociationTypeGetter>();
+        public FormLink<IAssociationTypeGetter> AssociationType { get; set; } = new FormLink<IAssociationTypeGetter>();
         #endregion
         #region DATADataTypeState
         public Relationship.DATADataType DATADataTypeState { get; set; } = default;
@@ -640,12 +634,12 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IRelationshipInternal>,
         ILinkedFormKeyContainer
     {
-        new FormLink<Npc> Parent { get; set; }
-        new FormLink<Npc> Child { get; set; }
+        new FormLink<INpcGetter> Parent { get; set; }
+        new FormLink<INpcGetter> Child { get; set; }
         new Relationship.RankType Rank { get; set; }
         new Byte Unknown { get; set; }
         new Relationship.Flag Flags { get; set; }
-        new FormLink<AssociationType> AssociationType { get; set; }
+        new FormLink<IAssociationTypeGetter> AssociationType { get; set; }
         new Relationship.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
         new Relationship.MajorFlag MajorFlags { get; set; }
@@ -878,167 +872,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "PARENT":
-                    return (ushort)Relationship_FieldIndex.Parent;
-                case "CHILD":
-                    return (ushort)Relationship_FieldIndex.Child;
-                case "RANK":
-                    return (ushort)Relationship_FieldIndex.Rank;
-                case "UNKNOWN":
-                    return (ushort)Relationship_FieldIndex.Unknown;
-                case "FLAGS":
-                    return (ushort)Relationship_FieldIndex.Flags;
-                case "ASSOCIATIONTYPE":
-                    return (ushort)Relationship_FieldIndex.AssociationType;
-                case "DATADATATYPESTATE":
-                    return (ushort)Relationship_FieldIndex.DATADataTypeState;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Relationship_FieldIndex enu = (Relationship_FieldIndex)index;
-            switch (enu)
-            {
-                case Relationship_FieldIndex.Parent:
-                case Relationship_FieldIndex.Child:
-                case Relationship_FieldIndex.Rank:
-                case Relationship_FieldIndex.Unknown:
-                case Relationship_FieldIndex.Flags:
-                case Relationship_FieldIndex.AssociationType:
-                case Relationship_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Relationship_FieldIndex enu = (Relationship_FieldIndex)index;
-            switch (enu)
-            {
-                case Relationship_FieldIndex.Parent:
-                case Relationship_FieldIndex.Child:
-                case Relationship_FieldIndex.Rank:
-                case Relationship_FieldIndex.Unknown:
-                case Relationship_FieldIndex.Flags:
-                case Relationship_FieldIndex.AssociationType:
-                case Relationship_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Relationship_FieldIndex enu = (Relationship_FieldIndex)index;
-            switch (enu)
-            {
-                case Relationship_FieldIndex.Parent:
-                case Relationship_FieldIndex.Child:
-                case Relationship_FieldIndex.Rank:
-                case Relationship_FieldIndex.Unknown:
-                case Relationship_FieldIndex.Flags:
-                case Relationship_FieldIndex.AssociationType:
-                case Relationship_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Relationship_FieldIndex enu = (Relationship_FieldIndex)index;
-            switch (enu)
-            {
-                case Relationship_FieldIndex.Parent:
-                    return "Parent";
-                case Relationship_FieldIndex.Child:
-                    return "Child";
-                case Relationship_FieldIndex.Rank:
-                    return "Rank";
-                case Relationship_FieldIndex.Unknown:
-                    return "Unknown";
-                case Relationship_FieldIndex.Flags:
-                    return "Flags";
-                case Relationship_FieldIndex.AssociationType:
-                    return "AssociationType";
-                case Relationship_FieldIndex.DATADataTypeState:
-                    return "DATADataTypeState";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Relationship_FieldIndex enu = (Relationship_FieldIndex)index;
-            switch (enu)
-            {
-                case Relationship_FieldIndex.Parent:
-                case Relationship_FieldIndex.Child:
-                case Relationship_FieldIndex.Rank:
-                case Relationship_FieldIndex.Unknown:
-                case Relationship_FieldIndex.Flags:
-                case Relationship_FieldIndex.AssociationType:
-                case Relationship_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Relationship_FieldIndex enu = (Relationship_FieldIndex)index;
-            switch (enu)
-            {
-                case Relationship_FieldIndex.Parent:
-                case Relationship_FieldIndex.Child:
-                case Relationship_FieldIndex.Rank:
-                case Relationship_FieldIndex.Unknown:
-                case Relationship_FieldIndex.Flags:
-                case Relationship_FieldIndex.AssociationType:
-                case Relationship_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Relationship_FieldIndex enu = (Relationship_FieldIndex)index;
-            switch (enu)
-            {
-                case Relationship_FieldIndex.Parent:
-                    return typeof(FormLink<Npc>);
-                case Relationship_FieldIndex.Child:
-                    return typeof(FormLink<Npc>);
-                case Relationship_FieldIndex.Rank:
-                    return typeof(Relationship.RankType);
-                case Relationship_FieldIndex.Unknown:
-                    return typeof(Byte);
-                case Relationship_FieldIndex.Flags:
-                    return typeof(Relationship.Flag);
-                case Relationship_FieldIndex.AssociationType:
-                    return typeof(FormLink<AssociationType>);
-                case Relationship_FieldIndex.DATADataTypeState:
-                    return typeof(Relationship.DATADataType);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.RELA;
         public static readonly Type BinaryWriteTranslation = typeof(RelationshipBinaryWriteTranslation);
         #region Interface
@@ -1059,14 +892,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1082,12 +915,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IRelationshipInternal item)
         {
             ClearPartial();
-            item.Parent = FormLink<Npc>.Null;
-            item.Child = FormLink<Npc>.Null;
+            item.Parent = FormLink<INpcGetter>.Null;
+            item.Child = FormLink<INpcGetter>.Null;
             item.Rank = default;
             item.Unknown = default;
             item.Flags = default;
-            item.AssociationType = FormLink<AssociationType>.Null;
+            item.AssociationType = FormLink<IAssociationTypeGetter>.Null;
             item.DATADataTypeState = default;
             base.Clear(item);
         }
@@ -1423,11 +1256,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.Parent) ?? true))
             {
-                item.Parent = new FormLink<Npc>(rhs.Parent.FormKey);
+                item.Parent = new FormLink<INpcGetter>(rhs.Parent.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.Child) ?? true))
             {
-                item.Child = new FormLink<Npc>(rhs.Child.FormKey);
+                item.Child = new FormLink<INpcGetter>(rhs.Child.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.Rank) ?? true))
             {
@@ -1443,7 +1276,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.AssociationType) ?? true))
             {
-                item.AssociationType = new FormLink<AssociationType>(rhs.AssociationType.FormKey);
+                item.AssociationType = new FormLink<IAssociationTypeGetter>(rhs.AssociationType.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.DATADataTypeState) ?? true))
             {

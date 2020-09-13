@@ -40,9 +40,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Perk
-        public FormLink<Perk> Perk { get; set; } = new FormLink<Perk>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IPerkGetter> IActorValuePerkNodeGetter.Perk => this.Perk.ToGetter<Perk, IPerkGetter>();
+        public FormLink<IPerkGetter> Perk { get; set; } = new FormLink<IPerkGetter>();
         #endregion
         #region FNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -76,14 +74,12 @@ namespace Mutagen.Bethesda.Skyrim
         Single? IActorValuePerkNodeGetter.VerticalPosition => this.VerticalPosition;
         #endregion
         #region AssociatedSkill
-        public FormLinkNullable<ActorValueInformation> AssociatedSkill { get; set; } = new FormLinkNullable<ActorValueInformation>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IActorValueInformationGetter> IActorValuePerkNodeGetter.AssociatedSkill => this.AssociatedSkill.ToGetter<ActorValueInformation, IActorValueInformationGetter>();
+        public FormLinkNullable<IActorValueInformationGetter> AssociatedSkill { get; set; } = new FormLinkNullable<IActorValueInformationGetter>();
         #endregion
         #region ConnectionLineToIndices
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<UInt32> _ConnectionLineToIndices = new ExtendedList<UInt32>();
-        public IExtendedList<UInt32> ConnectionLineToIndices
+        private ExtendedList<UInt32> _ConnectionLineToIndices = new ExtendedList<UInt32>();
+        public ExtendedList<UInt32> ConnectionLineToIndices
         {
             get => this._ConnectionLineToIndices;
             protected set => this._ConnectionLineToIndices = value;
@@ -772,14 +768,14 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IActorValuePerkNode>,
         ILinkedFormKeyContainer
     {
-        new FormLink<Perk> Perk { get; set; }
+        new FormLink<IPerkGetter> Perk { get; set; }
         new MemorySlice<Byte>? FNAM { get; set; }
         new UInt32? PerkGridX { get; set; }
         new UInt32? PerkGridY { get; set; }
         new Single? HorizontalPosition { get; set; }
         new Single? VerticalPosition { get; set; }
-        new FormLinkNullable<ActorValueInformation> AssociatedSkill { get; set; }
-        new IExtendedList<UInt32> ConnectionLineToIndices { get; }
+        new FormLinkNullable<IActorValueInformationGetter> AssociatedSkill { get; set; }
+        new ExtendedList<UInt32> ConnectionLineToIndices { get; }
         new UInt32? Index { get; set; }
     }
 
@@ -1026,190 +1022,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "PERK":
-                    return (ushort)ActorValuePerkNode_FieldIndex.Perk;
-                case "FNAM":
-                    return (ushort)ActorValuePerkNode_FieldIndex.FNAM;
-                case "PERKGRIDX":
-                    return (ushort)ActorValuePerkNode_FieldIndex.PerkGridX;
-                case "PERKGRIDY":
-                    return (ushort)ActorValuePerkNode_FieldIndex.PerkGridY;
-                case "HORIZONTALPOSITION":
-                    return (ushort)ActorValuePerkNode_FieldIndex.HorizontalPosition;
-                case "VERTICALPOSITION":
-                    return (ushort)ActorValuePerkNode_FieldIndex.VerticalPosition;
-                case "ASSOCIATEDSKILL":
-                    return (ushort)ActorValuePerkNode_FieldIndex.AssociatedSkill;
-                case "CONNECTIONLINETOINDICES":
-                    return (ushort)ActorValuePerkNode_FieldIndex.ConnectionLineToIndices;
-                case "INDEX":
-                    return (ushort)ActorValuePerkNode_FieldIndex.Index;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            ActorValuePerkNode_FieldIndex enu = (ActorValuePerkNode_FieldIndex)index;
-            switch (enu)
-            {
-                case ActorValuePerkNode_FieldIndex.ConnectionLineToIndices:
-                    return true;
-                case ActorValuePerkNode_FieldIndex.Perk:
-                case ActorValuePerkNode_FieldIndex.FNAM:
-                case ActorValuePerkNode_FieldIndex.PerkGridX:
-                case ActorValuePerkNode_FieldIndex.PerkGridY:
-                case ActorValuePerkNode_FieldIndex.HorizontalPosition:
-                case ActorValuePerkNode_FieldIndex.VerticalPosition:
-                case ActorValuePerkNode_FieldIndex.AssociatedSkill:
-                case ActorValuePerkNode_FieldIndex.Index:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            ActorValuePerkNode_FieldIndex enu = (ActorValuePerkNode_FieldIndex)index;
-            switch (enu)
-            {
-                case ActorValuePerkNode_FieldIndex.Perk:
-                case ActorValuePerkNode_FieldIndex.FNAM:
-                case ActorValuePerkNode_FieldIndex.PerkGridX:
-                case ActorValuePerkNode_FieldIndex.PerkGridY:
-                case ActorValuePerkNode_FieldIndex.HorizontalPosition:
-                case ActorValuePerkNode_FieldIndex.VerticalPosition:
-                case ActorValuePerkNode_FieldIndex.AssociatedSkill:
-                case ActorValuePerkNode_FieldIndex.ConnectionLineToIndices:
-                case ActorValuePerkNode_FieldIndex.Index:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            ActorValuePerkNode_FieldIndex enu = (ActorValuePerkNode_FieldIndex)index;
-            switch (enu)
-            {
-                case ActorValuePerkNode_FieldIndex.Perk:
-                case ActorValuePerkNode_FieldIndex.FNAM:
-                case ActorValuePerkNode_FieldIndex.PerkGridX:
-                case ActorValuePerkNode_FieldIndex.PerkGridY:
-                case ActorValuePerkNode_FieldIndex.HorizontalPosition:
-                case ActorValuePerkNode_FieldIndex.VerticalPosition:
-                case ActorValuePerkNode_FieldIndex.AssociatedSkill:
-                case ActorValuePerkNode_FieldIndex.ConnectionLineToIndices:
-                case ActorValuePerkNode_FieldIndex.Index:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            ActorValuePerkNode_FieldIndex enu = (ActorValuePerkNode_FieldIndex)index;
-            switch (enu)
-            {
-                case ActorValuePerkNode_FieldIndex.Perk:
-                    return "Perk";
-                case ActorValuePerkNode_FieldIndex.FNAM:
-                    return "FNAM";
-                case ActorValuePerkNode_FieldIndex.PerkGridX:
-                    return "PerkGridX";
-                case ActorValuePerkNode_FieldIndex.PerkGridY:
-                    return "PerkGridY";
-                case ActorValuePerkNode_FieldIndex.HorizontalPosition:
-                    return "HorizontalPosition";
-                case ActorValuePerkNode_FieldIndex.VerticalPosition:
-                    return "VerticalPosition";
-                case ActorValuePerkNode_FieldIndex.AssociatedSkill:
-                    return "AssociatedSkill";
-                case ActorValuePerkNode_FieldIndex.ConnectionLineToIndices:
-                    return "ConnectionLineToIndices";
-                case ActorValuePerkNode_FieldIndex.Index:
-                    return "Index";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            ActorValuePerkNode_FieldIndex enu = (ActorValuePerkNode_FieldIndex)index;
-            switch (enu)
-            {
-                case ActorValuePerkNode_FieldIndex.Perk:
-                case ActorValuePerkNode_FieldIndex.FNAM:
-                case ActorValuePerkNode_FieldIndex.PerkGridX:
-                case ActorValuePerkNode_FieldIndex.PerkGridY:
-                case ActorValuePerkNode_FieldIndex.HorizontalPosition:
-                case ActorValuePerkNode_FieldIndex.VerticalPosition:
-                case ActorValuePerkNode_FieldIndex.AssociatedSkill:
-                case ActorValuePerkNode_FieldIndex.ConnectionLineToIndices:
-                case ActorValuePerkNode_FieldIndex.Index:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            ActorValuePerkNode_FieldIndex enu = (ActorValuePerkNode_FieldIndex)index;
-            switch (enu)
-            {
-                case ActorValuePerkNode_FieldIndex.Perk:
-                case ActorValuePerkNode_FieldIndex.FNAM:
-                case ActorValuePerkNode_FieldIndex.PerkGridX:
-                case ActorValuePerkNode_FieldIndex.PerkGridY:
-                case ActorValuePerkNode_FieldIndex.HorizontalPosition:
-                case ActorValuePerkNode_FieldIndex.VerticalPosition:
-                case ActorValuePerkNode_FieldIndex.AssociatedSkill:
-                case ActorValuePerkNode_FieldIndex.ConnectionLineToIndices:
-                case ActorValuePerkNode_FieldIndex.Index:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            ActorValuePerkNode_FieldIndex enu = (ActorValuePerkNode_FieldIndex)index;
-            switch (enu)
-            {
-                case ActorValuePerkNode_FieldIndex.Perk:
-                    return typeof(FormLink<Perk>);
-                case ActorValuePerkNode_FieldIndex.FNAM:
-                    return typeof(MemorySlice<Byte>);
-                case ActorValuePerkNode_FieldIndex.PerkGridX:
-                    return typeof(UInt32);
-                case ActorValuePerkNode_FieldIndex.PerkGridY:
-                    return typeof(UInt32);
-                case ActorValuePerkNode_FieldIndex.HorizontalPosition:
-                    return typeof(Single);
-                case ActorValuePerkNode_FieldIndex.VerticalPosition:
-                    return typeof(Single);
-                case ActorValuePerkNode_FieldIndex.AssociatedSkill:
-                    return typeof(FormLinkNullable<ActorValueInformation>);
-                case ActorValuePerkNode_FieldIndex.ConnectionLineToIndices:
-                    return typeof(IExtendedList<UInt32>);
-                case ActorValuePerkNode_FieldIndex.Index:
-                    return typeof(UInt32);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.PNAM;
         public static readonly Type BinaryWriteTranslation = typeof(ActorValuePerkNodeBinaryWriteTranslation);
         #region Interface
@@ -1230,14 +1042,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1253,13 +1065,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IActorValuePerkNode item)
         {
             ClearPartial();
-            item.Perk = FormLink<Perk>.Null;
+            item.Perk = FormLink<IPerkGetter>.Null;
             item.FNAM = default;
             item.PerkGridX = default;
             item.PerkGridY = default;
             item.HorizontalPosition = default;
             item.VerticalPosition = default;
-            item.AssociatedSkill = FormLinkNullable<ActorValueInformation>.Null;
+            item.AssociatedSkill = FormLinkNullable<IActorValueInformationGetter>.Null;
             item.ConnectionLineToIndices.Clear();
             item.Index = default;
         }
@@ -1511,7 +1323,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.Perk) ?? true))
             {
-                item.Perk = new FormLink<Perk>(rhs.Perk.FormKey);
+                item.Perk = new FormLink<IPerkGetter>(rhs.Perk.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.FNAM) ?? true))
             {
@@ -1542,7 +1354,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.AssociatedSkill) ?? true))
             {
-                item.AssociatedSkill = new FormLinkNullable<ActorValueInformation>(rhs.AssociatedSkill.FormKey);
+                item.AssociatedSkill = new FormLinkNullable<IActorValueInformationGetter>(rhs.AssociatedSkill.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.ConnectionLineToIndices) ?? true))
             {

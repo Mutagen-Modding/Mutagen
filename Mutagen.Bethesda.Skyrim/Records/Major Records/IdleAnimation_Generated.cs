@@ -44,8 +44,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public IExtendedList<Condition> Conditions
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -68,8 +68,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RelatedIdles
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IIdleRelation>> _RelatedIdles = new ExtendedList<IFormLink<IIdleRelation>>();
-        public IExtendedList<IFormLink<IIdleRelation>> RelatedIdles
+        private ExtendedList<IFormLink<IIdleRelationGetter>> _RelatedIdles = new ExtendedList<IFormLink<IIdleRelationGetter>>();
+        public ExtendedList<IFormLink<IIdleRelationGetter>> RelatedIdles
         {
             get => this._RelatedIdles;
             protected set => this._RelatedIdles = value;
@@ -897,10 +897,10 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IIdleAnimationInternal>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<Condition> Conditions { get; }
+        new ExtendedList<Condition> Conditions { get; }
         new String? Filename { get; set; }
         new String? AnimationEvent { get; set; }
-        new IExtendedList<IFormLink<IIdleRelation>> RelatedIdles { get; }
+        new ExtendedList<IFormLink<IIdleRelationGetter>> RelatedIdles { get; }
         new Byte LoopingSecondsMin { get; set; }
         new Byte LoopingSecondsMax { get; set; }
         new IdleAnimation.Flag Flags { get; set; }
@@ -1137,202 +1137,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "CONDITIONS":
-                    return (ushort)IdleAnimation_FieldIndex.Conditions;
-                case "FILENAME":
-                    return (ushort)IdleAnimation_FieldIndex.Filename;
-                case "ANIMATIONEVENT":
-                    return (ushort)IdleAnimation_FieldIndex.AnimationEvent;
-                case "RELATEDIDLES":
-                    return (ushort)IdleAnimation_FieldIndex.RelatedIdles;
-                case "LOOPINGSECONDSMIN":
-                    return (ushort)IdleAnimation_FieldIndex.LoopingSecondsMin;
-                case "LOOPINGSECONDSMAX":
-                    return (ushort)IdleAnimation_FieldIndex.LoopingSecondsMax;
-                case "FLAGS":
-                    return (ushort)IdleAnimation_FieldIndex.Flags;
-                case "ANIMATIONGROUPSECTION":
-                    return (ushort)IdleAnimation_FieldIndex.AnimationGroupSection;
-                case "REPLAYDELAY":
-                    return (ushort)IdleAnimation_FieldIndex.ReplayDelay;
-                case "DATADATATYPESTATE":
-                    return (ushort)IdleAnimation_FieldIndex.DATADataTypeState;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            IdleAnimation_FieldIndex enu = (IdleAnimation_FieldIndex)index;
-            switch (enu)
-            {
-                case IdleAnimation_FieldIndex.Conditions:
-                case IdleAnimation_FieldIndex.RelatedIdles:
-                    return true;
-                case IdleAnimation_FieldIndex.Filename:
-                case IdleAnimation_FieldIndex.AnimationEvent:
-                case IdleAnimation_FieldIndex.LoopingSecondsMin:
-                case IdleAnimation_FieldIndex.LoopingSecondsMax:
-                case IdleAnimation_FieldIndex.Flags:
-                case IdleAnimation_FieldIndex.AnimationGroupSection:
-                case IdleAnimation_FieldIndex.ReplayDelay:
-                case IdleAnimation_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            IdleAnimation_FieldIndex enu = (IdleAnimation_FieldIndex)index;
-            switch (enu)
-            {
-                case IdleAnimation_FieldIndex.Conditions:
-                    return true;
-                case IdleAnimation_FieldIndex.Filename:
-                case IdleAnimation_FieldIndex.AnimationEvent:
-                case IdleAnimation_FieldIndex.RelatedIdles:
-                case IdleAnimation_FieldIndex.LoopingSecondsMin:
-                case IdleAnimation_FieldIndex.LoopingSecondsMax:
-                case IdleAnimation_FieldIndex.Flags:
-                case IdleAnimation_FieldIndex.AnimationGroupSection:
-                case IdleAnimation_FieldIndex.ReplayDelay:
-                case IdleAnimation_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            IdleAnimation_FieldIndex enu = (IdleAnimation_FieldIndex)index;
-            switch (enu)
-            {
-                case IdleAnimation_FieldIndex.Conditions:
-                case IdleAnimation_FieldIndex.Filename:
-                case IdleAnimation_FieldIndex.AnimationEvent:
-                case IdleAnimation_FieldIndex.RelatedIdles:
-                case IdleAnimation_FieldIndex.LoopingSecondsMin:
-                case IdleAnimation_FieldIndex.LoopingSecondsMax:
-                case IdleAnimation_FieldIndex.Flags:
-                case IdleAnimation_FieldIndex.AnimationGroupSection:
-                case IdleAnimation_FieldIndex.ReplayDelay:
-                case IdleAnimation_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            IdleAnimation_FieldIndex enu = (IdleAnimation_FieldIndex)index;
-            switch (enu)
-            {
-                case IdleAnimation_FieldIndex.Conditions:
-                    return "Conditions";
-                case IdleAnimation_FieldIndex.Filename:
-                    return "Filename";
-                case IdleAnimation_FieldIndex.AnimationEvent:
-                    return "AnimationEvent";
-                case IdleAnimation_FieldIndex.RelatedIdles:
-                    return "RelatedIdles";
-                case IdleAnimation_FieldIndex.LoopingSecondsMin:
-                    return "LoopingSecondsMin";
-                case IdleAnimation_FieldIndex.LoopingSecondsMax:
-                    return "LoopingSecondsMax";
-                case IdleAnimation_FieldIndex.Flags:
-                    return "Flags";
-                case IdleAnimation_FieldIndex.AnimationGroupSection:
-                    return "AnimationGroupSection";
-                case IdleAnimation_FieldIndex.ReplayDelay:
-                    return "ReplayDelay";
-                case IdleAnimation_FieldIndex.DATADataTypeState:
-                    return "DATADataTypeState";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            IdleAnimation_FieldIndex enu = (IdleAnimation_FieldIndex)index;
-            switch (enu)
-            {
-                case IdleAnimation_FieldIndex.Conditions:
-                case IdleAnimation_FieldIndex.Filename:
-                case IdleAnimation_FieldIndex.AnimationEvent:
-                case IdleAnimation_FieldIndex.RelatedIdles:
-                case IdleAnimation_FieldIndex.LoopingSecondsMin:
-                case IdleAnimation_FieldIndex.LoopingSecondsMax:
-                case IdleAnimation_FieldIndex.Flags:
-                case IdleAnimation_FieldIndex.AnimationGroupSection:
-                case IdleAnimation_FieldIndex.ReplayDelay:
-                case IdleAnimation_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            IdleAnimation_FieldIndex enu = (IdleAnimation_FieldIndex)index;
-            switch (enu)
-            {
-                case IdleAnimation_FieldIndex.Conditions:
-                case IdleAnimation_FieldIndex.Filename:
-                case IdleAnimation_FieldIndex.AnimationEvent:
-                case IdleAnimation_FieldIndex.RelatedIdles:
-                case IdleAnimation_FieldIndex.LoopingSecondsMin:
-                case IdleAnimation_FieldIndex.LoopingSecondsMax:
-                case IdleAnimation_FieldIndex.Flags:
-                case IdleAnimation_FieldIndex.AnimationGroupSection:
-                case IdleAnimation_FieldIndex.ReplayDelay:
-                case IdleAnimation_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            IdleAnimation_FieldIndex enu = (IdleAnimation_FieldIndex)index;
-            switch (enu)
-            {
-                case IdleAnimation_FieldIndex.Conditions:
-                    return typeof(IExtendedList<Condition>);
-                case IdleAnimation_FieldIndex.Filename:
-                    return typeof(String);
-                case IdleAnimation_FieldIndex.AnimationEvent:
-                    return typeof(String);
-                case IdleAnimation_FieldIndex.RelatedIdles:
-                    return typeof(IExtendedList<IFormLink<IIdleRelation>>);
-                case IdleAnimation_FieldIndex.LoopingSecondsMin:
-                    return typeof(Byte);
-                case IdleAnimation_FieldIndex.LoopingSecondsMax:
-                    return typeof(Byte);
-                case IdleAnimation_FieldIndex.Flags:
-                    return typeof(IdleAnimation.Flag);
-                case IdleAnimation_FieldIndex.AnimationGroupSection:
-                    return typeof(Byte);
-                case IdleAnimation_FieldIndex.ReplayDelay:
-                    return typeof(UInt16);
-                case IdleAnimation_FieldIndex.DATADataTypeState:
-                    return typeof(IdleAnimation.DATADataType);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.IDLE;
         public static readonly Type BinaryWriteTranslation = typeof(IdleAnimationBinaryWriteTranslation);
         #region Interface
@@ -1353,14 +1157,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1826,7 +1630,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.RelatedIdles.SetTo(
                         rhs.RelatedIdles
-                        .Select(r => (IFormLink<IIdleRelation>)new FormLink<IIdleRelation>(r.FormKey)));
+                        .Select(r => (IFormLink<IIdleRelationGetter>)new FormLink<IIdleRelationGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2186,7 +1990,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RelatedIdles.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IIdleRelation>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IIdleRelationGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)IdleAnimation_FieldIndex.RelatedIdles;

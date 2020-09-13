@@ -40,14 +40,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Origin
-        public FormLink<PlacedObject> Origin { get; set; } = new FormLink<PlacedObject>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IPlacedObjectGetter> IPortalGetter.Origin => this.Origin.ToGetter<PlacedObject, IPlacedObjectGetter>();
+        public FormLink<IPlacedObjectGetter> Origin { get; set; } = new FormLink<IPlacedObjectGetter>();
         #endregion
         #region Destination
-        public FormLink<PlacedObject> Destination { get; set; } = new FormLink<PlacedObject>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IPlacedObjectGetter> IPortalGetter.Destination => this.Destination.ToGetter<PlacedObject, IPlacedObjectGetter>();
+        public FormLink<IPlacedObjectGetter> Destination { get; set; } = new FormLink<IPlacedObjectGetter>();
         #endregion
 
         #region To String
@@ -452,8 +448,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPortal>,
         ILinkedFormKeyContainer
     {
-        new FormLink<PlacedObject> Origin { get; set; }
-        new FormLink<PlacedObject> Destination { get; set; }
+        new FormLink<IPlacedObjectGetter> Origin { get; set; }
+        new FormLink<IPlacedObjectGetter> Destination { get; set; }
     }
 
     public partial interface IPortalGetter :
@@ -685,112 +681,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "ORIGIN":
-                    return (ushort)Portal_FieldIndex.Origin;
-                case "DESTINATION":
-                    return (ushort)Portal_FieldIndex.Destination;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Portal_FieldIndex enu = (Portal_FieldIndex)index;
-            switch (enu)
-            {
-                case Portal_FieldIndex.Origin:
-                case Portal_FieldIndex.Destination:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Portal_FieldIndex enu = (Portal_FieldIndex)index;
-            switch (enu)
-            {
-                case Portal_FieldIndex.Origin:
-                case Portal_FieldIndex.Destination:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Portal_FieldIndex enu = (Portal_FieldIndex)index;
-            switch (enu)
-            {
-                case Portal_FieldIndex.Origin:
-                case Portal_FieldIndex.Destination:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Portal_FieldIndex enu = (Portal_FieldIndex)index;
-            switch (enu)
-            {
-                case Portal_FieldIndex.Origin:
-                    return "Origin";
-                case Portal_FieldIndex.Destination:
-                    return "Destination";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Portal_FieldIndex enu = (Portal_FieldIndex)index;
-            switch (enu)
-            {
-                case Portal_FieldIndex.Origin:
-                case Portal_FieldIndex.Destination:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Portal_FieldIndex enu = (Portal_FieldIndex)index;
-            switch (enu)
-            {
-                case Portal_FieldIndex.Origin:
-                case Portal_FieldIndex.Destination:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Portal_FieldIndex enu = (Portal_FieldIndex)index;
-            switch (enu)
-            {
-                case Portal_FieldIndex.Origin:
-                    return typeof(FormLink<PlacedObject>);
-                case Portal_FieldIndex.Destination:
-                    return typeof(FormLink<PlacedObject>);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly Type BinaryWriteTranslation = typeof(PortalBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -810,14 +700,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -833,8 +723,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IPortal item)
         {
             ClearPartial();
-            item.Origin = FormLink<PlacedObject>.Null;
-            item.Destination = FormLink<PlacedObject>.Null;
+            item.Origin = FormLink<IPlacedObjectGetter>.Null;
+            item.Destination = FormLink<IPlacedObjectGetter>.Null;
         }
         
         #region Binary Translation
@@ -990,11 +880,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)Portal_FieldIndex.Origin) ?? true))
             {
-                item.Origin = new FormLink<PlacedObject>(rhs.Origin.FormKey);
+                item.Origin = new FormLink<IPlacedObjectGetter>(rhs.Origin.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Portal_FieldIndex.Destination) ?? true))
             {
-                item.Destination = new FormLink<PlacedObject>(rhs.Destination.FormKey);
+                item.Destination = new FormLink<IPlacedObjectGetter>(rhs.Destination.FormKey);
             }
         }
         

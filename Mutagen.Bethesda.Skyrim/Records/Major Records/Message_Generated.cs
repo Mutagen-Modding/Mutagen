@@ -62,9 +62,7 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte> IMessageGetter.INAM => this.INAM;
         #endregion
         #region Quest
-        public FormLinkNullable<Quest> Quest { get; set; } = new FormLinkNullable<Quest>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IQuestGetter> IMessageGetter.Quest => this.Quest.ToGetter<Quest, IQuestGetter>();
+        public FormLinkNullable<IQuestGetter> Quest { get; set; } = new FormLinkNullable<IQuestGetter>();
         #endregion
         #region Flags
         public Message.Flag Flags { get; set; } = default;
@@ -76,8 +74,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MenuButtons
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<MessageButton> _MenuButtons = new ExtendedList<MessageButton>();
-        public IExtendedList<MessageButton> MenuButtons
+        private ExtendedList<MessageButton> _MenuButtons = new ExtendedList<MessageButton>();
+        public ExtendedList<MessageButton> MenuButtons
         {
             get => this._MenuButtons;
             protected set => this._MenuButtons = value;
@@ -729,10 +727,10 @@ namespace Mutagen.Bethesda.Skyrim
         new TranslatedString Description { get; set; }
         new TranslatedString? Name { get; set; }
         new MemorySlice<Byte> INAM { get; set; }
-        new FormLinkNullable<Quest> Quest { get; set; }
+        new FormLinkNullable<IQuestGetter> Quest { get; set; }
         new Message.Flag Flags { get; set; }
         new UInt32? DisplayTime { get; set; }
-        new IExtendedList<MessageButton> MenuButtons { get; }
+        new ExtendedList<MessageButton> MenuButtons { get; }
     }
 
     public partial interface IMessageInternal :
@@ -957,169 +955,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "DESCRIPTION":
-                    return (ushort)Message_FieldIndex.Description;
-                case "NAME":
-                    return (ushort)Message_FieldIndex.Name;
-                case "INAM":
-                    return (ushort)Message_FieldIndex.INAM;
-                case "QUEST":
-                    return (ushort)Message_FieldIndex.Quest;
-                case "FLAGS":
-                    return (ushort)Message_FieldIndex.Flags;
-                case "DISPLAYTIME":
-                    return (ushort)Message_FieldIndex.DisplayTime;
-                case "MENUBUTTONS":
-                    return (ushort)Message_FieldIndex.MenuButtons;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Message_FieldIndex enu = (Message_FieldIndex)index;
-            switch (enu)
-            {
-                case Message_FieldIndex.MenuButtons:
-                    return true;
-                case Message_FieldIndex.Description:
-                case Message_FieldIndex.Name:
-                case Message_FieldIndex.INAM:
-                case Message_FieldIndex.Quest:
-                case Message_FieldIndex.Flags:
-                case Message_FieldIndex.DisplayTime:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Message_FieldIndex enu = (Message_FieldIndex)index;
-            switch (enu)
-            {
-                case Message_FieldIndex.MenuButtons:
-                    return true;
-                case Message_FieldIndex.Description:
-                case Message_FieldIndex.Name:
-                case Message_FieldIndex.INAM:
-                case Message_FieldIndex.Quest:
-                case Message_FieldIndex.Flags:
-                case Message_FieldIndex.DisplayTime:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Message_FieldIndex enu = (Message_FieldIndex)index;
-            switch (enu)
-            {
-                case Message_FieldIndex.Description:
-                case Message_FieldIndex.Name:
-                case Message_FieldIndex.INAM:
-                case Message_FieldIndex.Quest:
-                case Message_FieldIndex.Flags:
-                case Message_FieldIndex.DisplayTime:
-                case Message_FieldIndex.MenuButtons:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Message_FieldIndex enu = (Message_FieldIndex)index;
-            switch (enu)
-            {
-                case Message_FieldIndex.Description:
-                    return "Description";
-                case Message_FieldIndex.Name:
-                    return "Name";
-                case Message_FieldIndex.INAM:
-                    return "INAM";
-                case Message_FieldIndex.Quest:
-                    return "Quest";
-                case Message_FieldIndex.Flags:
-                    return "Flags";
-                case Message_FieldIndex.DisplayTime:
-                    return "DisplayTime";
-                case Message_FieldIndex.MenuButtons:
-                    return "MenuButtons";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Message_FieldIndex enu = (Message_FieldIndex)index;
-            switch (enu)
-            {
-                case Message_FieldIndex.Description:
-                case Message_FieldIndex.Name:
-                case Message_FieldIndex.INAM:
-                case Message_FieldIndex.Quest:
-                case Message_FieldIndex.Flags:
-                case Message_FieldIndex.DisplayTime:
-                case Message_FieldIndex.MenuButtons:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Message_FieldIndex enu = (Message_FieldIndex)index;
-            switch (enu)
-            {
-                case Message_FieldIndex.Description:
-                case Message_FieldIndex.Name:
-                case Message_FieldIndex.INAM:
-                case Message_FieldIndex.Quest:
-                case Message_FieldIndex.Flags:
-                case Message_FieldIndex.DisplayTime:
-                case Message_FieldIndex.MenuButtons:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Message_FieldIndex enu = (Message_FieldIndex)index;
-            switch (enu)
-            {
-                case Message_FieldIndex.Description:
-                    return typeof(TranslatedString);
-                case Message_FieldIndex.Name:
-                    return typeof(TranslatedString);
-                case Message_FieldIndex.INAM:
-                    return typeof(MemorySlice<Byte>);
-                case Message_FieldIndex.Quest:
-                    return typeof(FormLinkNullable<Quest>);
-                case Message_FieldIndex.Flags:
-                    return typeof(Message.Flag);
-                case Message_FieldIndex.DisplayTime:
-                    return typeof(UInt32);
-                case Message_FieldIndex.MenuButtons:
-                    return typeof(IExtendedList<MessageButton>);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.MESG;
         public static readonly Type BinaryWriteTranslation = typeof(MessageBinaryWriteTranslation);
         #region Interface
@@ -1140,14 +975,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1166,7 +1001,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Description.Clear();
             item.Name = default;
             item.INAM = new byte[0];
-            item.Quest = FormLinkNullable<Quest>.Null;
+            item.Quest = FormLinkNullable<IQuestGetter>.Null;
             item.Flags = default;
             item.DisplayTime = default;
             item.MenuButtons.Clear();
@@ -1547,7 +1382,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Message_FieldIndex.Quest) ?? true))
             {
-                item.Quest = new FormLinkNullable<Quest>(rhs.Quest.FormKey);
+                item.Quest = new FormLinkNullable<IQuestGetter>(rhs.Quest.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Message_FieldIndex.Flags) ?? true))
             {

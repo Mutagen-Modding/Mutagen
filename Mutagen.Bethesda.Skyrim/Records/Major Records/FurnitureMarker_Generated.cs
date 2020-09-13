@@ -55,9 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
         IEntryPointsGetter? IFurnitureMarkerGetter.DisabledEntryPoints => this.DisabledEntryPoints;
         #endregion
         #region MarkerKeyword
-        public FormLinkNullable<Keyword> MarkerKeyword { get; set; } = new FormLinkNullable<Keyword>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IKeywordGetter> IFurnitureMarkerGetter.MarkerKeyword => this.MarkerKeyword.ToGetter<Keyword, IKeywordGetter>();
+        public FormLinkNullable<IKeywordGetter> MarkerKeyword { get; set; } = new FormLinkNullable<IKeywordGetter>();
         #endregion
         #region EntryPoints
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -545,7 +543,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Boolean Enabled { get; set; }
         new EntryPoints? DisabledEntryPoints { get; set; }
-        new FormLinkNullable<Keyword> MarkerKeyword { get; set; }
+        new FormLinkNullable<IKeywordGetter> MarkerKeyword { get; set; }
         new EntryPoints? EntryPoints { get; set; }
     }
 
@@ -782,135 +780,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "ENABLED":
-                    return (ushort)FurnitureMarker_FieldIndex.Enabled;
-                case "DISABLEDENTRYPOINTS":
-                    return (ushort)FurnitureMarker_FieldIndex.DisabledEntryPoints;
-                case "MARKERKEYWORD":
-                    return (ushort)FurnitureMarker_FieldIndex.MarkerKeyword;
-                case "ENTRYPOINTS":
-                    return (ushort)FurnitureMarker_FieldIndex.EntryPoints;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            FurnitureMarker_FieldIndex enu = (FurnitureMarker_FieldIndex)index;
-            switch (enu)
-            {
-                case FurnitureMarker_FieldIndex.Enabled:
-                case FurnitureMarker_FieldIndex.DisabledEntryPoints:
-                case FurnitureMarker_FieldIndex.MarkerKeyword:
-                case FurnitureMarker_FieldIndex.EntryPoints:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            FurnitureMarker_FieldIndex enu = (FurnitureMarker_FieldIndex)index;
-            switch (enu)
-            {
-                case FurnitureMarker_FieldIndex.DisabledEntryPoints:
-                case FurnitureMarker_FieldIndex.EntryPoints:
-                    return true;
-                case FurnitureMarker_FieldIndex.Enabled:
-                case FurnitureMarker_FieldIndex.MarkerKeyword:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            FurnitureMarker_FieldIndex enu = (FurnitureMarker_FieldIndex)index;
-            switch (enu)
-            {
-                case FurnitureMarker_FieldIndex.Enabled:
-                case FurnitureMarker_FieldIndex.DisabledEntryPoints:
-                case FurnitureMarker_FieldIndex.MarkerKeyword:
-                case FurnitureMarker_FieldIndex.EntryPoints:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            FurnitureMarker_FieldIndex enu = (FurnitureMarker_FieldIndex)index;
-            switch (enu)
-            {
-                case FurnitureMarker_FieldIndex.Enabled:
-                    return "Enabled";
-                case FurnitureMarker_FieldIndex.DisabledEntryPoints:
-                    return "DisabledEntryPoints";
-                case FurnitureMarker_FieldIndex.MarkerKeyword:
-                    return "MarkerKeyword";
-                case FurnitureMarker_FieldIndex.EntryPoints:
-                    return "EntryPoints";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            FurnitureMarker_FieldIndex enu = (FurnitureMarker_FieldIndex)index;
-            switch (enu)
-            {
-                case FurnitureMarker_FieldIndex.Enabled:
-                case FurnitureMarker_FieldIndex.DisabledEntryPoints:
-                case FurnitureMarker_FieldIndex.MarkerKeyword:
-                case FurnitureMarker_FieldIndex.EntryPoints:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            FurnitureMarker_FieldIndex enu = (FurnitureMarker_FieldIndex)index;
-            switch (enu)
-            {
-                case FurnitureMarker_FieldIndex.Enabled:
-                case FurnitureMarker_FieldIndex.DisabledEntryPoints:
-                case FurnitureMarker_FieldIndex.MarkerKeyword:
-                case FurnitureMarker_FieldIndex.EntryPoints:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            FurnitureMarker_FieldIndex enu = (FurnitureMarker_FieldIndex)index;
-            switch (enu)
-            {
-                case FurnitureMarker_FieldIndex.Enabled:
-                    return typeof(Boolean);
-                case FurnitureMarker_FieldIndex.DisabledEntryPoints:
-                    return typeof(EntryPoints);
-                case FurnitureMarker_FieldIndex.MarkerKeyword:
-                    return typeof(FormLinkNullable<Keyword>);
-                case FurnitureMarker_FieldIndex.EntryPoints:
-                    return typeof(EntryPoints);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly Type BinaryWriteTranslation = typeof(FurnitureMarkerBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -930,14 +799,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -955,7 +824,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.Enabled = default;
             item.DisabledEntryPoints = null;
-            item.MarkerKeyword = FormLinkNullable<Keyword>.Null;
+            item.MarkerKeyword = FormLinkNullable<IKeywordGetter>.Null;
             item.EntryPoints = null;
         }
         
@@ -1174,7 +1043,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)FurnitureMarker_FieldIndex.MarkerKeyword) ?? true))
             {
-                item.MarkerKeyword = new FormLinkNullable<Keyword>(rhs.MarkerKeyword.FormKey);
+                item.MarkerKeyword = new FormLinkNullable<IKeywordGetter>(rhs.MarkerKeyword.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)FurnitureMarker_FieldIndex.EntryPoints) ?? true))
             {

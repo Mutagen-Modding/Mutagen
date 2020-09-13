@@ -86,14 +86,10 @@ namespace Mutagen.Bethesda.Skyrim
         IDestructibleGetter? IAmmunitionGetter.Destructible => this.Destructible;
         #endregion
         #region PickUpSound
-        public FormLinkNullable<SoundDescriptor> PickUpSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IAmmunitionGetter.PickUpSound => this.PickUpSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region PutDownSound
-        public FormLinkNullable<SoundDescriptor> PutDownSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IAmmunitionGetter.PutDownSound => this.PutDownSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region Description
         public TranslatedString? Description { get; set; }
@@ -102,8 +98,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Keyword>>? _Keywords;
-        public IExtendedList<IFormLink<Keyword>>? Keywords
+        private ExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
+        public ExtendedList<IFormLink<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -115,9 +111,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region Projectile
-        public FormLink<Projectile> Projectile { get; set; } = new FormLink<Projectile>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IProjectileGetter> IAmmunitionGetter.Projectile => this.Projectile.ToGetter<Projectile, IProjectileGetter>();
+        public FormLink<IProjectileGetter> Projectile { get; set; } = new FormLink<IProjectileGetter>();
         #endregion
         #region Flags
         public Ammunition.Flag Flags { get; set; } = default;
@@ -1075,11 +1069,11 @@ namespace Mutagen.Bethesda.Skyrim
         new Model? Model { get; set; }
         new Icons? Icons { get; set; }
         new Destructible? Destructible { get; set; }
-        new FormLinkNullable<SoundDescriptor> PickUpSound { get; set; }
-        new FormLinkNullable<SoundDescriptor> PutDownSound { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; set; }
         new TranslatedString? Description { get; set; }
-        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
-        new FormLink<Projectile> Projectile { get; set; }
+        new ExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
+        new FormLink<IProjectileGetter> Projectile { get; set; }
         new Ammunition.Flag Flags { get; set; }
         new Single Damage { get; set; }
         new UInt32 Value { get; set; }
@@ -1342,268 +1336,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "OBJECTBOUNDS":
-                    return (ushort)Ammunition_FieldIndex.ObjectBounds;
-                case "NAME":
-                    return (ushort)Ammunition_FieldIndex.Name;
-                case "MODEL":
-                    return (ushort)Ammunition_FieldIndex.Model;
-                case "ICONS":
-                    return (ushort)Ammunition_FieldIndex.Icons;
-                case "DESTRUCTIBLE":
-                    return (ushort)Ammunition_FieldIndex.Destructible;
-                case "PICKUPSOUND":
-                    return (ushort)Ammunition_FieldIndex.PickUpSound;
-                case "PUTDOWNSOUND":
-                    return (ushort)Ammunition_FieldIndex.PutDownSound;
-                case "DESCRIPTION":
-                    return (ushort)Ammunition_FieldIndex.Description;
-                case "KEYWORDS":
-                    return (ushort)Ammunition_FieldIndex.Keywords;
-                case "PROJECTILE":
-                    return (ushort)Ammunition_FieldIndex.Projectile;
-                case "FLAGS":
-                    return (ushort)Ammunition_FieldIndex.Flags;
-                case "DAMAGE":
-                    return (ushort)Ammunition_FieldIndex.Damage;
-                case "VALUE":
-                    return (ushort)Ammunition_FieldIndex.Value;
-                case "WEIGHT":
-                    return (ushort)Ammunition_FieldIndex.Weight;
-                case "SHORTNAME":
-                    return (ushort)Ammunition_FieldIndex.ShortName;
-                case "DATADATATYPESTATE":
-                    return (ushort)Ammunition_FieldIndex.DATADataTypeState;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Ammunition_FieldIndex enu = (Ammunition_FieldIndex)index;
-            switch (enu)
-            {
-                case Ammunition_FieldIndex.Keywords:
-                    return true;
-                case Ammunition_FieldIndex.ObjectBounds:
-                case Ammunition_FieldIndex.Name:
-                case Ammunition_FieldIndex.Model:
-                case Ammunition_FieldIndex.Icons:
-                case Ammunition_FieldIndex.Destructible:
-                case Ammunition_FieldIndex.PickUpSound:
-                case Ammunition_FieldIndex.PutDownSound:
-                case Ammunition_FieldIndex.Description:
-                case Ammunition_FieldIndex.Projectile:
-                case Ammunition_FieldIndex.Flags:
-                case Ammunition_FieldIndex.Damage:
-                case Ammunition_FieldIndex.Value:
-                case Ammunition_FieldIndex.Weight:
-                case Ammunition_FieldIndex.ShortName:
-                case Ammunition_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Ammunition_FieldIndex enu = (Ammunition_FieldIndex)index;
-            switch (enu)
-            {
-                case Ammunition_FieldIndex.ObjectBounds:
-                case Ammunition_FieldIndex.Model:
-                case Ammunition_FieldIndex.Icons:
-                case Ammunition_FieldIndex.Destructible:
-                    return true;
-                case Ammunition_FieldIndex.Name:
-                case Ammunition_FieldIndex.PickUpSound:
-                case Ammunition_FieldIndex.PutDownSound:
-                case Ammunition_FieldIndex.Description:
-                case Ammunition_FieldIndex.Keywords:
-                case Ammunition_FieldIndex.Projectile:
-                case Ammunition_FieldIndex.Flags:
-                case Ammunition_FieldIndex.Damage:
-                case Ammunition_FieldIndex.Value:
-                case Ammunition_FieldIndex.Weight:
-                case Ammunition_FieldIndex.ShortName:
-                case Ammunition_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Ammunition_FieldIndex enu = (Ammunition_FieldIndex)index;
-            switch (enu)
-            {
-                case Ammunition_FieldIndex.ObjectBounds:
-                case Ammunition_FieldIndex.Name:
-                case Ammunition_FieldIndex.Model:
-                case Ammunition_FieldIndex.Icons:
-                case Ammunition_FieldIndex.Destructible:
-                case Ammunition_FieldIndex.PickUpSound:
-                case Ammunition_FieldIndex.PutDownSound:
-                case Ammunition_FieldIndex.Description:
-                case Ammunition_FieldIndex.Keywords:
-                case Ammunition_FieldIndex.Projectile:
-                case Ammunition_FieldIndex.Flags:
-                case Ammunition_FieldIndex.Damage:
-                case Ammunition_FieldIndex.Value:
-                case Ammunition_FieldIndex.Weight:
-                case Ammunition_FieldIndex.ShortName:
-                case Ammunition_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Ammunition_FieldIndex enu = (Ammunition_FieldIndex)index;
-            switch (enu)
-            {
-                case Ammunition_FieldIndex.ObjectBounds:
-                    return "ObjectBounds";
-                case Ammunition_FieldIndex.Name:
-                    return "Name";
-                case Ammunition_FieldIndex.Model:
-                    return "Model";
-                case Ammunition_FieldIndex.Icons:
-                    return "Icons";
-                case Ammunition_FieldIndex.Destructible:
-                    return "Destructible";
-                case Ammunition_FieldIndex.PickUpSound:
-                    return "PickUpSound";
-                case Ammunition_FieldIndex.PutDownSound:
-                    return "PutDownSound";
-                case Ammunition_FieldIndex.Description:
-                    return "Description";
-                case Ammunition_FieldIndex.Keywords:
-                    return "Keywords";
-                case Ammunition_FieldIndex.Projectile:
-                    return "Projectile";
-                case Ammunition_FieldIndex.Flags:
-                    return "Flags";
-                case Ammunition_FieldIndex.Damage:
-                    return "Damage";
-                case Ammunition_FieldIndex.Value:
-                    return "Value";
-                case Ammunition_FieldIndex.Weight:
-                    return "Weight";
-                case Ammunition_FieldIndex.ShortName:
-                    return "ShortName";
-                case Ammunition_FieldIndex.DATADataTypeState:
-                    return "DATADataTypeState";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Ammunition_FieldIndex enu = (Ammunition_FieldIndex)index;
-            switch (enu)
-            {
-                case Ammunition_FieldIndex.ObjectBounds:
-                case Ammunition_FieldIndex.Name:
-                case Ammunition_FieldIndex.Model:
-                case Ammunition_FieldIndex.Icons:
-                case Ammunition_FieldIndex.Destructible:
-                case Ammunition_FieldIndex.PickUpSound:
-                case Ammunition_FieldIndex.PutDownSound:
-                case Ammunition_FieldIndex.Description:
-                case Ammunition_FieldIndex.Keywords:
-                case Ammunition_FieldIndex.Projectile:
-                case Ammunition_FieldIndex.Flags:
-                case Ammunition_FieldIndex.Damage:
-                case Ammunition_FieldIndex.Value:
-                case Ammunition_FieldIndex.Weight:
-                case Ammunition_FieldIndex.ShortName:
-                case Ammunition_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Ammunition_FieldIndex enu = (Ammunition_FieldIndex)index;
-            switch (enu)
-            {
-                case Ammunition_FieldIndex.ObjectBounds:
-                case Ammunition_FieldIndex.Name:
-                case Ammunition_FieldIndex.Model:
-                case Ammunition_FieldIndex.Icons:
-                case Ammunition_FieldIndex.Destructible:
-                case Ammunition_FieldIndex.PickUpSound:
-                case Ammunition_FieldIndex.PutDownSound:
-                case Ammunition_FieldIndex.Description:
-                case Ammunition_FieldIndex.Keywords:
-                case Ammunition_FieldIndex.Projectile:
-                case Ammunition_FieldIndex.Flags:
-                case Ammunition_FieldIndex.Damage:
-                case Ammunition_FieldIndex.Value:
-                case Ammunition_FieldIndex.Weight:
-                case Ammunition_FieldIndex.ShortName:
-                case Ammunition_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Ammunition_FieldIndex enu = (Ammunition_FieldIndex)index;
-            switch (enu)
-            {
-                case Ammunition_FieldIndex.ObjectBounds:
-                    return typeof(ObjectBounds);
-                case Ammunition_FieldIndex.Name:
-                    return typeof(TranslatedString);
-                case Ammunition_FieldIndex.Model:
-                    return typeof(Model);
-                case Ammunition_FieldIndex.Icons:
-                    return typeof(Icons);
-                case Ammunition_FieldIndex.Destructible:
-                    return typeof(Destructible);
-                case Ammunition_FieldIndex.PickUpSound:
-                    return typeof(FormLinkNullable<SoundDescriptor>);
-                case Ammunition_FieldIndex.PutDownSound:
-                    return typeof(FormLinkNullable<SoundDescriptor>);
-                case Ammunition_FieldIndex.Description:
-                    return typeof(TranslatedString);
-                case Ammunition_FieldIndex.Keywords:
-                    return typeof(IExtendedList<IFormLink<Keyword>>);
-                case Ammunition_FieldIndex.Projectile:
-                    return typeof(FormLink<Projectile>);
-                case Ammunition_FieldIndex.Flags:
-                    return typeof(Ammunition.Flag);
-                case Ammunition_FieldIndex.Damage:
-                    return typeof(Single);
-                case Ammunition_FieldIndex.Value:
-                    return typeof(UInt32);
-                case Ammunition_FieldIndex.Weight:
-                    return typeof(Single);
-                case Ammunition_FieldIndex.ShortName:
-                    return typeof(String);
-                case Ammunition_FieldIndex.DATADataTypeState:
-                    return typeof(Ammunition.DATADataType);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.AMMO;
         public static readonly Type BinaryWriteTranslation = typeof(AmmunitionBinaryWriteTranslation);
         #region Interface
@@ -1624,14 +1356,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1652,11 +1384,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Model = null;
             item.Icons = null;
             item.Destructible = null;
-            item.PickUpSound = FormLinkNullable<SoundDescriptor>.Null;
-            item.PutDownSound = FormLinkNullable<SoundDescriptor>.Null;
+            item.PickUpSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
+            item.PutDownSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
             item.Description = default;
             item.Keywords = null;
-            item.Projectile = FormLink<Projectile>.Null;
+            item.Projectile = FormLink<IProjectileGetter>.Null;
             item.Flags = default;
             item.Damage = default;
             item.Value = default;
@@ -2245,11 +1977,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.PickUpSound) ?? true))
             {
-                item.PickUpSound = new FormLinkNullable<SoundDescriptor>(rhs.PickUpSound.FormKey);
+                item.PickUpSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.PickUpSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.PutDownSound) ?? true))
             {
-                item.PutDownSound = new FormLinkNullable<SoundDescriptor>(rhs.PutDownSound.FormKey);
+                item.PutDownSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.PutDownSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Description) ?? true))
             {
@@ -2264,8 +1996,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLink<Keyword>)new FormLink<Keyword>(r.FormKey))
-                            .ToExtendedList<IFormLink<Keyword>>();
+                            .Select(r => (IFormLink<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IKeywordGetter>>();
                     }
                     else
                     {
@@ -2284,7 +2016,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Projectile) ?? true))
             {
-                item.Projectile = new FormLink<Projectile>(rhs.Projectile.FormKey);
+                item.Projectile = new FormLink<IProjectileGetter>(rhs.Projectile.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Flags) ?? true))
             {
@@ -2709,13 +2441,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KSIZ:
                 {
                     item.Keywords = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<Keyword>>();
+                        .CastExtendedList<IFormLink<IKeywordGetter>>();
                     return (int)Ammunition_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DATA:

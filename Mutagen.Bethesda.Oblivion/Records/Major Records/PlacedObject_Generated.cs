@@ -43,9 +43,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Base
-        public FormLinkNullable<OblivionMajorRecord> Base { get; set; } = new FormLinkNullable<OblivionMajorRecord>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IOblivionMajorRecordGetter> IPlacedObjectGetter.Base => this.Base.ToGetter<OblivionMajorRecord, IOblivionMajorRecordGetter>();
+        public FormLinkNullable<IOblivionMajorRecordGetter> Base { get; set; } = new FormLinkNullable<IOblivionMajorRecordGetter>();
         #endregion
         #region XPCIFluff
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -92,9 +90,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILockInformationGetter? IPlacedObjectGetter.Lock => this.Lock;
         #endregion
         #region Owner
-        public FormLinkNullable<IOwner> Owner { get; set; } = new FormLinkNullable<IOwner>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IOwnerGetter> IPlacedObjectGetter.Owner => this.Owner.ToGetter<IOwner, IOwnerGetter>();
+        public FormLinkNullable<IOwnerGetter> Owner { get; set; } = new FormLinkNullable<IOwnerGetter>();
         #endregion
         #region FactionRank
         public Int32? FactionRank { get; set; }
@@ -102,9 +98,7 @@ namespace Mutagen.Bethesda.Oblivion
         Int32? IPlacedObjectGetter.FactionRank => this.FactionRank;
         #endregion
         #region GlobalVariable
-        public FormLinkNullable<Global> GlobalVariable { get; set; } = new FormLinkNullable<Global>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IGlobalGetter> IPlacedObjectGetter.GlobalVariable => this.GlobalVariable.ToGetter<Global, IGlobalGetter>();
+        public FormLinkNullable<IGlobalGetter> GlobalVariable { get; set; } = new FormLinkNullable<IGlobalGetter>();
         #endregion
         #region EnableParent
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -118,9 +112,7 @@ namespace Mutagen.Bethesda.Oblivion
         IEnableParentGetter? IPlacedObjectGetter.EnableParent => this.EnableParent;
         #endregion
         #region Target
-        public FormLinkNullable<IPlaced> Target { get; set; } = new FormLinkNullable<IPlaced>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IPlacedGetter> IPlacedObjectGetter.Target => this.Target.ToGetter<IPlaced, IPlacedGetter>();
+        public FormLinkNullable<IPlacedGetter> Target { get; set; } = new FormLinkNullable<IPlacedGetter>();
         #endregion
         #region SpeedTreeSeed
         public Byte? SpeedTreeSeed { get; set; }
@@ -154,9 +146,7 @@ namespace Mutagen.Bethesda.Oblivion
         Int32? IPlacedObjectGetter.LevelModifier => this.LevelModifier;
         #endregion
         #region XRTM
-        public FormLinkNullable<OblivionMajorRecord> XRTM { get; set; } = new FormLinkNullable<OblivionMajorRecord>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IOblivionMajorRecordGetter> IPlacedObjectGetter.XRTM => this.XRTM.ToGetter<OblivionMajorRecord, IOblivionMajorRecordGetter>();
+        public FormLinkNullable<IOblivionMajorRecordGetter> XRTM { get; set; } = new FormLinkNullable<IOblivionMajorRecordGetter>();
         #endregion
         #region ActionFlags
         public PlacedObject.ActionFlag? ActionFlags { get; set; }
@@ -199,9 +189,7 @@ namespace Mutagen.Bethesda.Oblivion
         Single? IPlacedObjectGetter.Scale => this.Scale;
         #endregion
         #region ContainedSoul
-        public FormLinkNullable<SoulGem> ContainedSoul { get; set; } = new FormLinkNullable<SoulGem>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoulGemGetter> IPlacedObjectGetter.ContainedSoul => this.ContainedSoul.ToGetter<SoulGem, ISoulGemGetter>();
+        public FormLinkNullable<ISoulGemGetter> ContainedSoul { get; set; } = new FormLinkNullable<ISoulGemGetter>();
         #endregion
         #region Location
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1293,29 +1281,29 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IPlacedObjectInternal>,
         ILinkedFormKeyContainer
     {
-        new FormLinkNullable<OblivionMajorRecord> Base { get; set; }
+        new FormLinkNullable<IOblivionMajorRecordGetter> Base { get; set; }
         new MemorySlice<Byte>? XPCIFluff { get; set; }
         new MemorySlice<Byte>? FULLFluff { get; set; }
         new TeleportDestination? TeleportDestination { get; set; }
         new LockInformation? Lock { get; set; }
-        new FormLinkNullable<IOwner> Owner { get; set; }
+        new FormLinkNullable<IOwnerGetter> Owner { get; set; }
         new Int32? FactionRank { get; set; }
-        new FormLinkNullable<Global> GlobalVariable { get; set; }
+        new FormLinkNullable<IGlobalGetter> GlobalVariable { get; set; }
         new EnableParent? EnableParent { get; set; }
-        new FormLinkNullable<IPlaced> Target { get; set; }
+        new FormLinkNullable<IPlacedGetter> Target { get; set; }
         new Byte? SpeedTreeSeed { get; set; }
         new DistantLODData? DistantLODData { get; set; }
         new Single? Charge { get; set; }
         new Int32? Health { get; set; }
         new Int32? LevelModifier { get; set; }
-        new FormLinkNullable<OblivionMajorRecord> XRTM { get; set; }
+        new FormLinkNullable<IOblivionMajorRecordGetter> XRTM { get; set; }
         new PlacedObject.ActionFlag? ActionFlags { get; set; }
         new Int32? Count { get; set; }
         new MapMarker? MapMarker { get; set; }
         new Boolean OpenByDefault { get; set; }
         new MemorySlice<Byte>? RagdollData { get; set; }
         new Single? Scale { get; set; }
-        new FormLinkNullable<SoulGem> ContainedSoul { get; set; }
+        new FormLinkNullable<ISoulGemGetter> ContainedSoul { get; set; }
         new Location? Location { get; set; }
     }
 
@@ -1574,355 +1562,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "BASE":
-                    return (ushort)PlacedObject_FieldIndex.Base;
-                case "XPCIFLUFF":
-                    return (ushort)PlacedObject_FieldIndex.XPCIFluff;
-                case "FULLFLUFF":
-                    return (ushort)PlacedObject_FieldIndex.FULLFluff;
-                case "TELEPORTDESTINATION":
-                    return (ushort)PlacedObject_FieldIndex.TeleportDestination;
-                case "LOCK":
-                    return (ushort)PlacedObject_FieldIndex.Lock;
-                case "OWNER":
-                    return (ushort)PlacedObject_FieldIndex.Owner;
-                case "FACTIONRANK":
-                    return (ushort)PlacedObject_FieldIndex.FactionRank;
-                case "GLOBALVARIABLE":
-                    return (ushort)PlacedObject_FieldIndex.GlobalVariable;
-                case "ENABLEPARENT":
-                    return (ushort)PlacedObject_FieldIndex.EnableParent;
-                case "TARGET":
-                    return (ushort)PlacedObject_FieldIndex.Target;
-                case "SPEEDTREESEED":
-                    return (ushort)PlacedObject_FieldIndex.SpeedTreeSeed;
-                case "DISTANTLODDATA":
-                    return (ushort)PlacedObject_FieldIndex.DistantLODData;
-                case "CHARGE":
-                    return (ushort)PlacedObject_FieldIndex.Charge;
-                case "HEALTH":
-                    return (ushort)PlacedObject_FieldIndex.Health;
-                case "LEVELMODIFIER":
-                    return (ushort)PlacedObject_FieldIndex.LevelModifier;
-                case "XRTM":
-                    return (ushort)PlacedObject_FieldIndex.XRTM;
-                case "ACTIONFLAGS":
-                    return (ushort)PlacedObject_FieldIndex.ActionFlags;
-                case "COUNT":
-                    return (ushort)PlacedObject_FieldIndex.Count;
-                case "MAPMARKER":
-                    return (ushort)PlacedObject_FieldIndex.MapMarker;
-                case "OPENBYDEFAULT":
-                    return (ushort)PlacedObject_FieldIndex.OpenByDefault;
-                case "RAGDOLLDATA":
-                    return (ushort)PlacedObject_FieldIndex.RagdollData;
-                case "SCALE":
-                    return (ushort)PlacedObject_FieldIndex.Scale;
-                case "CONTAINEDSOUL":
-                    return (ushort)PlacedObject_FieldIndex.ContainedSoul;
-                case "LOCATION":
-                    return (ushort)PlacedObject_FieldIndex.Location;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedObject_FieldIndex.Base:
-                case PlacedObject_FieldIndex.XPCIFluff:
-                case PlacedObject_FieldIndex.FULLFluff:
-                case PlacedObject_FieldIndex.TeleportDestination:
-                case PlacedObject_FieldIndex.Lock:
-                case PlacedObject_FieldIndex.Owner:
-                case PlacedObject_FieldIndex.FactionRank:
-                case PlacedObject_FieldIndex.GlobalVariable:
-                case PlacedObject_FieldIndex.EnableParent:
-                case PlacedObject_FieldIndex.Target:
-                case PlacedObject_FieldIndex.SpeedTreeSeed:
-                case PlacedObject_FieldIndex.DistantLODData:
-                case PlacedObject_FieldIndex.Charge:
-                case PlacedObject_FieldIndex.Health:
-                case PlacedObject_FieldIndex.LevelModifier:
-                case PlacedObject_FieldIndex.XRTM:
-                case PlacedObject_FieldIndex.ActionFlags:
-                case PlacedObject_FieldIndex.Count:
-                case PlacedObject_FieldIndex.MapMarker:
-                case PlacedObject_FieldIndex.OpenByDefault:
-                case PlacedObject_FieldIndex.RagdollData:
-                case PlacedObject_FieldIndex.Scale:
-                case PlacedObject_FieldIndex.ContainedSoul:
-                case PlacedObject_FieldIndex.Location:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedObject_FieldIndex.TeleportDestination:
-                case PlacedObject_FieldIndex.Lock:
-                case PlacedObject_FieldIndex.EnableParent:
-                case PlacedObject_FieldIndex.DistantLODData:
-                case PlacedObject_FieldIndex.MapMarker:
-                case PlacedObject_FieldIndex.Location:
-                    return true;
-                case PlacedObject_FieldIndex.Base:
-                case PlacedObject_FieldIndex.XPCIFluff:
-                case PlacedObject_FieldIndex.FULLFluff:
-                case PlacedObject_FieldIndex.Owner:
-                case PlacedObject_FieldIndex.FactionRank:
-                case PlacedObject_FieldIndex.GlobalVariable:
-                case PlacedObject_FieldIndex.Target:
-                case PlacedObject_FieldIndex.SpeedTreeSeed:
-                case PlacedObject_FieldIndex.Charge:
-                case PlacedObject_FieldIndex.Health:
-                case PlacedObject_FieldIndex.LevelModifier:
-                case PlacedObject_FieldIndex.XRTM:
-                case PlacedObject_FieldIndex.ActionFlags:
-                case PlacedObject_FieldIndex.Count:
-                case PlacedObject_FieldIndex.OpenByDefault:
-                case PlacedObject_FieldIndex.RagdollData:
-                case PlacedObject_FieldIndex.Scale:
-                case PlacedObject_FieldIndex.ContainedSoul:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedObject_FieldIndex.Base:
-                case PlacedObject_FieldIndex.XPCIFluff:
-                case PlacedObject_FieldIndex.FULLFluff:
-                case PlacedObject_FieldIndex.TeleportDestination:
-                case PlacedObject_FieldIndex.Lock:
-                case PlacedObject_FieldIndex.Owner:
-                case PlacedObject_FieldIndex.FactionRank:
-                case PlacedObject_FieldIndex.GlobalVariable:
-                case PlacedObject_FieldIndex.EnableParent:
-                case PlacedObject_FieldIndex.Target:
-                case PlacedObject_FieldIndex.SpeedTreeSeed:
-                case PlacedObject_FieldIndex.DistantLODData:
-                case PlacedObject_FieldIndex.Charge:
-                case PlacedObject_FieldIndex.Health:
-                case PlacedObject_FieldIndex.LevelModifier:
-                case PlacedObject_FieldIndex.XRTM:
-                case PlacedObject_FieldIndex.ActionFlags:
-                case PlacedObject_FieldIndex.Count:
-                case PlacedObject_FieldIndex.MapMarker:
-                case PlacedObject_FieldIndex.OpenByDefault:
-                case PlacedObject_FieldIndex.RagdollData:
-                case PlacedObject_FieldIndex.Scale:
-                case PlacedObject_FieldIndex.ContainedSoul:
-                case PlacedObject_FieldIndex.Location:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedObject_FieldIndex.Base:
-                    return "Base";
-                case PlacedObject_FieldIndex.XPCIFluff:
-                    return "XPCIFluff";
-                case PlacedObject_FieldIndex.FULLFluff:
-                    return "FULLFluff";
-                case PlacedObject_FieldIndex.TeleportDestination:
-                    return "TeleportDestination";
-                case PlacedObject_FieldIndex.Lock:
-                    return "Lock";
-                case PlacedObject_FieldIndex.Owner:
-                    return "Owner";
-                case PlacedObject_FieldIndex.FactionRank:
-                    return "FactionRank";
-                case PlacedObject_FieldIndex.GlobalVariable:
-                    return "GlobalVariable";
-                case PlacedObject_FieldIndex.EnableParent:
-                    return "EnableParent";
-                case PlacedObject_FieldIndex.Target:
-                    return "Target";
-                case PlacedObject_FieldIndex.SpeedTreeSeed:
-                    return "SpeedTreeSeed";
-                case PlacedObject_FieldIndex.DistantLODData:
-                    return "DistantLODData";
-                case PlacedObject_FieldIndex.Charge:
-                    return "Charge";
-                case PlacedObject_FieldIndex.Health:
-                    return "Health";
-                case PlacedObject_FieldIndex.LevelModifier:
-                    return "LevelModifier";
-                case PlacedObject_FieldIndex.XRTM:
-                    return "XRTM";
-                case PlacedObject_FieldIndex.ActionFlags:
-                    return "ActionFlags";
-                case PlacedObject_FieldIndex.Count:
-                    return "Count";
-                case PlacedObject_FieldIndex.MapMarker:
-                    return "MapMarker";
-                case PlacedObject_FieldIndex.OpenByDefault:
-                    return "OpenByDefault";
-                case PlacedObject_FieldIndex.RagdollData:
-                    return "RagdollData";
-                case PlacedObject_FieldIndex.Scale:
-                    return "Scale";
-                case PlacedObject_FieldIndex.ContainedSoul:
-                    return "ContainedSoul";
-                case PlacedObject_FieldIndex.Location:
-                    return "Location";
-                default:
-                    return OblivionMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedObject_FieldIndex.Base:
-                case PlacedObject_FieldIndex.XPCIFluff:
-                case PlacedObject_FieldIndex.FULLFluff:
-                case PlacedObject_FieldIndex.TeleportDestination:
-                case PlacedObject_FieldIndex.Lock:
-                case PlacedObject_FieldIndex.Owner:
-                case PlacedObject_FieldIndex.FactionRank:
-                case PlacedObject_FieldIndex.GlobalVariable:
-                case PlacedObject_FieldIndex.EnableParent:
-                case PlacedObject_FieldIndex.Target:
-                case PlacedObject_FieldIndex.SpeedTreeSeed:
-                case PlacedObject_FieldIndex.DistantLODData:
-                case PlacedObject_FieldIndex.Charge:
-                case PlacedObject_FieldIndex.Health:
-                case PlacedObject_FieldIndex.LevelModifier:
-                case PlacedObject_FieldIndex.XRTM:
-                case PlacedObject_FieldIndex.ActionFlags:
-                case PlacedObject_FieldIndex.Count:
-                case PlacedObject_FieldIndex.MapMarker:
-                case PlacedObject_FieldIndex.OpenByDefault:
-                case PlacedObject_FieldIndex.RagdollData:
-                case PlacedObject_FieldIndex.Scale:
-                case PlacedObject_FieldIndex.ContainedSoul:
-                case PlacedObject_FieldIndex.Location:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedObject_FieldIndex.Base:
-                case PlacedObject_FieldIndex.XPCIFluff:
-                case PlacedObject_FieldIndex.FULLFluff:
-                case PlacedObject_FieldIndex.TeleportDestination:
-                case PlacedObject_FieldIndex.Lock:
-                case PlacedObject_FieldIndex.Owner:
-                case PlacedObject_FieldIndex.FactionRank:
-                case PlacedObject_FieldIndex.GlobalVariable:
-                case PlacedObject_FieldIndex.EnableParent:
-                case PlacedObject_FieldIndex.Target:
-                case PlacedObject_FieldIndex.SpeedTreeSeed:
-                case PlacedObject_FieldIndex.DistantLODData:
-                case PlacedObject_FieldIndex.Charge:
-                case PlacedObject_FieldIndex.Health:
-                case PlacedObject_FieldIndex.LevelModifier:
-                case PlacedObject_FieldIndex.XRTM:
-                case PlacedObject_FieldIndex.ActionFlags:
-                case PlacedObject_FieldIndex.Count:
-                case PlacedObject_FieldIndex.MapMarker:
-                case PlacedObject_FieldIndex.OpenByDefault:
-                case PlacedObject_FieldIndex.RagdollData:
-                case PlacedObject_FieldIndex.Scale:
-                case PlacedObject_FieldIndex.ContainedSoul:
-                case PlacedObject_FieldIndex.Location:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedObject_FieldIndex.Base:
-                    return typeof(FormLinkNullable<OblivionMajorRecord>);
-                case PlacedObject_FieldIndex.XPCIFluff:
-                    return typeof(MemorySlice<Byte>);
-                case PlacedObject_FieldIndex.FULLFluff:
-                    return typeof(MemorySlice<Byte>);
-                case PlacedObject_FieldIndex.TeleportDestination:
-                    return typeof(TeleportDestination);
-                case PlacedObject_FieldIndex.Lock:
-                    return typeof(LockInformation);
-                case PlacedObject_FieldIndex.Owner:
-                    return typeof(FormLinkNullable<IOwner>);
-                case PlacedObject_FieldIndex.FactionRank:
-                    return typeof(Int32);
-                case PlacedObject_FieldIndex.GlobalVariable:
-                    return typeof(FormLinkNullable<Global>);
-                case PlacedObject_FieldIndex.EnableParent:
-                    return typeof(EnableParent);
-                case PlacedObject_FieldIndex.Target:
-                    return typeof(FormLinkNullable<IPlaced>);
-                case PlacedObject_FieldIndex.SpeedTreeSeed:
-                    return typeof(Byte);
-                case PlacedObject_FieldIndex.DistantLODData:
-                    return typeof(DistantLODData);
-                case PlacedObject_FieldIndex.Charge:
-                    return typeof(Single);
-                case PlacedObject_FieldIndex.Health:
-                    return typeof(Int32);
-                case PlacedObject_FieldIndex.LevelModifier:
-                    return typeof(Int32);
-                case PlacedObject_FieldIndex.XRTM:
-                    return typeof(FormLinkNullable<OblivionMajorRecord>);
-                case PlacedObject_FieldIndex.ActionFlags:
-                    return typeof(PlacedObject.ActionFlag);
-                case PlacedObject_FieldIndex.Count:
-                    return typeof(Int32);
-                case PlacedObject_FieldIndex.MapMarker:
-                    return typeof(MapMarker);
-                case PlacedObject_FieldIndex.OpenByDefault:
-                    return typeof(Boolean);
-                case PlacedObject_FieldIndex.RagdollData:
-                    return typeof(MemorySlice<Byte>);
-                case PlacedObject_FieldIndex.Scale:
-                    return typeof(Single);
-                case PlacedObject_FieldIndex.ContainedSoul:
-                    return typeof(FormLinkNullable<SoulGem>);
-                case PlacedObject_FieldIndex.Location:
-                    return typeof(Location);
-                default:
-                    return OblivionMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.REFR;
         public static readonly Type BinaryWriteTranslation = typeof(PlacedObjectBinaryWriteTranslation);
         #region Interface
@@ -1943,14 +1582,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1966,29 +1605,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IPlacedObjectInternal item)
         {
             ClearPartial();
-            item.Base = FormLinkNullable<OblivionMajorRecord>.Null;
+            item.Base = FormLinkNullable<IOblivionMajorRecordGetter>.Null;
             item.XPCIFluff = default;
             item.FULLFluff = default;
             item.TeleportDestination = null;
             item.Lock = null;
-            item.Owner = FormLinkNullable<IOwner>.Null;
+            item.Owner = FormLinkNullable<IOwnerGetter>.Null;
             item.FactionRank = default;
-            item.GlobalVariable = FormLinkNullable<Global>.Null;
+            item.GlobalVariable = FormLinkNullable<IGlobalGetter>.Null;
             item.EnableParent = null;
-            item.Target = FormLinkNullable<IPlaced>.Null;
+            item.Target = FormLinkNullable<IPlacedGetter>.Null;
             item.SpeedTreeSeed = default;
             item.DistantLODData = null;
             item.Charge = default;
             item.Health = default;
             item.LevelModifier = default;
-            item.XRTM = FormLinkNullable<OblivionMajorRecord>.Null;
+            item.XRTM = FormLinkNullable<IOblivionMajorRecordGetter>.Null;
             item.ActionFlags = default;
             item.Count = default;
             item.MapMarker = null;
             item.OpenByDefault = default;
             item.RagdollData = default;
             item.Scale = default;
-            item.ContainedSoul = FormLinkNullable<SoulGem>.Null;
+            item.ContainedSoul = FormLinkNullable<ISoulGemGetter>.Null;
             item.Location = null;
             base.Clear(item);
         }
@@ -2575,7 +2214,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Base) ?? true))
             {
-                item.Base = new FormLinkNullable<OblivionMajorRecord>(rhs.Base.FormKey);
+                item.Base = new FormLinkNullable<IOblivionMajorRecordGetter>(rhs.Base.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XPCIFluff) ?? true))
             {
@@ -2653,7 +2292,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Owner) ?? true))
             {
-                item.Owner = new FormLinkNullable<IOwner>(rhs.Owner.FormKey);
+                item.Owner = new FormLinkNullable<IOwnerGetter>(rhs.Owner.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.FactionRank) ?? true))
             {
@@ -2661,7 +2300,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.GlobalVariable) ?? true))
             {
-                item.GlobalVariable = new FormLinkNullable<Global>(rhs.GlobalVariable.FormKey);
+                item.GlobalVariable = new FormLinkNullable<IGlobalGetter>(rhs.GlobalVariable.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.EnableParent) ?? true))
             {
@@ -2691,7 +2330,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Target) ?? true))
             {
-                item.Target = new FormLinkNullable<IPlaced>(rhs.Target.FormKey);
+                item.Target = new FormLinkNullable<IPlacedGetter>(rhs.Target.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.SpeedTreeSeed) ?? true))
             {
@@ -2737,7 +2376,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XRTM) ?? true))
             {
-                item.XRTM = new FormLinkNullable<OblivionMajorRecord>(rhs.XRTM.FormKey);
+                item.XRTM = new FormLinkNullable<IOblivionMajorRecordGetter>(rhs.XRTM.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ActionFlags) ?? true))
             {
@@ -2794,7 +2433,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ContainedSoul) ?? true))
             {
-                item.ContainedSoul = new FormLinkNullable<SoulGem>(rhs.ContainedSoul.FormKey);
+                item.ContainedSoul = new FormLinkNullable<ISoulGemGetter>(rhs.ContainedSoul.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Location) ?? true))
             {

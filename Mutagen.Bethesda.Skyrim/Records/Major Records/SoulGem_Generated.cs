@@ -92,19 +92,15 @@ namespace Mutagen.Bethesda.Skyrim
         IDestructibleGetter? ISoulGemGetter.Destructible => this.Destructible;
         #endregion
         #region PickUpSound
-        public FormLinkNullable<SoundDescriptor> PickUpSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> ISoulGemGetter.PickUpSound => this.PickUpSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region PutDownSound
-        public FormLinkNullable<SoundDescriptor> PutDownSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> ISoulGemGetter.PutDownSound => this.PutDownSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Keyword>>? _Keywords;
-        public IExtendedList<IFormLink<Keyword>>? Keywords
+        private ExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
+        public ExtendedList<IFormLink<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -128,9 +124,7 @@ namespace Mutagen.Bethesda.Skyrim
         public SoulGem.Level MaximumCapacity { get; set; } = default;
         #endregion
         #region LinkedTo
-        public FormLinkNullable<SoulGem> LinkedTo { get; set; } = new FormLinkNullable<SoulGem>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoulGemGetter> ISoulGemGetter.LinkedTo => this.LinkedTo.ToGetter<SoulGem, ISoulGemGetter>();
+        public FormLinkNullable<ISoulGemGetter> LinkedTo { get; set; } = new FormLinkNullable<ISoulGemGetter>();
         #endregion
         #region DATADataTypeState
         public SoulGem.DATADataType DATADataTypeState { get; set; } = default;
@@ -1011,14 +1005,14 @@ namespace Mutagen.Bethesda.Skyrim
         new Model? Model { get; set; }
         new Icons? Icons { get; set; }
         new Destructible? Destructible { get; set; }
-        new FormLinkNullable<SoundDescriptor> PickUpSound { get; set; }
-        new FormLinkNullable<SoundDescriptor> PutDownSound { get; set; }
-        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; set; }
+        new ExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
         new UInt32 Value { get; set; }
         new Single Weight { get; set; }
         new SoulGem.Level ContainedSoul { get; set; }
         new SoulGem.Level MaximumCapacity { get; set; }
-        new FormLinkNullable<SoulGem> LinkedTo { get; set; }
+        new FormLinkNullable<ISoulGemGetter> LinkedTo { get; set; }
         new SoulGem.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
         new SoulGem.MajorFlag MajorFlags { get; set; }
@@ -1268,246 +1262,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "OBJECTBOUNDS":
-                    return (ushort)SoulGem_FieldIndex.ObjectBounds;
-                case "NAME":
-                    return (ushort)SoulGem_FieldIndex.Name;
-                case "MODEL":
-                    return (ushort)SoulGem_FieldIndex.Model;
-                case "ICONS":
-                    return (ushort)SoulGem_FieldIndex.Icons;
-                case "DESTRUCTIBLE":
-                    return (ushort)SoulGem_FieldIndex.Destructible;
-                case "PICKUPSOUND":
-                    return (ushort)SoulGem_FieldIndex.PickUpSound;
-                case "PUTDOWNSOUND":
-                    return (ushort)SoulGem_FieldIndex.PutDownSound;
-                case "KEYWORDS":
-                    return (ushort)SoulGem_FieldIndex.Keywords;
-                case "VALUE":
-                    return (ushort)SoulGem_FieldIndex.Value;
-                case "WEIGHT":
-                    return (ushort)SoulGem_FieldIndex.Weight;
-                case "CONTAINEDSOUL":
-                    return (ushort)SoulGem_FieldIndex.ContainedSoul;
-                case "MAXIMUMCAPACITY":
-                    return (ushort)SoulGem_FieldIndex.MaximumCapacity;
-                case "LINKEDTO":
-                    return (ushort)SoulGem_FieldIndex.LinkedTo;
-                case "DATADATATYPESTATE":
-                    return (ushort)SoulGem_FieldIndex.DATADataTypeState;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
-            switch (enu)
-            {
-                case SoulGem_FieldIndex.Keywords:
-                    return true;
-                case SoulGem_FieldIndex.ObjectBounds:
-                case SoulGem_FieldIndex.Name:
-                case SoulGem_FieldIndex.Model:
-                case SoulGem_FieldIndex.Icons:
-                case SoulGem_FieldIndex.Destructible:
-                case SoulGem_FieldIndex.PickUpSound:
-                case SoulGem_FieldIndex.PutDownSound:
-                case SoulGem_FieldIndex.Value:
-                case SoulGem_FieldIndex.Weight:
-                case SoulGem_FieldIndex.ContainedSoul:
-                case SoulGem_FieldIndex.MaximumCapacity:
-                case SoulGem_FieldIndex.LinkedTo:
-                case SoulGem_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
-            switch (enu)
-            {
-                case SoulGem_FieldIndex.ObjectBounds:
-                case SoulGem_FieldIndex.Model:
-                case SoulGem_FieldIndex.Icons:
-                case SoulGem_FieldIndex.Destructible:
-                    return true;
-                case SoulGem_FieldIndex.Name:
-                case SoulGem_FieldIndex.PickUpSound:
-                case SoulGem_FieldIndex.PutDownSound:
-                case SoulGem_FieldIndex.Keywords:
-                case SoulGem_FieldIndex.Value:
-                case SoulGem_FieldIndex.Weight:
-                case SoulGem_FieldIndex.ContainedSoul:
-                case SoulGem_FieldIndex.MaximumCapacity:
-                case SoulGem_FieldIndex.LinkedTo:
-                case SoulGem_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
-            switch (enu)
-            {
-                case SoulGem_FieldIndex.ObjectBounds:
-                case SoulGem_FieldIndex.Name:
-                case SoulGem_FieldIndex.Model:
-                case SoulGem_FieldIndex.Icons:
-                case SoulGem_FieldIndex.Destructible:
-                case SoulGem_FieldIndex.PickUpSound:
-                case SoulGem_FieldIndex.PutDownSound:
-                case SoulGem_FieldIndex.Keywords:
-                case SoulGem_FieldIndex.Value:
-                case SoulGem_FieldIndex.Weight:
-                case SoulGem_FieldIndex.ContainedSoul:
-                case SoulGem_FieldIndex.MaximumCapacity:
-                case SoulGem_FieldIndex.LinkedTo:
-                case SoulGem_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
-            switch (enu)
-            {
-                case SoulGem_FieldIndex.ObjectBounds:
-                    return "ObjectBounds";
-                case SoulGem_FieldIndex.Name:
-                    return "Name";
-                case SoulGem_FieldIndex.Model:
-                    return "Model";
-                case SoulGem_FieldIndex.Icons:
-                    return "Icons";
-                case SoulGem_FieldIndex.Destructible:
-                    return "Destructible";
-                case SoulGem_FieldIndex.PickUpSound:
-                    return "PickUpSound";
-                case SoulGem_FieldIndex.PutDownSound:
-                    return "PutDownSound";
-                case SoulGem_FieldIndex.Keywords:
-                    return "Keywords";
-                case SoulGem_FieldIndex.Value:
-                    return "Value";
-                case SoulGem_FieldIndex.Weight:
-                    return "Weight";
-                case SoulGem_FieldIndex.ContainedSoul:
-                    return "ContainedSoul";
-                case SoulGem_FieldIndex.MaximumCapacity:
-                    return "MaximumCapacity";
-                case SoulGem_FieldIndex.LinkedTo:
-                    return "LinkedTo";
-                case SoulGem_FieldIndex.DATADataTypeState:
-                    return "DATADataTypeState";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
-            switch (enu)
-            {
-                case SoulGem_FieldIndex.ObjectBounds:
-                case SoulGem_FieldIndex.Name:
-                case SoulGem_FieldIndex.Model:
-                case SoulGem_FieldIndex.Icons:
-                case SoulGem_FieldIndex.Destructible:
-                case SoulGem_FieldIndex.PickUpSound:
-                case SoulGem_FieldIndex.PutDownSound:
-                case SoulGem_FieldIndex.Keywords:
-                case SoulGem_FieldIndex.Value:
-                case SoulGem_FieldIndex.Weight:
-                case SoulGem_FieldIndex.ContainedSoul:
-                case SoulGem_FieldIndex.MaximumCapacity:
-                case SoulGem_FieldIndex.LinkedTo:
-                case SoulGem_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
-            switch (enu)
-            {
-                case SoulGem_FieldIndex.ObjectBounds:
-                case SoulGem_FieldIndex.Name:
-                case SoulGem_FieldIndex.Model:
-                case SoulGem_FieldIndex.Icons:
-                case SoulGem_FieldIndex.Destructible:
-                case SoulGem_FieldIndex.PickUpSound:
-                case SoulGem_FieldIndex.PutDownSound:
-                case SoulGem_FieldIndex.Keywords:
-                case SoulGem_FieldIndex.Value:
-                case SoulGem_FieldIndex.Weight:
-                case SoulGem_FieldIndex.ContainedSoul:
-                case SoulGem_FieldIndex.MaximumCapacity:
-                case SoulGem_FieldIndex.LinkedTo:
-                case SoulGem_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
-            switch (enu)
-            {
-                case SoulGem_FieldIndex.ObjectBounds:
-                    return typeof(ObjectBounds);
-                case SoulGem_FieldIndex.Name:
-                    return typeof(TranslatedString);
-                case SoulGem_FieldIndex.Model:
-                    return typeof(Model);
-                case SoulGem_FieldIndex.Icons:
-                    return typeof(Icons);
-                case SoulGem_FieldIndex.Destructible:
-                    return typeof(Destructible);
-                case SoulGem_FieldIndex.PickUpSound:
-                    return typeof(FormLinkNullable<SoundDescriptor>);
-                case SoulGem_FieldIndex.PutDownSound:
-                    return typeof(FormLinkNullable<SoundDescriptor>);
-                case SoulGem_FieldIndex.Keywords:
-                    return typeof(IExtendedList<IFormLink<Keyword>>);
-                case SoulGem_FieldIndex.Value:
-                    return typeof(UInt32);
-                case SoulGem_FieldIndex.Weight:
-                    return typeof(Single);
-                case SoulGem_FieldIndex.ContainedSoul:
-                    return typeof(SoulGem.Level);
-                case SoulGem_FieldIndex.MaximumCapacity:
-                    return typeof(SoulGem.Level);
-                case SoulGem_FieldIndex.LinkedTo:
-                    return typeof(FormLinkNullable<SoulGem>);
-                case SoulGem_FieldIndex.DATADataTypeState:
-                    return typeof(SoulGem.DATADataType);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.SLGM;
         public static readonly Type BinaryWriteTranslation = typeof(SoulGemBinaryWriteTranslation);
         #region Interface
@@ -1528,14 +1282,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1556,14 +1310,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Model = null;
             item.Icons = null;
             item.Destructible = null;
-            item.PickUpSound = FormLinkNullable<SoundDescriptor>.Null;
-            item.PutDownSound = FormLinkNullable<SoundDescriptor>.Null;
+            item.PickUpSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
+            item.PutDownSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
             item.Keywords = null;
             item.Value = default;
             item.Weight = default;
             item.ContainedSoul = default;
             item.MaximumCapacity = default;
-            item.LinkedTo = FormLinkNullable<SoulGem>.Null;
+            item.LinkedTo = FormLinkNullable<ISoulGemGetter>.Null;
             item.DATADataTypeState = default;
             base.Clear(item);
         }
@@ -2140,11 +1894,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.PickUpSound) ?? true))
             {
-                item.PickUpSound = new FormLinkNullable<SoundDescriptor>(rhs.PickUpSound.FormKey);
+                item.PickUpSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.PickUpSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.PutDownSound) ?? true))
             {
-                item.PutDownSound = new FormLinkNullable<SoundDescriptor>(rhs.PutDownSound.FormKey);
+                item.PutDownSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.PutDownSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Keywords) ?? true))
             {
@@ -2155,8 +1909,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLink<Keyword>)new FormLink<Keyword>(r.FormKey))
-                            .ToExtendedList<IFormLink<Keyword>>();
+                            .Select(r => (IFormLink<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IKeywordGetter>>();
                     }
                     else
                     {
@@ -2191,7 +1945,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.LinkedTo) ?? true))
             {
-                item.LinkedTo = new FormLinkNullable<SoulGem>(rhs.LinkedTo.FormKey);
+                item.LinkedTo = new FormLinkNullable<ISoulGemGetter>(rhs.LinkedTo.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.DATADataTypeState) ?? true))
             {
@@ -2579,13 +2333,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KSIZ:
                 {
                     item.Keywords = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<Keyword>>();
+                        .CastExtendedList<IFormLink<IKeywordGetter>>();
                     return (int)SoulGem_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DATA:

@@ -60,8 +60,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<ItemEntry> _Items = new ExtendedList<ItemEntry>();
-        public IExtendedList<ItemEntry> Items
+        private ExtendedList<ItemEntry> _Items = new ExtendedList<ItemEntry>();
+        public ExtendedList<ItemEntry> Items
         {
             get => this._Items;
             protected set => this._Items = value;
@@ -74,8 +74,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<ASpell>> _Spells = new ExtendedList<IFormLink<ASpell>>();
-        public IExtendedList<IFormLink<ASpell>> Spells
+        private ExtendedList<IFormLink<IASpellGetter>> _Spells = new ExtendedList<IFormLink<IASpellGetter>>();
+        public ExtendedList<IFormLink<IASpellGetter>> Spells
         {
             get => this._Spells;
             protected set => this._Spells = value;
@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Models
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<String>? _Models;
-        public IExtendedList<String>? Models
+        private ExtendedList<String>? _Models;
+        public ExtendedList<String>? Models
         {
             get => this._Models;
             set => this._Models = value;
@@ -124,8 +124,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Factions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<RankPlacement> _Factions = new ExtendedList<RankPlacement>();
-        public IExtendedList<RankPlacement> Factions
+        private ExtendedList<RankPlacement> _Factions = new ExtendedList<RankPlacement>();
+        public ExtendedList<RankPlacement> Factions
         {
             get => this._Factions;
             protected set => this._Factions = value;
@@ -137,14 +137,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region DeathItem
-        public FormLinkNullable<AItem> DeathItem { get; set; } = new FormLinkNullable<AItem>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IAItemGetter> ICreatureGetter.DeathItem => this.DeathItem.ToGetter<AItem, IAItemGetter>();
+        public FormLinkNullable<IAItemGetter> DeathItem { get; set; } = new FormLinkNullable<IAItemGetter>();
         #endregion
         #region Script
-        public FormLinkNullable<Script> Script { get; set; } = new FormLinkNullable<Script>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IScriptGetter> ICreatureGetter.Script => this.Script.ToGetter<Script, IScriptGetter>();
+        public FormLinkNullable<IScriptGetter> Script { get; set; } = new FormLinkNullable<IScriptGetter>();
         #endregion
         #region AIData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -159,8 +155,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region AIPackages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<AIPackage>> _AIPackages = new ExtendedList<IFormLink<AIPackage>>();
-        public IExtendedList<IFormLink<AIPackage>> AIPackages
+        private ExtendedList<IFormLink<IAIPackageGetter>> _AIPackages = new ExtendedList<IFormLink<IAIPackageGetter>>();
+        public ExtendedList<IFormLink<IAIPackageGetter>> AIPackages
         {
             get => this._AIPackages;
             protected set => this._AIPackages = value;
@@ -173,8 +169,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Animations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<String>? _Animations;
-        public IExtendedList<String>? Animations
+        private ExtendedList<String>? _Animations;
+        public ExtendedList<String>? Animations
         {
             get => this._Animations;
             set => this._Animations = value;
@@ -202,9 +198,7 @@ namespace Mutagen.Bethesda.Oblivion
         Byte? ICreatureGetter.AttackReach => this.AttackReach;
         #endregion
         #region CombatStyle
-        public FormLinkNullable<CombatStyle> CombatStyle { get; set; } = new FormLinkNullable<CombatStyle>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ICombatStyleGetter> ICreatureGetter.CombatStyle => this.CombatStyle.ToGetter<CombatStyle, ICombatStyleGetter>();
+        public FormLinkNullable<ICombatStyleGetter> CombatStyle { get; set; } = new FormLinkNullable<ICombatStyleGetter>();
         #endregion
         #region TurningSpeed
         public Single? TurningSpeed { get; set; }
@@ -232,14 +226,12 @@ namespace Mutagen.Bethesda.Oblivion
         String? ICreatureGetter.BloodDecal => this.BloodDecal;
         #endregion
         #region InheritsSoundFrom
-        public FormLinkNullable<Creature> InheritsSoundFrom { get; set; } = new FormLinkNullable<Creature>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ICreatureGetter> ICreatureGetter.InheritsSoundFrom => this.InheritsSoundFrom.ToGetter<Creature, ICreatureGetter>();
+        public FormLinkNullable<ICreatureGetter> InheritsSoundFrom { get; set; } = new FormLinkNullable<ICreatureGetter>();
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<CreatureSound> _Sounds = new ExtendedList<CreatureSound>();
-        public IExtendedList<CreatureSound> Sounds
+        private ExtendedList<CreatureSound> _Sounds = new ExtendedList<CreatureSound>();
+        public ExtendedList<CreatureSound> Sounds
         {
             get => this._Sounds;
             protected set => this._Sounds = value;
@@ -1806,27 +1798,27 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
-        new IExtendedList<ItemEntry> Items { get; }
-        new IExtendedList<IFormLink<ASpell>> Spells { get; }
-        new IExtendedList<String>? Models { get; set; }
+        new ExtendedList<ItemEntry> Items { get; }
+        new ExtendedList<IFormLink<IASpellGetter>> Spells { get; }
+        new ExtendedList<String>? Models { get; set; }
         new MemorySlice<Byte>? NIFT { get; set; }
         new CreatureConfiguration? Configuration { get; set; }
-        new IExtendedList<RankPlacement> Factions { get; }
-        new FormLinkNullable<AItem> DeathItem { get; set; }
-        new FormLinkNullable<Script> Script { get; set; }
+        new ExtendedList<RankPlacement> Factions { get; }
+        new FormLinkNullable<IAItemGetter> DeathItem { get; set; }
+        new FormLinkNullable<IScriptGetter> Script { get; set; }
         new CreatureAIData? AIData { get; set; }
-        new IExtendedList<IFormLink<AIPackage>> AIPackages { get; }
-        new IExtendedList<String>? Animations { get; set; }
+        new ExtendedList<IFormLink<IAIPackageGetter>> AIPackages { get; }
+        new ExtendedList<String>? Animations { get; set; }
         new CreatureData? Data { get; set; }
         new Byte? AttackReach { get; set; }
-        new FormLinkNullable<CombatStyle> CombatStyle { get; set; }
+        new FormLinkNullable<ICombatStyleGetter> CombatStyle { get; set; }
         new Single? TurningSpeed { get; set; }
         new Single? BaseScale { get; set; }
         new Single? FootWeight { get; set; }
         new String? BloodSpray { get; set; }
         new String? BloodDecal { get; set; }
-        new FormLinkNullable<Creature> InheritsSoundFrom { get; set; }
-        new IExtendedList<CreatureSound> Sounds { get; }
+        new FormLinkNullable<ICreatureGetter> InheritsSoundFrom { get; set; }
+        new ExtendedList<CreatureSound> Sounds { get; }
     }
 
     public partial interface ICreatureInternal :
@@ -2082,345 +2074,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "NAME":
-                    return (ushort)Creature_FieldIndex.Name;
-                case "MODEL":
-                    return (ushort)Creature_FieldIndex.Model;
-                case "ITEMS":
-                    return (ushort)Creature_FieldIndex.Items;
-                case "SPELLS":
-                    return (ushort)Creature_FieldIndex.Spells;
-                case "MODELS":
-                    return (ushort)Creature_FieldIndex.Models;
-                case "NIFT":
-                    return (ushort)Creature_FieldIndex.NIFT;
-                case "CONFIGURATION":
-                    return (ushort)Creature_FieldIndex.Configuration;
-                case "FACTIONS":
-                    return (ushort)Creature_FieldIndex.Factions;
-                case "DEATHITEM":
-                    return (ushort)Creature_FieldIndex.DeathItem;
-                case "SCRIPT":
-                    return (ushort)Creature_FieldIndex.Script;
-                case "AIDATA":
-                    return (ushort)Creature_FieldIndex.AIData;
-                case "AIPACKAGES":
-                    return (ushort)Creature_FieldIndex.AIPackages;
-                case "ANIMATIONS":
-                    return (ushort)Creature_FieldIndex.Animations;
-                case "DATA":
-                    return (ushort)Creature_FieldIndex.Data;
-                case "ATTACKREACH":
-                    return (ushort)Creature_FieldIndex.AttackReach;
-                case "COMBATSTYLE":
-                    return (ushort)Creature_FieldIndex.CombatStyle;
-                case "TURNINGSPEED":
-                    return (ushort)Creature_FieldIndex.TurningSpeed;
-                case "BASESCALE":
-                    return (ushort)Creature_FieldIndex.BaseScale;
-                case "FOOTWEIGHT":
-                    return (ushort)Creature_FieldIndex.FootWeight;
-                case "BLOODSPRAY":
-                    return (ushort)Creature_FieldIndex.BloodSpray;
-                case "BLOODDECAL":
-                    return (ushort)Creature_FieldIndex.BloodDecal;
-                case "INHERITSSOUNDFROM":
-                    return (ushort)Creature_FieldIndex.InheritsSoundFrom;
-                case "SOUNDS":
-                    return (ushort)Creature_FieldIndex.Sounds;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Creature_FieldIndex enu = (Creature_FieldIndex)index;
-            switch (enu)
-            {
-                case Creature_FieldIndex.Items:
-                case Creature_FieldIndex.Spells:
-                case Creature_FieldIndex.Models:
-                case Creature_FieldIndex.Factions:
-                case Creature_FieldIndex.AIPackages:
-                case Creature_FieldIndex.Animations:
-                case Creature_FieldIndex.Sounds:
-                    return true;
-                case Creature_FieldIndex.Name:
-                case Creature_FieldIndex.Model:
-                case Creature_FieldIndex.NIFT:
-                case Creature_FieldIndex.Configuration:
-                case Creature_FieldIndex.DeathItem:
-                case Creature_FieldIndex.Script:
-                case Creature_FieldIndex.AIData:
-                case Creature_FieldIndex.Data:
-                case Creature_FieldIndex.AttackReach:
-                case Creature_FieldIndex.CombatStyle:
-                case Creature_FieldIndex.TurningSpeed:
-                case Creature_FieldIndex.BaseScale:
-                case Creature_FieldIndex.FootWeight:
-                case Creature_FieldIndex.BloodSpray:
-                case Creature_FieldIndex.BloodDecal:
-                case Creature_FieldIndex.InheritsSoundFrom:
-                    return false;
-                default:
-                    return ANpc_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Creature_FieldIndex enu = (Creature_FieldIndex)index;
-            switch (enu)
-            {
-                case Creature_FieldIndex.Model:
-                case Creature_FieldIndex.Items:
-                case Creature_FieldIndex.Configuration:
-                case Creature_FieldIndex.Factions:
-                case Creature_FieldIndex.AIData:
-                case Creature_FieldIndex.Data:
-                case Creature_FieldIndex.Sounds:
-                    return true;
-                case Creature_FieldIndex.Name:
-                case Creature_FieldIndex.Spells:
-                case Creature_FieldIndex.Models:
-                case Creature_FieldIndex.NIFT:
-                case Creature_FieldIndex.DeathItem:
-                case Creature_FieldIndex.Script:
-                case Creature_FieldIndex.AIPackages:
-                case Creature_FieldIndex.Animations:
-                case Creature_FieldIndex.AttackReach:
-                case Creature_FieldIndex.CombatStyle:
-                case Creature_FieldIndex.TurningSpeed:
-                case Creature_FieldIndex.BaseScale:
-                case Creature_FieldIndex.FootWeight:
-                case Creature_FieldIndex.BloodSpray:
-                case Creature_FieldIndex.BloodDecal:
-                case Creature_FieldIndex.InheritsSoundFrom:
-                    return false;
-                default:
-                    return ANpc_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Creature_FieldIndex enu = (Creature_FieldIndex)index;
-            switch (enu)
-            {
-                case Creature_FieldIndex.Name:
-                case Creature_FieldIndex.Model:
-                case Creature_FieldIndex.Items:
-                case Creature_FieldIndex.Spells:
-                case Creature_FieldIndex.Models:
-                case Creature_FieldIndex.NIFT:
-                case Creature_FieldIndex.Configuration:
-                case Creature_FieldIndex.Factions:
-                case Creature_FieldIndex.DeathItem:
-                case Creature_FieldIndex.Script:
-                case Creature_FieldIndex.AIData:
-                case Creature_FieldIndex.AIPackages:
-                case Creature_FieldIndex.Animations:
-                case Creature_FieldIndex.Data:
-                case Creature_FieldIndex.AttackReach:
-                case Creature_FieldIndex.CombatStyle:
-                case Creature_FieldIndex.TurningSpeed:
-                case Creature_FieldIndex.BaseScale:
-                case Creature_FieldIndex.FootWeight:
-                case Creature_FieldIndex.BloodSpray:
-                case Creature_FieldIndex.BloodDecal:
-                case Creature_FieldIndex.InheritsSoundFrom:
-                case Creature_FieldIndex.Sounds:
-                    return false;
-                default:
-                    return ANpc_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Creature_FieldIndex enu = (Creature_FieldIndex)index;
-            switch (enu)
-            {
-                case Creature_FieldIndex.Name:
-                    return "Name";
-                case Creature_FieldIndex.Model:
-                    return "Model";
-                case Creature_FieldIndex.Items:
-                    return "Items";
-                case Creature_FieldIndex.Spells:
-                    return "Spells";
-                case Creature_FieldIndex.Models:
-                    return "Models";
-                case Creature_FieldIndex.NIFT:
-                    return "NIFT";
-                case Creature_FieldIndex.Configuration:
-                    return "Configuration";
-                case Creature_FieldIndex.Factions:
-                    return "Factions";
-                case Creature_FieldIndex.DeathItem:
-                    return "DeathItem";
-                case Creature_FieldIndex.Script:
-                    return "Script";
-                case Creature_FieldIndex.AIData:
-                    return "AIData";
-                case Creature_FieldIndex.AIPackages:
-                    return "AIPackages";
-                case Creature_FieldIndex.Animations:
-                    return "Animations";
-                case Creature_FieldIndex.Data:
-                    return "Data";
-                case Creature_FieldIndex.AttackReach:
-                    return "AttackReach";
-                case Creature_FieldIndex.CombatStyle:
-                    return "CombatStyle";
-                case Creature_FieldIndex.TurningSpeed:
-                    return "TurningSpeed";
-                case Creature_FieldIndex.BaseScale:
-                    return "BaseScale";
-                case Creature_FieldIndex.FootWeight:
-                    return "FootWeight";
-                case Creature_FieldIndex.BloodSpray:
-                    return "BloodSpray";
-                case Creature_FieldIndex.BloodDecal:
-                    return "BloodDecal";
-                case Creature_FieldIndex.InheritsSoundFrom:
-                    return "InheritsSoundFrom";
-                case Creature_FieldIndex.Sounds:
-                    return "Sounds";
-                default:
-                    return ANpc_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Creature_FieldIndex enu = (Creature_FieldIndex)index;
-            switch (enu)
-            {
-                case Creature_FieldIndex.Name:
-                case Creature_FieldIndex.Model:
-                case Creature_FieldIndex.Items:
-                case Creature_FieldIndex.Spells:
-                case Creature_FieldIndex.Models:
-                case Creature_FieldIndex.NIFT:
-                case Creature_FieldIndex.Configuration:
-                case Creature_FieldIndex.Factions:
-                case Creature_FieldIndex.DeathItem:
-                case Creature_FieldIndex.Script:
-                case Creature_FieldIndex.AIData:
-                case Creature_FieldIndex.AIPackages:
-                case Creature_FieldIndex.Animations:
-                case Creature_FieldIndex.Data:
-                case Creature_FieldIndex.AttackReach:
-                case Creature_FieldIndex.CombatStyle:
-                case Creature_FieldIndex.TurningSpeed:
-                case Creature_FieldIndex.BaseScale:
-                case Creature_FieldIndex.FootWeight:
-                case Creature_FieldIndex.BloodSpray:
-                case Creature_FieldIndex.BloodDecal:
-                case Creature_FieldIndex.InheritsSoundFrom:
-                case Creature_FieldIndex.Sounds:
-                    return false;
-                default:
-                    return ANpc_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Creature_FieldIndex enu = (Creature_FieldIndex)index;
-            switch (enu)
-            {
-                case Creature_FieldIndex.Name:
-                case Creature_FieldIndex.Model:
-                case Creature_FieldIndex.Items:
-                case Creature_FieldIndex.Spells:
-                case Creature_FieldIndex.Models:
-                case Creature_FieldIndex.NIFT:
-                case Creature_FieldIndex.Configuration:
-                case Creature_FieldIndex.Factions:
-                case Creature_FieldIndex.DeathItem:
-                case Creature_FieldIndex.Script:
-                case Creature_FieldIndex.AIData:
-                case Creature_FieldIndex.AIPackages:
-                case Creature_FieldIndex.Animations:
-                case Creature_FieldIndex.Data:
-                case Creature_FieldIndex.AttackReach:
-                case Creature_FieldIndex.CombatStyle:
-                case Creature_FieldIndex.TurningSpeed:
-                case Creature_FieldIndex.BaseScale:
-                case Creature_FieldIndex.FootWeight:
-                case Creature_FieldIndex.BloodSpray:
-                case Creature_FieldIndex.BloodDecal:
-                case Creature_FieldIndex.InheritsSoundFrom:
-                case Creature_FieldIndex.Sounds:
-                    return false;
-                default:
-                    return ANpc_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Creature_FieldIndex enu = (Creature_FieldIndex)index;
-            switch (enu)
-            {
-                case Creature_FieldIndex.Name:
-                    return typeof(String);
-                case Creature_FieldIndex.Model:
-                    return typeof(Model);
-                case Creature_FieldIndex.Items:
-                    return typeof(IExtendedList<ItemEntry>);
-                case Creature_FieldIndex.Spells:
-                    return typeof(IExtendedList<IFormLink<ASpell>>);
-                case Creature_FieldIndex.Models:
-                    return typeof(IExtendedList<String>);
-                case Creature_FieldIndex.NIFT:
-                    return typeof(MemorySlice<Byte>);
-                case Creature_FieldIndex.Configuration:
-                    return typeof(CreatureConfiguration);
-                case Creature_FieldIndex.Factions:
-                    return typeof(IExtendedList<RankPlacement>);
-                case Creature_FieldIndex.DeathItem:
-                    return typeof(FormLinkNullable<AItem>);
-                case Creature_FieldIndex.Script:
-                    return typeof(FormLinkNullable<Script>);
-                case Creature_FieldIndex.AIData:
-                    return typeof(CreatureAIData);
-                case Creature_FieldIndex.AIPackages:
-                    return typeof(IExtendedList<IFormLink<AIPackage>>);
-                case Creature_FieldIndex.Animations:
-                    return typeof(IExtendedList<String>);
-                case Creature_FieldIndex.Data:
-                    return typeof(CreatureData);
-                case Creature_FieldIndex.AttackReach:
-                    return typeof(Byte);
-                case Creature_FieldIndex.CombatStyle:
-                    return typeof(FormLinkNullable<CombatStyle>);
-                case Creature_FieldIndex.TurningSpeed:
-                    return typeof(Single);
-                case Creature_FieldIndex.BaseScale:
-                    return typeof(Single);
-                case Creature_FieldIndex.FootWeight:
-                    return typeof(Single);
-                case Creature_FieldIndex.BloodSpray:
-                    return typeof(String);
-                case Creature_FieldIndex.BloodDecal:
-                    return typeof(String);
-                case Creature_FieldIndex.InheritsSoundFrom:
-                    return typeof(FormLinkNullable<Creature>);
-                case Creature_FieldIndex.Sounds:
-                    return typeof(IExtendedList<CreatureSound>);
-                default:
-                    return ANpc_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.CREA;
         public static readonly Type BinaryWriteTranslation = typeof(CreatureBinaryWriteTranslation);
         #region Interface
@@ -2441,14 +2094,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -2472,20 +2125,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.NIFT = default;
             item.Configuration = null;
             item.Factions.Clear();
-            item.DeathItem = FormLinkNullable<AItem>.Null;
-            item.Script = FormLinkNullable<Script>.Null;
+            item.DeathItem = FormLinkNullable<IAItemGetter>.Null;
+            item.Script = FormLinkNullable<IScriptGetter>.Null;
             item.AIData = null;
             item.AIPackages.Clear();
             item.Animations = null;
             item.Data = null;
             item.AttackReach = default;
-            item.CombatStyle = FormLinkNullable<CombatStyle>.Null;
+            item.CombatStyle = FormLinkNullable<ICombatStyleGetter>.Null;
             item.TurningSpeed = default;
             item.BaseScale = default;
             item.FootWeight = default;
             item.BloodSpray = default;
             item.BloodDecal = default;
-            item.InheritsSoundFrom = FormLinkNullable<Creature>.Null;
+            item.InheritsSoundFrom = FormLinkNullable<ICreatureGetter>.Null;
             item.Sounds.Clear();
             base.Clear(item);
         }
@@ -3306,7 +2959,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Spells.SetTo(
                         rhs.Spells
-                        .Select(r => (IFormLink<ASpell>)new FormLink<ASpell>(r.FormKey)));
+                        .Select(r => (IFormLink<IASpellGetter>)new FormLink<IASpellGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3407,11 +3060,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Creature_FieldIndex.DeathItem) ?? true))
             {
-                item.DeathItem = new FormLinkNullable<AItem>(rhs.DeathItem.FormKey);
+                item.DeathItem = new FormLinkNullable<IAItemGetter>(rhs.DeathItem.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Creature_FieldIndex.Script) ?? true))
             {
-                item.Script = new FormLinkNullable<Script>(rhs.Script.FormKey);
+                item.Script = new FormLinkNullable<IScriptGetter>(rhs.Script.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Creature_FieldIndex.AIData) ?? true))
             {
@@ -3446,7 +3099,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.AIPackages.SetTo(
                         rhs.AIPackages
-                        .Select(r => (IFormLink<AIPackage>)new FormLink<AIPackage>(r.FormKey)));
+                        .Select(r => (IFormLink<IAIPackageGetter>)new FormLink<IAIPackageGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3516,7 +3169,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Creature_FieldIndex.CombatStyle) ?? true))
             {
-                item.CombatStyle = new FormLinkNullable<CombatStyle>(rhs.CombatStyle.FormKey);
+                item.CombatStyle = new FormLinkNullable<ICombatStyleGetter>(rhs.CombatStyle.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Creature_FieldIndex.TurningSpeed) ?? true))
             {
@@ -3540,7 +3193,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Creature_FieldIndex.InheritsSoundFrom) ?? true))
             {
-                item.InheritsSoundFrom = new FormLinkNullable<Creature>(rhs.InheritsSoundFrom.FormKey);
+                item.InheritsSoundFrom = new FormLinkNullable<ICreatureGetter>(rhs.InheritsSoundFrom.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Creature_FieldIndex.Sounds) ?? true))
             {
@@ -4059,7 +3712,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.SPLO:
                 {
                     item.Spells.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ASpell>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IASpellGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPLO),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -4127,7 +3780,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.PKID:
                 {
                     item.AIPackages.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<AIPackage>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IAIPackageGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.PKID),
                             transl: FormLinkBinaryTranslation.Instance.Parse));

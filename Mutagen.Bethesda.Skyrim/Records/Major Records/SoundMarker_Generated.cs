@@ -70,9 +70,7 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? ISoundMarkerGetter.SNDD => this.SNDD;
         #endregion
         #region SoundDescriptor
-        public FormLinkNullable<SoundDescriptor> SoundDescriptor { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> ISoundMarkerGetter.SoundDescriptor => this.SoundDescriptor.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> SoundDescriptor { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
 
         #region To String
@@ -565,7 +563,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ObjectBounds ObjectBounds { get; set; }
         new MemorySlice<Byte>? FNAM { get; set; }
         new MemorySlice<Byte>? SNDD { get; set; }
-        new FormLinkNullable<SoundDescriptor> SoundDescriptor { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> SoundDescriptor { get; set; }
     }
 
     public partial interface ISoundMarkerInternal :
@@ -786,135 +784,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "OBJECTBOUNDS":
-                    return (ushort)SoundMarker_FieldIndex.ObjectBounds;
-                case "FNAM":
-                    return (ushort)SoundMarker_FieldIndex.FNAM;
-                case "SNDD":
-                    return (ushort)SoundMarker_FieldIndex.SNDD;
-                case "SOUNDDESCRIPTOR":
-                    return (ushort)SoundMarker_FieldIndex.SoundDescriptor;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            SoundMarker_FieldIndex enu = (SoundMarker_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundMarker_FieldIndex.ObjectBounds:
-                case SoundMarker_FieldIndex.FNAM:
-                case SoundMarker_FieldIndex.SNDD:
-                case SoundMarker_FieldIndex.SoundDescriptor:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            SoundMarker_FieldIndex enu = (SoundMarker_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundMarker_FieldIndex.ObjectBounds:
-                    return true;
-                case SoundMarker_FieldIndex.FNAM:
-                case SoundMarker_FieldIndex.SNDD:
-                case SoundMarker_FieldIndex.SoundDescriptor:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            SoundMarker_FieldIndex enu = (SoundMarker_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundMarker_FieldIndex.ObjectBounds:
-                case SoundMarker_FieldIndex.FNAM:
-                case SoundMarker_FieldIndex.SNDD:
-                case SoundMarker_FieldIndex.SoundDescriptor:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            SoundMarker_FieldIndex enu = (SoundMarker_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundMarker_FieldIndex.ObjectBounds:
-                    return "ObjectBounds";
-                case SoundMarker_FieldIndex.FNAM:
-                    return "FNAM";
-                case SoundMarker_FieldIndex.SNDD:
-                    return "SNDD";
-                case SoundMarker_FieldIndex.SoundDescriptor:
-                    return "SoundDescriptor";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            SoundMarker_FieldIndex enu = (SoundMarker_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundMarker_FieldIndex.ObjectBounds:
-                case SoundMarker_FieldIndex.FNAM:
-                case SoundMarker_FieldIndex.SNDD:
-                case SoundMarker_FieldIndex.SoundDescriptor:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            SoundMarker_FieldIndex enu = (SoundMarker_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundMarker_FieldIndex.ObjectBounds:
-                case SoundMarker_FieldIndex.FNAM:
-                case SoundMarker_FieldIndex.SNDD:
-                case SoundMarker_FieldIndex.SoundDescriptor:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            SoundMarker_FieldIndex enu = (SoundMarker_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundMarker_FieldIndex.ObjectBounds:
-                    return typeof(ObjectBounds);
-                case SoundMarker_FieldIndex.FNAM:
-                    return typeof(MemorySlice<Byte>);
-                case SoundMarker_FieldIndex.SNDD:
-                    return typeof(MemorySlice<Byte>);
-                case SoundMarker_FieldIndex.SoundDescriptor:
-                    return typeof(FormLinkNullable<SoundDescriptor>);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.SOUN;
         public static readonly Type BinaryWriteTranslation = typeof(SoundMarkerBinaryWriteTranslation);
         #region Interface
@@ -935,14 +804,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -961,7 +830,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ObjectBounds.Clear();
             item.FNAM = default;
             item.SNDD = default;
-            item.SoundDescriptor = FormLinkNullable<SoundDescriptor>.Null;
+            item.SoundDescriptor = FormLinkNullable<ISoundDescriptorGetter>.Null;
             base.Clear(item);
         }
         
@@ -1328,7 +1197,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SoundMarker_FieldIndex.SoundDescriptor) ?? true))
             {
-                item.SoundDescriptor = new FormLinkNullable<SoundDescriptor>(rhs.SoundDescriptor.FormKey);
+                item.SoundDescriptor = new FormLinkNullable<ISoundDescriptorGetter>(rhs.SoundDescriptor.FormKey);
             }
         }
         

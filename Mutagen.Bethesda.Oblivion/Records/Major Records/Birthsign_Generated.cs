@@ -59,8 +59,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Spell>> _Spells = new ExtendedList<IFormLink<Spell>>();
-        public IExtendedList<IFormLink<Spell>> Spells
+        private ExtendedList<IFormLink<ISpellGetter>> _Spells = new ExtendedList<IFormLink<ISpellGetter>>();
+        public ExtendedList<IFormLink<ISpellGetter>> Spells
         {
             get => this._Spells;
             protected set => this._Spells = value;
@@ -624,7 +624,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Name { get; set; }
         new String? Icon { get; set; }
         new String? Description { get; set; }
-        new IExtendedList<IFormLink<Spell>> Spells { get; }
+        new ExtendedList<IFormLink<ISpellGetter>> Spells { get; }
     }
 
     public partial interface IBirthsignInternal :
@@ -842,135 +842,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "NAME":
-                    return (ushort)Birthsign_FieldIndex.Name;
-                case "ICON":
-                    return (ushort)Birthsign_FieldIndex.Icon;
-                case "DESCRIPTION":
-                    return (ushort)Birthsign_FieldIndex.Description;
-                case "SPELLS":
-                    return (ushort)Birthsign_FieldIndex.Spells;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;
-            switch (enu)
-            {
-                case Birthsign_FieldIndex.Spells:
-                    return true;
-                case Birthsign_FieldIndex.Name:
-                case Birthsign_FieldIndex.Icon:
-                case Birthsign_FieldIndex.Description:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;
-            switch (enu)
-            {
-                case Birthsign_FieldIndex.Name:
-                case Birthsign_FieldIndex.Icon:
-                case Birthsign_FieldIndex.Description:
-                case Birthsign_FieldIndex.Spells:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;
-            switch (enu)
-            {
-                case Birthsign_FieldIndex.Name:
-                case Birthsign_FieldIndex.Icon:
-                case Birthsign_FieldIndex.Description:
-                case Birthsign_FieldIndex.Spells:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;
-            switch (enu)
-            {
-                case Birthsign_FieldIndex.Name:
-                    return "Name";
-                case Birthsign_FieldIndex.Icon:
-                    return "Icon";
-                case Birthsign_FieldIndex.Description:
-                    return "Description";
-                case Birthsign_FieldIndex.Spells:
-                    return "Spells";
-                default:
-                    return OblivionMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;
-            switch (enu)
-            {
-                case Birthsign_FieldIndex.Name:
-                case Birthsign_FieldIndex.Icon:
-                case Birthsign_FieldIndex.Description:
-                case Birthsign_FieldIndex.Spells:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;
-            switch (enu)
-            {
-                case Birthsign_FieldIndex.Name:
-                case Birthsign_FieldIndex.Icon:
-                case Birthsign_FieldIndex.Description:
-                case Birthsign_FieldIndex.Spells:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;
-            switch (enu)
-            {
-                case Birthsign_FieldIndex.Name:
-                    return typeof(String);
-                case Birthsign_FieldIndex.Icon:
-                    return typeof(String);
-                case Birthsign_FieldIndex.Description:
-                    return typeof(String);
-                case Birthsign_FieldIndex.Spells:
-                    return typeof(IExtendedList<IFormLink<Spell>>);
-                default:
-                    return OblivionMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.BSGN;
         public static readonly Type BinaryWriteTranslation = typeof(BirthsignBinaryWriteTranslation);
         #region Interface
@@ -991,14 +862,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1376,7 +1247,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Spells.SetTo(
                         rhs.Spells
-                        .Select(r => (IFormLink<Spell>)new FormLink<Spell>(r.FormKey)));
+                        .Select(r => (IFormLink<ISpellGetter>)new FormLink<ISpellGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1681,7 +1552,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.SPLO:
                 {
                     item.Spells.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Spell>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ISpellGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPLO),
                             transl: FormLinkBinaryTranslation.Instance.Parse));

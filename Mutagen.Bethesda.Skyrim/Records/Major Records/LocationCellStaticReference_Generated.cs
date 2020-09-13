@@ -40,19 +40,13 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region LocationRefType
-        public FormLink<LocationReferenceType> LocationRefType { get; set; } = new FormLink<LocationReferenceType>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ILocationReferenceTypeGetter> ILocationCellStaticReferenceGetter.LocationRefType => this.LocationRefType.ToGetter<LocationReferenceType, ILocationReferenceTypeGetter>();
+        public FormLink<ILocationReferenceTypeGetter> LocationRefType { get; set; } = new FormLink<ILocationReferenceTypeGetter>();
         #endregion
         #region Marker
-        public FormLink<ILinkedReference> Marker { get; set; } = new FormLink<ILinkedReference>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ILinkedReferenceGetter> ILocationCellStaticReferenceGetter.Marker => this.Marker.ToGetter<ILinkedReference, ILinkedReferenceGetter>();
+        public FormLink<ILinkedReferenceGetter> Marker { get; set; } = new FormLink<ILinkedReferenceGetter>();
         #endregion
         #region Location
-        public FormLink<IComplexLocation> Location { get; set; } = new FormLink<IComplexLocation>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IComplexLocationGetter> ILocationCellStaticReferenceGetter.Location => this.Location.ToGetter<IComplexLocation, IComplexLocationGetter>();
+        public FormLink<IComplexLocationGetter> Location { get; set; } = new FormLink<IComplexLocationGetter>();
         #endregion
         #region Grid
         public P2Int16 Grid { get; set; } = default;
@@ -516,9 +510,9 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ILocationCellStaticReference>,
         ILinkedFormKeyContainer
     {
-        new FormLink<LocationReferenceType> LocationRefType { get; set; }
-        new FormLink<ILinkedReference> Marker { get; set; }
-        new FormLink<IComplexLocation> Location { get; set; }
+        new FormLink<ILocationReferenceTypeGetter> LocationRefType { get; set; }
+        new FormLink<ILinkedReferenceGetter> Marker { get; set; }
+        new FormLink<IComplexLocationGetter> Location { get; set; }
         new P2Int16 Grid { get; set; }
     }
 
@@ -755,134 +749,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "LOCATIONREFTYPE":
-                    return (ushort)LocationCellStaticReference_FieldIndex.LocationRefType;
-                case "MARKER":
-                    return (ushort)LocationCellStaticReference_FieldIndex.Marker;
-                case "LOCATION":
-                    return (ushort)LocationCellStaticReference_FieldIndex.Location;
-                case "GRID":
-                    return (ushort)LocationCellStaticReference_FieldIndex.Grid;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            LocationCellStaticReference_FieldIndex enu = (LocationCellStaticReference_FieldIndex)index;
-            switch (enu)
-            {
-                case LocationCellStaticReference_FieldIndex.LocationRefType:
-                case LocationCellStaticReference_FieldIndex.Marker:
-                case LocationCellStaticReference_FieldIndex.Location:
-                case LocationCellStaticReference_FieldIndex.Grid:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            LocationCellStaticReference_FieldIndex enu = (LocationCellStaticReference_FieldIndex)index;
-            switch (enu)
-            {
-                case LocationCellStaticReference_FieldIndex.LocationRefType:
-                case LocationCellStaticReference_FieldIndex.Marker:
-                case LocationCellStaticReference_FieldIndex.Location:
-                case LocationCellStaticReference_FieldIndex.Grid:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            LocationCellStaticReference_FieldIndex enu = (LocationCellStaticReference_FieldIndex)index;
-            switch (enu)
-            {
-                case LocationCellStaticReference_FieldIndex.LocationRefType:
-                case LocationCellStaticReference_FieldIndex.Marker:
-                case LocationCellStaticReference_FieldIndex.Location:
-                case LocationCellStaticReference_FieldIndex.Grid:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            LocationCellStaticReference_FieldIndex enu = (LocationCellStaticReference_FieldIndex)index;
-            switch (enu)
-            {
-                case LocationCellStaticReference_FieldIndex.LocationRefType:
-                    return "LocationRefType";
-                case LocationCellStaticReference_FieldIndex.Marker:
-                    return "Marker";
-                case LocationCellStaticReference_FieldIndex.Location:
-                    return "Location";
-                case LocationCellStaticReference_FieldIndex.Grid:
-                    return "Grid";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            LocationCellStaticReference_FieldIndex enu = (LocationCellStaticReference_FieldIndex)index;
-            switch (enu)
-            {
-                case LocationCellStaticReference_FieldIndex.LocationRefType:
-                case LocationCellStaticReference_FieldIndex.Marker:
-                case LocationCellStaticReference_FieldIndex.Location:
-                case LocationCellStaticReference_FieldIndex.Grid:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            LocationCellStaticReference_FieldIndex enu = (LocationCellStaticReference_FieldIndex)index;
-            switch (enu)
-            {
-                case LocationCellStaticReference_FieldIndex.LocationRefType:
-                case LocationCellStaticReference_FieldIndex.Marker:
-                case LocationCellStaticReference_FieldIndex.Location:
-                case LocationCellStaticReference_FieldIndex.Grid:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            LocationCellStaticReference_FieldIndex enu = (LocationCellStaticReference_FieldIndex)index;
-            switch (enu)
-            {
-                case LocationCellStaticReference_FieldIndex.LocationRefType:
-                    return typeof(FormLink<LocationReferenceType>);
-                case LocationCellStaticReference_FieldIndex.Marker:
-                    return typeof(FormLink<ILinkedReference>);
-                case LocationCellStaticReference_FieldIndex.Location:
-                    return typeof(FormLink<IComplexLocation>);
-                case LocationCellStaticReference_FieldIndex.Grid:
-                    return typeof(P2Int16);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly Type BinaryWriteTranslation = typeof(LocationCellStaticReferenceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -902,14 +768,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -925,9 +791,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ILocationCellStaticReference item)
         {
             ClearPartial();
-            item.LocationRefType = FormLink<LocationReferenceType>.Null;
-            item.Marker = FormLink<ILinkedReference>.Null;
-            item.Location = FormLink<IComplexLocation>.Null;
+            item.LocationRefType = FormLink<ILocationReferenceTypeGetter>.Null;
+            item.Marker = FormLink<ILinkedReferenceGetter>.Null;
+            item.Location = FormLink<IComplexLocationGetter>.Null;
             item.Grid = default;
         }
         
@@ -1099,15 +965,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)LocationCellStaticReference_FieldIndex.LocationRefType) ?? true))
             {
-                item.LocationRefType = new FormLink<LocationReferenceType>(rhs.LocationRefType.FormKey);
+                item.LocationRefType = new FormLink<ILocationReferenceTypeGetter>(rhs.LocationRefType.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LocationCellStaticReference_FieldIndex.Marker) ?? true))
             {
-                item.Marker = new FormLink<ILinkedReference>(rhs.Marker.FormKey);
+                item.Marker = new FormLink<ILinkedReferenceGetter>(rhs.Marker.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LocationCellStaticReference_FieldIndex.Location) ?? true))
             {
-                item.Location = new FormLink<IComplexLocation>(rhs.Location.FormKey);
+                item.Location = new FormLink<IComplexLocationGetter>(rhs.Location.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LocationCellStaticReference_FieldIndex.Grid) ?? true))
             {

@@ -18,12 +18,12 @@
   <ItemGroup>
     <PackageReference Include="Compression.BSA" Version="2.2.1.1" />
     <PackageReference Include="DotNetZip" Version="1.13.8" />
-    <PackageReference Include="Loqui" Version="1.5.2" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.1.4" />
+    <PackageReference Include="Loqui" Version="1.5.4" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.1.5" />
   </ItemGroup>
   <PropertyGroup>
     <PackageId>Mutagen.Bethesda.Core</PackageId>
-    <Version>0.15.2.0</Version>
+    <Version>0.16.0.0</Version>
     <Authors>Noggog</Authors>
     <Company>Mutagen</Company>
     <Product>Mutagen</Product>
@@ -51,14 +51,16 @@
     <Compile Include="Exceptions\RecordException.cs" />
     <Compile Include="Exceptions\SubrecordException.cs" />
     <Compile Include="Extensions\EnumerableExt.cs" />
-    <Compile Include="Extensions\FormLinkExt.cs" />
+    <Compile Include="Extensions\FormLinkListMixIn.cs" />
     <Compile Include="Extensions\ModKeyExt.cs" />
     <Compile Include="Extensions\RemoveExt.cs" />
     <Compile Include="Extensions\LoadOrderExt.cs" />
     <Compile Include="Extensions\MutagenEnumExt.cs" />
+    <Compile Include="Interfaces\Aspect\IKeywordCommon.cs" />
     <Compile Include="Interfaces\IDuplicatable.cs" />
     <Compile Include="Interfaces\IGameSettingCommon.cs" />
     <Compile Include="Interfaces\IGroup.cs" />
+    <Compile Include="Interfaces\Aspect\IKeyworded.cs" />
     <Compile Include="Interfaces\ILinkInterfaceMapping.cs" />
     <Compile Include="Interfaces\IMajorRecordCommon.cs" />
     <Compile Include="Interfaces\IMajorRecordContextEnumerable.cs" />
@@ -66,8 +68,8 @@
     <Compile Include="Interfaces\IMod.cs" />
     <Compile Include="Interfaces\IModHeaderCommon.cs" />
     <Compile Include="Interfaces\IModKeyed.cs" />
-    <Compile Include="Interfaces\INamed.cs" />
-    <Compile Include="Interfaces\INamedRequired.cs" />
+    <Compile Include="Interfaces\Aspect\INamed.cs" />
+    <Compile Include="Interfaces\Aspect\INamedRequired.cs" />
     <Compile Include="Interfaces\ITranslatedNamed.cs" />
     <Compile Include="Interfaces\ITranslatedNamedRequired.cs" />
     <Compile Include="Interfaces\LinkInterfaceMapping.cs" />

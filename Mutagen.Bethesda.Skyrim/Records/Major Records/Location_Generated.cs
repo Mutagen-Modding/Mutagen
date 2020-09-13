@@ -45,8 +45,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region ActorCellPersistentReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<LocationReference>? _ActorCellPersistentReferences;
-        public IExtendedList<LocationReference>? ActorCellPersistentReferences
+        private ExtendedList<LocationReference>? _ActorCellPersistentReferences;
+        public ExtendedList<LocationReference>? ActorCellPersistentReferences
         {
             get => this._ActorCellPersistentReferences;
             set => this._ActorCellPersistentReferences = value;
@@ -59,8 +59,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LocationCellPersistentReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<LocationReference>? _LocationCellPersistentReferences;
-        public IExtendedList<LocationReference>? LocationCellPersistentReferences
+        private ExtendedList<LocationReference>? _LocationCellPersistentReferences;
+        public ExtendedList<LocationReference>? LocationCellPersistentReferences
         {
             get => this._LocationCellPersistentReferences;
             set => this._LocationCellPersistentReferences = value;
@@ -73,8 +73,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ReferenceCellPersistentReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IPlacedSimple>>? _ReferenceCellPersistentReferences;
-        public IExtendedList<IFormLink<IPlacedSimple>>? ReferenceCellPersistentReferences
+        private ExtendedList<IFormLink<IPlacedSimpleGetter>>? _ReferenceCellPersistentReferences;
+        public ExtendedList<IFormLink<IPlacedSimpleGetter>>? ReferenceCellPersistentReferences
         {
             get => this._ReferenceCellPersistentReferences;
             set => this._ReferenceCellPersistentReferences = value;
@@ -87,8 +87,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ActorCellUniques
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<LocationReference>? _ActorCellUniques;
-        public IExtendedList<LocationReference>? ActorCellUniques
+        private ExtendedList<LocationReference>? _ActorCellUniques;
+        public ExtendedList<LocationReference>? ActorCellUniques
         {
             get => this._ActorCellUniques;
             set => this._ActorCellUniques = value;
@@ -101,8 +101,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LocationCellUniques
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<LocationReference>? _LocationCellUniques;
-        public IExtendedList<LocationReference>? LocationCellUniques
+        private ExtendedList<LocationReference>? _LocationCellUniques;
+        public ExtendedList<LocationReference>? LocationCellUniques
         {
             get => this._LocationCellUniques;
             set => this._LocationCellUniques = value;
@@ -115,8 +115,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ReferenceCellUnique
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Npc>>? _ReferenceCellUnique;
-        public IExtendedList<IFormLink<Npc>>? ReferenceCellUnique
+        private ExtendedList<IFormLink<INpcGetter>>? _ReferenceCellUnique;
+        public ExtendedList<IFormLink<INpcGetter>>? ReferenceCellUnique
         {
             get => this._ReferenceCellUnique;
             set => this._ReferenceCellUnique = value;
@@ -129,8 +129,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ActorCellStaticReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<LocationCellStaticReference>? _ActorCellStaticReferences;
-        public IExtendedList<LocationCellStaticReference>? ActorCellStaticReferences
+        private ExtendedList<LocationCellStaticReference>? _ActorCellStaticReferences;
+        public ExtendedList<LocationCellStaticReference>? ActorCellStaticReferences
         {
             get => this._ActorCellStaticReferences;
             set => this._ActorCellStaticReferences = value;
@@ -143,8 +143,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LocationCellStaticReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<LocationCellStaticReference>? _LocationCellStaticReferences;
-        public IExtendedList<LocationCellStaticReference>? LocationCellStaticReferences
+        private ExtendedList<LocationCellStaticReference>? _LocationCellStaticReferences;
+        public ExtendedList<LocationCellStaticReference>? LocationCellStaticReferences
         {
             get => this._LocationCellStaticReferences;
             set => this._LocationCellStaticReferences = value;
@@ -157,8 +157,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ReferenceCellStaticReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IPlacedSimple>>? _ReferenceCellStaticReferences;
-        public IExtendedList<IFormLink<IPlacedSimple>>? ReferenceCellStaticReferences
+        private ExtendedList<IFormLink<IPlacedSimpleGetter>>? _ReferenceCellStaticReferences;
+        public ExtendedList<IFormLink<IPlacedSimpleGetter>>? ReferenceCellStaticReferences
         {
             get => this._ReferenceCellStaticReferences;
             set => this._ReferenceCellStaticReferences = value;
@@ -171,8 +171,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ActorCellEncounterCell
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<LocationCoordinate> _ActorCellEncounterCell = new ExtendedList<LocationCoordinate>();
-        public IExtendedList<LocationCoordinate> ActorCellEncounterCell
+        private ExtendedList<LocationCoordinate> _ActorCellEncounterCell = new ExtendedList<LocationCoordinate>();
+        public ExtendedList<LocationCoordinate> ActorCellEncounterCell
         {
             get => this._ActorCellEncounterCell;
             protected set => this._ActorCellEncounterCell = value;
@@ -185,8 +185,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LocationCellEncounterCell
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<LocationCoordinate> _LocationCellEncounterCell = new ExtendedList<LocationCoordinate>();
-        public IExtendedList<LocationCoordinate> LocationCellEncounterCell
+        private ExtendedList<LocationCoordinate> _LocationCellEncounterCell = new ExtendedList<LocationCoordinate>();
+        public ExtendedList<LocationCoordinate> LocationCellEncounterCell
         {
             get => this._LocationCellEncounterCell;
             protected set => this._LocationCellEncounterCell = value;
@@ -199,8 +199,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ReferenceCellEncounterCell
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<LocationCoordinate> _ReferenceCellEncounterCell = new ExtendedList<LocationCoordinate>();
-        public IExtendedList<LocationCoordinate> ReferenceCellEncounterCell
+        private ExtendedList<LocationCoordinate> _ReferenceCellEncounterCell = new ExtendedList<LocationCoordinate>();
+        public ExtendedList<LocationCoordinate> ReferenceCellEncounterCell
         {
             get => this._ReferenceCellEncounterCell;
             protected set => this._ReferenceCellEncounterCell = value;
@@ -213,8 +213,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ActorCellMarkerReference
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IPlaced>>? _ActorCellMarkerReference;
-        public IExtendedList<IFormLink<IPlaced>>? ActorCellMarkerReference
+        private ExtendedList<IFormLink<IPlacedGetter>>? _ActorCellMarkerReference;
+        public ExtendedList<IFormLink<IPlacedGetter>>? ActorCellMarkerReference
         {
             get => this._ActorCellMarkerReference;
             set => this._ActorCellMarkerReference = value;
@@ -227,8 +227,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LocationCellMarkerReference
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<IPlaced>>? _LocationCellMarkerReference;
-        public IExtendedList<IFormLink<IPlaced>>? LocationCellMarkerReference
+        private ExtendedList<IFormLink<IPlacedGetter>>? _LocationCellMarkerReference;
+        public ExtendedList<IFormLink<IPlacedGetter>>? LocationCellMarkerReference
         {
             get => this._LocationCellMarkerReference;
             set => this._LocationCellMarkerReference = value;
@@ -241,8 +241,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ActorCellEnablePoint
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<LocationCellEnablePoint>? _ActorCellEnablePoint;
-        public IExtendedList<LocationCellEnablePoint>? ActorCellEnablePoint
+        private ExtendedList<LocationCellEnablePoint>? _ActorCellEnablePoint;
+        public ExtendedList<LocationCellEnablePoint>? ActorCellEnablePoint
         {
             get => this._ActorCellEnablePoint;
             set => this._ActorCellEnablePoint = value;
@@ -255,8 +255,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LocationCellEnablePoint
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<LocationCellEnablePoint>? _LocationCellEnablePoint;
-        public IExtendedList<LocationCellEnablePoint>? LocationCellEnablePoint
+        private ExtendedList<LocationCellEnablePoint>? _LocationCellEnablePoint;
+        public ExtendedList<LocationCellEnablePoint>? LocationCellEnablePoint
         {
             get => this._LocationCellEnablePoint;
             set => this._LocationCellEnablePoint = value;
@@ -274,8 +274,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Keyword>>? _Keywords;
-        public IExtendedList<IFormLink<Keyword>>? Keywords
+        private ExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
+        public ExtendedList<IFormLink<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -287,24 +287,16 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region ParentLocation
-        public FormLinkNullable<Location> ParentLocation { get; set; } = new FormLinkNullable<Location>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ILocationGetter> ILocationGetter.ParentLocation => this.ParentLocation.ToGetter<Location, ILocationGetter>();
+        public FormLinkNullable<ILocationGetter> ParentLocation { get; set; } = new FormLinkNullable<ILocationGetter>();
         #endregion
         #region Music
-        public FormLinkNullable<MusicType> Music { get; set; } = new FormLinkNullable<MusicType>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IMusicTypeGetter> ILocationGetter.Music => this.Music.ToGetter<MusicType, IMusicTypeGetter>();
+        public FormLinkNullable<IMusicTypeGetter> Music { get; set; } = new FormLinkNullable<IMusicTypeGetter>();
         #endregion
         #region UnreportedCrimeFaction
-        public FormLinkNullable<Faction> UnreportedCrimeFaction { get; set; } = new FormLinkNullable<Faction>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IFactionGetter> ILocationGetter.UnreportedCrimeFaction => this.UnreportedCrimeFaction.ToGetter<Faction, IFactionGetter>();
+        public FormLinkNullable<IFactionGetter> UnreportedCrimeFaction { get; set; } = new FormLinkNullable<IFactionGetter>();
         #endregion
         #region WorldLocationMarkerRef
-        public FormLinkNullable<IPlacedSimple> WorldLocationMarkerRef { get; set; } = new FormLinkNullable<IPlacedSimple>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IPlacedSimpleGetter> ILocationGetter.WorldLocationMarkerRef => this.WorldLocationMarkerRef.ToGetter<IPlacedSimple, IPlacedSimpleGetter>();
+        public FormLinkNullable<IPlacedSimpleGetter> WorldLocationMarkerRef { get; set; } = new FormLinkNullable<IPlacedSimpleGetter>();
         #endregion
         #region WorldLocationRadius
         public Single? WorldLocationRadius { get; set; }
@@ -312,9 +304,7 @@ namespace Mutagen.Bethesda.Skyrim
         Single? ILocationGetter.WorldLocationRadius => this.WorldLocationRadius;
         #endregion
         #region HorseMarkerRef
-        public FormLinkNullable<PlacedObject> HorseMarkerRef { get; set; } = new FormLinkNullable<PlacedObject>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IPlacedObjectGetter> ILocationGetter.HorseMarkerRef => this.HorseMarkerRef.ToGetter<PlacedObject, IPlacedObjectGetter>();
+        public FormLinkNullable<IPlacedObjectGetter> HorseMarkerRef { get; set; } = new FormLinkNullable<IPlacedObjectGetter>();
         #endregion
         #region Color
         public Color? Color { get; set; }
@@ -2652,30 +2642,30 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ILocationInternal>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<LocationReference>? ActorCellPersistentReferences { get; set; }
-        new IExtendedList<LocationReference>? LocationCellPersistentReferences { get; set; }
-        new IExtendedList<IFormLink<IPlacedSimple>>? ReferenceCellPersistentReferences { get; set; }
-        new IExtendedList<LocationReference>? ActorCellUniques { get; set; }
-        new IExtendedList<LocationReference>? LocationCellUniques { get; set; }
-        new IExtendedList<IFormLink<Npc>>? ReferenceCellUnique { get; set; }
-        new IExtendedList<LocationCellStaticReference>? ActorCellStaticReferences { get; set; }
-        new IExtendedList<LocationCellStaticReference>? LocationCellStaticReferences { get; set; }
-        new IExtendedList<IFormLink<IPlacedSimple>>? ReferenceCellStaticReferences { get; set; }
-        new IExtendedList<LocationCoordinate> ActorCellEncounterCell { get; }
-        new IExtendedList<LocationCoordinate> LocationCellEncounterCell { get; }
-        new IExtendedList<LocationCoordinate> ReferenceCellEncounterCell { get; }
-        new IExtendedList<IFormLink<IPlaced>>? ActorCellMarkerReference { get; set; }
-        new IExtendedList<IFormLink<IPlaced>>? LocationCellMarkerReference { get; set; }
-        new IExtendedList<LocationCellEnablePoint>? ActorCellEnablePoint { get; set; }
-        new IExtendedList<LocationCellEnablePoint>? LocationCellEnablePoint { get; set; }
+        new ExtendedList<LocationReference>? ActorCellPersistentReferences { get; set; }
+        new ExtendedList<LocationReference>? LocationCellPersistentReferences { get; set; }
+        new ExtendedList<IFormLink<IPlacedSimpleGetter>>? ReferenceCellPersistentReferences { get; set; }
+        new ExtendedList<LocationReference>? ActorCellUniques { get; set; }
+        new ExtendedList<LocationReference>? LocationCellUniques { get; set; }
+        new ExtendedList<IFormLink<INpcGetter>>? ReferenceCellUnique { get; set; }
+        new ExtendedList<LocationCellStaticReference>? ActorCellStaticReferences { get; set; }
+        new ExtendedList<LocationCellStaticReference>? LocationCellStaticReferences { get; set; }
+        new ExtendedList<IFormLink<IPlacedSimpleGetter>>? ReferenceCellStaticReferences { get; set; }
+        new ExtendedList<LocationCoordinate> ActorCellEncounterCell { get; }
+        new ExtendedList<LocationCoordinate> LocationCellEncounterCell { get; }
+        new ExtendedList<LocationCoordinate> ReferenceCellEncounterCell { get; }
+        new ExtendedList<IFormLink<IPlacedGetter>>? ActorCellMarkerReference { get; set; }
+        new ExtendedList<IFormLink<IPlacedGetter>>? LocationCellMarkerReference { get; set; }
+        new ExtendedList<LocationCellEnablePoint>? ActorCellEnablePoint { get; set; }
+        new ExtendedList<LocationCellEnablePoint>? LocationCellEnablePoint { get; set; }
         new TranslatedString? Name { get; set; }
-        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
-        new FormLinkNullable<Location> ParentLocation { get; set; }
-        new FormLinkNullable<MusicType> Music { get; set; }
-        new FormLinkNullable<Faction> UnreportedCrimeFaction { get; set; }
-        new FormLinkNullable<IPlacedSimple> WorldLocationMarkerRef { get; set; }
+        new ExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
+        new FormLinkNullable<ILocationGetter> ParentLocation { get; set; }
+        new FormLinkNullable<IMusicTypeGetter> Music { get; set; }
+        new FormLinkNullable<IFactionGetter> UnreportedCrimeFaction { get; set; }
+        new FormLinkNullable<IPlacedSimpleGetter> WorldLocationMarkerRef { get; set; }
         new Single? WorldLocationRadius { get; set; }
-        new FormLinkNullable<PlacedObject> HorseMarkerRef { get; set; }
+        new FormLinkNullable<IPlacedObjectGetter> HorseMarkerRef { get; set; }
         new Color? Color { get; set; }
     }
 
@@ -2938,367 +2928,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "ACTORCELLPERSISTENTREFERENCES":
-                    return (ushort)Location_FieldIndex.ActorCellPersistentReferences;
-                case "LOCATIONCELLPERSISTENTREFERENCES":
-                    return (ushort)Location_FieldIndex.LocationCellPersistentReferences;
-                case "REFERENCECELLPERSISTENTREFERENCES":
-                    return (ushort)Location_FieldIndex.ReferenceCellPersistentReferences;
-                case "ACTORCELLUNIQUES":
-                    return (ushort)Location_FieldIndex.ActorCellUniques;
-                case "LOCATIONCELLUNIQUES":
-                    return (ushort)Location_FieldIndex.LocationCellUniques;
-                case "REFERENCECELLUNIQUE":
-                    return (ushort)Location_FieldIndex.ReferenceCellUnique;
-                case "ACTORCELLSTATICREFERENCES":
-                    return (ushort)Location_FieldIndex.ActorCellStaticReferences;
-                case "LOCATIONCELLSTATICREFERENCES":
-                    return (ushort)Location_FieldIndex.LocationCellStaticReferences;
-                case "REFERENCECELLSTATICREFERENCES":
-                    return (ushort)Location_FieldIndex.ReferenceCellStaticReferences;
-                case "ACTORCELLENCOUNTERCELL":
-                    return (ushort)Location_FieldIndex.ActorCellEncounterCell;
-                case "LOCATIONCELLENCOUNTERCELL":
-                    return (ushort)Location_FieldIndex.LocationCellEncounterCell;
-                case "REFERENCECELLENCOUNTERCELL":
-                    return (ushort)Location_FieldIndex.ReferenceCellEncounterCell;
-                case "ACTORCELLMARKERREFERENCE":
-                    return (ushort)Location_FieldIndex.ActorCellMarkerReference;
-                case "LOCATIONCELLMARKERREFERENCE":
-                    return (ushort)Location_FieldIndex.LocationCellMarkerReference;
-                case "ACTORCELLENABLEPOINT":
-                    return (ushort)Location_FieldIndex.ActorCellEnablePoint;
-                case "LOCATIONCELLENABLEPOINT":
-                    return (ushort)Location_FieldIndex.LocationCellEnablePoint;
-                case "NAME":
-                    return (ushort)Location_FieldIndex.Name;
-                case "KEYWORDS":
-                    return (ushort)Location_FieldIndex.Keywords;
-                case "PARENTLOCATION":
-                    return (ushort)Location_FieldIndex.ParentLocation;
-                case "MUSIC":
-                    return (ushort)Location_FieldIndex.Music;
-                case "UNREPORTEDCRIMEFACTION":
-                    return (ushort)Location_FieldIndex.UnreportedCrimeFaction;
-                case "WORLDLOCATIONMARKERREF":
-                    return (ushort)Location_FieldIndex.WorldLocationMarkerRef;
-                case "WORLDLOCATIONRADIUS":
-                    return (ushort)Location_FieldIndex.WorldLocationRadius;
-                case "HORSEMARKERREF":
-                    return (ushort)Location_FieldIndex.HorseMarkerRef;
-                case "COLOR":
-                    return (ushort)Location_FieldIndex.Color;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Location_FieldIndex enu = (Location_FieldIndex)index;
-            switch (enu)
-            {
-                case Location_FieldIndex.ActorCellPersistentReferences:
-                case Location_FieldIndex.LocationCellPersistentReferences:
-                case Location_FieldIndex.ReferenceCellPersistentReferences:
-                case Location_FieldIndex.ActorCellUniques:
-                case Location_FieldIndex.LocationCellUniques:
-                case Location_FieldIndex.ReferenceCellUnique:
-                case Location_FieldIndex.ActorCellStaticReferences:
-                case Location_FieldIndex.LocationCellStaticReferences:
-                case Location_FieldIndex.ReferenceCellStaticReferences:
-                case Location_FieldIndex.ActorCellEncounterCell:
-                case Location_FieldIndex.LocationCellEncounterCell:
-                case Location_FieldIndex.ReferenceCellEncounterCell:
-                case Location_FieldIndex.ActorCellMarkerReference:
-                case Location_FieldIndex.LocationCellMarkerReference:
-                case Location_FieldIndex.ActorCellEnablePoint:
-                case Location_FieldIndex.LocationCellEnablePoint:
-                case Location_FieldIndex.Keywords:
-                    return true;
-                case Location_FieldIndex.Name:
-                case Location_FieldIndex.ParentLocation:
-                case Location_FieldIndex.Music:
-                case Location_FieldIndex.UnreportedCrimeFaction:
-                case Location_FieldIndex.WorldLocationMarkerRef:
-                case Location_FieldIndex.WorldLocationRadius:
-                case Location_FieldIndex.HorseMarkerRef:
-                case Location_FieldIndex.Color:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Location_FieldIndex enu = (Location_FieldIndex)index;
-            switch (enu)
-            {
-                case Location_FieldIndex.ActorCellPersistentReferences:
-                case Location_FieldIndex.LocationCellPersistentReferences:
-                case Location_FieldIndex.ActorCellUniques:
-                case Location_FieldIndex.LocationCellUniques:
-                case Location_FieldIndex.ActorCellStaticReferences:
-                case Location_FieldIndex.LocationCellStaticReferences:
-                case Location_FieldIndex.ActorCellEncounterCell:
-                case Location_FieldIndex.LocationCellEncounterCell:
-                case Location_FieldIndex.ReferenceCellEncounterCell:
-                case Location_FieldIndex.ActorCellEnablePoint:
-                case Location_FieldIndex.LocationCellEnablePoint:
-                    return true;
-                case Location_FieldIndex.ReferenceCellPersistentReferences:
-                case Location_FieldIndex.ReferenceCellUnique:
-                case Location_FieldIndex.ReferenceCellStaticReferences:
-                case Location_FieldIndex.ActorCellMarkerReference:
-                case Location_FieldIndex.LocationCellMarkerReference:
-                case Location_FieldIndex.Name:
-                case Location_FieldIndex.Keywords:
-                case Location_FieldIndex.ParentLocation:
-                case Location_FieldIndex.Music:
-                case Location_FieldIndex.UnreportedCrimeFaction:
-                case Location_FieldIndex.WorldLocationMarkerRef:
-                case Location_FieldIndex.WorldLocationRadius:
-                case Location_FieldIndex.HorseMarkerRef:
-                case Location_FieldIndex.Color:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Location_FieldIndex enu = (Location_FieldIndex)index;
-            switch (enu)
-            {
-                case Location_FieldIndex.ActorCellPersistentReferences:
-                case Location_FieldIndex.LocationCellPersistentReferences:
-                case Location_FieldIndex.ReferenceCellPersistentReferences:
-                case Location_FieldIndex.ActorCellUniques:
-                case Location_FieldIndex.LocationCellUniques:
-                case Location_FieldIndex.ReferenceCellUnique:
-                case Location_FieldIndex.ActorCellStaticReferences:
-                case Location_FieldIndex.LocationCellStaticReferences:
-                case Location_FieldIndex.ReferenceCellStaticReferences:
-                case Location_FieldIndex.ActorCellEncounterCell:
-                case Location_FieldIndex.LocationCellEncounterCell:
-                case Location_FieldIndex.ReferenceCellEncounterCell:
-                case Location_FieldIndex.ActorCellMarkerReference:
-                case Location_FieldIndex.LocationCellMarkerReference:
-                case Location_FieldIndex.ActorCellEnablePoint:
-                case Location_FieldIndex.LocationCellEnablePoint:
-                case Location_FieldIndex.Name:
-                case Location_FieldIndex.Keywords:
-                case Location_FieldIndex.ParentLocation:
-                case Location_FieldIndex.Music:
-                case Location_FieldIndex.UnreportedCrimeFaction:
-                case Location_FieldIndex.WorldLocationMarkerRef:
-                case Location_FieldIndex.WorldLocationRadius:
-                case Location_FieldIndex.HorseMarkerRef:
-                case Location_FieldIndex.Color:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Location_FieldIndex enu = (Location_FieldIndex)index;
-            switch (enu)
-            {
-                case Location_FieldIndex.ActorCellPersistentReferences:
-                    return "ActorCellPersistentReferences";
-                case Location_FieldIndex.LocationCellPersistentReferences:
-                    return "LocationCellPersistentReferences";
-                case Location_FieldIndex.ReferenceCellPersistentReferences:
-                    return "ReferenceCellPersistentReferences";
-                case Location_FieldIndex.ActorCellUniques:
-                    return "ActorCellUniques";
-                case Location_FieldIndex.LocationCellUniques:
-                    return "LocationCellUniques";
-                case Location_FieldIndex.ReferenceCellUnique:
-                    return "ReferenceCellUnique";
-                case Location_FieldIndex.ActorCellStaticReferences:
-                    return "ActorCellStaticReferences";
-                case Location_FieldIndex.LocationCellStaticReferences:
-                    return "LocationCellStaticReferences";
-                case Location_FieldIndex.ReferenceCellStaticReferences:
-                    return "ReferenceCellStaticReferences";
-                case Location_FieldIndex.ActorCellEncounterCell:
-                    return "ActorCellEncounterCell";
-                case Location_FieldIndex.LocationCellEncounterCell:
-                    return "LocationCellEncounterCell";
-                case Location_FieldIndex.ReferenceCellEncounterCell:
-                    return "ReferenceCellEncounterCell";
-                case Location_FieldIndex.ActorCellMarkerReference:
-                    return "ActorCellMarkerReference";
-                case Location_FieldIndex.LocationCellMarkerReference:
-                    return "LocationCellMarkerReference";
-                case Location_FieldIndex.ActorCellEnablePoint:
-                    return "ActorCellEnablePoint";
-                case Location_FieldIndex.LocationCellEnablePoint:
-                    return "LocationCellEnablePoint";
-                case Location_FieldIndex.Name:
-                    return "Name";
-                case Location_FieldIndex.Keywords:
-                    return "Keywords";
-                case Location_FieldIndex.ParentLocation:
-                    return "ParentLocation";
-                case Location_FieldIndex.Music:
-                    return "Music";
-                case Location_FieldIndex.UnreportedCrimeFaction:
-                    return "UnreportedCrimeFaction";
-                case Location_FieldIndex.WorldLocationMarkerRef:
-                    return "WorldLocationMarkerRef";
-                case Location_FieldIndex.WorldLocationRadius:
-                    return "WorldLocationRadius";
-                case Location_FieldIndex.HorseMarkerRef:
-                    return "HorseMarkerRef";
-                case Location_FieldIndex.Color:
-                    return "Color";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Location_FieldIndex enu = (Location_FieldIndex)index;
-            switch (enu)
-            {
-                case Location_FieldIndex.ActorCellPersistentReferences:
-                case Location_FieldIndex.LocationCellPersistentReferences:
-                case Location_FieldIndex.ReferenceCellPersistentReferences:
-                case Location_FieldIndex.ActorCellUniques:
-                case Location_FieldIndex.LocationCellUniques:
-                case Location_FieldIndex.ReferenceCellUnique:
-                case Location_FieldIndex.ActorCellStaticReferences:
-                case Location_FieldIndex.LocationCellStaticReferences:
-                case Location_FieldIndex.ReferenceCellStaticReferences:
-                case Location_FieldIndex.ActorCellEncounterCell:
-                case Location_FieldIndex.LocationCellEncounterCell:
-                case Location_FieldIndex.ReferenceCellEncounterCell:
-                case Location_FieldIndex.ActorCellMarkerReference:
-                case Location_FieldIndex.LocationCellMarkerReference:
-                case Location_FieldIndex.ActorCellEnablePoint:
-                case Location_FieldIndex.LocationCellEnablePoint:
-                case Location_FieldIndex.Name:
-                case Location_FieldIndex.Keywords:
-                case Location_FieldIndex.ParentLocation:
-                case Location_FieldIndex.Music:
-                case Location_FieldIndex.UnreportedCrimeFaction:
-                case Location_FieldIndex.WorldLocationMarkerRef:
-                case Location_FieldIndex.WorldLocationRadius:
-                case Location_FieldIndex.HorseMarkerRef:
-                case Location_FieldIndex.Color:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Location_FieldIndex enu = (Location_FieldIndex)index;
-            switch (enu)
-            {
-                case Location_FieldIndex.ActorCellPersistentReferences:
-                case Location_FieldIndex.LocationCellPersistentReferences:
-                case Location_FieldIndex.ReferenceCellPersistentReferences:
-                case Location_FieldIndex.ActorCellUniques:
-                case Location_FieldIndex.LocationCellUniques:
-                case Location_FieldIndex.ReferenceCellUnique:
-                case Location_FieldIndex.ActorCellStaticReferences:
-                case Location_FieldIndex.LocationCellStaticReferences:
-                case Location_FieldIndex.ReferenceCellStaticReferences:
-                case Location_FieldIndex.ActorCellEncounterCell:
-                case Location_FieldIndex.LocationCellEncounterCell:
-                case Location_FieldIndex.ReferenceCellEncounterCell:
-                case Location_FieldIndex.ActorCellMarkerReference:
-                case Location_FieldIndex.LocationCellMarkerReference:
-                case Location_FieldIndex.ActorCellEnablePoint:
-                case Location_FieldIndex.LocationCellEnablePoint:
-                case Location_FieldIndex.Name:
-                case Location_FieldIndex.Keywords:
-                case Location_FieldIndex.ParentLocation:
-                case Location_FieldIndex.Music:
-                case Location_FieldIndex.UnreportedCrimeFaction:
-                case Location_FieldIndex.WorldLocationMarkerRef:
-                case Location_FieldIndex.WorldLocationRadius:
-                case Location_FieldIndex.HorseMarkerRef:
-                case Location_FieldIndex.Color:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Location_FieldIndex enu = (Location_FieldIndex)index;
-            switch (enu)
-            {
-                case Location_FieldIndex.ActorCellPersistentReferences:
-                    return typeof(IExtendedList<LocationReference>);
-                case Location_FieldIndex.LocationCellPersistentReferences:
-                    return typeof(IExtendedList<LocationReference>);
-                case Location_FieldIndex.ReferenceCellPersistentReferences:
-                    return typeof(IExtendedList<IFormLink<IPlacedSimple>>);
-                case Location_FieldIndex.ActorCellUniques:
-                    return typeof(IExtendedList<LocationReference>);
-                case Location_FieldIndex.LocationCellUniques:
-                    return typeof(IExtendedList<LocationReference>);
-                case Location_FieldIndex.ReferenceCellUnique:
-                    return typeof(IExtendedList<IFormLink<Npc>>);
-                case Location_FieldIndex.ActorCellStaticReferences:
-                    return typeof(IExtendedList<LocationCellStaticReference>);
-                case Location_FieldIndex.LocationCellStaticReferences:
-                    return typeof(IExtendedList<LocationCellStaticReference>);
-                case Location_FieldIndex.ReferenceCellStaticReferences:
-                    return typeof(IExtendedList<IFormLink<IPlacedSimple>>);
-                case Location_FieldIndex.ActorCellEncounterCell:
-                    return typeof(IExtendedList<LocationCoordinate>);
-                case Location_FieldIndex.LocationCellEncounterCell:
-                    return typeof(IExtendedList<LocationCoordinate>);
-                case Location_FieldIndex.ReferenceCellEncounterCell:
-                    return typeof(IExtendedList<LocationCoordinate>);
-                case Location_FieldIndex.ActorCellMarkerReference:
-                    return typeof(IExtendedList<IFormLink<IPlaced>>);
-                case Location_FieldIndex.LocationCellMarkerReference:
-                    return typeof(IExtendedList<IFormLink<IPlaced>>);
-                case Location_FieldIndex.ActorCellEnablePoint:
-                    return typeof(IExtendedList<LocationCellEnablePoint>);
-                case Location_FieldIndex.LocationCellEnablePoint:
-                    return typeof(IExtendedList<LocationCellEnablePoint>);
-                case Location_FieldIndex.Name:
-                    return typeof(TranslatedString);
-                case Location_FieldIndex.Keywords:
-                    return typeof(IExtendedList<IFormLink<Keyword>>);
-                case Location_FieldIndex.ParentLocation:
-                    return typeof(FormLinkNullable<Location>);
-                case Location_FieldIndex.Music:
-                    return typeof(FormLinkNullable<MusicType>);
-                case Location_FieldIndex.UnreportedCrimeFaction:
-                    return typeof(FormLinkNullable<Faction>);
-                case Location_FieldIndex.WorldLocationMarkerRef:
-                    return typeof(FormLinkNullable<IPlacedSimple>);
-                case Location_FieldIndex.WorldLocationRadius:
-                    return typeof(Single);
-                case Location_FieldIndex.HorseMarkerRef:
-                    return typeof(FormLinkNullable<PlacedObject>);
-                case Location_FieldIndex.Color:
-                    return typeof(Color);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.LCTN;
         public static readonly Type BinaryWriteTranslation = typeof(LocationBinaryWriteTranslation);
         #region Interface
@@ -3319,14 +2948,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -3360,12 +2989,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.LocationCellEnablePoint = null;
             item.Name = default;
             item.Keywords = null;
-            item.ParentLocation = FormLinkNullable<Location>.Null;
-            item.Music = FormLinkNullable<MusicType>.Null;
-            item.UnreportedCrimeFaction = FormLinkNullable<Faction>.Null;
-            item.WorldLocationMarkerRef = FormLinkNullable<IPlacedSimple>.Null;
+            item.ParentLocation = FormLinkNullable<ILocationGetter>.Null;
+            item.Music = FormLinkNullable<IMusicTypeGetter>.Null;
+            item.UnreportedCrimeFaction = FormLinkNullable<IFactionGetter>.Null;
+            item.WorldLocationMarkerRef = FormLinkNullable<IPlacedSimpleGetter>.Null;
             item.WorldLocationRadius = default;
-            item.HorseMarkerRef = FormLinkNullable<PlacedObject>.Null;
+            item.HorseMarkerRef = FormLinkNullable<IPlacedObjectGetter>.Null;
             item.Color = default;
             base.Clear(item);
         }
@@ -4340,8 +3969,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.ReferenceCellPersistentReferences = 
                             rhs.ReferenceCellPersistentReferences
-                            .Select(r => (IFormLink<IPlacedSimple>)new FormLink<IPlacedSimple>(r.FormKey))
-                            .ToExtendedList<IFormLink<IPlacedSimple>>();
+                            .Select(r => (IFormLink<IPlacedSimpleGetter>)new FormLink<IPlacedSimpleGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IPlacedSimpleGetter>>();
                     }
                     else
                     {
@@ -4431,8 +4060,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.ReferenceCellUnique = 
                             rhs.ReferenceCellUnique
-                            .Select(r => (IFormLink<Npc>)new FormLink<Npc>(r.FormKey))
-                            .ToExtendedList<IFormLink<Npc>>();
+                            .Select(r => (IFormLink<INpcGetter>)new FormLink<INpcGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<INpcGetter>>();
                     }
                     else
                     {
@@ -4522,8 +4151,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.ReferenceCellStaticReferences = 
                             rhs.ReferenceCellStaticReferences
-                            .Select(r => (IFormLink<IPlacedSimple>)new FormLink<IPlacedSimple>(r.FormKey))
-                            .ToExtendedList<IFormLink<IPlacedSimple>>();
+                            .Select(r => (IFormLink<IPlacedSimpleGetter>)new FormLink<IPlacedSimpleGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IPlacedSimpleGetter>>();
                     }
                     else
                     {
@@ -4621,8 +4250,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.ActorCellMarkerReference = 
                             rhs.ActorCellMarkerReference
-                            .Select(r => (IFormLink<IPlaced>)new FormLink<IPlaced>(r.FormKey))
-                            .ToExtendedList<IFormLink<IPlaced>>();
+                            .Select(r => (IFormLink<IPlacedGetter>)new FormLink<IPlacedGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IPlacedGetter>>();
                     }
                     else
                     {
@@ -4648,8 +4277,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.LocationCellMarkerReference = 
                             rhs.LocationCellMarkerReference
-                            .Select(r => (IFormLink<IPlaced>)new FormLink<IPlaced>(r.FormKey))
-                            .ToExtendedList<IFormLink<IPlaced>>();
+                            .Select(r => (IFormLink<IPlacedGetter>)new FormLink<IPlacedGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IPlacedGetter>>();
                     }
                     else
                     {
@@ -4743,8 +4372,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLink<Keyword>)new FormLink<Keyword>(r.FormKey))
-                            .ToExtendedList<IFormLink<Keyword>>();
+                            .Select(r => (IFormLink<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IKeywordGetter>>();
                     }
                     else
                     {
@@ -4763,19 +4392,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.ParentLocation) ?? true))
             {
-                item.ParentLocation = new FormLinkNullable<Location>(rhs.ParentLocation.FormKey);
+                item.ParentLocation = new FormLinkNullable<ILocationGetter>(rhs.ParentLocation.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.Music) ?? true))
             {
-                item.Music = new FormLinkNullable<MusicType>(rhs.Music.FormKey);
+                item.Music = new FormLinkNullable<IMusicTypeGetter>(rhs.Music.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.UnreportedCrimeFaction) ?? true))
             {
-                item.UnreportedCrimeFaction = new FormLinkNullable<Faction>(rhs.UnreportedCrimeFaction.FormKey);
+                item.UnreportedCrimeFaction = new FormLinkNullable<IFactionGetter>(rhs.UnreportedCrimeFaction.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.WorldLocationMarkerRef) ?? true))
             {
-                item.WorldLocationMarkerRef = new FormLinkNullable<IPlacedSimple>(rhs.WorldLocationMarkerRef.FormKey);
+                item.WorldLocationMarkerRef = new FormLinkNullable<IPlacedSimpleGetter>(rhs.WorldLocationMarkerRef.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.WorldLocationRadius) ?? true))
             {
@@ -4783,7 +4412,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.HorseMarkerRef) ?? true))
             {
-                item.HorseMarkerRef = new FormLinkNullable<PlacedObject>(rhs.HorseMarkerRef.FormKey);
+                item.HorseMarkerRef = new FormLinkNullable<IPlacedObjectGetter>(rhs.HorseMarkerRef.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.Color) ?? true))
             {
@@ -5288,10 +4917,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ReferenceCellPersistentReferences = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPlacedSimple>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPlacedSimpleGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<IPlacedSimple>>();
+                        .CastExtendedList<IFormLink<IPlacedSimpleGetter>>();
                     return (int)Location_FieldIndex.ReferenceCellPersistentReferences;
                 }
                 case RecordTypeInts.ACUN:
@@ -5318,10 +4947,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ReferenceCellUnique = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Npc>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<INpcGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<Npc>>();
+                        .CastExtendedList<IFormLink<INpcGetter>>();
                     return (int)Location_FieldIndex.ReferenceCellUnique;
                 }
                 case RecordTypeInts.ACSR:
@@ -5348,10 +4977,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ReferenceCellStaticReferences = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPlacedSimple>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPlacedSimpleGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<IPlacedSimple>>();
+                        .CastExtendedList<IFormLink<IPlacedSimpleGetter>>();
                     return (int)Location_FieldIndex.ReferenceCellStaticReferences;
                 }
                 case RecordTypeInts.ACEC:
@@ -5391,20 +5020,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ActorCellMarkerReference = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPlaced>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPlacedGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<IPlaced>>();
+                        .CastExtendedList<IFormLink<IPlacedGetter>>();
                     return (int)Location_FieldIndex.ActorCellMarkerReference;
                 }
                 case RecordTypeInts.LCID:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.LocationCellMarkerReference = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPlaced>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPlacedGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<IPlaced>>();
+                        .CastExtendedList<IFormLink<IPlacedGetter>>();
                     return (int)Location_FieldIndex.LocationCellMarkerReference;
                 }
                 case RecordTypeInts.ACEP:
@@ -5440,13 +5069,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KSIZ:
                 {
                     item.Keywords = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<Keyword>>();
+                        .CastExtendedList<IFormLink<IKeywordGetter>>();
                     return (int)Location_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.PNAM:

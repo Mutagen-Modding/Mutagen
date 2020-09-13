@@ -59,14 +59,12 @@ namespace Mutagen.Bethesda.Oblivion
         IModelGetter? IContainerGetter.Model => this.Model;
         #endregion
         #region Script
-        public FormLinkNullable<Script> Script { get; set; } = new FormLinkNullable<Script>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IScriptGetter> IContainerGetter.Script => this.Script.ToGetter<Script, IScriptGetter>();
+        public FormLinkNullable<IScriptGetter> Script { get; set; } = new FormLinkNullable<IScriptGetter>();
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<ContainerItem> _Items = new ExtendedList<ContainerItem>();
-        public IExtendedList<ContainerItem> Items
+        private ExtendedList<ContainerItem> _Items = new ExtendedList<ContainerItem>();
+        public ExtendedList<ContainerItem> Items
         {
             get => this._Items;
             protected set => this._Items = value;
@@ -89,14 +87,10 @@ namespace Mutagen.Bethesda.Oblivion
         IContainerDataGetter? IContainerGetter.Data => this.Data;
         #endregion
         #region OpenSound
-        public FormLinkNullable<Sound> OpenSound { get; set; } = new FormLinkNullable<Sound>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundGetter> IContainerGetter.OpenSound => this.OpenSound.ToGetter<Sound, ISoundGetter>();
+        public FormLinkNullable<ISoundGetter> OpenSound { get; set; } = new FormLinkNullable<ISoundGetter>();
         #endregion
         #region CloseSound
-        public FormLinkNullable<Sound> CloseSound { get; set; } = new FormLinkNullable<Sound>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundGetter> IContainerGetter.CloseSound => this.CloseSound.ToGetter<Sound, ISoundGetter>();
+        public FormLinkNullable<ISoundGetter> CloseSound { get; set; } = new FormLinkNullable<ISoundGetter>();
         #endregion
 
         #region To String
@@ -750,11 +744,11 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
-        new FormLinkNullable<Script> Script { get; set; }
-        new IExtendedList<ContainerItem> Items { get; }
+        new FormLinkNullable<IScriptGetter> Script { get; set; }
+        new ExtendedList<ContainerItem> Items { get; }
         new ContainerData? Data { get; set; }
-        new FormLinkNullable<Sound> OpenSound { get; set; }
-        new FormLinkNullable<Sound> CloseSound { get; set; }
+        new FormLinkNullable<ISoundGetter> OpenSound { get; set; }
+        new FormLinkNullable<ISoundGetter> CloseSound { get; set; }
     }
 
     public partial interface IContainerInternal :
@@ -978,169 +972,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "NAME":
-                    return (ushort)Container_FieldIndex.Name;
-                case "MODEL":
-                    return (ushort)Container_FieldIndex.Model;
-                case "SCRIPT":
-                    return (ushort)Container_FieldIndex.Script;
-                case "ITEMS":
-                    return (ushort)Container_FieldIndex.Items;
-                case "DATA":
-                    return (ushort)Container_FieldIndex.Data;
-                case "OPENSOUND":
-                    return (ushort)Container_FieldIndex.OpenSound;
-                case "CLOSESOUND":
-                    return (ushort)Container_FieldIndex.CloseSound;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Container_FieldIndex enu = (Container_FieldIndex)index;
-            switch (enu)
-            {
-                case Container_FieldIndex.Items:
-                    return true;
-                case Container_FieldIndex.Name:
-                case Container_FieldIndex.Model:
-                case Container_FieldIndex.Script:
-                case Container_FieldIndex.Data:
-                case Container_FieldIndex.OpenSound:
-                case Container_FieldIndex.CloseSound:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Container_FieldIndex enu = (Container_FieldIndex)index;
-            switch (enu)
-            {
-                case Container_FieldIndex.Model:
-                case Container_FieldIndex.Items:
-                case Container_FieldIndex.Data:
-                    return true;
-                case Container_FieldIndex.Name:
-                case Container_FieldIndex.Script:
-                case Container_FieldIndex.OpenSound:
-                case Container_FieldIndex.CloseSound:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Container_FieldIndex enu = (Container_FieldIndex)index;
-            switch (enu)
-            {
-                case Container_FieldIndex.Name:
-                case Container_FieldIndex.Model:
-                case Container_FieldIndex.Script:
-                case Container_FieldIndex.Items:
-                case Container_FieldIndex.Data:
-                case Container_FieldIndex.OpenSound:
-                case Container_FieldIndex.CloseSound:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Container_FieldIndex enu = (Container_FieldIndex)index;
-            switch (enu)
-            {
-                case Container_FieldIndex.Name:
-                    return "Name";
-                case Container_FieldIndex.Model:
-                    return "Model";
-                case Container_FieldIndex.Script:
-                    return "Script";
-                case Container_FieldIndex.Items:
-                    return "Items";
-                case Container_FieldIndex.Data:
-                    return "Data";
-                case Container_FieldIndex.OpenSound:
-                    return "OpenSound";
-                case Container_FieldIndex.CloseSound:
-                    return "CloseSound";
-                default:
-                    return OblivionMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Container_FieldIndex enu = (Container_FieldIndex)index;
-            switch (enu)
-            {
-                case Container_FieldIndex.Name:
-                case Container_FieldIndex.Model:
-                case Container_FieldIndex.Script:
-                case Container_FieldIndex.Items:
-                case Container_FieldIndex.Data:
-                case Container_FieldIndex.OpenSound:
-                case Container_FieldIndex.CloseSound:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Container_FieldIndex enu = (Container_FieldIndex)index;
-            switch (enu)
-            {
-                case Container_FieldIndex.Name:
-                case Container_FieldIndex.Model:
-                case Container_FieldIndex.Script:
-                case Container_FieldIndex.Items:
-                case Container_FieldIndex.Data:
-                case Container_FieldIndex.OpenSound:
-                case Container_FieldIndex.CloseSound:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Container_FieldIndex enu = (Container_FieldIndex)index;
-            switch (enu)
-            {
-                case Container_FieldIndex.Name:
-                    return typeof(String);
-                case Container_FieldIndex.Model:
-                    return typeof(Model);
-                case Container_FieldIndex.Script:
-                    return typeof(FormLinkNullable<Script>);
-                case Container_FieldIndex.Items:
-                    return typeof(IExtendedList<ContainerItem>);
-                case Container_FieldIndex.Data:
-                    return typeof(ContainerData);
-                case Container_FieldIndex.OpenSound:
-                    return typeof(FormLinkNullable<Sound>);
-                case Container_FieldIndex.CloseSound:
-                    return typeof(FormLinkNullable<Sound>);
-                default:
-                    return OblivionMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.CONT;
         public static readonly Type BinaryWriteTranslation = typeof(ContainerBinaryWriteTranslation);
         #region Interface
@@ -1161,14 +992,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1186,11 +1017,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.Name = default;
             item.Model = null;
-            item.Script = FormLinkNullable<Script>.Null;
+            item.Script = FormLinkNullable<IScriptGetter>.Null;
             item.Items.Clear();
             item.Data = null;
-            item.OpenSound = FormLinkNullable<Sound>.Null;
-            item.CloseSound = FormLinkNullable<Sound>.Null;
+            item.OpenSound = FormLinkNullable<ISoundGetter>.Null;
+            item.CloseSound = FormLinkNullable<ISoundGetter>.Null;
             base.Clear(item);
         }
         
@@ -1603,7 +1434,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.Script) ?? true))
             {
-                item.Script = new FormLinkNullable<Script>(rhs.Script.FormKey);
+                item.Script = new FormLinkNullable<IScriptGetter>(rhs.Script.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.Items) ?? true))
             {
@@ -1657,11 +1488,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.OpenSound) ?? true))
             {
-                item.OpenSound = new FormLinkNullable<Sound>(rhs.OpenSound.FormKey);
+                item.OpenSound = new FormLinkNullable<ISoundGetter>(rhs.OpenSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.CloseSound) ?? true))
             {
-                item.CloseSound = new FormLinkNullable<Sound>(rhs.CloseSound.FormKey);
+                item.CloseSound = new FormLinkNullable<ISoundGetter>(rhs.CloseSound.FormKey);
             }
         }
         

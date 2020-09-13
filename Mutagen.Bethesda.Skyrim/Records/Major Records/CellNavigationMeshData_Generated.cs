@@ -42,14 +42,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region UnusedWorldspaceParent
-        public FormLink<Worldspace> UnusedWorldspaceParent { get; set; } = new FormLink<Worldspace>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IWorldspaceGetter> ICellNavigationMeshDataGetter.UnusedWorldspaceParent => this.UnusedWorldspaceParent.ToGetter<Worldspace, IWorldspaceGetter>();
+        public FormLink<IWorldspaceGetter> UnusedWorldspaceParent { get; set; } = new FormLink<IWorldspaceGetter>();
         #endregion
         #region Parent
-        public FormLink<Cell> Parent { get; set; } = new FormLink<Cell>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ICellGetter> ICellNavigationMeshDataGetter.Parent => this.Parent.ToGetter<Cell, ICellGetter>();
+        public FormLink<ICellGetter> Parent { get; set; } = new FormLink<ICellGetter>();
         #endregion
 
         #region To String
@@ -467,8 +463,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ICellNavigationMeshData>,
         ILinkedFormKeyContainer
     {
-        new FormLink<Worldspace> UnusedWorldspaceParent { get; set; }
-        new FormLink<Cell> Parent { get; set; }
+        new FormLink<IWorldspaceGetter> UnusedWorldspaceParent { get; set; }
+        new FormLink<ICellGetter> Parent { get; set; }
     }
 
     public partial interface ICellNavigationMeshDataGetter :
@@ -681,112 +677,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "UNUSEDWORLDSPACEPARENT":
-                    return (ushort)CellNavigationMeshData_FieldIndex.UnusedWorldspaceParent;
-                case "PARENT":
-                    return (ushort)CellNavigationMeshData_FieldIndex.Parent;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            CellNavigationMeshData_FieldIndex enu = (CellNavigationMeshData_FieldIndex)index;
-            switch (enu)
-            {
-                case CellNavigationMeshData_FieldIndex.UnusedWorldspaceParent:
-                case CellNavigationMeshData_FieldIndex.Parent:
-                    return false;
-                default:
-                    return ANavigationMeshData_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            CellNavigationMeshData_FieldIndex enu = (CellNavigationMeshData_FieldIndex)index;
-            switch (enu)
-            {
-                case CellNavigationMeshData_FieldIndex.UnusedWorldspaceParent:
-                case CellNavigationMeshData_FieldIndex.Parent:
-                    return false;
-                default:
-                    return ANavigationMeshData_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            CellNavigationMeshData_FieldIndex enu = (CellNavigationMeshData_FieldIndex)index;
-            switch (enu)
-            {
-                case CellNavigationMeshData_FieldIndex.UnusedWorldspaceParent:
-                case CellNavigationMeshData_FieldIndex.Parent:
-                    return false;
-                default:
-                    return ANavigationMeshData_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            CellNavigationMeshData_FieldIndex enu = (CellNavigationMeshData_FieldIndex)index;
-            switch (enu)
-            {
-                case CellNavigationMeshData_FieldIndex.UnusedWorldspaceParent:
-                    return "UnusedWorldspaceParent";
-                case CellNavigationMeshData_FieldIndex.Parent:
-                    return "Parent";
-                default:
-                    return ANavigationMeshData_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            CellNavigationMeshData_FieldIndex enu = (CellNavigationMeshData_FieldIndex)index;
-            switch (enu)
-            {
-                case CellNavigationMeshData_FieldIndex.UnusedWorldspaceParent:
-                case CellNavigationMeshData_FieldIndex.Parent:
-                    return false;
-                default:
-                    return ANavigationMeshData_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            CellNavigationMeshData_FieldIndex enu = (CellNavigationMeshData_FieldIndex)index;
-            switch (enu)
-            {
-                case CellNavigationMeshData_FieldIndex.UnusedWorldspaceParent:
-                case CellNavigationMeshData_FieldIndex.Parent:
-                    return false;
-                default:
-                    return ANavigationMeshData_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            CellNavigationMeshData_FieldIndex enu = (CellNavigationMeshData_FieldIndex)index;
-            switch (enu)
-            {
-                case CellNavigationMeshData_FieldIndex.UnusedWorldspaceParent:
-                    return typeof(FormLink<Worldspace>);
-                case CellNavigationMeshData_FieldIndex.Parent:
-                    return typeof(FormLink<Cell>);
-                default:
-                    return ANavigationMeshData_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly Type BinaryWriteTranslation = typeof(CellNavigationMeshDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -806,14 +696,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -829,8 +719,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ICellNavigationMeshData item)
         {
             ClearPartial();
-            item.UnusedWorldspaceParent = FormLink<Worldspace>.Null;
-            item.Parent = FormLink<Cell>.Null;
+            item.UnusedWorldspaceParent = FormLink<IWorldspaceGetter>.Null;
+            item.Parent = FormLink<ICellGetter>.Null;
             base.Clear(item);
         }
         
@@ -1067,11 +957,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)CellNavigationMeshData_FieldIndex.UnusedWorldspaceParent) ?? true))
             {
-                item.UnusedWorldspaceParent = new FormLink<Worldspace>(rhs.UnusedWorldspaceParent.FormKey);
+                item.UnusedWorldspaceParent = new FormLink<IWorldspaceGetter>(rhs.UnusedWorldspaceParent.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)CellNavigationMeshData_FieldIndex.Parent) ?? true))
             {
-                item.Parent = new FormLink<Cell>(rhs.Parent.FormKey);
+                item.Parent = new FormLink<ICellGetter>(rhs.Parent.FormKey);
             }
         }
         

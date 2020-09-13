@@ -54,9 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBodyTemplateGetter? IArmorAddonGetter.BodyTemplate => this.BodyTemplate;
         #endregion
         #region Race
-        public FormLinkNullable<Race> Race { get; set; } = new FormLinkNullable<Race>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IRaceGetter> IArmorAddonGetter.Race => this.Race.ToGetter<Race, IRaceGetter>();
+        public FormLinkNullable<IRaceGetter> Race { get; set; } = new FormLinkNullable<IRaceGetter>();
         #endregion
         #region Priority
         public GenderedItem<Byte> Priority { get; set; } = new GenderedItem<Byte>(default, default);
@@ -87,17 +85,17 @@ namespace Mutagen.Bethesda.Skyrim
         IGenderedItemGetter<IModelGetter?>? IArmorAddonGetter.FirstPersonModel => this.FirstPersonModel;
         #endregion
         #region SkinTexture
-        public GenderedItem<IFormLinkNullable<TextureSet>>? SkinTexture { get; set; }
+        public GenderedItem<IFormLinkNullable<ITextureSetGetter>>? SkinTexture { get; set; }
         IGenderedItemGetter<IFormLinkNullable<ITextureSetGetter>>? IArmorAddonGetter.SkinTexture => this.SkinTexture;
         #endregion
         #region TextureSwapList
-        public GenderedItem<IFormLinkNullable<FormList>>? TextureSwapList { get; set; }
+        public GenderedItem<IFormLinkNullable<IFormListGetter>>? TextureSwapList { get; set; }
         IGenderedItemGetter<IFormLinkNullable<IFormListGetter>>? IArmorAddonGetter.TextureSwapList => this.TextureSwapList;
         #endregion
         #region AdditionalRaces
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Race>> _AdditionalRaces = new ExtendedList<IFormLink<Race>>();
-        public IExtendedList<IFormLink<Race>> AdditionalRaces
+        private ExtendedList<IFormLink<IRaceGetter>> _AdditionalRaces = new ExtendedList<IFormLink<IRaceGetter>>();
+        public ExtendedList<IFormLink<IRaceGetter>> AdditionalRaces
         {
             get => this._AdditionalRaces;
             protected set => this._AdditionalRaces = value;
@@ -109,14 +107,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region FootstepSound
-        public FormLinkNullable<FootstepSet> FootstepSound { get; set; } = new FormLinkNullable<FootstepSet>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IFootstepSetGetter> IArmorAddonGetter.FootstepSound => this.FootstepSound.ToGetter<FootstepSet, IFootstepSetGetter>();
+        public FormLinkNullable<IFootstepSetGetter> FootstepSound { get; set; } = new FormLinkNullable<IFootstepSetGetter>();
         #endregion
         #region ArtObject
-        public FormLinkNullable<ArtObject> ArtObject { get; set; } = new FormLinkNullable<ArtObject>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IArtObjectGetter> IArmorAddonGetter.ArtObject => this.ArtObject.ToGetter<ArtObject, IArtObjectGetter>();
+        public FormLinkNullable<IArtObjectGetter> ArtObject { get; set; } = new FormLinkNullable<IArtObjectGetter>();
         #endregion
         #region DNAMDataTypeState
         public ArmorAddon.DNAMDataType DNAMDataTypeState { get; set; } = default;
@@ -1060,7 +1054,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new BodyTemplate? BodyTemplate { get; set; }
-        new FormLinkNullable<Race> Race { get; set; }
+        new FormLinkNullable<IRaceGetter> Race { get; set; }
         new GenderedItem<Byte> Priority { get; set; }
         new GenderedItem<Boolean> WeightSliderEnabled { get; set; }
         new UInt16 Unknown { get; set; }
@@ -1069,11 +1063,11 @@ namespace Mutagen.Bethesda.Skyrim
         new Single WeaponAdjust { get; set; }
         new GenderedItem<Model?>? WorldModel { get; set; }
         new GenderedItem<Model?>? FirstPersonModel { get; set; }
-        new GenderedItem<IFormLinkNullable<TextureSet>>? SkinTexture { get; set; }
-        new GenderedItem<IFormLinkNullable<FormList>>? TextureSwapList { get; set; }
-        new IExtendedList<IFormLink<Race>> AdditionalRaces { get; }
-        new FormLinkNullable<FootstepSet> FootstepSound { get; set; }
-        new FormLinkNullable<ArtObject> ArtObject { get; set; }
+        new GenderedItem<IFormLinkNullable<ITextureSetGetter>>? SkinTexture { get; set; }
+        new GenderedItem<IFormLinkNullable<IFormListGetter>>? TextureSwapList { get; set; }
+        new ExtendedList<IFormLink<IRaceGetter>> AdditionalRaces { get; }
+        new FormLinkNullable<IFootstepSetGetter> FootstepSound { get; set; }
+        new FormLinkNullable<IArtObjectGetter> ArtObject { get; set; }
         new ArmorAddon.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
@@ -1086,8 +1080,8 @@ namespace Mutagen.Bethesda.Skyrim
         new GenderedItem<Boolean> WeightSliderEnabled { get; set; }
         new GenderedItem<Model?>? WorldModel { get; set; }
         new GenderedItem<Model?>? FirstPersonModel { get; set; }
-        new GenderedItem<IFormLinkNullable<TextureSet>>? SkinTexture { get; set; }
-        new GenderedItem<IFormLinkNullable<FormList>>? TextureSwapList { get; set; }
+        new GenderedItem<IFormLinkNullable<ITextureSetGetter>>? SkinTexture { get; set; }
+        new GenderedItem<IFormLinkNullable<IFormListGetter>>? TextureSwapList { get; set; }
     }
 
     public partial interface IArmorAddonGetter :
@@ -1322,268 +1316,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "BODYTEMPLATE":
-                    return (ushort)ArmorAddon_FieldIndex.BodyTemplate;
-                case "RACE":
-                    return (ushort)ArmorAddon_FieldIndex.Race;
-                case "PRIORITY":
-                    return (ushort)ArmorAddon_FieldIndex.Priority;
-                case "WEIGHTSLIDERENABLED":
-                    return (ushort)ArmorAddon_FieldIndex.WeightSliderEnabled;
-                case "UNKNOWN":
-                    return (ushort)ArmorAddon_FieldIndex.Unknown;
-                case "DETECTIONSOUNDVALUE":
-                    return (ushort)ArmorAddon_FieldIndex.DetectionSoundValue;
-                case "UNKNOWN2":
-                    return (ushort)ArmorAddon_FieldIndex.Unknown2;
-                case "WEAPONADJUST":
-                    return (ushort)ArmorAddon_FieldIndex.WeaponAdjust;
-                case "WORLDMODEL":
-                    return (ushort)ArmorAddon_FieldIndex.WorldModel;
-                case "FIRSTPERSONMODEL":
-                    return (ushort)ArmorAddon_FieldIndex.FirstPersonModel;
-                case "SKINTEXTURE":
-                    return (ushort)ArmorAddon_FieldIndex.SkinTexture;
-                case "TEXTURESWAPLIST":
-                    return (ushort)ArmorAddon_FieldIndex.TextureSwapList;
-                case "ADDITIONALRACES":
-                    return (ushort)ArmorAddon_FieldIndex.AdditionalRaces;
-                case "FOOTSTEPSOUND":
-                    return (ushort)ArmorAddon_FieldIndex.FootstepSound;
-                case "ARTOBJECT":
-                    return (ushort)ArmorAddon_FieldIndex.ArtObject;
-                case "DNAMDATATYPESTATE":
-                    return (ushort)ArmorAddon_FieldIndex.DNAMDataTypeState;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            ArmorAddon_FieldIndex enu = (ArmorAddon_FieldIndex)index;
-            switch (enu)
-            {
-                case ArmorAddon_FieldIndex.AdditionalRaces:
-                    return true;
-                case ArmorAddon_FieldIndex.BodyTemplate:
-                case ArmorAddon_FieldIndex.Race:
-                case ArmorAddon_FieldIndex.Priority:
-                case ArmorAddon_FieldIndex.WeightSliderEnabled:
-                case ArmorAddon_FieldIndex.Unknown:
-                case ArmorAddon_FieldIndex.DetectionSoundValue:
-                case ArmorAddon_FieldIndex.Unknown2:
-                case ArmorAddon_FieldIndex.WeaponAdjust:
-                case ArmorAddon_FieldIndex.WorldModel:
-                case ArmorAddon_FieldIndex.FirstPersonModel:
-                case ArmorAddon_FieldIndex.SkinTexture:
-                case ArmorAddon_FieldIndex.TextureSwapList:
-                case ArmorAddon_FieldIndex.FootstepSound:
-                case ArmorAddon_FieldIndex.ArtObject:
-                case ArmorAddon_FieldIndex.DNAMDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            ArmorAddon_FieldIndex enu = (ArmorAddon_FieldIndex)index;
-            switch (enu)
-            {
-                case ArmorAddon_FieldIndex.BodyTemplate:
-                case ArmorAddon_FieldIndex.WorldModel:
-                case ArmorAddon_FieldIndex.FirstPersonModel:
-                    return true;
-                case ArmorAddon_FieldIndex.Race:
-                case ArmorAddon_FieldIndex.Priority:
-                case ArmorAddon_FieldIndex.WeightSliderEnabled:
-                case ArmorAddon_FieldIndex.Unknown:
-                case ArmorAddon_FieldIndex.DetectionSoundValue:
-                case ArmorAddon_FieldIndex.Unknown2:
-                case ArmorAddon_FieldIndex.WeaponAdjust:
-                case ArmorAddon_FieldIndex.SkinTexture:
-                case ArmorAddon_FieldIndex.TextureSwapList:
-                case ArmorAddon_FieldIndex.AdditionalRaces:
-                case ArmorAddon_FieldIndex.FootstepSound:
-                case ArmorAddon_FieldIndex.ArtObject:
-                case ArmorAddon_FieldIndex.DNAMDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            ArmorAddon_FieldIndex enu = (ArmorAddon_FieldIndex)index;
-            switch (enu)
-            {
-                case ArmorAddon_FieldIndex.BodyTemplate:
-                case ArmorAddon_FieldIndex.Race:
-                case ArmorAddon_FieldIndex.Priority:
-                case ArmorAddon_FieldIndex.WeightSliderEnabled:
-                case ArmorAddon_FieldIndex.Unknown:
-                case ArmorAddon_FieldIndex.DetectionSoundValue:
-                case ArmorAddon_FieldIndex.Unknown2:
-                case ArmorAddon_FieldIndex.WeaponAdjust:
-                case ArmorAddon_FieldIndex.WorldModel:
-                case ArmorAddon_FieldIndex.FirstPersonModel:
-                case ArmorAddon_FieldIndex.SkinTexture:
-                case ArmorAddon_FieldIndex.TextureSwapList:
-                case ArmorAddon_FieldIndex.AdditionalRaces:
-                case ArmorAddon_FieldIndex.FootstepSound:
-                case ArmorAddon_FieldIndex.ArtObject:
-                case ArmorAddon_FieldIndex.DNAMDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            ArmorAddon_FieldIndex enu = (ArmorAddon_FieldIndex)index;
-            switch (enu)
-            {
-                case ArmorAddon_FieldIndex.BodyTemplate:
-                    return "BodyTemplate";
-                case ArmorAddon_FieldIndex.Race:
-                    return "Race";
-                case ArmorAddon_FieldIndex.Priority:
-                    return "Priority";
-                case ArmorAddon_FieldIndex.WeightSliderEnabled:
-                    return "WeightSliderEnabled";
-                case ArmorAddon_FieldIndex.Unknown:
-                    return "Unknown";
-                case ArmorAddon_FieldIndex.DetectionSoundValue:
-                    return "DetectionSoundValue";
-                case ArmorAddon_FieldIndex.Unknown2:
-                    return "Unknown2";
-                case ArmorAddon_FieldIndex.WeaponAdjust:
-                    return "WeaponAdjust";
-                case ArmorAddon_FieldIndex.WorldModel:
-                    return "WorldModel";
-                case ArmorAddon_FieldIndex.FirstPersonModel:
-                    return "FirstPersonModel";
-                case ArmorAddon_FieldIndex.SkinTexture:
-                    return "SkinTexture";
-                case ArmorAddon_FieldIndex.TextureSwapList:
-                    return "TextureSwapList";
-                case ArmorAddon_FieldIndex.AdditionalRaces:
-                    return "AdditionalRaces";
-                case ArmorAddon_FieldIndex.FootstepSound:
-                    return "FootstepSound";
-                case ArmorAddon_FieldIndex.ArtObject:
-                    return "ArtObject";
-                case ArmorAddon_FieldIndex.DNAMDataTypeState:
-                    return "DNAMDataTypeState";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            ArmorAddon_FieldIndex enu = (ArmorAddon_FieldIndex)index;
-            switch (enu)
-            {
-                case ArmorAddon_FieldIndex.BodyTemplate:
-                case ArmorAddon_FieldIndex.Race:
-                case ArmorAddon_FieldIndex.Priority:
-                case ArmorAddon_FieldIndex.WeightSliderEnabled:
-                case ArmorAddon_FieldIndex.Unknown:
-                case ArmorAddon_FieldIndex.DetectionSoundValue:
-                case ArmorAddon_FieldIndex.Unknown2:
-                case ArmorAddon_FieldIndex.WeaponAdjust:
-                case ArmorAddon_FieldIndex.WorldModel:
-                case ArmorAddon_FieldIndex.FirstPersonModel:
-                case ArmorAddon_FieldIndex.SkinTexture:
-                case ArmorAddon_FieldIndex.TextureSwapList:
-                case ArmorAddon_FieldIndex.AdditionalRaces:
-                case ArmorAddon_FieldIndex.FootstepSound:
-                case ArmorAddon_FieldIndex.ArtObject:
-                case ArmorAddon_FieldIndex.DNAMDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            ArmorAddon_FieldIndex enu = (ArmorAddon_FieldIndex)index;
-            switch (enu)
-            {
-                case ArmorAddon_FieldIndex.BodyTemplate:
-                case ArmorAddon_FieldIndex.Race:
-                case ArmorAddon_FieldIndex.Priority:
-                case ArmorAddon_FieldIndex.WeightSliderEnabled:
-                case ArmorAddon_FieldIndex.Unknown:
-                case ArmorAddon_FieldIndex.DetectionSoundValue:
-                case ArmorAddon_FieldIndex.Unknown2:
-                case ArmorAddon_FieldIndex.WeaponAdjust:
-                case ArmorAddon_FieldIndex.WorldModel:
-                case ArmorAddon_FieldIndex.FirstPersonModel:
-                case ArmorAddon_FieldIndex.SkinTexture:
-                case ArmorAddon_FieldIndex.TextureSwapList:
-                case ArmorAddon_FieldIndex.AdditionalRaces:
-                case ArmorAddon_FieldIndex.FootstepSound:
-                case ArmorAddon_FieldIndex.ArtObject:
-                case ArmorAddon_FieldIndex.DNAMDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            ArmorAddon_FieldIndex enu = (ArmorAddon_FieldIndex)index;
-            switch (enu)
-            {
-                case ArmorAddon_FieldIndex.BodyTemplate:
-                    return typeof(BodyTemplate);
-                case ArmorAddon_FieldIndex.Race:
-                    return typeof(FormLinkNullable<Race>);
-                case ArmorAddon_FieldIndex.Priority:
-                    return typeof(GenderedItem<Byte>);
-                case ArmorAddon_FieldIndex.WeightSliderEnabled:
-                    return typeof(GenderedItem<Boolean>);
-                case ArmorAddon_FieldIndex.Unknown:
-                    return typeof(UInt16);
-                case ArmorAddon_FieldIndex.DetectionSoundValue:
-                    return typeof(Byte);
-                case ArmorAddon_FieldIndex.Unknown2:
-                    return typeof(Byte);
-                case ArmorAddon_FieldIndex.WeaponAdjust:
-                    return typeof(Single);
-                case ArmorAddon_FieldIndex.WorldModel:
-                    return typeof(GenderedItem<Model?>);
-                case ArmorAddon_FieldIndex.FirstPersonModel:
-                    return typeof(GenderedItem<Model?>);
-                case ArmorAddon_FieldIndex.SkinTexture:
-                    return typeof(GenderedItem<IFormLinkNullable<TextureSet>>);
-                case ArmorAddon_FieldIndex.TextureSwapList:
-                    return typeof(GenderedItem<IFormLinkNullable<FormList>>);
-                case ArmorAddon_FieldIndex.AdditionalRaces:
-                    return typeof(IExtendedList<IFormLink<Race>>);
-                case ArmorAddon_FieldIndex.FootstepSound:
-                    return typeof(FormLinkNullable<FootstepSet>);
-                case ArmorAddon_FieldIndex.ArtObject:
-                    return typeof(FormLinkNullable<ArtObject>);
-                case ArmorAddon_FieldIndex.DNAMDataTypeState:
-                    return typeof(ArmorAddon.DNAMDataType);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.ARMA;
         public static readonly Type BinaryWriteTranslation = typeof(ArmorAddonBinaryWriteTranslation);
         public static RecordTypeConverter WorldModelFemaleConverter = new RecordTypeConverter(
@@ -1644,14 +1376,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1668,7 +1400,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.BodyTemplate = null;
-            item.Race = FormLinkNullable<Race>.Null;
+            item.Race = FormLinkNullable<IRaceGetter>.Null;
             item.Priority.Male = default;
             item.Priority.Female = default;
             item.WeightSliderEnabled.Male = default;
@@ -1682,8 +1414,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.SkinTexture = null;
             item.TextureSwapList = null;
             item.AdditionalRaces.Clear();
-            item.FootstepSound = FormLinkNullable<FootstepSet>.Null;
-            item.ArtObject = FormLinkNullable<ArtObject>.Null;
+            item.FootstepSound = FormLinkNullable<IFootstepSetGetter>.Null;
+            item.ArtObject = FormLinkNullable<IArtObjectGetter>.Null;
             item.DNAMDataTypeState = default;
             base.Clear(item);
         }
@@ -2210,7 +1942,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Race) ?? true))
             {
-                item.Race = new FormLinkNullable<Race>(rhs.Race.FormKey);
+                item.Race = new FormLinkNullable<IRaceGetter>(rhs.Race.FormKey);
             }
             item.Priority = new GenderedItem<Byte>(
                 male: rhs.Priority.Male,
@@ -2268,9 +2000,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             else
             {
-                item.SkinTexture = new GenderedItem<IFormLinkNullable<TextureSet>>(
-                    male: new FormLinkNullable<TextureSet>(rhsSkinTextureitem.Male.FormKey),
-                    female: new FormLinkNullable<TextureSet>(rhsSkinTextureitem.Female.FormKey));
+                item.SkinTexture = new GenderedItem<IFormLinkNullable<ITextureSetGetter>>(
+                    male: new FormLinkNullable<ITextureSetGetter>(rhsSkinTextureitem.Male.FormKey),
+                    female: new FormLinkNullable<ITextureSetGetter>(rhsSkinTextureitem.Female.FormKey));
             }
             if (!rhs.TextureSwapList.TryGet(out var rhsTextureSwapListitem))
             {
@@ -2278,9 +2010,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             else
             {
-                item.TextureSwapList = new GenderedItem<IFormLinkNullable<FormList>>(
-                    male: new FormLinkNullable<FormList>(rhsTextureSwapListitem.Male.FormKey),
-                    female: new FormLinkNullable<FormList>(rhsTextureSwapListitem.Female.FormKey));
+                item.TextureSwapList = new GenderedItem<IFormLinkNullable<IFormListGetter>>(
+                    male: new FormLinkNullable<IFormListGetter>(rhsTextureSwapListitem.Male.FormKey),
+                    female: new FormLinkNullable<IFormListGetter>(rhsTextureSwapListitem.Female.FormKey));
             }
             if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.AdditionalRaces) ?? true))
             {
@@ -2289,7 +2021,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.AdditionalRaces.SetTo(
                         rhs.AdditionalRaces
-                        .Select(r => (IFormLink<Race>)new FormLink<Race>(r.FormKey)));
+                        .Select(r => (IFormLink<IRaceGetter>)new FormLink<IRaceGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2303,11 +2035,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.FootstepSound) ?? true))
             {
-                item.FootstepSound = new FormLinkNullable<FootstepSet>(rhs.FootstepSound.FormKey);
+                item.FootstepSound = new FormLinkNullable<IFootstepSetGetter>(rhs.FootstepSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.ArtObject) ?? true))
             {
-                item.ArtObject = new FormLinkNullable<ArtObject>(rhs.ArtObject.FormKey);
+                item.ArtObject = new FormLinkNullable<IArtObjectGetter>(rhs.ArtObject.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.DNAMDataTypeState) ?? true))
             {
@@ -2737,7 +2469,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.NAM0:
                 case RecordTypeInts.NAM1:
                 {
-                    item.SkinTexture = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<IFormLinkNullable<TextureSet>>(
+                    item.SkinTexture = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<IFormLinkNullable<ITextureSetGetter>>(
                         frame: frame,
                         maleMarker: RecordTypes.NAM0,
                         femaleMarker: RecordTypes.NAM1,
@@ -2749,7 +2481,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.NAM2:
                 case RecordTypeInts.NAM3:
                 {
-                    item.TextureSwapList = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<IFormLinkNullable<FormList>>(
+                    item.TextureSwapList = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<IFormLinkNullable<IFormListGetter>>(
                         frame: frame,
                         maleMarker: RecordTypes.NAM2,
                         femaleMarker: RecordTypes.NAM3,
@@ -2761,7 +2493,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.MODL:
                 {
                     item.AdditionalRaces.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Race>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IRaceGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.MODL),
                             transl: FormLinkBinaryTranslation.Instance.Parse));

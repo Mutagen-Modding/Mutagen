@@ -43,14 +43,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region EffectArt
-        public FormLink<ArtObject> EffectArt { get; set; } = new FormLink<ArtObject>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IArtObjectGetter> IVisualEffectGetter.EffectArt => this.EffectArt.ToGetter<ArtObject, IArtObjectGetter>();
+        public FormLink<IArtObjectGetter> EffectArt { get; set; } = new FormLink<IArtObjectGetter>();
         #endregion
         #region Shader
-        public FormLink<EffectShader> Shader { get; set; } = new FormLink<EffectShader>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IEffectShaderGetter> IVisualEffectGetter.Shader => this.Shader.ToGetter<EffectShader, IEffectShaderGetter>();
+        public FormLink<IEffectShaderGetter> Shader { get; set; } = new FormLink<IEffectShaderGetter>();
         #endregion
         #region Flags
         public VisualEffect.Flag Flags { get; set; } = default;
@@ -540,8 +536,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IVisualEffectInternal>,
         ILinkedFormKeyContainer
     {
-        new FormLink<ArtObject> EffectArt { get; set; }
-        new FormLink<EffectShader> Shader { get; set; }
+        new FormLink<IArtObjectGetter> EffectArt { get; set; }
+        new FormLink<IEffectShaderGetter> Shader { get; set; }
         new VisualEffect.Flag Flags { get; set; }
         new VisualEffect.DATADataType DATADataTypeState { get; set; }
     }
@@ -761,134 +757,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "EFFECTART":
-                    return (ushort)VisualEffect_FieldIndex.EffectArt;
-                case "SHADER":
-                    return (ushort)VisualEffect_FieldIndex.Shader;
-                case "FLAGS":
-                    return (ushort)VisualEffect_FieldIndex.Flags;
-                case "DATADATATYPESTATE":
-                    return (ushort)VisualEffect_FieldIndex.DATADataTypeState;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            VisualEffect_FieldIndex enu = (VisualEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case VisualEffect_FieldIndex.EffectArt:
-                case VisualEffect_FieldIndex.Shader:
-                case VisualEffect_FieldIndex.Flags:
-                case VisualEffect_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            VisualEffect_FieldIndex enu = (VisualEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case VisualEffect_FieldIndex.EffectArt:
-                case VisualEffect_FieldIndex.Shader:
-                case VisualEffect_FieldIndex.Flags:
-                case VisualEffect_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            VisualEffect_FieldIndex enu = (VisualEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case VisualEffect_FieldIndex.EffectArt:
-                case VisualEffect_FieldIndex.Shader:
-                case VisualEffect_FieldIndex.Flags:
-                case VisualEffect_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            VisualEffect_FieldIndex enu = (VisualEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case VisualEffect_FieldIndex.EffectArt:
-                    return "EffectArt";
-                case VisualEffect_FieldIndex.Shader:
-                    return "Shader";
-                case VisualEffect_FieldIndex.Flags:
-                    return "Flags";
-                case VisualEffect_FieldIndex.DATADataTypeState:
-                    return "DATADataTypeState";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            VisualEffect_FieldIndex enu = (VisualEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case VisualEffect_FieldIndex.EffectArt:
-                case VisualEffect_FieldIndex.Shader:
-                case VisualEffect_FieldIndex.Flags:
-                case VisualEffect_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            VisualEffect_FieldIndex enu = (VisualEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case VisualEffect_FieldIndex.EffectArt:
-                case VisualEffect_FieldIndex.Shader:
-                case VisualEffect_FieldIndex.Flags:
-                case VisualEffect_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            VisualEffect_FieldIndex enu = (VisualEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case VisualEffect_FieldIndex.EffectArt:
-                    return typeof(FormLink<ArtObject>);
-                case VisualEffect_FieldIndex.Shader:
-                    return typeof(FormLink<EffectShader>);
-                case VisualEffect_FieldIndex.Flags:
-                    return typeof(VisualEffect.Flag);
-                case VisualEffect_FieldIndex.DATADataTypeState:
-                    return typeof(VisualEffect.DATADataType);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.RFCT;
         public static readonly Type BinaryWriteTranslation = typeof(VisualEffectBinaryWriteTranslation);
         #region Interface
@@ -909,14 +777,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -932,8 +800,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IVisualEffectInternal item)
         {
             ClearPartial();
-            item.EffectArt = FormLink<ArtObject>.Null;
-            item.Shader = FormLink<EffectShader>.Null;
+            item.EffectArt = FormLink<IArtObjectGetter>.Null;
+            item.Shader = FormLink<IEffectShaderGetter>.Null;
             item.Flags = default;
             item.DATADataTypeState = default;
             base.Clear(item);
@@ -1248,11 +1116,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)VisualEffect_FieldIndex.EffectArt) ?? true))
             {
-                item.EffectArt = new FormLink<ArtObject>(rhs.EffectArt.FormKey);
+                item.EffectArt = new FormLink<IArtObjectGetter>(rhs.EffectArt.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)VisualEffect_FieldIndex.Shader) ?? true))
             {
-                item.Shader = new FormLink<EffectShader>(rhs.Shader.FormKey);
+                item.Shader = new FormLink<IEffectShaderGetter>(rhs.Shader.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)VisualEffect_FieldIndex.Flags) ?? true))
             {

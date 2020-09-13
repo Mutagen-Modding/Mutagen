@@ -60,8 +60,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region SpeedTreeSeeds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<UInt32>? _SpeedTreeSeeds;
-        public IExtendedList<UInt32>? SpeedTreeSeeds
+        private ExtendedList<UInt32>? _SpeedTreeSeeds;
+        public ExtendedList<UInt32>? SpeedTreeSeeds
         {
             get => this._SpeedTreeSeeds;
             set => this._SpeedTreeSeeds = value;
@@ -687,7 +687,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new Model? Model { get; set; }
         new String? Icon { get; set; }
-        new IExtendedList<UInt32>? SpeedTreeSeeds { get; set; }
+        new ExtendedList<UInt32>? SpeedTreeSeeds { get; set; }
         new TreeData? Data { get; set; }
         new Dimensions? BillboardDimensions { get; set; }
     }
@@ -907,147 +907,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "MODEL":
-                    return (ushort)Tree_FieldIndex.Model;
-                case "ICON":
-                    return (ushort)Tree_FieldIndex.Icon;
-                case "SPEEDTREESEEDS":
-                    return (ushort)Tree_FieldIndex.SpeedTreeSeeds;
-                case "DATA":
-                    return (ushort)Tree_FieldIndex.Data;
-                case "BILLBOARDDIMENSIONS":
-                    return (ushort)Tree_FieldIndex.BillboardDimensions;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Tree_FieldIndex enu = (Tree_FieldIndex)index;
-            switch (enu)
-            {
-                case Tree_FieldIndex.SpeedTreeSeeds:
-                    return true;
-                case Tree_FieldIndex.Model:
-                case Tree_FieldIndex.Icon:
-                case Tree_FieldIndex.Data:
-                case Tree_FieldIndex.BillboardDimensions:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Tree_FieldIndex enu = (Tree_FieldIndex)index;
-            switch (enu)
-            {
-                case Tree_FieldIndex.Model:
-                case Tree_FieldIndex.Data:
-                case Tree_FieldIndex.BillboardDimensions:
-                    return true;
-                case Tree_FieldIndex.Icon:
-                case Tree_FieldIndex.SpeedTreeSeeds:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Tree_FieldIndex enu = (Tree_FieldIndex)index;
-            switch (enu)
-            {
-                case Tree_FieldIndex.Model:
-                case Tree_FieldIndex.Icon:
-                case Tree_FieldIndex.SpeedTreeSeeds:
-                case Tree_FieldIndex.Data:
-                case Tree_FieldIndex.BillboardDimensions:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Tree_FieldIndex enu = (Tree_FieldIndex)index;
-            switch (enu)
-            {
-                case Tree_FieldIndex.Model:
-                    return "Model";
-                case Tree_FieldIndex.Icon:
-                    return "Icon";
-                case Tree_FieldIndex.SpeedTreeSeeds:
-                    return "SpeedTreeSeeds";
-                case Tree_FieldIndex.Data:
-                    return "Data";
-                case Tree_FieldIndex.BillboardDimensions:
-                    return "BillboardDimensions";
-                default:
-                    return OblivionMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Tree_FieldIndex enu = (Tree_FieldIndex)index;
-            switch (enu)
-            {
-                case Tree_FieldIndex.Model:
-                case Tree_FieldIndex.Icon:
-                case Tree_FieldIndex.SpeedTreeSeeds:
-                case Tree_FieldIndex.Data:
-                case Tree_FieldIndex.BillboardDimensions:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Tree_FieldIndex enu = (Tree_FieldIndex)index;
-            switch (enu)
-            {
-                case Tree_FieldIndex.Model:
-                case Tree_FieldIndex.Icon:
-                case Tree_FieldIndex.SpeedTreeSeeds:
-                case Tree_FieldIndex.Data:
-                case Tree_FieldIndex.BillboardDimensions:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Tree_FieldIndex enu = (Tree_FieldIndex)index;
-            switch (enu)
-            {
-                case Tree_FieldIndex.Model:
-                    return typeof(Model);
-                case Tree_FieldIndex.Icon:
-                    return typeof(String);
-                case Tree_FieldIndex.SpeedTreeSeeds:
-                    return typeof(IExtendedList<UInt32>);
-                case Tree_FieldIndex.Data:
-                    return typeof(TreeData);
-                case Tree_FieldIndex.BillboardDimensions:
-                    return typeof(Dimensions);
-                default:
-                    return OblivionMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.TREE;
         public static readonly Type BinaryWriteTranslation = typeof(TreeBinaryWriteTranslation);
         #region Interface
@@ -1068,14 +927,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

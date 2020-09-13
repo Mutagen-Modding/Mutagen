@@ -43,9 +43,7 @@ namespace Mutagen.Bethesda.Skyrim
         public WaterReflection.VersioningBreaks Versioning { get; set; } = default;
         #endregion
         #region Water
-        public FormLink<PlacedObject> Water { get; set; } = new FormLink<PlacedObject>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IPlacedObjectGetter> IWaterReflectionGetter.Water => this.Water.ToGetter<PlacedObject, IPlacedObjectGetter>();
+        public FormLink<IPlacedObjectGetter> Water { get; set; } = new FormLink<IPlacedObjectGetter>();
         #endregion
         #region Type
         public WaterReflection.Flag Type { get; set; } = default;
@@ -488,7 +486,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new WaterReflection.VersioningBreaks Versioning { get; set; }
-        new FormLink<PlacedObject> Water { get; set; }
+        new FormLink<IPlacedObjectGetter> Water { get; set; }
         new WaterReflection.Flag Type { get; set; }
     }
 
@@ -723,123 +721,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "VERSIONING":
-                    return (ushort)WaterReflection_FieldIndex.Versioning;
-                case "WATER":
-                    return (ushort)WaterReflection_FieldIndex.Water;
-                case "TYPE":
-                    return (ushort)WaterReflection_FieldIndex.Type;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            WaterReflection_FieldIndex enu = (WaterReflection_FieldIndex)index;
-            switch (enu)
-            {
-                case WaterReflection_FieldIndex.Versioning:
-                case WaterReflection_FieldIndex.Water:
-                case WaterReflection_FieldIndex.Type:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            WaterReflection_FieldIndex enu = (WaterReflection_FieldIndex)index;
-            switch (enu)
-            {
-                case WaterReflection_FieldIndex.Versioning:
-                case WaterReflection_FieldIndex.Water:
-                case WaterReflection_FieldIndex.Type:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            WaterReflection_FieldIndex enu = (WaterReflection_FieldIndex)index;
-            switch (enu)
-            {
-                case WaterReflection_FieldIndex.Versioning:
-                case WaterReflection_FieldIndex.Water:
-                case WaterReflection_FieldIndex.Type:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            WaterReflection_FieldIndex enu = (WaterReflection_FieldIndex)index;
-            switch (enu)
-            {
-                case WaterReflection_FieldIndex.Versioning:
-                    return "Versioning";
-                case WaterReflection_FieldIndex.Water:
-                    return "Water";
-                case WaterReflection_FieldIndex.Type:
-                    return "Type";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            WaterReflection_FieldIndex enu = (WaterReflection_FieldIndex)index;
-            switch (enu)
-            {
-                case WaterReflection_FieldIndex.Versioning:
-                case WaterReflection_FieldIndex.Water:
-                case WaterReflection_FieldIndex.Type:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            WaterReflection_FieldIndex enu = (WaterReflection_FieldIndex)index;
-            switch (enu)
-            {
-                case WaterReflection_FieldIndex.Versioning:
-                case WaterReflection_FieldIndex.Water:
-                case WaterReflection_FieldIndex.Type:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            WaterReflection_FieldIndex enu = (WaterReflection_FieldIndex)index;
-            switch (enu)
-            {
-                case WaterReflection_FieldIndex.Versioning:
-                    return typeof(WaterReflection.VersioningBreaks);
-                case WaterReflection_FieldIndex.Water:
-                    return typeof(FormLink<PlacedObject>);
-                case WaterReflection_FieldIndex.Type:
-                    return typeof(WaterReflection.Flag);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.XPWR;
         public static readonly Type BinaryWriteTranslation = typeof(WaterReflectionBinaryWriteTranslation);
         #region Interface
@@ -860,14 +741,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -884,7 +765,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Versioning = default;
-            item.Water = FormLink<PlacedObject>.Null;
+            item.Water = FormLink<IPlacedObjectGetter>.Null;
             item.Type = default;
         }
         
@@ -1054,7 +935,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)WaterReflection_FieldIndex.Water) ?? true))
             {
-                item.Water = new FormLink<PlacedObject>(rhs.Water.FormKey);
+                item.Water = new FormLink<IPlacedObjectGetter>(rhs.Water.FormKey);
             }
             if (rhs.Versioning.HasFlag(WaterReflection.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)WaterReflection_FieldIndex.Type) ?? true))

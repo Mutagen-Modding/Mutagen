@@ -42,8 +42,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region HeadParts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<HeadPartReference> _HeadParts = new ExtendedList<HeadPartReference>();
-        public IExtendedList<HeadPartReference> HeadParts
+        private ExtendedList<HeadPartReference> _HeadParts = new ExtendedList<HeadPartReference>();
+        public ExtendedList<HeadPartReference> HeadParts
         {
             get => this._HeadParts;
             protected set => this._HeadParts = value;
@@ -67,8 +67,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RacePresets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Npc>> _RacePresets = new ExtendedList<IFormLink<Npc>>();
-        public IExtendedList<IFormLink<Npc>> RacePresets
+        private ExtendedList<IFormLink<INpcGetter>> _RacePresets = new ExtendedList<IFormLink<INpcGetter>>();
+        public ExtendedList<IFormLink<INpcGetter>> RacePresets
         {
             get => this._RacePresets;
             protected set => this._RacePresets = value;
@@ -81,8 +81,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region AvailableHairColors
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<ColorRecord>> _AvailableHairColors = new ExtendedList<IFormLink<ColorRecord>>();
-        public IExtendedList<IFormLink<ColorRecord>> AvailableHairColors
+        private ExtendedList<IFormLink<IColorRecordGetter>> _AvailableHairColors = new ExtendedList<IFormLink<IColorRecordGetter>>();
+        public ExtendedList<IFormLink<IColorRecordGetter>> AvailableHairColors
         {
             get => this._AvailableHairColors;
             protected set => this._AvailableHairColors = value;
@@ -95,8 +95,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region FaceDetails
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<TextureSet>> _FaceDetails = new ExtendedList<IFormLink<TextureSet>>();
-        public IExtendedList<IFormLink<TextureSet>> FaceDetails
+        private ExtendedList<IFormLink<ITextureSetGetter>> _FaceDetails = new ExtendedList<IFormLink<ITextureSetGetter>>();
+        public ExtendedList<IFormLink<ITextureSetGetter>> FaceDetails
         {
             get => this._FaceDetails;
             protected set => this._FaceDetails = value;
@@ -108,14 +108,12 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region DefaultFaceTexture
-        public FormLinkNullable<TextureSet> DefaultFaceTexture { get; set; } = new FormLinkNullable<TextureSet>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ITextureSetGetter> IHeadDataGetter.DefaultFaceTexture => this.DefaultFaceTexture.ToGetter<TextureSet, ITextureSetGetter>();
+        public FormLinkNullable<ITextureSetGetter> DefaultFaceTexture { get; set; } = new FormLinkNullable<ITextureSetGetter>();
         #endregion
         #region TintMasks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<TintAssets> _TintMasks = new ExtendedList<TintAssets>();
-        public IExtendedList<TintAssets> TintMasks
+        private ExtendedList<TintAssets> _TintMasks = new ExtendedList<TintAssets>();
+        public ExtendedList<TintAssets> TintMasks
         {
             get => this._TintMasks;
             protected set => this._TintMasks = value;
@@ -1092,13 +1090,13 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IHeadData>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<HeadPartReference> HeadParts { get; }
+        new ExtendedList<HeadPartReference> HeadParts { get; }
         new AvailableMorphs? AvailableMorphs { get; set; }
-        new IExtendedList<IFormLink<Npc>> RacePresets { get; }
-        new IExtendedList<IFormLink<ColorRecord>> AvailableHairColors { get; }
-        new IExtendedList<IFormLink<TextureSet>> FaceDetails { get; }
-        new FormLinkNullable<TextureSet> DefaultFaceTexture { get; set; }
-        new IExtendedList<TintAssets> TintMasks { get; }
+        new ExtendedList<IFormLink<INpcGetter>> RacePresets { get; }
+        new ExtendedList<IFormLink<IColorRecordGetter>> AvailableHairColors { get; }
+        new ExtendedList<IFormLink<ITextureSetGetter>> FaceDetails { get; }
+        new FormLinkNullable<ITextureSetGetter> DefaultFaceTexture { get; set; }
+        new ExtendedList<TintAssets> TintMasks { get; }
         new Model? Model { get; set; }
     }
 
@@ -1344,180 +1342,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "HEADPARTS":
-                    return (ushort)HeadData_FieldIndex.HeadParts;
-                case "AVAILABLEMORPHS":
-                    return (ushort)HeadData_FieldIndex.AvailableMorphs;
-                case "RACEPRESETS":
-                    return (ushort)HeadData_FieldIndex.RacePresets;
-                case "AVAILABLEHAIRCOLORS":
-                    return (ushort)HeadData_FieldIndex.AvailableHairColors;
-                case "FACEDETAILS":
-                    return (ushort)HeadData_FieldIndex.FaceDetails;
-                case "DEFAULTFACETEXTURE":
-                    return (ushort)HeadData_FieldIndex.DefaultFaceTexture;
-                case "TINTMASKS":
-                    return (ushort)HeadData_FieldIndex.TintMasks;
-                case "MODEL":
-                    return (ushort)HeadData_FieldIndex.Model;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            HeadData_FieldIndex enu = (HeadData_FieldIndex)index;
-            switch (enu)
-            {
-                case HeadData_FieldIndex.HeadParts:
-                case HeadData_FieldIndex.RacePresets:
-                case HeadData_FieldIndex.AvailableHairColors:
-                case HeadData_FieldIndex.FaceDetails:
-                case HeadData_FieldIndex.TintMasks:
-                    return true;
-                case HeadData_FieldIndex.AvailableMorphs:
-                case HeadData_FieldIndex.DefaultFaceTexture:
-                case HeadData_FieldIndex.Model:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            HeadData_FieldIndex enu = (HeadData_FieldIndex)index;
-            switch (enu)
-            {
-                case HeadData_FieldIndex.HeadParts:
-                case HeadData_FieldIndex.AvailableMorphs:
-                case HeadData_FieldIndex.TintMasks:
-                case HeadData_FieldIndex.Model:
-                    return true;
-                case HeadData_FieldIndex.RacePresets:
-                case HeadData_FieldIndex.AvailableHairColors:
-                case HeadData_FieldIndex.FaceDetails:
-                case HeadData_FieldIndex.DefaultFaceTexture:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            HeadData_FieldIndex enu = (HeadData_FieldIndex)index;
-            switch (enu)
-            {
-                case HeadData_FieldIndex.HeadParts:
-                case HeadData_FieldIndex.AvailableMorphs:
-                case HeadData_FieldIndex.RacePresets:
-                case HeadData_FieldIndex.AvailableHairColors:
-                case HeadData_FieldIndex.FaceDetails:
-                case HeadData_FieldIndex.DefaultFaceTexture:
-                case HeadData_FieldIndex.TintMasks:
-                case HeadData_FieldIndex.Model:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            HeadData_FieldIndex enu = (HeadData_FieldIndex)index;
-            switch (enu)
-            {
-                case HeadData_FieldIndex.HeadParts:
-                    return "HeadParts";
-                case HeadData_FieldIndex.AvailableMorphs:
-                    return "AvailableMorphs";
-                case HeadData_FieldIndex.RacePresets:
-                    return "RacePresets";
-                case HeadData_FieldIndex.AvailableHairColors:
-                    return "AvailableHairColors";
-                case HeadData_FieldIndex.FaceDetails:
-                    return "FaceDetails";
-                case HeadData_FieldIndex.DefaultFaceTexture:
-                    return "DefaultFaceTexture";
-                case HeadData_FieldIndex.TintMasks:
-                    return "TintMasks";
-                case HeadData_FieldIndex.Model:
-                    return "Model";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            HeadData_FieldIndex enu = (HeadData_FieldIndex)index;
-            switch (enu)
-            {
-                case HeadData_FieldIndex.HeadParts:
-                case HeadData_FieldIndex.AvailableMorphs:
-                case HeadData_FieldIndex.RacePresets:
-                case HeadData_FieldIndex.AvailableHairColors:
-                case HeadData_FieldIndex.FaceDetails:
-                case HeadData_FieldIndex.DefaultFaceTexture:
-                case HeadData_FieldIndex.TintMasks:
-                case HeadData_FieldIndex.Model:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            HeadData_FieldIndex enu = (HeadData_FieldIndex)index;
-            switch (enu)
-            {
-                case HeadData_FieldIndex.HeadParts:
-                case HeadData_FieldIndex.AvailableMorphs:
-                case HeadData_FieldIndex.RacePresets:
-                case HeadData_FieldIndex.AvailableHairColors:
-                case HeadData_FieldIndex.FaceDetails:
-                case HeadData_FieldIndex.DefaultFaceTexture:
-                case HeadData_FieldIndex.TintMasks:
-                case HeadData_FieldIndex.Model:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            HeadData_FieldIndex enu = (HeadData_FieldIndex)index;
-            switch (enu)
-            {
-                case HeadData_FieldIndex.HeadParts:
-                    return typeof(IExtendedList<HeadPartReference>);
-                case HeadData_FieldIndex.AvailableMorphs:
-                    return typeof(AvailableMorphs);
-                case HeadData_FieldIndex.RacePresets:
-                    return typeof(IExtendedList<IFormLink<Npc>>);
-                case HeadData_FieldIndex.AvailableHairColors:
-                    return typeof(IExtendedList<IFormLink<ColorRecord>>);
-                case HeadData_FieldIndex.FaceDetails:
-                    return typeof(IExtendedList<IFormLink<TextureSet>>);
-                case HeadData_FieldIndex.DefaultFaceTexture:
-                    return typeof(FormLinkNullable<TextureSet>);
-                case HeadData_FieldIndex.TintMasks:
-                    return typeof(IExtendedList<TintAssets>);
-                case HeadData_FieldIndex.Model:
-                    return typeof(Model);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1562,14 +1386,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1590,7 +1414,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.RacePresets.Clear();
             item.AvailableHairColors.Clear();
             item.FaceDetails.Clear();
-            item.DefaultFaceTexture = FormLinkNullable<TextureSet>.Null;
+            item.DefaultFaceTexture = FormLinkNullable<ITextureSetGetter>.Null;
             item.TintMasks.Clear();
             item.Model = null;
         }
@@ -1976,7 +1800,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.RacePresets.SetTo(
                         rhs.RacePresets
-                        .Select(r => (IFormLink<Npc>)new FormLink<Npc>(r.FormKey)));
+                        .Select(r => (IFormLink<INpcGetter>)new FormLink<INpcGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1995,7 +1819,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.AvailableHairColors.SetTo(
                         rhs.AvailableHairColors
-                        .Select(r => (IFormLink<ColorRecord>)new FormLink<ColorRecord>(r.FormKey)));
+                        .Select(r => (IFormLink<IColorRecordGetter>)new FormLink<IColorRecordGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2014,7 +1838,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.FaceDetails.SetTo(
                         rhs.FaceDetails
-                        .Select(r => (IFormLink<TextureSet>)new FormLink<TextureSet>(r.FormKey)));
+                        .Select(r => (IFormLink<ITextureSetGetter>)new FormLink<ITextureSetGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2028,7 +1852,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)HeadData_FieldIndex.DefaultFaceTexture) ?? true))
             {
-                item.DefaultFaceTexture = new FormLinkNullable<TextureSet>(rhs.DefaultFaceTexture.FormKey);
+                item.DefaultFaceTexture = new FormLinkNullable<ITextureSetGetter>(rhs.DefaultFaceTexture.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)HeadData_FieldIndex.TintMasks) ?? true))
             {
@@ -2317,7 +2141,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.RacePresets) return ParseResult.Stop;
                     item.RacePresets.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Npc>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<INpcGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.RPRM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -2327,7 +2151,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.AvailableHairColors) return ParseResult.Stop;
                     item.AvailableHairColors.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ColorRecord>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IColorRecordGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.AHCM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -2337,7 +2161,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.FaceDetails) return ParseResult.Stop;
                     item.FaceDetails.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<TextureSet>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ITextureSetGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.FTSM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));

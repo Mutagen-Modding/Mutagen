@@ -54,14 +54,12 @@ namespace Mutagen.Bethesda.Skyrim
         public LeveledItem.Flag Flags { get; set; } = default;
         #endregion
         #region Global
-        public FormLinkNullable<Global> Global { get; set; } = new FormLinkNullable<Global>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IGlobalGetter> ILeveledItemGetter.Global => this.Global.ToGetter<Global, IGlobalGetter>();
+        public FormLinkNullable<IGlobalGetter> Global { get; set; } = new FormLinkNullable<IGlobalGetter>();
         #endregion
         #region Entries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<LeveledItemEntry>? _Entries;
-        public IExtendedList<LeveledItemEntry>? Entries
+        private ExtendedList<LeveledItemEntry>? _Entries;
+        public ExtendedList<LeveledItemEntry>? Entries
         {
             get => this._Entries;
             set => this._Entries = value;
@@ -667,8 +665,8 @@ namespace Mutagen.Bethesda.Skyrim
         new ObjectBounds ObjectBounds { get; set; }
         new Byte ChanceNone { get; set; }
         new LeveledItem.Flag Flags { get; set; }
-        new FormLinkNullable<Global> Global { get; set; }
-        new IExtendedList<LeveledItemEntry>? Entries { get; set; }
+        new FormLinkNullable<IGlobalGetter> Global { get; set; }
+        new ExtendedList<LeveledItemEntry>? Entries { get; set; }
     }
 
     public partial interface ILeveledItemInternal :
@@ -892,147 +890,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "OBJECTBOUNDS":
-                    return (ushort)LeveledItem_FieldIndex.ObjectBounds;
-                case "CHANCENONE":
-                    return (ushort)LeveledItem_FieldIndex.ChanceNone;
-                case "FLAGS":
-                    return (ushort)LeveledItem_FieldIndex.Flags;
-                case "GLOBAL":
-                    return (ushort)LeveledItem_FieldIndex.Global;
-                case "ENTRIES":
-                    return (ushort)LeveledItem_FieldIndex.Entries;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            LeveledItem_FieldIndex enu = (LeveledItem_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledItem_FieldIndex.Entries:
-                    return true;
-                case LeveledItem_FieldIndex.ObjectBounds:
-                case LeveledItem_FieldIndex.ChanceNone:
-                case LeveledItem_FieldIndex.Flags:
-                case LeveledItem_FieldIndex.Global:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            LeveledItem_FieldIndex enu = (LeveledItem_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledItem_FieldIndex.ObjectBounds:
-                case LeveledItem_FieldIndex.Entries:
-                    return true;
-                case LeveledItem_FieldIndex.ChanceNone:
-                case LeveledItem_FieldIndex.Flags:
-                case LeveledItem_FieldIndex.Global:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            LeveledItem_FieldIndex enu = (LeveledItem_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledItem_FieldIndex.ObjectBounds:
-                case LeveledItem_FieldIndex.ChanceNone:
-                case LeveledItem_FieldIndex.Flags:
-                case LeveledItem_FieldIndex.Global:
-                case LeveledItem_FieldIndex.Entries:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            LeveledItem_FieldIndex enu = (LeveledItem_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledItem_FieldIndex.ObjectBounds:
-                    return "ObjectBounds";
-                case LeveledItem_FieldIndex.ChanceNone:
-                    return "ChanceNone";
-                case LeveledItem_FieldIndex.Flags:
-                    return "Flags";
-                case LeveledItem_FieldIndex.Global:
-                    return "Global";
-                case LeveledItem_FieldIndex.Entries:
-                    return "Entries";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            LeveledItem_FieldIndex enu = (LeveledItem_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledItem_FieldIndex.ObjectBounds:
-                case LeveledItem_FieldIndex.ChanceNone:
-                case LeveledItem_FieldIndex.Flags:
-                case LeveledItem_FieldIndex.Global:
-                case LeveledItem_FieldIndex.Entries:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            LeveledItem_FieldIndex enu = (LeveledItem_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledItem_FieldIndex.ObjectBounds:
-                case LeveledItem_FieldIndex.ChanceNone:
-                case LeveledItem_FieldIndex.Flags:
-                case LeveledItem_FieldIndex.Global:
-                case LeveledItem_FieldIndex.Entries:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            LeveledItem_FieldIndex enu = (LeveledItem_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledItem_FieldIndex.ObjectBounds:
-                    return typeof(ObjectBounds);
-                case LeveledItem_FieldIndex.ChanceNone:
-                    return typeof(Byte);
-                case LeveledItem_FieldIndex.Flags:
-                    return typeof(LeveledItem.Flag);
-                case LeveledItem_FieldIndex.Global:
-                    return typeof(FormLinkNullable<Global>);
-                case LeveledItem_FieldIndex.Entries:
-                    return typeof(IExtendedList<LeveledItemEntry>);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.LVLI;
         public static readonly Type BinaryWriteTranslation = typeof(LeveledItemBinaryWriteTranslation);
         #region Interface
@@ -1053,14 +910,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1079,7 +936,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ObjectBounds.Clear();
             item.ChanceNone = default;
             item.Flags = default;
-            item.Global = FormLinkNullable<Global>.Null;
+            item.Global = FormLinkNullable<IGlobalGetter>.Null;
             item.Entries = null;
             base.Clear(item);
         }
@@ -1458,7 +1315,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Global) ?? true))
             {
-                item.Global = new FormLinkNullable<Global>(rhs.Global.FormKey);
+                item.Global = new FormLinkNullable<IGlobalGetter>(rhs.Global.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Entries) ?? true))
             {

@@ -43,9 +43,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Script
-        public FormLinkNullable<Script> Script { get; set; } = new FormLinkNullable<Script>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IScriptGetter> IQuestGetter.Script => this.Script.ToGetter<Script, IScriptGetter>();
+        public FormLinkNullable<IScriptGetter> Script { get; set; } = new FormLinkNullable<IScriptGetter>();
         #endregion
         #region Name
         public String? Name { get; set; }
@@ -70,8 +68,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public IExtendedList<Condition> Conditions
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -84,8 +82,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Stages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<QuestStage> _Stages = new ExtendedList<QuestStage>();
-        public IExtendedList<QuestStage> Stages
+        private ExtendedList<QuestStage> _Stages = new ExtendedList<QuestStage>();
+        public ExtendedList<QuestStage> Stages
         {
             get => this._Stages;
             protected set => this._Stages = value;
@@ -98,8 +96,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Targets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<QuestTarget> _Targets = new ExtendedList<QuestTarget>();
-        public IExtendedList<QuestTarget> Targets
+        private ExtendedList<QuestTarget> _Targets = new ExtendedList<QuestTarget>();
+        public ExtendedList<QuestTarget> Targets
         {
             get => this._Targets;
             protected set => this._Targets = value;
@@ -903,13 +901,13 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IQuestInternal>,
         ILinkedFormKeyContainer
     {
-        new FormLinkNullable<Script> Script { get; set; }
+        new FormLinkNullable<IScriptGetter> Script { get; set; }
         new String? Name { get; set; }
         new String? Icon { get; set; }
         new QuestData? Data { get; set; }
-        new IExtendedList<Condition> Conditions { get; }
-        new IExtendedList<QuestStage> Stages { get; }
-        new IExtendedList<QuestTarget> Targets { get; }
+        new ExtendedList<Condition> Conditions { get; }
+        new ExtendedList<QuestStage> Stages { get; }
+        new ExtendedList<QuestTarget> Targets { get; }
     }
 
     public partial interface IQuestInternal :
@@ -1133,169 +1131,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "SCRIPT":
-                    return (ushort)Quest_FieldIndex.Script;
-                case "NAME":
-                    return (ushort)Quest_FieldIndex.Name;
-                case "ICON":
-                    return (ushort)Quest_FieldIndex.Icon;
-                case "DATA":
-                    return (ushort)Quest_FieldIndex.Data;
-                case "CONDITIONS":
-                    return (ushort)Quest_FieldIndex.Conditions;
-                case "STAGES":
-                    return (ushort)Quest_FieldIndex.Stages;
-                case "TARGETS":
-                    return (ushort)Quest_FieldIndex.Targets;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Quest_FieldIndex enu = (Quest_FieldIndex)index;
-            switch (enu)
-            {
-                case Quest_FieldIndex.Conditions:
-                case Quest_FieldIndex.Stages:
-                case Quest_FieldIndex.Targets:
-                    return true;
-                case Quest_FieldIndex.Script:
-                case Quest_FieldIndex.Name:
-                case Quest_FieldIndex.Icon:
-                case Quest_FieldIndex.Data:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Quest_FieldIndex enu = (Quest_FieldIndex)index;
-            switch (enu)
-            {
-                case Quest_FieldIndex.Data:
-                case Quest_FieldIndex.Conditions:
-                case Quest_FieldIndex.Stages:
-                case Quest_FieldIndex.Targets:
-                    return true;
-                case Quest_FieldIndex.Script:
-                case Quest_FieldIndex.Name:
-                case Quest_FieldIndex.Icon:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Quest_FieldIndex enu = (Quest_FieldIndex)index;
-            switch (enu)
-            {
-                case Quest_FieldIndex.Script:
-                case Quest_FieldIndex.Name:
-                case Quest_FieldIndex.Icon:
-                case Quest_FieldIndex.Data:
-                case Quest_FieldIndex.Conditions:
-                case Quest_FieldIndex.Stages:
-                case Quest_FieldIndex.Targets:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Quest_FieldIndex enu = (Quest_FieldIndex)index;
-            switch (enu)
-            {
-                case Quest_FieldIndex.Script:
-                    return "Script";
-                case Quest_FieldIndex.Name:
-                    return "Name";
-                case Quest_FieldIndex.Icon:
-                    return "Icon";
-                case Quest_FieldIndex.Data:
-                    return "Data";
-                case Quest_FieldIndex.Conditions:
-                    return "Conditions";
-                case Quest_FieldIndex.Stages:
-                    return "Stages";
-                case Quest_FieldIndex.Targets:
-                    return "Targets";
-                default:
-                    return OblivionMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Quest_FieldIndex enu = (Quest_FieldIndex)index;
-            switch (enu)
-            {
-                case Quest_FieldIndex.Script:
-                case Quest_FieldIndex.Name:
-                case Quest_FieldIndex.Icon:
-                case Quest_FieldIndex.Data:
-                case Quest_FieldIndex.Conditions:
-                case Quest_FieldIndex.Stages:
-                case Quest_FieldIndex.Targets:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Quest_FieldIndex enu = (Quest_FieldIndex)index;
-            switch (enu)
-            {
-                case Quest_FieldIndex.Script:
-                case Quest_FieldIndex.Name:
-                case Quest_FieldIndex.Icon:
-                case Quest_FieldIndex.Data:
-                case Quest_FieldIndex.Conditions:
-                case Quest_FieldIndex.Stages:
-                case Quest_FieldIndex.Targets:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Quest_FieldIndex enu = (Quest_FieldIndex)index;
-            switch (enu)
-            {
-                case Quest_FieldIndex.Script:
-                    return typeof(FormLinkNullable<Script>);
-                case Quest_FieldIndex.Name:
-                    return typeof(String);
-                case Quest_FieldIndex.Icon:
-                    return typeof(String);
-                case Quest_FieldIndex.Data:
-                    return typeof(QuestData);
-                case Quest_FieldIndex.Conditions:
-                    return typeof(IExtendedList<Condition>);
-                case Quest_FieldIndex.Stages:
-                    return typeof(IExtendedList<QuestStage>);
-                case Quest_FieldIndex.Targets:
-                    return typeof(IExtendedList<QuestTarget>);
-                default:
-                    return OblivionMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.QUST;
         public static readonly Type BinaryWriteTranslation = typeof(QuestBinaryWriteTranslation);
         #region Interface
@@ -1316,14 +1151,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1339,7 +1174,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IQuestInternal item)
         {
             ClearPartial();
-            item.Script = FormLinkNullable<Script>.Null;
+            item.Script = FormLinkNullable<IScriptGetter>.Null;
             item.Name = default;
             item.Icon = default;
             item.Data = null;
@@ -1755,7 +1590,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Script) ?? true))
             {
-                item.Script = new FormLinkNullable<Script>(rhs.Script.FormKey);
+                item.Script = new FormLinkNullable<IScriptGetter>(rhs.Script.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Name) ?? true))
             {

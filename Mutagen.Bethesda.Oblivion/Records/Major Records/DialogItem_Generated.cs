@@ -54,19 +54,15 @@ namespace Mutagen.Bethesda.Oblivion
         IDialogItemDataGetter? IDialogItemGetter.Data => this.Data;
         #endregion
         #region Quest
-        public FormLinkNullable<Quest> Quest { get; set; } = new FormLinkNullable<Quest>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IQuestGetter> IDialogItemGetter.Quest => this.Quest.ToGetter<Quest, IQuestGetter>();
+        public FormLinkNullable<IQuestGetter> Quest { get; set; } = new FormLinkNullable<IQuestGetter>();
         #endregion
         #region PreviousTopic
-        public FormLinkNullable<DialogItem> PreviousTopic { get; set; } = new FormLinkNullable<DialogItem>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IDialogItemGetter> IDialogItemGetter.PreviousTopic => this.PreviousTopic.ToGetter<DialogItem, IDialogItemGetter>();
+        public FormLinkNullable<IDialogItemGetter> PreviousTopic { get; set; } = new FormLinkNullable<IDialogItemGetter>();
         #endregion
         #region Topics
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<DialogTopic>> _Topics = new ExtendedList<IFormLink<DialogTopic>>();
-        public IExtendedList<IFormLink<DialogTopic>> Topics
+        private ExtendedList<IFormLink<IDialogTopicGetter>> _Topics = new ExtendedList<IFormLink<IDialogTopicGetter>>();
+        public ExtendedList<IFormLink<IDialogTopicGetter>> Topics
         {
             get => this._Topics;
             protected set => this._Topics = value;
@@ -79,8 +75,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Responses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<DialogResponse> _Responses = new ExtendedList<DialogResponse>();
-        public IExtendedList<DialogResponse> Responses
+        private ExtendedList<DialogResponse> _Responses = new ExtendedList<DialogResponse>();
+        public ExtendedList<DialogResponse> Responses
         {
             get => this._Responses;
             protected set => this._Responses = value;
@@ -93,8 +89,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public IExtendedList<Condition> Conditions
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -107,8 +103,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Choices
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<DialogTopic>> _Choices = new ExtendedList<IFormLink<DialogTopic>>();
-        public IExtendedList<IFormLink<DialogTopic>> Choices
+        private ExtendedList<IFormLink<IDialogTopicGetter>> _Choices = new ExtendedList<IFormLink<IDialogTopicGetter>>();
+        public ExtendedList<IFormLink<IDialogTopicGetter>> Choices
         {
             get => this._Choices;
             protected set => this._Choices = value;
@@ -121,8 +117,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region LinkFrom
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<DialogTopic>> _LinkFrom = new ExtendedList<IFormLink<DialogTopic>>();
-        public IExtendedList<IFormLink<DialogTopic>> LinkFrom
+        private ExtendedList<IFormLink<IDialogTopicGetter>> _LinkFrom = new ExtendedList<IFormLink<IDialogTopicGetter>>();
+        public ExtendedList<IFormLink<IDialogTopicGetter>> LinkFrom
         {
             get => this._LinkFrom;
             protected set => this._LinkFrom = value;
@@ -1140,13 +1136,13 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkedFormKeyContainer
     {
         new DialogItemData? Data { get; set; }
-        new FormLinkNullable<Quest> Quest { get; set; }
-        new FormLinkNullable<DialogItem> PreviousTopic { get; set; }
-        new IExtendedList<IFormLink<DialogTopic>> Topics { get; }
-        new IExtendedList<DialogResponse> Responses { get; }
-        new IExtendedList<Condition> Conditions { get; }
-        new IExtendedList<IFormLink<DialogTopic>> Choices { get; }
-        new IExtendedList<IFormLink<DialogTopic>> LinkFrom { get; }
+        new FormLinkNullable<IQuestGetter> Quest { get; set; }
+        new FormLinkNullable<IDialogItemGetter> PreviousTopic { get; set; }
+        new ExtendedList<IFormLink<IDialogTopicGetter>> Topics { get; }
+        new ExtendedList<DialogResponse> Responses { get; }
+        new ExtendedList<Condition> Conditions { get; }
+        new ExtendedList<IFormLink<IDialogTopicGetter>> Choices { get; }
+        new ExtendedList<IFormLink<IDialogTopicGetter>> LinkFrom { get; }
         new ScriptFields Script { get; }
     }
 
@@ -1375,193 +1371,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "DATA":
-                    return (ushort)DialogItem_FieldIndex.Data;
-                case "QUEST":
-                    return (ushort)DialogItem_FieldIndex.Quest;
-                case "PREVIOUSTOPIC":
-                    return (ushort)DialogItem_FieldIndex.PreviousTopic;
-                case "TOPICS":
-                    return (ushort)DialogItem_FieldIndex.Topics;
-                case "RESPONSES":
-                    return (ushort)DialogItem_FieldIndex.Responses;
-                case "CONDITIONS":
-                    return (ushort)DialogItem_FieldIndex.Conditions;
-                case "CHOICES":
-                    return (ushort)DialogItem_FieldIndex.Choices;
-                case "LINKFROM":
-                    return (ushort)DialogItem_FieldIndex.LinkFrom;
-                case "SCRIPT":
-                    return (ushort)DialogItem_FieldIndex.Script;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            DialogItem_FieldIndex enu = (DialogItem_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogItem_FieldIndex.Topics:
-                case DialogItem_FieldIndex.Responses:
-                case DialogItem_FieldIndex.Conditions:
-                case DialogItem_FieldIndex.Choices:
-                case DialogItem_FieldIndex.LinkFrom:
-                    return true;
-                case DialogItem_FieldIndex.Data:
-                case DialogItem_FieldIndex.Quest:
-                case DialogItem_FieldIndex.PreviousTopic:
-                case DialogItem_FieldIndex.Script:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            DialogItem_FieldIndex enu = (DialogItem_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogItem_FieldIndex.Data:
-                case DialogItem_FieldIndex.Responses:
-                case DialogItem_FieldIndex.Conditions:
-                case DialogItem_FieldIndex.Script:
-                    return true;
-                case DialogItem_FieldIndex.Quest:
-                case DialogItem_FieldIndex.PreviousTopic:
-                case DialogItem_FieldIndex.Topics:
-                case DialogItem_FieldIndex.Choices:
-                case DialogItem_FieldIndex.LinkFrom:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            DialogItem_FieldIndex enu = (DialogItem_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogItem_FieldIndex.Script:
-                    return true;
-                case DialogItem_FieldIndex.Data:
-                case DialogItem_FieldIndex.Quest:
-                case DialogItem_FieldIndex.PreviousTopic:
-                case DialogItem_FieldIndex.Topics:
-                case DialogItem_FieldIndex.Responses:
-                case DialogItem_FieldIndex.Conditions:
-                case DialogItem_FieldIndex.Choices:
-                case DialogItem_FieldIndex.LinkFrom:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            DialogItem_FieldIndex enu = (DialogItem_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogItem_FieldIndex.Data:
-                    return "Data";
-                case DialogItem_FieldIndex.Quest:
-                    return "Quest";
-                case DialogItem_FieldIndex.PreviousTopic:
-                    return "PreviousTopic";
-                case DialogItem_FieldIndex.Topics:
-                    return "Topics";
-                case DialogItem_FieldIndex.Responses:
-                    return "Responses";
-                case DialogItem_FieldIndex.Conditions:
-                    return "Conditions";
-                case DialogItem_FieldIndex.Choices:
-                    return "Choices";
-                case DialogItem_FieldIndex.LinkFrom:
-                    return "LinkFrom";
-                case DialogItem_FieldIndex.Script:
-                    return "Script";
-                default:
-                    return OblivionMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            DialogItem_FieldIndex enu = (DialogItem_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogItem_FieldIndex.Data:
-                case DialogItem_FieldIndex.Quest:
-                case DialogItem_FieldIndex.PreviousTopic:
-                case DialogItem_FieldIndex.Topics:
-                case DialogItem_FieldIndex.Responses:
-                case DialogItem_FieldIndex.Conditions:
-                case DialogItem_FieldIndex.Choices:
-                case DialogItem_FieldIndex.LinkFrom:
-                case DialogItem_FieldIndex.Script:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            DialogItem_FieldIndex enu = (DialogItem_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogItem_FieldIndex.Script:
-                    return true;
-                case DialogItem_FieldIndex.Data:
-                case DialogItem_FieldIndex.Quest:
-                case DialogItem_FieldIndex.PreviousTopic:
-                case DialogItem_FieldIndex.Topics:
-                case DialogItem_FieldIndex.Responses:
-                case DialogItem_FieldIndex.Conditions:
-                case DialogItem_FieldIndex.Choices:
-                case DialogItem_FieldIndex.LinkFrom:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            DialogItem_FieldIndex enu = (DialogItem_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogItem_FieldIndex.Data:
-                    return typeof(DialogItemData);
-                case DialogItem_FieldIndex.Quest:
-                    return typeof(FormLinkNullable<Quest>);
-                case DialogItem_FieldIndex.PreviousTopic:
-                    return typeof(FormLinkNullable<DialogItem>);
-                case DialogItem_FieldIndex.Topics:
-                    return typeof(IExtendedList<IFormLink<DialogTopic>>);
-                case DialogItem_FieldIndex.Responses:
-                    return typeof(IExtendedList<DialogResponse>);
-                case DialogItem_FieldIndex.Conditions:
-                    return typeof(IExtendedList<Condition>);
-                case DialogItem_FieldIndex.Choices:
-                    return typeof(IExtendedList<IFormLink<DialogTopic>>);
-                case DialogItem_FieldIndex.LinkFrom:
-                    return typeof(IExtendedList<IFormLink<DialogTopic>>);
-                case DialogItem_FieldIndex.Script:
-                    return typeof(ScriptFields);
-                default:
-                    return OblivionMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.INFO;
         public static readonly Type BinaryWriteTranslation = typeof(DialogItemBinaryWriteTranslation);
         #region Interface
@@ -1582,14 +1391,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1606,8 +1415,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ClearPartial();
             item.Data = null;
-            item.Quest = FormLinkNullable<Quest>.Null;
-            item.PreviousTopic = FormLinkNullable<DialogItem>.Null;
+            item.Quest = FormLinkNullable<IQuestGetter>.Null;
+            item.PreviousTopic = FormLinkNullable<IDialogItemGetter>.Null;
             item.Topics.Clear();
             item.Responses.Clear();
             item.Conditions.Clear();
@@ -2102,11 +1911,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Quest) ?? true))
             {
-                item.Quest = new FormLinkNullable<Quest>(rhs.Quest.FormKey);
+                item.Quest = new FormLinkNullable<IQuestGetter>(rhs.Quest.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogItem_FieldIndex.PreviousTopic) ?? true))
             {
-                item.PreviousTopic = new FormLinkNullable<DialogItem>(rhs.PreviousTopic.FormKey);
+                item.PreviousTopic = new FormLinkNullable<IDialogItemGetter>(rhs.PreviousTopic.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Topics) ?? true))
             {
@@ -2115,7 +1924,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Topics.SetTo(
                         rhs.Topics
-                        .Select(r => (IFormLink<DialogTopic>)new FormLink<DialogTopic>(r.FormKey)));
+                        .Select(r => (IFormLink<IDialogTopicGetter>)new FormLink<IDialogTopicGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2182,7 +1991,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Choices.SetTo(
                         rhs.Choices
-                        .Select(r => (IFormLink<DialogTopic>)new FormLink<DialogTopic>(r.FormKey)));
+                        .Select(r => (IFormLink<IDialogTopicGetter>)new FormLink<IDialogTopicGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2201,7 +2010,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.LinkFrom.SetTo(
                         rhs.LinkFrom
-                        .Select(r => (IFormLink<DialogTopic>)new FormLink<DialogTopic>(r.FormKey)));
+                        .Select(r => (IFormLink<IDialogTopicGetter>)new FormLink<IDialogTopicGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2570,7 +2379,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.NAME:
                 {
                     item.Topics.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<DialogTopic>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IDialogTopicGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.NAME),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -2602,7 +2411,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.TCLT:
                 {
                     item.Choices.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<DialogTopic>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IDialogTopicGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.TCLT),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -2611,7 +2420,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.TCLF:
                 {
                     item.LinkFrom.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<DialogTopic>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IDialogTopicGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.TCLF),
                             transl: FormLinkBinaryTranslation.Instance.Parse));

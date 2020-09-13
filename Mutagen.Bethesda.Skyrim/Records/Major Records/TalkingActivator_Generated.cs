@@ -87,8 +87,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Keyword>>? _Keywords;
-        public IExtendedList<IFormLink<Keyword>>? Keywords
+        private ExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
+        public ExtendedList<IFormLink<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -105,9 +105,7 @@ namespace Mutagen.Bethesda.Skyrim
         Int32? ITalkingActivatorGetter.PNAM => this.PNAM;
         #endregion
         #region LoopingSound
-        public FormLinkNullable<SoundMarker> LoopingSound { get; set; } = new FormLinkNullable<SoundMarker>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundMarkerGetter> ITalkingActivatorGetter.LoopingSound => this.LoopingSound.ToGetter<SoundMarker, ISoundMarkerGetter>();
+        public FormLinkNullable<ISoundMarkerGetter> LoopingSound { get; set; } = new FormLinkNullable<ISoundMarkerGetter>();
         #endregion
         #region FNAM
         public Int16? FNAM { get; set; }
@@ -115,9 +113,7 @@ namespace Mutagen.Bethesda.Skyrim
         Int16? ITalkingActivatorGetter.FNAM => this.FNAM;
         #endregion
         #region VoiceType
-        public FormLinkNullable<VoiceType> VoiceType { get; set; } = new FormLinkNullable<VoiceType>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IVoiceTypeGetter> ITalkingActivatorGetter.VoiceType => this.VoiceType.ToGetter<VoiceType, IVoiceTypeGetter>();
+        public FormLinkNullable<IVoiceTypeGetter> VoiceType { get; set; } = new FormLinkNullable<IVoiceTypeGetter>();
         #endregion
 
         #region To String
@@ -879,11 +875,11 @@ namespace Mutagen.Bethesda.Skyrim
         new TranslatedString? Name { get; set; }
         new Model? Model { get; set; }
         new Destructible? Destructible { get; set; }
-        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new ExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
         new Int32? PNAM { get; set; }
-        new FormLinkNullable<SoundMarker> LoopingSound { get; set; }
+        new FormLinkNullable<ISoundMarkerGetter> LoopingSound { get; set; }
         new Int16? FNAM { get; set; }
-        new FormLinkNullable<VoiceType> VoiceType { get; set; }
+        new FormLinkNullable<IVoiceTypeGetter> VoiceType { get; set; }
         #region Mutagen
         new TalkingActivator.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1124,202 +1120,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "VIRTUALMACHINEADAPTER":
-                    return (ushort)TalkingActivator_FieldIndex.VirtualMachineAdapter;
-                case "OBJECTBOUNDS":
-                    return (ushort)TalkingActivator_FieldIndex.ObjectBounds;
-                case "NAME":
-                    return (ushort)TalkingActivator_FieldIndex.Name;
-                case "MODEL":
-                    return (ushort)TalkingActivator_FieldIndex.Model;
-                case "DESTRUCTIBLE":
-                    return (ushort)TalkingActivator_FieldIndex.Destructible;
-                case "KEYWORDS":
-                    return (ushort)TalkingActivator_FieldIndex.Keywords;
-                case "PNAM":
-                    return (ushort)TalkingActivator_FieldIndex.PNAM;
-                case "LOOPINGSOUND":
-                    return (ushort)TalkingActivator_FieldIndex.LoopingSound;
-                case "FNAM":
-                    return (ushort)TalkingActivator_FieldIndex.FNAM;
-                case "VOICETYPE":
-                    return (ushort)TalkingActivator_FieldIndex.VoiceType;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            TalkingActivator_FieldIndex enu = (TalkingActivator_FieldIndex)index;
-            switch (enu)
-            {
-                case TalkingActivator_FieldIndex.Keywords:
-                    return true;
-                case TalkingActivator_FieldIndex.VirtualMachineAdapter:
-                case TalkingActivator_FieldIndex.ObjectBounds:
-                case TalkingActivator_FieldIndex.Name:
-                case TalkingActivator_FieldIndex.Model:
-                case TalkingActivator_FieldIndex.Destructible:
-                case TalkingActivator_FieldIndex.PNAM:
-                case TalkingActivator_FieldIndex.LoopingSound:
-                case TalkingActivator_FieldIndex.FNAM:
-                case TalkingActivator_FieldIndex.VoiceType:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            TalkingActivator_FieldIndex enu = (TalkingActivator_FieldIndex)index;
-            switch (enu)
-            {
-                case TalkingActivator_FieldIndex.VirtualMachineAdapter:
-                case TalkingActivator_FieldIndex.ObjectBounds:
-                case TalkingActivator_FieldIndex.Model:
-                case TalkingActivator_FieldIndex.Destructible:
-                    return true;
-                case TalkingActivator_FieldIndex.Name:
-                case TalkingActivator_FieldIndex.Keywords:
-                case TalkingActivator_FieldIndex.PNAM:
-                case TalkingActivator_FieldIndex.LoopingSound:
-                case TalkingActivator_FieldIndex.FNAM:
-                case TalkingActivator_FieldIndex.VoiceType:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            TalkingActivator_FieldIndex enu = (TalkingActivator_FieldIndex)index;
-            switch (enu)
-            {
-                case TalkingActivator_FieldIndex.VirtualMachineAdapter:
-                case TalkingActivator_FieldIndex.ObjectBounds:
-                case TalkingActivator_FieldIndex.Name:
-                case TalkingActivator_FieldIndex.Model:
-                case TalkingActivator_FieldIndex.Destructible:
-                case TalkingActivator_FieldIndex.Keywords:
-                case TalkingActivator_FieldIndex.PNAM:
-                case TalkingActivator_FieldIndex.LoopingSound:
-                case TalkingActivator_FieldIndex.FNAM:
-                case TalkingActivator_FieldIndex.VoiceType:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            TalkingActivator_FieldIndex enu = (TalkingActivator_FieldIndex)index;
-            switch (enu)
-            {
-                case TalkingActivator_FieldIndex.VirtualMachineAdapter:
-                    return "VirtualMachineAdapter";
-                case TalkingActivator_FieldIndex.ObjectBounds:
-                    return "ObjectBounds";
-                case TalkingActivator_FieldIndex.Name:
-                    return "Name";
-                case TalkingActivator_FieldIndex.Model:
-                    return "Model";
-                case TalkingActivator_FieldIndex.Destructible:
-                    return "Destructible";
-                case TalkingActivator_FieldIndex.Keywords:
-                    return "Keywords";
-                case TalkingActivator_FieldIndex.PNAM:
-                    return "PNAM";
-                case TalkingActivator_FieldIndex.LoopingSound:
-                    return "LoopingSound";
-                case TalkingActivator_FieldIndex.FNAM:
-                    return "FNAM";
-                case TalkingActivator_FieldIndex.VoiceType:
-                    return "VoiceType";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            TalkingActivator_FieldIndex enu = (TalkingActivator_FieldIndex)index;
-            switch (enu)
-            {
-                case TalkingActivator_FieldIndex.VirtualMachineAdapter:
-                case TalkingActivator_FieldIndex.ObjectBounds:
-                case TalkingActivator_FieldIndex.Name:
-                case TalkingActivator_FieldIndex.Model:
-                case TalkingActivator_FieldIndex.Destructible:
-                case TalkingActivator_FieldIndex.Keywords:
-                case TalkingActivator_FieldIndex.PNAM:
-                case TalkingActivator_FieldIndex.LoopingSound:
-                case TalkingActivator_FieldIndex.FNAM:
-                case TalkingActivator_FieldIndex.VoiceType:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            TalkingActivator_FieldIndex enu = (TalkingActivator_FieldIndex)index;
-            switch (enu)
-            {
-                case TalkingActivator_FieldIndex.VirtualMachineAdapter:
-                case TalkingActivator_FieldIndex.ObjectBounds:
-                case TalkingActivator_FieldIndex.Name:
-                case TalkingActivator_FieldIndex.Model:
-                case TalkingActivator_FieldIndex.Destructible:
-                case TalkingActivator_FieldIndex.Keywords:
-                case TalkingActivator_FieldIndex.PNAM:
-                case TalkingActivator_FieldIndex.LoopingSound:
-                case TalkingActivator_FieldIndex.FNAM:
-                case TalkingActivator_FieldIndex.VoiceType:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            TalkingActivator_FieldIndex enu = (TalkingActivator_FieldIndex)index;
-            switch (enu)
-            {
-                case TalkingActivator_FieldIndex.VirtualMachineAdapter:
-                    return typeof(VirtualMachineAdapter);
-                case TalkingActivator_FieldIndex.ObjectBounds:
-                    return typeof(ObjectBounds);
-                case TalkingActivator_FieldIndex.Name:
-                    return typeof(TranslatedString);
-                case TalkingActivator_FieldIndex.Model:
-                    return typeof(Model);
-                case TalkingActivator_FieldIndex.Destructible:
-                    return typeof(Destructible);
-                case TalkingActivator_FieldIndex.Keywords:
-                    return typeof(IExtendedList<IFormLink<Keyword>>);
-                case TalkingActivator_FieldIndex.PNAM:
-                    return typeof(Int32);
-                case TalkingActivator_FieldIndex.LoopingSound:
-                    return typeof(FormLinkNullable<SoundMarker>);
-                case TalkingActivator_FieldIndex.FNAM:
-                    return typeof(Int16);
-                case TalkingActivator_FieldIndex.VoiceType:
-                    return typeof(FormLinkNullable<VoiceType>);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.TACT;
         public static readonly Type BinaryWriteTranslation = typeof(TalkingActivatorBinaryWriteTranslation);
         #region Interface
@@ -1340,14 +1140,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1370,9 +1170,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Destructible = null;
             item.Keywords = null;
             item.PNAM = default;
-            item.LoopingSound = FormLinkNullable<SoundMarker>.Null;
+            item.LoopingSound = FormLinkNullable<ISoundMarkerGetter>.Null;
             item.FNAM = default;
-            item.VoiceType = FormLinkNullable<VoiceType>.Null;
+            item.VoiceType = FormLinkNullable<IVoiceTypeGetter>.Null;
             base.Clear(item);
         }
         
@@ -1926,8 +1726,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLink<Keyword>)new FormLink<Keyword>(r.FormKey))
-                            .ToExtendedList<IFormLink<Keyword>>();
+                            .Select(r => (IFormLink<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IKeywordGetter>>();
                     }
                     else
                     {
@@ -1950,7 +1750,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)TalkingActivator_FieldIndex.LoopingSound) ?? true))
             {
-                item.LoopingSound = new FormLinkNullable<SoundMarker>(rhs.LoopingSound.FormKey);
+                item.LoopingSound = new FormLinkNullable<ISoundMarkerGetter>(rhs.LoopingSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)TalkingActivator_FieldIndex.FNAM) ?? true))
             {
@@ -1958,7 +1758,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)TalkingActivator_FieldIndex.VoiceType) ?? true))
             {
-                item.VoiceType = new FormLinkNullable<VoiceType>(rhs.VoiceType.FormKey);
+                item.VoiceType = new FormLinkNullable<IVoiceTypeGetter>(rhs.VoiceType.FormKey);
             }
         }
         
@@ -2300,13 +2100,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KSIZ:
                 {
                     item.Keywords = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<Keyword>>();
+                        .CastExtendedList<IFormLink<IKeywordGetter>>();
                     return (int)TalkingActivator_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.PNAM:

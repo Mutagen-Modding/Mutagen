@@ -54,8 +54,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region LocalVariables
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<LocalVariable> _LocalVariables = new ExtendedList<LocalVariable>();
-        public IExtendedList<LocalVariable> LocalVariables
+        private ExtendedList<LocalVariable> _LocalVariables = new ExtendedList<LocalVariable>();
+        public ExtendedList<LocalVariable> LocalVariables
         {
             get => this._LocalVariables;
             protected set => this._LocalVariables = value;
@@ -68,8 +68,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region References
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<AScriptReference> _References = new ExtendedList<AScriptReference>();
-        public IExtendedList<AScriptReference> References
+        private ExtendedList<AScriptReference> _References = new ExtendedList<AScriptReference>();
+        public ExtendedList<AScriptReference> References
         {
             get => this._References;
             protected set => this._References = value;
@@ -727,8 +727,8 @@ namespace Mutagen.Bethesda.Oblivion
         new ScriptMetaSummary MetadataSummary { get; }
         new MemorySlice<Byte>? CompiledScript { get; set; }
         new String? SourceCode { get; set; }
-        new IExtendedList<LocalVariable> LocalVariables { get; }
-        new IExtendedList<AScriptReference> References { get; }
+        new ExtendedList<LocalVariable> LocalVariables { get; }
+        new ExtendedList<AScriptReference> References { get; }
     }
 
     public partial interface IScriptFieldsGetter :
@@ -966,149 +966,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "METADATASUMMARY":
-                    return (ushort)ScriptFields_FieldIndex.MetadataSummary;
-                case "COMPILEDSCRIPT":
-                    return (ushort)ScriptFields_FieldIndex.CompiledScript;
-                case "SOURCECODE":
-                    return (ushort)ScriptFields_FieldIndex.SourceCode;
-                case "LOCALVARIABLES":
-                    return (ushort)ScriptFields_FieldIndex.LocalVariables;
-                case "REFERENCES":
-                    return (ushort)ScriptFields_FieldIndex.References;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            ScriptFields_FieldIndex enu = (ScriptFields_FieldIndex)index;
-            switch (enu)
-            {
-                case ScriptFields_FieldIndex.LocalVariables:
-                case ScriptFields_FieldIndex.References:
-                    return true;
-                case ScriptFields_FieldIndex.MetadataSummary:
-                case ScriptFields_FieldIndex.CompiledScript:
-                case ScriptFields_FieldIndex.SourceCode:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            ScriptFields_FieldIndex enu = (ScriptFields_FieldIndex)index;
-            switch (enu)
-            {
-                case ScriptFields_FieldIndex.MetadataSummary:
-                case ScriptFields_FieldIndex.LocalVariables:
-                case ScriptFields_FieldIndex.References:
-                    return true;
-                case ScriptFields_FieldIndex.CompiledScript:
-                case ScriptFields_FieldIndex.SourceCode:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            ScriptFields_FieldIndex enu = (ScriptFields_FieldIndex)index;
-            switch (enu)
-            {
-                case ScriptFields_FieldIndex.MetadataSummary:
-                    return true;
-                case ScriptFields_FieldIndex.CompiledScript:
-                case ScriptFields_FieldIndex.SourceCode:
-                case ScriptFields_FieldIndex.LocalVariables:
-                case ScriptFields_FieldIndex.References:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            ScriptFields_FieldIndex enu = (ScriptFields_FieldIndex)index;
-            switch (enu)
-            {
-                case ScriptFields_FieldIndex.MetadataSummary:
-                    return "MetadataSummary";
-                case ScriptFields_FieldIndex.CompiledScript:
-                    return "CompiledScript";
-                case ScriptFields_FieldIndex.SourceCode:
-                    return "SourceCode";
-                case ScriptFields_FieldIndex.LocalVariables:
-                    return "LocalVariables";
-                case ScriptFields_FieldIndex.References:
-                    return "References";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            ScriptFields_FieldIndex enu = (ScriptFields_FieldIndex)index;
-            switch (enu)
-            {
-                case ScriptFields_FieldIndex.MetadataSummary:
-                case ScriptFields_FieldIndex.CompiledScript:
-                case ScriptFields_FieldIndex.SourceCode:
-                case ScriptFields_FieldIndex.LocalVariables:
-                case ScriptFields_FieldIndex.References:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            ScriptFields_FieldIndex enu = (ScriptFields_FieldIndex)index;
-            switch (enu)
-            {
-                case ScriptFields_FieldIndex.MetadataSummary:
-                    return true;
-                case ScriptFields_FieldIndex.CompiledScript:
-                case ScriptFields_FieldIndex.SourceCode:
-                case ScriptFields_FieldIndex.LocalVariables:
-                case ScriptFields_FieldIndex.References:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            ScriptFields_FieldIndex enu = (ScriptFields_FieldIndex)index;
-            switch (enu)
-            {
-                case ScriptFields_FieldIndex.MetadataSummary:
-                    return typeof(ScriptMetaSummary);
-                case ScriptFields_FieldIndex.CompiledScript:
-                    return typeof(MemorySlice<Byte>);
-                case ScriptFields_FieldIndex.SourceCode:
-                    return typeof(String);
-                case ScriptFields_FieldIndex.LocalVariables:
-                    return typeof(IExtendedList<LocalVariable>);
-                case ScriptFields_FieldIndex.References:
-                    return typeof(IExtendedList<AScriptReference>);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1140,14 +997,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

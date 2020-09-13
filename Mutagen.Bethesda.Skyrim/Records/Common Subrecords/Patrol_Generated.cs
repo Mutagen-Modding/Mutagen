@@ -44,9 +44,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Single IdleTime { get; set; } = default;
         #endregion
         #region Idle
-        public FormLink<IdleAnimation> Idle { get; set; } = new FormLink<IdleAnimation>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IIdleAnimationGetter> IPatrolGetter.Idle => this.Idle.ToGetter<IdleAnimation, IIdleAnimationGetter>();
+        public FormLink<IIdleAnimationGetter> Idle { get; set; } = new FormLink<IIdleAnimationGetter>();
         #endregion
         #region SCHR
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -72,8 +70,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Topics
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<ATopicReference> _Topics = new ExtendedList<ATopicReference>();
-        public IExtendedList<ATopicReference> Topics
+        private ExtendedList<ATopicReference> _Topics = new ExtendedList<ATopicReference>();
+        public ExtendedList<ATopicReference> Topics
         {
             get => this._Topics;
             protected set => this._Topics = value;
@@ -648,10 +646,10 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new Single IdleTime { get; set; }
-        new FormLink<IdleAnimation> Idle { get; set; }
+        new FormLink<IIdleAnimationGetter> Idle { get; set; }
         new MemorySlice<Byte>? SCHR { get; set; }
         new MemorySlice<Byte>? SCTX { get; set; }
-        new IExtendedList<ATopicReference> Topics { get; }
+        new ExtendedList<ATopicReference> Topics { get; }
     }
 
     public partial interface IPatrolGetter :
@@ -889,147 +887,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "IDLETIME":
-                    return (ushort)Patrol_FieldIndex.IdleTime;
-                case "IDLE":
-                    return (ushort)Patrol_FieldIndex.Idle;
-                case "SCHR":
-                    return (ushort)Patrol_FieldIndex.SCHR;
-                case "SCTX":
-                    return (ushort)Patrol_FieldIndex.SCTX;
-                case "TOPICS":
-                    return (ushort)Patrol_FieldIndex.Topics;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Patrol_FieldIndex enu = (Patrol_FieldIndex)index;
-            switch (enu)
-            {
-                case Patrol_FieldIndex.Topics:
-                    return true;
-                case Patrol_FieldIndex.IdleTime:
-                case Patrol_FieldIndex.Idle:
-                case Patrol_FieldIndex.SCHR:
-                case Patrol_FieldIndex.SCTX:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Patrol_FieldIndex enu = (Patrol_FieldIndex)index;
-            switch (enu)
-            {
-                case Patrol_FieldIndex.Topics:
-                    return true;
-                case Patrol_FieldIndex.IdleTime:
-                case Patrol_FieldIndex.Idle:
-                case Patrol_FieldIndex.SCHR:
-                case Patrol_FieldIndex.SCTX:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Patrol_FieldIndex enu = (Patrol_FieldIndex)index;
-            switch (enu)
-            {
-                case Patrol_FieldIndex.IdleTime:
-                case Patrol_FieldIndex.Idle:
-                case Patrol_FieldIndex.SCHR:
-                case Patrol_FieldIndex.SCTX:
-                case Patrol_FieldIndex.Topics:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Patrol_FieldIndex enu = (Patrol_FieldIndex)index;
-            switch (enu)
-            {
-                case Patrol_FieldIndex.IdleTime:
-                    return "IdleTime";
-                case Patrol_FieldIndex.Idle:
-                    return "Idle";
-                case Patrol_FieldIndex.SCHR:
-                    return "SCHR";
-                case Patrol_FieldIndex.SCTX:
-                    return "SCTX";
-                case Patrol_FieldIndex.Topics:
-                    return "Topics";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Patrol_FieldIndex enu = (Patrol_FieldIndex)index;
-            switch (enu)
-            {
-                case Patrol_FieldIndex.IdleTime:
-                case Patrol_FieldIndex.Idle:
-                case Patrol_FieldIndex.SCHR:
-                case Patrol_FieldIndex.SCTX:
-                case Patrol_FieldIndex.Topics:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Patrol_FieldIndex enu = (Patrol_FieldIndex)index;
-            switch (enu)
-            {
-                case Patrol_FieldIndex.IdleTime:
-                case Patrol_FieldIndex.Idle:
-                case Patrol_FieldIndex.SCHR:
-                case Patrol_FieldIndex.SCTX:
-                case Patrol_FieldIndex.Topics:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Patrol_FieldIndex enu = (Patrol_FieldIndex)index;
-            switch (enu)
-            {
-                case Patrol_FieldIndex.IdleTime:
-                    return typeof(Single);
-                case Patrol_FieldIndex.Idle:
-                    return typeof(FormLink<IdleAnimation>);
-                case Patrol_FieldIndex.SCHR:
-                    return typeof(MemorySlice<Byte>);
-                case Patrol_FieldIndex.SCTX:
-                    return typeof(MemorySlice<Byte>);
-                case Patrol_FieldIndex.Topics:
-                    return typeof(IExtendedList<ATopicReference>);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.XPRD;
         public static readonly Type BinaryWriteTranslation = typeof(PatrolBinaryWriteTranslation);
         #region Interface
@@ -1050,14 +907,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1074,7 +931,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.IdleTime = default;
-            item.Idle = FormLink<IdleAnimation>.Null;
+            item.Idle = FormLink<IIdleAnimationGetter>.Null;
             item.SCHR = default;
             item.SCTX = default;
             item.Topics.Clear();
@@ -1288,7 +1145,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Patrol_FieldIndex.Idle) ?? true))
             {
-                item.Idle = new FormLink<IdleAnimation>(rhs.Idle.FormKey);
+                item.Idle = new FormLink<IIdleAnimationGetter>(rhs.Idle.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Patrol_FieldIndex.SCHR) ?? true))
             {

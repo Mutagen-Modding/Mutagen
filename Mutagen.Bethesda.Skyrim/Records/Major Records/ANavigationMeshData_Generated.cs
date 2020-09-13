@@ -50,8 +50,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Vertices
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<P3Float> _Vertices = new ExtendedList<P3Float>();
-        public IExtendedList<P3Float> Vertices
+        private ExtendedList<P3Float> _Vertices = new ExtendedList<P3Float>();
+        public ExtendedList<P3Float> Vertices
         {
             get => this._Vertices;
             protected set => this._Vertices = value;
@@ -64,8 +64,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Triangles
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<NavmeshTriangle> _Triangles = new ExtendedList<NavmeshTriangle>();
-        public IExtendedList<NavmeshTriangle> Triangles
+        private ExtendedList<NavmeshTriangle> _Triangles = new ExtendedList<NavmeshTriangle>();
+        public ExtendedList<NavmeshTriangle> Triangles
         {
             get => this._Triangles;
             protected set => this._Triangles = value;
@@ -78,8 +78,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region EdgeLinks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<EdgeLink> _EdgeLinks = new ExtendedList<EdgeLink>();
-        public IExtendedList<EdgeLink> EdgeLinks
+        private ExtendedList<EdgeLink> _EdgeLinks = new ExtendedList<EdgeLink>();
+        public ExtendedList<EdgeLink> EdgeLinks
         {
             get => this._EdgeLinks;
             protected set => this._EdgeLinks = value;
@@ -92,8 +92,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region DoorTriangles
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<DoorTriangle> _DoorTriangles = new ExtendedList<DoorTriangle>();
-        public IExtendedList<DoorTriangle> DoorTriangles
+        private ExtendedList<DoorTriangle> _DoorTriangles = new ExtendedList<DoorTriangle>();
+        public ExtendedList<DoorTriangle> DoorTriangles
         {
             get => this._DoorTriangles;
             protected set => this._DoorTriangles = value;
@@ -1089,10 +1089,10 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new UInt32 NavmeshVersion { get; set; }
         new UInt32 Magic { get; set; }
-        new IExtendedList<P3Float> Vertices { get; }
-        new IExtendedList<NavmeshTriangle> Triangles { get; }
-        new IExtendedList<EdgeLink> EdgeLinks { get; }
-        new IExtendedList<DoorTriangle> DoorTriangles { get; }
+        new ExtendedList<P3Float> Vertices { get; }
+        new ExtendedList<NavmeshTriangle> Triangles { get; }
+        new ExtendedList<EdgeLink> EdgeLinks { get; }
+        new ExtendedList<DoorTriangle> DoorTriangles { get; }
         new UInt32 NavmeshGridDivisor { get; set; }
         new Single MaxDistanceX { get; set; }
         new Single MaxDistanceY { get; set; }
@@ -1350,224 +1350,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "NAVMESHVERSION":
-                    return (ushort)ANavigationMeshData_FieldIndex.NavmeshVersion;
-                case "MAGIC":
-                    return (ushort)ANavigationMeshData_FieldIndex.Magic;
-                case "VERTICES":
-                    return (ushort)ANavigationMeshData_FieldIndex.Vertices;
-                case "TRIANGLES":
-                    return (ushort)ANavigationMeshData_FieldIndex.Triangles;
-                case "EDGELINKS":
-                    return (ushort)ANavigationMeshData_FieldIndex.EdgeLinks;
-                case "DOORTRIANGLES":
-                    return (ushort)ANavigationMeshData_FieldIndex.DoorTriangles;
-                case "NAVMESHGRIDDIVISOR":
-                    return (ushort)ANavigationMeshData_FieldIndex.NavmeshGridDivisor;
-                case "MAXDISTANCEX":
-                    return (ushort)ANavigationMeshData_FieldIndex.MaxDistanceX;
-                case "MAXDISTANCEY":
-                    return (ushort)ANavigationMeshData_FieldIndex.MaxDistanceY;
-                case "MIN":
-                    return (ushort)ANavigationMeshData_FieldIndex.Min;
-                case "MAX":
-                    return (ushort)ANavigationMeshData_FieldIndex.Max;
-                case "NAVMESHGRID":
-                    return (ushort)ANavigationMeshData_FieldIndex.NavmeshGrid;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            ANavigationMeshData_FieldIndex enu = (ANavigationMeshData_FieldIndex)index;
-            switch (enu)
-            {
-                case ANavigationMeshData_FieldIndex.Vertices:
-                case ANavigationMeshData_FieldIndex.Triangles:
-                case ANavigationMeshData_FieldIndex.EdgeLinks:
-                case ANavigationMeshData_FieldIndex.DoorTriangles:
-                    return true;
-                case ANavigationMeshData_FieldIndex.NavmeshVersion:
-                case ANavigationMeshData_FieldIndex.Magic:
-                case ANavigationMeshData_FieldIndex.NavmeshGridDivisor:
-                case ANavigationMeshData_FieldIndex.MaxDistanceX:
-                case ANavigationMeshData_FieldIndex.MaxDistanceY:
-                case ANavigationMeshData_FieldIndex.Min:
-                case ANavigationMeshData_FieldIndex.Max:
-                case ANavigationMeshData_FieldIndex.NavmeshGrid:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            ANavigationMeshData_FieldIndex enu = (ANavigationMeshData_FieldIndex)index;
-            switch (enu)
-            {
-                case ANavigationMeshData_FieldIndex.Triangles:
-                case ANavigationMeshData_FieldIndex.EdgeLinks:
-                case ANavigationMeshData_FieldIndex.DoorTriangles:
-                    return true;
-                case ANavigationMeshData_FieldIndex.NavmeshVersion:
-                case ANavigationMeshData_FieldIndex.Magic:
-                case ANavigationMeshData_FieldIndex.Vertices:
-                case ANavigationMeshData_FieldIndex.NavmeshGridDivisor:
-                case ANavigationMeshData_FieldIndex.MaxDistanceX:
-                case ANavigationMeshData_FieldIndex.MaxDistanceY:
-                case ANavigationMeshData_FieldIndex.Min:
-                case ANavigationMeshData_FieldIndex.Max:
-                case ANavigationMeshData_FieldIndex.NavmeshGrid:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            ANavigationMeshData_FieldIndex enu = (ANavigationMeshData_FieldIndex)index;
-            switch (enu)
-            {
-                case ANavigationMeshData_FieldIndex.NavmeshVersion:
-                case ANavigationMeshData_FieldIndex.Magic:
-                case ANavigationMeshData_FieldIndex.Vertices:
-                case ANavigationMeshData_FieldIndex.Triangles:
-                case ANavigationMeshData_FieldIndex.EdgeLinks:
-                case ANavigationMeshData_FieldIndex.DoorTriangles:
-                case ANavigationMeshData_FieldIndex.NavmeshGridDivisor:
-                case ANavigationMeshData_FieldIndex.MaxDistanceX:
-                case ANavigationMeshData_FieldIndex.MaxDistanceY:
-                case ANavigationMeshData_FieldIndex.Min:
-                case ANavigationMeshData_FieldIndex.Max:
-                case ANavigationMeshData_FieldIndex.NavmeshGrid:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            ANavigationMeshData_FieldIndex enu = (ANavigationMeshData_FieldIndex)index;
-            switch (enu)
-            {
-                case ANavigationMeshData_FieldIndex.NavmeshVersion:
-                    return "NavmeshVersion";
-                case ANavigationMeshData_FieldIndex.Magic:
-                    return "Magic";
-                case ANavigationMeshData_FieldIndex.Vertices:
-                    return "Vertices";
-                case ANavigationMeshData_FieldIndex.Triangles:
-                    return "Triangles";
-                case ANavigationMeshData_FieldIndex.EdgeLinks:
-                    return "EdgeLinks";
-                case ANavigationMeshData_FieldIndex.DoorTriangles:
-                    return "DoorTriangles";
-                case ANavigationMeshData_FieldIndex.NavmeshGridDivisor:
-                    return "NavmeshGridDivisor";
-                case ANavigationMeshData_FieldIndex.MaxDistanceX:
-                    return "MaxDistanceX";
-                case ANavigationMeshData_FieldIndex.MaxDistanceY:
-                    return "MaxDistanceY";
-                case ANavigationMeshData_FieldIndex.Min:
-                    return "Min";
-                case ANavigationMeshData_FieldIndex.Max:
-                    return "Max";
-                case ANavigationMeshData_FieldIndex.NavmeshGrid:
-                    return "NavmeshGrid";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            ANavigationMeshData_FieldIndex enu = (ANavigationMeshData_FieldIndex)index;
-            switch (enu)
-            {
-                case ANavigationMeshData_FieldIndex.NavmeshVersion:
-                case ANavigationMeshData_FieldIndex.Magic:
-                case ANavigationMeshData_FieldIndex.Vertices:
-                case ANavigationMeshData_FieldIndex.Triangles:
-                case ANavigationMeshData_FieldIndex.EdgeLinks:
-                case ANavigationMeshData_FieldIndex.DoorTriangles:
-                case ANavigationMeshData_FieldIndex.NavmeshGridDivisor:
-                case ANavigationMeshData_FieldIndex.MaxDistanceX:
-                case ANavigationMeshData_FieldIndex.MaxDistanceY:
-                case ANavigationMeshData_FieldIndex.Min:
-                case ANavigationMeshData_FieldIndex.Max:
-                case ANavigationMeshData_FieldIndex.NavmeshGrid:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            ANavigationMeshData_FieldIndex enu = (ANavigationMeshData_FieldIndex)index;
-            switch (enu)
-            {
-                case ANavigationMeshData_FieldIndex.NavmeshVersion:
-                case ANavigationMeshData_FieldIndex.Magic:
-                case ANavigationMeshData_FieldIndex.Vertices:
-                case ANavigationMeshData_FieldIndex.Triangles:
-                case ANavigationMeshData_FieldIndex.EdgeLinks:
-                case ANavigationMeshData_FieldIndex.DoorTriangles:
-                case ANavigationMeshData_FieldIndex.NavmeshGridDivisor:
-                case ANavigationMeshData_FieldIndex.MaxDistanceX:
-                case ANavigationMeshData_FieldIndex.MaxDistanceY:
-                case ANavigationMeshData_FieldIndex.Min:
-                case ANavigationMeshData_FieldIndex.Max:
-                case ANavigationMeshData_FieldIndex.NavmeshGrid:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            ANavigationMeshData_FieldIndex enu = (ANavigationMeshData_FieldIndex)index;
-            switch (enu)
-            {
-                case ANavigationMeshData_FieldIndex.NavmeshVersion:
-                    return typeof(UInt32);
-                case ANavigationMeshData_FieldIndex.Magic:
-                    return typeof(UInt32);
-                case ANavigationMeshData_FieldIndex.Vertices:
-                    return typeof(IExtendedList<P3Float>);
-                case ANavigationMeshData_FieldIndex.Triangles:
-                    return typeof(IExtendedList<NavmeshTriangle>);
-                case ANavigationMeshData_FieldIndex.EdgeLinks:
-                    return typeof(IExtendedList<EdgeLink>);
-                case ANavigationMeshData_FieldIndex.DoorTriangles:
-                    return typeof(IExtendedList<DoorTriangle>);
-                case ANavigationMeshData_FieldIndex.NavmeshGridDivisor:
-                    return typeof(UInt32);
-                case ANavigationMeshData_FieldIndex.MaxDistanceX:
-                    return typeof(Single);
-                case ANavigationMeshData_FieldIndex.MaxDistanceY:
-                    return typeof(Single);
-                case ANavigationMeshData_FieldIndex.Min:
-                    return typeof(P3Float);
-                case ANavigationMeshData_FieldIndex.Max:
-                    return typeof(P3Float);
-                case ANavigationMeshData_FieldIndex.NavmeshGrid:
-                    return typeof(MemorySlice<Byte>);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly Type BinaryWriteTranslation = typeof(ANavigationMeshDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1587,14 +1369,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

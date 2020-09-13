@@ -64,14 +64,12 @@ namespace Mutagen.Bethesda.Oblivion
         String? ISigilStoneGetter.Icon => this.Icon;
         #endregion
         #region Script
-        public FormLinkNullable<Script> Script { get; set; } = new FormLinkNullable<Script>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IScriptGetter> ISigilStoneGetter.Script => this.Script.ToGetter<Script, IScriptGetter>();
+        public FormLinkNullable<IScriptGetter> Script { get; set; } = new FormLinkNullable<IScriptGetter>();
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Effect> _Effects = new ExtendedList<Effect>();
-        public IExtendedList<Effect> Effects
+        private ExtendedList<Effect> _Effects = new ExtendedList<Effect>();
+        public ExtendedList<Effect> Effects
         {
             get => this._Effects;
             protected set => this._Effects = value;
@@ -718,8 +716,8 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Name { get; set; }
         new Model? Model { get; set; }
         new String? Icon { get; set; }
-        new FormLinkNullable<Script> Script { get; set; }
-        new IExtendedList<Effect> Effects { get; }
+        new FormLinkNullable<IScriptGetter> Script { get; set; }
+        new ExtendedList<Effect> Effects { get; }
         new SigilStoneData? Data { get; set; }
     }
 
@@ -942,158 +940,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "NAME":
-                    return (ushort)SigilStone_FieldIndex.Name;
-                case "MODEL":
-                    return (ushort)SigilStone_FieldIndex.Model;
-                case "ICON":
-                    return (ushort)SigilStone_FieldIndex.Icon;
-                case "SCRIPT":
-                    return (ushort)SigilStone_FieldIndex.Script;
-                case "EFFECTS":
-                    return (ushort)SigilStone_FieldIndex.Effects;
-                case "DATA":
-                    return (ushort)SigilStone_FieldIndex.Data;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            SigilStone_FieldIndex enu = (SigilStone_FieldIndex)index;
-            switch (enu)
-            {
-                case SigilStone_FieldIndex.Effects:
-                    return true;
-                case SigilStone_FieldIndex.Name:
-                case SigilStone_FieldIndex.Model:
-                case SigilStone_FieldIndex.Icon:
-                case SigilStone_FieldIndex.Script:
-                case SigilStone_FieldIndex.Data:
-                    return false;
-                default:
-                    return AItem_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            SigilStone_FieldIndex enu = (SigilStone_FieldIndex)index;
-            switch (enu)
-            {
-                case SigilStone_FieldIndex.Model:
-                case SigilStone_FieldIndex.Effects:
-                case SigilStone_FieldIndex.Data:
-                    return true;
-                case SigilStone_FieldIndex.Name:
-                case SigilStone_FieldIndex.Icon:
-                case SigilStone_FieldIndex.Script:
-                    return false;
-                default:
-                    return AItem_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            SigilStone_FieldIndex enu = (SigilStone_FieldIndex)index;
-            switch (enu)
-            {
-                case SigilStone_FieldIndex.Name:
-                case SigilStone_FieldIndex.Model:
-                case SigilStone_FieldIndex.Icon:
-                case SigilStone_FieldIndex.Script:
-                case SigilStone_FieldIndex.Effects:
-                case SigilStone_FieldIndex.Data:
-                    return false;
-                default:
-                    return AItem_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            SigilStone_FieldIndex enu = (SigilStone_FieldIndex)index;
-            switch (enu)
-            {
-                case SigilStone_FieldIndex.Name:
-                    return "Name";
-                case SigilStone_FieldIndex.Model:
-                    return "Model";
-                case SigilStone_FieldIndex.Icon:
-                    return "Icon";
-                case SigilStone_FieldIndex.Script:
-                    return "Script";
-                case SigilStone_FieldIndex.Effects:
-                    return "Effects";
-                case SigilStone_FieldIndex.Data:
-                    return "Data";
-                default:
-                    return AItem_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            SigilStone_FieldIndex enu = (SigilStone_FieldIndex)index;
-            switch (enu)
-            {
-                case SigilStone_FieldIndex.Name:
-                case SigilStone_FieldIndex.Model:
-                case SigilStone_FieldIndex.Icon:
-                case SigilStone_FieldIndex.Script:
-                case SigilStone_FieldIndex.Effects:
-                case SigilStone_FieldIndex.Data:
-                    return false;
-                default:
-                    return AItem_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            SigilStone_FieldIndex enu = (SigilStone_FieldIndex)index;
-            switch (enu)
-            {
-                case SigilStone_FieldIndex.Name:
-                case SigilStone_FieldIndex.Model:
-                case SigilStone_FieldIndex.Icon:
-                case SigilStone_FieldIndex.Script:
-                case SigilStone_FieldIndex.Effects:
-                case SigilStone_FieldIndex.Data:
-                    return false;
-                default:
-                    return AItem_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            SigilStone_FieldIndex enu = (SigilStone_FieldIndex)index;
-            switch (enu)
-            {
-                case SigilStone_FieldIndex.Name:
-                    return typeof(String);
-                case SigilStone_FieldIndex.Model:
-                    return typeof(Model);
-                case SigilStone_FieldIndex.Icon:
-                    return typeof(String);
-                case SigilStone_FieldIndex.Script:
-                    return typeof(FormLinkNullable<Script>);
-                case SigilStone_FieldIndex.Effects:
-                    return typeof(IExtendedList<Effect>);
-                case SigilStone_FieldIndex.Data:
-                    return typeof(SigilStoneData);
-                default:
-                    return AItem_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.SGST;
         public static readonly Type BinaryWriteTranslation = typeof(SigilStoneBinaryWriteTranslation);
         #region Interface
@@ -1114,14 +960,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1140,7 +986,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name = default;
             item.Model = null;
             item.Icon = default;
-            item.Script = FormLinkNullable<Script>.Null;
+            item.Script = FormLinkNullable<IScriptGetter>.Null;
             item.Effects.Clear();
             item.Data = null;
             base.Clear(item);
@@ -1597,7 +1443,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Script) ?? true))
             {
-                item.Script = new FormLinkNullable<Script>(rhs.Script.FormKey);
+                item.Script = new FormLinkNullable<IScriptGetter>(rhs.Script.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Effects) ?? true))
             {

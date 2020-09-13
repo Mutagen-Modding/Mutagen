@@ -41,8 +41,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Navmeshes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<ANavigationMesh>> _Navmeshes = new ExtendedList<IFormLink<ANavigationMesh>>();
-        public IExtendedList<IFormLink<ANavigationMesh>> Navmeshes
+        private ExtendedList<IFormLink<IANavigationMeshGetter>> _Navmeshes = new ExtendedList<IFormLink<IANavigationMeshGetter>>();
+        public ExtendedList<IFormLink<IANavigationMeshGetter>> Navmeshes
         {
             get => this._Navmeshes;
             protected set => this._Navmeshes = value;
@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<INavmeshSet>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<IFormLink<ANavigationMesh>> Navmeshes { get; }
+        new ExtendedList<IFormLink<IANavigationMeshGetter>> Navmeshes { get; }
     }
 
     public partial interface INavmeshSetGetter :
@@ -725,101 +725,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "NAVMESHES":
-                    return (ushort)NavmeshSet_FieldIndex.Navmeshes;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            NavmeshSet_FieldIndex enu = (NavmeshSet_FieldIndex)index;
-            switch (enu)
-            {
-                case NavmeshSet_FieldIndex.Navmeshes:
-                    return true;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            NavmeshSet_FieldIndex enu = (NavmeshSet_FieldIndex)index;
-            switch (enu)
-            {
-                case NavmeshSet_FieldIndex.Navmeshes:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            NavmeshSet_FieldIndex enu = (NavmeshSet_FieldIndex)index;
-            switch (enu)
-            {
-                case NavmeshSet_FieldIndex.Navmeshes:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            NavmeshSet_FieldIndex enu = (NavmeshSet_FieldIndex)index;
-            switch (enu)
-            {
-                case NavmeshSet_FieldIndex.Navmeshes:
-                    return "Navmeshes";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            NavmeshSet_FieldIndex enu = (NavmeshSet_FieldIndex)index;
-            switch (enu)
-            {
-                case NavmeshSet_FieldIndex.Navmeshes:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            NavmeshSet_FieldIndex enu = (NavmeshSet_FieldIndex)index;
-            switch (enu)
-            {
-                case NavmeshSet_FieldIndex.Navmeshes:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            NavmeshSet_FieldIndex enu = (NavmeshSet_FieldIndex)index;
-            switch (enu)
-            {
-                case NavmeshSet_FieldIndex.Navmeshes:
-                    return typeof(IExtendedList<IFormLink<ANavigationMesh>>);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly Type BinaryWriteTranslation = typeof(NavmeshSetBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -839,14 +744,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1035,7 +940,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Navmeshes.SetTo(
                         rhs.Navmeshes
-                        .Select(r => (IFormLink<ANavigationMesh>)new FormLink<ANavigationMesh>(r.FormKey)));
+                        .Select(r => (IFormLink<IANavigationMeshGetter>)new FormLink<IANavigationMeshGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1187,7 +1092,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame)
         {
             item.Navmeshes.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ANavigationMesh>>.Instance.Parse(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IANavigationMeshGetter>>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     frame: frame,
                     transl: FormLinkBinaryTranslation.Instance.Parse));

@@ -41,9 +41,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region NavigationMesh
-        public FormLink<ANavigationMesh> NavigationMesh { get; set; } = new FormLink<ANavigationMesh>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IANavigationMeshGetter> INavigationMapInfoGetter.NavigationMesh => this.NavigationMesh.ToGetter<ANavigationMesh, IANavigationMeshGetter>();
+        public FormLink<IANavigationMeshGetter> NavigationMesh { get; set; } = new FormLink<IANavigationMeshGetter>();
         #endregion
         #region Unknown
         public Int32 Unknown { get; set; } = default;
@@ -56,8 +54,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MergedTo
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<ANavigationMesh>> _MergedTo = new ExtendedList<IFormLink<ANavigationMesh>>();
-        public IExtendedList<IFormLink<ANavigationMesh>> MergedTo
+        private ExtendedList<IFormLink<IANavigationMeshGetter>> _MergedTo = new ExtendedList<IFormLink<IANavigationMeshGetter>>();
+        public ExtendedList<IFormLink<IANavigationMeshGetter>> MergedTo
         {
             get => this._MergedTo;
             protected set => this._MergedTo = value;
@@ -70,8 +68,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region PreferredMerges
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<ANavigationMesh>> _PreferredMerges = new ExtendedList<IFormLink<ANavigationMesh>>();
-        public IExtendedList<IFormLink<ANavigationMesh>> PreferredMerges
+        private ExtendedList<IFormLink<IANavigationMeshGetter>> _PreferredMerges = new ExtendedList<IFormLink<IANavigationMeshGetter>>();
+        public ExtendedList<IFormLink<IANavigationMeshGetter>> PreferredMerges
         {
             get => this._PreferredMerges;
             protected set => this._PreferredMerges = value;
@@ -84,8 +82,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LinkedDoors
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<LinkedDoor> _LinkedDoors = new ExtendedList<LinkedDoor>();
-        public IExtendedList<LinkedDoor> LinkedDoors
+        private ExtendedList<LinkedDoor> _LinkedDoors = new ExtendedList<LinkedDoor>();
+        public ExtendedList<LinkedDoor> LinkedDoors
         {
             get => this._LinkedDoors;
             protected set => this._LinkedDoors = value;
@@ -111,17 +109,13 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 Unknown2 { get; set; } = default;
         #endregion
         #region ParentWorldspace
-        public FormLink<Worldspace> ParentWorldspace { get; set; } = new FormLink<Worldspace>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IWorldspaceGetter> INavigationMapInfoGetter.ParentWorldspace => this.ParentWorldspace.ToGetter<Worldspace, IWorldspaceGetter>();
+        public FormLink<IWorldspaceGetter> ParentWorldspace { get; set; } = new FormLink<IWorldspaceGetter>();
         #endregion
         #region ParentWorldspaceCoord
         public P2Int16 ParentWorldspaceCoord { get; set; } = default;
         #endregion
         #region ParentCell
-        public FormLink<Cell> ParentCell { get; set; } = new FormLink<Cell>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ICellGetter> INavigationMapInfoGetter.ParentCell => this.ParentCell.ToGetter<Cell, ICellGetter>();
+        public FormLink<ICellGetter> ParentCell { get; set; } = new FormLink<ICellGetter>();
         #endregion
 
         #region To String
@@ -1035,18 +1029,18 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<INavigationMapInfo>,
         ILinkedFormKeyContainer
     {
-        new FormLink<ANavigationMesh> NavigationMesh { get; set; }
+        new FormLink<IANavigationMeshGetter> NavigationMesh { get; set; }
         new Int32 Unknown { get; set; }
         new P3Float Point { get; set; }
         new UInt32 PreferredMergesFlag { get; set; }
-        new IExtendedList<IFormLink<ANavigationMesh>> MergedTo { get; }
-        new IExtendedList<IFormLink<ANavigationMesh>> PreferredMerges { get; }
-        new IExtendedList<LinkedDoor> LinkedDoors { get; }
+        new ExtendedList<IFormLink<IANavigationMeshGetter>> MergedTo { get; }
+        new ExtendedList<IFormLink<IANavigationMeshGetter>> PreferredMerges { get; }
+        new ExtendedList<LinkedDoor> LinkedDoors { get; }
         new IslandData? Island { get; set; }
         new Int32 Unknown2 { get; set; }
-        new FormLink<Worldspace> ParentWorldspace { get; set; }
+        new FormLink<IWorldspaceGetter> ParentWorldspace { get; set; }
         new P2Int16 ParentWorldspaceCoord { get; set; }
-        new FormLink<Cell> ParentCell { get; set; }
+        new FormLink<ICellGetter> ParentCell { get; set; }
     }
 
     public partial interface INavigationMapInfoGetter :
@@ -1298,224 +1292,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "NAVIGATIONMESH":
-                    return (ushort)NavigationMapInfo_FieldIndex.NavigationMesh;
-                case "UNKNOWN":
-                    return (ushort)NavigationMapInfo_FieldIndex.Unknown;
-                case "POINT":
-                    return (ushort)NavigationMapInfo_FieldIndex.Point;
-                case "PREFERREDMERGESFLAG":
-                    return (ushort)NavigationMapInfo_FieldIndex.PreferredMergesFlag;
-                case "MERGEDTO":
-                    return (ushort)NavigationMapInfo_FieldIndex.MergedTo;
-                case "PREFERREDMERGES":
-                    return (ushort)NavigationMapInfo_FieldIndex.PreferredMerges;
-                case "LINKEDDOORS":
-                    return (ushort)NavigationMapInfo_FieldIndex.LinkedDoors;
-                case "ISLAND":
-                    return (ushort)NavigationMapInfo_FieldIndex.Island;
-                case "UNKNOWN2":
-                    return (ushort)NavigationMapInfo_FieldIndex.Unknown2;
-                case "PARENTWORLDSPACE":
-                    return (ushort)NavigationMapInfo_FieldIndex.ParentWorldspace;
-                case "PARENTWORLDSPACECOORD":
-                    return (ushort)NavigationMapInfo_FieldIndex.ParentWorldspaceCoord;
-                case "PARENTCELL":
-                    return (ushort)NavigationMapInfo_FieldIndex.ParentCell;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            NavigationMapInfo_FieldIndex enu = (NavigationMapInfo_FieldIndex)index;
-            switch (enu)
-            {
-                case NavigationMapInfo_FieldIndex.MergedTo:
-                case NavigationMapInfo_FieldIndex.PreferredMerges:
-                case NavigationMapInfo_FieldIndex.LinkedDoors:
-                    return true;
-                case NavigationMapInfo_FieldIndex.NavigationMesh:
-                case NavigationMapInfo_FieldIndex.Unknown:
-                case NavigationMapInfo_FieldIndex.Point:
-                case NavigationMapInfo_FieldIndex.PreferredMergesFlag:
-                case NavigationMapInfo_FieldIndex.Island:
-                case NavigationMapInfo_FieldIndex.Unknown2:
-                case NavigationMapInfo_FieldIndex.ParentWorldspace:
-                case NavigationMapInfo_FieldIndex.ParentWorldspaceCoord:
-                case NavigationMapInfo_FieldIndex.ParentCell:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            NavigationMapInfo_FieldIndex enu = (NavigationMapInfo_FieldIndex)index;
-            switch (enu)
-            {
-                case NavigationMapInfo_FieldIndex.LinkedDoors:
-                case NavigationMapInfo_FieldIndex.Island:
-                    return true;
-                case NavigationMapInfo_FieldIndex.NavigationMesh:
-                case NavigationMapInfo_FieldIndex.Unknown:
-                case NavigationMapInfo_FieldIndex.Point:
-                case NavigationMapInfo_FieldIndex.PreferredMergesFlag:
-                case NavigationMapInfo_FieldIndex.MergedTo:
-                case NavigationMapInfo_FieldIndex.PreferredMerges:
-                case NavigationMapInfo_FieldIndex.Unknown2:
-                case NavigationMapInfo_FieldIndex.ParentWorldspace:
-                case NavigationMapInfo_FieldIndex.ParentWorldspaceCoord:
-                case NavigationMapInfo_FieldIndex.ParentCell:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            NavigationMapInfo_FieldIndex enu = (NavigationMapInfo_FieldIndex)index;
-            switch (enu)
-            {
-                case NavigationMapInfo_FieldIndex.NavigationMesh:
-                case NavigationMapInfo_FieldIndex.Unknown:
-                case NavigationMapInfo_FieldIndex.Point:
-                case NavigationMapInfo_FieldIndex.PreferredMergesFlag:
-                case NavigationMapInfo_FieldIndex.MergedTo:
-                case NavigationMapInfo_FieldIndex.PreferredMerges:
-                case NavigationMapInfo_FieldIndex.LinkedDoors:
-                case NavigationMapInfo_FieldIndex.Island:
-                case NavigationMapInfo_FieldIndex.Unknown2:
-                case NavigationMapInfo_FieldIndex.ParentWorldspace:
-                case NavigationMapInfo_FieldIndex.ParentWorldspaceCoord:
-                case NavigationMapInfo_FieldIndex.ParentCell:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            NavigationMapInfo_FieldIndex enu = (NavigationMapInfo_FieldIndex)index;
-            switch (enu)
-            {
-                case NavigationMapInfo_FieldIndex.NavigationMesh:
-                    return "NavigationMesh";
-                case NavigationMapInfo_FieldIndex.Unknown:
-                    return "Unknown";
-                case NavigationMapInfo_FieldIndex.Point:
-                    return "Point";
-                case NavigationMapInfo_FieldIndex.PreferredMergesFlag:
-                    return "PreferredMergesFlag";
-                case NavigationMapInfo_FieldIndex.MergedTo:
-                    return "MergedTo";
-                case NavigationMapInfo_FieldIndex.PreferredMerges:
-                    return "PreferredMerges";
-                case NavigationMapInfo_FieldIndex.LinkedDoors:
-                    return "LinkedDoors";
-                case NavigationMapInfo_FieldIndex.Island:
-                    return "Island";
-                case NavigationMapInfo_FieldIndex.Unknown2:
-                    return "Unknown2";
-                case NavigationMapInfo_FieldIndex.ParentWorldspace:
-                    return "ParentWorldspace";
-                case NavigationMapInfo_FieldIndex.ParentWorldspaceCoord:
-                    return "ParentWorldspaceCoord";
-                case NavigationMapInfo_FieldIndex.ParentCell:
-                    return "ParentCell";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            NavigationMapInfo_FieldIndex enu = (NavigationMapInfo_FieldIndex)index;
-            switch (enu)
-            {
-                case NavigationMapInfo_FieldIndex.NavigationMesh:
-                case NavigationMapInfo_FieldIndex.Unknown:
-                case NavigationMapInfo_FieldIndex.Point:
-                case NavigationMapInfo_FieldIndex.PreferredMergesFlag:
-                case NavigationMapInfo_FieldIndex.MergedTo:
-                case NavigationMapInfo_FieldIndex.PreferredMerges:
-                case NavigationMapInfo_FieldIndex.LinkedDoors:
-                case NavigationMapInfo_FieldIndex.Island:
-                case NavigationMapInfo_FieldIndex.Unknown2:
-                case NavigationMapInfo_FieldIndex.ParentWorldspace:
-                case NavigationMapInfo_FieldIndex.ParentWorldspaceCoord:
-                case NavigationMapInfo_FieldIndex.ParentCell:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            NavigationMapInfo_FieldIndex enu = (NavigationMapInfo_FieldIndex)index;
-            switch (enu)
-            {
-                case NavigationMapInfo_FieldIndex.NavigationMesh:
-                case NavigationMapInfo_FieldIndex.Unknown:
-                case NavigationMapInfo_FieldIndex.Point:
-                case NavigationMapInfo_FieldIndex.PreferredMergesFlag:
-                case NavigationMapInfo_FieldIndex.MergedTo:
-                case NavigationMapInfo_FieldIndex.PreferredMerges:
-                case NavigationMapInfo_FieldIndex.LinkedDoors:
-                case NavigationMapInfo_FieldIndex.Island:
-                case NavigationMapInfo_FieldIndex.Unknown2:
-                case NavigationMapInfo_FieldIndex.ParentWorldspace:
-                case NavigationMapInfo_FieldIndex.ParentWorldspaceCoord:
-                case NavigationMapInfo_FieldIndex.ParentCell:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            NavigationMapInfo_FieldIndex enu = (NavigationMapInfo_FieldIndex)index;
-            switch (enu)
-            {
-                case NavigationMapInfo_FieldIndex.NavigationMesh:
-                    return typeof(FormLink<ANavigationMesh>);
-                case NavigationMapInfo_FieldIndex.Unknown:
-                    return typeof(Int32);
-                case NavigationMapInfo_FieldIndex.Point:
-                    return typeof(P3Float);
-                case NavigationMapInfo_FieldIndex.PreferredMergesFlag:
-                    return typeof(UInt32);
-                case NavigationMapInfo_FieldIndex.MergedTo:
-                    return typeof(IExtendedList<IFormLink<ANavigationMesh>>);
-                case NavigationMapInfo_FieldIndex.PreferredMerges:
-                    return typeof(IExtendedList<IFormLink<ANavigationMesh>>);
-                case NavigationMapInfo_FieldIndex.LinkedDoors:
-                    return typeof(IExtendedList<LinkedDoor>);
-                case NavigationMapInfo_FieldIndex.Island:
-                    return typeof(IslandData);
-                case NavigationMapInfo_FieldIndex.Unknown2:
-                    return typeof(Int32);
-                case NavigationMapInfo_FieldIndex.ParentWorldspace:
-                    return typeof(FormLink<Worldspace>);
-                case NavigationMapInfo_FieldIndex.ParentWorldspaceCoord:
-                    return typeof(P2Int16);
-                case NavigationMapInfo_FieldIndex.ParentCell:
-                    return typeof(FormLink<Cell>);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.NVMI;
         public static readonly Type BinaryWriteTranslation = typeof(NavigationMapInfoBinaryWriteTranslation);
         #region Interface
@@ -1536,14 +1312,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1559,7 +1335,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(INavigationMapInfo item)
         {
             ClearPartial();
-            item.NavigationMesh = FormLink<ANavigationMesh>.Null;
+            item.NavigationMesh = FormLink<IANavigationMeshGetter>.Null;
             item.Unknown = default;
             item.Point = default;
             item.PreferredMergesFlag = default;
@@ -1568,9 +1344,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.LinkedDoors.Clear();
             item.Island = null;
             item.Unknown2 = default;
-            item.ParentWorldspace = FormLink<Worldspace>.Null;
+            item.ParentWorldspace = FormLink<IWorldspaceGetter>.Null;
             item.ParentWorldspaceCoord = default;
-            item.ParentCell = FormLink<Cell>.Null;
+            item.ParentCell = FormLink<ICellGetter>.Null;
         }
         
         #region Binary Translation
@@ -1871,7 +1647,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.NavigationMesh) ?? true))
             {
-                item.NavigationMesh = new FormLink<ANavigationMesh>(rhs.NavigationMesh.FormKey);
+                item.NavigationMesh = new FormLink<IANavigationMeshGetter>(rhs.NavigationMesh.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.Unknown) ?? true))
             {
@@ -1892,7 +1668,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.MergedTo.SetTo(
                         rhs.MergedTo
-                        .Select(r => (IFormLink<ANavigationMesh>)new FormLink<ANavigationMesh>(r.FormKey)));
+                        .Select(r => (IFormLink<IANavigationMeshGetter>)new FormLink<IANavigationMeshGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1911,7 +1687,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.PreferredMerges.SetTo(
                         rhs.PreferredMerges
-                        .Select(r => (IFormLink<ANavigationMesh>)new FormLink<ANavigationMesh>(r.FormKey)));
+                        .Select(r => (IFormLink<IANavigationMeshGetter>)new FormLink<IANavigationMeshGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1979,7 +1755,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.ParentWorldspace) ?? true))
             {
-                item.ParentWorldspace = new FormLink<Worldspace>(rhs.ParentWorldspace.FormKey);
+                item.ParentWorldspace = new FormLink<IWorldspaceGetter>(rhs.ParentWorldspace.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.ParentWorldspaceCoord) ?? true))
             {
@@ -1987,7 +1763,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.ParentCell) ?? true))
             {
-                item.ParentCell = new FormLink<Cell>(rhs.ParentCell.FormKey);
+                item.ParentCell = new FormLink<ICellGetter>(rhs.ParentCell.FormKey);
             }
         }
         
@@ -2207,12 +1983,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Point = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.PreferredMergesFlag = frame.ReadUInt32();
             item.MergedTo.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ANavigationMesh>>.Instance.Parse(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IANavigationMeshGetter>>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     frame: frame,
                     transl: FormLinkBinaryTranslation.Instance.Parse));
             item.PreferredMerges.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ANavigationMesh>>.Instance.Parse(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IANavigationMeshGetter>>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     frame: frame,
                     transl: FormLinkBinaryTranslation.Instance.Parse));

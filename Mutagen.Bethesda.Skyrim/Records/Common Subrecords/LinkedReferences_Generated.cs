@@ -43,14 +43,10 @@ namespace Mutagen.Bethesda.Skyrim
         public LinkedReferences.VersioningBreaks Versioning { get; set; } = default;
         #endregion
         #region KeywordOrReference
-        public FormLink<IKeywordLinkedReference> KeywordOrReference { get; set; } = new FormLink<IKeywordLinkedReference>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IKeywordLinkedReferenceGetter> ILinkedReferencesGetter.KeywordOrReference => this.KeywordOrReference.ToGetter<IKeywordLinkedReference, IKeywordLinkedReferenceGetter>();
+        public FormLink<IKeywordLinkedReferenceGetter> KeywordOrReference { get; set; } = new FormLink<IKeywordLinkedReferenceGetter>();
         #endregion
         #region Reference
-        public FormLink<ILinkedReference> Reference { get; set; } = new FormLink<ILinkedReference>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ILinkedReferenceGetter> ILinkedReferencesGetter.Reference => this.Reference.ToGetter<ILinkedReference, ILinkedReferenceGetter>();
+        public FormLink<ILinkedReferenceGetter> Reference { get; set; } = new FormLink<ILinkedReferenceGetter>();
         #endregion
 
         #region To String
@@ -490,8 +486,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new LinkedReferences.VersioningBreaks Versioning { get; set; }
-        new FormLink<IKeywordLinkedReference> KeywordOrReference { get; set; }
-        new FormLink<ILinkedReference> Reference { get; set; }
+        new FormLink<IKeywordLinkedReferenceGetter> KeywordOrReference { get; set; }
+        new FormLink<ILinkedReferenceGetter> Reference { get; set; }
     }
 
     public partial interface ILinkedReferencesGetter :
@@ -725,123 +721,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "VERSIONING":
-                    return (ushort)LinkedReferences_FieldIndex.Versioning;
-                case "KEYWORDORREFERENCE":
-                    return (ushort)LinkedReferences_FieldIndex.KeywordOrReference;
-                case "REFERENCE":
-                    return (ushort)LinkedReferences_FieldIndex.Reference;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            LinkedReferences_FieldIndex enu = (LinkedReferences_FieldIndex)index;
-            switch (enu)
-            {
-                case LinkedReferences_FieldIndex.Versioning:
-                case LinkedReferences_FieldIndex.KeywordOrReference:
-                case LinkedReferences_FieldIndex.Reference:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            LinkedReferences_FieldIndex enu = (LinkedReferences_FieldIndex)index;
-            switch (enu)
-            {
-                case LinkedReferences_FieldIndex.Versioning:
-                case LinkedReferences_FieldIndex.KeywordOrReference:
-                case LinkedReferences_FieldIndex.Reference:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            LinkedReferences_FieldIndex enu = (LinkedReferences_FieldIndex)index;
-            switch (enu)
-            {
-                case LinkedReferences_FieldIndex.Versioning:
-                case LinkedReferences_FieldIndex.KeywordOrReference:
-                case LinkedReferences_FieldIndex.Reference:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            LinkedReferences_FieldIndex enu = (LinkedReferences_FieldIndex)index;
-            switch (enu)
-            {
-                case LinkedReferences_FieldIndex.Versioning:
-                    return "Versioning";
-                case LinkedReferences_FieldIndex.KeywordOrReference:
-                    return "KeywordOrReference";
-                case LinkedReferences_FieldIndex.Reference:
-                    return "Reference";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            LinkedReferences_FieldIndex enu = (LinkedReferences_FieldIndex)index;
-            switch (enu)
-            {
-                case LinkedReferences_FieldIndex.Versioning:
-                case LinkedReferences_FieldIndex.KeywordOrReference:
-                case LinkedReferences_FieldIndex.Reference:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            LinkedReferences_FieldIndex enu = (LinkedReferences_FieldIndex)index;
-            switch (enu)
-            {
-                case LinkedReferences_FieldIndex.Versioning:
-                case LinkedReferences_FieldIndex.KeywordOrReference:
-                case LinkedReferences_FieldIndex.Reference:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            LinkedReferences_FieldIndex enu = (LinkedReferences_FieldIndex)index;
-            switch (enu)
-            {
-                case LinkedReferences_FieldIndex.Versioning:
-                    return typeof(LinkedReferences.VersioningBreaks);
-                case LinkedReferences_FieldIndex.KeywordOrReference:
-                    return typeof(FormLink<IKeywordLinkedReference>);
-                case LinkedReferences_FieldIndex.Reference:
-                    return typeof(FormLink<ILinkedReference>);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.XLKR;
         public static readonly Type BinaryWriteTranslation = typeof(LinkedReferencesBinaryWriteTranslation);
         #region Interface
@@ -862,14 +741,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -886,8 +765,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Versioning = default;
-            item.KeywordOrReference = FormLink<IKeywordLinkedReference>.Null;
-            item.Reference = FormLink<ILinkedReference>.Null;
+            item.KeywordOrReference = FormLink<IKeywordLinkedReferenceGetter>.Null;
+            item.Reference = FormLink<ILinkedReferenceGetter>.Null;
         }
         
         #region Binary Translation
@@ -1058,12 +937,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LinkedReferences_FieldIndex.KeywordOrReference) ?? true))
             {
-                item.KeywordOrReference = new FormLink<IKeywordLinkedReference>(rhs.KeywordOrReference.FormKey);
+                item.KeywordOrReference = new FormLink<IKeywordLinkedReferenceGetter>(rhs.KeywordOrReference.FormKey);
             }
             if (rhs.Versioning.HasFlag(LinkedReferences.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)LinkedReferences_FieldIndex.Reference) ?? true))
             {
-                item.Reference = new FormLink<ILinkedReference>(rhs.Reference.FormKey);
+                item.Reference = new FormLink<ILinkedReferenceGetter>(rhs.Reference.FormKey);
             }
         }
         

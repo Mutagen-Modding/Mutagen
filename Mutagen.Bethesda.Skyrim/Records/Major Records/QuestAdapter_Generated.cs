@@ -52,8 +52,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Fragments
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<QuestScriptFragment> _Fragments = new ExtendedList<QuestScriptFragment>();
-        public IExtendedList<QuestScriptFragment> Fragments
+        private ExtendedList<QuestScriptFragment> _Fragments = new ExtendedList<QuestScriptFragment>();
+        public ExtendedList<QuestScriptFragment> Fragments
         {
             get => this._Fragments;
             protected set => this._Fragments = value;
@@ -66,8 +66,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Aliases
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<QuestFragmentAlias> _Aliases = new ExtendedList<QuestFragmentAlias>();
-        public IExtendedList<QuestFragmentAlias> Aliases
+        private ExtendedList<QuestFragmentAlias> _Aliases = new ExtendedList<QuestFragmentAlias>();
+        public ExtendedList<QuestFragmentAlias> Aliases
         {
             get => this._Aliases;
             protected set => this._Aliases = value;
@@ -719,8 +719,8 @@ namespace Mutagen.Bethesda.Skyrim
         new QuestAdapter.VersioningBreaks Versioning { get; set; }
         new Byte Unknown { get; set; }
         new String FileName { get; set; }
-        new IExtendedList<QuestScriptFragment> Fragments { get; }
-        new IExtendedList<QuestFragmentAlias> Aliases { get; }
+        new ExtendedList<QuestScriptFragment> Fragments { get; }
+        new ExtendedList<QuestFragmentAlias> Aliases { get; }
     }
 
     public partial interface IQuestAdapterGetter :
@@ -930,147 +930,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "VERSIONING":
-                    return (ushort)QuestAdapter_FieldIndex.Versioning;
-                case "UNKNOWN":
-                    return (ushort)QuestAdapter_FieldIndex.Unknown;
-                case "FILENAME":
-                    return (ushort)QuestAdapter_FieldIndex.FileName;
-                case "FRAGMENTS":
-                    return (ushort)QuestAdapter_FieldIndex.Fragments;
-                case "ALIASES":
-                    return (ushort)QuestAdapter_FieldIndex.Aliases;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            QuestAdapter_FieldIndex enu = (QuestAdapter_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestAdapter_FieldIndex.Fragments:
-                case QuestAdapter_FieldIndex.Aliases:
-                    return true;
-                case QuestAdapter_FieldIndex.Versioning:
-                case QuestAdapter_FieldIndex.Unknown:
-                case QuestAdapter_FieldIndex.FileName:
-                    return false;
-                default:
-                    return AVirtualMachineAdapter_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            QuestAdapter_FieldIndex enu = (QuestAdapter_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestAdapter_FieldIndex.Fragments:
-                case QuestAdapter_FieldIndex.Aliases:
-                    return true;
-                case QuestAdapter_FieldIndex.Versioning:
-                case QuestAdapter_FieldIndex.Unknown:
-                case QuestAdapter_FieldIndex.FileName:
-                    return false;
-                default:
-                    return AVirtualMachineAdapter_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            QuestAdapter_FieldIndex enu = (QuestAdapter_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestAdapter_FieldIndex.Versioning:
-                case QuestAdapter_FieldIndex.Unknown:
-                case QuestAdapter_FieldIndex.FileName:
-                case QuestAdapter_FieldIndex.Fragments:
-                case QuestAdapter_FieldIndex.Aliases:
-                    return false;
-                default:
-                    return AVirtualMachineAdapter_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            QuestAdapter_FieldIndex enu = (QuestAdapter_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestAdapter_FieldIndex.Versioning:
-                    return "Versioning";
-                case QuestAdapter_FieldIndex.Unknown:
-                    return "Unknown";
-                case QuestAdapter_FieldIndex.FileName:
-                    return "FileName";
-                case QuestAdapter_FieldIndex.Fragments:
-                    return "Fragments";
-                case QuestAdapter_FieldIndex.Aliases:
-                    return "Aliases";
-                default:
-                    return AVirtualMachineAdapter_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            QuestAdapter_FieldIndex enu = (QuestAdapter_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestAdapter_FieldIndex.Versioning:
-                case QuestAdapter_FieldIndex.Unknown:
-                case QuestAdapter_FieldIndex.FileName:
-                case QuestAdapter_FieldIndex.Fragments:
-                case QuestAdapter_FieldIndex.Aliases:
-                    return false;
-                default:
-                    return AVirtualMachineAdapter_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            QuestAdapter_FieldIndex enu = (QuestAdapter_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestAdapter_FieldIndex.Versioning:
-                case QuestAdapter_FieldIndex.Unknown:
-                case QuestAdapter_FieldIndex.FileName:
-                case QuestAdapter_FieldIndex.Fragments:
-                case QuestAdapter_FieldIndex.Aliases:
-                    return false;
-                default:
-                    return AVirtualMachineAdapter_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            QuestAdapter_FieldIndex enu = (QuestAdapter_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestAdapter_FieldIndex.Versioning:
-                    return typeof(QuestAdapter.VersioningBreaks);
-                case QuestAdapter_FieldIndex.Unknown:
-                    return typeof(Byte);
-                case QuestAdapter_FieldIndex.FileName:
-                    return typeof(String);
-                case QuestAdapter_FieldIndex.Fragments:
-                    return typeof(IExtendedList<QuestScriptFragment>);
-                case QuestAdapter_FieldIndex.Aliases:
-                    return typeof(IExtendedList<QuestFragmentAlias>);
-                default:
-                    return AVirtualMachineAdapter_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.VMAD;
         public static readonly Type BinaryWriteTranslation = typeof(QuestAdapterBinaryWriteTranslation);
         #region Interface
@@ -1091,14 +950,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

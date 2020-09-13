@@ -65,8 +65,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Keyword>>? _Keywords;
-        public IExtendedList<IFormLink<Keyword>>? Keywords
+        private ExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
+        public ExtendedList<IFormLink<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -111,19 +111,13 @@ namespace Mutagen.Bethesda.Skyrim
         IDestructibleGetter? IIngredientGetter.Destructible => this.Destructible;
         #endregion
         #region EquipType
-        public FormLinkNullable<EquipType> EquipType { get; set; } = new FormLinkNullable<EquipType>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IEquipTypeGetter> IIngredientGetter.EquipType => this.EquipType.ToGetter<EquipType, IEquipTypeGetter>();
+        public FormLinkNullable<IEquipTypeGetter> EquipType { get; set; } = new FormLinkNullable<IEquipTypeGetter>();
         #endregion
         #region PickUpSound
-        public FormLinkNullable<SoundDescriptor> PickUpSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IIngredientGetter.PickUpSound => this.PickUpSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region PutDownSound
-        public FormLinkNullable<SoundDescriptor> PutDownSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IIngredientGetter.PutDownSound => this.PutDownSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region Value
         public UInt32 Value { get; set; } = default;
@@ -139,8 +133,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Effect> _Effects = new ExtendedList<Effect>();
-        public IExtendedList<Effect> Effects
+        private ExtendedList<Effect> _Effects = new ExtendedList<Effect>();
+        public ExtendedList<Effect> Effects
         {
             get => this._Effects;
             protected set => this._Effects = value;
@@ -1200,18 +1194,18 @@ namespace Mutagen.Bethesda.Skyrim
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
-        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new ExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
         new Model? Model { get; set; }
         new Icons? Icons { get; set; }
         new Destructible? Destructible { get; set; }
-        new FormLinkNullable<EquipType> EquipType { get; set; }
-        new FormLinkNullable<SoundDescriptor> PickUpSound { get; set; }
-        new FormLinkNullable<SoundDescriptor> PutDownSound { get; set; }
+        new FormLinkNullable<IEquipTypeGetter> EquipType { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; set; }
         new UInt32 Value { get; set; }
         new Single Weight { get; set; }
         new Int32 IngredientValue { get; set; }
         new Ingredient.Flag Flags { get; set; }
-        new IExtendedList<Effect> Effects { get; }
+        new ExtendedList<Effect> Effects { get; }
         new Ingredient.DATADataType DATADataTypeState { get; set; }
         new Ingredient.ENITDataType ENITDataTypeState { get; set; }
     }
@@ -1464,279 +1458,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "VIRTUALMACHINEADAPTER":
-                    return (ushort)Ingredient_FieldIndex.VirtualMachineAdapter;
-                case "OBJECTBOUNDS":
-                    return (ushort)Ingredient_FieldIndex.ObjectBounds;
-                case "NAME":
-                    return (ushort)Ingredient_FieldIndex.Name;
-                case "KEYWORDS":
-                    return (ushort)Ingredient_FieldIndex.Keywords;
-                case "MODEL":
-                    return (ushort)Ingredient_FieldIndex.Model;
-                case "ICONS":
-                    return (ushort)Ingredient_FieldIndex.Icons;
-                case "DESTRUCTIBLE":
-                    return (ushort)Ingredient_FieldIndex.Destructible;
-                case "EQUIPTYPE":
-                    return (ushort)Ingredient_FieldIndex.EquipType;
-                case "PICKUPSOUND":
-                    return (ushort)Ingredient_FieldIndex.PickUpSound;
-                case "PUTDOWNSOUND":
-                    return (ushort)Ingredient_FieldIndex.PutDownSound;
-                case "VALUE":
-                    return (ushort)Ingredient_FieldIndex.Value;
-                case "WEIGHT":
-                    return (ushort)Ingredient_FieldIndex.Weight;
-                case "INGREDIENTVALUE":
-                    return (ushort)Ingredient_FieldIndex.IngredientValue;
-                case "FLAGS":
-                    return (ushort)Ingredient_FieldIndex.Flags;
-                case "EFFECTS":
-                    return (ushort)Ingredient_FieldIndex.Effects;
-                case "DATADATATYPESTATE":
-                    return (ushort)Ingredient_FieldIndex.DATADataTypeState;
-                case "ENITDATATYPESTATE":
-                    return (ushort)Ingredient_FieldIndex.ENITDataTypeState;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
-            switch (enu)
-            {
-                case Ingredient_FieldIndex.Keywords:
-                case Ingredient_FieldIndex.Effects:
-                    return true;
-                case Ingredient_FieldIndex.VirtualMachineAdapter:
-                case Ingredient_FieldIndex.ObjectBounds:
-                case Ingredient_FieldIndex.Name:
-                case Ingredient_FieldIndex.Model:
-                case Ingredient_FieldIndex.Icons:
-                case Ingredient_FieldIndex.Destructible:
-                case Ingredient_FieldIndex.EquipType:
-                case Ingredient_FieldIndex.PickUpSound:
-                case Ingredient_FieldIndex.PutDownSound:
-                case Ingredient_FieldIndex.Value:
-                case Ingredient_FieldIndex.Weight:
-                case Ingredient_FieldIndex.IngredientValue:
-                case Ingredient_FieldIndex.Flags:
-                case Ingredient_FieldIndex.DATADataTypeState:
-                case Ingredient_FieldIndex.ENITDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
-            switch (enu)
-            {
-                case Ingredient_FieldIndex.VirtualMachineAdapter:
-                case Ingredient_FieldIndex.ObjectBounds:
-                case Ingredient_FieldIndex.Model:
-                case Ingredient_FieldIndex.Icons:
-                case Ingredient_FieldIndex.Destructible:
-                case Ingredient_FieldIndex.Effects:
-                    return true;
-                case Ingredient_FieldIndex.Name:
-                case Ingredient_FieldIndex.Keywords:
-                case Ingredient_FieldIndex.EquipType:
-                case Ingredient_FieldIndex.PickUpSound:
-                case Ingredient_FieldIndex.PutDownSound:
-                case Ingredient_FieldIndex.Value:
-                case Ingredient_FieldIndex.Weight:
-                case Ingredient_FieldIndex.IngredientValue:
-                case Ingredient_FieldIndex.Flags:
-                case Ingredient_FieldIndex.DATADataTypeState:
-                case Ingredient_FieldIndex.ENITDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
-            switch (enu)
-            {
-                case Ingredient_FieldIndex.VirtualMachineAdapter:
-                case Ingredient_FieldIndex.ObjectBounds:
-                case Ingredient_FieldIndex.Name:
-                case Ingredient_FieldIndex.Keywords:
-                case Ingredient_FieldIndex.Model:
-                case Ingredient_FieldIndex.Icons:
-                case Ingredient_FieldIndex.Destructible:
-                case Ingredient_FieldIndex.EquipType:
-                case Ingredient_FieldIndex.PickUpSound:
-                case Ingredient_FieldIndex.PutDownSound:
-                case Ingredient_FieldIndex.Value:
-                case Ingredient_FieldIndex.Weight:
-                case Ingredient_FieldIndex.IngredientValue:
-                case Ingredient_FieldIndex.Flags:
-                case Ingredient_FieldIndex.Effects:
-                case Ingredient_FieldIndex.DATADataTypeState:
-                case Ingredient_FieldIndex.ENITDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
-            switch (enu)
-            {
-                case Ingredient_FieldIndex.VirtualMachineAdapter:
-                    return "VirtualMachineAdapter";
-                case Ingredient_FieldIndex.ObjectBounds:
-                    return "ObjectBounds";
-                case Ingredient_FieldIndex.Name:
-                    return "Name";
-                case Ingredient_FieldIndex.Keywords:
-                    return "Keywords";
-                case Ingredient_FieldIndex.Model:
-                    return "Model";
-                case Ingredient_FieldIndex.Icons:
-                    return "Icons";
-                case Ingredient_FieldIndex.Destructible:
-                    return "Destructible";
-                case Ingredient_FieldIndex.EquipType:
-                    return "EquipType";
-                case Ingredient_FieldIndex.PickUpSound:
-                    return "PickUpSound";
-                case Ingredient_FieldIndex.PutDownSound:
-                    return "PutDownSound";
-                case Ingredient_FieldIndex.Value:
-                    return "Value";
-                case Ingredient_FieldIndex.Weight:
-                    return "Weight";
-                case Ingredient_FieldIndex.IngredientValue:
-                    return "IngredientValue";
-                case Ingredient_FieldIndex.Flags:
-                    return "Flags";
-                case Ingredient_FieldIndex.Effects:
-                    return "Effects";
-                case Ingredient_FieldIndex.DATADataTypeState:
-                    return "DATADataTypeState";
-                case Ingredient_FieldIndex.ENITDataTypeState:
-                    return "ENITDataTypeState";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
-            switch (enu)
-            {
-                case Ingredient_FieldIndex.VirtualMachineAdapter:
-                case Ingredient_FieldIndex.ObjectBounds:
-                case Ingredient_FieldIndex.Name:
-                case Ingredient_FieldIndex.Keywords:
-                case Ingredient_FieldIndex.Model:
-                case Ingredient_FieldIndex.Icons:
-                case Ingredient_FieldIndex.Destructible:
-                case Ingredient_FieldIndex.EquipType:
-                case Ingredient_FieldIndex.PickUpSound:
-                case Ingredient_FieldIndex.PutDownSound:
-                case Ingredient_FieldIndex.Value:
-                case Ingredient_FieldIndex.Weight:
-                case Ingredient_FieldIndex.IngredientValue:
-                case Ingredient_FieldIndex.Flags:
-                case Ingredient_FieldIndex.Effects:
-                case Ingredient_FieldIndex.DATADataTypeState:
-                case Ingredient_FieldIndex.ENITDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
-            switch (enu)
-            {
-                case Ingredient_FieldIndex.VirtualMachineAdapter:
-                case Ingredient_FieldIndex.ObjectBounds:
-                case Ingredient_FieldIndex.Name:
-                case Ingredient_FieldIndex.Keywords:
-                case Ingredient_FieldIndex.Model:
-                case Ingredient_FieldIndex.Icons:
-                case Ingredient_FieldIndex.Destructible:
-                case Ingredient_FieldIndex.EquipType:
-                case Ingredient_FieldIndex.PickUpSound:
-                case Ingredient_FieldIndex.PutDownSound:
-                case Ingredient_FieldIndex.Value:
-                case Ingredient_FieldIndex.Weight:
-                case Ingredient_FieldIndex.IngredientValue:
-                case Ingredient_FieldIndex.Flags:
-                case Ingredient_FieldIndex.Effects:
-                case Ingredient_FieldIndex.DATADataTypeState:
-                case Ingredient_FieldIndex.ENITDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
-            switch (enu)
-            {
-                case Ingredient_FieldIndex.VirtualMachineAdapter:
-                    return typeof(VirtualMachineAdapter);
-                case Ingredient_FieldIndex.ObjectBounds:
-                    return typeof(ObjectBounds);
-                case Ingredient_FieldIndex.Name:
-                    return typeof(TranslatedString);
-                case Ingredient_FieldIndex.Keywords:
-                    return typeof(IExtendedList<IFormLink<Keyword>>);
-                case Ingredient_FieldIndex.Model:
-                    return typeof(Model);
-                case Ingredient_FieldIndex.Icons:
-                    return typeof(Icons);
-                case Ingredient_FieldIndex.Destructible:
-                    return typeof(Destructible);
-                case Ingredient_FieldIndex.EquipType:
-                    return typeof(FormLinkNullable<EquipType>);
-                case Ingredient_FieldIndex.PickUpSound:
-                    return typeof(FormLinkNullable<SoundDescriptor>);
-                case Ingredient_FieldIndex.PutDownSound:
-                    return typeof(FormLinkNullable<SoundDescriptor>);
-                case Ingredient_FieldIndex.Value:
-                    return typeof(UInt32);
-                case Ingredient_FieldIndex.Weight:
-                    return typeof(Single);
-                case Ingredient_FieldIndex.IngredientValue:
-                    return typeof(Int32);
-                case Ingredient_FieldIndex.Flags:
-                    return typeof(Ingredient.Flag);
-                case Ingredient_FieldIndex.Effects:
-                    return typeof(IExtendedList<Effect>);
-                case Ingredient_FieldIndex.DATADataTypeState:
-                    return typeof(Ingredient.DATADataType);
-                case Ingredient_FieldIndex.ENITDataTypeState:
-                    return typeof(Ingredient.ENITDataType);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.INGR;
         public static readonly Type BinaryWriteTranslation = typeof(IngredientBinaryWriteTranslation);
         #region Interface
@@ -1757,14 +1478,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1787,9 +1508,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Model = null;
             item.Icons = null;
             item.Destructible = null;
-            item.EquipType = FormLinkNullable<EquipType>.Null;
-            item.PickUpSound = FormLinkNullable<SoundDescriptor>.Null;
-            item.PutDownSound = FormLinkNullable<SoundDescriptor>.Null;
+            item.EquipType = FormLinkNullable<IEquipTypeGetter>.Null;
+            item.PickUpSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
+            item.PutDownSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
             item.Value = default;
             item.Weight = default;
             item.IngredientValue = default;
@@ -2372,8 +2093,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLink<Keyword>)new FormLink<Keyword>(r.FormKey))
-                            .ToExtendedList<IFormLink<Keyword>>();
+                            .Select(r => (IFormLink<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IKeywordGetter>>();
                     }
                     else
                     {
@@ -2470,15 +2191,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.EquipType) ?? true))
             {
-                item.EquipType = new FormLinkNullable<EquipType>(rhs.EquipType.FormKey);
+                item.EquipType = new FormLinkNullable<IEquipTypeGetter>(rhs.EquipType.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.PickUpSound) ?? true))
             {
-                item.PickUpSound = new FormLinkNullable<SoundDescriptor>(rhs.PickUpSound.FormKey);
+                item.PickUpSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.PickUpSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.PutDownSound) ?? true))
             {
-                item.PutDownSound = new FormLinkNullable<SoundDescriptor>(rhs.PutDownSound.FormKey);
+                item.PutDownSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.PutDownSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.Value) ?? true))
             {
@@ -2890,13 +2611,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KSIZ:
                 {
                     item.Keywords = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<Keyword>>();
+                        .CastExtendedList<IFormLink<IKeywordGetter>>();
                     return (int)Ingredient_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.MODL:

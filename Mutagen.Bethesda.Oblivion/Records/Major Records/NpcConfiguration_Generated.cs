@@ -844,167 +844,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "FLAGS":
-                    return (ushort)NpcConfiguration_FieldIndex.Flags;
-                case "BASESPELLPOINTS":
-                    return (ushort)NpcConfiguration_FieldIndex.BaseSpellPoints;
-                case "FATIGUE":
-                    return (ushort)NpcConfiguration_FieldIndex.Fatigue;
-                case "BARTERGOLD":
-                    return (ushort)NpcConfiguration_FieldIndex.BarterGold;
-                case "LEVELOFFSET":
-                    return (ushort)NpcConfiguration_FieldIndex.LevelOffset;
-                case "CALCMIN":
-                    return (ushort)NpcConfiguration_FieldIndex.CalcMin;
-                case "CALCMAX":
-                    return (ushort)NpcConfiguration_FieldIndex.CalcMax;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            NpcConfiguration_FieldIndex enu = (NpcConfiguration_FieldIndex)index;
-            switch (enu)
-            {
-                case NpcConfiguration_FieldIndex.Flags:
-                case NpcConfiguration_FieldIndex.BaseSpellPoints:
-                case NpcConfiguration_FieldIndex.Fatigue:
-                case NpcConfiguration_FieldIndex.BarterGold:
-                case NpcConfiguration_FieldIndex.LevelOffset:
-                case NpcConfiguration_FieldIndex.CalcMin:
-                case NpcConfiguration_FieldIndex.CalcMax:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            NpcConfiguration_FieldIndex enu = (NpcConfiguration_FieldIndex)index;
-            switch (enu)
-            {
-                case NpcConfiguration_FieldIndex.Flags:
-                case NpcConfiguration_FieldIndex.BaseSpellPoints:
-                case NpcConfiguration_FieldIndex.Fatigue:
-                case NpcConfiguration_FieldIndex.BarterGold:
-                case NpcConfiguration_FieldIndex.LevelOffset:
-                case NpcConfiguration_FieldIndex.CalcMin:
-                case NpcConfiguration_FieldIndex.CalcMax:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            NpcConfiguration_FieldIndex enu = (NpcConfiguration_FieldIndex)index;
-            switch (enu)
-            {
-                case NpcConfiguration_FieldIndex.Flags:
-                case NpcConfiguration_FieldIndex.BaseSpellPoints:
-                case NpcConfiguration_FieldIndex.Fatigue:
-                case NpcConfiguration_FieldIndex.BarterGold:
-                case NpcConfiguration_FieldIndex.LevelOffset:
-                case NpcConfiguration_FieldIndex.CalcMin:
-                case NpcConfiguration_FieldIndex.CalcMax:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            NpcConfiguration_FieldIndex enu = (NpcConfiguration_FieldIndex)index;
-            switch (enu)
-            {
-                case NpcConfiguration_FieldIndex.Flags:
-                    return "Flags";
-                case NpcConfiguration_FieldIndex.BaseSpellPoints:
-                    return "BaseSpellPoints";
-                case NpcConfiguration_FieldIndex.Fatigue:
-                    return "Fatigue";
-                case NpcConfiguration_FieldIndex.BarterGold:
-                    return "BarterGold";
-                case NpcConfiguration_FieldIndex.LevelOffset:
-                    return "LevelOffset";
-                case NpcConfiguration_FieldIndex.CalcMin:
-                    return "CalcMin";
-                case NpcConfiguration_FieldIndex.CalcMax:
-                    return "CalcMax";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            NpcConfiguration_FieldIndex enu = (NpcConfiguration_FieldIndex)index;
-            switch (enu)
-            {
-                case NpcConfiguration_FieldIndex.Flags:
-                case NpcConfiguration_FieldIndex.BaseSpellPoints:
-                case NpcConfiguration_FieldIndex.Fatigue:
-                case NpcConfiguration_FieldIndex.BarterGold:
-                case NpcConfiguration_FieldIndex.LevelOffset:
-                case NpcConfiguration_FieldIndex.CalcMin:
-                case NpcConfiguration_FieldIndex.CalcMax:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            NpcConfiguration_FieldIndex enu = (NpcConfiguration_FieldIndex)index;
-            switch (enu)
-            {
-                case NpcConfiguration_FieldIndex.Flags:
-                case NpcConfiguration_FieldIndex.BaseSpellPoints:
-                case NpcConfiguration_FieldIndex.Fatigue:
-                case NpcConfiguration_FieldIndex.BarterGold:
-                case NpcConfiguration_FieldIndex.LevelOffset:
-                case NpcConfiguration_FieldIndex.CalcMin:
-                case NpcConfiguration_FieldIndex.CalcMax:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            NpcConfiguration_FieldIndex enu = (NpcConfiguration_FieldIndex)index;
-            switch (enu)
-            {
-                case NpcConfiguration_FieldIndex.Flags:
-                    return typeof(Npc.NpcFlag);
-                case NpcConfiguration_FieldIndex.BaseSpellPoints:
-                    return typeof(UInt16);
-                case NpcConfiguration_FieldIndex.Fatigue:
-                    return typeof(UInt16);
-                case NpcConfiguration_FieldIndex.BarterGold:
-                    return typeof(UInt16);
-                case NpcConfiguration_FieldIndex.LevelOffset:
-                    return typeof(Int16);
-                case NpcConfiguration_FieldIndex.CalcMin:
-                    return typeof(UInt16);
-                case NpcConfiguration_FieldIndex.CalcMax:
-                    return typeof(UInt16);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.ACBS;
         public static readonly Type BinaryWriteTranslation = typeof(NpcConfigurationBinaryWriteTranslation);
         #region Interface
@@ -1025,14 +864,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

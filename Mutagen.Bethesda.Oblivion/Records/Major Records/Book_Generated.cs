@@ -64,14 +64,10 @@ namespace Mutagen.Bethesda.Oblivion
         String? IBookGetter.Icon => this.Icon;
         #endregion
         #region Script
-        public FormLinkNullable<Script> Script { get; set; } = new FormLinkNullable<Script>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IScriptGetter> IBookGetter.Script => this.Script.ToGetter<Script, IScriptGetter>();
+        public FormLinkNullable<IScriptGetter> Script { get; set; } = new FormLinkNullable<IScriptGetter>();
         #endregion
         #region Enchantment
-        public FormLinkNullable<Enchantment> Enchantment { get; set; } = new FormLinkNullable<Enchantment>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IEnchantmentGetter> IBookGetter.Enchantment => this.Enchantment.ToGetter<Enchantment, IEnchantmentGetter>();
+        public FormLinkNullable<IEnchantmentGetter> Enchantment { get; set; } = new FormLinkNullable<IEnchantmentGetter>();
         #endregion
         #region EnchantmentPoints
         public UInt16? EnchantmentPoints { get; set; }
@@ -700,8 +696,8 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Name { get; set; }
         new Model? Model { get; set; }
         new String? Icon { get; set; }
-        new FormLinkNullable<Script> Script { get; set; }
-        new FormLinkNullable<Enchantment> Enchantment { get; set; }
+        new FormLinkNullable<IScriptGetter> Script { get; set; }
+        new FormLinkNullable<IEnchantmentGetter> Enchantment { get; set; }
         new UInt16? EnchantmentPoints { get; set; }
         new String? Description { get; set; }
         new BookData? Data { get; set; }
@@ -930,179 +926,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "NAME":
-                    return (ushort)Book_FieldIndex.Name;
-                case "MODEL":
-                    return (ushort)Book_FieldIndex.Model;
-                case "ICON":
-                    return (ushort)Book_FieldIndex.Icon;
-                case "SCRIPT":
-                    return (ushort)Book_FieldIndex.Script;
-                case "ENCHANTMENT":
-                    return (ushort)Book_FieldIndex.Enchantment;
-                case "ENCHANTMENTPOINTS":
-                    return (ushort)Book_FieldIndex.EnchantmentPoints;
-                case "DESCRIPTION":
-                    return (ushort)Book_FieldIndex.Description;
-                case "DATA":
-                    return (ushort)Book_FieldIndex.Data;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Book_FieldIndex enu = (Book_FieldIndex)index;
-            switch (enu)
-            {
-                case Book_FieldIndex.Name:
-                case Book_FieldIndex.Model:
-                case Book_FieldIndex.Icon:
-                case Book_FieldIndex.Script:
-                case Book_FieldIndex.Enchantment:
-                case Book_FieldIndex.EnchantmentPoints:
-                case Book_FieldIndex.Description:
-                case Book_FieldIndex.Data:
-                    return false;
-                default:
-                    return AItem_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Book_FieldIndex enu = (Book_FieldIndex)index;
-            switch (enu)
-            {
-                case Book_FieldIndex.Model:
-                case Book_FieldIndex.Data:
-                    return true;
-                case Book_FieldIndex.Name:
-                case Book_FieldIndex.Icon:
-                case Book_FieldIndex.Script:
-                case Book_FieldIndex.Enchantment:
-                case Book_FieldIndex.EnchantmentPoints:
-                case Book_FieldIndex.Description:
-                    return false;
-                default:
-                    return AItem_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Book_FieldIndex enu = (Book_FieldIndex)index;
-            switch (enu)
-            {
-                case Book_FieldIndex.Name:
-                case Book_FieldIndex.Model:
-                case Book_FieldIndex.Icon:
-                case Book_FieldIndex.Script:
-                case Book_FieldIndex.Enchantment:
-                case Book_FieldIndex.EnchantmentPoints:
-                case Book_FieldIndex.Description:
-                case Book_FieldIndex.Data:
-                    return false;
-                default:
-                    return AItem_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Book_FieldIndex enu = (Book_FieldIndex)index;
-            switch (enu)
-            {
-                case Book_FieldIndex.Name:
-                    return "Name";
-                case Book_FieldIndex.Model:
-                    return "Model";
-                case Book_FieldIndex.Icon:
-                    return "Icon";
-                case Book_FieldIndex.Script:
-                    return "Script";
-                case Book_FieldIndex.Enchantment:
-                    return "Enchantment";
-                case Book_FieldIndex.EnchantmentPoints:
-                    return "EnchantmentPoints";
-                case Book_FieldIndex.Description:
-                    return "Description";
-                case Book_FieldIndex.Data:
-                    return "Data";
-                default:
-                    return AItem_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Book_FieldIndex enu = (Book_FieldIndex)index;
-            switch (enu)
-            {
-                case Book_FieldIndex.Name:
-                case Book_FieldIndex.Model:
-                case Book_FieldIndex.Icon:
-                case Book_FieldIndex.Script:
-                case Book_FieldIndex.Enchantment:
-                case Book_FieldIndex.EnchantmentPoints:
-                case Book_FieldIndex.Description:
-                case Book_FieldIndex.Data:
-                    return false;
-                default:
-                    return AItem_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Book_FieldIndex enu = (Book_FieldIndex)index;
-            switch (enu)
-            {
-                case Book_FieldIndex.Name:
-                case Book_FieldIndex.Model:
-                case Book_FieldIndex.Icon:
-                case Book_FieldIndex.Script:
-                case Book_FieldIndex.Enchantment:
-                case Book_FieldIndex.EnchantmentPoints:
-                case Book_FieldIndex.Description:
-                case Book_FieldIndex.Data:
-                    return false;
-                default:
-                    return AItem_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Book_FieldIndex enu = (Book_FieldIndex)index;
-            switch (enu)
-            {
-                case Book_FieldIndex.Name:
-                    return typeof(String);
-                case Book_FieldIndex.Model:
-                    return typeof(Model);
-                case Book_FieldIndex.Icon:
-                    return typeof(String);
-                case Book_FieldIndex.Script:
-                    return typeof(FormLinkNullable<Script>);
-                case Book_FieldIndex.Enchantment:
-                    return typeof(FormLinkNullable<Enchantment>);
-                case Book_FieldIndex.EnchantmentPoints:
-                    return typeof(UInt16);
-                case Book_FieldIndex.Description:
-                    return typeof(String);
-                case Book_FieldIndex.Data:
-                    return typeof(BookData);
-                default:
-                    return AItem_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.BOOK;
         public static readonly Type BinaryWriteTranslation = typeof(BookBinaryWriteTranslation);
         #region Interface
@@ -1123,14 +946,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1149,8 +972,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name = default;
             item.Model = null;
             item.Icon = default;
-            item.Script = FormLinkNullable<Script>.Null;
-            item.Enchantment = FormLinkNullable<Enchantment>.Null;
+            item.Script = FormLinkNullable<IScriptGetter>.Null;
+            item.Enchantment = FormLinkNullable<IEnchantmentGetter>.Null;
             item.EnchantmentPoints = default;
             item.Description = default;
             item.Data = null;
@@ -1613,11 +1436,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.Script) ?? true))
             {
-                item.Script = new FormLinkNullable<Script>(rhs.Script.FormKey);
+                item.Script = new FormLinkNullable<IScriptGetter>(rhs.Script.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.Enchantment) ?? true))
             {
-                item.Enchantment = new FormLinkNullable<Enchantment>(rhs.Enchantment.FormKey);
+                item.Enchantment = new FormLinkNullable<IEnchantmentGetter>(rhs.Enchantment.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.EnchantmentPoints) ?? true))
             {

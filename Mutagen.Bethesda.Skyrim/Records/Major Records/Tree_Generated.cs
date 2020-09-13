@@ -70,14 +70,10 @@ namespace Mutagen.Bethesda.Skyrim
         IModelGetter? ITreeGetter.Model => this.Model;
         #endregion
         #region Ingredient
-        public FormLinkNullable<IHarvestTarget> Ingredient { get; set; } = new FormLinkNullable<IHarvestTarget>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IHarvestTargetGetter> ITreeGetter.Ingredient => this.Ingredient.ToGetter<IHarvestTarget, IHarvestTargetGetter>();
+        public FormLinkNullable<IHarvestTargetGetter> Ingredient { get; set; } = new FormLinkNullable<IHarvestTargetGetter>();
         #endregion
         #region HarvestSound
-        public FormLinkNullable<SoundDescriptor> HarvestSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> ITreeGetter.HarvestSound => this.HarvestSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> HarvestSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region Production
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -896,8 +892,8 @@ namespace Mutagen.Bethesda.Skyrim
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
         new Model? Model { get; set; }
-        new FormLinkNullable<IHarvestTarget> Ingredient { get; set; }
-        new FormLinkNullable<SoundDescriptor> HarvestSound { get; set; }
+        new FormLinkNullable<IHarvestTargetGetter> Ingredient { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> HarvestSound { get; set; }
         new SeasonalIngredientProduction? Production { get; set; }
         new TranslatedString? Name { get; set; }
         new Single TrunkFlexibility { get; set; }
@@ -1154,234 +1150,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "VIRTUALMACHINEADAPTER":
-                    return (ushort)Tree_FieldIndex.VirtualMachineAdapter;
-                case "OBJECTBOUNDS":
-                    return (ushort)Tree_FieldIndex.ObjectBounds;
-                case "MODEL":
-                    return (ushort)Tree_FieldIndex.Model;
-                case "INGREDIENT":
-                    return (ushort)Tree_FieldIndex.Ingredient;
-                case "HARVESTSOUND":
-                    return (ushort)Tree_FieldIndex.HarvestSound;
-                case "PRODUCTION":
-                    return (ushort)Tree_FieldIndex.Production;
-                case "NAME":
-                    return (ushort)Tree_FieldIndex.Name;
-                case "TRUNKFLEXIBILITY":
-                    return (ushort)Tree_FieldIndex.TrunkFlexibility;
-                case "BRANCHFLEXIBILITY":
-                    return (ushort)Tree_FieldIndex.BranchFlexibility;
-                case "UNKNOWN":
-                    return (ushort)Tree_FieldIndex.Unknown;
-                case "LEAFAMPLITUDE":
-                    return (ushort)Tree_FieldIndex.LeafAmplitude;
-                case "LEAFFREQUENCY":
-                    return (ushort)Tree_FieldIndex.LeafFrequency;
-                case "CNAMDATATYPESTATE":
-                    return (ushort)Tree_FieldIndex.CNAMDataTypeState;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Tree_FieldIndex enu = (Tree_FieldIndex)index;
-            switch (enu)
-            {
-                case Tree_FieldIndex.VirtualMachineAdapter:
-                case Tree_FieldIndex.ObjectBounds:
-                case Tree_FieldIndex.Model:
-                case Tree_FieldIndex.Ingredient:
-                case Tree_FieldIndex.HarvestSound:
-                case Tree_FieldIndex.Production:
-                case Tree_FieldIndex.Name:
-                case Tree_FieldIndex.TrunkFlexibility:
-                case Tree_FieldIndex.BranchFlexibility:
-                case Tree_FieldIndex.Unknown:
-                case Tree_FieldIndex.LeafAmplitude:
-                case Tree_FieldIndex.LeafFrequency:
-                case Tree_FieldIndex.CNAMDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Tree_FieldIndex enu = (Tree_FieldIndex)index;
-            switch (enu)
-            {
-                case Tree_FieldIndex.VirtualMachineAdapter:
-                case Tree_FieldIndex.ObjectBounds:
-                case Tree_FieldIndex.Model:
-                case Tree_FieldIndex.Production:
-                    return true;
-                case Tree_FieldIndex.Ingredient:
-                case Tree_FieldIndex.HarvestSound:
-                case Tree_FieldIndex.Name:
-                case Tree_FieldIndex.TrunkFlexibility:
-                case Tree_FieldIndex.BranchFlexibility:
-                case Tree_FieldIndex.Unknown:
-                case Tree_FieldIndex.LeafAmplitude:
-                case Tree_FieldIndex.LeafFrequency:
-                case Tree_FieldIndex.CNAMDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Tree_FieldIndex enu = (Tree_FieldIndex)index;
-            switch (enu)
-            {
-                case Tree_FieldIndex.VirtualMachineAdapter:
-                case Tree_FieldIndex.ObjectBounds:
-                case Tree_FieldIndex.Model:
-                case Tree_FieldIndex.Ingredient:
-                case Tree_FieldIndex.HarvestSound:
-                case Tree_FieldIndex.Production:
-                case Tree_FieldIndex.Name:
-                case Tree_FieldIndex.TrunkFlexibility:
-                case Tree_FieldIndex.BranchFlexibility:
-                case Tree_FieldIndex.Unknown:
-                case Tree_FieldIndex.LeafAmplitude:
-                case Tree_FieldIndex.LeafFrequency:
-                case Tree_FieldIndex.CNAMDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Tree_FieldIndex enu = (Tree_FieldIndex)index;
-            switch (enu)
-            {
-                case Tree_FieldIndex.VirtualMachineAdapter:
-                    return "VirtualMachineAdapter";
-                case Tree_FieldIndex.ObjectBounds:
-                    return "ObjectBounds";
-                case Tree_FieldIndex.Model:
-                    return "Model";
-                case Tree_FieldIndex.Ingredient:
-                    return "Ingredient";
-                case Tree_FieldIndex.HarvestSound:
-                    return "HarvestSound";
-                case Tree_FieldIndex.Production:
-                    return "Production";
-                case Tree_FieldIndex.Name:
-                    return "Name";
-                case Tree_FieldIndex.TrunkFlexibility:
-                    return "TrunkFlexibility";
-                case Tree_FieldIndex.BranchFlexibility:
-                    return "BranchFlexibility";
-                case Tree_FieldIndex.Unknown:
-                    return "Unknown";
-                case Tree_FieldIndex.LeafAmplitude:
-                    return "LeafAmplitude";
-                case Tree_FieldIndex.LeafFrequency:
-                    return "LeafFrequency";
-                case Tree_FieldIndex.CNAMDataTypeState:
-                    return "CNAMDataTypeState";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Tree_FieldIndex enu = (Tree_FieldIndex)index;
-            switch (enu)
-            {
-                case Tree_FieldIndex.VirtualMachineAdapter:
-                case Tree_FieldIndex.ObjectBounds:
-                case Tree_FieldIndex.Model:
-                case Tree_FieldIndex.Ingredient:
-                case Tree_FieldIndex.HarvestSound:
-                case Tree_FieldIndex.Production:
-                case Tree_FieldIndex.Name:
-                case Tree_FieldIndex.TrunkFlexibility:
-                case Tree_FieldIndex.BranchFlexibility:
-                case Tree_FieldIndex.Unknown:
-                case Tree_FieldIndex.LeafAmplitude:
-                case Tree_FieldIndex.LeafFrequency:
-                case Tree_FieldIndex.CNAMDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Tree_FieldIndex enu = (Tree_FieldIndex)index;
-            switch (enu)
-            {
-                case Tree_FieldIndex.VirtualMachineAdapter:
-                case Tree_FieldIndex.ObjectBounds:
-                case Tree_FieldIndex.Model:
-                case Tree_FieldIndex.Ingredient:
-                case Tree_FieldIndex.HarvestSound:
-                case Tree_FieldIndex.Production:
-                case Tree_FieldIndex.Name:
-                case Tree_FieldIndex.TrunkFlexibility:
-                case Tree_FieldIndex.BranchFlexibility:
-                case Tree_FieldIndex.Unknown:
-                case Tree_FieldIndex.LeafAmplitude:
-                case Tree_FieldIndex.LeafFrequency:
-                case Tree_FieldIndex.CNAMDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Tree_FieldIndex enu = (Tree_FieldIndex)index;
-            switch (enu)
-            {
-                case Tree_FieldIndex.VirtualMachineAdapter:
-                    return typeof(VirtualMachineAdapter);
-                case Tree_FieldIndex.ObjectBounds:
-                    return typeof(ObjectBounds);
-                case Tree_FieldIndex.Model:
-                    return typeof(Model);
-                case Tree_FieldIndex.Ingredient:
-                    return typeof(FormLinkNullable<IHarvestTarget>);
-                case Tree_FieldIndex.HarvestSound:
-                    return typeof(FormLinkNullable<SoundDescriptor>);
-                case Tree_FieldIndex.Production:
-                    return typeof(SeasonalIngredientProduction);
-                case Tree_FieldIndex.Name:
-                    return typeof(TranslatedString);
-                case Tree_FieldIndex.TrunkFlexibility:
-                    return typeof(Single);
-                case Tree_FieldIndex.BranchFlexibility:
-                    return typeof(Single);
-                case Tree_FieldIndex.Unknown:
-                    return typeof(MemorySlice<Byte>);
-                case Tree_FieldIndex.LeafAmplitude:
-                    return typeof(Single);
-                case Tree_FieldIndex.LeafFrequency:
-                    return typeof(Single);
-                case Tree_FieldIndex.CNAMDataTypeState:
-                    return typeof(Tree.CNAMDataType);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.TREE;
         public static readonly Type BinaryWriteTranslation = typeof(TreeBinaryWriteTranslation);
         #region Interface
@@ -1402,14 +1170,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1428,8 +1196,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.VirtualMachineAdapter = null;
             item.ObjectBounds.Clear();
             item.Model = null;
-            item.Ingredient = FormLinkNullable<IHarvestTarget>.Null;
-            item.HarvestSound = FormLinkNullable<SoundDescriptor>.Null;
+            item.Ingredient = FormLinkNullable<IHarvestTargetGetter>.Null;
+            item.HarvestSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
             item.Production = null;
             item.Name = default;
             item.TrunkFlexibility = default;
@@ -1935,11 +1703,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.Ingredient) ?? true))
             {
-                item.Ingredient = new FormLinkNullable<IHarvestTarget>(rhs.Ingredient.FormKey);
+                item.Ingredient = new FormLinkNullable<IHarvestTargetGetter>(rhs.Ingredient.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.HarvestSound) ?? true))
             {
-                item.HarvestSound = new FormLinkNullable<SoundDescriptor>(rhs.HarvestSound.FormKey);
+                item.HarvestSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.HarvestSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.Production) ?? true))
             {

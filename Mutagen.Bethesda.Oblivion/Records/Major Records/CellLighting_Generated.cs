@@ -913,189 +913,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "AMBIENTCOLOR":
-                    return (ushort)CellLighting_FieldIndex.AmbientColor;
-                case "DIRECTIONALCOLOR":
-                    return (ushort)CellLighting_FieldIndex.DirectionalColor;
-                case "FOGCOLOR":
-                    return (ushort)CellLighting_FieldIndex.FogColor;
-                case "FOGNEAR":
-                    return (ushort)CellLighting_FieldIndex.FogNear;
-                case "FOGFAR":
-                    return (ushort)CellLighting_FieldIndex.FogFar;
-                case "DIRECTIONALROTATIONXY":
-                    return (ushort)CellLighting_FieldIndex.DirectionalRotationXY;
-                case "DIRECTIONALROTATIONZ":
-                    return (ushort)CellLighting_FieldIndex.DirectionalRotationZ;
-                case "DIRECTIONALFADE":
-                    return (ushort)CellLighting_FieldIndex.DirectionalFade;
-                case "FOGCLIPDISTANCE":
-                    return (ushort)CellLighting_FieldIndex.FogClipDistance;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            CellLighting_FieldIndex enu = (CellLighting_FieldIndex)index;
-            switch (enu)
-            {
-                case CellLighting_FieldIndex.AmbientColor:
-                case CellLighting_FieldIndex.DirectionalColor:
-                case CellLighting_FieldIndex.FogColor:
-                case CellLighting_FieldIndex.FogNear:
-                case CellLighting_FieldIndex.FogFar:
-                case CellLighting_FieldIndex.DirectionalRotationXY:
-                case CellLighting_FieldIndex.DirectionalRotationZ:
-                case CellLighting_FieldIndex.DirectionalFade:
-                case CellLighting_FieldIndex.FogClipDistance:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            CellLighting_FieldIndex enu = (CellLighting_FieldIndex)index;
-            switch (enu)
-            {
-                case CellLighting_FieldIndex.AmbientColor:
-                case CellLighting_FieldIndex.DirectionalColor:
-                case CellLighting_FieldIndex.FogColor:
-                case CellLighting_FieldIndex.FogNear:
-                case CellLighting_FieldIndex.FogFar:
-                case CellLighting_FieldIndex.DirectionalRotationXY:
-                case CellLighting_FieldIndex.DirectionalRotationZ:
-                case CellLighting_FieldIndex.DirectionalFade:
-                case CellLighting_FieldIndex.FogClipDistance:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            CellLighting_FieldIndex enu = (CellLighting_FieldIndex)index;
-            switch (enu)
-            {
-                case CellLighting_FieldIndex.AmbientColor:
-                case CellLighting_FieldIndex.DirectionalColor:
-                case CellLighting_FieldIndex.FogColor:
-                case CellLighting_FieldIndex.FogNear:
-                case CellLighting_FieldIndex.FogFar:
-                case CellLighting_FieldIndex.DirectionalRotationXY:
-                case CellLighting_FieldIndex.DirectionalRotationZ:
-                case CellLighting_FieldIndex.DirectionalFade:
-                case CellLighting_FieldIndex.FogClipDistance:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            CellLighting_FieldIndex enu = (CellLighting_FieldIndex)index;
-            switch (enu)
-            {
-                case CellLighting_FieldIndex.AmbientColor:
-                    return "AmbientColor";
-                case CellLighting_FieldIndex.DirectionalColor:
-                    return "DirectionalColor";
-                case CellLighting_FieldIndex.FogColor:
-                    return "FogColor";
-                case CellLighting_FieldIndex.FogNear:
-                    return "FogNear";
-                case CellLighting_FieldIndex.FogFar:
-                    return "FogFar";
-                case CellLighting_FieldIndex.DirectionalRotationXY:
-                    return "DirectionalRotationXY";
-                case CellLighting_FieldIndex.DirectionalRotationZ:
-                    return "DirectionalRotationZ";
-                case CellLighting_FieldIndex.DirectionalFade:
-                    return "DirectionalFade";
-                case CellLighting_FieldIndex.FogClipDistance:
-                    return "FogClipDistance";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            CellLighting_FieldIndex enu = (CellLighting_FieldIndex)index;
-            switch (enu)
-            {
-                case CellLighting_FieldIndex.AmbientColor:
-                case CellLighting_FieldIndex.DirectionalColor:
-                case CellLighting_FieldIndex.FogColor:
-                case CellLighting_FieldIndex.FogNear:
-                case CellLighting_FieldIndex.FogFar:
-                case CellLighting_FieldIndex.DirectionalRotationXY:
-                case CellLighting_FieldIndex.DirectionalRotationZ:
-                case CellLighting_FieldIndex.DirectionalFade:
-                case CellLighting_FieldIndex.FogClipDistance:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            CellLighting_FieldIndex enu = (CellLighting_FieldIndex)index;
-            switch (enu)
-            {
-                case CellLighting_FieldIndex.AmbientColor:
-                case CellLighting_FieldIndex.DirectionalColor:
-                case CellLighting_FieldIndex.FogColor:
-                case CellLighting_FieldIndex.FogNear:
-                case CellLighting_FieldIndex.FogFar:
-                case CellLighting_FieldIndex.DirectionalRotationXY:
-                case CellLighting_FieldIndex.DirectionalRotationZ:
-                case CellLighting_FieldIndex.DirectionalFade:
-                case CellLighting_FieldIndex.FogClipDistance:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            CellLighting_FieldIndex enu = (CellLighting_FieldIndex)index;
-            switch (enu)
-            {
-                case CellLighting_FieldIndex.AmbientColor:
-                    return typeof(Color);
-                case CellLighting_FieldIndex.DirectionalColor:
-                    return typeof(Color);
-                case CellLighting_FieldIndex.FogColor:
-                    return typeof(Color);
-                case CellLighting_FieldIndex.FogNear:
-                    return typeof(Single);
-                case CellLighting_FieldIndex.FogFar:
-                    return typeof(Single);
-                case CellLighting_FieldIndex.DirectionalRotationXY:
-                    return typeof(Int32);
-                case CellLighting_FieldIndex.DirectionalRotationZ:
-                    return typeof(Int32);
-                case CellLighting_FieldIndex.DirectionalFade:
-                    return typeof(Single);
-                case CellLighting_FieldIndex.FogClipDistance:
-                    return typeof(Single);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.XCLL;
         public static readonly Type BinaryWriteTranslation = typeof(CellLightingBinaryWriteTranslation);
         #region Interface
@@ -1116,14 +933,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

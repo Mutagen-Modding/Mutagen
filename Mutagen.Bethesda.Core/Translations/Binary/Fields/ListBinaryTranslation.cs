@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         #region Out Parameters
-        public IExtendedList<T> Parse(
+        public ExtendedList<T> Parse(
             MutagenFrame frame,
             RecordType triggeringRecord,
             BinarySubParseDelegate<T> transl)
@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Binary
             return ret;
         }
 
-        public IExtendedList<T> Parse(
+        public ExtendedList<T> Parse(
             MutagenFrame frame,
             BinarySubParseRecordDelegate<T> transl,
             ICollectionGetter<RecordType>? triggeringRecord = null)
@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda.Binary
             return ret;
         }
 
-        public IExtendedList<T> Parse(
+        public ExtendedList<T> Parse(
             MutagenFrame frame,
             BinaryMasterParseRecordDelegate<T> transl,
             ICollectionGetter<RecordType>? triggeringRecord = null,
@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Binary
         #endregion
 
         #region Lengthed Triggering Record
-        public IExtendedList<T> Parse(
+        public ExtendedList<T> Parse(
             MutagenFrame frame,
             RecordType triggeringRecord,
             BinaryMasterParseDelegate<T> transl,
@@ -211,7 +211,7 @@ namespace Mutagen.Bethesda.Binary
         #endregion
 
         #region Lengthed Triggering Records
-        public IExtendedList<T> Parse(
+        public ExtendedList<T> Parse(
             MutagenFrame frame,
             BinarySubParseDelegate<T> transl,
             ICollectionGetter<RecordType> triggeringRecord)
@@ -238,7 +238,7 @@ namespace Mutagen.Bethesda.Binary
             return ret;
         }
 
-        public IExtendedList<T> Parse(
+        public ExtendedList<T> Parse(
             MutagenFrame frame,
             BinaryMasterParseDelegate<T> transl,
             ICollectionGetter<RecordType> triggeringRecord,
@@ -268,7 +268,7 @@ namespace Mutagen.Bethesda.Binary
         }
         #endregion
 
-        public IExtendedList<T> Parse(
+        public ExtendedList<T> Parse(
             MutagenFrame frame,
             BinarySubParseDelegate<T> transl)
         {
@@ -287,7 +287,7 @@ namespace Mutagen.Bethesda.Binary
             return ret;
         }
 
-        public IExtendedList<T> Parse(
+        public ExtendedList<T> Parse(
             MutagenFrame frame,
             BinaryMasterParseDelegate<T> transl,
             RecordTypeConverter? recordTypeConverter = null)
@@ -307,7 +307,7 @@ namespace Mutagen.Bethesda.Binary
             return ret;
         }
 
-        public IExtendedList<T> Parse(
+        public ExtendedList<T> Parse(
             MutagenFrame frame,
             int amount,
             BinarySubParseDelegate<T> transl)
@@ -323,7 +323,7 @@ namespace Mutagen.Bethesda.Binary
             return ret;
         }
 
-        public IExtendedList<T> Parse(
+        public ExtendedList<T> Parse(
             MutagenFrame frame,
             int amount,
             BinaryMasterParseDelegate<T> transl,
@@ -340,7 +340,7 @@ namespace Mutagen.Bethesda.Binary
             return ret;
         }
 
-        public IExtendedList<T> Parse(
+        public ExtendedList<T> Parse(
             MutagenFrame frame,
             int amount,
             RecordType triggeringRecord,
@@ -372,7 +372,7 @@ namespace Mutagen.Bethesda.Binary
             return ret;
         }
 
-        public IExtendedList<T> Parse(
+        public ExtendedList<T> Parse(
             MutagenFrame frame,
             RecordType triggeringRecord,
             RecordType countRecord,
@@ -475,7 +475,7 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
-        public IExtendedList<T> ParsePerItem(
+        public ExtendedList<T> ParsePerItem(
             MutagenFrame frame,
             int amount,
             RecordType triggeringRecord,
@@ -507,7 +507,7 @@ namespace Mutagen.Bethesda.Binary
             return ret;
         }
 
-        public IExtendedList<T> ParsePerItem(
+        public ExtendedList<T> ParsePerItem(
             MutagenFrame frame,
             RecordType triggeringRecord,
             RecordType countRecord,
@@ -544,7 +544,7 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
-        public IExtendedList<T> ParsePerItem(
+        public ExtendedList<T> ParsePerItem(
             MutagenFrame frame,
             int amount,
             RecordType triggeringRecord,
@@ -575,7 +575,7 @@ namespace Mutagen.Bethesda.Binary
             return ret;
         }
 
-        public IExtendedList<T> ParsePerItem(
+        public ExtendedList<T> ParsePerItem(
             MutagenFrame frame,
             RecordType triggeringRecord,
             RecordType countRecord,

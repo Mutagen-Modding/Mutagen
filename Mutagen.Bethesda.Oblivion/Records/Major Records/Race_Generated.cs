@@ -54,8 +54,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Spell>> _Spells = new ExtendedList<IFormLink<Spell>>();
-        public IExtendedList<IFormLink<Spell>> Spells
+        private ExtendedList<IFormLink<ISpellGetter>> _Spells = new ExtendedList<IFormLink<ISpellGetter>>();
+        public ExtendedList<IFormLink<ISpellGetter>> Spells
         {
             get => this._Spells;
             protected set => this._Spells = value;
@@ -68,8 +68,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Relations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<RaceRelation> _Relations = new ExtendedList<RaceRelation>();
-        public IExtendedList<RaceRelation> Relations
+        private ExtendedList<RaceRelation> _Relations = new ExtendedList<RaceRelation>();
+        public ExtendedList<RaceRelation> Relations
         {
             get => this._Relations;
             protected set => this._Relations = value;
@@ -92,11 +92,11 @@ namespace Mutagen.Bethesda.Oblivion
         IRaceDataGetter? IRaceGetter.Data => this.Data;
         #endregion
         #region Voices
-        public GenderedItem<IFormLink<Race>>? Voices { get; set; }
+        public GenderedItem<IFormLink<IRaceGetter>>? Voices { get; set; }
         IGenderedItemGetter<IFormLink<IRaceGetter>>? IRaceGetter.Voices => this.Voices;
         #endregion
         #region DefaultHair
-        public GenderedItem<IFormLink<Hair>>? DefaultHair { get; set; }
+        public GenderedItem<IFormLink<IHairGetter>>? DefaultHair { get; set; }
         IGenderedItemGetter<IFormLink<IHairGetter>>? IRaceGetter.DefaultHair => this.DefaultHair;
         #endregion
         #region DefaultHairColor
@@ -120,8 +120,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region FaceData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<FacePart> _FaceData = new ExtendedList<FacePart>();
-        public IExtendedList<FacePart> FaceData
+        private ExtendedList<FacePart> _FaceData = new ExtendedList<FacePart>();
+        public ExtendedList<FacePart> FaceData
         {
             get => this._FaceData;
             protected set => this._FaceData = value;
@@ -138,8 +138,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Hairs
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Hair>>? _Hairs;
-        public IExtendedList<IFormLink<Hair>>? Hairs
+        private ExtendedList<IFormLink<IHairGetter>>? _Hairs;
+        public ExtendedList<IFormLink<IHairGetter>>? Hairs
         {
             get => this._Hairs;
             set => this._Hairs = value;
@@ -152,8 +152,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Eyes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Eye>>? _Eyes;
-        public IExtendedList<IFormLink<Eye>>? Eyes
+        private ExtendedList<IFormLink<IEyeGetter>>? _Eyes;
+        public ExtendedList<IFormLink<IEyeGetter>>? Eyes
         {
             get => this._Eyes;
             set => this._Eyes = value;
@@ -1444,19 +1444,19 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new String? Name { get; set; }
         new String? Description { get; set; }
-        new IExtendedList<IFormLink<Spell>> Spells { get; }
-        new IExtendedList<RaceRelation> Relations { get; }
+        new ExtendedList<IFormLink<ISpellGetter>> Spells { get; }
+        new ExtendedList<RaceRelation> Relations { get; }
         new RaceData? Data { get; set; }
-        new GenderedItem<IFormLink<Race>>? Voices { get; set; }
-        new GenderedItem<IFormLink<Hair>>? DefaultHair { get; set; }
+        new GenderedItem<IFormLink<IRaceGetter>>? Voices { get; set; }
+        new GenderedItem<IFormLink<IHairGetter>>? DefaultHair { get; set; }
         new Byte? DefaultHairColor { get; set; }
         new Int32? FaceGenMainClamp { get; set; }
         new Int32? FaceGenFaceClamp { get; set; }
         new GenderedItem<RaceStats>? RaceStats { get; set; }
-        new IExtendedList<FacePart> FaceData { get; }
+        new ExtendedList<FacePart> FaceData { get; }
         new GenderedItem<BodyData?>? BodyData { get; set; }
-        new IExtendedList<IFormLink<Hair>>? Hairs { get; set; }
-        new IExtendedList<IFormLink<Eye>>? Eyes { get; set; }
+        new ExtendedList<IFormLink<IHairGetter>>? Hairs { get; set; }
+        new ExtendedList<IFormLink<IEyeGetter>>? Eyes { get; set; }
         new FaceGenData? FaceGenData { get; set; }
         new Int16? SNAM { get; set; }
     }
@@ -1466,8 +1466,8 @@ namespace Mutagen.Bethesda.Oblivion
         IRace,
         IRaceGetter
     {
-        new GenderedItem<IFormLink<Race>>? Voices { get; set; }
-        new GenderedItem<IFormLink<Hair>>? DefaultHair { get; set; }
+        new GenderedItem<IFormLink<IRaceGetter>>? Voices { get; set; }
+        new GenderedItem<IFormLink<IHairGetter>>? DefaultHair { get; set; }
         new GenderedItem<RaceStats>? RaceStats { get; set; }
         new GenderedItem<BodyData?>? BodyData { get; set; }
     }
@@ -1706,279 +1706,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "NAME":
-                    return (ushort)Race_FieldIndex.Name;
-                case "DESCRIPTION":
-                    return (ushort)Race_FieldIndex.Description;
-                case "SPELLS":
-                    return (ushort)Race_FieldIndex.Spells;
-                case "RELATIONS":
-                    return (ushort)Race_FieldIndex.Relations;
-                case "DATA":
-                    return (ushort)Race_FieldIndex.Data;
-                case "VOICES":
-                    return (ushort)Race_FieldIndex.Voices;
-                case "DEFAULTHAIR":
-                    return (ushort)Race_FieldIndex.DefaultHair;
-                case "DEFAULTHAIRCOLOR":
-                    return (ushort)Race_FieldIndex.DefaultHairColor;
-                case "FACEGENMAINCLAMP":
-                    return (ushort)Race_FieldIndex.FaceGenMainClamp;
-                case "FACEGENFACECLAMP":
-                    return (ushort)Race_FieldIndex.FaceGenFaceClamp;
-                case "RACESTATS":
-                    return (ushort)Race_FieldIndex.RaceStats;
-                case "FACEDATA":
-                    return (ushort)Race_FieldIndex.FaceData;
-                case "BODYDATA":
-                    return (ushort)Race_FieldIndex.BodyData;
-                case "HAIRS":
-                    return (ushort)Race_FieldIndex.Hairs;
-                case "EYES":
-                    return (ushort)Race_FieldIndex.Eyes;
-                case "FACEGENDATA":
-                    return (ushort)Race_FieldIndex.FaceGenData;
-                case "SNAM":
-                    return (ushort)Race_FieldIndex.SNAM;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Race_FieldIndex enu = (Race_FieldIndex)index;
-            switch (enu)
-            {
-                case Race_FieldIndex.Spells:
-                case Race_FieldIndex.Relations:
-                case Race_FieldIndex.FaceData:
-                case Race_FieldIndex.Hairs:
-                case Race_FieldIndex.Eyes:
-                    return true;
-                case Race_FieldIndex.Name:
-                case Race_FieldIndex.Description:
-                case Race_FieldIndex.Data:
-                case Race_FieldIndex.Voices:
-                case Race_FieldIndex.DefaultHair:
-                case Race_FieldIndex.DefaultHairColor:
-                case Race_FieldIndex.FaceGenMainClamp:
-                case Race_FieldIndex.FaceGenFaceClamp:
-                case Race_FieldIndex.RaceStats:
-                case Race_FieldIndex.BodyData:
-                case Race_FieldIndex.FaceGenData:
-                case Race_FieldIndex.SNAM:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Race_FieldIndex enu = (Race_FieldIndex)index;
-            switch (enu)
-            {
-                case Race_FieldIndex.Relations:
-                case Race_FieldIndex.Data:
-                case Race_FieldIndex.RaceStats:
-                case Race_FieldIndex.FaceData:
-                case Race_FieldIndex.BodyData:
-                case Race_FieldIndex.FaceGenData:
-                    return true;
-                case Race_FieldIndex.Name:
-                case Race_FieldIndex.Description:
-                case Race_FieldIndex.Spells:
-                case Race_FieldIndex.Voices:
-                case Race_FieldIndex.DefaultHair:
-                case Race_FieldIndex.DefaultHairColor:
-                case Race_FieldIndex.FaceGenMainClamp:
-                case Race_FieldIndex.FaceGenFaceClamp:
-                case Race_FieldIndex.Hairs:
-                case Race_FieldIndex.Eyes:
-                case Race_FieldIndex.SNAM:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Race_FieldIndex enu = (Race_FieldIndex)index;
-            switch (enu)
-            {
-                case Race_FieldIndex.Name:
-                case Race_FieldIndex.Description:
-                case Race_FieldIndex.Spells:
-                case Race_FieldIndex.Relations:
-                case Race_FieldIndex.Data:
-                case Race_FieldIndex.Voices:
-                case Race_FieldIndex.DefaultHair:
-                case Race_FieldIndex.DefaultHairColor:
-                case Race_FieldIndex.FaceGenMainClamp:
-                case Race_FieldIndex.FaceGenFaceClamp:
-                case Race_FieldIndex.RaceStats:
-                case Race_FieldIndex.FaceData:
-                case Race_FieldIndex.BodyData:
-                case Race_FieldIndex.Hairs:
-                case Race_FieldIndex.Eyes:
-                case Race_FieldIndex.FaceGenData:
-                case Race_FieldIndex.SNAM:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Race_FieldIndex enu = (Race_FieldIndex)index;
-            switch (enu)
-            {
-                case Race_FieldIndex.Name:
-                    return "Name";
-                case Race_FieldIndex.Description:
-                    return "Description";
-                case Race_FieldIndex.Spells:
-                    return "Spells";
-                case Race_FieldIndex.Relations:
-                    return "Relations";
-                case Race_FieldIndex.Data:
-                    return "Data";
-                case Race_FieldIndex.Voices:
-                    return "Voices";
-                case Race_FieldIndex.DefaultHair:
-                    return "DefaultHair";
-                case Race_FieldIndex.DefaultHairColor:
-                    return "DefaultHairColor";
-                case Race_FieldIndex.FaceGenMainClamp:
-                    return "FaceGenMainClamp";
-                case Race_FieldIndex.FaceGenFaceClamp:
-                    return "FaceGenFaceClamp";
-                case Race_FieldIndex.RaceStats:
-                    return "RaceStats";
-                case Race_FieldIndex.FaceData:
-                    return "FaceData";
-                case Race_FieldIndex.BodyData:
-                    return "BodyData";
-                case Race_FieldIndex.Hairs:
-                    return "Hairs";
-                case Race_FieldIndex.Eyes:
-                    return "Eyes";
-                case Race_FieldIndex.FaceGenData:
-                    return "FaceGenData";
-                case Race_FieldIndex.SNAM:
-                    return "SNAM";
-                default:
-                    return OblivionMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Race_FieldIndex enu = (Race_FieldIndex)index;
-            switch (enu)
-            {
-                case Race_FieldIndex.Name:
-                case Race_FieldIndex.Description:
-                case Race_FieldIndex.Spells:
-                case Race_FieldIndex.Relations:
-                case Race_FieldIndex.Data:
-                case Race_FieldIndex.Voices:
-                case Race_FieldIndex.DefaultHair:
-                case Race_FieldIndex.DefaultHairColor:
-                case Race_FieldIndex.FaceGenMainClamp:
-                case Race_FieldIndex.FaceGenFaceClamp:
-                case Race_FieldIndex.RaceStats:
-                case Race_FieldIndex.FaceData:
-                case Race_FieldIndex.BodyData:
-                case Race_FieldIndex.Hairs:
-                case Race_FieldIndex.Eyes:
-                case Race_FieldIndex.FaceGenData:
-                case Race_FieldIndex.SNAM:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Race_FieldIndex enu = (Race_FieldIndex)index;
-            switch (enu)
-            {
-                case Race_FieldIndex.Name:
-                case Race_FieldIndex.Description:
-                case Race_FieldIndex.Spells:
-                case Race_FieldIndex.Relations:
-                case Race_FieldIndex.Data:
-                case Race_FieldIndex.Voices:
-                case Race_FieldIndex.DefaultHair:
-                case Race_FieldIndex.DefaultHairColor:
-                case Race_FieldIndex.FaceGenMainClamp:
-                case Race_FieldIndex.FaceGenFaceClamp:
-                case Race_FieldIndex.RaceStats:
-                case Race_FieldIndex.FaceData:
-                case Race_FieldIndex.BodyData:
-                case Race_FieldIndex.Hairs:
-                case Race_FieldIndex.Eyes:
-                case Race_FieldIndex.FaceGenData:
-                case Race_FieldIndex.SNAM:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Race_FieldIndex enu = (Race_FieldIndex)index;
-            switch (enu)
-            {
-                case Race_FieldIndex.Name:
-                    return typeof(String);
-                case Race_FieldIndex.Description:
-                    return typeof(String);
-                case Race_FieldIndex.Spells:
-                    return typeof(IExtendedList<IFormLink<Spell>>);
-                case Race_FieldIndex.Relations:
-                    return typeof(IExtendedList<RaceRelation>);
-                case Race_FieldIndex.Data:
-                    return typeof(RaceData);
-                case Race_FieldIndex.Voices:
-                    return typeof(GenderedItem<IFormLink<Race>>);
-                case Race_FieldIndex.DefaultHair:
-                    return typeof(GenderedItem<IFormLink<Hair>>);
-                case Race_FieldIndex.DefaultHairColor:
-                    return typeof(Byte);
-                case Race_FieldIndex.FaceGenMainClamp:
-                    return typeof(Int32);
-                case Race_FieldIndex.FaceGenFaceClamp:
-                    return typeof(Int32);
-                case Race_FieldIndex.RaceStats:
-                    return typeof(GenderedItem<RaceStats>);
-                case Race_FieldIndex.FaceData:
-                    return typeof(IExtendedList<FacePart>);
-                case Race_FieldIndex.BodyData:
-                    return typeof(GenderedItem<BodyData?>);
-                case Race_FieldIndex.Hairs:
-                    return typeof(IExtendedList<IFormLink<Hair>>);
-                case Race_FieldIndex.Eyes:
-                    return typeof(IExtendedList<IFormLink<Eye>>);
-                case Race_FieldIndex.FaceGenData:
-                    return typeof(FaceGenData);
-                case Race_FieldIndex.SNAM:
-                    return typeof(Int16);
-                default:
-                    return OblivionMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.RACE;
         public static readonly Type BinaryWriteTranslation = typeof(RaceBinaryWriteTranslation);
         #region Interface
@@ -1999,14 +1726,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -2646,7 +2373,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Spells.SetTo(
                         rhs.Spells
-                        .Select(r => (IFormLink<Spell>)new FormLink<Spell>(r.FormKey)));
+                        .Select(r => (IFormLink<ISpellGetter>)new FormLink<ISpellGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2714,9 +2441,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             else
             {
-                item.Voices = new GenderedItem<IFormLink<Race>>(
-                    male: new FormLink<Race>(rhsVoicesitem.Male.FormKey),
-                    female: new FormLink<Race>(rhsVoicesitem.Female.FormKey));
+                item.Voices = new GenderedItem<IFormLink<IRaceGetter>>(
+                    male: new FormLink<IRaceGetter>(rhsVoicesitem.Male.FormKey),
+                    female: new FormLink<IRaceGetter>(rhsVoicesitem.Female.FormKey));
             }
             if (!rhs.DefaultHair.TryGet(out var rhsDefaultHairitem))
             {
@@ -2724,9 +2451,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             else
             {
-                item.DefaultHair = new GenderedItem<IFormLink<Hair>>(
-                    male: new FormLink<Hair>(rhsDefaultHairitem.Male.FormKey),
-                    female: new FormLink<Hair>(rhsDefaultHairitem.Female.FormKey));
+                item.DefaultHair = new GenderedItem<IFormLink<IHairGetter>>(
+                    male: new FormLink<IHairGetter>(rhsDefaultHairitem.Male.FormKey),
+                    female: new FormLink<IHairGetter>(rhsDefaultHairitem.Female.FormKey));
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.DefaultHairColor) ?? true))
             {
@@ -2801,8 +2528,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Hairs = 
                             rhs.Hairs
-                            .Select(r => (IFormLink<Hair>)new FormLink<Hair>(r.FormKey))
-                            .ToExtendedList<IFormLink<Hair>>();
+                            .Select(r => (IFormLink<IHairGetter>)new FormLink<IHairGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IHairGetter>>();
                     }
                     else
                     {
@@ -2828,8 +2555,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Eyes = 
                             rhs.Eyes
-                            .Select(r => (IFormLink<Eye>)new FormLink<Eye>(r.FormKey))
-                            .ToExtendedList<IFormLink<Eye>>();
+                            .Select(r => (IFormLink<IEyeGetter>)new FormLink<IEyeGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IEyeGetter>>();
                     }
                     else
                     {
@@ -3278,7 +3005,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.SPLO:
                 {
                     item.Spells.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Spell>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ISpellGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPLO),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -3302,7 +3029,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.VNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Voices = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<IFormLink<Race>>(
+                    item.Voices = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<IFormLink<IRaceGetter>>(
                         frame: frame,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return (int)Race_FieldIndex.Voices;
@@ -3310,7 +3037,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DefaultHair = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<IFormLink<Hair>>(
+                    item.DefaultHair = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<IFormLink<IHairGetter>>(
                         frame: frame,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return (int)Race_FieldIndex.DefaultHair;
@@ -3366,20 +3093,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Hairs = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Hair>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IHairGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<Hair>>();
+                        .CastExtendedList<IFormLink<IHairGetter>>();
                     return (int)Race_FieldIndex.Hairs;
                 }
                 case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Eyes = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Eye>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IEyeGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<Eye>>();
+                        .CastExtendedList<IFormLink<IEyeGetter>>();
                     return (int)Race_FieldIndex.Eyes;
                 }
                 case RecordTypeInts.FGGS:

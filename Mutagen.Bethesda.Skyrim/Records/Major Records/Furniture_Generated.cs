@@ -87,8 +87,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Keyword>>? _Keywords;
-        public IExtendedList<IFormLink<Keyword>>? Keywords
+        private ExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
+        public ExtendedList<IFormLink<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -116,9 +116,7 @@ namespace Mutagen.Bethesda.Skyrim
         Furniture.Flag? IFurnitureGetter.Flags => this.Flags;
         #endregion
         #region InteractionKeyword
-        public FormLinkNullable<Keyword> InteractionKeyword { get; set; } = new FormLinkNullable<Keyword>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IKeywordGetter> IFurnitureGetter.InteractionKeyword => this.InteractionKeyword.ToGetter<Keyword, IKeywordGetter>();
+        public FormLinkNullable<IKeywordGetter> InteractionKeyword { get; set; } = new FormLinkNullable<IKeywordGetter>();
         #endregion
         #region WorkbenchData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -132,14 +130,12 @@ namespace Mutagen.Bethesda.Skyrim
         IWorkbenchDataGetter? IFurnitureGetter.WorkbenchData => this.WorkbenchData;
         #endregion
         #region AssociatedSpell
-        public FormLinkNullable<Spell> AssociatedSpell { get; set; } = new FormLinkNullable<Spell>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISpellGetter> IFurnitureGetter.AssociatedSpell => this.AssociatedSpell.ToGetter<Spell, ISpellGetter>();
+        public FormLinkNullable<ISpellGetter> AssociatedSpell { get; set; } = new FormLinkNullable<ISpellGetter>();
         #endregion
         #region Markers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<FurnitureMarker>? _Markers;
-        public IExtendedList<FurnitureMarker>? Markers
+        private ExtendedList<FurnitureMarker>? _Markers;
+        public ExtendedList<FurnitureMarker>? Markers
         {
             get => this._Markers;
             set => this._Markers = value;
@@ -1082,13 +1078,13 @@ namespace Mutagen.Bethesda.Skyrim
         new TranslatedString? Name { get; set; }
         new Model? Model { get; set; }
         new Destructible? Destructible { get; set; }
-        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new ExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
         new MemorySlice<Byte>? PNAM { get; set; }
         new Furniture.Flag? Flags { get; set; }
-        new FormLinkNullable<Keyword> InteractionKeyword { get; set; }
+        new FormLinkNullable<IKeywordGetter> InteractionKeyword { get; set; }
         new WorkbenchData? WorkbenchData { get; set; }
-        new FormLinkNullable<Spell> AssociatedSpell { get; set; }
-        new IExtendedList<FurnitureMarker>? Markers { get; set; }
+        new FormLinkNullable<ISpellGetter> AssociatedSpell { get; set; }
+        new ExtendedList<FurnitureMarker>? Markers { get; set; }
         new String? ModelFilename { get; set; }
         #region Mutagen
         new Furniture.MajorFlag MajorFlags { get; set; }
@@ -1337,235 +1333,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "VIRTUALMACHINEADAPTER":
-                    return (ushort)Furniture_FieldIndex.VirtualMachineAdapter;
-                case "OBJECTBOUNDS":
-                    return (ushort)Furniture_FieldIndex.ObjectBounds;
-                case "NAME":
-                    return (ushort)Furniture_FieldIndex.Name;
-                case "MODEL":
-                    return (ushort)Furniture_FieldIndex.Model;
-                case "DESTRUCTIBLE":
-                    return (ushort)Furniture_FieldIndex.Destructible;
-                case "KEYWORDS":
-                    return (ushort)Furniture_FieldIndex.Keywords;
-                case "PNAM":
-                    return (ushort)Furniture_FieldIndex.PNAM;
-                case "FLAGS":
-                    return (ushort)Furniture_FieldIndex.Flags;
-                case "INTERACTIONKEYWORD":
-                    return (ushort)Furniture_FieldIndex.InteractionKeyword;
-                case "WORKBENCHDATA":
-                    return (ushort)Furniture_FieldIndex.WorkbenchData;
-                case "ASSOCIATEDSPELL":
-                    return (ushort)Furniture_FieldIndex.AssociatedSpell;
-                case "MARKERS":
-                    return (ushort)Furniture_FieldIndex.Markers;
-                case "MODELFILENAME":
-                    return (ushort)Furniture_FieldIndex.ModelFilename;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Furniture_FieldIndex enu = (Furniture_FieldIndex)index;
-            switch (enu)
-            {
-                case Furniture_FieldIndex.Keywords:
-                case Furniture_FieldIndex.Markers:
-                    return true;
-                case Furniture_FieldIndex.VirtualMachineAdapter:
-                case Furniture_FieldIndex.ObjectBounds:
-                case Furniture_FieldIndex.Name:
-                case Furniture_FieldIndex.Model:
-                case Furniture_FieldIndex.Destructible:
-                case Furniture_FieldIndex.PNAM:
-                case Furniture_FieldIndex.Flags:
-                case Furniture_FieldIndex.InteractionKeyword:
-                case Furniture_FieldIndex.WorkbenchData:
-                case Furniture_FieldIndex.AssociatedSpell:
-                case Furniture_FieldIndex.ModelFilename:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Furniture_FieldIndex enu = (Furniture_FieldIndex)index;
-            switch (enu)
-            {
-                case Furniture_FieldIndex.VirtualMachineAdapter:
-                case Furniture_FieldIndex.ObjectBounds:
-                case Furniture_FieldIndex.Model:
-                case Furniture_FieldIndex.Destructible:
-                case Furniture_FieldIndex.WorkbenchData:
-                case Furniture_FieldIndex.Markers:
-                    return true;
-                case Furniture_FieldIndex.Name:
-                case Furniture_FieldIndex.Keywords:
-                case Furniture_FieldIndex.PNAM:
-                case Furniture_FieldIndex.Flags:
-                case Furniture_FieldIndex.InteractionKeyword:
-                case Furniture_FieldIndex.AssociatedSpell:
-                case Furniture_FieldIndex.ModelFilename:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Furniture_FieldIndex enu = (Furniture_FieldIndex)index;
-            switch (enu)
-            {
-                case Furniture_FieldIndex.VirtualMachineAdapter:
-                case Furniture_FieldIndex.ObjectBounds:
-                case Furniture_FieldIndex.Name:
-                case Furniture_FieldIndex.Model:
-                case Furniture_FieldIndex.Destructible:
-                case Furniture_FieldIndex.Keywords:
-                case Furniture_FieldIndex.PNAM:
-                case Furniture_FieldIndex.Flags:
-                case Furniture_FieldIndex.InteractionKeyword:
-                case Furniture_FieldIndex.WorkbenchData:
-                case Furniture_FieldIndex.AssociatedSpell:
-                case Furniture_FieldIndex.Markers:
-                case Furniture_FieldIndex.ModelFilename:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Furniture_FieldIndex enu = (Furniture_FieldIndex)index;
-            switch (enu)
-            {
-                case Furniture_FieldIndex.VirtualMachineAdapter:
-                    return "VirtualMachineAdapter";
-                case Furniture_FieldIndex.ObjectBounds:
-                    return "ObjectBounds";
-                case Furniture_FieldIndex.Name:
-                    return "Name";
-                case Furniture_FieldIndex.Model:
-                    return "Model";
-                case Furniture_FieldIndex.Destructible:
-                    return "Destructible";
-                case Furniture_FieldIndex.Keywords:
-                    return "Keywords";
-                case Furniture_FieldIndex.PNAM:
-                    return "PNAM";
-                case Furniture_FieldIndex.Flags:
-                    return "Flags";
-                case Furniture_FieldIndex.InteractionKeyword:
-                    return "InteractionKeyword";
-                case Furniture_FieldIndex.WorkbenchData:
-                    return "WorkbenchData";
-                case Furniture_FieldIndex.AssociatedSpell:
-                    return "AssociatedSpell";
-                case Furniture_FieldIndex.Markers:
-                    return "Markers";
-                case Furniture_FieldIndex.ModelFilename:
-                    return "ModelFilename";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Furniture_FieldIndex enu = (Furniture_FieldIndex)index;
-            switch (enu)
-            {
-                case Furniture_FieldIndex.VirtualMachineAdapter:
-                case Furniture_FieldIndex.ObjectBounds:
-                case Furniture_FieldIndex.Name:
-                case Furniture_FieldIndex.Model:
-                case Furniture_FieldIndex.Destructible:
-                case Furniture_FieldIndex.Keywords:
-                case Furniture_FieldIndex.PNAM:
-                case Furniture_FieldIndex.Flags:
-                case Furniture_FieldIndex.InteractionKeyword:
-                case Furniture_FieldIndex.WorkbenchData:
-                case Furniture_FieldIndex.AssociatedSpell:
-                case Furniture_FieldIndex.Markers:
-                case Furniture_FieldIndex.ModelFilename:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Furniture_FieldIndex enu = (Furniture_FieldIndex)index;
-            switch (enu)
-            {
-                case Furniture_FieldIndex.VirtualMachineAdapter:
-                case Furniture_FieldIndex.ObjectBounds:
-                case Furniture_FieldIndex.Name:
-                case Furniture_FieldIndex.Model:
-                case Furniture_FieldIndex.Destructible:
-                case Furniture_FieldIndex.Keywords:
-                case Furniture_FieldIndex.PNAM:
-                case Furniture_FieldIndex.Flags:
-                case Furniture_FieldIndex.InteractionKeyword:
-                case Furniture_FieldIndex.WorkbenchData:
-                case Furniture_FieldIndex.AssociatedSpell:
-                case Furniture_FieldIndex.Markers:
-                case Furniture_FieldIndex.ModelFilename:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Furniture_FieldIndex enu = (Furniture_FieldIndex)index;
-            switch (enu)
-            {
-                case Furniture_FieldIndex.VirtualMachineAdapter:
-                    return typeof(VirtualMachineAdapter);
-                case Furniture_FieldIndex.ObjectBounds:
-                    return typeof(ObjectBounds);
-                case Furniture_FieldIndex.Name:
-                    return typeof(TranslatedString);
-                case Furniture_FieldIndex.Model:
-                    return typeof(Model);
-                case Furniture_FieldIndex.Destructible:
-                    return typeof(Destructible);
-                case Furniture_FieldIndex.Keywords:
-                    return typeof(IExtendedList<IFormLink<Keyword>>);
-                case Furniture_FieldIndex.PNAM:
-                    return typeof(MemorySlice<Byte>);
-                case Furniture_FieldIndex.Flags:
-                    return typeof(Furniture.Flag);
-                case Furniture_FieldIndex.InteractionKeyword:
-                    return typeof(FormLinkNullable<Keyword>);
-                case Furniture_FieldIndex.WorkbenchData:
-                    return typeof(WorkbenchData);
-                case Furniture_FieldIndex.AssociatedSpell:
-                    return typeof(FormLinkNullable<Spell>);
-                case Furniture_FieldIndex.Markers:
-                    return typeof(IExtendedList<FurnitureMarker>);
-                case Furniture_FieldIndex.ModelFilename:
-                    return typeof(String);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.FURN;
         public static readonly Type BinaryWriteTranslation = typeof(FurnitureBinaryWriteTranslation);
         #region Interface
@@ -1586,14 +1353,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1617,9 +1384,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Keywords = null;
             item.PNAM = default;
             item.Flags = default;
-            item.InteractionKeyword = FormLinkNullable<Keyword>.Null;
+            item.InteractionKeyword = FormLinkNullable<IKeywordGetter>.Null;
             item.WorkbenchData = null;
-            item.AssociatedSpell = FormLinkNullable<Spell>.Null;
+            item.AssociatedSpell = FormLinkNullable<ISpellGetter>.Null;
             item.Markers = null;
             item.ModelFilename = default;
             base.Clear(item);
@@ -2233,8 +2000,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLink<Keyword>)new FormLink<Keyword>(r.FormKey))
-                            .ToExtendedList<IFormLink<Keyword>>();
+                            .Select(r => (IFormLink<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IKeywordGetter>>();
                     }
                     else
                     {
@@ -2268,7 +2035,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.InteractionKeyword) ?? true))
             {
-                item.InteractionKeyword = new FormLinkNullable<Keyword>(rhs.InteractionKeyword.FormKey);
+                item.InteractionKeyword = new FormLinkNullable<IKeywordGetter>(rhs.InteractionKeyword.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.WorkbenchData) ?? true))
             {
@@ -2298,7 +2065,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.AssociatedSpell) ?? true))
             {
-                item.AssociatedSpell = new FormLinkNullable<Spell>(rhs.AssociatedSpell.FormKey);
+                item.AssociatedSpell = new FormLinkNullable<ISpellGetter>(rhs.AssociatedSpell.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.Markers) ?? true))
             {
@@ -2748,13 +2515,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KSIZ:
                 {
                     item.Keywords = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<Keyword>>();
+                        .CastExtendedList<IFormLink<IKeywordGetter>>();
                     return (int)Furniture_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.PNAM:

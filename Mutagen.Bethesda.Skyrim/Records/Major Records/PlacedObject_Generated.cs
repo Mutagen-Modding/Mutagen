@@ -54,9 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
         IVirtualMachineAdapterGetter? IPlacedObjectGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region Base
-        public FormLinkNullable<SkyrimMajorRecord> Base { get; set; } = new FormLinkNullable<SkyrimMajorRecord>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISkyrimMajorRecordGetter> IPlacedObjectGetter.Base => this.Base.ToGetter<SkyrimMajorRecord, ISkyrimMajorRecordGetter>();
+        public FormLinkNullable<ISkyrimMajorRecordGetter> Base { get; set; } = new FormLinkNullable<ISkyrimMajorRecordGetter>();
         #endregion
         #region BoundHalfExtents
         public P3Float? BoundHalfExtents { get; set; }
@@ -98,8 +96,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Portals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Portal>? _Portals;
-        public IExtendedList<Portal>? Portals
+        private ExtendedList<Portal>? _Portals;
+        public ExtendedList<Portal>? Portals
         {
             get => this._Portals;
             set => this._Portals = value;
@@ -125,19 +123,15 @@ namespace Mutagen.Bethesda.Skyrim
         public Int16 Unknown { get; set; } = default;
         #endregion
         #region LightingTemplate
-        public FormLinkNullable<Light> LightingTemplate { get; set; } = new FormLinkNullable<Light>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ILightGetter> IPlacedObjectGetter.LightingTemplate => this.LightingTemplate.ToGetter<Light, ILightGetter>();
+        public FormLinkNullable<ILightGetter> LightingTemplate { get; set; } = new FormLinkNullable<ILightGetter>();
         #endregion
         #region ImageSpace
-        public FormLinkNullable<ImageSpaceAdapter> ImageSpace { get; set; } = new FormLinkNullable<ImageSpaceAdapter>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IImageSpaceAdapterGetter> IPlacedObjectGetter.ImageSpace => this.ImageSpace.ToGetter<ImageSpaceAdapter, IImageSpaceAdapterGetter>();
+        public FormLinkNullable<IImageSpaceAdapterGetter> ImageSpace { get; set; } = new FormLinkNullable<IImageSpaceAdapterGetter>();
         #endregion
         #region LinkedRooms
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<PlacedObject>> _LinkedRooms = new ExtendedList<IFormLink<PlacedObject>>();
-        public IExtendedList<IFormLink<PlacedObject>> LinkedRooms
+        private ExtendedList<IFormLink<IPlacedObjectGetter>> _LinkedRooms = new ExtendedList<IFormLink<IPlacedObjectGetter>>();
+        public ExtendedList<IFormLink<IPlacedObjectGetter>> LinkedRooms
         {
             get => this._LinkedRooms;
             protected set => this._LinkedRooms = value;
@@ -180,8 +174,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Reflections
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<WaterReflection> _Reflections = new ExtendedList<WaterReflection>();
-        public IExtendedList<WaterReflection> Reflections
+        private ExtendedList<WaterReflection> _Reflections = new ExtendedList<WaterReflection>();
+        public ExtendedList<WaterReflection> Reflections
         {
             get => this._Reflections;
             protected set => this._Reflections = value;
@@ -194,8 +188,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LitWater
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<PlacedObject>> _LitWater = new ExtendedList<IFormLink<PlacedObject>>();
-        public IExtendedList<IFormLink<PlacedObject>> LitWater
+        private ExtendedList<IFormLink<IPlacedObjectGetter>> _LitWater = new ExtendedList<IFormLink<IPlacedObjectGetter>>();
+        public ExtendedList<IFormLink<IPlacedObjectGetter>> LitWater
         {
             get => this._LitWater;
             protected set => this._LitWater = value;
@@ -207,9 +201,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region Emittance
-        public FormLinkNullable<IEmittance> Emittance { get; set; } = new FormLinkNullable<IEmittance>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IEmittanceGetter> IPlacedObjectGetter.Emittance => this.Emittance.ToGetter<IEmittance, IEmittanceGetter>();
+        public FormLinkNullable<IEmittanceGetter> Emittance { get; set; } = new FormLinkNullable<IEmittanceGetter>();
         #endregion
         #region LightData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -245,14 +237,10 @@ namespace Mutagen.Bethesda.Skyrim
         ITeleportDestinationGetter? IPlacedObjectGetter.TeleportDestination => this.TeleportDestination;
         #endregion
         #region TeleportMessageBox
-        public FormLinkNullable<Message> TeleportMessageBox { get; set; } = new FormLinkNullable<Message>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IMessageGetter> IPlacedObjectGetter.TeleportMessageBox => this.TeleportMessageBox.ToGetter<Message, IMessageGetter>();
+        public FormLinkNullable<IMessageGetter> TeleportMessageBox { get; set; } = new FormLinkNullable<IMessageGetter>();
         #endregion
         #region MultiboundReference
-        public FormLinkNullable<PlacedObject> MultiboundReference { get; set; } = new FormLinkNullable<PlacedObject>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IPlacedObjectGetter> IPlacedObjectGetter.MultiboundReference => this.MultiboundReference.ToGetter<PlacedObject, IPlacedObjectGetter>();
+        public FormLinkNullable<IPlacedObjectGetter> MultiboundReference { get; set; } = new FormLinkNullable<IPlacedObjectGetter>();
         #endregion
         #region XWCN
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -299,9 +287,7 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? IPlacedObjectGetter.XCVL => this.XCVL;
         #endregion
         #region XCZR
-        public FormLinkNullable<ILinkedReference> XCZR { get; set; } = new FormLinkNullable<ILinkedReference>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ILinkedReferenceGetter> IPlacedObjectGetter.XCZR => this.XCZR.ToGetter<ILinkedReference, ILinkedReferenceGetter>();
+        public FormLinkNullable<ILinkedReferenceGetter> XCZR { get; set; } = new FormLinkNullable<ILinkedReferenceGetter>();
         #endregion
         #region XCZA
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -315,9 +301,7 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? IPlacedObjectGetter.XCZA => this.XCZA;
         #endregion
         #region XCZC
-        public FormLinkNullable<Cell> XCZC { get; set; } = new FormLinkNullable<Cell>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ICellGetter> IPlacedObjectGetter.XCZC => this.XCZC.ToGetter<Cell, ICellGetter>();
+        public FormLinkNullable<ICellGetter> XCZC { get; set; } = new FormLinkNullable<ICellGetter>();
         #endregion
         #region Scale
         public Single? Scale { get; set; }
@@ -325,9 +309,7 @@ namespace Mutagen.Bethesda.Skyrim
         Single? IPlacedObjectGetter.Scale => this.Scale;
         #endregion
         #region SpawnContainer
-        public FormLinkNullable<PlacedObject> SpawnContainer { get; set; } = new FormLinkNullable<PlacedObject>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IPlacedObjectGetter> IPlacedObjectGetter.SpawnContainer => this.SpawnContainer.ToGetter<PlacedObject, IPlacedObjectGetter>();
+        public FormLinkNullable<IPlacedObjectGetter> SpawnContainer { get; set; } = new FormLinkNullable<IPlacedObjectGetter>();
         #endregion
         #region ActivateParents
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -341,9 +323,7 @@ namespace Mutagen.Bethesda.Skyrim
         IActivateParentsGetter? IPlacedObjectGetter.ActivateParents => this.ActivateParents;
         #endregion
         #region LeveledItemBaseObject
-        public FormLinkNullable<LeveledItem> LeveledItemBaseObject { get; set; } = new FormLinkNullable<LeveledItem>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ILeveledItemGetter> IPlacedObjectGetter.LeveledItemBaseObject => this.LeveledItemBaseObject.ToGetter<LeveledItem, ILeveledItemGetter>();
+        public FormLinkNullable<ILeveledItemGetter> LeveledItemBaseObject { get; set; } = new FormLinkNullable<ILeveledItemGetter>();
         #endregion
         #region LevelModifier
         public Level? LevelModifier { get; set; }
@@ -351,9 +331,7 @@ namespace Mutagen.Bethesda.Skyrim
         Level? IPlacedObjectGetter.LevelModifier => this.LevelModifier;
         #endregion
         #region PersistentLocation
-        public FormLinkNullable<Location> PersistentLocation { get; set; } = new FormLinkNullable<Location>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ILocationGetter> IPlacedObjectGetter.PersistentLocation => this.PersistentLocation.ToGetter<Location, ILocationGetter>();
+        public FormLinkNullable<ILocationGetter> PersistentLocation { get; set; } = new FormLinkNullable<ILocationGetter>();
         #endregion
         #region CollisionLayer
         public UInt32? CollisionLayer { get; set; }
@@ -372,9 +350,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILockDataGetter? IPlacedObjectGetter.Lock => this.Lock;
         #endregion
         #region EncounterZone
-        public FormLinkNullable<EncounterZone> EncounterZone { get; set; } = new FormLinkNullable<EncounterZone>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IEncounterZoneGetter> IPlacedObjectGetter.EncounterZone => this.EncounterZone.ToGetter<EncounterZone, IEncounterZoneGetter>();
+        public FormLinkNullable<IEncounterZoneGetter> EncounterZone { get; set; } = new FormLinkNullable<IEncounterZoneGetter>();
         #endregion
         #region NavigationDoorLink
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -389,8 +365,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LocationRefTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<LocationReferenceType>>? _LocationRefTypes;
-        public IExtendedList<IFormLink<LocationReferenceType>>? LocationRefTypes
+        private ExtendedList<IFormLink<ILocationReferenceTypeGetter>>? _LocationRefTypes;
+        public ExtendedList<IFormLink<ILocationReferenceTypeGetter>>? LocationRefTypes
         {
             get => this._LocationRefTypes;
             set => this._LocationRefTypes = value;
@@ -426,9 +402,7 @@ namespace Mutagen.Bethesda.Skyrim
         Single? IPlacedObjectGetter.Charge => this.Charge;
         #endregion
         #region LocationReference
-        public FormLinkNullable<ILocationRecord> LocationReference { get; set; } = new FormLinkNullable<ILocationRecord>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ILocationRecordGetter> IPlacedObjectGetter.LocationReference => this.LocationReference.ToGetter<ILocationRecord, ILocationRecordGetter>();
+        public FormLinkNullable<ILocationRecordGetter> LocationReference { get; set; } = new FormLinkNullable<ILocationRecordGetter>();
         #endregion
         #region EnableParent
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -443,8 +417,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LinkedReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<LinkedReferences> _LinkedReferences = new ExtendedList<LinkedReferences>();
-        public IExtendedList<LinkedReferences> LinkedReferences
+        private ExtendedList<LinkedReferences> _LinkedReferences = new ExtendedList<LinkedReferences>();
+        public ExtendedList<LinkedReferences> LinkedReferences
         {
             get => this._LinkedReferences;
             protected set => this._LinkedReferences = value;
@@ -496,9 +470,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapMarkerGetter? IPlacedObjectGetter.MapMarker => this.MapMarker;
         #endregion
         #region AttachRef
-        public FormLinkNullable<IPlacedThing> AttachRef { get; set; } = new FormLinkNullable<IPlacedThing>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IPlacedThingGetter> IPlacedObjectGetter.AttachRef => this.AttachRef.ToGetter<IPlacedThing, IPlacedThingGetter>();
+        public FormLinkNullable<IPlacedThingGetter> AttachRef { get; set; } = new FormLinkNullable<IPlacedThingGetter>();
         #endregion
         #region DistantLodData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -3074,61 +3046,61 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
-        new FormLinkNullable<SkyrimMajorRecord> Base { get; set; }
+        new FormLinkNullable<ISkyrimMajorRecordGetter> Base { get; set; }
         new P3Float? BoundHalfExtents { get; set; }
         new PlacedPrimitive? Primitive { get; set; }
         new MemorySlice<Byte>? XORD { get; set; }
         new Bounding? OcclusionPlane { get; set; }
-        new IExtendedList<Portal>? Portals { get; set; }
+        new ExtendedList<Portal>? Portals { get; set; }
         new Bounding? RoomPortal { get; set; }
         new Int16 Unknown { get; set; }
-        new FormLinkNullable<Light> LightingTemplate { get; set; }
-        new FormLinkNullable<ImageSpaceAdapter> ImageSpace { get; set; }
-        new IExtendedList<IFormLink<PlacedObject>> LinkedRooms { get; }
+        new FormLinkNullable<ILightGetter> LightingTemplate { get; set; }
+        new FormLinkNullable<IImageSpaceAdapterGetter> ImageSpace { get; set; }
+        new ExtendedList<IFormLink<IPlacedObjectGetter>> LinkedRooms { get; }
         new Boolean MultiBoundPrimitive { get; set; }
         new MemorySlice<Byte>? RagdollData { get; set; }
         new MemorySlice<Byte>? RagdollBipedData { get; set; }
         new Single? Radius { get; set; }
-        new IExtendedList<WaterReflection> Reflections { get; }
-        new IExtendedList<IFormLink<PlacedObject>> LitWater { get; }
-        new FormLinkNullable<IEmittance> Emittance { get; set; }
+        new ExtendedList<WaterReflection> Reflections { get; }
+        new ExtendedList<IFormLink<IPlacedObjectGetter>> LitWater { get; }
+        new FormLinkNullable<IEmittanceGetter> Emittance { get; set; }
         new LightData? LightData { get; set; }
         new Alpha? Alpha { get; set; }
         new TeleportDestination? TeleportDestination { get; set; }
-        new FormLinkNullable<Message> TeleportMessageBox { get; set; }
-        new FormLinkNullable<PlacedObject> MultiboundReference { get; set; }
+        new FormLinkNullable<IMessageGetter> TeleportMessageBox { get; set; }
+        new FormLinkNullable<IPlacedObjectGetter> MultiboundReference { get; set; }
         new MemorySlice<Byte>? XWCN { get; set; }
         new MemorySlice<Byte>? XWCS { get; set; }
         new WaterVelocity? WaterVelocity { get; set; }
         new MemorySlice<Byte>? XCVL { get; set; }
-        new FormLinkNullable<ILinkedReference> XCZR { get; set; }
+        new FormLinkNullable<ILinkedReferenceGetter> XCZR { get; set; }
         new MemorySlice<Byte>? XCZA { get; set; }
-        new FormLinkNullable<Cell> XCZC { get; set; }
+        new FormLinkNullable<ICellGetter> XCZC { get; set; }
         new Single? Scale { get; set; }
-        new FormLinkNullable<PlacedObject> SpawnContainer { get; set; }
+        new FormLinkNullable<IPlacedObjectGetter> SpawnContainer { get; set; }
         new ActivateParents? ActivateParents { get; set; }
-        new FormLinkNullable<LeveledItem> LeveledItemBaseObject { get; set; }
+        new FormLinkNullable<ILeveledItemGetter> LeveledItemBaseObject { get; set; }
         new Level? LevelModifier { get; set; }
-        new FormLinkNullable<Location> PersistentLocation { get; set; }
+        new FormLinkNullable<ILocationGetter> PersistentLocation { get; set; }
         new UInt32? CollisionLayer { get; set; }
         new LockData? Lock { get; set; }
-        new FormLinkNullable<EncounterZone> EncounterZone { get; set; }
+        new FormLinkNullable<IEncounterZoneGetter> EncounterZone { get; set; }
         new NavigationDoorLink? NavigationDoorLink { get; set; }
-        new IExtendedList<IFormLink<LocationReferenceType>>? LocationRefTypes { get; set; }
+        new ExtendedList<IFormLink<ILocationReferenceTypeGetter>>? LocationRefTypes { get; set; }
         new Boolean IgnoredBySandbox { get; set; }
         new Ownership? Ownership { get; set; }
         new Int32? ItemCount { get; set; }
         new Single? Charge { get; set; }
-        new FormLinkNullable<ILocationRecord> LocationReference { get; set; }
+        new FormLinkNullable<ILocationRecordGetter> LocationReference { get; set; }
         new EnableParent? EnableParent { get; set; }
-        new IExtendedList<LinkedReferences> LinkedReferences { get; }
+        new ExtendedList<LinkedReferences> LinkedReferences { get; }
         new Patrol? Patrol { get; set; }
         new PlacedObject.ActionFlag? Action { get; set; }
         new Single? HeadTrackingWeight { get; set; }
         new Single? FavorCost { get; set; }
         new Boolean OpenByDefault { get; set; }
         new MapMarker? MapMarker { get; set; }
-        new FormLinkNullable<IPlacedThing> AttachRef { get; set; }
+        new FormLinkNullable<IPlacedThingGetter> AttachRef { get; set; }
         new MemorySlice<Byte>? DistantLodData { get; set; }
         new Placement? Placement { get; set; }
     }
@@ -3461,730 +3433,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "VIRTUALMACHINEADAPTER":
-                    return (ushort)PlacedObject_FieldIndex.VirtualMachineAdapter;
-                case "BASE":
-                    return (ushort)PlacedObject_FieldIndex.Base;
-                case "BOUNDHALFEXTENTS":
-                    return (ushort)PlacedObject_FieldIndex.BoundHalfExtents;
-                case "PRIMITIVE":
-                    return (ushort)PlacedObject_FieldIndex.Primitive;
-                case "XORD":
-                    return (ushort)PlacedObject_FieldIndex.XORD;
-                case "OCCLUSIONPLANE":
-                    return (ushort)PlacedObject_FieldIndex.OcclusionPlane;
-                case "PORTALS":
-                    return (ushort)PlacedObject_FieldIndex.Portals;
-                case "ROOMPORTAL":
-                    return (ushort)PlacedObject_FieldIndex.RoomPortal;
-                case "UNKNOWN":
-                    return (ushort)PlacedObject_FieldIndex.Unknown;
-                case "LIGHTINGTEMPLATE":
-                    return (ushort)PlacedObject_FieldIndex.LightingTemplate;
-                case "IMAGESPACE":
-                    return (ushort)PlacedObject_FieldIndex.ImageSpace;
-                case "LINKEDROOMS":
-                    return (ushort)PlacedObject_FieldIndex.LinkedRooms;
-                case "MULTIBOUNDPRIMITIVE":
-                    return (ushort)PlacedObject_FieldIndex.MultiBoundPrimitive;
-                case "RAGDOLLDATA":
-                    return (ushort)PlacedObject_FieldIndex.RagdollData;
-                case "RAGDOLLBIPEDDATA":
-                    return (ushort)PlacedObject_FieldIndex.RagdollBipedData;
-                case "RADIUS":
-                    return (ushort)PlacedObject_FieldIndex.Radius;
-                case "REFLECTIONS":
-                    return (ushort)PlacedObject_FieldIndex.Reflections;
-                case "LITWATER":
-                    return (ushort)PlacedObject_FieldIndex.LitWater;
-                case "EMITTANCE":
-                    return (ushort)PlacedObject_FieldIndex.Emittance;
-                case "LIGHTDATA":
-                    return (ushort)PlacedObject_FieldIndex.LightData;
-                case "ALPHA":
-                    return (ushort)PlacedObject_FieldIndex.Alpha;
-                case "TELEPORTDESTINATION":
-                    return (ushort)PlacedObject_FieldIndex.TeleportDestination;
-                case "TELEPORTMESSAGEBOX":
-                    return (ushort)PlacedObject_FieldIndex.TeleportMessageBox;
-                case "MULTIBOUNDREFERENCE":
-                    return (ushort)PlacedObject_FieldIndex.MultiboundReference;
-                case "XWCN":
-                    return (ushort)PlacedObject_FieldIndex.XWCN;
-                case "XWCS":
-                    return (ushort)PlacedObject_FieldIndex.XWCS;
-                case "WATERVELOCITY":
-                    return (ushort)PlacedObject_FieldIndex.WaterVelocity;
-                case "XCVL":
-                    return (ushort)PlacedObject_FieldIndex.XCVL;
-                case "XCZR":
-                    return (ushort)PlacedObject_FieldIndex.XCZR;
-                case "XCZA":
-                    return (ushort)PlacedObject_FieldIndex.XCZA;
-                case "XCZC":
-                    return (ushort)PlacedObject_FieldIndex.XCZC;
-                case "SCALE":
-                    return (ushort)PlacedObject_FieldIndex.Scale;
-                case "SPAWNCONTAINER":
-                    return (ushort)PlacedObject_FieldIndex.SpawnContainer;
-                case "ACTIVATEPARENTS":
-                    return (ushort)PlacedObject_FieldIndex.ActivateParents;
-                case "LEVELEDITEMBASEOBJECT":
-                    return (ushort)PlacedObject_FieldIndex.LeveledItemBaseObject;
-                case "LEVELMODIFIER":
-                    return (ushort)PlacedObject_FieldIndex.LevelModifier;
-                case "PERSISTENTLOCATION":
-                    return (ushort)PlacedObject_FieldIndex.PersistentLocation;
-                case "COLLISIONLAYER":
-                    return (ushort)PlacedObject_FieldIndex.CollisionLayer;
-                case "LOCK":
-                    return (ushort)PlacedObject_FieldIndex.Lock;
-                case "ENCOUNTERZONE":
-                    return (ushort)PlacedObject_FieldIndex.EncounterZone;
-                case "NAVIGATIONDOORLINK":
-                    return (ushort)PlacedObject_FieldIndex.NavigationDoorLink;
-                case "LOCATIONREFTYPES":
-                    return (ushort)PlacedObject_FieldIndex.LocationRefTypes;
-                case "IGNOREDBYSANDBOX":
-                    return (ushort)PlacedObject_FieldIndex.IgnoredBySandbox;
-                case "OWNERSHIP":
-                    return (ushort)PlacedObject_FieldIndex.Ownership;
-                case "ITEMCOUNT":
-                    return (ushort)PlacedObject_FieldIndex.ItemCount;
-                case "CHARGE":
-                    return (ushort)PlacedObject_FieldIndex.Charge;
-                case "LOCATIONREFERENCE":
-                    return (ushort)PlacedObject_FieldIndex.LocationReference;
-                case "ENABLEPARENT":
-                    return (ushort)PlacedObject_FieldIndex.EnableParent;
-                case "LINKEDREFERENCES":
-                    return (ushort)PlacedObject_FieldIndex.LinkedReferences;
-                case "PATROL":
-                    return (ushort)PlacedObject_FieldIndex.Patrol;
-                case "ACTION":
-                    return (ushort)PlacedObject_FieldIndex.Action;
-                case "HEADTRACKINGWEIGHT":
-                    return (ushort)PlacedObject_FieldIndex.HeadTrackingWeight;
-                case "FAVORCOST":
-                    return (ushort)PlacedObject_FieldIndex.FavorCost;
-                case "OPENBYDEFAULT":
-                    return (ushort)PlacedObject_FieldIndex.OpenByDefault;
-                case "MAPMARKER":
-                    return (ushort)PlacedObject_FieldIndex.MapMarker;
-                case "ATTACHREF":
-                    return (ushort)PlacedObject_FieldIndex.AttachRef;
-                case "DISTANTLODDATA":
-                    return (ushort)PlacedObject_FieldIndex.DistantLodData;
-                case "PLACEMENT":
-                    return (ushort)PlacedObject_FieldIndex.Placement;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedObject_FieldIndex.Portals:
-                case PlacedObject_FieldIndex.LinkedRooms:
-                case PlacedObject_FieldIndex.Reflections:
-                case PlacedObject_FieldIndex.LitWater:
-                case PlacedObject_FieldIndex.LocationRefTypes:
-                case PlacedObject_FieldIndex.LinkedReferences:
-                    return true;
-                case PlacedObject_FieldIndex.VirtualMachineAdapter:
-                case PlacedObject_FieldIndex.Base:
-                case PlacedObject_FieldIndex.BoundHalfExtents:
-                case PlacedObject_FieldIndex.Primitive:
-                case PlacedObject_FieldIndex.XORD:
-                case PlacedObject_FieldIndex.OcclusionPlane:
-                case PlacedObject_FieldIndex.RoomPortal:
-                case PlacedObject_FieldIndex.Unknown:
-                case PlacedObject_FieldIndex.LightingTemplate:
-                case PlacedObject_FieldIndex.ImageSpace:
-                case PlacedObject_FieldIndex.MultiBoundPrimitive:
-                case PlacedObject_FieldIndex.RagdollData:
-                case PlacedObject_FieldIndex.RagdollBipedData:
-                case PlacedObject_FieldIndex.Radius:
-                case PlacedObject_FieldIndex.Emittance:
-                case PlacedObject_FieldIndex.LightData:
-                case PlacedObject_FieldIndex.Alpha:
-                case PlacedObject_FieldIndex.TeleportDestination:
-                case PlacedObject_FieldIndex.TeleportMessageBox:
-                case PlacedObject_FieldIndex.MultiboundReference:
-                case PlacedObject_FieldIndex.XWCN:
-                case PlacedObject_FieldIndex.XWCS:
-                case PlacedObject_FieldIndex.WaterVelocity:
-                case PlacedObject_FieldIndex.XCVL:
-                case PlacedObject_FieldIndex.XCZR:
-                case PlacedObject_FieldIndex.XCZA:
-                case PlacedObject_FieldIndex.XCZC:
-                case PlacedObject_FieldIndex.Scale:
-                case PlacedObject_FieldIndex.SpawnContainer:
-                case PlacedObject_FieldIndex.ActivateParents:
-                case PlacedObject_FieldIndex.LeveledItemBaseObject:
-                case PlacedObject_FieldIndex.LevelModifier:
-                case PlacedObject_FieldIndex.PersistentLocation:
-                case PlacedObject_FieldIndex.CollisionLayer:
-                case PlacedObject_FieldIndex.Lock:
-                case PlacedObject_FieldIndex.EncounterZone:
-                case PlacedObject_FieldIndex.NavigationDoorLink:
-                case PlacedObject_FieldIndex.IgnoredBySandbox:
-                case PlacedObject_FieldIndex.Ownership:
-                case PlacedObject_FieldIndex.ItemCount:
-                case PlacedObject_FieldIndex.Charge:
-                case PlacedObject_FieldIndex.LocationReference:
-                case PlacedObject_FieldIndex.EnableParent:
-                case PlacedObject_FieldIndex.Patrol:
-                case PlacedObject_FieldIndex.Action:
-                case PlacedObject_FieldIndex.HeadTrackingWeight:
-                case PlacedObject_FieldIndex.FavorCost:
-                case PlacedObject_FieldIndex.OpenByDefault:
-                case PlacedObject_FieldIndex.MapMarker:
-                case PlacedObject_FieldIndex.AttachRef:
-                case PlacedObject_FieldIndex.DistantLodData:
-                case PlacedObject_FieldIndex.Placement:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedObject_FieldIndex.VirtualMachineAdapter:
-                case PlacedObject_FieldIndex.Primitive:
-                case PlacedObject_FieldIndex.OcclusionPlane:
-                case PlacedObject_FieldIndex.Portals:
-                case PlacedObject_FieldIndex.RoomPortal:
-                case PlacedObject_FieldIndex.Reflections:
-                case PlacedObject_FieldIndex.LightData:
-                case PlacedObject_FieldIndex.Alpha:
-                case PlacedObject_FieldIndex.TeleportDestination:
-                case PlacedObject_FieldIndex.WaterVelocity:
-                case PlacedObject_FieldIndex.ActivateParents:
-                case PlacedObject_FieldIndex.Lock:
-                case PlacedObject_FieldIndex.NavigationDoorLink:
-                case PlacedObject_FieldIndex.Ownership:
-                case PlacedObject_FieldIndex.EnableParent:
-                case PlacedObject_FieldIndex.LinkedReferences:
-                case PlacedObject_FieldIndex.Patrol:
-                case PlacedObject_FieldIndex.MapMarker:
-                case PlacedObject_FieldIndex.Placement:
-                    return true;
-                case PlacedObject_FieldIndex.Base:
-                case PlacedObject_FieldIndex.BoundHalfExtents:
-                case PlacedObject_FieldIndex.XORD:
-                case PlacedObject_FieldIndex.Unknown:
-                case PlacedObject_FieldIndex.LightingTemplate:
-                case PlacedObject_FieldIndex.ImageSpace:
-                case PlacedObject_FieldIndex.LinkedRooms:
-                case PlacedObject_FieldIndex.MultiBoundPrimitive:
-                case PlacedObject_FieldIndex.RagdollData:
-                case PlacedObject_FieldIndex.RagdollBipedData:
-                case PlacedObject_FieldIndex.Radius:
-                case PlacedObject_FieldIndex.LitWater:
-                case PlacedObject_FieldIndex.Emittance:
-                case PlacedObject_FieldIndex.TeleportMessageBox:
-                case PlacedObject_FieldIndex.MultiboundReference:
-                case PlacedObject_FieldIndex.XWCN:
-                case PlacedObject_FieldIndex.XWCS:
-                case PlacedObject_FieldIndex.XCVL:
-                case PlacedObject_FieldIndex.XCZR:
-                case PlacedObject_FieldIndex.XCZA:
-                case PlacedObject_FieldIndex.XCZC:
-                case PlacedObject_FieldIndex.Scale:
-                case PlacedObject_FieldIndex.SpawnContainer:
-                case PlacedObject_FieldIndex.LeveledItemBaseObject:
-                case PlacedObject_FieldIndex.LevelModifier:
-                case PlacedObject_FieldIndex.PersistentLocation:
-                case PlacedObject_FieldIndex.CollisionLayer:
-                case PlacedObject_FieldIndex.EncounterZone:
-                case PlacedObject_FieldIndex.LocationRefTypes:
-                case PlacedObject_FieldIndex.IgnoredBySandbox:
-                case PlacedObject_FieldIndex.ItemCount:
-                case PlacedObject_FieldIndex.Charge:
-                case PlacedObject_FieldIndex.LocationReference:
-                case PlacedObject_FieldIndex.Action:
-                case PlacedObject_FieldIndex.HeadTrackingWeight:
-                case PlacedObject_FieldIndex.FavorCost:
-                case PlacedObject_FieldIndex.OpenByDefault:
-                case PlacedObject_FieldIndex.AttachRef:
-                case PlacedObject_FieldIndex.DistantLodData:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedObject_FieldIndex.VirtualMachineAdapter:
-                case PlacedObject_FieldIndex.Base:
-                case PlacedObject_FieldIndex.BoundHalfExtents:
-                case PlacedObject_FieldIndex.Primitive:
-                case PlacedObject_FieldIndex.XORD:
-                case PlacedObject_FieldIndex.OcclusionPlane:
-                case PlacedObject_FieldIndex.Portals:
-                case PlacedObject_FieldIndex.RoomPortal:
-                case PlacedObject_FieldIndex.Unknown:
-                case PlacedObject_FieldIndex.LightingTemplate:
-                case PlacedObject_FieldIndex.ImageSpace:
-                case PlacedObject_FieldIndex.LinkedRooms:
-                case PlacedObject_FieldIndex.MultiBoundPrimitive:
-                case PlacedObject_FieldIndex.RagdollData:
-                case PlacedObject_FieldIndex.RagdollBipedData:
-                case PlacedObject_FieldIndex.Radius:
-                case PlacedObject_FieldIndex.Reflections:
-                case PlacedObject_FieldIndex.LitWater:
-                case PlacedObject_FieldIndex.Emittance:
-                case PlacedObject_FieldIndex.LightData:
-                case PlacedObject_FieldIndex.Alpha:
-                case PlacedObject_FieldIndex.TeleportDestination:
-                case PlacedObject_FieldIndex.TeleportMessageBox:
-                case PlacedObject_FieldIndex.MultiboundReference:
-                case PlacedObject_FieldIndex.XWCN:
-                case PlacedObject_FieldIndex.XWCS:
-                case PlacedObject_FieldIndex.WaterVelocity:
-                case PlacedObject_FieldIndex.XCVL:
-                case PlacedObject_FieldIndex.XCZR:
-                case PlacedObject_FieldIndex.XCZA:
-                case PlacedObject_FieldIndex.XCZC:
-                case PlacedObject_FieldIndex.Scale:
-                case PlacedObject_FieldIndex.SpawnContainer:
-                case PlacedObject_FieldIndex.ActivateParents:
-                case PlacedObject_FieldIndex.LeveledItemBaseObject:
-                case PlacedObject_FieldIndex.LevelModifier:
-                case PlacedObject_FieldIndex.PersistentLocation:
-                case PlacedObject_FieldIndex.CollisionLayer:
-                case PlacedObject_FieldIndex.Lock:
-                case PlacedObject_FieldIndex.EncounterZone:
-                case PlacedObject_FieldIndex.NavigationDoorLink:
-                case PlacedObject_FieldIndex.LocationRefTypes:
-                case PlacedObject_FieldIndex.IgnoredBySandbox:
-                case PlacedObject_FieldIndex.Ownership:
-                case PlacedObject_FieldIndex.ItemCount:
-                case PlacedObject_FieldIndex.Charge:
-                case PlacedObject_FieldIndex.LocationReference:
-                case PlacedObject_FieldIndex.EnableParent:
-                case PlacedObject_FieldIndex.LinkedReferences:
-                case PlacedObject_FieldIndex.Patrol:
-                case PlacedObject_FieldIndex.Action:
-                case PlacedObject_FieldIndex.HeadTrackingWeight:
-                case PlacedObject_FieldIndex.FavorCost:
-                case PlacedObject_FieldIndex.OpenByDefault:
-                case PlacedObject_FieldIndex.MapMarker:
-                case PlacedObject_FieldIndex.AttachRef:
-                case PlacedObject_FieldIndex.DistantLodData:
-                case PlacedObject_FieldIndex.Placement:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedObject_FieldIndex.VirtualMachineAdapter:
-                    return "VirtualMachineAdapter";
-                case PlacedObject_FieldIndex.Base:
-                    return "Base";
-                case PlacedObject_FieldIndex.BoundHalfExtents:
-                    return "BoundHalfExtents";
-                case PlacedObject_FieldIndex.Primitive:
-                    return "Primitive";
-                case PlacedObject_FieldIndex.XORD:
-                    return "XORD";
-                case PlacedObject_FieldIndex.OcclusionPlane:
-                    return "OcclusionPlane";
-                case PlacedObject_FieldIndex.Portals:
-                    return "Portals";
-                case PlacedObject_FieldIndex.RoomPortal:
-                    return "RoomPortal";
-                case PlacedObject_FieldIndex.Unknown:
-                    return "Unknown";
-                case PlacedObject_FieldIndex.LightingTemplate:
-                    return "LightingTemplate";
-                case PlacedObject_FieldIndex.ImageSpace:
-                    return "ImageSpace";
-                case PlacedObject_FieldIndex.LinkedRooms:
-                    return "LinkedRooms";
-                case PlacedObject_FieldIndex.MultiBoundPrimitive:
-                    return "MultiBoundPrimitive";
-                case PlacedObject_FieldIndex.RagdollData:
-                    return "RagdollData";
-                case PlacedObject_FieldIndex.RagdollBipedData:
-                    return "RagdollBipedData";
-                case PlacedObject_FieldIndex.Radius:
-                    return "Radius";
-                case PlacedObject_FieldIndex.Reflections:
-                    return "Reflections";
-                case PlacedObject_FieldIndex.LitWater:
-                    return "LitWater";
-                case PlacedObject_FieldIndex.Emittance:
-                    return "Emittance";
-                case PlacedObject_FieldIndex.LightData:
-                    return "LightData";
-                case PlacedObject_FieldIndex.Alpha:
-                    return "Alpha";
-                case PlacedObject_FieldIndex.TeleportDestination:
-                    return "TeleportDestination";
-                case PlacedObject_FieldIndex.TeleportMessageBox:
-                    return "TeleportMessageBox";
-                case PlacedObject_FieldIndex.MultiboundReference:
-                    return "MultiboundReference";
-                case PlacedObject_FieldIndex.XWCN:
-                    return "XWCN";
-                case PlacedObject_FieldIndex.XWCS:
-                    return "XWCS";
-                case PlacedObject_FieldIndex.WaterVelocity:
-                    return "WaterVelocity";
-                case PlacedObject_FieldIndex.XCVL:
-                    return "XCVL";
-                case PlacedObject_FieldIndex.XCZR:
-                    return "XCZR";
-                case PlacedObject_FieldIndex.XCZA:
-                    return "XCZA";
-                case PlacedObject_FieldIndex.XCZC:
-                    return "XCZC";
-                case PlacedObject_FieldIndex.Scale:
-                    return "Scale";
-                case PlacedObject_FieldIndex.SpawnContainer:
-                    return "SpawnContainer";
-                case PlacedObject_FieldIndex.ActivateParents:
-                    return "ActivateParents";
-                case PlacedObject_FieldIndex.LeveledItemBaseObject:
-                    return "LeveledItemBaseObject";
-                case PlacedObject_FieldIndex.LevelModifier:
-                    return "LevelModifier";
-                case PlacedObject_FieldIndex.PersistentLocation:
-                    return "PersistentLocation";
-                case PlacedObject_FieldIndex.CollisionLayer:
-                    return "CollisionLayer";
-                case PlacedObject_FieldIndex.Lock:
-                    return "Lock";
-                case PlacedObject_FieldIndex.EncounterZone:
-                    return "EncounterZone";
-                case PlacedObject_FieldIndex.NavigationDoorLink:
-                    return "NavigationDoorLink";
-                case PlacedObject_FieldIndex.LocationRefTypes:
-                    return "LocationRefTypes";
-                case PlacedObject_FieldIndex.IgnoredBySandbox:
-                    return "IgnoredBySandbox";
-                case PlacedObject_FieldIndex.Ownership:
-                    return "Ownership";
-                case PlacedObject_FieldIndex.ItemCount:
-                    return "ItemCount";
-                case PlacedObject_FieldIndex.Charge:
-                    return "Charge";
-                case PlacedObject_FieldIndex.LocationReference:
-                    return "LocationReference";
-                case PlacedObject_FieldIndex.EnableParent:
-                    return "EnableParent";
-                case PlacedObject_FieldIndex.LinkedReferences:
-                    return "LinkedReferences";
-                case PlacedObject_FieldIndex.Patrol:
-                    return "Patrol";
-                case PlacedObject_FieldIndex.Action:
-                    return "Action";
-                case PlacedObject_FieldIndex.HeadTrackingWeight:
-                    return "HeadTrackingWeight";
-                case PlacedObject_FieldIndex.FavorCost:
-                    return "FavorCost";
-                case PlacedObject_FieldIndex.OpenByDefault:
-                    return "OpenByDefault";
-                case PlacedObject_FieldIndex.MapMarker:
-                    return "MapMarker";
-                case PlacedObject_FieldIndex.AttachRef:
-                    return "AttachRef";
-                case PlacedObject_FieldIndex.DistantLodData:
-                    return "DistantLodData";
-                case PlacedObject_FieldIndex.Placement:
-                    return "Placement";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedObject_FieldIndex.VirtualMachineAdapter:
-                case PlacedObject_FieldIndex.Base:
-                case PlacedObject_FieldIndex.BoundHalfExtents:
-                case PlacedObject_FieldIndex.Primitive:
-                case PlacedObject_FieldIndex.XORD:
-                case PlacedObject_FieldIndex.OcclusionPlane:
-                case PlacedObject_FieldIndex.Portals:
-                case PlacedObject_FieldIndex.RoomPortal:
-                case PlacedObject_FieldIndex.Unknown:
-                case PlacedObject_FieldIndex.LightingTemplate:
-                case PlacedObject_FieldIndex.ImageSpace:
-                case PlacedObject_FieldIndex.LinkedRooms:
-                case PlacedObject_FieldIndex.MultiBoundPrimitive:
-                case PlacedObject_FieldIndex.RagdollData:
-                case PlacedObject_FieldIndex.RagdollBipedData:
-                case PlacedObject_FieldIndex.Radius:
-                case PlacedObject_FieldIndex.Reflections:
-                case PlacedObject_FieldIndex.LitWater:
-                case PlacedObject_FieldIndex.Emittance:
-                case PlacedObject_FieldIndex.LightData:
-                case PlacedObject_FieldIndex.Alpha:
-                case PlacedObject_FieldIndex.TeleportDestination:
-                case PlacedObject_FieldIndex.TeleportMessageBox:
-                case PlacedObject_FieldIndex.MultiboundReference:
-                case PlacedObject_FieldIndex.XWCN:
-                case PlacedObject_FieldIndex.XWCS:
-                case PlacedObject_FieldIndex.WaterVelocity:
-                case PlacedObject_FieldIndex.XCVL:
-                case PlacedObject_FieldIndex.XCZR:
-                case PlacedObject_FieldIndex.XCZA:
-                case PlacedObject_FieldIndex.XCZC:
-                case PlacedObject_FieldIndex.Scale:
-                case PlacedObject_FieldIndex.SpawnContainer:
-                case PlacedObject_FieldIndex.ActivateParents:
-                case PlacedObject_FieldIndex.LeveledItemBaseObject:
-                case PlacedObject_FieldIndex.LevelModifier:
-                case PlacedObject_FieldIndex.PersistentLocation:
-                case PlacedObject_FieldIndex.CollisionLayer:
-                case PlacedObject_FieldIndex.Lock:
-                case PlacedObject_FieldIndex.EncounterZone:
-                case PlacedObject_FieldIndex.NavigationDoorLink:
-                case PlacedObject_FieldIndex.LocationRefTypes:
-                case PlacedObject_FieldIndex.IgnoredBySandbox:
-                case PlacedObject_FieldIndex.Ownership:
-                case PlacedObject_FieldIndex.ItemCount:
-                case PlacedObject_FieldIndex.Charge:
-                case PlacedObject_FieldIndex.LocationReference:
-                case PlacedObject_FieldIndex.EnableParent:
-                case PlacedObject_FieldIndex.LinkedReferences:
-                case PlacedObject_FieldIndex.Patrol:
-                case PlacedObject_FieldIndex.Action:
-                case PlacedObject_FieldIndex.HeadTrackingWeight:
-                case PlacedObject_FieldIndex.FavorCost:
-                case PlacedObject_FieldIndex.OpenByDefault:
-                case PlacedObject_FieldIndex.MapMarker:
-                case PlacedObject_FieldIndex.AttachRef:
-                case PlacedObject_FieldIndex.DistantLodData:
-                case PlacedObject_FieldIndex.Placement:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedObject_FieldIndex.VirtualMachineAdapter:
-                case PlacedObject_FieldIndex.Base:
-                case PlacedObject_FieldIndex.BoundHalfExtents:
-                case PlacedObject_FieldIndex.Primitive:
-                case PlacedObject_FieldIndex.XORD:
-                case PlacedObject_FieldIndex.OcclusionPlane:
-                case PlacedObject_FieldIndex.Portals:
-                case PlacedObject_FieldIndex.RoomPortal:
-                case PlacedObject_FieldIndex.Unknown:
-                case PlacedObject_FieldIndex.LightingTemplate:
-                case PlacedObject_FieldIndex.ImageSpace:
-                case PlacedObject_FieldIndex.LinkedRooms:
-                case PlacedObject_FieldIndex.MultiBoundPrimitive:
-                case PlacedObject_FieldIndex.RagdollData:
-                case PlacedObject_FieldIndex.RagdollBipedData:
-                case PlacedObject_FieldIndex.Radius:
-                case PlacedObject_FieldIndex.Reflections:
-                case PlacedObject_FieldIndex.LitWater:
-                case PlacedObject_FieldIndex.Emittance:
-                case PlacedObject_FieldIndex.LightData:
-                case PlacedObject_FieldIndex.Alpha:
-                case PlacedObject_FieldIndex.TeleportDestination:
-                case PlacedObject_FieldIndex.TeleportMessageBox:
-                case PlacedObject_FieldIndex.MultiboundReference:
-                case PlacedObject_FieldIndex.XWCN:
-                case PlacedObject_FieldIndex.XWCS:
-                case PlacedObject_FieldIndex.WaterVelocity:
-                case PlacedObject_FieldIndex.XCVL:
-                case PlacedObject_FieldIndex.XCZR:
-                case PlacedObject_FieldIndex.XCZA:
-                case PlacedObject_FieldIndex.XCZC:
-                case PlacedObject_FieldIndex.Scale:
-                case PlacedObject_FieldIndex.SpawnContainer:
-                case PlacedObject_FieldIndex.ActivateParents:
-                case PlacedObject_FieldIndex.LeveledItemBaseObject:
-                case PlacedObject_FieldIndex.LevelModifier:
-                case PlacedObject_FieldIndex.PersistentLocation:
-                case PlacedObject_FieldIndex.CollisionLayer:
-                case PlacedObject_FieldIndex.Lock:
-                case PlacedObject_FieldIndex.EncounterZone:
-                case PlacedObject_FieldIndex.NavigationDoorLink:
-                case PlacedObject_FieldIndex.LocationRefTypes:
-                case PlacedObject_FieldIndex.IgnoredBySandbox:
-                case PlacedObject_FieldIndex.Ownership:
-                case PlacedObject_FieldIndex.ItemCount:
-                case PlacedObject_FieldIndex.Charge:
-                case PlacedObject_FieldIndex.LocationReference:
-                case PlacedObject_FieldIndex.EnableParent:
-                case PlacedObject_FieldIndex.LinkedReferences:
-                case PlacedObject_FieldIndex.Patrol:
-                case PlacedObject_FieldIndex.Action:
-                case PlacedObject_FieldIndex.HeadTrackingWeight:
-                case PlacedObject_FieldIndex.FavorCost:
-                case PlacedObject_FieldIndex.OpenByDefault:
-                case PlacedObject_FieldIndex.MapMarker:
-                case PlacedObject_FieldIndex.AttachRef:
-                case PlacedObject_FieldIndex.DistantLodData:
-                case PlacedObject_FieldIndex.Placement:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedObject_FieldIndex.VirtualMachineAdapter:
-                    return typeof(VirtualMachineAdapter);
-                case PlacedObject_FieldIndex.Base:
-                    return typeof(FormLinkNullable<SkyrimMajorRecord>);
-                case PlacedObject_FieldIndex.BoundHalfExtents:
-                    return typeof(P3Float);
-                case PlacedObject_FieldIndex.Primitive:
-                    return typeof(PlacedPrimitive);
-                case PlacedObject_FieldIndex.XORD:
-                    return typeof(MemorySlice<Byte>);
-                case PlacedObject_FieldIndex.OcclusionPlane:
-                    return typeof(Bounding);
-                case PlacedObject_FieldIndex.Portals:
-                    return typeof(IExtendedList<Portal>);
-                case PlacedObject_FieldIndex.RoomPortal:
-                    return typeof(Bounding);
-                case PlacedObject_FieldIndex.Unknown:
-                    return typeof(Int16);
-                case PlacedObject_FieldIndex.LightingTemplate:
-                    return typeof(FormLinkNullable<Light>);
-                case PlacedObject_FieldIndex.ImageSpace:
-                    return typeof(FormLinkNullable<ImageSpaceAdapter>);
-                case PlacedObject_FieldIndex.LinkedRooms:
-                    return typeof(IExtendedList<IFormLink<PlacedObject>>);
-                case PlacedObject_FieldIndex.MultiBoundPrimitive:
-                    return typeof(Boolean);
-                case PlacedObject_FieldIndex.RagdollData:
-                    return typeof(MemorySlice<Byte>);
-                case PlacedObject_FieldIndex.RagdollBipedData:
-                    return typeof(MemorySlice<Byte>);
-                case PlacedObject_FieldIndex.Radius:
-                    return typeof(Single);
-                case PlacedObject_FieldIndex.Reflections:
-                    return typeof(IExtendedList<WaterReflection>);
-                case PlacedObject_FieldIndex.LitWater:
-                    return typeof(IExtendedList<IFormLink<PlacedObject>>);
-                case PlacedObject_FieldIndex.Emittance:
-                    return typeof(FormLinkNullable<IEmittance>);
-                case PlacedObject_FieldIndex.LightData:
-                    return typeof(LightData);
-                case PlacedObject_FieldIndex.Alpha:
-                    return typeof(Alpha);
-                case PlacedObject_FieldIndex.TeleportDestination:
-                    return typeof(TeleportDestination);
-                case PlacedObject_FieldIndex.TeleportMessageBox:
-                    return typeof(FormLinkNullable<Message>);
-                case PlacedObject_FieldIndex.MultiboundReference:
-                    return typeof(FormLinkNullable<PlacedObject>);
-                case PlacedObject_FieldIndex.XWCN:
-                    return typeof(MemorySlice<Byte>);
-                case PlacedObject_FieldIndex.XWCS:
-                    return typeof(MemorySlice<Byte>);
-                case PlacedObject_FieldIndex.WaterVelocity:
-                    return typeof(WaterVelocity);
-                case PlacedObject_FieldIndex.XCVL:
-                    return typeof(MemorySlice<Byte>);
-                case PlacedObject_FieldIndex.XCZR:
-                    return typeof(FormLinkNullable<ILinkedReference>);
-                case PlacedObject_FieldIndex.XCZA:
-                    return typeof(MemorySlice<Byte>);
-                case PlacedObject_FieldIndex.XCZC:
-                    return typeof(FormLinkNullable<Cell>);
-                case PlacedObject_FieldIndex.Scale:
-                    return typeof(Single);
-                case PlacedObject_FieldIndex.SpawnContainer:
-                    return typeof(FormLinkNullable<PlacedObject>);
-                case PlacedObject_FieldIndex.ActivateParents:
-                    return typeof(ActivateParents);
-                case PlacedObject_FieldIndex.LeveledItemBaseObject:
-                    return typeof(FormLinkNullable<LeveledItem>);
-                case PlacedObject_FieldIndex.LevelModifier:
-                    return typeof(Level);
-                case PlacedObject_FieldIndex.PersistentLocation:
-                    return typeof(FormLinkNullable<Location>);
-                case PlacedObject_FieldIndex.CollisionLayer:
-                    return typeof(UInt32);
-                case PlacedObject_FieldIndex.Lock:
-                    return typeof(LockData);
-                case PlacedObject_FieldIndex.EncounterZone:
-                    return typeof(FormLinkNullable<EncounterZone>);
-                case PlacedObject_FieldIndex.NavigationDoorLink:
-                    return typeof(NavigationDoorLink);
-                case PlacedObject_FieldIndex.LocationRefTypes:
-                    return typeof(IExtendedList<IFormLink<LocationReferenceType>>);
-                case PlacedObject_FieldIndex.IgnoredBySandbox:
-                    return typeof(Boolean);
-                case PlacedObject_FieldIndex.Ownership:
-                    return typeof(Ownership);
-                case PlacedObject_FieldIndex.ItemCount:
-                    return typeof(Int32);
-                case PlacedObject_FieldIndex.Charge:
-                    return typeof(Single);
-                case PlacedObject_FieldIndex.LocationReference:
-                    return typeof(FormLinkNullable<ILocationRecord>);
-                case PlacedObject_FieldIndex.EnableParent:
-                    return typeof(EnableParent);
-                case PlacedObject_FieldIndex.LinkedReferences:
-                    return typeof(IExtendedList<LinkedReferences>);
-                case PlacedObject_FieldIndex.Patrol:
-                    return typeof(Patrol);
-                case PlacedObject_FieldIndex.Action:
-                    return typeof(PlacedObject.ActionFlag);
-                case PlacedObject_FieldIndex.HeadTrackingWeight:
-                    return typeof(Single);
-                case PlacedObject_FieldIndex.FavorCost:
-                    return typeof(Single);
-                case PlacedObject_FieldIndex.OpenByDefault:
-                    return typeof(Boolean);
-                case PlacedObject_FieldIndex.MapMarker:
-                    return typeof(MapMarker);
-                case PlacedObject_FieldIndex.AttachRef:
-                    return typeof(FormLinkNullable<IPlacedThing>);
-                case PlacedObject_FieldIndex.DistantLodData:
-                    return typeof(MemorySlice<Byte>);
-                case PlacedObject_FieldIndex.Placement:
-                    return typeof(Placement);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.REFR;
         public static readonly Type BinaryWriteTranslation = typeof(PlacedObjectBinaryWriteTranslation);
         #region Interface
@@ -4205,14 +3453,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -4229,7 +3477,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.VirtualMachineAdapter = null;
-            item.Base = FormLinkNullable<SkyrimMajorRecord>.Null;
+            item.Base = FormLinkNullable<ISkyrimMajorRecordGetter>.Null;
             item.BoundHalfExtents = default;
             item.Primitive = null;
             item.XORD = default;
@@ -4237,8 +3485,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Portals = null;
             item.RoomPortal = null;
             item.Unknown = default;
-            item.LightingTemplate = FormLinkNullable<Light>.Null;
-            item.ImageSpace = FormLinkNullable<ImageSpaceAdapter>.Null;
+            item.LightingTemplate = FormLinkNullable<ILightGetter>.Null;
+            item.ImageSpace = FormLinkNullable<IImageSpaceAdapterGetter>.Null;
             item.LinkedRooms.Clear();
             item.MultiBoundPrimitive = default;
             item.RagdollData = default;
@@ -4246,35 +3494,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Radius = default;
             item.Reflections.Clear();
             item.LitWater.Clear();
-            item.Emittance = FormLinkNullable<IEmittance>.Null;
+            item.Emittance = FormLinkNullable<IEmittanceGetter>.Null;
             item.LightData = null;
             item.Alpha = null;
             item.TeleportDestination = null;
-            item.TeleportMessageBox = FormLinkNullable<Message>.Null;
-            item.MultiboundReference = FormLinkNullable<PlacedObject>.Null;
+            item.TeleportMessageBox = FormLinkNullable<IMessageGetter>.Null;
+            item.MultiboundReference = FormLinkNullable<IPlacedObjectGetter>.Null;
             item.XWCN = default;
             item.XWCS = default;
             item.WaterVelocity = null;
             item.XCVL = default;
-            item.XCZR = FormLinkNullable<ILinkedReference>.Null;
+            item.XCZR = FormLinkNullable<ILinkedReferenceGetter>.Null;
             item.XCZA = default;
-            item.XCZC = FormLinkNullable<Cell>.Null;
+            item.XCZC = FormLinkNullable<ICellGetter>.Null;
             item.Scale = default;
-            item.SpawnContainer = FormLinkNullable<PlacedObject>.Null;
+            item.SpawnContainer = FormLinkNullable<IPlacedObjectGetter>.Null;
             item.ActivateParents = null;
-            item.LeveledItemBaseObject = FormLinkNullable<LeveledItem>.Null;
+            item.LeveledItemBaseObject = FormLinkNullable<ILeveledItemGetter>.Null;
             item.LevelModifier = default;
-            item.PersistentLocation = FormLinkNullable<Location>.Null;
+            item.PersistentLocation = FormLinkNullable<ILocationGetter>.Null;
             item.CollisionLayer = default;
             item.Lock = null;
-            item.EncounterZone = FormLinkNullable<EncounterZone>.Null;
+            item.EncounterZone = FormLinkNullable<IEncounterZoneGetter>.Null;
             item.NavigationDoorLink = null;
             item.LocationRefTypes = null;
             item.IgnoredBySandbox = default;
             item.Ownership = null;
             item.ItemCount = default;
             item.Charge = default;
-            item.LocationReference = FormLinkNullable<ILocationRecord>.Null;
+            item.LocationReference = FormLinkNullable<ILocationRecordGetter>.Null;
             item.EnableParent = null;
             item.LinkedReferences.Clear();
             item.Patrol = null;
@@ -4283,7 +3531,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.FavorCost = default;
             item.OpenByDefault = default;
             item.MapMarker = null;
-            item.AttachRef = FormLinkNullable<IPlacedThing>.Null;
+            item.AttachRef = FormLinkNullable<IPlacedThingGetter>.Null;
             item.DistantLodData = default;
             item.Placement = null;
             base.Clear(item);
@@ -5446,7 +4694,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Base) ?? true))
             {
-                item.Base = new FormLinkNullable<SkyrimMajorRecord>(rhs.Base.FormKey);
+                item.Base = new FormLinkNullable<ISkyrimMajorRecordGetter>(rhs.Base.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.BoundHalfExtents) ?? true))
             {
@@ -5579,11 +4827,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LightingTemplate) ?? true))
             {
-                item.LightingTemplate = new FormLinkNullable<Light>(rhs.LightingTemplate.FormKey);
+                item.LightingTemplate = new FormLinkNullable<ILightGetter>(rhs.LightingTemplate.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ImageSpace) ?? true))
             {
-                item.ImageSpace = new FormLinkNullable<ImageSpaceAdapter>(rhs.ImageSpace.FormKey);
+                item.ImageSpace = new FormLinkNullable<IImageSpaceAdapterGetter>(rhs.ImageSpace.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LinkedRooms) ?? true))
             {
@@ -5592,7 +4840,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.LinkedRooms.SetTo(
                         rhs.LinkedRooms
-                        .Select(r => (IFormLink<PlacedObject>)new FormLink<PlacedObject>(r.FormKey)));
+                        .Select(r => (IFormLink<IPlacedObjectGetter>)new FormLink<IPlacedObjectGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5665,7 +4913,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.LitWater.SetTo(
                         rhs.LitWater
-                        .Select(r => (IFormLink<PlacedObject>)new FormLink<PlacedObject>(r.FormKey)));
+                        .Select(r => (IFormLink<IPlacedObjectGetter>)new FormLink<IPlacedObjectGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5679,7 +4927,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Emittance) ?? true))
             {
-                item.Emittance = new FormLinkNullable<IEmittance>(rhs.Emittance.FormKey);
+                item.Emittance = new FormLinkNullable<IEmittanceGetter>(rhs.Emittance.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LightData) ?? true))
             {
@@ -5761,11 +5009,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.TeleportMessageBox) ?? true))
             {
-                item.TeleportMessageBox = new FormLinkNullable<Message>(rhs.TeleportMessageBox.FormKey);
+                item.TeleportMessageBox = new FormLinkNullable<IMessageGetter>(rhs.TeleportMessageBox.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.MultiboundReference) ?? true))
             {
-                item.MultiboundReference = new FormLinkNullable<PlacedObject>(rhs.MultiboundReference.FormKey);
+                item.MultiboundReference = new FormLinkNullable<IPlacedObjectGetter>(rhs.MultiboundReference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XWCN) ?? true))
             {
@@ -5828,7 +5076,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XCZR) ?? true))
             {
-                item.XCZR = new FormLinkNullable<ILinkedReference>(rhs.XCZR.FormKey);
+                item.XCZR = new FormLinkNullable<ILinkedReferenceGetter>(rhs.XCZR.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XCZA) ?? true))
             {
@@ -5843,7 +5091,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XCZC) ?? true))
             {
-                item.XCZC = new FormLinkNullable<Cell>(rhs.XCZC.FormKey);
+                item.XCZC = new FormLinkNullable<ICellGetter>(rhs.XCZC.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Scale) ?? true))
             {
@@ -5851,7 +5099,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.SpawnContainer) ?? true))
             {
-                item.SpawnContainer = new FormLinkNullable<PlacedObject>(rhs.SpawnContainer.FormKey);
+                item.SpawnContainer = new FormLinkNullable<IPlacedObjectGetter>(rhs.SpawnContainer.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ActivateParents) ?? true))
             {
@@ -5881,7 +5129,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LeveledItemBaseObject) ?? true))
             {
-                item.LeveledItemBaseObject = new FormLinkNullable<LeveledItem>(rhs.LeveledItemBaseObject.FormKey);
+                item.LeveledItemBaseObject = new FormLinkNullable<ILeveledItemGetter>(rhs.LeveledItemBaseObject.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LevelModifier) ?? true))
             {
@@ -5889,7 +5137,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.PersistentLocation) ?? true))
             {
-                item.PersistentLocation = new FormLinkNullable<Location>(rhs.PersistentLocation.FormKey);
+                item.PersistentLocation = new FormLinkNullable<ILocationGetter>(rhs.PersistentLocation.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.CollisionLayer) ?? true))
             {
@@ -5923,7 +5171,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.EncounterZone) ?? true))
             {
-                item.EncounterZone = new FormLinkNullable<EncounterZone>(rhs.EncounterZone.FormKey);
+                item.EncounterZone = new FormLinkNullable<IEncounterZoneGetter>(rhs.EncounterZone.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.NavigationDoorLink) ?? true))
             {
@@ -5960,8 +5208,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.LocationRefTypes = 
                             rhs.LocationRefTypes
-                            .Select(r => (IFormLink<LocationReferenceType>)new FormLink<LocationReferenceType>(r.FormKey))
-                            .ToExtendedList<IFormLink<LocationReferenceType>>();
+                            .Select(r => (IFormLink<ILocationReferenceTypeGetter>)new FormLink<ILocationReferenceTypeGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<ILocationReferenceTypeGetter>>();
                     }
                     else
                     {
@@ -6018,7 +5266,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LocationReference) ?? true))
             {
-                item.LocationReference = new FormLinkNullable<ILocationRecord>(rhs.LocationReference.FormKey);
+                item.LocationReference = new FormLinkNullable<ILocationRecordGetter>(rhs.LocationReference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.EnableParent) ?? true))
             {
@@ -6140,7 +5388,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.AttachRef) ?? true))
             {
-                item.AttachRef = new FormLinkNullable<IPlacedThing>(rhs.AttachRef.FormKey);
+                item.AttachRef = new FormLinkNullable<IPlacedThingGetter>(rhs.AttachRef.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.DistantLodData) ?? true))
             {
@@ -6847,7 +6095,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.XLTW:
                 {
                     item.LitWater.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<PlacedObject>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPlacedObjectGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.XLTW),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -7008,10 +6256,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.LocationRefTypes = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<LocationReferenceType>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ILocationReferenceTypeGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<LocationReferenceType>>();
+                        .CastExtendedList<IFormLink<ILocationReferenceTypeGetter>>();
                     return (int)PlacedObject_FieldIndex.LocationRefTypes;
                 }
                 case RecordTypeInts.XIS2:

@@ -54,14 +54,10 @@ namespace Mutagen.Bethesda.Skyrim
         IVirtualMachineAdapterGetter? IPlacedNpcGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region Base
-        public FormLinkNullable<Npc> Base { get; set; } = new FormLinkNullable<Npc>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<INpcGetter> IPlacedNpcGetter.Base => this.Base.ToGetter<Npc, INpcGetter>();
+        public FormLinkNullable<INpcGetter> Base { get; set; } = new FormLinkNullable<INpcGetter>();
         #endregion
         #region EncounterZone
-        public FormLinkNullable<EncounterZone> EncounterZone { get; set; } = new FormLinkNullable<EncounterZone>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IEncounterZoneGetter> IPlacedNpcGetter.EncounterZone => this.EncounterZone.ToGetter<EncounterZone, IEncounterZoneGetter>();
+        public FormLinkNullable<IEncounterZoneGetter> EncounterZone { get; set; } = new FormLinkNullable<IEncounterZoneGetter>();
         #endregion
         #region RagdollData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -102,9 +98,7 @@ namespace Mutagen.Bethesda.Skyrim
         Level? IPlacedNpcGetter.LevelModifier => this.LevelModifier;
         #endregion
         #region MerchantContainer
-        public FormLinkNullable<PlacedObject> MerchantContainer { get; set; } = new FormLinkNullable<PlacedObject>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IPlacedObjectGetter> IPlacedNpcGetter.MerchantContainer => this.MerchantContainer.ToGetter<PlacedObject, IPlacedObjectGetter>();
+        public FormLinkNullable<IPlacedObjectGetter> MerchantContainer { get; set; } = new FormLinkNullable<IPlacedObjectGetter>();
         #endregion
         #region Count
         public Int32? Count { get; set; }
@@ -123,8 +117,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LinkedReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<LinkedReferences> _LinkedReferences = new ExtendedList<LinkedReferences>();
-        public IExtendedList<LinkedReferences> LinkedReferences
+        private ExtendedList<LinkedReferences> _LinkedReferences = new ExtendedList<LinkedReferences>();
+        public ExtendedList<LinkedReferences> LinkedReferences
         {
             get => this._LinkedReferences;
             protected set => this._LinkedReferences = value;
@@ -158,22 +152,18 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedReferenceColorGetter? IPlacedNpcGetter.LinkedReferenceColor => this.LinkedReferenceColor;
         #endregion
         #region PersistentLocation
-        public FormLinkNullable<Location> PersistentLocation { get; set; } = new FormLinkNullable<Location>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ILocationGetter> IPlacedNpcGetter.PersistentLocation => this.PersistentLocation.ToGetter<Location, ILocationGetter>();
+        public FormLinkNullable<ILocationGetter> PersistentLocation { get; set; } = new FormLinkNullable<ILocationGetter>();
         #endregion
         #region LocationReference
-        public FormLinkNullable<ILocationRecord> LocationReference { get; set; } = new FormLinkNullable<ILocationRecord>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ILocationRecordGetter> IPlacedNpcGetter.LocationReference => this.LocationReference.ToGetter<ILocationRecord, ILocationRecordGetter>();
+        public FormLinkNullable<ILocationRecordGetter> LocationReference { get; set; } = new FormLinkNullable<ILocationRecordGetter>();
         #endregion
         #region IgnoredBySandbox
         public Boolean IgnoredBySandbox { get; set; } = default;
         #endregion
         #region LocationRefTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<LocationReferenceType>>? _LocationRefTypes;
-        public IExtendedList<IFormLink<LocationReferenceType>>? LocationRefTypes
+        private ExtendedList<IFormLink<ILocationReferenceTypeGetter>>? _LocationRefTypes;
+        public ExtendedList<IFormLink<ILocationReferenceTypeGetter>>? LocationRefTypes
         {
             get => this._LocationRefTypes;
             set => this._LocationRefTypes = value;
@@ -190,9 +180,7 @@ namespace Mutagen.Bethesda.Skyrim
         Single? IPlacedNpcGetter.HeadTrackingWeight => this.HeadTrackingWeight;
         #endregion
         #region Horse
-        public FormLinkNullable<PlacedNpc> Horse { get; set; } = new FormLinkNullable<PlacedNpc>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IPlacedNpcGetter> IPlacedNpcGetter.Horse => this.Horse.ToGetter<PlacedNpc, IPlacedNpcGetter>();
+        public FormLinkNullable<IPlacedNpcGetter> Horse { get; set; } = new FormLinkNullable<IPlacedNpcGetter>();
         #endregion
         #region FavorCost
         public Single? FavorCost { get; set; }
@@ -222,14 +210,10 @@ namespace Mutagen.Bethesda.Skyrim
         IOwnershipGetter? IPlacedNpcGetter.Ownership => this.Ownership;
         #endregion
         #region Emittance
-        public FormLinkNullable<IEmittance> Emittance { get; set; } = new FormLinkNullable<IEmittance>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IEmittanceGetter> IPlacedNpcGetter.Emittance => this.Emittance.ToGetter<IEmittance, IEmittanceGetter>();
+        public FormLinkNullable<IEmittanceGetter> Emittance { get; set; } = new FormLinkNullable<IEmittanceGetter>();
         #endregion
         #region MultiboundReference
-        public FormLinkNullable<PlacedObject> MultiboundReference { get; set; } = new FormLinkNullable<PlacedObject>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IPlacedObjectGetter> IPlacedNpcGetter.MultiboundReference => this.MultiboundReference.ToGetter<PlacedObject, IPlacedObjectGetter>();
+        public FormLinkNullable<IPlacedObjectGetter> MultiboundReference { get; set; } = new FormLinkNullable<IPlacedObjectGetter>();
         #endregion
         #region IgnoredBySandbox2
         public Boolean IgnoredBySandbox2 { get; set; } = default;
@@ -1608,30 +1592,30 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
-        new FormLinkNullable<Npc> Base { get; set; }
-        new FormLinkNullable<EncounterZone> EncounterZone { get; set; }
+        new FormLinkNullable<INpcGetter> Base { get; set; }
+        new FormLinkNullable<IEncounterZoneGetter> EncounterZone { get; set; }
         new MemorySlice<Byte>? RagdollData { get; set; }
         new MemorySlice<Byte>? RagdollBipedData { get; set; }
         new Patrol? Patrol { get; set; }
         new Level? LevelModifier { get; set; }
-        new FormLinkNullable<PlacedObject> MerchantContainer { get; set; }
+        new FormLinkNullable<IPlacedObjectGetter> MerchantContainer { get; set; }
         new Int32? Count { get; set; }
         new Single? Radius { get; set; }
         new Single? Health { get; set; }
-        new IExtendedList<LinkedReferences> LinkedReferences { get; }
+        new ExtendedList<LinkedReferences> LinkedReferences { get; }
         new ActivateParents? ActivateParents { get; set; }
         new LinkedReferenceColor? LinkedReferenceColor { get; set; }
-        new FormLinkNullable<Location> PersistentLocation { get; set; }
-        new FormLinkNullable<ILocationRecord> LocationReference { get; set; }
+        new FormLinkNullable<ILocationGetter> PersistentLocation { get; set; }
+        new FormLinkNullable<ILocationRecordGetter> LocationReference { get; set; }
         new Boolean IgnoredBySandbox { get; set; }
-        new IExtendedList<IFormLink<LocationReferenceType>>? LocationRefTypes { get; set; }
+        new ExtendedList<IFormLink<ILocationReferenceTypeGetter>>? LocationRefTypes { get; set; }
         new Single? HeadTrackingWeight { get; set; }
-        new FormLinkNullable<PlacedNpc> Horse { get; set; }
+        new FormLinkNullable<IPlacedNpcGetter> Horse { get; set; }
         new Single? FavorCost { get; set; }
         new EnableParent? EnableParent { get; set; }
         new Ownership? Ownership { get; set; }
-        new FormLinkNullable<IEmittance> Emittance { get; set; }
-        new FormLinkNullable<PlacedObject> MultiboundReference { get; set; }
+        new FormLinkNullable<IEmittanceGetter> Emittance { get; set; }
+        new FormLinkNullable<IPlacedObjectGetter> MultiboundReference { get; set; }
         new Boolean IgnoredBySandbox2 { get; set; }
         new Single? Scale { get; set; }
         new Placement? Placement { get; set; }
@@ -1913,400 +1897,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "VIRTUALMACHINEADAPTER":
-                    return (ushort)PlacedNpc_FieldIndex.VirtualMachineAdapter;
-                case "BASE":
-                    return (ushort)PlacedNpc_FieldIndex.Base;
-                case "ENCOUNTERZONE":
-                    return (ushort)PlacedNpc_FieldIndex.EncounterZone;
-                case "RAGDOLLDATA":
-                    return (ushort)PlacedNpc_FieldIndex.RagdollData;
-                case "RAGDOLLBIPEDDATA":
-                    return (ushort)PlacedNpc_FieldIndex.RagdollBipedData;
-                case "PATROL":
-                    return (ushort)PlacedNpc_FieldIndex.Patrol;
-                case "LEVELMODIFIER":
-                    return (ushort)PlacedNpc_FieldIndex.LevelModifier;
-                case "MERCHANTCONTAINER":
-                    return (ushort)PlacedNpc_FieldIndex.MerchantContainer;
-                case "COUNT":
-                    return (ushort)PlacedNpc_FieldIndex.Count;
-                case "RADIUS":
-                    return (ushort)PlacedNpc_FieldIndex.Radius;
-                case "HEALTH":
-                    return (ushort)PlacedNpc_FieldIndex.Health;
-                case "LINKEDREFERENCES":
-                    return (ushort)PlacedNpc_FieldIndex.LinkedReferences;
-                case "ACTIVATEPARENTS":
-                    return (ushort)PlacedNpc_FieldIndex.ActivateParents;
-                case "LINKEDREFERENCECOLOR":
-                    return (ushort)PlacedNpc_FieldIndex.LinkedReferenceColor;
-                case "PERSISTENTLOCATION":
-                    return (ushort)PlacedNpc_FieldIndex.PersistentLocation;
-                case "LOCATIONREFERENCE":
-                    return (ushort)PlacedNpc_FieldIndex.LocationReference;
-                case "IGNOREDBYSANDBOX":
-                    return (ushort)PlacedNpc_FieldIndex.IgnoredBySandbox;
-                case "LOCATIONREFTYPES":
-                    return (ushort)PlacedNpc_FieldIndex.LocationRefTypes;
-                case "HEADTRACKINGWEIGHT":
-                    return (ushort)PlacedNpc_FieldIndex.HeadTrackingWeight;
-                case "HORSE":
-                    return (ushort)PlacedNpc_FieldIndex.Horse;
-                case "FAVORCOST":
-                    return (ushort)PlacedNpc_FieldIndex.FavorCost;
-                case "ENABLEPARENT":
-                    return (ushort)PlacedNpc_FieldIndex.EnableParent;
-                case "OWNERSHIP":
-                    return (ushort)PlacedNpc_FieldIndex.Ownership;
-                case "EMITTANCE":
-                    return (ushort)PlacedNpc_FieldIndex.Emittance;
-                case "MULTIBOUNDREFERENCE":
-                    return (ushort)PlacedNpc_FieldIndex.MultiboundReference;
-                case "IGNOREDBYSANDBOX2":
-                    return (ushort)PlacedNpc_FieldIndex.IgnoredBySandbox2;
-                case "SCALE":
-                    return (ushort)PlacedNpc_FieldIndex.Scale;
-                case "PLACEMENT":
-                    return (ushort)PlacedNpc_FieldIndex.Placement;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            PlacedNpc_FieldIndex enu = (PlacedNpc_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedNpc_FieldIndex.LinkedReferences:
-                case PlacedNpc_FieldIndex.LocationRefTypes:
-                    return true;
-                case PlacedNpc_FieldIndex.VirtualMachineAdapter:
-                case PlacedNpc_FieldIndex.Base:
-                case PlacedNpc_FieldIndex.EncounterZone:
-                case PlacedNpc_FieldIndex.RagdollData:
-                case PlacedNpc_FieldIndex.RagdollBipedData:
-                case PlacedNpc_FieldIndex.Patrol:
-                case PlacedNpc_FieldIndex.LevelModifier:
-                case PlacedNpc_FieldIndex.MerchantContainer:
-                case PlacedNpc_FieldIndex.Count:
-                case PlacedNpc_FieldIndex.Radius:
-                case PlacedNpc_FieldIndex.Health:
-                case PlacedNpc_FieldIndex.ActivateParents:
-                case PlacedNpc_FieldIndex.LinkedReferenceColor:
-                case PlacedNpc_FieldIndex.PersistentLocation:
-                case PlacedNpc_FieldIndex.LocationReference:
-                case PlacedNpc_FieldIndex.IgnoredBySandbox:
-                case PlacedNpc_FieldIndex.HeadTrackingWeight:
-                case PlacedNpc_FieldIndex.Horse:
-                case PlacedNpc_FieldIndex.FavorCost:
-                case PlacedNpc_FieldIndex.EnableParent:
-                case PlacedNpc_FieldIndex.Ownership:
-                case PlacedNpc_FieldIndex.Emittance:
-                case PlacedNpc_FieldIndex.MultiboundReference:
-                case PlacedNpc_FieldIndex.IgnoredBySandbox2:
-                case PlacedNpc_FieldIndex.Scale:
-                case PlacedNpc_FieldIndex.Placement:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            PlacedNpc_FieldIndex enu = (PlacedNpc_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedNpc_FieldIndex.VirtualMachineAdapter:
-                case PlacedNpc_FieldIndex.Patrol:
-                case PlacedNpc_FieldIndex.LinkedReferences:
-                case PlacedNpc_FieldIndex.ActivateParents:
-                case PlacedNpc_FieldIndex.LinkedReferenceColor:
-                case PlacedNpc_FieldIndex.EnableParent:
-                case PlacedNpc_FieldIndex.Ownership:
-                case PlacedNpc_FieldIndex.Placement:
-                    return true;
-                case PlacedNpc_FieldIndex.Base:
-                case PlacedNpc_FieldIndex.EncounterZone:
-                case PlacedNpc_FieldIndex.RagdollData:
-                case PlacedNpc_FieldIndex.RagdollBipedData:
-                case PlacedNpc_FieldIndex.LevelModifier:
-                case PlacedNpc_FieldIndex.MerchantContainer:
-                case PlacedNpc_FieldIndex.Count:
-                case PlacedNpc_FieldIndex.Radius:
-                case PlacedNpc_FieldIndex.Health:
-                case PlacedNpc_FieldIndex.PersistentLocation:
-                case PlacedNpc_FieldIndex.LocationReference:
-                case PlacedNpc_FieldIndex.IgnoredBySandbox:
-                case PlacedNpc_FieldIndex.LocationRefTypes:
-                case PlacedNpc_FieldIndex.HeadTrackingWeight:
-                case PlacedNpc_FieldIndex.Horse:
-                case PlacedNpc_FieldIndex.FavorCost:
-                case PlacedNpc_FieldIndex.Emittance:
-                case PlacedNpc_FieldIndex.MultiboundReference:
-                case PlacedNpc_FieldIndex.IgnoredBySandbox2:
-                case PlacedNpc_FieldIndex.Scale:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            PlacedNpc_FieldIndex enu = (PlacedNpc_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedNpc_FieldIndex.VirtualMachineAdapter:
-                case PlacedNpc_FieldIndex.Base:
-                case PlacedNpc_FieldIndex.EncounterZone:
-                case PlacedNpc_FieldIndex.RagdollData:
-                case PlacedNpc_FieldIndex.RagdollBipedData:
-                case PlacedNpc_FieldIndex.Patrol:
-                case PlacedNpc_FieldIndex.LevelModifier:
-                case PlacedNpc_FieldIndex.MerchantContainer:
-                case PlacedNpc_FieldIndex.Count:
-                case PlacedNpc_FieldIndex.Radius:
-                case PlacedNpc_FieldIndex.Health:
-                case PlacedNpc_FieldIndex.LinkedReferences:
-                case PlacedNpc_FieldIndex.ActivateParents:
-                case PlacedNpc_FieldIndex.LinkedReferenceColor:
-                case PlacedNpc_FieldIndex.PersistentLocation:
-                case PlacedNpc_FieldIndex.LocationReference:
-                case PlacedNpc_FieldIndex.IgnoredBySandbox:
-                case PlacedNpc_FieldIndex.LocationRefTypes:
-                case PlacedNpc_FieldIndex.HeadTrackingWeight:
-                case PlacedNpc_FieldIndex.Horse:
-                case PlacedNpc_FieldIndex.FavorCost:
-                case PlacedNpc_FieldIndex.EnableParent:
-                case PlacedNpc_FieldIndex.Ownership:
-                case PlacedNpc_FieldIndex.Emittance:
-                case PlacedNpc_FieldIndex.MultiboundReference:
-                case PlacedNpc_FieldIndex.IgnoredBySandbox2:
-                case PlacedNpc_FieldIndex.Scale:
-                case PlacedNpc_FieldIndex.Placement:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            PlacedNpc_FieldIndex enu = (PlacedNpc_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedNpc_FieldIndex.VirtualMachineAdapter:
-                    return "VirtualMachineAdapter";
-                case PlacedNpc_FieldIndex.Base:
-                    return "Base";
-                case PlacedNpc_FieldIndex.EncounterZone:
-                    return "EncounterZone";
-                case PlacedNpc_FieldIndex.RagdollData:
-                    return "RagdollData";
-                case PlacedNpc_FieldIndex.RagdollBipedData:
-                    return "RagdollBipedData";
-                case PlacedNpc_FieldIndex.Patrol:
-                    return "Patrol";
-                case PlacedNpc_FieldIndex.LevelModifier:
-                    return "LevelModifier";
-                case PlacedNpc_FieldIndex.MerchantContainer:
-                    return "MerchantContainer";
-                case PlacedNpc_FieldIndex.Count:
-                    return "Count";
-                case PlacedNpc_FieldIndex.Radius:
-                    return "Radius";
-                case PlacedNpc_FieldIndex.Health:
-                    return "Health";
-                case PlacedNpc_FieldIndex.LinkedReferences:
-                    return "LinkedReferences";
-                case PlacedNpc_FieldIndex.ActivateParents:
-                    return "ActivateParents";
-                case PlacedNpc_FieldIndex.LinkedReferenceColor:
-                    return "LinkedReferenceColor";
-                case PlacedNpc_FieldIndex.PersistentLocation:
-                    return "PersistentLocation";
-                case PlacedNpc_FieldIndex.LocationReference:
-                    return "LocationReference";
-                case PlacedNpc_FieldIndex.IgnoredBySandbox:
-                    return "IgnoredBySandbox";
-                case PlacedNpc_FieldIndex.LocationRefTypes:
-                    return "LocationRefTypes";
-                case PlacedNpc_FieldIndex.HeadTrackingWeight:
-                    return "HeadTrackingWeight";
-                case PlacedNpc_FieldIndex.Horse:
-                    return "Horse";
-                case PlacedNpc_FieldIndex.FavorCost:
-                    return "FavorCost";
-                case PlacedNpc_FieldIndex.EnableParent:
-                    return "EnableParent";
-                case PlacedNpc_FieldIndex.Ownership:
-                    return "Ownership";
-                case PlacedNpc_FieldIndex.Emittance:
-                    return "Emittance";
-                case PlacedNpc_FieldIndex.MultiboundReference:
-                    return "MultiboundReference";
-                case PlacedNpc_FieldIndex.IgnoredBySandbox2:
-                    return "IgnoredBySandbox2";
-                case PlacedNpc_FieldIndex.Scale:
-                    return "Scale";
-                case PlacedNpc_FieldIndex.Placement:
-                    return "Placement";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            PlacedNpc_FieldIndex enu = (PlacedNpc_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedNpc_FieldIndex.VirtualMachineAdapter:
-                case PlacedNpc_FieldIndex.Base:
-                case PlacedNpc_FieldIndex.EncounterZone:
-                case PlacedNpc_FieldIndex.RagdollData:
-                case PlacedNpc_FieldIndex.RagdollBipedData:
-                case PlacedNpc_FieldIndex.Patrol:
-                case PlacedNpc_FieldIndex.LevelModifier:
-                case PlacedNpc_FieldIndex.MerchantContainer:
-                case PlacedNpc_FieldIndex.Count:
-                case PlacedNpc_FieldIndex.Radius:
-                case PlacedNpc_FieldIndex.Health:
-                case PlacedNpc_FieldIndex.LinkedReferences:
-                case PlacedNpc_FieldIndex.ActivateParents:
-                case PlacedNpc_FieldIndex.LinkedReferenceColor:
-                case PlacedNpc_FieldIndex.PersistentLocation:
-                case PlacedNpc_FieldIndex.LocationReference:
-                case PlacedNpc_FieldIndex.IgnoredBySandbox:
-                case PlacedNpc_FieldIndex.LocationRefTypes:
-                case PlacedNpc_FieldIndex.HeadTrackingWeight:
-                case PlacedNpc_FieldIndex.Horse:
-                case PlacedNpc_FieldIndex.FavorCost:
-                case PlacedNpc_FieldIndex.EnableParent:
-                case PlacedNpc_FieldIndex.Ownership:
-                case PlacedNpc_FieldIndex.Emittance:
-                case PlacedNpc_FieldIndex.MultiboundReference:
-                case PlacedNpc_FieldIndex.IgnoredBySandbox2:
-                case PlacedNpc_FieldIndex.Scale:
-                case PlacedNpc_FieldIndex.Placement:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            PlacedNpc_FieldIndex enu = (PlacedNpc_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedNpc_FieldIndex.VirtualMachineAdapter:
-                case PlacedNpc_FieldIndex.Base:
-                case PlacedNpc_FieldIndex.EncounterZone:
-                case PlacedNpc_FieldIndex.RagdollData:
-                case PlacedNpc_FieldIndex.RagdollBipedData:
-                case PlacedNpc_FieldIndex.Patrol:
-                case PlacedNpc_FieldIndex.LevelModifier:
-                case PlacedNpc_FieldIndex.MerchantContainer:
-                case PlacedNpc_FieldIndex.Count:
-                case PlacedNpc_FieldIndex.Radius:
-                case PlacedNpc_FieldIndex.Health:
-                case PlacedNpc_FieldIndex.LinkedReferences:
-                case PlacedNpc_FieldIndex.ActivateParents:
-                case PlacedNpc_FieldIndex.LinkedReferenceColor:
-                case PlacedNpc_FieldIndex.PersistentLocation:
-                case PlacedNpc_FieldIndex.LocationReference:
-                case PlacedNpc_FieldIndex.IgnoredBySandbox:
-                case PlacedNpc_FieldIndex.LocationRefTypes:
-                case PlacedNpc_FieldIndex.HeadTrackingWeight:
-                case PlacedNpc_FieldIndex.Horse:
-                case PlacedNpc_FieldIndex.FavorCost:
-                case PlacedNpc_FieldIndex.EnableParent:
-                case PlacedNpc_FieldIndex.Ownership:
-                case PlacedNpc_FieldIndex.Emittance:
-                case PlacedNpc_FieldIndex.MultiboundReference:
-                case PlacedNpc_FieldIndex.IgnoredBySandbox2:
-                case PlacedNpc_FieldIndex.Scale:
-                case PlacedNpc_FieldIndex.Placement:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            PlacedNpc_FieldIndex enu = (PlacedNpc_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedNpc_FieldIndex.VirtualMachineAdapter:
-                    return typeof(VirtualMachineAdapter);
-                case PlacedNpc_FieldIndex.Base:
-                    return typeof(FormLinkNullable<Npc>);
-                case PlacedNpc_FieldIndex.EncounterZone:
-                    return typeof(FormLinkNullable<EncounterZone>);
-                case PlacedNpc_FieldIndex.RagdollData:
-                    return typeof(MemorySlice<Byte>);
-                case PlacedNpc_FieldIndex.RagdollBipedData:
-                    return typeof(MemorySlice<Byte>);
-                case PlacedNpc_FieldIndex.Patrol:
-                    return typeof(Patrol);
-                case PlacedNpc_FieldIndex.LevelModifier:
-                    return typeof(Level);
-                case PlacedNpc_FieldIndex.MerchantContainer:
-                    return typeof(FormLinkNullable<PlacedObject>);
-                case PlacedNpc_FieldIndex.Count:
-                    return typeof(Int32);
-                case PlacedNpc_FieldIndex.Radius:
-                    return typeof(Single);
-                case PlacedNpc_FieldIndex.Health:
-                    return typeof(Single);
-                case PlacedNpc_FieldIndex.LinkedReferences:
-                    return typeof(IExtendedList<LinkedReferences>);
-                case PlacedNpc_FieldIndex.ActivateParents:
-                    return typeof(ActivateParents);
-                case PlacedNpc_FieldIndex.LinkedReferenceColor:
-                    return typeof(LinkedReferenceColor);
-                case PlacedNpc_FieldIndex.PersistentLocation:
-                    return typeof(FormLinkNullable<Location>);
-                case PlacedNpc_FieldIndex.LocationReference:
-                    return typeof(FormLinkNullable<ILocationRecord>);
-                case PlacedNpc_FieldIndex.IgnoredBySandbox:
-                    return typeof(Boolean);
-                case PlacedNpc_FieldIndex.LocationRefTypes:
-                    return typeof(IExtendedList<IFormLink<LocationReferenceType>>);
-                case PlacedNpc_FieldIndex.HeadTrackingWeight:
-                    return typeof(Single);
-                case PlacedNpc_FieldIndex.Horse:
-                    return typeof(FormLinkNullable<PlacedNpc>);
-                case PlacedNpc_FieldIndex.FavorCost:
-                    return typeof(Single);
-                case PlacedNpc_FieldIndex.EnableParent:
-                    return typeof(EnableParent);
-                case PlacedNpc_FieldIndex.Ownership:
-                    return typeof(Ownership);
-                case PlacedNpc_FieldIndex.Emittance:
-                    return typeof(FormLinkNullable<IEmittance>);
-                case PlacedNpc_FieldIndex.MultiboundReference:
-                    return typeof(FormLinkNullable<PlacedObject>);
-                case PlacedNpc_FieldIndex.IgnoredBySandbox2:
-                    return typeof(Boolean);
-                case PlacedNpc_FieldIndex.Scale:
-                    return typeof(Single);
-                case PlacedNpc_FieldIndex.Placement:
-                    return typeof(Placement);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.ACHR;
         public static readonly Type BinaryWriteTranslation = typeof(PlacedNpcBinaryWriteTranslation);
         #region Interface
@@ -2327,14 +1917,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -2351,30 +1941,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.VirtualMachineAdapter = null;
-            item.Base = FormLinkNullable<Npc>.Null;
-            item.EncounterZone = FormLinkNullable<EncounterZone>.Null;
+            item.Base = FormLinkNullable<INpcGetter>.Null;
+            item.EncounterZone = FormLinkNullable<IEncounterZoneGetter>.Null;
             item.RagdollData = default;
             item.RagdollBipedData = default;
             item.Patrol = null;
             item.LevelModifier = default;
-            item.MerchantContainer = FormLinkNullable<PlacedObject>.Null;
+            item.MerchantContainer = FormLinkNullable<IPlacedObjectGetter>.Null;
             item.Count = default;
             item.Radius = default;
             item.Health = default;
             item.LinkedReferences.Clear();
             item.ActivateParents = null;
             item.LinkedReferenceColor = null;
-            item.PersistentLocation = FormLinkNullable<Location>.Null;
-            item.LocationReference = FormLinkNullable<ILocationRecord>.Null;
+            item.PersistentLocation = FormLinkNullable<ILocationGetter>.Null;
+            item.LocationReference = FormLinkNullable<ILocationRecordGetter>.Null;
             item.IgnoredBySandbox = default;
             item.LocationRefTypes = null;
             item.HeadTrackingWeight = default;
-            item.Horse = FormLinkNullable<PlacedNpc>.Null;
+            item.Horse = FormLinkNullable<IPlacedNpcGetter>.Null;
             item.FavorCost = default;
             item.EnableParent = null;
             item.Ownership = null;
-            item.Emittance = FormLinkNullable<IEmittance>.Null;
-            item.MultiboundReference = FormLinkNullable<PlacedObject>.Null;
+            item.Emittance = FormLinkNullable<IEmittanceGetter>.Null;
+            item.MultiboundReference = FormLinkNullable<IPlacedObjectGetter>.Null;
             item.IgnoredBySandbox2 = default;
             item.Scale = default;
             item.Placement = null;
@@ -3087,11 +2677,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Base) ?? true))
             {
-                item.Base = new FormLinkNullable<Npc>(rhs.Base.FormKey);
+                item.Base = new FormLinkNullable<INpcGetter>(rhs.Base.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.EncounterZone) ?? true))
             {
-                item.EncounterZone = new FormLinkNullable<EncounterZone>(rhs.EncounterZone.FormKey);
+                item.EncounterZone = new FormLinkNullable<IEncounterZoneGetter>(rhs.EncounterZone.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.RagdollData) ?? true))
             {
@@ -3147,7 +2737,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.MerchantContainer) ?? true))
             {
-                item.MerchantContainer = new FormLinkNullable<PlacedObject>(rhs.MerchantContainer.FormKey);
+                item.MerchantContainer = new FormLinkNullable<IPlacedObjectGetter>(rhs.MerchantContainer.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Count) ?? true))
             {
@@ -3239,11 +2829,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.PersistentLocation) ?? true))
             {
-                item.PersistentLocation = new FormLinkNullable<Location>(rhs.PersistentLocation.FormKey);
+                item.PersistentLocation = new FormLinkNullable<ILocationGetter>(rhs.PersistentLocation.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.LocationReference) ?? true))
             {
-                item.LocationReference = new FormLinkNullable<ILocationRecord>(rhs.LocationReference.FormKey);
+                item.LocationReference = new FormLinkNullable<ILocationRecordGetter>(rhs.LocationReference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.IgnoredBySandbox) ?? true))
             {
@@ -3258,8 +2848,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.LocationRefTypes = 
                             rhs.LocationRefTypes
-                            .Select(r => (IFormLink<LocationReferenceType>)new FormLink<LocationReferenceType>(r.FormKey))
-                            .ToExtendedList<IFormLink<LocationReferenceType>>();
+                            .Select(r => (IFormLink<ILocationReferenceTypeGetter>)new FormLink<ILocationReferenceTypeGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<ILocationReferenceTypeGetter>>();
                     }
                     else
                     {
@@ -3282,7 +2872,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Horse) ?? true))
             {
-                item.Horse = new FormLinkNullable<PlacedNpc>(rhs.Horse.FormKey);
+                item.Horse = new FormLinkNullable<IPlacedNpcGetter>(rhs.Horse.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.FavorCost) ?? true))
             {
@@ -3342,11 +2932,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Emittance) ?? true))
             {
-                item.Emittance = new FormLinkNullable<IEmittance>(rhs.Emittance.FormKey);
+                item.Emittance = new FormLinkNullable<IEmittanceGetter>(rhs.Emittance.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.MultiboundReference) ?? true))
             {
-                item.MultiboundReference = new FormLinkNullable<PlacedObject>(rhs.MultiboundReference.FormKey);
+                item.MultiboundReference = new FormLinkNullable<IPlacedObjectGetter>(rhs.MultiboundReference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.IgnoredBySandbox2) ?? true))
             {
@@ -3889,10 +3479,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.LocationRefTypes = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<LocationReferenceType>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ILocationReferenceTypeGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<LocationReferenceType>>();
+                        .CastExtendedList<IFormLink<ILocationReferenceTypeGetter>>();
                     return (int)PlacedNpc_FieldIndex.LocationRefTypes;
                 }
                 case RecordTypeInts.XHTW:

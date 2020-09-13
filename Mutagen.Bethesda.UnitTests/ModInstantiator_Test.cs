@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void Direct()
         {
-            var ret = ModInstantiator.GetActivator<TDirect>(Registration)(ModPath, Release);
+            var ret = ModInstantiatorReflection.GetActivator<TDirect>(Registration)(ModPath, Release);
             Assert.IsType<TDirect>(ret);
             Assert.Equal(ModPath.ModKey, ret.ModKey);
         }
@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void Setter()
         {
-            var ret = ModInstantiator.GetActivator<TSetter>(Registration)(ModPath, Release);
+            var ret = ModInstantiatorReflection.GetActivator<TSetter>(Registration)(ModPath, Release);
             Assert.IsType<TDirect>(ret);
             Assert.Equal(ModPath.ModKey, ret.ModKey);
         }
@@ -54,14 +54,14 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void Getter()
         {
-            var ret = ModInstantiator.GetActivator<TGetter>(Registration)(ModPath, Release);
+            var ret = ModInstantiatorReflection.GetActivator<TGetter>(Registration)(ModPath, Release);
             Assert.IsType<TDirect>(ret);
             Assert.Equal(ModPath.ModKey, ret.ModKey);
         }
         [Fact]
         public void Import_Direct()
         {
-            var ret = ModInstantiator.GetImporter<TDirect>(Registration)(
+            var ret = ModInstantiatorReflection.GetImporter<TDirect>(Registration)(
                 ModPath,
                 Release);
             Assert.IsType<TDirect>(ret);
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void Import_Setter()
         {
-            var ret = ModInstantiator.GetImporter<TSetter>(Registration)(
+            var ret = ModInstantiatorReflection.GetImporter<TSetter>(Registration)(
                 ModPath,
                 Release);
             Assert.IsType<TDirect>(ret);
@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void Import_Getter()
         {
-            var ret = ModInstantiator.GetImporter<TGetter>(Registration)(
+            var ret = ModInstantiatorReflection.GetImporter<TGetter>(Registration)(
                 ModPath,
                 Release);
             Assert.IsType<TOverlay>(ret);

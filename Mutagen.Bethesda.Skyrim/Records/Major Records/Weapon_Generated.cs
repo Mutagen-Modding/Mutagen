@@ -86,9 +86,7 @@ namespace Mutagen.Bethesda.Skyrim
         IIconsGetter? IWeaponGetter.Icons => this.Icons;
         #endregion
         #region ObjectEffect
-        public FormLinkNullable<IEffectRecord> ObjectEffect { get; set; } = new FormLinkNullable<IEffectRecord>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IEffectRecordGetter> IWeaponGetter.ObjectEffect => this.ObjectEffect.ToGetter<IEffectRecord, IEffectRecordGetter>();
+        public FormLinkNullable<IEffectRecordGetter> ObjectEffect { get; set; } = new FormLinkNullable<IEffectRecordGetter>();
         #endregion
         #region EnchantmentAmount
         public UInt16? EnchantmentAmount { get; set; }
@@ -107,34 +105,24 @@ namespace Mutagen.Bethesda.Skyrim
         IDestructibleGetter? IWeaponGetter.Destructible => this.Destructible;
         #endregion
         #region EquipmentType
-        public FormLinkNullable<EquipType> EquipmentType { get; set; } = new FormLinkNullable<EquipType>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IEquipTypeGetter> IWeaponGetter.EquipmentType => this.EquipmentType.ToGetter<EquipType, IEquipTypeGetter>();
+        public FormLinkNullable<IEquipTypeGetter> EquipmentType { get; set; } = new FormLinkNullable<IEquipTypeGetter>();
         #endregion
         #region BlockBashImpact
-        public FormLinkNullable<ImpactDataSet> BlockBashImpact { get; set; } = new FormLinkNullable<ImpactDataSet>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IImpactDataSetGetter> IWeaponGetter.BlockBashImpact => this.BlockBashImpact.ToGetter<ImpactDataSet, IImpactDataSetGetter>();
+        public FormLinkNullable<IImpactDataSetGetter> BlockBashImpact { get; set; } = new FormLinkNullable<IImpactDataSetGetter>();
         #endregion
         #region AlternateBlockMaterial
-        public FormLinkNullable<MaterialType> AlternateBlockMaterial { get; set; } = new FormLinkNullable<MaterialType>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IMaterialTypeGetter> IWeaponGetter.AlternateBlockMaterial => this.AlternateBlockMaterial.ToGetter<MaterialType, IMaterialTypeGetter>();
+        public FormLinkNullable<IMaterialTypeGetter> AlternateBlockMaterial { get; set; } = new FormLinkNullable<IMaterialTypeGetter>();
         #endregion
         #region PickUpSound
-        public FormLinkNullable<SoundDescriptor> PickUpSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IWeaponGetter.PickUpSound => this.PickUpSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region PutDownSound
-        public FormLinkNullable<SoundDescriptor> PutDownSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IWeaponGetter.PutDownSound => this.PutDownSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Keyword>>? _Keywords;
-        public IExtendedList<IFormLink<Keyword>>? Keywords
+        private ExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
+        public ExtendedList<IFormLink<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -173,49 +161,31 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? IWeaponGetter.Unused => this.Unused;
         #endregion
         #region ImpactDataSet
-        public FormLinkNullable<ImpactDataSet> ImpactDataSet { get; set; } = new FormLinkNullable<ImpactDataSet>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IImpactDataSetGetter> IWeaponGetter.ImpactDataSet => this.ImpactDataSet.ToGetter<ImpactDataSet, IImpactDataSetGetter>();
+        public FormLinkNullable<IImpactDataSetGetter> ImpactDataSet { get; set; } = new FormLinkNullable<IImpactDataSetGetter>();
         #endregion
         #region FirstPersonModel
-        public FormLinkNullable<Static> FirstPersonModel { get; set; } = new FormLinkNullable<Static>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IStaticGetter> IWeaponGetter.FirstPersonModel => this.FirstPersonModel.ToGetter<Static, IStaticGetter>();
+        public FormLinkNullable<IStaticGetter> FirstPersonModel { get; set; } = new FormLinkNullable<IStaticGetter>();
         #endregion
         #region AttackSound
-        public FormLinkNullable<SoundDescriptor> AttackSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IWeaponGetter.AttackSound => this.AttackSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> AttackSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region AttackSound2D
-        public FormLinkNullable<SoundDescriptor> AttackSound2D { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IWeaponGetter.AttackSound2D => this.AttackSound2D.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> AttackSound2D { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region AttackLoopSound
-        public FormLinkNullable<SoundDescriptor> AttackLoopSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IWeaponGetter.AttackLoopSound => this.AttackLoopSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> AttackLoopSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region AttackFailSound
-        public FormLinkNullable<SoundDescriptor> AttackFailSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IWeaponGetter.AttackFailSound => this.AttackFailSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> AttackFailSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region IdleSound
-        public FormLinkNullable<SoundDescriptor> IdleSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IWeaponGetter.IdleSound => this.IdleSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> IdleSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region EquipSound
-        public FormLinkNullable<SoundDescriptor> EquipSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IWeaponGetter.EquipSound => this.EquipSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> EquipSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region UnequipSound
-        public FormLinkNullable<SoundDescriptor> UnequipSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISoundDescriptorGetter> IWeaponGetter.UnequipSound => this.UnequipSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLinkNullable<ISoundDescriptorGetter> UnequipSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region BasicStats
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -256,9 +226,7 @@ namespace Mutagen.Bethesda.Skyrim
         SoundLevel? IWeaponGetter.DetectionSoundLevel => this.DetectionSoundLevel;
         #endregion
         #region Template
-        public FormLinkNullable<Weapon> Template { get; set; } = new FormLinkNullable<Weapon>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IWeaponGetter> IWeaponGetter.Template => this.Template.ToGetter<Weapon, IWeaponGetter>();
+        public FormLinkNullable<IWeaponGetter> Template { get; set; } = new FormLinkNullable<IWeaponGetter>();
         #endregion
 
         #region To String
@@ -1646,32 +1614,32 @@ namespace Mutagen.Bethesda.Skyrim
         new TranslatedString? Name { get; set; }
         new Model? Model { get; set; }
         new Icons? Icons { get; set; }
-        new FormLinkNullable<IEffectRecord> ObjectEffect { get; set; }
+        new FormLinkNullable<IEffectRecordGetter> ObjectEffect { get; set; }
         new UInt16? EnchantmentAmount { get; set; }
         new Destructible? Destructible { get; set; }
-        new FormLinkNullable<EquipType> EquipmentType { get; set; }
-        new FormLinkNullable<ImpactDataSet> BlockBashImpact { get; set; }
-        new FormLinkNullable<MaterialType> AlternateBlockMaterial { get; set; }
-        new FormLinkNullable<SoundDescriptor> PickUpSound { get; set; }
-        new FormLinkNullable<SoundDescriptor> PutDownSound { get; set; }
-        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new FormLinkNullable<IEquipTypeGetter> EquipmentType { get; set; }
+        new FormLinkNullable<IImpactDataSetGetter> BlockBashImpact { get; set; }
+        new FormLinkNullable<IMaterialTypeGetter> AlternateBlockMaterial { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; set; }
+        new ExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
         new TranslatedString? Description { get; set; }
         new Model? ScopeModel { get; set; }
         new MemorySlice<Byte>? Unused { get; set; }
-        new FormLinkNullable<ImpactDataSet> ImpactDataSet { get; set; }
-        new FormLinkNullable<Static> FirstPersonModel { get; set; }
-        new FormLinkNullable<SoundDescriptor> AttackSound { get; set; }
-        new FormLinkNullable<SoundDescriptor> AttackSound2D { get; set; }
-        new FormLinkNullable<SoundDescriptor> AttackLoopSound { get; set; }
-        new FormLinkNullable<SoundDescriptor> AttackFailSound { get; set; }
-        new FormLinkNullable<SoundDescriptor> IdleSound { get; set; }
-        new FormLinkNullable<SoundDescriptor> EquipSound { get; set; }
-        new FormLinkNullable<SoundDescriptor> UnequipSound { get; set; }
+        new FormLinkNullable<IImpactDataSetGetter> ImpactDataSet { get; set; }
+        new FormLinkNullable<IStaticGetter> FirstPersonModel { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> AttackSound { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> AttackSound2D { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> AttackLoopSound { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> AttackFailSound { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> IdleSound { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> EquipSound { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> UnequipSound { get; set; }
         new WeaponBasicStats? BasicStats { get; set; }
         new WeaponData? Data { get; set; }
         new CriticalData? Critical { get; set; }
         new SoundLevel? DetectionSoundLevel { get; set; }
-        new FormLinkNullable<Weapon> Template { get; set; }
+        new FormLinkNullable<IWeaponGetter> Template { get; set; }
         #region Mutagen
         new Weapon.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1957,433 +1925,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "VIRTUALMACHINEADAPTER":
-                    return (ushort)Weapon_FieldIndex.VirtualMachineAdapter;
-                case "OBJECTBOUNDS":
-                    return (ushort)Weapon_FieldIndex.ObjectBounds;
-                case "NAME":
-                    return (ushort)Weapon_FieldIndex.Name;
-                case "MODEL":
-                    return (ushort)Weapon_FieldIndex.Model;
-                case "ICONS":
-                    return (ushort)Weapon_FieldIndex.Icons;
-                case "OBJECTEFFECT":
-                    return (ushort)Weapon_FieldIndex.ObjectEffect;
-                case "ENCHANTMENTAMOUNT":
-                    return (ushort)Weapon_FieldIndex.EnchantmentAmount;
-                case "DESTRUCTIBLE":
-                    return (ushort)Weapon_FieldIndex.Destructible;
-                case "EQUIPMENTTYPE":
-                    return (ushort)Weapon_FieldIndex.EquipmentType;
-                case "BLOCKBASHIMPACT":
-                    return (ushort)Weapon_FieldIndex.BlockBashImpact;
-                case "ALTERNATEBLOCKMATERIAL":
-                    return (ushort)Weapon_FieldIndex.AlternateBlockMaterial;
-                case "PICKUPSOUND":
-                    return (ushort)Weapon_FieldIndex.PickUpSound;
-                case "PUTDOWNSOUND":
-                    return (ushort)Weapon_FieldIndex.PutDownSound;
-                case "KEYWORDS":
-                    return (ushort)Weapon_FieldIndex.Keywords;
-                case "DESCRIPTION":
-                    return (ushort)Weapon_FieldIndex.Description;
-                case "SCOPEMODEL":
-                    return (ushort)Weapon_FieldIndex.ScopeModel;
-                case "UNUSED":
-                    return (ushort)Weapon_FieldIndex.Unused;
-                case "IMPACTDATASET":
-                    return (ushort)Weapon_FieldIndex.ImpactDataSet;
-                case "FIRSTPERSONMODEL":
-                    return (ushort)Weapon_FieldIndex.FirstPersonModel;
-                case "ATTACKSOUND":
-                    return (ushort)Weapon_FieldIndex.AttackSound;
-                case "ATTACKSOUND2D":
-                    return (ushort)Weapon_FieldIndex.AttackSound2D;
-                case "ATTACKLOOPSOUND":
-                    return (ushort)Weapon_FieldIndex.AttackLoopSound;
-                case "ATTACKFAILSOUND":
-                    return (ushort)Weapon_FieldIndex.AttackFailSound;
-                case "IDLESOUND":
-                    return (ushort)Weapon_FieldIndex.IdleSound;
-                case "EQUIPSOUND":
-                    return (ushort)Weapon_FieldIndex.EquipSound;
-                case "UNEQUIPSOUND":
-                    return (ushort)Weapon_FieldIndex.UnequipSound;
-                case "BASICSTATS":
-                    return (ushort)Weapon_FieldIndex.BasicStats;
-                case "DATA":
-                    return (ushort)Weapon_FieldIndex.Data;
-                case "CRITICAL":
-                    return (ushort)Weapon_FieldIndex.Critical;
-                case "DETECTIONSOUNDLEVEL":
-                    return (ushort)Weapon_FieldIndex.DetectionSoundLevel;
-                case "TEMPLATE":
-                    return (ushort)Weapon_FieldIndex.Template;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Weapon_FieldIndex enu = (Weapon_FieldIndex)index;
-            switch (enu)
-            {
-                case Weapon_FieldIndex.Keywords:
-                    return true;
-                case Weapon_FieldIndex.VirtualMachineAdapter:
-                case Weapon_FieldIndex.ObjectBounds:
-                case Weapon_FieldIndex.Name:
-                case Weapon_FieldIndex.Model:
-                case Weapon_FieldIndex.Icons:
-                case Weapon_FieldIndex.ObjectEffect:
-                case Weapon_FieldIndex.EnchantmentAmount:
-                case Weapon_FieldIndex.Destructible:
-                case Weapon_FieldIndex.EquipmentType:
-                case Weapon_FieldIndex.BlockBashImpact:
-                case Weapon_FieldIndex.AlternateBlockMaterial:
-                case Weapon_FieldIndex.PickUpSound:
-                case Weapon_FieldIndex.PutDownSound:
-                case Weapon_FieldIndex.Description:
-                case Weapon_FieldIndex.ScopeModel:
-                case Weapon_FieldIndex.Unused:
-                case Weapon_FieldIndex.ImpactDataSet:
-                case Weapon_FieldIndex.FirstPersonModel:
-                case Weapon_FieldIndex.AttackSound:
-                case Weapon_FieldIndex.AttackSound2D:
-                case Weapon_FieldIndex.AttackLoopSound:
-                case Weapon_FieldIndex.AttackFailSound:
-                case Weapon_FieldIndex.IdleSound:
-                case Weapon_FieldIndex.EquipSound:
-                case Weapon_FieldIndex.UnequipSound:
-                case Weapon_FieldIndex.BasicStats:
-                case Weapon_FieldIndex.Data:
-                case Weapon_FieldIndex.Critical:
-                case Weapon_FieldIndex.DetectionSoundLevel:
-                case Weapon_FieldIndex.Template:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Weapon_FieldIndex enu = (Weapon_FieldIndex)index;
-            switch (enu)
-            {
-                case Weapon_FieldIndex.VirtualMachineAdapter:
-                case Weapon_FieldIndex.ObjectBounds:
-                case Weapon_FieldIndex.Model:
-                case Weapon_FieldIndex.Icons:
-                case Weapon_FieldIndex.Destructible:
-                case Weapon_FieldIndex.ScopeModel:
-                case Weapon_FieldIndex.BasicStats:
-                case Weapon_FieldIndex.Data:
-                case Weapon_FieldIndex.Critical:
-                    return true;
-                case Weapon_FieldIndex.Name:
-                case Weapon_FieldIndex.ObjectEffect:
-                case Weapon_FieldIndex.EnchantmentAmount:
-                case Weapon_FieldIndex.EquipmentType:
-                case Weapon_FieldIndex.BlockBashImpact:
-                case Weapon_FieldIndex.AlternateBlockMaterial:
-                case Weapon_FieldIndex.PickUpSound:
-                case Weapon_FieldIndex.PutDownSound:
-                case Weapon_FieldIndex.Keywords:
-                case Weapon_FieldIndex.Description:
-                case Weapon_FieldIndex.Unused:
-                case Weapon_FieldIndex.ImpactDataSet:
-                case Weapon_FieldIndex.FirstPersonModel:
-                case Weapon_FieldIndex.AttackSound:
-                case Weapon_FieldIndex.AttackSound2D:
-                case Weapon_FieldIndex.AttackLoopSound:
-                case Weapon_FieldIndex.AttackFailSound:
-                case Weapon_FieldIndex.IdleSound:
-                case Weapon_FieldIndex.EquipSound:
-                case Weapon_FieldIndex.UnequipSound:
-                case Weapon_FieldIndex.DetectionSoundLevel:
-                case Weapon_FieldIndex.Template:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Weapon_FieldIndex enu = (Weapon_FieldIndex)index;
-            switch (enu)
-            {
-                case Weapon_FieldIndex.VirtualMachineAdapter:
-                case Weapon_FieldIndex.ObjectBounds:
-                case Weapon_FieldIndex.Name:
-                case Weapon_FieldIndex.Model:
-                case Weapon_FieldIndex.Icons:
-                case Weapon_FieldIndex.ObjectEffect:
-                case Weapon_FieldIndex.EnchantmentAmount:
-                case Weapon_FieldIndex.Destructible:
-                case Weapon_FieldIndex.EquipmentType:
-                case Weapon_FieldIndex.BlockBashImpact:
-                case Weapon_FieldIndex.AlternateBlockMaterial:
-                case Weapon_FieldIndex.PickUpSound:
-                case Weapon_FieldIndex.PutDownSound:
-                case Weapon_FieldIndex.Keywords:
-                case Weapon_FieldIndex.Description:
-                case Weapon_FieldIndex.ScopeModel:
-                case Weapon_FieldIndex.Unused:
-                case Weapon_FieldIndex.ImpactDataSet:
-                case Weapon_FieldIndex.FirstPersonModel:
-                case Weapon_FieldIndex.AttackSound:
-                case Weapon_FieldIndex.AttackSound2D:
-                case Weapon_FieldIndex.AttackLoopSound:
-                case Weapon_FieldIndex.AttackFailSound:
-                case Weapon_FieldIndex.IdleSound:
-                case Weapon_FieldIndex.EquipSound:
-                case Weapon_FieldIndex.UnequipSound:
-                case Weapon_FieldIndex.BasicStats:
-                case Weapon_FieldIndex.Data:
-                case Weapon_FieldIndex.Critical:
-                case Weapon_FieldIndex.DetectionSoundLevel:
-                case Weapon_FieldIndex.Template:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Weapon_FieldIndex enu = (Weapon_FieldIndex)index;
-            switch (enu)
-            {
-                case Weapon_FieldIndex.VirtualMachineAdapter:
-                    return "VirtualMachineAdapter";
-                case Weapon_FieldIndex.ObjectBounds:
-                    return "ObjectBounds";
-                case Weapon_FieldIndex.Name:
-                    return "Name";
-                case Weapon_FieldIndex.Model:
-                    return "Model";
-                case Weapon_FieldIndex.Icons:
-                    return "Icons";
-                case Weapon_FieldIndex.ObjectEffect:
-                    return "ObjectEffect";
-                case Weapon_FieldIndex.EnchantmentAmount:
-                    return "EnchantmentAmount";
-                case Weapon_FieldIndex.Destructible:
-                    return "Destructible";
-                case Weapon_FieldIndex.EquipmentType:
-                    return "EquipmentType";
-                case Weapon_FieldIndex.BlockBashImpact:
-                    return "BlockBashImpact";
-                case Weapon_FieldIndex.AlternateBlockMaterial:
-                    return "AlternateBlockMaterial";
-                case Weapon_FieldIndex.PickUpSound:
-                    return "PickUpSound";
-                case Weapon_FieldIndex.PutDownSound:
-                    return "PutDownSound";
-                case Weapon_FieldIndex.Keywords:
-                    return "Keywords";
-                case Weapon_FieldIndex.Description:
-                    return "Description";
-                case Weapon_FieldIndex.ScopeModel:
-                    return "ScopeModel";
-                case Weapon_FieldIndex.Unused:
-                    return "Unused";
-                case Weapon_FieldIndex.ImpactDataSet:
-                    return "ImpactDataSet";
-                case Weapon_FieldIndex.FirstPersonModel:
-                    return "FirstPersonModel";
-                case Weapon_FieldIndex.AttackSound:
-                    return "AttackSound";
-                case Weapon_FieldIndex.AttackSound2D:
-                    return "AttackSound2D";
-                case Weapon_FieldIndex.AttackLoopSound:
-                    return "AttackLoopSound";
-                case Weapon_FieldIndex.AttackFailSound:
-                    return "AttackFailSound";
-                case Weapon_FieldIndex.IdleSound:
-                    return "IdleSound";
-                case Weapon_FieldIndex.EquipSound:
-                    return "EquipSound";
-                case Weapon_FieldIndex.UnequipSound:
-                    return "UnequipSound";
-                case Weapon_FieldIndex.BasicStats:
-                    return "BasicStats";
-                case Weapon_FieldIndex.Data:
-                    return "Data";
-                case Weapon_FieldIndex.Critical:
-                    return "Critical";
-                case Weapon_FieldIndex.DetectionSoundLevel:
-                    return "DetectionSoundLevel";
-                case Weapon_FieldIndex.Template:
-                    return "Template";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Weapon_FieldIndex enu = (Weapon_FieldIndex)index;
-            switch (enu)
-            {
-                case Weapon_FieldIndex.VirtualMachineAdapter:
-                case Weapon_FieldIndex.ObjectBounds:
-                case Weapon_FieldIndex.Name:
-                case Weapon_FieldIndex.Model:
-                case Weapon_FieldIndex.Icons:
-                case Weapon_FieldIndex.ObjectEffect:
-                case Weapon_FieldIndex.EnchantmentAmount:
-                case Weapon_FieldIndex.Destructible:
-                case Weapon_FieldIndex.EquipmentType:
-                case Weapon_FieldIndex.BlockBashImpact:
-                case Weapon_FieldIndex.AlternateBlockMaterial:
-                case Weapon_FieldIndex.PickUpSound:
-                case Weapon_FieldIndex.PutDownSound:
-                case Weapon_FieldIndex.Keywords:
-                case Weapon_FieldIndex.Description:
-                case Weapon_FieldIndex.ScopeModel:
-                case Weapon_FieldIndex.Unused:
-                case Weapon_FieldIndex.ImpactDataSet:
-                case Weapon_FieldIndex.FirstPersonModel:
-                case Weapon_FieldIndex.AttackSound:
-                case Weapon_FieldIndex.AttackSound2D:
-                case Weapon_FieldIndex.AttackLoopSound:
-                case Weapon_FieldIndex.AttackFailSound:
-                case Weapon_FieldIndex.IdleSound:
-                case Weapon_FieldIndex.EquipSound:
-                case Weapon_FieldIndex.UnequipSound:
-                case Weapon_FieldIndex.BasicStats:
-                case Weapon_FieldIndex.Data:
-                case Weapon_FieldIndex.Critical:
-                case Weapon_FieldIndex.DetectionSoundLevel:
-                case Weapon_FieldIndex.Template:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Weapon_FieldIndex enu = (Weapon_FieldIndex)index;
-            switch (enu)
-            {
-                case Weapon_FieldIndex.VirtualMachineAdapter:
-                case Weapon_FieldIndex.ObjectBounds:
-                case Weapon_FieldIndex.Name:
-                case Weapon_FieldIndex.Model:
-                case Weapon_FieldIndex.Icons:
-                case Weapon_FieldIndex.ObjectEffect:
-                case Weapon_FieldIndex.EnchantmentAmount:
-                case Weapon_FieldIndex.Destructible:
-                case Weapon_FieldIndex.EquipmentType:
-                case Weapon_FieldIndex.BlockBashImpact:
-                case Weapon_FieldIndex.AlternateBlockMaterial:
-                case Weapon_FieldIndex.PickUpSound:
-                case Weapon_FieldIndex.PutDownSound:
-                case Weapon_FieldIndex.Keywords:
-                case Weapon_FieldIndex.Description:
-                case Weapon_FieldIndex.ScopeModel:
-                case Weapon_FieldIndex.Unused:
-                case Weapon_FieldIndex.ImpactDataSet:
-                case Weapon_FieldIndex.FirstPersonModel:
-                case Weapon_FieldIndex.AttackSound:
-                case Weapon_FieldIndex.AttackSound2D:
-                case Weapon_FieldIndex.AttackLoopSound:
-                case Weapon_FieldIndex.AttackFailSound:
-                case Weapon_FieldIndex.IdleSound:
-                case Weapon_FieldIndex.EquipSound:
-                case Weapon_FieldIndex.UnequipSound:
-                case Weapon_FieldIndex.BasicStats:
-                case Weapon_FieldIndex.Data:
-                case Weapon_FieldIndex.Critical:
-                case Weapon_FieldIndex.DetectionSoundLevel:
-                case Weapon_FieldIndex.Template:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Weapon_FieldIndex enu = (Weapon_FieldIndex)index;
-            switch (enu)
-            {
-                case Weapon_FieldIndex.VirtualMachineAdapter:
-                    return typeof(VirtualMachineAdapter);
-                case Weapon_FieldIndex.ObjectBounds:
-                    return typeof(ObjectBounds);
-                case Weapon_FieldIndex.Name:
-                    return typeof(TranslatedString);
-                case Weapon_FieldIndex.Model:
-                    return typeof(Model);
-                case Weapon_FieldIndex.Icons:
-                    return typeof(Icons);
-                case Weapon_FieldIndex.ObjectEffect:
-                    return typeof(FormLinkNullable<IEffectRecord>);
-                case Weapon_FieldIndex.EnchantmentAmount:
-                    return typeof(UInt16);
-                case Weapon_FieldIndex.Destructible:
-                    return typeof(Destructible);
-                case Weapon_FieldIndex.EquipmentType:
-                    return typeof(FormLinkNullable<EquipType>);
-                case Weapon_FieldIndex.BlockBashImpact:
-                    return typeof(FormLinkNullable<ImpactDataSet>);
-                case Weapon_FieldIndex.AlternateBlockMaterial:
-                    return typeof(FormLinkNullable<MaterialType>);
-                case Weapon_FieldIndex.PickUpSound:
-                    return typeof(FormLinkNullable<SoundDescriptor>);
-                case Weapon_FieldIndex.PutDownSound:
-                    return typeof(FormLinkNullable<SoundDescriptor>);
-                case Weapon_FieldIndex.Keywords:
-                    return typeof(IExtendedList<IFormLink<Keyword>>);
-                case Weapon_FieldIndex.Description:
-                    return typeof(TranslatedString);
-                case Weapon_FieldIndex.ScopeModel:
-                    return typeof(Model);
-                case Weapon_FieldIndex.Unused:
-                    return typeof(MemorySlice<Byte>);
-                case Weapon_FieldIndex.ImpactDataSet:
-                    return typeof(FormLinkNullable<ImpactDataSet>);
-                case Weapon_FieldIndex.FirstPersonModel:
-                    return typeof(FormLinkNullable<Static>);
-                case Weapon_FieldIndex.AttackSound:
-                    return typeof(FormLinkNullable<SoundDescriptor>);
-                case Weapon_FieldIndex.AttackSound2D:
-                    return typeof(FormLinkNullable<SoundDescriptor>);
-                case Weapon_FieldIndex.AttackLoopSound:
-                    return typeof(FormLinkNullable<SoundDescriptor>);
-                case Weapon_FieldIndex.AttackFailSound:
-                    return typeof(FormLinkNullable<SoundDescriptor>);
-                case Weapon_FieldIndex.IdleSound:
-                    return typeof(FormLinkNullable<SoundDescriptor>);
-                case Weapon_FieldIndex.EquipSound:
-                    return typeof(FormLinkNullable<SoundDescriptor>);
-                case Weapon_FieldIndex.UnequipSound:
-                    return typeof(FormLinkNullable<SoundDescriptor>);
-                case Weapon_FieldIndex.BasicStats:
-                    return typeof(WeaponBasicStats);
-                case Weapon_FieldIndex.Data:
-                    return typeof(WeaponData);
-                case Weapon_FieldIndex.Critical:
-                    return typeof(CriticalData);
-                case Weapon_FieldIndex.DetectionSoundLevel:
-                    return typeof(SoundLevel);
-                case Weapon_FieldIndex.Template:
-                    return typeof(FormLinkNullable<Weapon>);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.WEAP;
         public static RecordTypeConverter ScopeModelConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
@@ -2414,14 +1955,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -2442,32 +1983,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Name = default;
             item.Model = null;
             item.Icons = null;
-            item.ObjectEffect = FormLinkNullable<IEffectRecord>.Null;
+            item.ObjectEffect = FormLinkNullable<IEffectRecordGetter>.Null;
             item.EnchantmentAmount = default;
             item.Destructible = null;
-            item.EquipmentType = FormLinkNullable<EquipType>.Null;
-            item.BlockBashImpact = FormLinkNullable<ImpactDataSet>.Null;
-            item.AlternateBlockMaterial = FormLinkNullable<MaterialType>.Null;
-            item.PickUpSound = FormLinkNullable<SoundDescriptor>.Null;
-            item.PutDownSound = FormLinkNullable<SoundDescriptor>.Null;
+            item.EquipmentType = FormLinkNullable<IEquipTypeGetter>.Null;
+            item.BlockBashImpact = FormLinkNullable<IImpactDataSetGetter>.Null;
+            item.AlternateBlockMaterial = FormLinkNullable<IMaterialTypeGetter>.Null;
+            item.PickUpSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
+            item.PutDownSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
             item.Keywords = null;
             item.Description = default;
             item.ScopeModel = null;
             item.Unused = default;
-            item.ImpactDataSet = FormLinkNullable<ImpactDataSet>.Null;
-            item.FirstPersonModel = FormLinkNullable<Static>.Null;
-            item.AttackSound = FormLinkNullable<SoundDescriptor>.Null;
-            item.AttackSound2D = FormLinkNullable<SoundDescriptor>.Null;
-            item.AttackLoopSound = FormLinkNullable<SoundDescriptor>.Null;
-            item.AttackFailSound = FormLinkNullable<SoundDescriptor>.Null;
-            item.IdleSound = FormLinkNullable<SoundDescriptor>.Null;
-            item.EquipSound = FormLinkNullable<SoundDescriptor>.Null;
-            item.UnequipSound = FormLinkNullable<SoundDescriptor>.Null;
+            item.ImpactDataSet = FormLinkNullable<IImpactDataSetGetter>.Null;
+            item.FirstPersonModel = FormLinkNullable<IStaticGetter>.Null;
+            item.AttackSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
+            item.AttackSound2D = FormLinkNullable<ISoundDescriptorGetter>.Null;
+            item.AttackLoopSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
+            item.AttackFailSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
+            item.IdleSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
+            item.EquipSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
+            item.UnequipSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
             item.BasicStats = null;
             item.Data = null;
             item.Critical = null;
             item.DetectionSoundLevel = default;
-            item.Template = FormLinkNullable<Weapon>.Null;
+            item.Template = FormLinkNullable<IWeaponGetter>.Null;
             base.Clear(item);
         }
         
@@ -3279,7 +2820,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.ObjectEffect) ?? true))
             {
-                item.ObjectEffect = new FormLinkNullable<IEffectRecord>(rhs.ObjectEffect.FormKey);
+                item.ObjectEffect = new FormLinkNullable<IEffectRecordGetter>(rhs.ObjectEffect.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.EnchantmentAmount) ?? true))
             {
@@ -3313,23 +2854,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.EquipmentType) ?? true))
             {
-                item.EquipmentType = new FormLinkNullable<EquipType>(rhs.EquipmentType.FormKey);
+                item.EquipmentType = new FormLinkNullable<IEquipTypeGetter>(rhs.EquipmentType.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.BlockBashImpact) ?? true))
             {
-                item.BlockBashImpact = new FormLinkNullable<ImpactDataSet>(rhs.BlockBashImpact.FormKey);
+                item.BlockBashImpact = new FormLinkNullable<IImpactDataSetGetter>(rhs.BlockBashImpact.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.AlternateBlockMaterial) ?? true))
             {
-                item.AlternateBlockMaterial = new FormLinkNullable<MaterialType>(rhs.AlternateBlockMaterial.FormKey);
+                item.AlternateBlockMaterial = new FormLinkNullable<IMaterialTypeGetter>(rhs.AlternateBlockMaterial.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.PickUpSound) ?? true))
             {
-                item.PickUpSound = new FormLinkNullable<SoundDescriptor>(rhs.PickUpSound.FormKey);
+                item.PickUpSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.PickUpSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.PutDownSound) ?? true))
             {
-                item.PutDownSound = new FormLinkNullable<SoundDescriptor>(rhs.PutDownSound.FormKey);
+                item.PutDownSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.PutDownSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Keywords) ?? true))
             {
@@ -3340,8 +2881,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLink<Keyword>)new FormLink<Keyword>(r.FormKey))
-                            .ToExtendedList<IFormLink<Keyword>>();
+                            .Select(r => (IFormLink<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IKeywordGetter>>();
                     }
                     else
                     {
@@ -3401,39 +2942,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.ImpactDataSet) ?? true))
             {
-                item.ImpactDataSet = new FormLinkNullable<ImpactDataSet>(rhs.ImpactDataSet.FormKey);
+                item.ImpactDataSet = new FormLinkNullable<IImpactDataSetGetter>(rhs.ImpactDataSet.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.FirstPersonModel) ?? true))
             {
-                item.FirstPersonModel = new FormLinkNullable<Static>(rhs.FirstPersonModel.FormKey);
+                item.FirstPersonModel = new FormLinkNullable<IStaticGetter>(rhs.FirstPersonModel.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.AttackSound) ?? true))
             {
-                item.AttackSound = new FormLinkNullable<SoundDescriptor>(rhs.AttackSound.FormKey);
+                item.AttackSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.AttackSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.AttackSound2D) ?? true))
             {
-                item.AttackSound2D = new FormLinkNullable<SoundDescriptor>(rhs.AttackSound2D.FormKey);
+                item.AttackSound2D = new FormLinkNullable<ISoundDescriptorGetter>(rhs.AttackSound2D.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.AttackLoopSound) ?? true))
             {
-                item.AttackLoopSound = new FormLinkNullable<SoundDescriptor>(rhs.AttackLoopSound.FormKey);
+                item.AttackLoopSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.AttackLoopSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.AttackFailSound) ?? true))
             {
-                item.AttackFailSound = new FormLinkNullable<SoundDescriptor>(rhs.AttackFailSound.FormKey);
+                item.AttackFailSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.AttackFailSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.IdleSound) ?? true))
             {
-                item.IdleSound = new FormLinkNullable<SoundDescriptor>(rhs.IdleSound.FormKey);
+                item.IdleSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.IdleSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.EquipSound) ?? true))
             {
-                item.EquipSound = new FormLinkNullable<SoundDescriptor>(rhs.EquipSound.FormKey);
+                item.EquipSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.EquipSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.UnequipSound) ?? true))
             {
-                item.UnequipSound = new FormLinkNullable<SoundDescriptor>(rhs.UnequipSound.FormKey);
+                item.UnequipSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.UnequipSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.BasicStats) ?? true))
             {
@@ -3519,7 +3060,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Template) ?? true))
             {
-                item.Template = new FormLinkNullable<Weapon>(rhs.Template.FormKey);
+                item.Template = new FormLinkNullable<IWeaponGetter>(rhs.Template.FormKey);
             }
         }
         
@@ -4024,13 +3565,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KSIZ:
                 {
                     item.Keywords = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<Keyword>>();
+                        .CastExtendedList<IFormLink<IKeywordGetter>>();
                     return (int)Weapon_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DESC:

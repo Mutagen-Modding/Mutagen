@@ -55,14 +55,10 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 SelfDamagePerSecond { get; set; } = default;
         #endregion
         #region Explosion
-        public FormLink<Explosion> Explosion { get; set; } = new FormLink<Explosion>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IExplosionGetter> IDestructionStageDataGetter.Explosion => this.Explosion.ToGetter<Explosion, IExplosionGetter>();
+        public FormLink<IExplosionGetter> Explosion { get; set; } = new FormLink<IExplosionGetter>();
         #endregion
         #region Debris
-        public FormLink<Debris> Debris { get; set; } = new FormLink<Debris>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IDebrisGetter> IDestructionStageDataGetter.Debris => this.Debris.ToGetter<Debris, IDebrisGetter>();
+        public FormLink<IDebrisGetter> Debris { get; set; } = new FormLink<IDebrisGetter>();
         #endregion
         #region DebrisCount
         public Int32 DebrisCount { get; set; } = default;
@@ -644,8 +640,8 @@ namespace Mutagen.Bethesda.Skyrim
         new Byte ModelDamageStage { get; set; }
         new DestructionStageData.Flag Flags { get; set; }
         new Int32 SelfDamagePerSecond { get; set; }
-        new FormLink<Explosion> Explosion { get; set; }
-        new FormLink<Debris> Debris { get; set; }
+        new FormLink<IExplosionGetter> Explosion { get; set; }
+        new FormLink<IDebrisGetter> Debris { get; set; }
         new Int32 DebrisCount { get; set; }
     }
 
@@ -890,178 +886,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "HEALTHPERCENT":
-                    return (ushort)DestructionStageData_FieldIndex.HealthPercent;
-                case "INDEX":
-                    return (ushort)DestructionStageData_FieldIndex.Index;
-                case "MODELDAMAGESTAGE":
-                    return (ushort)DestructionStageData_FieldIndex.ModelDamageStage;
-                case "FLAGS":
-                    return (ushort)DestructionStageData_FieldIndex.Flags;
-                case "SELFDAMAGEPERSECOND":
-                    return (ushort)DestructionStageData_FieldIndex.SelfDamagePerSecond;
-                case "EXPLOSION":
-                    return (ushort)DestructionStageData_FieldIndex.Explosion;
-                case "DEBRIS":
-                    return (ushort)DestructionStageData_FieldIndex.Debris;
-                case "DEBRISCOUNT":
-                    return (ushort)DestructionStageData_FieldIndex.DebrisCount;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            DestructionStageData_FieldIndex enu = (DestructionStageData_FieldIndex)index;
-            switch (enu)
-            {
-                case DestructionStageData_FieldIndex.HealthPercent:
-                case DestructionStageData_FieldIndex.Index:
-                case DestructionStageData_FieldIndex.ModelDamageStage:
-                case DestructionStageData_FieldIndex.Flags:
-                case DestructionStageData_FieldIndex.SelfDamagePerSecond:
-                case DestructionStageData_FieldIndex.Explosion:
-                case DestructionStageData_FieldIndex.Debris:
-                case DestructionStageData_FieldIndex.DebrisCount:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            DestructionStageData_FieldIndex enu = (DestructionStageData_FieldIndex)index;
-            switch (enu)
-            {
-                case DestructionStageData_FieldIndex.HealthPercent:
-                case DestructionStageData_FieldIndex.Index:
-                case DestructionStageData_FieldIndex.ModelDamageStage:
-                case DestructionStageData_FieldIndex.Flags:
-                case DestructionStageData_FieldIndex.SelfDamagePerSecond:
-                case DestructionStageData_FieldIndex.Explosion:
-                case DestructionStageData_FieldIndex.Debris:
-                case DestructionStageData_FieldIndex.DebrisCount:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            DestructionStageData_FieldIndex enu = (DestructionStageData_FieldIndex)index;
-            switch (enu)
-            {
-                case DestructionStageData_FieldIndex.HealthPercent:
-                case DestructionStageData_FieldIndex.Index:
-                case DestructionStageData_FieldIndex.ModelDamageStage:
-                case DestructionStageData_FieldIndex.Flags:
-                case DestructionStageData_FieldIndex.SelfDamagePerSecond:
-                case DestructionStageData_FieldIndex.Explosion:
-                case DestructionStageData_FieldIndex.Debris:
-                case DestructionStageData_FieldIndex.DebrisCount:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            DestructionStageData_FieldIndex enu = (DestructionStageData_FieldIndex)index;
-            switch (enu)
-            {
-                case DestructionStageData_FieldIndex.HealthPercent:
-                    return "HealthPercent";
-                case DestructionStageData_FieldIndex.Index:
-                    return "Index";
-                case DestructionStageData_FieldIndex.ModelDamageStage:
-                    return "ModelDamageStage";
-                case DestructionStageData_FieldIndex.Flags:
-                    return "Flags";
-                case DestructionStageData_FieldIndex.SelfDamagePerSecond:
-                    return "SelfDamagePerSecond";
-                case DestructionStageData_FieldIndex.Explosion:
-                    return "Explosion";
-                case DestructionStageData_FieldIndex.Debris:
-                    return "Debris";
-                case DestructionStageData_FieldIndex.DebrisCount:
-                    return "DebrisCount";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            DestructionStageData_FieldIndex enu = (DestructionStageData_FieldIndex)index;
-            switch (enu)
-            {
-                case DestructionStageData_FieldIndex.HealthPercent:
-                case DestructionStageData_FieldIndex.Index:
-                case DestructionStageData_FieldIndex.ModelDamageStage:
-                case DestructionStageData_FieldIndex.Flags:
-                case DestructionStageData_FieldIndex.SelfDamagePerSecond:
-                case DestructionStageData_FieldIndex.Explosion:
-                case DestructionStageData_FieldIndex.Debris:
-                case DestructionStageData_FieldIndex.DebrisCount:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            DestructionStageData_FieldIndex enu = (DestructionStageData_FieldIndex)index;
-            switch (enu)
-            {
-                case DestructionStageData_FieldIndex.HealthPercent:
-                case DestructionStageData_FieldIndex.Index:
-                case DestructionStageData_FieldIndex.ModelDamageStage:
-                case DestructionStageData_FieldIndex.Flags:
-                case DestructionStageData_FieldIndex.SelfDamagePerSecond:
-                case DestructionStageData_FieldIndex.Explosion:
-                case DestructionStageData_FieldIndex.Debris:
-                case DestructionStageData_FieldIndex.DebrisCount:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            DestructionStageData_FieldIndex enu = (DestructionStageData_FieldIndex)index;
-            switch (enu)
-            {
-                case DestructionStageData_FieldIndex.HealthPercent:
-                    return typeof(Byte);
-                case DestructionStageData_FieldIndex.Index:
-                    return typeof(Byte);
-                case DestructionStageData_FieldIndex.ModelDamageStage:
-                    return typeof(Byte);
-                case DestructionStageData_FieldIndex.Flags:
-                    return typeof(DestructionStageData.Flag);
-                case DestructionStageData_FieldIndex.SelfDamagePerSecond:
-                    return typeof(Int32);
-                case DestructionStageData_FieldIndex.Explosion:
-                    return typeof(FormLink<Explosion>);
-                case DestructionStageData_FieldIndex.Debris:
-                    return typeof(FormLink<Debris>);
-                case DestructionStageData_FieldIndex.DebrisCount:
-                    return typeof(Int32);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.DSTD;
         public static readonly Type BinaryWriteTranslation = typeof(DestructionStageDataBinaryWriteTranslation);
         #region Interface
@@ -1082,14 +906,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1110,8 +934,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ModelDamageStage = default;
             item.Flags = default;
             item.SelfDamagePerSecond = default;
-            item.Explosion = FormLink<Explosion>.Null;
-            item.Debris = FormLink<Debris>.Null;
+            item.Explosion = FormLink<IExplosionGetter>.Null;
+            item.Debris = FormLink<IDebrisGetter>.Null;
             item.DebrisCount = default;
         }
         
@@ -1333,11 +1157,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DestructionStageData_FieldIndex.Explosion) ?? true))
             {
-                item.Explosion = new FormLink<Explosion>(rhs.Explosion.FormKey);
+                item.Explosion = new FormLink<IExplosionGetter>(rhs.Explosion.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DestructionStageData_FieldIndex.Debris) ?? true))
             {
-                item.Debris = new FormLink<Debris>(rhs.Debris.FormKey);
+                item.Debris = new FormLink<IDebrisGetter>(rhs.Debris.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DestructionStageData_FieldIndex.DebrisCount) ?? true))
             {

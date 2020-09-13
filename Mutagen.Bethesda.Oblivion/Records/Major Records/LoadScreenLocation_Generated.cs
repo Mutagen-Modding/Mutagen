@@ -40,14 +40,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Direct
-        public FormLink<Place> Direct { get; set; } = new FormLink<Place>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IPlaceGetter> ILoadScreenLocationGetter.Direct => this.Direct.ToGetter<Place, IPlaceGetter>();
+        public FormLink<IPlaceGetter> Direct { get; set; } = new FormLink<IPlaceGetter>();
         #endregion
         #region Indirect
-        public FormLink<Worldspace> Indirect { get; set; } = new FormLink<Worldspace>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IWorldspaceGetter> ILoadScreenLocationGetter.Indirect => this.Indirect.ToGetter<Worldspace, IWorldspaceGetter>();
+        public FormLink<IWorldspaceGetter> Indirect { get; set; } = new FormLink<IWorldspaceGetter>();
         #endregion
         #region GridPoint
         public P2Int16 GridPoint { get; set; } = default;
@@ -484,8 +480,8 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<ILoadScreenLocation>,
         ILinkedFormKeyContainer
     {
-        new FormLink<Place> Direct { get; set; }
-        new FormLink<Worldspace> Indirect { get; set; }
+        new FormLink<IPlaceGetter> Direct { get; set; }
+        new FormLink<IWorldspaceGetter> Indirect { get; set; }
         new P2Int16 GridPoint { get; set; }
     }
 
@@ -720,123 +716,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "DIRECT":
-                    return (ushort)LoadScreenLocation_FieldIndex.Direct;
-                case "INDIRECT":
-                    return (ushort)LoadScreenLocation_FieldIndex.Indirect;
-                case "GRIDPOINT":
-                    return (ushort)LoadScreenLocation_FieldIndex.GridPoint;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            LoadScreenLocation_FieldIndex enu = (LoadScreenLocation_FieldIndex)index;
-            switch (enu)
-            {
-                case LoadScreenLocation_FieldIndex.Direct:
-                case LoadScreenLocation_FieldIndex.Indirect:
-                case LoadScreenLocation_FieldIndex.GridPoint:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            LoadScreenLocation_FieldIndex enu = (LoadScreenLocation_FieldIndex)index;
-            switch (enu)
-            {
-                case LoadScreenLocation_FieldIndex.Direct:
-                case LoadScreenLocation_FieldIndex.Indirect:
-                case LoadScreenLocation_FieldIndex.GridPoint:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            LoadScreenLocation_FieldIndex enu = (LoadScreenLocation_FieldIndex)index;
-            switch (enu)
-            {
-                case LoadScreenLocation_FieldIndex.Direct:
-                case LoadScreenLocation_FieldIndex.Indirect:
-                case LoadScreenLocation_FieldIndex.GridPoint:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            LoadScreenLocation_FieldIndex enu = (LoadScreenLocation_FieldIndex)index;
-            switch (enu)
-            {
-                case LoadScreenLocation_FieldIndex.Direct:
-                    return "Direct";
-                case LoadScreenLocation_FieldIndex.Indirect:
-                    return "Indirect";
-                case LoadScreenLocation_FieldIndex.GridPoint:
-                    return "GridPoint";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            LoadScreenLocation_FieldIndex enu = (LoadScreenLocation_FieldIndex)index;
-            switch (enu)
-            {
-                case LoadScreenLocation_FieldIndex.Direct:
-                case LoadScreenLocation_FieldIndex.Indirect:
-                case LoadScreenLocation_FieldIndex.GridPoint:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            LoadScreenLocation_FieldIndex enu = (LoadScreenLocation_FieldIndex)index;
-            switch (enu)
-            {
-                case LoadScreenLocation_FieldIndex.Direct:
-                case LoadScreenLocation_FieldIndex.Indirect:
-                case LoadScreenLocation_FieldIndex.GridPoint:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            LoadScreenLocation_FieldIndex enu = (LoadScreenLocation_FieldIndex)index;
-            switch (enu)
-            {
-                case LoadScreenLocation_FieldIndex.Direct:
-                    return typeof(FormLink<Place>);
-                case LoadScreenLocation_FieldIndex.Indirect:
-                    return typeof(FormLink<Worldspace>);
-                case LoadScreenLocation_FieldIndex.GridPoint:
-                    return typeof(P2Int16);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.LNAM;
         public static readonly Type BinaryWriteTranslation = typeof(LoadScreenLocationBinaryWriteTranslation);
         #region Interface
@@ -857,14 +736,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -880,8 +759,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(ILoadScreenLocation item)
         {
             ClearPartial();
-            item.Direct = FormLink<Place>.Null;
-            item.Indirect = FormLink<Worldspace>.Null;
+            item.Direct = FormLink<IPlaceGetter>.Null;
+            item.Indirect = FormLink<IWorldspaceGetter>.Null;
             item.GridPoint = default;
         }
         
@@ -1048,11 +927,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)LoadScreenLocation_FieldIndex.Direct) ?? true))
             {
-                item.Direct = new FormLink<Place>(rhs.Direct.FormKey);
+                item.Direct = new FormLink<IPlaceGetter>(rhs.Direct.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LoadScreenLocation_FieldIndex.Indirect) ?? true))
             {
-                item.Indirect = new FormLink<Worldspace>(rhs.Indirect.FormKey);
+                item.Indirect = new FormLink<IWorldspaceGetter>(rhs.Indirect.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LoadScreenLocation_FieldIndex.GridPoint) ?? true))
             {

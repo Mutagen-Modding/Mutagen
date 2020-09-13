@@ -48,9 +48,7 @@ namespace Mutagen.Bethesda.Skyrim
         TranslatedString? IShoutGetter.Name => this.Name;
         #endregion
         #region MenuDisplayObject
-        public FormLinkNullable<Static> MenuDisplayObject { get; set; } = new FormLinkNullable<Static>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IStaticGetter> IShoutGetter.MenuDisplayObject => this.MenuDisplayObject.ToGetter<Static, IStaticGetter>();
+        public FormLinkNullable<IStaticGetter> MenuDisplayObject { get; set; } = new FormLinkNullable<IStaticGetter>();
         #endregion
         #region Description
         public TranslatedString? Description { get; set; }
@@ -59,8 +57,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region WordsOfPower
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<ShoutWord> _WordsOfPower = new ExtendedList<ShoutWord>();
-        public IExtendedList<ShoutWord> WordsOfPower
+        private ExtendedList<ShoutWord> _WordsOfPower = new ExtendedList<ShoutWord>();
+        public ExtendedList<ShoutWord> WordsOfPower
         {
             get => this._WordsOfPower;
             protected set => this._WordsOfPower = value;
@@ -632,9 +630,9 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new TranslatedString? Name { get; set; }
-        new FormLinkNullable<Static> MenuDisplayObject { get; set; }
+        new FormLinkNullable<IStaticGetter> MenuDisplayObject { get; set; }
         new TranslatedString? Description { get; set; }
-        new IExtendedList<ShoutWord> WordsOfPower { get; }
+        new ExtendedList<ShoutWord> WordsOfPower { get; }
         #region Mutagen
         new Shout.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -862,136 +860,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "NAME":
-                    return (ushort)Shout_FieldIndex.Name;
-                case "MENUDISPLAYOBJECT":
-                    return (ushort)Shout_FieldIndex.MenuDisplayObject;
-                case "DESCRIPTION":
-                    return (ushort)Shout_FieldIndex.Description;
-                case "WORDSOFPOWER":
-                    return (ushort)Shout_FieldIndex.WordsOfPower;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Shout_FieldIndex enu = (Shout_FieldIndex)index;
-            switch (enu)
-            {
-                case Shout_FieldIndex.WordsOfPower:
-                    return true;
-                case Shout_FieldIndex.Name:
-                case Shout_FieldIndex.MenuDisplayObject:
-                case Shout_FieldIndex.Description:
-                    return false;
-                default:
-                    return ASpell_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Shout_FieldIndex enu = (Shout_FieldIndex)index;
-            switch (enu)
-            {
-                case Shout_FieldIndex.WordsOfPower:
-                    return true;
-                case Shout_FieldIndex.Name:
-                case Shout_FieldIndex.MenuDisplayObject:
-                case Shout_FieldIndex.Description:
-                    return false;
-                default:
-                    return ASpell_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Shout_FieldIndex enu = (Shout_FieldIndex)index;
-            switch (enu)
-            {
-                case Shout_FieldIndex.Name:
-                case Shout_FieldIndex.MenuDisplayObject:
-                case Shout_FieldIndex.Description:
-                case Shout_FieldIndex.WordsOfPower:
-                    return false;
-                default:
-                    return ASpell_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Shout_FieldIndex enu = (Shout_FieldIndex)index;
-            switch (enu)
-            {
-                case Shout_FieldIndex.Name:
-                    return "Name";
-                case Shout_FieldIndex.MenuDisplayObject:
-                    return "MenuDisplayObject";
-                case Shout_FieldIndex.Description:
-                    return "Description";
-                case Shout_FieldIndex.WordsOfPower:
-                    return "WordsOfPower";
-                default:
-                    return ASpell_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Shout_FieldIndex enu = (Shout_FieldIndex)index;
-            switch (enu)
-            {
-                case Shout_FieldIndex.Name:
-                case Shout_FieldIndex.MenuDisplayObject:
-                case Shout_FieldIndex.Description:
-                case Shout_FieldIndex.WordsOfPower:
-                    return false;
-                default:
-                    return ASpell_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Shout_FieldIndex enu = (Shout_FieldIndex)index;
-            switch (enu)
-            {
-                case Shout_FieldIndex.Name:
-                case Shout_FieldIndex.MenuDisplayObject:
-                case Shout_FieldIndex.Description:
-                case Shout_FieldIndex.WordsOfPower:
-                    return false;
-                default:
-                    return ASpell_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Shout_FieldIndex enu = (Shout_FieldIndex)index;
-            switch (enu)
-            {
-                case Shout_FieldIndex.Name:
-                    return typeof(TranslatedString);
-                case Shout_FieldIndex.MenuDisplayObject:
-                    return typeof(FormLinkNullable<Static>);
-                case Shout_FieldIndex.Description:
-                    return typeof(TranslatedString);
-                case Shout_FieldIndex.WordsOfPower:
-                    return typeof(IExtendedList<ShoutWord>);
-                default:
-                    return ASpell_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.SHOU;
         public static readonly Type BinaryWriteTranslation = typeof(ShoutBinaryWriteTranslation);
         #region Interface
@@ -1012,14 +880,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1036,7 +904,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Name = default;
-            item.MenuDisplayObject = FormLinkNullable<Static>.Null;
+            item.MenuDisplayObject = FormLinkNullable<IStaticGetter>.Null;
             item.Description = default;
             item.WordsOfPower.Clear();
             base.Clear(item);
@@ -1437,7 +1305,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Shout_FieldIndex.MenuDisplayObject) ?? true))
             {
-                item.MenuDisplayObject = new FormLinkNullable<Static>(rhs.MenuDisplayObject.FormKey);
+                item.MenuDisplayObject = new FormLinkNullable<IStaticGetter>(rhs.MenuDisplayObject.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Shout_FieldIndex.Description) ?? true))
             {

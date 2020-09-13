@@ -45,8 +45,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Parents
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<ActivateParent> _Parents = new ExtendedList<ActivateParent>();
-        public IExtendedList<ActivateParent> Parents
+        private ExtendedList<ActivateParent> _Parents = new ExtendedList<ActivateParent>();
+        public ExtendedList<ActivateParent> Parents
         {
             get => this._Parents;
             protected set => this._Parents = value;
@@ -537,7 +537,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new ActivateParents.Flag Flags { get; set; }
-        new IExtendedList<ActivateParent> Parents { get; }
+        new ExtendedList<ActivateParent> Parents { get; }
     }
 
     public partial interface IActivateParentsGetter :
@@ -769,114 +769,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "FLAGS":
-                    return (ushort)ActivateParents_FieldIndex.Flags;
-                case "PARENTS":
-                    return (ushort)ActivateParents_FieldIndex.Parents;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            ActivateParents_FieldIndex enu = (ActivateParents_FieldIndex)index;
-            switch (enu)
-            {
-                case ActivateParents_FieldIndex.Parents:
-                    return true;
-                case ActivateParents_FieldIndex.Flags:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            ActivateParents_FieldIndex enu = (ActivateParents_FieldIndex)index;
-            switch (enu)
-            {
-                case ActivateParents_FieldIndex.Parents:
-                    return true;
-                case ActivateParents_FieldIndex.Flags:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            ActivateParents_FieldIndex enu = (ActivateParents_FieldIndex)index;
-            switch (enu)
-            {
-                case ActivateParents_FieldIndex.Flags:
-                case ActivateParents_FieldIndex.Parents:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            ActivateParents_FieldIndex enu = (ActivateParents_FieldIndex)index;
-            switch (enu)
-            {
-                case ActivateParents_FieldIndex.Flags:
-                    return "Flags";
-                case ActivateParents_FieldIndex.Parents:
-                    return "Parents";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            ActivateParents_FieldIndex enu = (ActivateParents_FieldIndex)index;
-            switch (enu)
-            {
-                case ActivateParents_FieldIndex.Flags:
-                case ActivateParents_FieldIndex.Parents:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            ActivateParents_FieldIndex enu = (ActivateParents_FieldIndex)index;
-            switch (enu)
-            {
-                case ActivateParents_FieldIndex.Flags:
-                case ActivateParents_FieldIndex.Parents:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            ActivateParents_FieldIndex enu = (ActivateParents_FieldIndex)index;
-            switch (enu)
-            {
-                case ActivateParents_FieldIndex.Flags:
-                    return typeof(ActivateParents.Flag);
-                case ActivateParents_FieldIndex.Parents:
-                    return typeof(IExtendedList<ActivateParent>);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.XAPD;
         public static readonly Type BinaryWriteTranslation = typeof(ActivateParentsBinaryWriteTranslation);
         #region Interface
@@ -897,14 +789,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

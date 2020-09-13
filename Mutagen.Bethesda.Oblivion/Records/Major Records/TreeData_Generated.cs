@@ -878,178 +878,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "LEAFCURVATURE":
-                    return (ushort)TreeData_FieldIndex.LeafCurvature;
-                case "MINIMUMLEAFANGLE":
-                    return (ushort)TreeData_FieldIndex.MinimumLeafAngle;
-                case "MAXIMUMLEAFANGLE":
-                    return (ushort)TreeData_FieldIndex.MaximumLeafAngle;
-                case "BRANCHDIMMINGVALUE":
-                    return (ushort)TreeData_FieldIndex.BranchDimmingValue;
-                case "LEAFDIMMINGVALUE":
-                    return (ushort)TreeData_FieldIndex.LeafDimmingValue;
-                case "SHADOWRADIUS":
-                    return (ushort)TreeData_FieldIndex.ShadowRadius;
-                case "ROCKINGSPEED":
-                    return (ushort)TreeData_FieldIndex.RockingSpeed;
-                case "RUSTLESPEED":
-                    return (ushort)TreeData_FieldIndex.RustleSpeed;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            TreeData_FieldIndex enu = (TreeData_FieldIndex)index;
-            switch (enu)
-            {
-                case TreeData_FieldIndex.LeafCurvature:
-                case TreeData_FieldIndex.MinimumLeafAngle:
-                case TreeData_FieldIndex.MaximumLeafAngle:
-                case TreeData_FieldIndex.BranchDimmingValue:
-                case TreeData_FieldIndex.LeafDimmingValue:
-                case TreeData_FieldIndex.ShadowRadius:
-                case TreeData_FieldIndex.RockingSpeed:
-                case TreeData_FieldIndex.RustleSpeed:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            TreeData_FieldIndex enu = (TreeData_FieldIndex)index;
-            switch (enu)
-            {
-                case TreeData_FieldIndex.LeafCurvature:
-                case TreeData_FieldIndex.MinimumLeafAngle:
-                case TreeData_FieldIndex.MaximumLeafAngle:
-                case TreeData_FieldIndex.BranchDimmingValue:
-                case TreeData_FieldIndex.LeafDimmingValue:
-                case TreeData_FieldIndex.ShadowRadius:
-                case TreeData_FieldIndex.RockingSpeed:
-                case TreeData_FieldIndex.RustleSpeed:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            TreeData_FieldIndex enu = (TreeData_FieldIndex)index;
-            switch (enu)
-            {
-                case TreeData_FieldIndex.LeafCurvature:
-                case TreeData_FieldIndex.MinimumLeafAngle:
-                case TreeData_FieldIndex.MaximumLeafAngle:
-                case TreeData_FieldIndex.BranchDimmingValue:
-                case TreeData_FieldIndex.LeafDimmingValue:
-                case TreeData_FieldIndex.ShadowRadius:
-                case TreeData_FieldIndex.RockingSpeed:
-                case TreeData_FieldIndex.RustleSpeed:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            TreeData_FieldIndex enu = (TreeData_FieldIndex)index;
-            switch (enu)
-            {
-                case TreeData_FieldIndex.LeafCurvature:
-                    return "LeafCurvature";
-                case TreeData_FieldIndex.MinimumLeafAngle:
-                    return "MinimumLeafAngle";
-                case TreeData_FieldIndex.MaximumLeafAngle:
-                    return "MaximumLeafAngle";
-                case TreeData_FieldIndex.BranchDimmingValue:
-                    return "BranchDimmingValue";
-                case TreeData_FieldIndex.LeafDimmingValue:
-                    return "LeafDimmingValue";
-                case TreeData_FieldIndex.ShadowRadius:
-                    return "ShadowRadius";
-                case TreeData_FieldIndex.RockingSpeed:
-                    return "RockingSpeed";
-                case TreeData_FieldIndex.RustleSpeed:
-                    return "RustleSpeed";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            TreeData_FieldIndex enu = (TreeData_FieldIndex)index;
-            switch (enu)
-            {
-                case TreeData_FieldIndex.LeafCurvature:
-                case TreeData_FieldIndex.MinimumLeafAngle:
-                case TreeData_FieldIndex.MaximumLeafAngle:
-                case TreeData_FieldIndex.BranchDimmingValue:
-                case TreeData_FieldIndex.LeafDimmingValue:
-                case TreeData_FieldIndex.ShadowRadius:
-                case TreeData_FieldIndex.RockingSpeed:
-                case TreeData_FieldIndex.RustleSpeed:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            TreeData_FieldIndex enu = (TreeData_FieldIndex)index;
-            switch (enu)
-            {
-                case TreeData_FieldIndex.LeafCurvature:
-                case TreeData_FieldIndex.MinimumLeafAngle:
-                case TreeData_FieldIndex.MaximumLeafAngle:
-                case TreeData_FieldIndex.BranchDimmingValue:
-                case TreeData_FieldIndex.LeafDimmingValue:
-                case TreeData_FieldIndex.ShadowRadius:
-                case TreeData_FieldIndex.RockingSpeed:
-                case TreeData_FieldIndex.RustleSpeed:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            TreeData_FieldIndex enu = (TreeData_FieldIndex)index;
-            switch (enu)
-            {
-                case TreeData_FieldIndex.LeafCurvature:
-                    return typeof(Single);
-                case TreeData_FieldIndex.MinimumLeafAngle:
-                    return typeof(Single);
-                case TreeData_FieldIndex.MaximumLeafAngle:
-                    return typeof(Single);
-                case TreeData_FieldIndex.BranchDimmingValue:
-                    return typeof(Single);
-                case TreeData_FieldIndex.LeafDimmingValue:
-                    return typeof(Single);
-                case TreeData_FieldIndex.ShadowRadius:
-                    return typeof(Int32);
-                case TreeData_FieldIndex.RockingSpeed:
-                    return typeof(Single);
-                case TreeData_FieldIndex.RustleSpeed:
-                    return typeof(Single);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.CNAM;
         public static readonly Type BinaryWriteTranslation = typeof(TreeDataBinaryWriteTranslation);
         #region Interface
@@ -1070,14 +898,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

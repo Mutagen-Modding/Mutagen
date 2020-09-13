@@ -686,113 +686,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "TARGET":
-                    return (ushort)LocationTargetRadius_FieldIndex.Target;
-                case "RADIUS":
-                    return (ushort)LocationTargetRadius_FieldIndex.Radius;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            LocationTargetRadius_FieldIndex enu = (LocationTargetRadius_FieldIndex)index;
-            switch (enu)
-            {
-                case LocationTargetRadius_FieldIndex.Target:
-                case LocationTargetRadius_FieldIndex.Radius:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            LocationTargetRadius_FieldIndex enu = (LocationTargetRadius_FieldIndex)index;
-            switch (enu)
-            {
-                case LocationTargetRadius_FieldIndex.Target:
-                    return true;
-                case LocationTargetRadius_FieldIndex.Radius:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            LocationTargetRadius_FieldIndex enu = (LocationTargetRadius_FieldIndex)index;
-            switch (enu)
-            {
-                case LocationTargetRadius_FieldIndex.Target:
-                case LocationTargetRadius_FieldIndex.Radius:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            LocationTargetRadius_FieldIndex enu = (LocationTargetRadius_FieldIndex)index;
-            switch (enu)
-            {
-                case LocationTargetRadius_FieldIndex.Target:
-                    return "Target";
-                case LocationTargetRadius_FieldIndex.Radius:
-                    return "Radius";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            LocationTargetRadius_FieldIndex enu = (LocationTargetRadius_FieldIndex)index;
-            switch (enu)
-            {
-                case LocationTargetRadius_FieldIndex.Target:
-                case LocationTargetRadius_FieldIndex.Radius:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            LocationTargetRadius_FieldIndex enu = (LocationTargetRadius_FieldIndex)index;
-            switch (enu)
-            {
-                case LocationTargetRadius_FieldIndex.Target:
-                case LocationTargetRadius_FieldIndex.Radius:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            LocationTargetRadius_FieldIndex enu = (LocationTargetRadius_FieldIndex)index;
-            switch (enu)
-            {
-                case LocationTargetRadius_FieldIndex.Target:
-                    return typeof(ALocationTarget);
-                case LocationTargetRadius_FieldIndex.Radius:
-                    return typeof(UInt32);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly Type BinaryWriteTranslation = typeof(LocationTargetRadiusBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -812,14 +705,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

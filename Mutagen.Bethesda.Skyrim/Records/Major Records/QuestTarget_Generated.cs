@@ -41,17 +41,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Target
-        public FormLink<IPlaced> Target { get; set; } = new FormLink<IPlaced>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IPlacedGetter> IQuestTargetGetter.Target => this.Target.ToGetter<IPlaced, IPlacedGetter>();
+        public FormLink<IPlacedGetter> Target { get; set; } = new FormLink<IPlacedGetter>();
         #endregion
         #region Flags
         public Quest.TargetFlag Flags { get; set; } = default;
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public IExtendedList<Condition> Conditions
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -604,9 +602,9 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IQuestTarget>,
         ILinkedFormKeyContainer
     {
-        new FormLink<IPlaced> Target { get; set; }
+        new FormLink<IPlacedGetter> Target { get; set; }
         new Quest.TargetFlag Flags { get; set; }
-        new IExtendedList<Condition> Conditions { get; }
+        new ExtendedList<Condition> Conditions { get; }
         new QuestTarget.QSTADataType QSTADataTypeState { get; set; }
     }
 
@@ -843,136 +841,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "TARGET":
-                    return (ushort)QuestTarget_FieldIndex.Target;
-                case "FLAGS":
-                    return (ushort)QuestTarget_FieldIndex.Flags;
-                case "CONDITIONS":
-                    return (ushort)QuestTarget_FieldIndex.Conditions;
-                case "QSTADATATYPESTATE":
-                    return (ushort)QuestTarget_FieldIndex.QSTADataTypeState;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            QuestTarget_FieldIndex enu = (QuestTarget_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestTarget_FieldIndex.Conditions:
-                    return true;
-                case QuestTarget_FieldIndex.Target:
-                case QuestTarget_FieldIndex.Flags:
-                case QuestTarget_FieldIndex.QSTADataTypeState:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            QuestTarget_FieldIndex enu = (QuestTarget_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestTarget_FieldIndex.Conditions:
-                    return true;
-                case QuestTarget_FieldIndex.Target:
-                case QuestTarget_FieldIndex.Flags:
-                case QuestTarget_FieldIndex.QSTADataTypeState:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            QuestTarget_FieldIndex enu = (QuestTarget_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestTarget_FieldIndex.Target:
-                case QuestTarget_FieldIndex.Flags:
-                case QuestTarget_FieldIndex.Conditions:
-                case QuestTarget_FieldIndex.QSTADataTypeState:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            QuestTarget_FieldIndex enu = (QuestTarget_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestTarget_FieldIndex.Target:
-                    return "Target";
-                case QuestTarget_FieldIndex.Flags:
-                    return "Flags";
-                case QuestTarget_FieldIndex.Conditions:
-                    return "Conditions";
-                case QuestTarget_FieldIndex.QSTADataTypeState:
-                    return "QSTADataTypeState";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            QuestTarget_FieldIndex enu = (QuestTarget_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestTarget_FieldIndex.Target:
-                case QuestTarget_FieldIndex.Flags:
-                case QuestTarget_FieldIndex.Conditions:
-                case QuestTarget_FieldIndex.QSTADataTypeState:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            QuestTarget_FieldIndex enu = (QuestTarget_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestTarget_FieldIndex.Target:
-                case QuestTarget_FieldIndex.Flags:
-                case QuestTarget_FieldIndex.Conditions:
-                case QuestTarget_FieldIndex.QSTADataTypeState:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            QuestTarget_FieldIndex enu = (QuestTarget_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestTarget_FieldIndex.Target:
-                    return typeof(FormLink<IPlaced>);
-                case QuestTarget_FieldIndex.Flags:
-                    return typeof(Quest.TargetFlag);
-                case QuestTarget_FieldIndex.Conditions:
-                    return typeof(IExtendedList<Condition>);
-                case QuestTarget_FieldIndex.QSTADataTypeState:
-                    return typeof(QuestTarget.QSTADataType);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.QSTA;
         public static readonly Type BinaryWriteTranslation = typeof(QuestTargetBinaryWriteTranslation);
         #region Interface
@@ -993,14 +861,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1016,7 +884,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IQuestTarget item)
         {
             ClearPartial();
-            item.Target = FormLink<IPlaced>.Null;
+            item.Target = FormLink<IPlacedGetter>.Null;
             item.Flags = default;
             item.Conditions.Clear();
             item.QSTADataTypeState = default;
@@ -1211,7 +1079,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)QuestTarget_FieldIndex.Target) ?? true))
             {
-                item.Target = new FormLink<IPlaced>(rhs.Target.FormKey);
+                item.Target = new FormLink<IPlacedGetter>(rhs.Target.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)QuestTarget_FieldIndex.Flags) ?? true))
             {

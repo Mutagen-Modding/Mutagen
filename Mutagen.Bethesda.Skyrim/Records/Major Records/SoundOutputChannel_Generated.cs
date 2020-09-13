@@ -874,178 +874,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "L":
-                    return (ushort)SoundOutputChannel_FieldIndex.L;
-                case "R":
-                    return (ushort)SoundOutputChannel_FieldIndex.R;
-                case "C":
-                    return (ushort)SoundOutputChannel_FieldIndex.C;
-                case "LFE":
-                    return (ushort)SoundOutputChannel_FieldIndex.LFE;
-                case "RL":
-                    return (ushort)SoundOutputChannel_FieldIndex.RL;
-                case "RR":
-                    return (ushort)SoundOutputChannel_FieldIndex.RR;
-                case "BL":
-                    return (ushort)SoundOutputChannel_FieldIndex.BL;
-                case "BR":
-                    return (ushort)SoundOutputChannel_FieldIndex.BR;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            SoundOutputChannel_FieldIndex enu = (SoundOutputChannel_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundOutputChannel_FieldIndex.L:
-                case SoundOutputChannel_FieldIndex.R:
-                case SoundOutputChannel_FieldIndex.C:
-                case SoundOutputChannel_FieldIndex.LFE:
-                case SoundOutputChannel_FieldIndex.RL:
-                case SoundOutputChannel_FieldIndex.RR:
-                case SoundOutputChannel_FieldIndex.BL:
-                case SoundOutputChannel_FieldIndex.BR:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            SoundOutputChannel_FieldIndex enu = (SoundOutputChannel_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundOutputChannel_FieldIndex.L:
-                case SoundOutputChannel_FieldIndex.R:
-                case SoundOutputChannel_FieldIndex.C:
-                case SoundOutputChannel_FieldIndex.LFE:
-                case SoundOutputChannel_FieldIndex.RL:
-                case SoundOutputChannel_FieldIndex.RR:
-                case SoundOutputChannel_FieldIndex.BL:
-                case SoundOutputChannel_FieldIndex.BR:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            SoundOutputChannel_FieldIndex enu = (SoundOutputChannel_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundOutputChannel_FieldIndex.L:
-                case SoundOutputChannel_FieldIndex.R:
-                case SoundOutputChannel_FieldIndex.C:
-                case SoundOutputChannel_FieldIndex.LFE:
-                case SoundOutputChannel_FieldIndex.RL:
-                case SoundOutputChannel_FieldIndex.RR:
-                case SoundOutputChannel_FieldIndex.BL:
-                case SoundOutputChannel_FieldIndex.BR:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            SoundOutputChannel_FieldIndex enu = (SoundOutputChannel_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundOutputChannel_FieldIndex.L:
-                    return "L";
-                case SoundOutputChannel_FieldIndex.R:
-                    return "R";
-                case SoundOutputChannel_FieldIndex.C:
-                    return "C";
-                case SoundOutputChannel_FieldIndex.LFE:
-                    return "LFE";
-                case SoundOutputChannel_FieldIndex.RL:
-                    return "RL";
-                case SoundOutputChannel_FieldIndex.RR:
-                    return "RR";
-                case SoundOutputChannel_FieldIndex.BL:
-                    return "BL";
-                case SoundOutputChannel_FieldIndex.BR:
-                    return "BR";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            SoundOutputChannel_FieldIndex enu = (SoundOutputChannel_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundOutputChannel_FieldIndex.L:
-                case SoundOutputChannel_FieldIndex.R:
-                case SoundOutputChannel_FieldIndex.C:
-                case SoundOutputChannel_FieldIndex.LFE:
-                case SoundOutputChannel_FieldIndex.RL:
-                case SoundOutputChannel_FieldIndex.RR:
-                case SoundOutputChannel_FieldIndex.BL:
-                case SoundOutputChannel_FieldIndex.BR:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            SoundOutputChannel_FieldIndex enu = (SoundOutputChannel_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundOutputChannel_FieldIndex.L:
-                case SoundOutputChannel_FieldIndex.R:
-                case SoundOutputChannel_FieldIndex.C:
-                case SoundOutputChannel_FieldIndex.LFE:
-                case SoundOutputChannel_FieldIndex.RL:
-                case SoundOutputChannel_FieldIndex.RR:
-                case SoundOutputChannel_FieldIndex.BL:
-                case SoundOutputChannel_FieldIndex.BR:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            SoundOutputChannel_FieldIndex enu = (SoundOutputChannel_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundOutputChannel_FieldIndex.L:
-                    return typeof(Byte);
-                case SoundOutputChannel_FieldIndex.R:
-                    return typeof(Byte);
-                case SoundOutputChannel_FieldIndex.C:
-                    return typeof(Byte);
-                case SoundOutputChannel_FieldIndex.LFE:
-                    return typeof(Byte);
-                case SoundOutputChannel_FieldIndex.RL:
-                    return typeof(Byte);
-                case SoundOutputChannel_FieldIndex.RR:
-                    return typeof(Byte);
-                case SoundOutputChannel_FieldIndex.BL:
-                    return typeof(Byte);
-                case SoundOutputChannel_FieldIndex.BR:
-                    return typeof(Byte);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly Type BinaryWriteTranslation = typeof(SoundOutputChannelBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1065,14 +893,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

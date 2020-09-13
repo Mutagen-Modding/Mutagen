@@ -90,14 +90,10 @@ namespace Mutagen.Bethesda.Skyrim
         public Single Range { get; set; } = default;
         #endregion
         #region Light
-        public FormLink<Light> Light { get; set; } = new FormLink<Light>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ILightGetter> IProjectileGetter.Light => this.Light.ToGetter<Light, ILightGetter>();
+        public FormLink<ILightGetter> Light { get; set; } = new FormLink<ILightGetter>();
         #endregion
         #region MuzzleFlash
-        public FormLink<Light> MuzzleFlash { get; set; } = new FormLink<Light>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ILightGetter> IProjectileGetter.MuzzleFlash => this.MuzzleFlash.ToGetter<Light, ILightGetter>();
+        public FormLink<ILightGetter> MuzzleFlash { get; set; } = new FormLink<ILightGetter>();
         #endregion
         #region TracerChance
         public Single TracerChance { get; set; } = default;
@@ -109,14 +105,10 @@ namespace Mutagen.Bethesda.Skyrim
         public Single ExplosionAltTriggerTimer { get; set; } = default;
         #endregion
         #region Explosion
-        public FormLink<Explosion> Explosion { get; set; } = new FormLink<Explosion>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IExplosionGetter> IProjectileGetter.Explosion => this.Explosion.ToGetter<Explosion, IExplosionGetter>();
+        public FormLink<IExplosionGetter> Explosion { get; set; } = new FormLink<IExplosionGetter>();
         #endregion
         #region Sound
-        public FormLink<SoundDescriptor> Sound { get; set; } = new FormLink<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISoundDescriptorGetter> IProjectileGetter.Sound => this.Sound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLink<ISoundDescriptorGetter> Sound { get; set; } = new FormLink<ISoundDescriptorGetter>();
         #endregion
         #region MuzzleFlashDuration
         public Single MuzzleFlashDuration { get; set; } = default;
@@ -128,19 +120,13 @@ namespace Mutagen.Bethesda.Skyrim
         public Single ImpactForce { get; set; } = default;
         #endregion
         #region CountdownSound
-        public FormLink<SoundDescriptor> CountdownSound { get; set; } = new FormLink<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISoundDescriptorGetter> IProjectileGetter.CountdownSound => this.CountdownSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLink<ISoundDescriptorGetter> CountdownSound { get; set; } = new FormLink<ISoundDescriptorGetter>();
         #endregion
         #region DisaleSound
-        public FormLink<SoundDescriptor> DisaleSound { get; set; } = new FormLink<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISoundDescriptorGetter> IProjectileGetter.DisaleSound => this.DisaleSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLink<ISoundDescriptorGetter> DisaleSound { get; set; } = new FormLink<ISoundDescriptorGetter>();
         #endregion
         #region DefaultWeaponSource
-        public FormLink<Weapon> DefaultWeaponSource { get; set; } = new FormLink<Weapon>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IWeaponGetter> IProjectileGetter.DefaultWeaponSource => this.DefaultWeaponSource.ToGetter<Weapon, IWeaponGetter>();
+        public FormLink<IWeaponGetter> DefaultWeaponSource { get; set; } = new FormLink<IWeaponGetter>();
         #endregion
         #region ConeSpread
         public Single ConeSpread { get; set; } = default;
@@ -155,14 +141,10 @@ namespace Mutagen.Bethesda.Skyrim
         public Single RelaunchInterval { get; set; } = default;
         #endregion
         #region DecalData
-        public FormLink<TextureSet> DecalData { get; set; } = new FormLink<TextureSet>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ITextureSetGetter> IProjectileGetter.DecalData => this.DecalData.ToGetter<TextureSet, ITextureSetGetter>();
+        public FormLink<ITextureSetGetter> DecalData { get; set; } = new FormLink<ITextureSetGetter>();
         #endregion
         #region CollisionLayer
-        public FormLink<CollisionLayer> CollisionLayer { get; set; } = new FormLink<CollisionLayer>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ICollisionLayerGetter> IProjectileGetter.CollisionLayer => this.CollisionLayer.ToGetter<CollisionLayer, ICollisionLayerGetter>();
+        public FormLink<ICollisionLayerGetter> CollisionLayer { get; set; } = new FormLink<ICollisionLayerGetter>();
         #endregion
         #region MuzzleFlashModel
         public String MuzzleFlashModel { get; set; } = string.Empty;
@@ -1485,25 +1467,25 @@ namespace Mutagen.Bethesda.Skyrim
         new Single Gravity { get; set; }
         new Single Speed { get; set; }
         new Single Range { get; set; }
-        new FormLink<Light> Light { get; set; }
-        new FormLink<Light> MuzzleFlash { get; set; }
+        new FormLink<ILightGetter> Light { get; set; }
+        new FormLink<ILightGetter> MuzzleFlash { get; set; }
         new Single TracerChance { get; set; }
         new Single ExplosionAltTriggerProximity { get; set; }
         new Single ExplosionAltTriggerTimer { get; set; }
-        new FormLink<Explosion> Explosion { get; set; }
-        new FormLink<SoundDescriptor> Sound { get; set; }
+        new FormLink<IExplosionGetter> Explosion { get; set; }
+        new FormLink<ISoundDescriptorGetter> Sound { get; set; }
         new Single MuzzleFlashDuration { get; set; }
         new Single FadeDuration { get; set; }
         new Single ImpactForce { get; set; }
-        new FormLink<SoundDescriptor> CountdownSound { get; set; }
-        new FormLink<SoundDescriptor> DisaleSound { get; set; }
-        new FormLink<Weapon> DefaultWeaponSource { get; set; }
+        new FormLink<ISoundDescriptorGetter> CountdownSound { get; set; }
+        new FormLink<ISoundDescriptorGetter> DisaleSound { get; set; }
+        new FormLink<IWeaponGetter> DefaultWeaponSource { get; set; }
         new Single ConeSpread { get; set; }
         new Single CollisionRadius { get; set; }
         new Single Lifetime { get; set; }
         new Single RelaunchInterval { get; set; }
-        new FormLink<TextureSet> DecalData { get; set; }
-        new FormLink<CollisionLayer> CollisionLayer { get; set; }
+        new FormLink<ITextureSetGetter> DecalData { get; set; }
+        new FormLink<ICollisionLayerGetter> CollisionLayer { get; set; }
         new String MuzzleFlashModel { get; set; }
         new MemorySlice<Byte>? TextureFilesHashes { get; set; }
         new UInt32 SoundLevel { get; set; }
@@ -1784,443 +1766,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "OBJECTBOUNDS":
-                    return (ushort)Projectile_FieldIndex.ObjectBounds;
-                case "NAME":
-                    return (ushort)Projectile_FieldIndex.Name;
-                case "MODEL":
-                    return (ushort)Projectile_FieldIndex.Model;
-                case "DESTRUCTIBLE":
-                    return (ushort)Projectile_FieldIndex.Destructible;
-                case "FLAGS":
-                    return (ushort)Projectile_FieldIndex.Flags;
-                case "TYPE":
-                    return (ushort)Projectile_FieldIndex.Type;
-                case "GRAVITY":
-                    return (ushort)Projectile_FieldIndex.Gravity;
-                case "SPEED":
-                    return (ushort)Projectile_FieldIndex.Speed;
-                case "RANGE":
-                    return (ushort)Projectile_FieldIndex.Range;
-                case "LIGHT":
-                    return (ushort)Projectile_FieldIndex.Light;
-                case "MUZZLEFLASH":
-                    return (ushort)Projectile_FieldIndex.MuzzleFlash;
-                case "TRACERCHANCE":
-                    return (ushort)Projectile_FieldIndex.TracerChance;
-                case "EXPLOSIONALTTRIGGERPROXIMITY":
-                    return (ushort)Projectile_FieldIndex.ExplosionAltTriggerProximity;
-                case "EXPLOSIONALTTRIGGERTIMER":
-                    return (ushort)Projectile_FieldIndex.ExplosionAltTriggerTimer;
-                case "EXPLOSION":
-                    return (ushort)Projectile_FieldIndex.Explosion;
-                case "SOUND":
-                    return (ushort)Projectile_FieldIndex.Sound;
-                case "MUZZLEFLASHDURATION":
-                    return (ushort)Projectile_FieldIndex.MuzzleFlashDuration;
-                case "FADEDURATION":
-                    return (ushort)Projectile_FieldIndex.FadeDuration;
-                case "IMPACTFORCE":
-                    return (ushort)Projectile_FieldIndex.ImpactForce;
-                case "COUNTDOWNSOUND":
-                    return (ushort)Projectile_FieldIndex.CountdownSound;
-                case "DISALESOUND":
-                    return (ushort)Projectile_FieldIndex.DisaleSound;
-                case "DEFAULTWEAPONSOURCE":
-                    return (ushort)Projectile_FieldIndex.DefaultWeaponSource;
-                case "CONESPREAD":
-                    return (ushort)Projectile_FieldIndex.ConeSpread;
-                case "COLLISIONRADIUS":
-                    return (ushort)Projectile_FieldIndex.CollisionRadius;
-                case "LIFETIME":
-                    return (ushort)Projectile_FieldIndex.Lifetime;
-                case "RELAUNCHINTERVAL":
-                    return (ushort)Projectile_FieldIndex.RelaunchInterval;
-                case "DECALDATA":
-                    return (ushort)Projectile_FieldIndex.DecalData;
-                case "COLLISIONLAYER":
-                    return (ushort)Projectile_FieldIndex.CollisionLayer;
-                case "MUZZLEFLASHMODEL":
-                    return (ushort)Projectile_FieldIndex.MuzzleFlashModel;
-                case "TEXTUREFILESHASHES":
-                    return (ushort)Projectile_FieldIndex.TextureFilesHashes;
-                case "SOUNDLEVEL":
-                    return (ushort)Projectile_FieldIndex.SoundLevel;
-                case "DATADATATYPESTATE":
-                    return (ushort)Projectile_FieldIndex.DATADataTypeState;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Projectile_FieldIndex enu = (Projectile_FieldIndex)index;
-            switch (enu)
-            {
-                case Projectile_FieldIndex.ObjectBounds:
-                case Projectile_FieldIndex.Name:
-                case Projectile_FieldIndex.Model:
-                case Projectile_FieldIndex.Destructible:
-                case Projectile_FieldIndex.Flags:
-                case Projectile_FieldIndex.Type:
-                case Projectile_FieldIndex.Gravity:
-                case Projectile_FieldIndex.Speed:
-                case Projectile_FieldIndex.Range:
-                case Projectile_FieldIndex.Light:
-                case Projectile_FieldIndex.MuzzleFlash:
-                case Projectile_FieldIndex.TracerChance:
-                case Projectile_FieldIndex.ExplosionAltTriggerProximity:
-                case Projectile_FieldIndex.ExplosionAltTriggerTimer:
-                case Projectile_FieldIndex.Explosion:
-                case Projectile_FieldIndex.Sound:
-                case Projectile_FieldIndex.MuzzleFlashDuration:
-                case Projectile_FieldIndex.FadeDuration:
-                case Projectile_FieldIndex.ImpactForce:
-                case Projectile_FieldIndex.CountdownSound:
-                case Projectile_FieldIndex.DisaleSound:
-                case Projectile_FieldIndex.DefaultWeaponSource:
-                case Projectile_FieldIndex.ConeSpread:
-                case Projectile_FieldIndex.CollisionRadius:
-                case Projectile_FieldIndex.Lifetime:
-                case Projectile_FieldIndex.RelaunchInterval:
-                case Projectile_FieldIndex.DecalData:
-                case Projectile_FieldIndex.CollisionLayer:
-                case Projectile_FieldIndex.MuzzleFlashModel:
-                case Projectile_FieldIndex.TextureFilesHashes:
-                case Projectile_FieldIndex.SoundLevel:
-                case Projectile_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Projectile_FieldIndex enu = (Projectile_FieldIndex)index;
-            switch (enu)
-            {
-                case Projectile_FieldIndex.ObjectBounds:
-                case Projectile_FieldIndex.Model:
-                case Projectile_FieldIndex.Destructible:
-                    return true;
-                case Projectile_FieldIndex.Name:
-                case Projectile_FieldIndex.Flags:
-                case Projectile_FieldIndex.Type:
-                case Projectile_FieldIndex.Gravity:
-                case Projectile_FieldIndex.Speed:
-                case Projectile_FieldIndex.Range:
-                case Projectile_FieldIndex.Light:
-                case Projectile_FieldIndex.MuzzleFlash:
-                case Projectile_FieldIndex.TracerChance:
-                case Projectile_FieldIndex.ExplosionAltTriggerProximity:
-                case Projectile_FieldIndex.ExplosionAltTriggerTimer:
-                case Projectile_FieldIndex.Explosion:
-                case Projectile_FieldIndex.Sound:
-                case Projectile_FieldIndex.MuzzleFlashDuration:
-                case Projectile_FieldIndex.FadeDuration:
-                case Projectile_FieldIndex.ImpactForce:
-                case Projectile_FieldIndex.CountdownSound:
-                case Projectile_FieldIndex.DisaleSound:
-                case Projectile_FieldIndex.DefaultWeaponSource:
-                case Projectile_FieldIndex.ConeSpread:
-                case Projectile_FieldIndex.CollisionRadius:
-                case Projectile_FieldIndex.Lifetime:
-                case Projectile_FieldIndex.RelaunchInterval:
-                case Projectile_FieldIndex.DecalData:
-                case Projectile_FieldIndex.CollisionLayer:
-                case Projectile_FieldIndex.MuzzleFlashModel:
-                case Projectile_FieldIndex.TextureFilesHashes:
-                case Projectile_FieldIndex.SoundLevel:
-                case Projectile_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Projectile_FieldIndex enu = (Projectile_FieldIndex)index;
-            switch (enu)
-            {
-                case Projectile_FieldIndex.ObjectBounds:
-                case Projectile_FieldIndex.Name:
-                case Projectile_FieldIndex.Model:
-                case Projectile_FieldIndex.Destructible:
-                case Projectile_FieldIndex.Flags:
-                case Projectile_FieldIndex.Type:
-                case Projectile_FieldIndex.Gravity:
-                case Projectile_FieldIndex.Speed:
-                case Projectile_FieldIndex.Range:
-                case Projectile_FieldIndex.Light:
-                case Projectile_FieldIndex.MuzzleFlash:
-                case Projectile_FieldIndex.TracerChance:
-                case Projectile_FieldIndex.ExplosionAltTriggerProximity:
-                case Projectile_FieldIndex.ExplosionAltTriggerTimer:
-                case Projectile_FieldIndex.Explosion:
-                case Projectile_FieldIndex.Sound:
-                case Projectile_FieldIndex.MuzzleFlashDuration:
-                case Projectile_FieldIndex.FadeDuration:
-                case Projectile_FieldIndex.ImpactForce:
-                case Projectile_FieldIndex.CountdownSound:
-                case Projectile_FieldIndex.DisaleSound:
-                case Projectile_FieldIndex.DefaultWeaponSource:
-                case Projectile_FieldIndex.ConeSpread:
-                case Projectile_FieldIndex.CollisionRadius:
-                case Projectile_FieldIndex.Lifetime:
-                case Projectile_FieldIndex.RelaunchInterval:
-                case Projectile_FieldIndex.DecalData:
-                case Projectile_FieldIndex.CollisionLayer:
-                case Projectile_FieldIndex.MuzzleFlashModel:
-                case Projectile_FieldIndex.TextureFilesHashes:
-                case Projectile_FieldIndex.SoundLevel:
-                case Projectile_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Projectile_FieldIndex enu = (Projectile_FieldIndex)index;
-            switch (enu)
-            {
-                case Projectile_FieldIndex.ObjectBounds:
-                    return "ObjectBounds";
-                case Projectile_FieldIndex.Name:
-                    return "Name";
-                case Projectile_FieldIndex.Model:
-                    return "Model";
-                case Projectile_FieldIndex.Destructible:
-                    return "Destructible";
-                case Projectile_FieldIndex.Flags:
-                    return "Flags";
-                case Projectile_FieldIndex.Type:
-                    return "Type";
-                case Projectile_FieldIndex.Gravity:
-                    return "Gravity";
-                case Projectile_FieldIndex.Speed:
-                    return "Speed";
-                case Projectile_FieldIndex.Range:
-                    return "Range";
-                case Projectile_FieldIndex.Light:
-                    return "Light";
-                case Projectile_FieldIndex.MuzzleFlash:
-                    return "MuzzleFlash";
-                case Projectile_FieldIndex.TracerChance:
-                    return "TracerChance";
-                case Projectile_FieldIndex.ExplosionAltTriggerProximity:
-                    return "ExplosionAltTriggerProximity";
-                case Projectile_FieldIndex.ExplosionAltTriggerTimer:
-                    return "ExplosionAltTriggerTimer";
-                case Projectile_FieldIndex.Explosion:
-                    return "Explosion";
-                case Projectile_FieldIndex.Sound:
-                    return "Sound";
-                case Projectile_FieldIndex.MuzzleFlashDuration:
-                    return "MuzzleFlashDuration";
-                case Projectile_FieldIndex.FadeDuration:
-                    return "FadeDuration";
-                case Projectile_FieldIndex.ImpactForce:
-                    return "ImpactForce";
-                case Projectile_FieldIndex.CountdownSound:
-                    return "CountdownSound";
-                case Projectile_FieldIndex.DisaleSound:
-                    return "DisaleSound";
-                case Projectile_FieldIndex.DefaultWeaponSource:
-                    return "DefaultWeaponSource";
-                case Projectile_FieldIndex.ConeSpread:
-                    return "ConeSpread";
-                case Projectile_FieldIndex.CollisionRadius:
-                    return "CollisionRadius";
-                case Projectile_FieldIndex.Lifetime:
-                    return "Lifetime";
-                case Projectile_FieldIndex.RelaunchInterval:
-                    return "RelaunchInterval";
-                case Projectile_FieldIndex.DecalData:
-                    return "DecalData";
-                case Projectile_FieldIndex.CollisionLayer:
-                    return "CollisionLayer";
-                case Projectile_FieldIndex.MuzzleFlashModel:
-                    return "MuzzleFlashModel";
-                case Projectile_FieldIndex.TextureFilesHashes:
-                    return "TextureFilesHashes";
-                case Projectile_FieldIndex.SoundLevel:
-                    return "SoundLevel";
-                case Projectile_FieldIndex.DATADataTypeState:
-                    return "DATADataTypeState";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Projectile_FieldIndex enu = (Projectile_FieldIndex)index;
-            switch (enu)
-            {
-                case Projectile_FieldIndex.ObjectBounds:
-                case Projectile_FieldIndex.Name:
-                case Projectile_FieldIndex.Model:
-                case Projectile_FieldIndex.Destructible:
-                case Projectile_FieldIndex.Flags:
-                case Projectile_FieldIndex.Type:
-                case Projectile_FieldIndex.Gravity:
-                case Projectile_FieldIndex.Speed:
-                case Projectile_FieldIndex.Range:
-                case Projectile_FieldIndex.Light:
-                case Projectile_FieldIndex.MuzzleFlash:
-                case Projectile_FieldIndex.TracerChance:
-                case Projectile_FieldIndex.ExplosionAltTriggerProximity:
-                case Projectile_FieldIndex.ExplosionAltTriggerTimer:
-                case Projectile_FieldIndex.Explosion:
-                case Projectile_FieldIndex.Sound:
-                case Projectile_FieldIndex.MuzzleFlashDuration:
-                case Projectile_FieldIndex.FadeDuration:
-                case Projectile_FieldIndex.ImpactForce:
-                case Projectile_FieldIndex.CountdownSound:
-                case Projectile_FieldIndex.DisaleSound:
-                case Projectile_FieldIndex.DefaultWeaponSource:
-                case Projectile_FieldIndex.ConeSpread:
-                case Projectile_FieldIndex.CollisionRadius:
-                case Projectile_FieldIndex.Lifetime:
-                case Projectile_FieldIndex.RelaunchInterval:
-                case Projectile_FieldIndex.DecalData:
-                case Projectile_FieldIndex.CollisionLayer:
-                case Projectile_FieldIndex.MuzzleFlashModel:
-                case Projectile_FieldIndex.TextureFilesHashes:
-                case Projectile_FieldIndex.SoundLevel:
-                case Projectile_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Projectile_FieldIndex enu = (Projectile_FieldIndex)index;
-            switch (enu)
-            {
-                case Projectile_FieldIndex.ObjectBounds:
-                case Projectile_FieldIndex.Name:
-                case Projectile_FieldIndex.Model:
-                case Projectile_FieldIndex.Destructible:
-                case Projectile_FieldIndex.Flags:
-                case Projectile_FieldIndex.Type:
-                case Projectile_FieldIndex.Gravity:
-                case Projectile_FieldIndex.Speed:
-                case Projectile_FieldIndex.Range:
-                case Projectile_FieldIndex.Light:
-                case Projectile_FieldIndex.MuzzleFlash:
-                case Projectile_FieldIndex.TracerChance:
-                case Projectile_FieldIndex.ExplosionAltTriggerProximity:
-                case Projectile_FieldIndex.ExplosionAltTriggerTimer:
-                case Projectile_FieldIndex.Explosion:
-                case Projectile_FieldIndex.Sound:
-                case Projectile_FieldIndex.MuzzleFlashDuration:
-                case Projectile_FieldIndex.FadeDuration:
-                case Projectile_FieldIndex.ImpactForce:
-                case Projectile_FieldIndex.CountdownSound:
-                case Projectile_FieldIndex.DisaleSound:
-                case Projectile_FieldIndex.DefaultWeaponSource:
-                case Projectile_FieldIndex.ConeSpread:
-                case Projectile_FieldIndex.CollisionRadius:
-                case Projectile_FieldIndex.Lifetime:
-                case Projectile_FieldIndex.RelaunchInterval:
-                case Projectile_FieldIndex.DecalData:
-                case Projectile_FieldIndex.CollisionLayer:
-                case Projectile_FieldIndex.MuzzleFlashModel:
-                case Projectile_FieldIndex.TextureFilesHashes:
-                case Projectile_FieldIndex.SoundLevel:
-                case Projectile_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Projectile_FieldIndex enu = (Projectile_FieldIndex)index;
-            switch (enu)
-            {
-                case Projectile_FieldIndex.ObjectBounds:
-                    return typeof(ObjectBounds);
-                case Projectile_FieldIndex.Name:
-                    return typeof(TranslatedString);
-                case Projectile_FieldIndex.Model:
-                    return typeof(Model);
-                case Projectile_FieldIndex.Destructible:
-                    return typeof(Destructible);
-                case Projectile_FieldIndex.Flags:
-                    return typeof(Projectile.Flag);
-                case Projectile_FieldIndex.Type:
-                    return typeof(Projectile.TypeEnum);
-                case Projectile_FieldIndex.Gravity:
-                    return typeof(Single);
-                case Projectile_FieldIndex.Speed:
-                    return typeof(Single);
-                case Projectile_FieldIndex.Range:
-                    return typeof(Single);
-                case Projectile_FieldIndex.Light:
-                    return typeof(FormLink<Light>);
-                case Projectile_FieldIndex.MuzzleFlash:
-                    return typeof(FormLink<Light>);
-                case Projectile_FieldIndex.TracerChance:
-                    return typeof(Single);
-                case Projectile_FieldIndex.ExplosionAltTriggerProximity:
-                    return typeof(Single);
-                case Projectile_FieldIndex.ExplosionAltTriggerTimer:
-                    return typeof(Single);
-                case Projectile_FieldIndex.Explosion:
-                    return typeof(FormLink<Explosion>);
-                case Projectile_FieldIndex.Sound:
-                    return typeof(FormLink<SoundDescriptor>);
-                case Projectile_FieldIndex.MuzzleFlashDuration:
-                    return typeof(Single);
-                case Projectile_FieldIndex.FadeDuration:
-                    return typeof(Single);
-                case Projectile_FieldIndex.ImpactForce:
-                    return typeof(Single);
-                case Projectile_FieldIndex.CountdownSound:
-                    return typeof(FormLink<SoundDescriptor>);
-                case Projectile_FieldIndex.DisaleSound:
-                    return typeof(FormLink<SoundDescriptor>);
-                case Projectile_FieldIndex.DefaultWeaponSource:
-                    return typeof(FormLink<Weapon>);
-                case Projectile_FieldIndex.ConeSpread:
-                    return typeof(Single);
-                case Projectile_FieldIndex.CollisionRadius:
-                    return typeof(Single);
-                case Projectile_FieldIndex.Lifetime:
-                    return typeof(Single);
-                case Projectile_FieldIndex.RelaunchInterval:
-                    return typeof(Single);
-                case Projectile_FieldIndex.DecalData:
-                    return typeof(FormLink<TextureSet>);
-                case Projectile_FieldIndex.CollisionLayer:
-                    return typeof(FormLink<CollisionLayer>);
-                case Projectile_FieldIndex.MuzzleFlashModel:
-                    return typeof(String);
-                case Projectile_FieldIndex.TextureFilesHashes:
-                    return typeof(MemorySlice<Byte>);
-                case Projectile_FieldIndex.SoundLevel:
-                    return typeof(UInt32);
-                case Projectile_FieldIndex.DATADataTypeState:
-                    return typeof(Projectile.DATADataType);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.PROJ;
         public static readonly Type BinaryWriteTranslation = typeof(ProjectileBinaryWriteTranslation);
         #region Interface
@@ -2241,14 +1786,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -2273,25 +1818,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Gravity = default;
             item.Speed = default;
             item.Range = default;
-            item.Light = FormLink<Light>.Null;
-            item.MuzzleFlash = FormLink<Light>.Null;
+            item.Light = FormLink<ILightGetter>.Null;
+            item.MuzzleFlash = FormLink<ILightGetter>.Null;
             item.TracerChance = default;
             item.ExplosionAltTriggerProximity = default;
             item.ExplosionAltTriggerTimer = default;
-            item.Explosion = FormLink<Explosion>.Null;
-            item.Sound = FormLink<SoundDescriptor>.Null;
+            item.Explosion = FormLink<IExplosionGetter>.Null;
+            item.Sound = FormLink<ISoundDescriptorGetter>.Null;
             item.MuzzleFlashDuration = default;
             item.FadeDuration = default;
             item.ImpactForce = default;
-            item.CountdownSound = FormLink<SoundDescriptor>.Null;
-            item.DisaleSound = FormLink<SoundDescriptor>.Null;
-            item.DefaultWeaponSource = FormLink<Weapon>.Null;
+            item.CountdownSound = FormLink<ISoundDescriptorGetter>.Null;
+            item.DisaleSound = FormLink<ISoundDescriptorGetter>.Null;
+            item.DefaultWeaponSource = FormLink<IWeaponGetter>.Null;
             item.ConeSpread = default;
             item.CollisionRadius = default;
             item.Lifetime = default;
             item.RelaunchInterval = default;
-            item.DecalData = FormLink<TextureSet>.Null;
-            item.CollisionLayer = FormLink<CollisionLayer>.Null;
+            item.DecalData = FormLink<ITextureSetGetter>.Null;
+            item.CollisionLayer = FormLink<ICollisionLayerGetter>.Null;
             item.MuzzleFlashModel = string.Empty;
             item.TextureFilesHashes = default;
             item.SoundLevel = default;
@@ -2947,11 +2492,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.Light) ?? true))
             {
-                item.Light = new FormLink<Light>(rhs.Light.FormKey);
+                item.Light = new FormLink<ILightGetter>(rhs.Light.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlash) ?? true))
             {
-                item.MuzzleFlash = new FormLink<Light>(rhs.MuzzleFlash.FormKey);
+                item.MuzzleFlash = new FormLink<ILightGetter>(rhs.MuzzleFlash.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.TracerChance) ?? true))
             {
@@ -2967,11 +2512,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.Explosion) ?? true))
             {
-                item.Explosion = new FormLink<Explosion>(rhs.Explosion.FormKey);
+                item.Explosion = new FormLink<IExplosionGetter>(rhs.Explosion.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.Sound) ?? true))
             {
-                item.Sound = new FormLink<SoundDescriptor>(rhs.Sound.FormKey);
+                item.Sound = new FormLink<ISoundDescriptorGetter>(rhs.Sound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlashDuration) ?? true))
             {
@@ -2987,15 +2532,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.CountdownSound) ?? true))
             {
-                item.CountdownSound = new FormLink<SoundDescriptor>(rhs.CountdownSound.FormKey);
+                item.CountdownSound = new FormLink<ISoundDescriptorGetter>(rhs.CountdownSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.DisaleSound) ?? true))
             {
-                item.DisaleSound = new FormLink<SoundDescriptor>(rhs.DisaleSound.FormKey);
+                item.DisaleSound = new FormLink<ISoundDescriptorGetter>(rhs.DisaleSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.DefaultWeaponSource) ?? true))
             {
-                item.DefaultWeaponSource = new FormLink<Weapon>(rhs.DefaultWeaponSource.FormKey);
+                item.DefaultWeaponSource = new FormLink<IWeaponGetter>(rhs.DefaultWeaponSource.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.ConeSpread) ?? true))
             {
@@ -3015,11 +2560,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.DecalData) ?? true))
             {
-                item.DecalData = new FormLink<TextureSet>(rhs.DecalData.FormKey);
+                item.DecalData = new FormLink<ITextureSetGetter>(rhs.DecalData.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.CollisionLayer) ?? true))
             {
-                item.CollisionLayer = new FormLink<CollisionLayer>(rhs.CollisionLayer.FormKey);
+                item.CollisionLayer = new FormLink<ICollisionLayerGetter>(rhs.CollisionLayer.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlashModel) ?? true))
             {

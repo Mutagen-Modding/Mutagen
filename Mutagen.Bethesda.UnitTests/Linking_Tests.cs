@@ -1109,6 +1109,11 @@ namespace Mutagen.Bethesda.UnitTests
 
         public override IDisposable ConvertMod(SkyrimMod mod, out ISkyrimModGetter getter)
         {
+            return ConvertModToOverlay(mod, out getter);
+        }
+
+        public static IDisposable ConvertModToOverlay(SkyrimMod mod, out ISkyrimModGetter getter)
+        {
             var tempFile = new TempFile(extraDirectoryPaths: Utility.TempFolderPath);
             var path = new ModPath(mod.ModKey, tempFile.File.Path);
             mod.WriteToBinaryParallel(

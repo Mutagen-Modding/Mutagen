@@ -43,14 +43,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Base
-        public FormLinkNullable<Creature> Base { get; set; } = new FormLinkNullable<Creature>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ICreatureGetter> IPlacedCreatureGetter.Base => this.Base.ToGetter<Creature, ICreatureGetter>();
+        public FormLinkNullable<ICreatureGetter> Base { get; set; } = new FormLinkNullable<ICreatureGetter>();
         #endregion
         #region Owner
-        public FormLinkNullable<Faction> Owner { get; set; } = new FormLinkNullable<Faction>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IFactionGetter> IPlacedCreatureGetter.Owner => this.Owner.ToGetter<Faction, IFactionGetter>();
+        public FormLinkNullable<IFactionGetter> Owner { get; set; } = new FormLinkNullable<IFactionGetter>();
         #endregion
         #region FactionRank
         public Int32? FactionRank { get; set; }
@@ -58,9 +54,7 @@ namespace Mutagen.Bethesda.Oblivion
         Int32? IPlacedCreatureGetter.FactionRank => this.FactionRank;
         #endregion
         #region GlobalVariable
-        public FormLinkNullable<Global> GlobalVariable { get; set; } = new FormLinkNullable<Global>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IGlobalGetter> IPlacedCreatureGetter.GlobalVariable => this.GlobalVariable.ToGetter<Global, IGlobalGetter>();
+        public FormLinkNullable<IGlobalGetter> GlobalVariable { get; set; } = new FormLinkNullable<IGlobalGetter>();
         #endregion
         #region EnableParent
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -703,10 +697,10 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IPlacedCreatureInternal>,
         ILinkedFormKeyContainer
     {
-        new FormLinkNullable<Creature> Base { get; set; }
-        new FormLinkNullable<Faction> Owner { get; set; }
+        new FormLinkNullable<ICreatureGetter> Base { get; set; }
+        new FormLinkNullable<IFactionGetter> Owner { get; set; }
         new Int32? FactionRank { get; set; }
-        new FormLinkNullable<Global> GlobalVariable { get; set; }
+        new FormLinkNullable<IGlobalGetter> GlobalVariable { get; set; }
         new EnableParent? EnableParent { get; set; }
         new MemorySlice<Byte>? RagdollData { get; set; }
         new Single? Scale { get; set; }
@@ -936,179 +930,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "BASE":
-                    return (ushort)PlacedCreature_FieldIndex.Base;
-                case "OWNER":
-                    return (ushort)PlacedCreature_FieldIndex.Owner;
-                case "FACTIONRANK":
-                    return (ushort)PlacedCreature_FieldIndex.FactionRank;
-                case "GLOBALVARIABLE":
-                    return (ushort)PlacedCreature_FieldIndex.GlobalVariable;
-                case "ENABLEPARENT":
-                    return (ushort)PlacedCreature_FieldIndex.EnableParent;
-                case "RAGDOLLDATA":
-                    return (ushort)PlacedCreature_FieldIndex.RagdollData;
-                case "SCALE":
-                    return (ushort)PlacedCreature_FieldIndex.Scale;
-                case "LOCATION":
-                    return (ushort)PlacedCreature_FieldIndex.Location;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            PlacedCreature_FieldIndex enu = (PlacedCreature_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedCreature_FieldIndex.Base:
-                case PlacedCreature_FieldIndex.Owner:
-                case PlacedCreature_FieldIndex.FactionRank:
-                case PlacedCreature_FieldIndex.GlobalVariable:
-                case PlacedCreature_FieldIndex.EnableParent:
-                case PlacedCreature_FieldIndex.RagdollData:
-                case PlacedCreature_FieldIndex.Scale:
-                case PlacedCreature_FieldIndex.Location:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            PlacedCreature_FieldIndex enu = (PlacedCreature_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedCreature_FieldIndex.EnableParent:
-                case PlacedCreature_FieldIndex.Location:
-                    return true;
-                case PlacedCreature_FieldIndex.Base:
-                case PlacedCreature_FieldIndex.Owner:
-                case PlacedCreature_FieldIndex.FactionRank:
-                case PlacedCreature_FieldIndex.GlobalVariable:
-                case PlacedCreature_FieldIndex.RagdollData:
-                case PlacedCreature_FieldIndex.Scale:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            PlacedCreature_FieldIndex enu = (PlacedCreature_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedCreature_FieldIndex.Base:
-                case PlacedCreature_FieldIndex.Owner:
-                case PlacedCreature_FieldIndex.FactionRank:
-                case PlacedCreature_FieldIndex.GlobalVariable:
-                case PlacedCreature_FieldIndex.EnableParent:
-                case PlacedCreature_FieldIndex.RagdollData:
-                case PlacedCreature_FieldIndex.Scale:
-                case PlacedCreature_FieldIndex.Location:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            PlacedCreature_FieldIndex enu = (PlacedCreature_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedCreature_FieldIndex.Base:
-                    return "Base";
-                case PlacedCreature_FieldIndex.Owner:
-                    return "Owner";
-                case PlacedCreature_FieldIndex.FactionRank:
-                    return "FactionRank";
-                case PlacedCreature_FieldIndex.GlobalVariable:
-                    return "GlobalVariable";
-                case PlacedCreature_FieldIndex.EnableParent:
-                    return "EnableParent";
-                case PlacedCreature_FieldIndex.RagdollData:
-                    return "RagdollData";
-                case PlacedCreature_FieldIndex.Scale:
-                    return "Scale";
-                case PlacedCreature_FieldIndex.Location:
-                    return "Location";
-                default:
-                    return OblivionMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            PlacedCreature_FieldIndex enu = (PlacedCreature_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedCreature_FieldIndex.Base:
-                case PlacedCreature_FieldIndex.Owner:
-                case PlacedCreature_FieldIndex.FactionRank:
-                case PlacedCreature_FieldIndex.GlobalVariable:
-                case PlacedCreature_FieldIndex.EnableParent:
-                case PlacedCreature_FieldIndex.RagdollData:
-                case PlacedCreature_FieldIndex.Scale:
-                case PlacedCreature_FieldIndex.Location:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            PlacedCreature_FieldIndex enu = (PlacedCreature_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedCreature_FieldIndex.Base:
-                case PlacedCreature_FieldIndex.Owner:
-                case PlacedCreature_FieldIndex.FactionRank:
-                case PlacedCreature_FieldIndex.GlobalVariable:
-                case PlacedCreature_FieldIndex.EnableParent:
-                case PlacedCreature_FieldIndex.RagdollData:
-                case PlacedCreature_FieldIndex.Scale:
-                case PlacedCreature_FieldIndex.Location:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            PlacedCreature_FieldIndex enu = (PlacedCreature_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedCreature_FieldIndex.Base:
-                    return typeof(FormLinkNullable<Creature>);
-                case PlacedCreature_FieldIndex.Owner:
-                    return typeof(FormLinkNullable<Faction>);
-                case PlacedCreature_FieldIndex.FactionRank:
-                    return typeof(Int32);
-                case PlacedCreature_FieldIndex.GlobalVariable:
-                    return typeof(FormLinkNullable<Global>);
-                case PlacedCreature_FieldIndex.EnableParent:
-                    return typeof(EnableParent);
-                case PlacedCreature_FieldIndex.RagdollData:
-                    return typeof(MemorySlice<Byte>);
-                case PlacedCreature_FieldIndex.Scale:
-                    return typeof(Single);
-                case PlacedCreature_FieldIndex.Location:
-                    return typeof(Location);
-                default:
-                    return OblivionMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.ACRE;
         public static readonly Type BinaryWriteTranslation = typeof(PlacedCreatureBinaryWriteTranslation);
         #region Interface
@@ -1129,14 +950,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1152,10 +973,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IPlacedCreatureInternal item)
         {
             ClearPartial();
-            item.Base = FormLinkNullable<Creature>.Null;
-            item.Owner = FormLinkNullable<Faction>.Null;
+            item.Base = FormLinkNullable<ICreatureGetter>.Null;
+            item.Owner = FormLinkNullable<IFactionGetter>.Null;
             item.FactionRank = default;
-            item.GlobalVariable = FormLinkNullable<Global>.Null;
+            item.GlobalVariable = FormLinkNullable<IGlobalGetter>.Null;
             item.EnableParent = null;
             item.RagdollData = default;
             item.Scale = default;
@@ -1543,11 +1364,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.Base) ?? true))
             {
-                item.Base = new FormLinkNullable<Creature>(rhs.Base.FormKey);
+                item.Base = new FormLinkNullable<ICreatureGetter>(rhs.Base.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.Owner) ?? true))
             {
-                item.Owner = new FormLinkNullable<Faction>(rhs.Owner.FormKey);
+                item.Owner = new FormLinkNullable<IFactionGetter>(rhs.Owner.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.FactionRank) ?? true))
             {
@@ -1555,7 +1376,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.GlobalVariable) ?? true))
             {
-                item.GlobalVariable = new FormLinkNullable<Global>(rhs.GlobalVariable.FormKey);
+                item.GlobalVariable = new FormLinkNullable<IGlobalGetter>(rhs.GlobalVariable.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.EnableParent) ?? true))
             {

@@ -43,9 +43,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Base
-        public FormLinkNullable<Npc> Base { get; set; } = new FormLinkNullable<Npc>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<INpcGetter> IPlacedNpcGetter.Base => this.Base.ToGetter<Npc, INpcGetter>();
+        public FormLinkNullable<INpcGetter> Base { get; set; } = new FormLinkNullable<INpcGetter>();
         #endregion
         #region XPCIFluff
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -92,14 +90,10 @@ namespace Mutagen.Bethesda.Oblivion
         IEnableParentGetter? IPlacedNpcGetter.EnableParent => this.EnableParent;
         #endregion
         #region MerchantContainer
-        public FormLinkNullable<PlacedObject> MerchantContainer { get; set; } = new FormLinkNullable<PlacedObject>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IPlacedObjectGetter> IPlacedNpcGetter.MerchantContainer => this.MerchantContainer.ToGetter<PlacedObject, IPlacedObjectGetter>();
+        public FormLinkNullable<IPlacedObjectGetter> MerchantContainer { get; set; } = new FormLinkNullable<IPlacedObjectGetter>();
         #endregion
         #region Horse
-        public FormLinkNullable<PlacedCreature> Horse { get; set; } = new FormLinkNullable<PlacedCreature>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IPlacedCreatureGetter> IPlacedNpcGetter.Horse => this.Horse.ToGetter<PlacedCreature, IPlacedCreatureGetter>();
+        public FormLinkNullable<IPlacedCreatureGetter> Horse { get; set; } = new FormLinkNullable<IPlacedCreatureGetter>();
         #endregion
         #region RagdollData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -794,13 +788,13 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IPlacedNpcInternal>,
         ILinkedFormKeyContainer
     {
-        new FormLinkNullable<Npc> Base { get; set; }
+        new FormLinkNullable<INpcGetter> Base { get; set; }
         new MemorySlice<Byte>? XPCIFluff { get; set; }
         new MemorySlice<Byte>? FULLFluff { get; set; }
         new DistantLODData? DistantLODData { get; set; }
         new EnableParent? EnableParent { get; set; }
-        new FormLinkNullable<PlacedObject> MerchantContainer { get; set; }
-        new FormLinkNullable<PlacedCreature> Horse { get; set; }
+        new FormLinkNullable<IPlacedObjectGetter> MerchantContainer { get; set; }
+        new FormLinkNullable<IPlacedCreatureGetter> Horse { get; set; }
         new MemorySlice<Byte>? RagdollData { get; set; }
         new Single? Scale { get; set; }
         new Location? Location { get; set; }
@@ -1033,201 +1027,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "BASE":
-                    return (ushort)PlacedNpc_FieldIndex.Base;
-                case "XPCIFLUFF":
-                    return (ushort)PlacedNpc_FieldIndex.XPCIFluff;
-                case "FULLFLUFF":
-                    return (ushort)PlacedNpc_FieldIndex.FULLFluff;
-                case "DISTANTLODDATA":
-                    return (ushort)PlacedNpc_FieldIndex.DistantLODData;
-                case "ENABLEPARENT":
-                    return (ushort)PlacedNpc_FieldIndex.EnableParent;
-                case "MERCHANTCONTAINER":
-                    return (ushort)PlacedNpc_FieldIndex.MerchantContainer;
-                case "HORSE":
-                    return (ushort)PlacedNpc_FieldIndex.Horse;
-                case "RAGDOLLDATA":
-                    return (ushort)PlacedNpc_FieldIndex.RagdollData;
-                case "SCALE":
-                    return (ushort)PlacedNpc_FieldIndex.Scale;
-                case "LOCATION":
-                    return (ushort)PlacedNpc_FieldIndex.Location;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            PlacedNpc_FieldIndex enu = (PlacedNpc_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedNpc_FieldIndex.Base:
-                case PlacedNpc_FieldIndex.XPCIFluff:
-                case PlacedNpc_FieldIndex.FULLFluff:
-                case PlacedNpc_FieldIndex.DistantLODData:
-                case PlacedNpc_FieldIndex.EnableParent:
-                case PlacedNpc_FieldIndex.MerchantContainer:
-                case PlacedNpc_FieldIndex.Horse:
-                case PlacedNpc_FieldIndex.RagdollData:
-                case PlacedNpc_FieldIndex.Scale:
-                case PlacedNpc_FieldIndex.Location:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            PlacedNpc_FieldIndex enu = (PlacedNpc_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedNpc_FieldIndex.DistantLODData:
-                case PlacedNpc_FieldIndex.EnableParent:
-                case PlacedNpc_FieldIndex.Location:
-                    return true;
-                case PlacedNpc_FieldIndex.Base:
-                case PlacedNpc_FieldIndex.XPCIFluff:
-                case PlacedNpc_FieldIndex.FULLFluff:
-                case PlacedNpc_FieldIndex.MerchantContainer:
-                case PlacedNpc_FieldIndex.Horse:
-                case PlacedNpc_FieldIndex.RagdollData:
-                case PlacedNpc_FieldIndex.Scale:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            PlacedNpc_FieldIndex enu = (PlacedNpc_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedNpc_FieldIndex.Base:
-                case PlacedNpc_FieldIndex.XPCIFluff:
-                case PlacedNpc_FieldIndex.FULLFluff:
-                case PlacedNpc_FieldIndex.DistantLODData:
-                case PlacedNpc_FieldIndex.EnableParent:
-                case PlacedNpc_FieldIndex.MerchantContainer:
-                case PlacedNpc_FieldIndex.Horse:
-                case PlacedNpc_FieldIndex.RagdollData:
-                case PlacedNpc_FieldIndex.Scale:
-                case PlacedNpc_FieldIndex.Location:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            PlacedNpc_FieldIndex enu = (PlacedNpc_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedNpc_FieldIndex.Base:
-                    return "Base";
-                case PlacedNpc_FieldIndex.XPCIFluff:
-                    return "XPCIFluff";
-                case PlacedNpc_FieldIndex.FULLFluff:
-                    return "FULLFluff";
-                case PlacedNpc_FieldIndex.DistantLODData:
-                    return "DistantLODData";
-                case PlacedNpc_FieldIndex.EnableParent:
-                    return "EnableParent";
-                case PlacedNpc_FieldIndex.MerchantContainer:
-                    return "MerchantContainer";
-                case PlacedNpc_FieldIndex.Horse:
-                    return "Horse";
-                case PlacedNpc_FieldIndex.RagdollData:
-                    return "RagdollData";
-                case PlacedNpc_FieldIndex.Scale:
-                    return "Scale";
-                case PlacedNpc_FieldIndex.Location:
-                    return "Location";
-                default:
-                    return OblivionMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            PlacedNpc_FieldIndex enu = (PlacedNpc_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedNpc_FieldIndex.Base:
-                case PlacedNpc_FieldIndex.XPCIFluff:
-                case PlacedNpc_FieldIndex.FULLFluff:
-                case PlacedNpc_FieldIndex.DistantLODData:
-                case PlacedNpc_FieldIndex.EnableParent:
-                case PlacedNpc_FieldIndex.MerchantContainer:
-                case PlacedNpc_FieldIndex.Horse:
-                case PlacedNpc_FieldIndex.RagdollData:
-                case PlacedNpc_FieldIndex.Scale:
-                case PlacedNpc_FieldIndex.Location:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            PlacedNpc_FieldIndex enu = (PlacedNpc_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedNpc_FieldIndex.Base:
-                case PlacedNpc_FieldIndex.XPCIFluff:
-                case PlacedNpc_FieldIndex.FULLFluff:
-                case PlacedNpc_FieldIndex.DistantLODData:
-                case PlacedNpc_FieldIndex.EnableParent:
-                case PlacedNpc_FieldIndex.MerchantContainer:
-                case PlacedNpc_FieldIndex.Horse:
-                case PlacedNpc_FieldIndex.RagdollData:
-                case PlacedNpc_FieldIndex.Scale:
-                case PlacedNpc_FieldIndex.Location:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            PlacedNpc_FieldIndex enu = (PlacedNpc_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedNpc_FieldIndex.Base:
-                    return typeof(FormLinkNullable<Npc>);
-                case PlacedNpc_FieldIndex.XPCIFluff:
-                    return typeof(MemorySlice<Byte>);
-                case PlacedNpc_FieldIndex.FULLFluff:
-                    return typeof(MemorySlice<Byte>);
-                case PlacedNpc_FieldIndex.DistantLODData:
-                    return typeof(DistantLODData);
-                case PlacedNpc_FieldIndex.EnableParent:
-                    return typeof(EnableParent);
-                case PlacedNpc_FieldIndex.MerchantContainer:
-                    return typeof(FormLinkNullable<PlacedObject>);
-                case PlacedNpc_FieldIndex.Horse:
-                    return typeof(FormLinkNullable<PlacedCreature>);
-                case PlacedNpc_FieldIndex.RagdollData:
-                    return typeof(MemorySlice<Byte>);
-                case PlacedNpc_FieldIndex.Scale:
-                    return typeof(Single);
-                case PlacedNpc_FieldIndex.Location:
-                    return typeof(Location);
-                default:
-                    return OblivionMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.ACHR;
         public static readonly Type BinaryWriteTranslation = typeof(PlacedNpcBinaryWriteTranslation);
         #region Interface
@@ -1248,14 +1047,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1271,13 +1070,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IPlacedNpcInternal item)
         {
             ClearPartial();
-            item.Base = FormLinkNullable<Npc>.Null;
+            item.Base = FormLinkNullable<INpcGetter>.Null;
             item.XPCIFluff = default;
             item.FULLFluff = default;
             item.DistantLODData = null;
             item.EnableParent = null;
-            item.MerchantContainer = FormLinkNullable<PlacedObject>.Null;
-            item.Horse = FormLinkNullable<PlacedCreature>.Null;
+            item.MerchantContainer = FormLinkNullable<IPlacedObjectGetter>.Null;
+            item.Horse = FormLinkNullable<IPlacedCreatureGetter>.Null;
             item.RagdollData = default;
             item.Scale = default;
             item.Location = null;
@@ -1690,7 +1489,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Base) ?? true))
             {
-                item.Base = new FormLinkNullable<Npc>(rhs.Base.FormKey);
+                item.Base = new FormLinkNullable<INpcGetter>(rhs.Base.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.XPCIFluff) ?? true))
             {
@@ -1768,11 +1567,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.MerchantContainer) ?? true))
             {
-                item.MerchantContainer = new FormLinkNullable<PlacedObject>(rhs.MerchantContainer.FormKey);
+                item.MerchantContainer = new FormLinkNullable<IPlacedObjectGetter>(rhs.MerchantContainer.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Horse) ?? true))
             {
-                item.Horse = new FormLinkNullable<PlacedCreature>(rhs.Horse.FormKey);
+                item.Horse = new FormLinkNullable<IPlacedCreatureGetter>(rhs.Horse.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.RagdollData) ?? true))
             {

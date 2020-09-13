@@ -42,9 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Npc
-        public FormLink<Npc> Npc { get; set; } = new FormLink<Npc>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<INpcGetter> INpcOwnerGetter.Npc => this.Npc.ToGetter<Npc, INpcGetter>();
+        public FormLink<INpcGetter> Npc { get; set; } = new FormLink<INpcGetter>();
         #endregion
         #region RawVariableData
         public UInt32 RawVariableData { get; set; } = default;
@@ -441,7 +439,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<INpcOwner>,
         ILinkedFormKeyContainer
     {
-        new FormLink<Npc> Npc { get; set; }
+        new FormLink<INpcGetter> Npc { get; set; }
         new UInt32 RawVariableData { get; set; }
     }
 
@@ -643,112 +641,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "NPC":
-                    return (ushort)NpcOwner_FieldIndex.Npc;
-                case "RAWVARIABLEDATA":
-                    return (ushort)NpcOwner_FieldIndex.RawVariableData;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            NpcOwner_FieldIndex enu = (NpcOwner_FieldIndex)index;
-            switch (enu)
-            {
-                case NpcOwner_FieldIndex.Npc:
-                case NpcOwner_FieldIndex.RawVariableData:
-                    return false;
-                default:
-                    return OwnerTarget_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            NpcOwner_FieldIndex enu = (NpcOwner_FieldIndex)index;
-            switch (enu)
-            {
-                case NpcOwner_FieldIndex.Npc:
-                case NpcOwner_FieldIndex.RawVariableData:
-                    return false;
-                default:
-                    return OwnerTarget_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            NpcOwner_FieldIndex enu = (NpcOwner_FieldIndex)index;
-            switch (enu)
-            {
-                case NpcOwner_FieldIndex.Npc:
-                case NpcOwner_FieldIndex.RawVariableData:
-                    return false;
-                default:
-                    return OwnerTarget_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            NpcOwner_FieldIndex enu = (NpcOwner_FieldIndex)index;
-            switch (enu)
-            {
-                case NpcOwner_FieldIndex.Npc:
-                    return "Npc";
-                case NpcOwner_FieldIndex.RawVariableData:
-                    return "RawVariableData";
-                default:
-                    return OwnerTarget_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            NpcOwner_FieldIndex enu = (NpcOwner_FieldIndex)index;
-            switch (enu)
-            {
-                case NpcOwner_FieldIndex.Npc:
-                case NpcOwner_FieldIndex.RawVariableData:
-                    return false;
-                default:
-                    return OwnerTarget_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            NpcOwner_FieldIndex enu = (NpcOwner_FieldIndex)index;
-            switch (enu)
-            {
-                case NpcOwner_FieldIndex.Npc:
-                case NpcOwner_FieldIndex.RawVariableData:
-                    return false;
-                default:
-                    return OwnerTarget_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            NpcOwner_FieldIndex enu = (NpcOwner_FieldIndex)index;
-            switch (enu)
-            {
-                case NpcOwner_FieldIndex.Npc:
-                    return typeof(FormLink<Npc>);
-                case NpcOwner_FieldIndex.RawVariableData:
-                    return typeof(UInt32);
-                default:
-                    return OwnerTarget_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly Type BinaryWriteTranslation = typeof(NpcOwnerBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -768,14 +660,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -791,7 +683,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(INpcOwner item)
         {
             ClearPartial();
-            item.Npc = FormLink<Npc>.Null;
+            item.Npc = FormLink<INpcGetter>.Null;
             item.RawVariableData = default;
             base.Clear(item);
         }
@@ -1004,7 +896,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)NpcOwner_FieldIndex.Npc) ?? true))
             {
-                item.Npc = new FormLink<Npc>(rhs.Npc.FormKey);
+                item.Npc = new FormLink<INpcGetter>(rhs.Npc.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)NpcOwner_FieldIndex.RawVariableData) ?? true))
             {

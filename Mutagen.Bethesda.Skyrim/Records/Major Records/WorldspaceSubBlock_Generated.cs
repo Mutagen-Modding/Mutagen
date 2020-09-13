@@ -57,8 +57,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Cell> _Items = new ExtendedList<Cell>();
-        public IExtendedList<Cell> Items
+        private ExtendedList<Cell> _Items = new ExtendedList<Cell>();
+        public ExtendedList<Cell> Items
         {
             get => this._Items;
             protected set => this._Items = value;
@@ -700,7 +700,7 @@ namespace Mutagen.Bethesda.Skyrim
         new GroupTypeEnum GroupType { get; set; }
         new Int32 LastModified { get; set; }
         new Int32 Unknown { get; set; }
-        new IExtendedList<Cell> Items { get; }
+        new ExtendedList<Cell> Items { get; }
     }
 
     public partial interface IWorldspaceSubBlockGetter :
@@ -1156,158 +1156,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "BLOCKNUMBERY":
-                    return (ushort)WorldspaceSubBlock_FieldIndex.BlockNumberY;
-                case "BLOCKNUMBERX":
-                    return (ushort)WorldspaceSubBlock_FieldIndex.BlockNumberX;
-                case "GROUPTYPE":
-                    return (ushort)WorldspaceSubBlock_FieldIndex.GroupType;
-                case "LASTMODIFIED":
-                    return (ushort)WorldspaceSubBlock_FieldIndex.LastModified;
-                case "UNKNOWN":
-                    return (ushort)WorldspaceSubBlock_FieldIndex.Unknown;
-                case "ITEMS":
-                    return (ushort)WorldspaceSubBlock_FieldIndex.Items;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            WorldspaceSubBlock_FieldIndex enu = (WorldspaceSubBlock_FieldIndex)index;
-            switch (enu)
-            {
-                case WorldspaceSubBlock_FieldIndex.Items:
-                    return true;
-                case WorldspaceSubBlock_FieldIndex.BlockNumberY:
-                case WorldspaceSubBlock_FieldIndex.BlockNumberX:
-                case WorldspaceSubBlock_FieldIndex.GroupType:
-                case WorldspaceSubBlock_FieldIndex.LastModified:
-                case WorldspaceSubBlock_FieldIndex.Unknown:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            WorldspaceSubBlock_FieldIndex enu = (WorldspaceSubBlock_FieldIndex)index;
-            switch (enu)
-            {
-                case WorldspaceSubBlock_FieldIndex.Items:
-                    return true;
-                case WorldspaceSubBlock_FieldIndex.BlockNumberY:
-                case WorldspaceSubBlock_FieldIndex.BlockNumberX:
-                case WorldspaceSubBlock_FieldIndex.GroupType:
-                case WorldspaceSubBlock_FieldIndex.LastModified:
-                case WorldspaceSubBlock_FieldIndex.Unknown:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            WorldspaceSubBlock_FieldIndex enu = (WorldspaceSubBlock_FieldIndex)index;
-            switch (enu)
-            {
-                case WorldspaceSubBlock_FieldIndex.BlockNumberY:
-                case WorldspaceSubBlock_FieldIndex.BlockNumberX:
-                case WorldspaceSubBlock_FieldIndex.GroupType:
-                case WorldspaceSubBlock_FieldIndex.LastModified:
-                case WorldspaceSubBlock_FieldIndex.Unknown:
-                case WorldspaceSubBlock_FieldIndex.Items:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            WorldspaceSubBlock_FieldIndex enu = (WorldspaceSubBlock_FieldIndex)index;
-            switch (enu)
-            {
-                case WorldspaceSubBlock_FieldIndex.BlockNumberY:
-                    return "BlockNumberY";
-                case WorldspaceSubBlock_FieldIndex.BlockNumberX:
-                    return "BlockNumberX";
-                case WorldspaceSubBlock_FieldIndex.GroupType:
-                    return "GroupType";
-                case WorldspaceSubBlock_FieldIndex.LastModified:
-                    return "LastModified";
-                case WorldspaceSubBlock_FieldIndex.Unknown:
-                    return "Unknown";
-                case WorldspaceSubBlock_FieldIndex.Items:
-                    return "Items";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            WorldspaceSubBlock_FieldIndex enu = (WorldspaceSubBlock_FieldIndex)index;
-            switch (enu)
-            {
-                case WorldspaceSubBlock_FieldIndex.BlockNumberY:
-                case WorldspaceSubBlock_FieldIndex.BlockNumberX:
-                case WorldspaceSubBlock_FieldIndex.GroupType:
-                case WorldspaceSubBlock_FieldIndex.LastModified:
-                case WorldspaceSubBlock_FieldIndex.Unknown:
-                case WorldspaceSubBlock_FieldIndex.Items:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            WorldspaceSubBlock_FieldIndex enu = (WorldspaceSubBlock_FieldIndex)index;
-            switch (enu)
-            {
-                case WorldspaceSubBlock_FieldIndex.BlockNumberY:
-                case WorldspaceSubBlock_FieldIndex.BlockNumberX:
-                case WorldspaceSubBlock_FieldIndex.GroupType:
-                case WorldspaceSubBlock_FieldIndex.LastModified:
-                case WorldspaceSubBlock_FieldIndex.Unknown:
-                case WorldspaceSubBlock_FieldIndex.Items:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            WorldspaceSubBlock_FieldIndex enu = (WorldspaceSubBlock_FieldIndex)index;
-            switch (enu)
-            {
-                case WorldspaceSubBlock_FieldIndex.BlockNumberY:
-                    return typeof(Int16);
-                case WorldspaceSubBlock_FieldIndex.BlockNumberX:
-                    return typeof(Int16);
-                case WorldspaceSubBlock_FieldIndex.GroupType:
-                    return typeof(GroupTypeEnum);
-                case WorldspaceSubBlock_FieldIndex.LastModified:
-                    return typeof(Int32);
-                case WorldspaceSubBlock_FieldIndex.Unknown:
-                    return typeof(Int32);
-                case WorldspaceSubBlock_FieldIndex.Items:
-                    return typeof(IExtendedList<Cell>);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.GRUP;
         public static readonly Type BinaryWriteTranslation = typeof(WorldspaceSubBlockBinaryWriteTranslation);
         #region Interface
@@ -1328,14 +1176,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

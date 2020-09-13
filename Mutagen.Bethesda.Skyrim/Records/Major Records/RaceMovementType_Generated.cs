@@ -41,9 +41,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region MovementType
-        public FormLinkNullable<MovementType> MovementType { get; set; } = new FormLinkNullable<MovementType>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IMovementTypeGetter> IRaceMovementTypeGetter.MovementType => this.MovementType.ToGetter<MovementType, IMovementTypeGetter>();
+        public FormLinkNullable<IMovementTypeGetter> MovementType { get; set; } = new FormLinkNullable<IMovementTypeGetter>();
         #endregion
         #region Overrides
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -466,7 +464,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IRaceMovementType>,
         ILinkedFormKeyContainer
     {
-        new FormLinkNullable<MovementType> MovementType { get; set; }
+        new FormLinkNullable<IMovementTypeGetter> MovementType { get; set; }
         new SpeedOverrides? Overrides { get; set; }
     }
 
@@ -699,113 +697,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "MOVEMENTTYPE":
-                    return (ushort)RaceMovementType_FieldIndex.MovementType;
-                case "OVERRIDES":
-                    return (ushort)RaceMovementType_FieldIndex.Overrides;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            RaceMovementType_FieldIndex enu = (RaceMovementType_FieldIndex)index;
-            switch (enu)
-            {
-                case RaceMovementType_FieldIndex.MovementType:
-                case RaceMovementType_FieldIndex.Overrides:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            RaceMovementType_FieldIndex enu = (RaceMovementType_FieldIndex)index;
-            switch (enu)
-            {
-                case RaceMovementType_FieldIndex.Overrides:
-                    return true;
-                case RaceMovementType_FieldIndex.MovementType:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            RaceMovementType_FieldIndex enu = (RaceMovementType_FieldIndex)index;
-            switch (enu)
-            {
-                case RaceMovementType_FieldIndex.MovementType:
-                case RaceMovementType_FieldIndex.Overrides:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            RaceMovementType_FieldIndex enu = (RaceMovementType_FieldIndex)index;
-            switch (enu)
-            {
-                case RaceMovementType_FieldIndex.MovementType:
-                    return "MovementType";
-                case RaceMovementType_FieldIndex.Overrides:
-                    return "Overrides";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            RaceMovementType_FieldIndex enu = (RaceMovementType_FieldIndex)index;
-            switch (enu)
-            {
-                case RaceMovementType_FieldIndex.MovementType:
-                case RaceMovementType_FieldIndex.Overrides:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            RaceMovementType_FieldIndex enu = (RaceMovementType_FieldIndex)index;
-            switch (enu)
-            {
-                case RaceMovementType_FieldIndex.MovementType:
-                case RaceMovementType_FieldIndex.Overrides:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            RaceMovementType_FieldIndex enu = (RaceMovementType_FieldIndex)index;
-            switch (enu)
-            {
-                case RaceMovementType_FieldIndex.MovementType:
-                    return typeof(FormLinkNullable<MovementType>);
-                case RaceMovementType_FieldIndex.Overrides:
-                    return typeof(SpeedOverrides);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -837,14 +728,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -860,7 +751,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IRaceMovementType item)
         {
             ClearPartial();
-            item.MovementType = FormLinkNullable<MovementType>.Null;
+            item.MovementType = FormLinkNullable<IMovementTypeGetter>.Null;
             item.Overrides = null;
         }
         
@@ -1028,7 +919,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RaceMovementType_FieldIndex.MovementType) ?? true))
             {
-                item.MovementType = new FormLinkNullable<MovementType>(rhs.MovementType.FormKey);
+                item.MovementType = new FormLinkNullable<IMovementTypeGetter>(rhs.MovementType.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)RaceMovementType_FieldIndex.Overrides) ?? true))
             {

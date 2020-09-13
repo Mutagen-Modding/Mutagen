@@ -54,14 +54,12 @@ namespace Mutagen.Bethesda.Oblivion
         Color? IRegionGetter.MapColor => this.MapColor;
         #endregion
         #region Worldspace
-        public FormLinkNullable<Worldspace> Worldspace { get; set; } = new FormLinkNullable<Worldspace>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IWorldspaceGetter> IRegionGetter.Worldspace => this.Worldspace.ToGetter<Worldspace, IWorldspaceGetter>();
+        public FormLinkNullable<IWorldspaceGetter> Worldspace { get; set; } = new FormLinkNullable<IWorldspaceGetter>();
         #endregion
         #region Areas
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<RegionArea> _Areas = new ExtendedList<RegionArea>();
-        public IExtendedList<RegionArea> Areas
+        private ExtendedList<RegionArea> _Areas = new ExtendedList<RegionArea>();
+        public ExtendedList<RegionArea> Areas
         {
             get => this._Areas;
             protected set => this._Areas = value;
@@ -855,8 +853,8 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new String? Icon { get; set; }
         new Color? MapColor { get; set; }
-        new FormLinkNullable<Worldspace> Worldspace { get; set; }
-        new IExtendedList<RegionArea> Areas { get; }
+        new FormLinkNullable<IWorldspaceGetter> Worldspace { get; set; }
+        new ExtendedList<RegionArea> Areas { get; }
         new RegionObjects? Objects { get; set; }
         new RegionWeather? Weather { get; set; }
         new RegionMap? MapName { get; set; }
@@ -1088,191 +1086,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "ICON":
-                    return (ushort)Region_FieldIndex.Icon;
-                case "MAPCOLOR":
-                    return (ushort)Region_FieldIndex.MapColor;
-                case "WORLDSPACE":
-                    return (ushort)Region_FieldIndex.Worldspace;
-                case "AREAS":
-                    return (ushort)Region_FieldIndex.Areas;
-                case "OBJECTS":
-                    return (ushort)Region_FieldIndex.Objects;
-                case "WEATHER":
-                    return (ushort)Region_FieldIndex.Weather;
-                case "MAPNAME":
-                    return (ushort)Region_FieldIndex.MapName;
-                case "GRASSES":
-                    return (ushort)Region_FieldIndex.Grasses;
-                case "SOUNDS":
-                    return (ushort)Region_FieldIndex.Sounds;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Region_FieldIndex enu = (Region_FieldIndex)index;
-            switch (enu)
-            {
-                case Region_FieldIndex.Areas:
-                    return true;
-                case Region_FieldIndex.Icon:
-                case Region_FieldIndex.MapColor:
-                case Region_FieldIndex.Worldspace:
-                case Region_FieldIndex.Objects:
-                case Region_FieldIndex.Weather:
-                case Region_FieldIndex.MapName:
-                case Region_FieldIndex.Grasses:
-                case Region_FieldIndex.Sounds:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Region_FieldIndex enu = (Region_FieldIndex)index;
-            switch (enu)
-            {
-                case Region_FieldIndex.Areas:
-                case Region_FieldIndex.Objects:
-                case Region_FieldIndex.Weather:
-                case Region_FieldIndex.MapName:
-                case Region_FieldIndex.Grasses:
-                case Region_FieldIndex.Sounds:
-                    return true;
-                case Region_FieldIndex.Icon:
-                case Region_FieldIndex.MapColor:
-                case Region_FieldIndex.Worldspace:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Region_FieldIndex enu = (Region_FieldIndex)index;
-            switch (enu)
-            {
-                case Region_FieldIndex.Icon:
-                case Region_FieldIndex.MapColor:
-                case Region_FieldIndex.Worldspace:
-                case Region_FieldIndex.Areas:
-                case Region_FieldIndex.Objects:
-                case Region_FieldIndex.Weather:
-                case Region_FieldIndex.MapName:
-                case Region_FieldIndex.Grasses:
-                case Region_FieldIndex.Sounds:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Region_FieldIndex enu = (Region_FieldIndex)index;
-            switch (enu)
-            {
-                case Region_FieldIndex.Icon:
-                    return "Icon";
-                case Region_FieldIndex.MapColor:
-                    return "MapColor";
-                case Region_FieldIndex.Worldspace:
-                    return "Worldspace";
-                case Region_FieldIndex.Areas:
-                    return "Areas";
-                case Region_FieldIndex.Objects:
-                    return "Objects";
-                case Region_FieldIndex.Weather:
-                    return "Weather";
-                case Region_FieldIndex.MapName:
-                    return "MapName";
-                case Region_FieldIndex.Grasses:
-                    return "Grasses";
-                case Region_FieldIndex.Sounds:
-                    return "Sounds";
-                default:
-                    return OblivionMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Region_FieldIndex enu = (Region_FieldIndex)index;
-            switch (enu)
-            {
-                case Region_FieldIndex.Icon:
-                case Region_FieldIndex.MapColor:
-                case Region_FieldIndex.Worldspace:
-                case Region_FieldIndex.Areas:
-                case Region_FieldIndex.Objects:
-                case Region_FieldIndex.Weather:
-                case Region_FieldIndex.MapName:
-                case Region_FieldIndex.Grasses:
-                case Region_FieldIndex.Sounds:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Region_FieldIndex enu = (Region_FieldIndex)index;
-            switch (enu)
-            {
-                case Region_FieldIndex.Icon:
-                case Region_FieldIndex.MapColor:
-                case Region_FieldIndex.Worldspace:
-                case Region_FieldIndex.Areas:
-                case Region_FieldIndex.Objects:
-                case Region_FieldIndex.Weather:
-                case Region_FieldIndex.MapName:
-                case Region_FieldIndex.Grasses:
-                case Region_FieldIndex.Sounds:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Region_FieldIndex enu = (Region_FieldIndex)index;
-            switch (enu)
-            {
-                case Region_FieldIndex.Icon:
-                    return typeof(String);
-                case Region_FieldIndex.MapColor:
-                    return typeof(Color);
-                case Region_FieldIndex.Worldspace:
-                    return typeof(FormLinkNullable<Worldspace>);
-                case Region_FieldIndex.Areas:
-                    return typeof(IExtendedList<RegionArea>);
-                case Region_FieldIndex.Objects:
-                    return typeof(RegionObjects);
-                case Region_FieldIndex.Weather:
-                    return typeof(RegionWeather);
-                case Region_FieldIndex.MapName:
-                    return typeof(RegionMap);
-                case Region_FieldIndex.Grasses:
-                    return typeof(RegionGrasses);
-                case Region_FieldIndex.Sounds:
-                    return typeof(RegionSounds);
-                default:
-                    return OblivionMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.REGN;
         public static readonly Type BinaryWriteTranslation = typeof(RegionBinaryWriteTranslation);
         #region Interface
@@ -1293,14 +1106,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1318,7 +1131,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.Icon = default;
             item.MapColor = default;
-            item.Worldspace = FormLinkNullable<Worldspace>.Null;
+            item.Worldspace = FormLinkNullable<IWorldspaceGetter>.Null;
             item.Areas.Clear();
             item.Objects = null;
             item.Weather = null;
@@ -1773,7 +1586,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.Worldspace) ?? true))
             {
-                item.Worldspace = new FormLinkNullable<Worldspace>(rhs.Worldspace.FormKey);
+                item.Worldspace = new FormLinkNullable<IWorldspaceGetter>(rhs.Worldspace.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.Areas) ?? true))
             {

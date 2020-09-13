@@ -42,9 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Spell
-        public FormLinkNullable<Spell> Spell { get; set; } = new FormLinkNullable<Spell>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ISpellGetter> IPerkAddActivateChoiceGetter.Spell => this.Spell.ToGetter<Spell, ISpellGetter>();
+        public FormLinkNullable<ISpellGetter> Spell { get; set; } = new FormLinkNullable<ISpellGetter>();
         #endregion
         #region ButtonLabel
         public TranslatedString? ButtonLabel { get; set; }
@@ -496,7 +494,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPerkAddActivateChoice>,
         ILinkedFormKeyContainer
     {
-        new FormLinkNullable<Spell> Spell { get; set; }
+        new FormLinkNullable<ISpellGetter> Spell { get; set; }
         new TranslatedString? ButtonLabel { get; set; }
         new PerkScriptFlag Flags { get; set; }
     }
@@ -707,124 +705,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "SPELL":
-                    return (ushort)PerkAddActivateChoice_FieldIndex.Spell;
-                case "BUTTONLABEL":
-                    return (ushort)PerkAddActivateChoice_FieldIndex.ButtonLabel;
-                case "FLAGS":
-                    return (ushort)PerkAddActivateChoice_FieldIndex.Flags;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            PerkAddActivateChoice_FieldIndex enu = (PerkAddActivateChoice_FieldIndex)index;
-            switch (enu)
-            {
-                case PerkAddActivateChoice_FieldIndex.Spell:
-                case PerkAddActivateChoice_FieldIndex.ButtonLabel:
-                case PerkAddActivateChoice_FieldIndex.Flags:
-                    return false;
-                default:
-                    return APerkEntryPointEffect_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            PerkAddActivateChoice_FieldIndex enu = (PerkAddActivateChoice_FieldIndex)index;
-            switch (enu)
-            {
-                case PerkAddActivateChoice_FieldIndex.Flags:
-                    return true;
-                case PerkAddActivateChoice_FieldIndex.Spell:
-                case PerkAddActivateChoice_FieldIndex.ButtonLabel:
-                    return false;
-                default:
-                    return APerkEntryPointEffect_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            PerkAddActivateChoice_FieldIndex enu = (PerkAddActivateChoice_FieldIndex)index;
-            switch (enu)
-            {
-                case PerkAddActivateChoice_FieldIndex.Spell:
-                case PerkAddActivateChoice_FieldIndex.ButtonLabel:
-                case PerkAddActivateChoice_FieldIndex.Flags:
-                    return false;
-                default:
-                    return APerkEntryPointEffect_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            PerkAddActivateChoice_FieldIndex enu = (PerkAddActivateChoice_FieldIndex)index;
-            switch (enu)
-            {
-                case PerkAddActivateChoice_FieldIndex.Spell:
-                    return "Spell";
-                case PerkAddActivateChoice_FieldIndex.ButtonLabel:
-                    return "ButtonLabel";
-                case PerkAddActivateChoice_FieldIndex.Flags:
-                    return "Flags";
-                default:
-                    return APerkEntryPointEffect_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            PerkAddActivateChoice_FieldIndex enu = (PerkAddActivateChoice_FieldIndex)index;
-            switch (enu)
-            {
-                case PerkAddActivateChoice_FieldIndex.Spell:
-                case PerkAddActivateChoice_FieldIndex.ButtonLabel:
-                case PerkAddActivateChoice_FieldIndex.Flags:
-                    return false;
-                default:
-                    return APerkEntryPointEffect_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            PerkAddActivateChoice_FieldIndex enu = (PerkAddActivateChoice_FieldIndex)index;
-            switch (enu)
-            {
-                case PerkAddActivateChoice_FieldIndex.Spell:
-                case PerkAddActivateChoice_FieldIndex.ButtonLabel:
-                case PerkAddActivateChoice_FieldIndex.Flags:
-                    return false;
-                default:
-                    return APerkEntryPointEffect_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            PerkAddActivateChoice_FieldIndex enu = (PerkAddActivateChoice_FieldIndex)index;
-            switch (enu)
-            {
-                case PerkAddActivateChoice_FieldIndex.Spell:
-                    return typeof(FormLinkNullable<Spell>);
-                case PerkAddActivateChoice_FieldIndex.ButtonLabel:
-                    return typeof(TranslatedString);
-                case PerkAddActivateChoice_FieldIndex.Flags:
-                    return typeof(PerkScriptFlag);
-                default:
-                    return APerkEntryPointEffect_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.PRKE;
         public static readonly Type BinaryWriteTranslation = typeof(PerkAddActivateChoiceBinaryWriteTranslation);
         #region Interface
@@ -845,14 +725,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -868,7 +748,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IPerkAddActivateChoice item)
         {
             ClearPartial();
-            item.Spell = FormLinkNullable<Spell>.Null;
+            item.Spell = FormLinkNullable<ISpellGetter>.Null;
             item.ButtonLabel = default;
             item.Flags.Clear();
             base.Clear(item);
@@ -1156,7 +1036,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PerkAddActivateChoice_FieldIndex.Spell) ?? true))
             {
-                item.Spell = new FormLinkNullable<Spell>(rhs.Spell.FormKey);
+                item.Spell = new FormLinkNullable<ISpellGetter>(rhs.Spell.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PerkAddActivateChoice_FieldIndex.ButtonLabel) ?? true))
             {

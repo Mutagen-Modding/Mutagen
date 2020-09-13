@@ -45,8 +45,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public IExtendedList<Condition> Conditions
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region DataInputIndices
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Byte> _DataInputIndices = new ExtendedList<Byte>();
-        public IExtendedList<Byte> DataInputIndices
+        private ExtendedList<Byte> _DataInputIndices = new ExtendedList<Byte>();
+        public ExtendedList<Byte> DataInputIndices
         {
             get => this._DataInputIndices;
             protected set => this._DataInputIndices = value;
@@ -971,11 +971,11 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new String BranchType { get; set; }
-        new IExtendedList<Condition> Conditions { get; }
+        new ExtendedList<Condition> Conditions { get; }
         new PackageRoot? Root { get; set; }
         new String? ProcedureType { get; set; }
         new PackageBranch.Flag? Flags { get; set; }
-        new IExtendedList<Byte> DataInputIndices { get; }
+        new ExtendedList<Byte> DataInputIndices { get; }
         new PackageFlagsOverride? FlagsOverride { get; set; }
         new PackageFlagsOverride? FlagsOverrideUnused { get; set; }
         new SliceList<byte> Unknown { get; }
@@ -1224,191 +1224,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "BRANCHTYPE":
-                    return (ushort)PackageBranch_FieldIndex.BranchType;
-                case "CONDITIONS":
-                    return (ushort)PackageBranch_FieldIndex.Conditions;
-                case "ROOT":
-                    return (ushort)PackageBranch_FieldIndex.Root;
-                case "PROCEDURETYPE":
-                    return (ushort)PackageBranch_FieldIndex.ProcedureType;
-                case "FLAGS":
-                    return (ushort)PackageBranch_FieldIndex.Flags;
-                case "DATAINPUTINDICES":
-                    return (ushort)PackageBranch_FieldIndex.DataInputIndices;
-                case "FLAGSOVERRIDE":
-                    return (ushort)PackageBranch_FieldIndex.FlagsOverride;
-                case "FLAGSOVERRIDEUNUSED":
-                    return (ushort)PackageBranch_FieldIndex.FlagsOverrideUnused;
-                case "UNKNOWN":
-                    return (ushort)PackageBranch_FieldIndex.Unknown;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            PackageBranch_FieldIndex enu = (PackageBranch_FieldIndex)index;
-            switch (enu)
-            {
-                case PackageBranch_FieldIndex.Conditions:
-                case PackageBranch_FieldIndex.DataInputIndices:
-                case PackageBranch_FieldIndex.Unknown:
-                    return true;
-                case PackageBranch_FieldIndex.BranchType:
-                case PackageBranch_FieldIndex.Root:
-                case PackageBranch_FieldIndex.ProcedureType:
-                case PackageBranch_FieldIndex.Flags:
-                case PackageBranch_FieldIndex.FlagsOverride:
-                case PackageBranch_FieldIndex.FlagsOverrideUnused:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            PackageBranch_FieldIndex enu = (PackageBranch_FieldIndex)index;
-            switch (enu)
-            {
-                case PackageBranch_FieldIndex.Conditions:
-                case PackageBranch_FieldIndex.Root:
-                case PackageBranch_FieldIndex.FlagsOverride:
-                case PackageBranch_FieldIndex.FlagsOverrideUnused:
-                    return true;
-                case PackageBranch_FieldIndex.BranchType:
-                case PackageBranch_FieldIndex.ProcedureType:
-                case PackageBranch_FieldIndex.Flags:
-                case PackageBranch_FieldIndex.DataInputIndices:
-                case PackageBranch_FieldIndex.Unknown:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            PackageBranch_FieldIndex enu = (PackageBranch_FieldIndex)index;
-            switch (enu)
-            {
-                case PackageBranch_FieldIndex.BranchType:
-                case PackageBranch_FieldIndex.Conditions:
-                case PackageBranch_FieldIndex.Root:
-                case PackageBranch_FieldIndex.ProcedureType:
-                case PackageBranch_FieldIndex.Flags:
-                case PackageBranch_FieldIndex.DataInputIndices:
-                case PackageBranch_FieldIndex.FlagsOverride:
-                case PackageBranch_FieldIndex.FlagsOverrideUnused:
-                case PackageBranch_FieldIndex.Unknown:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            PackageBranch_FieldIndex enu = (PackageBranch_FieldIndex)index;
-            switch (enu)
-            {
-                case PackageBranch_FieldIndex.BranchType:
-                    return "BranchType";
-                case PackageBranch_FieldIndex.Conditions:
-                    return "Conditions";
-                case PackageBranch_FieldIndex.Root:
-                    return "Root";
-                case PackageBranch_FieldIndex.ProcedureType:
-                    return "ProcedureType";
-                case PackageBranch_FieldIndex.Flags:
-                    return "Flags";
-                case PackageBranch_FieldIndex.DataInputIndices:
-                    return "DataInputIndices";
-                case PackageBranch_FieldIndex.FlagsOverride:
-                    return "FlagsOverride";
-                case PackageBranch_FieldIndex.FlagsOverrideUnused:
-                    return "FlagsOverrideUnused";
-                case PackageBranch_FieldIndex.Unknown:
-                    return "Unknown";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            PackageBranch_FieldIndex enu = (PackageBranch_FieldIndex)index;
-            switch (enu)
-            {
-                case PackageBranch_FieldIndex.BranchType:
-                case PackageBranch_FieldIndex.Conditions:
-                case PackageBranch_FieldIndex.Root:
-                case PackageBranch_FieldIndex.ProcedureType:
-                case PackageBranch_FieldIndex.Flags:
-                case PackageBranch_FieldIndex.DataInputIndices:
-                case PackageBranch_FieldIndex.FlagsOverride:
-                case PackageBranch_FieldIndex.FlagsOverrideUnused:
-                case PackageBranch_FieldIndex.Unknown:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            PackageBranch_FieldIndex enu = (PackageBranch_FieldIndex)index;
-            switch (enu)
-            {
-                case PackageBranch_FieldIndex.BranchType:
-                case PackageBranch_FieldIndex.Conditions:
-                case PackageBranch_FieldIndex.Root:
-                case PackageBranch_FieldIndex.ProcedureType:
-                case PackageBranch_FieldIndex.Flags:
-                case PackageBranch_FieldIndex.DataInputIndices:
-                case PackageBranch_FieldIndex.FlagsOverride:
-                case PackageBranch_FieldIndex.FlagsOverrideUnused:
-                case PackageBranch_FieldIndex.Unknown:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            PackageBranch_FieldIndex enu = (PackageBranch_FieldIndex)index;
-            switch (enu)
-            {
-                case PackageBranch_FieldIndex.BranchType:
-                    return typeof(String);
-                case PackageBranch_FieldIndex.Conditions:
-                    return typeof(IExtendedList<Condition>);
-                case PackageBranch_FieldIndex.Root:
-                    return typeof(PackageRoot);
-                case PackageBranch_FieldIndex.ProcedureType:
-                    return typeof(String);
-                case PackageBranch_FieldIndex.Flags:
-                    return typeof(PackageBranch.Flag);
-                case PackageBranch_FieldIndex.DataInputIndices:
-                    return typeof(IExtendedList<Byte>);
-                case PackageBranch_FieldIndex.FlagsOverride:
-                    return typeof(PackageFlagsOverride);
-                case PackageBranch_FieldIndex.FlagsOverrideUnused:
-                    return typeof(PackageFlagsOverride);
-                case PackageBranch_FieldIndex.Unknown:
-                    return typeof(SliceList<byte>);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.ANAM;
         public static readonly Type BinaryWriteTranslation = typeof(PackageBranchBinaryWriteTranslation);
         #region Interface
@@ -1429,14 +1244,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

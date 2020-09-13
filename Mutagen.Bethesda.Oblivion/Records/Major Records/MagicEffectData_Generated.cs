@@ -62,17 +62,13 @@ namespace Mutagen.Bethesda.Oblivion
         public UInt32 CounterEffectCount { get; set; } = default;
         #endregion
         #region Light
-        public FormLink<Light> Light { get; set; } = new FormLink<Light>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ILightGetter> IMagicEffectDataGetter.Light => this.Light.ToGetter<Light, ILightGetter>();
+        public FormLink<ILightGetter> Light { get; set; } = new FormLink<ILightGetter>();
         #endregion
         #region ProjectileSpeed
         public Single ProjectileSpeed { get; set; } = default;
         #endregion
         #region EffectShader
-        public FormLink<EffectShader> EffectShader { get; set; } = new FormLink<EffectShader>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IEffectShaderGetter> IMagicEffectDataGetter.EffectShader => this.EffectShader.ToGetter<EffectShader, IEffectShaderGetter>();
+        public FormLink<IEffectShaderGetter> EffectShader { get; set; } = new FormLink<IEffectShaderGetter>();
         #endregion
         #region SubData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -760,9 +756,9 @@ namespace Mutagen.Bethesda.Oblivion
         new MagicSchool MagicSchool { get; set; }
         new Resistance Resistance { get; set; }
         new UInt32 CounterEffectCount { get; set; }
-        new FormLink<Light> Light { get; set; }
+        new FormLink<ILightGetter> Light { get; set; }
         new Single ProjectileSpeed { get; set; }
-        new FormLink<EffectShader> EffectShader { get; set; }
+        new FormLink<IEffectShaderGetter> EffectShader { get; set; }
         new MagicEffectSubData? SubData { get; set; }
     }
 
@@ -1013,212 +1009,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "VERSIONING":
-                    return (ushort)MagicEffectData_FieldIndex.Versioning;
-                case "FLAGS":
-                    return (ushort)MagicEffectData_FieldIndex.Flags;
-                case "BASECOST":
-                    return (ushort)MagicEffectData_FieldIndex.BaseCost;
-                case "UNUSED":
-                    return (ushort)MagicEffectData_FieldIndex.Unused;
-                case "MAGICSCHOOL":
-                    return (ushort)MagicEffectData_FieldIndex.MagicSchool;
-                case "RESISTANCE":
-                    return (ushort)MagicEffectData_FieldIndex.Resistance;
-                case "COUNTEREFFECTCOUNT":
-                    return (ushort)MagicEffectData_FieldIndex.CounterEffectCount;
-                case "LIGHT":
-                    return (ushort)MagicEffectData_FieldIndex.Light;
-                case "PROJECTILESPEED":
-                    return (ushort)MagicEffectData_FieldIndex.ProjectileSpeed;
-                case "EFFECTSHADER":
-                    return (ushort)MagicEffectData_FieldIndex.EffectShader;
-                case "SUBDATA":
-                    return (ushort)MagicEffectData_FieldIndex.SubData;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            MagicEffectData_FieldIndex enu = (MagicEffectData_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffectData_FieldIndex.Versioning:
-                case MagicEffectData_FieldIndex.Flags:
-                case MagicEffectData_FieldIndex.BaseCost:
-                case MagicEffectData_FieldIndex.Unused:
-                case MagicEffectData_FieldIndex.MagicSchool:
-                case MagicEffectData_FieldIndex.Resistance:
-                case MagicEffectData_FieldIndex.CounterEffectCount:
-                case MagicEffectData_FieldIndex.Light:
-                case MagicEffectData_FieldIndex.ProjectileSpeed:
-                case MagicEffectData_FieldIndex.EffectShader:
-                case MagicEffectData_FieldIndex.SubData:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            MagicEffectData_FieldIndex enu = (MagicEffectData_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffectData_FieldIndex.SubData:
-                    return true;
-                case MagicEffectData_FieldIndex.Versioning:
-                case MagicEffectData_FieldIndex.Flags:
-                case MagicEffectData_FieldIndex.BaseCost:
-                case MagicEffectData_FieldIndex.Unused:
-                case MagicEffectData_FieldIndex.MagicSchool:
-                case MagicEffectData_FieldIndex.Resistance:
-                case MagicEffectData_FieldIndex.CounterEffectCount:
-                case MagicEffectData_FieldIndex.Light:
-                case MagicEffectData_FieldIndex.ProjectileSpeed:
-                case MagicEffectData_FieldIndex.EffectShader:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            MagicEffectData_FieldIndex enu = (MagicEffectData_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffectData_FieldIndex.Versioning:
-                case MagicEffectData_FieldIndex.Flags:
-                case MagicEffectData_FieldIndex.BaseCost:
-                case MagicEffectData_FieldIndex.Unused:
-                case MagicEffectData_FieldIndex.MagicSchool:
-                case MagicEffectData_FieldIndex.Resistance:
-                case MagicEffectData_FieldIndex.CounterEffectCount:
-                case MagicEffectData_FieldIndex.Light:
-                case MagicEffectData_FieldIndex.ProjectileSpeed:
-                case MagicEffectData_FieldIndex.EffectShader:
-                case MagicEffectData_FieldIndex.SubData:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            MagicEffectData_FieldIndex enu = (MagicEffectData_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffectData_FieldIndex.Versioning:
-                    return "Versioning";
-                case MagicEffectData_FieldIndex.Flags:
-                    return "Flags";
-                case MagicEffectData_FieldIndex.BaseCost:
-                    return "BaseCost";
-                case MagicEffectData_FieldIndex.Unused:
-                    return "Unused";
-                case MagicEffectData_FieldIndex.MagicSchool:
-                    return "MagicSchool";
-                case MagicEffectData_FieldIndex.Resistance:
-                    return "Resistance";
-                case MagicEffectData_FieldIndex.CounterEffectCount:
-                    return "CounterEffectCount";
-                case MagicEffectData_FieldIndex.Light:
-                    return "Light";
-                case MagicEffectData_FieldIndex.ProjectileSpeed:
-                    return "ProjectileSpeed";
-                case MagicEffectData_FieldIndex.EffectShader:
-                    return "EffectShader";
-                case MagicEffectData_FieldIndex.SubData:
-                    return "SubData";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            MagicEffectData_FieldIndex enu = (MagicEffectData_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffectData_FieldIndex.Versioning:
-                case MagicEffectData_FieldIndex.Flags:
-                case MagicEffectData_FieldIndex.BaseCost:
-                case MagicEffectData_FieldIndex.Unused:
-                case MagicEffectData_FieldIndex.MagicSchool:
-                case MagicEffectData_FieldIndex.Resistance:
-                case MagicEffectData_FieldIndex.CounterEffectCount:
-                case MagicEffectData_FieldIndex.Light:
-                case MagicEffectData_FieldIndex.ProjectileSpeed:
-                case MagicEffectData_FieldIndex.EffectShader:
-                case MagicEffectData_FieldIndex.SubData:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            MagicEffectData_FieldIndex enu = (MagicEffectData_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffectData_FieldIndex.Versioning:
-                case MagicEffectData_FieldIndex.Flags:
-                case MagicEffectData_FieldIndex.BaseCost:
-                case MagicEffectData_FieldIndex.Unused:
-                case MagicEffectData_FieldIndex.MagicSchool:
-                case MagicEffectData_FieldIndex.Resistance:
-                case MagicEffectData_FieldIndex.CounterEffectCount:
-                case MagicEffectData_FieldIndex.Light:
-                case MagicEffectData_FieldIndex.ProjectileSpeed:
-                case MagicEffectData_FieldIndex.EffectShader:
-                case MagicEffectData_FieldIndex.SubData:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            MagicEffectData_FieldIndex enu = (MagicEffectData_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffectData_FieldIndex.Versioning:
-                    return typeof(MagicEffectData.VersioningBreaks);
-                case MagicEffectData_FieldIndex.Flags:
-                    return typeof(MagicEffect.MagicFlag);
-                case MagicEffectData_FieldIndex.BaseCost:
-                    return typeof(Single);
-                case MagicEffectData_FieldIndex.Unused:
-                    return typeof(Int32);
-                case MagicEffectData_FieldIndex.MagicSchool:
-                    return typeof(MagicSchool);
-                case MagicEffectData_FieldIndex.Resistance:
-                    return typeof(Resistance);
-                case MagicEffectData_FieldIndex.CounterEffectCount:
-                    return typeof(UInt32);
-                case MagicEffectData_FieldIndex.Light:
-                    return typeof(FormLink<Light>);
-                case MagicEffectData_FieldIndex.ProjectileSpeed:
-                    return typeof(Single);
-                case MagicEffectData_FieldIndex.EffectShader:
-                    return typeof(FormLink<EffectShader>);
-                case MagicEffectData_FieldIndex.SubData:
-                    return typeof(MagicEffectSubData);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.DATA;
         public static readonly Type BinaryWriteTranslation = typeof(MagicEffectDataBinaryWriteTranslation);
         #region Interface
@@ -1239,14 +1029,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1269,9 +1059,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.MagicSchool = default;
             item.Resistance = default;
             item.CounterEffectCount = default;
-            item.Light = FormLink<Light>.Null;
+            item.Light = FormLink<ILightGetter>.Null;
             item.ProjectileSpeed = default;
-            item.EffectShader = FormLink<EffectShader>.Null;
+            item.EffectShader = FormLink<IEffectShaderGetter>.Null;
             item.SubData = null;
         }
         
@@ -1538,7 +1328,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.Light) ?? true))
             {
-                item.Light = new FormLink<Light>(rhs.Light.FormKey);
+                item.Light = new FormLink<ILightGetter>(rhs.Light.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.ProjectileSpeed) ?? true))
             {
@@ -1546,7 +1336,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.EffectShader) ?? true))
             {
-                item.EffectShader = new FormLink<EffectShader>(rhs.EffectShader.FormKey);
+                item.EffectShader = new FormLink<IEffectShaderGetter>(rhs.EffectShader.FormKey);
             }
             if (rhs.Versioning.HasFlag(MagicEffectData.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.SubData) ?? true))

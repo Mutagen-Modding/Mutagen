@@ -64,9 +64,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModelGetter? IHazardGetter.Model => this.Model;
         #endregion
         #region ImageSpaceModifier
-        public FormLinkNullable<ImageSpaceAdapter> ImageSpaceModifier { get; set; } = new FormLinkNullable<ImageSpaceAdapter>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IImageSpaceAdapterGetter> IHazardGetter.ImageSpaceModifier => this.ImageSpaceModifier.ToGetter<ImageSpaceAdapter, IImageSpaceAdapterGetter>();
+        public FormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; set; } = new FormLinkNullable<IImageSpaceAdapterGetter>();
         #endregion
         #region Limit
         public UInt32 Limit { get; set; } = default;
@@ -87,24 +85,16 @@ namespace Mutagen.Bethesda.Skyrim
         public Hazard.Flag Flags { get; set; } = default;
         #endregion
         #region Spell
-        public FormLink<IEffectRecord> Spell { get; set; } = new FormLink<IEffectRecord>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IEffectRecordGetter> IHazardGetter.Spell => this.Spell.ToGetter<IEffectRecord, IEffectRecordGetter>();
+        public FormLink<IEffectRecordGetter> Spell { get; set; } = new FormLink<IEffectRecordGetter>();
         #endregion
         #region Light
-        public FormLink<Light> Light { get; set; } = new FormLink<Light>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ILightGetter> IHazardGetter.Light => this.Light.ToGetter<Light, ILightGetter>();
+        public FormLink<ILightGetter> Light { get; set; } = new FormLink<ILightGetter>();
         #endregion
         #region ImpactDataSet
-        public FormLink<ImpactDataSet> ImpactDataSet { get; set; } = new FormLink<ImpactDataSet>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IImpactDataSetGetter> IHazardGetter.ImpactDataSet => this.ImpactDataSet.ToGetter<ImpactDataSet, IImpactDataSetGetter>();
+        public FormLink<IImpactDataSetGetter> ImpactDataSet { get; set; } = new FormLink<IImpactDataSetGetter>();
         #endregion
         #region Sound
-        public FormLink<SoundDescriptor> Sound { get; set; } = new FormLink<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISoundDescriptorGetter> IHazardGetter.Sound => this.Sound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLink<ISoundDescriptorGetter> Sound { get; set; } = new FormLink<ISoundDescriptorGetter>();
         #endregion
         #region DATADataTypeState
         public Hazard.DATADataType DATADataTypeState { get; set; } = default;
@@ -918,17 +908,17 @@ namespace Mutagen.Bethesda.Skyrim
         new ObjectBounds ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
         new Model? Model { get; set; }
-        new FormLinkNullable<ImageSpaceAdapter> ImageSpaceModifier { get; set; }
+        new FormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; set; }
         new UInt32 Limit { get; set; }
         new Single Radius { get; set; }
         new Single Lifetime { get; set; }
         new Single ImageSpaceRadius { get; set; }
         new Single TargetInterval { get; set; }
         new Hazard.Flag Flags { get; set; }
-        new FormLink<IEffectRecord> Spell { get; set; }
-        new FormLink<Light> Light { get; set; }
-        new FormLink<ImpactDataSet> ImpactDataSet { get; set; }
-        new FormLink<SoundDescriptor> Sound { get; set; }
+        new FormLink<IEffectRecordGetter> Spell { get; set; }
+        new FormLink<ILightGetter> Light { get; set; }
+        new FormLink<IImpactDataSetGetter> ImpactDataSet { get; set; }
+        new FormLink<ISoundDescriptorGetter> Sound { get; set; }
         new Hazard.DATADataType DATADataTypeState { get; set; }
     }
 
@@ -1171,256 +1161,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "OBJECTBOUNDS":
-                    return (ushort)Hazard_FieldIndex.ObjectBounds;
-                case "NAME":
-                    return (ushort)Hazard_FieldIndex.Name;
-                case "MODEL":
-                    return (ushort)Hazard_FieldIndex.Model;
-                case "IMAGESPACEMODIFIER":
-                    return (ushort)Hazard_FieldIndex.ImageSpaceModifier;
-                case "LIMIT":
-                    return (ushort)Hazard_FieldIndex.Limit;
-                case "RADIUS":
-                    return (ushort)Hazard_FieldIndex.Radius;
-                case "LIFETIME":
-                    return (ushort)Hazard_FieldIndex.Lifetime;
-                case "IMAGESPACERADIUS":
-                    return (ushort)Hazard_FieldIndex.ImageSpaceRadius;
-                case "TARGETINTERVAL":
-                    return (ushort)Hazard_FieldIndex.TargetInterval;
-                case "FLAGS":
-                    return (ushort)Hazard_FieldIndex.Flags;
-                case "SPELL":
-                    return (ushort)Hazard_FieldIndex.Spell;
-                case "LIGHT":
-                    return (ushort)Hazard_FieldIndex.Light;
-                case "IMPACTDATASET":
-                    return (ushort)Hazard_FieldIndex.ImpactDataSet;
-                case "SOUND":
-                    return (ushort)Hazard_FieldIndex.Sound;
-                case "DATADATATYPESTATE":
-                    return (ushort)Hazard_FieldIndex.DATADataTypeState;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Hazard_FieldIndex enu = (Hazard_FieldIndex)index;
-            switch (enu)
-            {
-                case Hazard_FieldIndex.ObjectBounds:
-                case Hazard_FieldIndex.Name:
-                case Hazard_FieldIndex.Model:
-                case Hazard_FieldIndex.ImageSpaceModifier:
-                case Hazard_FieldIndex.Limit:
-                case Hazard_FieldIndex.Radius:
-                case Hazard_FieldIndex.Lifetime:
-                case Hazard_FieldIndex.ImageSpaceRadius:
-                case Hazard_FieldIndex.TargetInterval:
-                case Hazard_FieldIndex.Flags:
-                case Hazard_FieldIndex.Spell:
-                case Hazard_FieldIndex.Light:
-                case Hazard_FieldIndex.ImpactDataSet:
-                case Hazard_FieldIndex.Sound:
-                case Hazard_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Hazard_FieldIndex enu = (Hazard_FieldIndex)index;
-            switch (enu)
-            {
-                case Hazard_FieldIndex.ObjectBounds:
-                case Hazard_FieldIndex.Model:
-                    return true;
-                case Hazard_FieldIndex.Name:
-                case Hazard_FieldIndex.ImageSpaceModifier:
-                case Hazard_FieldIndex.Limit:
-                case Hazard_FieldIndex.Radius:
-                case Hazard_FieldIndex.Lifetime:
-                case Hazard_FieldIndex.ImageSpaceRadius:
-                case Hazard_FieldIndex.TargetInterval:
-                case Hazard_FieldIndex.Flags:
-                case Hazard_FieldIndex.Spell:
-                case Hazard_FieldIndex.Light:
-                case Hazard_FieldIndex.ImpactDataSet:
-                case Hazard_FieldIndex.Sound:
-                case Hazard_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Hazard_FieldIndex enu = (Hazard_FieldIndex)index;
-            switch (enu)
-            {
-                case Hazard_FieldIndex.ObjectBounds:
-                case Hazard_FieldIndex.Name:
-                case Hazard_FieldIndex.Model:
-                case Hazard_FieldIndex.ImageSpaceModifier:
-                case Hazard_FieldIndex.Limit:
-                case Hazard_FieldIndex.Radius:
-                case Hazard_FieldIndex.Lifetime:
-                case Hazard_FieldIndex.ImageSpaceRadius:
-                case Hazard_FieldIndex.TargetInterval:
-                case Hazard_FieldIndex.Flags:
-                case Hazard_FieldIndex.Spell:
-                case Hazard_FieldIndex.Light:
-                case Hazard_FieldIndex.ImpactDataSet:
-                case Hazard_FieldIndex.Sound:
-                case Hazard_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Hazard_FieldIndex enu = (Hazard_FieldIndex)index;
-            switch (enu)
-            {
-                case Hazard_FieldIndex.ObjectBounds:
-                    return "ObjectBounds";
-                case Hazard_FieldIndex.Name:
-                    return "Name";
-                case Hazard_FieldIndex.Model:
-                    return "Model";
-                case Hazard_FieldIndex.ImageSpaceModifier:
-                    return "ImageSpaceModifier";
-                case Hazard_FieldIndex.Limit:
-                    return "Limit";
-                case Hazard_FieldIndex.Radius:
-                    return "Radius";
-                case Hazard_FieldIndex.Lifetime:
-                    return "Lifetime";
-                case Hazard_FieldIndex.ImageSpaceRadius:
-                    return "ImageSpaceRadius";
-                case Hazard_FieldIndex.TargetInterval:
-                    return "TargetInterval";
-                case Hazard_FieldIndex.Flags:
-                    return "Flags";
-                case Hazard_FieldIndex.Spell:
-                    return "Spell";
-                case Hazard_FieldIndex.Light:
-                    return "Light";
-                case Hazard_FieldIndex.ImpactDataSet:
-                    return "ImpactDataSet";
-                case Hazard_FieldIndex.Sound:
-                    return "Sound";
-                case Hazard_FieldIndex.DATADataTypeState:
-                    return "DATADataTypeState";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Hazard_FieldIndex enu = (Hazard_FieldIndex)index;
-            switch (enu)
-            {
-                case Hazard_FieldIndex.ObjectBounds:
-                case Hazard_FieldIndex.Name:
-                case Hazard_FieldIndex.Model:
-                case Hazard_FieldIndex.ImageSpaceModifier:
-                case Hazard_FieldIndex.Limit:
-                case Hazard_FieldIndex.Radius:
-                case Hazard_FieldIndex.Lifetime:
-                case Hazard_FieldIndex.ImageSpaceRadius:
-                case Hazard_FieldIndex.TargetInterval:
-                case Hazard_FieldIndex.Flags:
-                case Hazard_FieldIndex.Spell:
-                case Hazard_FieldIndex.Light:
-                case Hazard_FieldIndex.ImpactDataSet:
-                case Hazard_FieldIndex.Sound:
-                case Hazard_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Hazard_FieldIndex enu = (Hazard_FieldIndex)index;
-            switch (enu)
-            {
-                case Hazard_FieldIndex.ObjectBounds:
-                case Hazard_FieldIndex.Name:
-                case Hazard_FieldIndex.Model:
-                case Hazard_FieldIndex.ImageSpaceModifier:
-                case Hazard_FieldIndex.Limit:
-                case Hazard_FieldIndex.Radius:
-                case Hazard_FieldIndex.Lifetime:
-                case Hazard_FieldIndex.ImageSpaceRadius:
-                case Hazard_FieldIndex.TargetInterval:
-                case Hazard_FieldIndex.Flags:
-                case Hazard_FieldIndex.Spell:
-                case Hazard_FieldIndex.Light:
-                case Hazard_FieldIndex.ImpactDataSet:
-                case Hazard_FieldIndex.Sound:
-                case Hazard_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Hazard_FieldIndex enu = (Hazard_FieldIndex)index;
-            switch (enu)
-            {
-                case Hazard_FieldIndex.ObjectBounds:
-                    return typeof(ObjectBounds);
-                case Hazard_FieldIndex.Name:
-                    return typeof(TranslatedString);
-                case Hazard_FieldIndex.Model:
-                    return typeof(Model);
-                case Hazard_FieldIndex.ImageSpaceModifier:
-                    return typeof(FormLinkNullable<ImageSpaceAdapter>);
-                case Hazard_FieldIndex.Limit:
-                    return typeof(UInt32);
-                case Hazard_FieldIndex.Radius:
-                    return typeof(Single);
-                case Hazard_FieldIndex.Lifetime:
-                    return typeof(Single);
-                case Hazard_FieldIndex.ImageSpaceRadius:
-                    return typeof(Single);
-                case Hazard_FieldIndex.TargetInterval:
-                    return typeof(Single);
-                case Hazard_FieldIndex.Flags:
-                    return typeof(Hazard.Flag);
-                case Hazard_FieldIndex.Spell:
-                    return typeof(FormLink<IEffectRecord>);
-                case Hazard_FieldIndex.Light:
-                    return typeof(FormLink<Light>);
-                case Hazard_FieldIndex.ImpactDataSet:
-                    return typeof(FormLink<ImpactDataSet>);
-                case Hazard_FieldIndex.Sound:
-                    return typeof(FormLink<SoundDescriptor>);
-                case Hazard_FieldIndex.DATADataTypeState:
-                    return typeof(Hazard.DATADataType);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.HAZD;
         public static readonly Type BinaryWriteTranslation = typeof(HazardBinaryWriteTranslation);
         #region Interface
@@ -1441,14 +1181,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1467,17 +1207,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ObjectBounds.Clear();
             item.Name = default;
             item.Model = null;
-            item.ImageSpaceModifier = FormLinkNullable<ImageSpaceAdapter>.Null;
+            item.ImageSpaceModifier = FormLinkNullable<IImageSpaceAdapterGetter>.Null;
             item.Limit = default;
             item.Radius = default;
             item.Lifetime = default;
             item.ImageSpaceRadius = default;
             item.TargetInterval = default;
             item.Flags = default;
-            item.Spell = FormLink<IEffectRecord>.Null;
-            item.Light = FormLink<Light>.Null;
-            item.ImpactDataSet = FormLink<ImpactDataSet>.Null;
-            item.Sound = FormLink<SoundDescriptor>.Null;
+            item.Spell = FormLink<IEffectRecordGetter>.Null;
+            item.Light = FormLink<ILightGetter>.Null;
+            item.ImpactDataSet = FormLink<IImpactDataSetGetter>.Null;
+            item.Sound = FormLink<ISoundDescriptorGetter>.Null;
             item.DATADataTypeState = default;
             base.Clear(item);
         }
@@ -1945,7 +1685,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.ImageSpaceModifier) ?? true))
             {
-                item.ImageSpaceModifier = new FormLinkNullable<ImageSpaceAdapter>(rhs.ImageSpaceModifier.FormKey);
+                item.ImageSpaceModifier = new FormLinkNullable<IImageSpaceAdapterGetter>(rhs.ImageSpaceModifier.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.Limit) ?? true))
             {
@@ -1973,19 +1713,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.Spell) ?? true))
             {
-                item.Spell = new FormLink<IEffectRecord>(rhs.Spell.FormKey);
+                item.Spell = new FormLink<IEffectRecordGetter>(rhs.Spell.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.Light) ?? true))
             {
-                item.Light = new FormLink<Light>(rhs.Light.FormKey);
+                item.Light = new FormLink<ILightGetter>(rhs.Light.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.ImpactDataSet) ?? true))
             {
-                item.ImpactDataSet = new FormLink<ImpactDataSet>(rhs.ImpactDataSet.FormKey);
+                item.ImpactDataSet = new FormLink<IImpactDataSetGetter>(rhs.ImpactDataSet.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.Sound) ?? true))
             {
-                item.Sound = new FormLink<SoundDescriptor>(rhs.Sound.FormKey);
+                item.Sound = new FormLink<ISoundDescriptorGetter>(rhs.Sound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.DATADataTypeState) ?? true))
             {

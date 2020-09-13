@@ -75,44 +75,28 @@ namespace Mutagen.Bethesda.Skyrim
         IModelGetter? IExplosionGetter.Model => this.Model;
         #endregion
         #region ObjectEffect
-        public FormLinkNullable<IEffectRecord> ObjectEffect { get; set; } = new FormLinkNullable<IEffectRecord>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IEffectRecordGetter> IExplosionGetter.ObjectEffect => this.ObjectEffect.ToGetter<IEffectRecord, IEffectRecordGetter>();
+        public FormLinkNullable<IEffectRecordGetter> ObjectEffect { get; set; } = new FormLinkNullable<IEffectRecordGetter>();
         #endregion
         #region ImageSpaceModifier
-        public FormLinkNullable<ImageSpaceAdapter> ImageSpaceModifier { get; set; } = new FormLinkNullable<ImageSpaceAdapter>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IImageSpaceAdapterGetter> IExplosionGetter.ImageSpaceModifier => this.ImageSpaceModifier.ToGetter<ImageSpaceAdapter, IImageSpaceAdapterGetter>();
+        public FormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; set; } = new FormLinkNullable<IImageSpaceAdapterGetter>();
         #endregion
         #region Light
-        public FormLink<Light> Light { get; set; } = new FormLink<Light>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ILightGetter> IExplosionGetter.Light => this.Light.ToGetter<Light, ILightGetter>();
+        public FormLink<ILightGetter> Light { get; set; } = new FormLink<ILightGetter>();
         #endregion
         #region Sound1
-        public FormLink<SoundDescriptor> Sound1 { get; set; } = new FormLink<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISoundDescriptorGetter> IExplosionGetter.Sound1 => this.Sound1.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLink<ISoundDescriptorGetter> Sound1 { get; set; } = new FormLink<ISoundDescriptorGetter>();
         #endregion
         #region Sound2
-        public FormLink<SoundDescriptor> Sound2 { get; set; } = new FormLink<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISoundDescriptorGetter> IExplosionGetter.Sound2 => this.Sound2.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLink<ISoundDescriptorGetter> Sound2 { get; set; } = new FormLink<ISoundDescriptorGetter>();
         #endregion
         #region ImpactDataSet
-        public FormLink<ImpactDataSet> ImpactDataSet { get; set; } = new FormLink<ImpactDataSet>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IImpactDataSetGetter> IExplosionGetter.ImpactDataSet => this.ImpactDataSet.ToGetter<ImpactDataSet, IImpactDataSetGetter>();
+        public FormLink<IImpactDataSetGetter> ImpactDataSet { get; set; } = new FormLink<IImpactDataSetGetter>();
         #endregion
         #region PlacedObject
-        public FormLink<SkyrimMajorRecord> PlacedObject { get; set; } = new FormLink<SkyrimMajorRecord>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISkyrimMajorRecordGetter> IExplosionGetter.PlacedObject => this.PlacedObject.ToGetter<SkyrimMajorRecord, ISkyrimMajorRecordGetter>();
+        public FormLink<ISkyrimMajorRecordGetter> PlacedObject { get; set; } = new FormLink<ISkyrimMajorRecordGetter>();
         #endregion
         #region SpawnProjectile
-        public FormLink<Projectile> SpawnProjectile { get; set; } = new FormLink<Projectile>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IProjectileGetter> IExplosionGetter.SpawnProjectile => this.SpawnProjectile.ToGetter<Projectile, IProjectileGetter>();
+        public FormLink<IProjectileGetter> SpawnProjectile { get; set; } = new FormLink<IProjectileGetter>();
         #endregion
         #region Force
         public Single Force { get; set; } = default;
@@ -1131,14 +1115,14 @@ namespace Mutagen.Bethesda.Skyrim
         new ObjectBounds ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
         new Model? Model { get; set; }
-        new FormLinkNullable<IEffectRecord> ObjectEffect { get; set; }
-        new FormLinkNullable<ImageSpaceAdapter> ImageSpaceModifier { get; set; }
-        new FormLink<Light> Light { get; set; }
-        new FormLink<SoundDescriptor> Sound1 { get; set; }
-        new FormLink<SoundDescriptor> Sound2 { get; set; }
-        new FormLink<ImpactDataSet> ImpactDataSet { get; set; }
-        new FormLink<SkyrimMajorRecord> PlacedObject { get; set; }
-        new FormLink<Projectile> SpawnProjectile { get; set; }
+        new FormLinkNullable<IEffectRecordGetter> ObjectEffect { get; set; }
+        new FormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; set; }
+        new FormLink<ILightGetter> Light { get; set; }
+        new FormLink<ISoundDescriptorGetter> Sound1 { get; set; }
+        new FormLink<ISoundDescriptorGetter> Sound2 { get; set; }
+        new FormLink<IImpactDataSetGetter> ImpactDataSet { get; set; }
+        new FormLink<ISkyrimMajorRecordGetter> PlacedObject { get; set; }
+        new FormLink<IProjectileGetter> SpawnProjectile { get; set; }
         new Single Force { get; set; }
         new Single Damage { get; set; }
         new Single Radius { get; set; }
@@ -1398,311 +1382,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "VIRTUALMACHINEADAPTER":
-                    return (ushort)Explosion_FieldIndex.VirtualMachineAdapter;
-                case "OBJECTBOUNDS":
-                    return (ushort)Explosion_FieldIndex.ObjectBounds;
-                case "NAME":
-                    return (ushort)Explosion_FieldIndex.Name;
-                case "MODEL":
-                    return (ushort)Explosion_FieldIndex.Model;
-                case "OBJECTEFFECT":
-                    return (ushort)Explosion_FieldIndex.ObjectEffect;
-                case "IMAGESPACEMODIFIER":
-                    return (ushort)Explosion_FieldIndex.ImageSpaceModifier;
-                case "LIGHT":
-                    return (ushort)Explosion_FieldIndex.Light;
-                case "SOUND1":
-                    return (ushort)Explosion_FieldIndex.Sound1;
-                case "SOUND2":
-                    return (ushort)Explosion_FieldIndex.Sound2;
-                case "IMPACTDATASET":
-                    return (ushort)Explosion_FieldIndex.ImpactDataSet;
-                case "PLACEDOBJECT":
-                    return (ushort)Explosion_FieldIndex.PlacedObject;
-                case "SPAWNPROJECTILE":
-                    return (ushort)Explosion_FieldIndex.SpawnProjectile;
-                case "FORCE":
-                    return (ushort)Explosion_FieldIndex.Force;
-                case "DAMAGE":
-                    return (ushort)Explosion_FieldIndex.Damage;
-                case "RADIUS":
-                    return (ushort)Explosion_FieldIndex.Radius;
-                case "ISRADIUS":
-                    return (ushort)Explosion_FieldIndex.ISRadius;
-                case "VERTICALOFFSETMULT":
-                    return (ushort)Explosion_FieldIndex.VerticalOffsetMult;
-                case "FLAGS":
-                    return (ushort)Explosion_FieldIndex.Flags;
-                case "SOUNDLEVEL":
-                    return (ushort)Explosion_FieldIndex.SoundLevel;
-                case "DATADATATYPESTATE":
-                    return (ushort)Explosion_FieldIndex.DATADataTypeState;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Explosion_FieldIndex enu = (Explosion_FieldIndex)index;
-            switch (enu)
-            {
-                case Explosion_FieldIndex.VirtualMachineAdapter:
-                case Explosion_FieldIndex.ObjectBounds:
-                case Explosion_FieldIndex.Name:
-                case Explosion_FieldIndex.Model:
-                case Explosion_FieldIndex.ObjectEffect:
-                case Explosion_FieldIndex.ImageSpaceModifier:
-                case Explosion_FieldIndex.Light:
-                case Explosion_FieldIndex.Sound1:
-                case Explosion_FieldIndex.Sound2:
-                case Explosion_FieldIndex.ImpactDataSet:
-                case Explosion_FieldIndex.PlacedObject:
-                case Explosion_FieldIndex.SpawnProjectile:
-                case Explosion_FieldIndex.Force:
-                case Explosion_FieldIndex.Damage:
-                case Explosion_FieldIndex.Radius:
-                case Explosion_FieldIndex.ISRadius:
-                case Explosion_FieldIndex.VerticalOffsetMult:
-                case Explosion_FieldIndex.Flags:
-                case Explosion_FieldIndex.SoundLevel:
-                case Explosion_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Explosion_FieldIndex enu = (Explosion_FieldIndex)index;
-            switch (enu)
-            {
-                case Explosion_FieldIndex.VirtualMachineAdapter:
-                case Explosion_FieldIndex.ObjectBounds:
-                case Explosion_FieldIndex.Model:
-                    return true;
-                case Explosion_FieldIndex.Name:
-                case Explosion_FieldIndex.ObjectEffect:
-                case Explosion_FieldIndex.ImageSpaceModifier:
-                case Explosion_FieldIndex.Light:
-                case Explosion_FieldIndex.Sound1:
-                case Explosion_FieldIndex.Sound2:
-                case Explosion_FieldIndex.ImpactDataSet:
-                case Explosion_FieldIndex.PlacedObject:
-                case Explosion_FieldIndex.SpawnProjectile:
-                case Explosion_FieldIndex.Force:
-                case Explosion_FieldIndex.Damage:
-                case Explosion_FieldIndex.Radius:
-                case Explosion_FieldIndex.ISRadius:
-                case Explosion_FieldIndex.VerticalOffsetMult:
-                case Explosion_FieldIndex.Flags:
-                case Explosion_FieldIndex.SoundLevel:
-                case Explosion_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Explosion_FieldIndex enu = (Explosion_FieldIndex)index;
-            switch (enu)
-            {
-                case Explosion_FieldIndex.VirtualMachineAdapter:
-                case Explosion_FieldIndex.ObjectBounds:
-                case Explosion_FieldIndex.Name:
-                case Explosion_FieldIndex.Model:
-                case Explosion_FieldIndex.ObjectEffect:
-                case Explosion_FieldIndex.ImageSpaceModifier:
-                case Explosion_FieldIndex.Light:
-                case Explosion_FieldIndex.Sound1:
-                case Explosion_FieldIndex.Sound2:
-                case Explosion_FieldIndex.ImpactDataSet:
-                case Explosion_FieldIndex.PlacedObject:
-                case Explosion_FieldIndex.SpawnProjectile:
-                case Explosion_FieldIndex.Force:
-                case Explosion_FieldIndex.Damage:
-                case Explosion_FieldIndex.Radius:
-                case Explosion_FieldIndex.ISRadius:
-                case Explosion_FieldIndex.VerticalOffsetMult:
-                case Explosion_FieldIndex.Flags:
-                case Explosion_FieldIndex.SoundLevel:
-                case Explosion_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Explosion_FieldIndex enu = (Explosion_FieldIndex)index;
-            switch (enu)
-            {
-                case Explosion_FieldIndex.VirtualMachineAdapter:
-                    return "VirtualMachineAdapter";
-                case Explosion_FieldIndex.ObjectBounds:
-                    return "ObjectBounds";
-                case Explosion_FieldIndex.Name:
-                    return "Name";
-                case Explosion_FieldIndex.Model:
-                    return "Model";
-                case Explosion_FieldIndex.ObjectEffect:
-                    return "ObjectEffect";
-                case Explosion_FieldIndex.ImageSpaceModifier:
-                    return "ImageSpaceModifier";
-                case Explosion_FieldIndex.Light:
-                    return "Light";
-                case Explosion_FieldIndex.Sound1:
-                    return "Sound1";
-                case Explosion_FieldIndex.Sound2:
-                    return "Sound2";
-                case Explosion_FieldIndex.ImpactDataSet:
-                    return "ImpactDataSet";
-                case Explosion_FieldIndex.PlacedObject:
-                    return "PlacedObject";
-                case Explosion_FieldIndex.SpawnProjectile:
-                    return "SpawnProjectile";
-                case Explosion_FieldIndex.Force:
-                    return "Force";
-                case Explosion_FieldIndex.Damage:
-                    return "Damage";
-                case Explosion_FieldIndex.Radius:
-                    return "Radius";
-                case Explosion_FieldIndex.ISRadius:
-                    return "ISRadius";
-                case Explosion_FieldIndex.VerticalOffsetMult:
-                    return "VerticalOffsetMult";
-                case Explosion_FieldIndex.Flags:
-                    return "Flags";
-                case Explosion_FieldIndex.SoundLevel:
-                    return "SoundLevel";
-                case Explosion_FieldIndex.DATADataTypeState:
-                    return "DATADataTypeState";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Explosion_FieldIndex enu = (Explosion_FieldIndex)index;
-            switch (enu)
-            {
-                case Explosion_FieldIndex.VirtualMachineAdapter:
-                case Explosion_FieldIndex.ObjectBounds:
-                case Explosion_FieldIndex.Name:
-                case Explosion_FieldIndex.Model:
-                case Explosion_FieldIndex.ObjectEffect:
-                case Explosion_FieldIndex.ImageSpaceModifier:
-                case Explosion_FieldIndex.Light:
-                case Explosion_FieldIndex.Sound1:
-                case Explosion_FieldIndex.Sound2:
-                case Explosion_FieldIndex.ImpactDataSet:
-                case Explosion_FieldIndex.PlacedObject:
-                case Explosion_FieldIndex.SpawnProjectile:
-                case Explosion_FieldIndex.Force:
-                case Explosion_FieldIndex.Damage:
-                case Explosion_FieldIndex.Radius:
-                case Explosion_FieldIndex.ISRadius:
-                case Explosion_FieldIndex.VerticalOffsetMult:
-                case Explosion_FieldIndex.Flags:
-                case Explosion_FieldIndex.SoundLevel:
-                case Explosion_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Explosion_FieldIndex enu = (Explosion_FieldIndex)index;
-            switch (enu)
-            {
-                case Explosion_FieldIndex.VirtualMachineAdapter:
-                case Explosion_FieldIndex.ObjectBounds:
-                case Explosion_FieldIndex.Name:
-                case Explosion_FieldIndex.Model:
-                case Explosion_FieldIndex.ObjectEffect:
-                case Explosion_FieldIndex.ImageSpaceModifier:
-                case Explosion_FieldIndex.Light:
-                case Explosion_FieldIndex.Sound1:
-                case Explosion_FieldIndex.Sound2:
-                case Explosion_FieldIndex.ImpactDataSet:
-                case Explosion_FieldIndex.PlacedObject:
-                case Explosion_FieldIndex.SpawnProjectile:
-                case Explosion_FieldIndex.Force:
-                case Explosion_FieldIndex.Damage:
-                case Explosion_FieldIndex.Radius:
-                case Explosion_FieldIndex.ISRadius:
-                case Explosion_FieldIndex.VerticalOffsetMult:
-                case Explosion_FieldIndex.Flags:
-                case Explosion_FieldIndex.SoundLevel:
-                case Explosion_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Explosion_FieldIndex enu = (Explosion_FieldIndex)index;
-            switch (enu)
-            {
-                case Explosion_FieldIndex.VirtualMachineAdapter:
-                    return typeof(VirtualMachineAdapter);
-                case Explosion_FieldIndex.ObjectBounds:
-                    return typeof(ObjectBounds);
-                case Explosion_FieldIndex.Name:
-                    return typeof(TranslatedString);
-                case Explosion_FieldIndex.Model:
-                    return typeof(Model);
-                case Explosion_FieldIndex.ObjectEffect:
-                    return typeof(FormLinkNullable<IEffectRecord>);
-                case Explosion_FieldIndex.ImageSpaceModifier:
-                    return typeof(FormLinkNullable<ImageSpaceAdapter>);
-                case Explosion_FieldIndex.Light:
-                    return typeof(FormLink<Light>);
-                case Explosion_FieldIndex.Sound1:
-                    return typeof(FormLink<SoundDescriptor>);
-                case Explosion_FieldIndex.Sound2:
-                    return typeof(FormLink<SoundDescriptor>);
-                case Explosion_FieldIndex.ImpactDataSet:
-                    return typeof(FormLink<ImpactDataSet>);
-                case Explosion_FieldIndex.PlacedObject:
-                    return typeof(FormLink<SkyrimMajorRecord>);
-                case Explosion_FieldIndex.SpawnProjectile:
-                    return typeof(FormLink<Projectile>);
-                case Explosion_FieldIndex.Force:
-                    return typeof(Single);
-                case Explosion_FieldIndex.Damage:
-                    return typeof(Single);
-                case Explosion_FieldIndex.Radius:
-                    return typeof(Single);
-                case Explosion_FieldIndex.ISRadius:
-                    return typeof(Single);
-                case Explosion_FieldIndex.VerticalOffsetMult:
-                    return typeof(Single);
-                case Explosion_FieldIndex.Flags:
-                    return typeof(Explosion.Flag);
-                case Explosion_FieldIndex.SoundLevel:
-                    return typeof(SoundLevel);
-                case Explosion_FieldIndex.DATADataTypeState:
-                    return typeof(Explosion.DATADataType);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.EXPL;
         public static readonly Type BinaryWriteTranslation = typeof(ExplosionBinaryWriteTranslation);
         #region Interface
@@ -1723,14 +1402,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1750,14 +1429,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ObjectBounds.Clear();
             item.Name = default;
             item.Model = null;
-            item.ObjectEffect = FormLinkNullable<IEffectRecord>.Null;
-            item.ImageSpaceModifier = FormLinkNullable<ImageSpaceAdapter>.Null;
-            item.Light = FormLink<Light>.Null;
-            item.Sound1 = FormLink<SoundDescriptor>.Null;
-            item.Sound2 = FormLink<SoundDescriptor>.Null;
-            item.ImpactDataSet = FormLink<ImpactDataSet>.Null;
-            item.PlacedObject = FormLink<SkyrimMajorRecord>.Null;
-            item.SpawnProjectile = FormLink<Projectile>.Null;
+            item.ObjectEffect = FormLinkNullable<IEffectRecordGetter>.Null;
+            item.ImageSpaceModifier = FormLinkNullable<IImageSpaceAdapterGetter>.Null;
+            item.Light = FormLink<ILightGetter>.Null;
+            item.Sound1 = FormLink<ISoundDescriptorGetter>.Null;
+            item.Sound2 = FormLink<ISoundDescriptorGetter>.Null;
+            item.ImpactDataSet = FormLink<IImpactDataSetGetter>.Null;
+            item.PlacedObject = FormLink<ISkyrimMajorRecordGetter>.Null;
+            item.SpawnProjectile = FormLink<IProjectileGetter>.Null;
             item.Force = default;
             item.Damage = default;
             item.Radius = default;
@@ -2314,35 +1993,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.ObjectEffect) ?? true))
             {
-                item.ObjectEffect = new FormLinkNullable<IEffectRecord>(rhs.ObjectEffect.FormKey);
+                item.ObjectEffect = new FormLinkNullable<IEffectRecordGetter>(rhs.ObjectEffect.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.ImageSpaceModifier) ?? true))
             {
-                item.ImageSpaceModifier = new FormLinkNullable<ImageSpaceAdapter>(rhs.ImageSpaceModifier.FormKey);
+                item.ImageSpaceModifier = new FormLinkNullable<IImageSpaceAdapterGetter>(rhs.ImageSpaceModifier.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.Light) ?? true))
             {
-                item.Light = new FormLink<Light>(rhs.Light.FormKey);
+                item.Light = new FormLink<ILightGetter>(rhs.Light.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.Sound1) ?? true))
             {
-                item.Sound1 = new FormLink<SoundDescriptor>(rhs.Sound1.FormKey);
+                item.Sound1 = new FormLink<ISoundDescriptorGetter>(rhs.Sound1.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.Sound2) ?? true))
             {
-                item.Sound2 = new FormLink<SoundDescriptor>(rhs.Sound2.FormKey);
+                item.Sound2 = new FormLink<ISoundDescriptorGetter>(rhs.Sound2.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.ImpactDataSet) ?? true))
             {
-                item.ImpactDataSet = new FormLink<ImpactDataSet>(rhs.ImpactDataSet.FormKey);
+                item.ImpactDataSet = new FormLink<IImpactDataSetGetter>(rhs.ImpactDataSet.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.PlacedObject) ?? true))
             {
-                item.PlacedObject = new FormLink<SkyrimMajorRecord>(rhs.PlacedObject.FormKey);
+                item.PlacedObject = new FormLink<ISkyrimMajorRecordGetter>(rhs.PlacedObject.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.SpawnProjectile) ?? true))
             {
-                item.SpawnProjectile = new FormLink<Projectile>(rhs.SpawnProjectile.FormKey);
+                item.SpawnProjectile = new FormLink<IProjectileGetter>(rhs.SpawnProjectile.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.Force) ?? true))
             {

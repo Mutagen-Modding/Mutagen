@@ -912,189 +912,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "EYEADAPTSPEED":
-                    return (ushort)ImageSpaceHdr_FieldIndex.EyeAdaptSpeed;
-                case "BLOOMBLURRADIUS":
-                    return (ushort)ImageSpaceHdr_FieldIndex.BloomBlurRadius;
-                case "BLOOMTHRESHOLD":
-                    return (ushort)ImageSpaceHdr_FieldIndex.BloomThreshold;
-                case "BLOOMSCALE":
-                    return (ushort)ImageSpaceHdr_FieldIndex.BloomScale;
-                case "RECEIVEBLOOMTHRESHOLD":
-                    return (ushort)ImageSpaceHdr_FieldIndex.ReceiveBloomThreshold;
-                case "WHITE":
-                    return (ushort)ImageSpaceHdr_FieldIndex.White;
-                case "SUNLIGHTSCALE":
-                    return (ushort)ImageSpaceHdr_FieldIndex.SunlightScale;
-                case "SKYSCALE":
-                    return (ushort)ImageSpaceHdr_FieldIndex.SkyScale;
-                case "EYEADAPTSTRENGTH":
-                    return (ushort)ImageSpaceHdr_FieldIndex.EyeAdaptStrength;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            ImageSpaceHdr_FieldIndex enu = (ImageSpaceHdr_FieldIndex)index;
-            switch (enu)
-            {
-                case ImageSpaceHdr_FieldIndex.EyeAdaptSpeed:
-                case ImageSpaceHdr_FieldIndex.BloomBlurRadius:
-                case ImageSpaceHdr_FieldIndex.BloomThreshold:
-                case ImageSpaceHdr_FieldIndex.BloomScale:
-                case ImageSpaceHdr_FieldIndex.ReceiveBloomThreshold:
-                case ImageSpaceHdr_FieldIndex.White:
-                case ImageSpaceHdr_FieldIndex.SunlightScale:
-                case ImageSpaceHdr_FieldIndex.SkyScale:
-                case ImageSpaceHdr_FieldIndex.EyeAdaptStrength:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            ImageSpaceHdr_FieldIndex enu = (ImageSpaceHdr_FieldIndex)index;
-            switch (enu)
-            {
-                case ImageSpaceHdr_FieldIndex.EyeAdaptSpeed:
-                case ImageSpaceHdr_FieldIndex.BloomBlurRadius:
-                case ImageSpaceHdr_FieldIndex.BloomThreshold:
-                case ImageSpaceHdr_FieldIndex.BloomScale:
-                case ImageSpaceHdr_FieldIndex.ReceiveBloomThreshold:
-                case ImageSpaceHdr_FieldIndex.White:
-                case ImageSpaceHdr_FieldIndex.SunlightScale:
-                case ImageSpaceHdr_FieldIndex.SkyScale:
-                case ImageSpaceHdr_FieldIndex.EyeAdaptStrength:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            ImageSpaceHdr_FieldIndex enu = (ImageSpaceHdr_FieldIndex)index;
-            switch (enu)
-            {
-                case ImageSpaceHdr_FieldIndex.EyeAdaptSpeed:
-                case ImageSpaceHdr_FieldIndex.BloomBlurRadius:
-                case ImageSpaceHdr_FieldIndex.BloomThreshold:
-                case ImageSpaceHdr_FieldIndex.BloomScale:
-                case ImageSpaceHdr_FieldIndex.ReceiveBloomThreshold:
-                case ImageSpaceHdr_FieldIndex.White:
-                case ImageSpaceHdr_FieldIndex.SunlightScale:
-                case ImageSpaceHdr_FieldIndex.SkyScale:
-                case ImageSpaceHdr_FieldIndex.EyeAdaptStrength:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            ImageSpaceHdr_FieldIndex enu = (ImageSpaceHdr_FieldIndex)index;
-            switch (enu)
-            {
-                case ImageSpaceHdr_FieldIndex.EyeAdaptSpeed:
-                    return "EyeAdaptSpeed";
-                case ImageSpaceHdr_FieldIndex.BloomBlurRadius:
-                    return "BloomBlurRadius";
-                case ImageSpaceHdr_FieldIndex.BloomThreshold:
-                    return "BloomThreshold";
-                case ImageSpaceHdr_FieldIndex.BloomScale:
-                    return "BloomScale";
-                case ImageSpaceHdr_FieldIndex.ReceiveBloomThreshold:
-                    return "ReceiveBloomThreshold";
-                case ImageSpaceHdr_FieldIndex.White:
-                    return "White";
-                case ImageSpaceHdr_FieldIndex.SunlightScale:
-                    return "SunlightScale";
-                case ImageSpaceHdr_FieldIndex.SkyScale:
-                    return "SkyScale";
-                case ImageSpaceHdr_FieldIndex.EyeAdaptStrength:
-                    return "EyeAdaptStrength";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            ImageSpaceHdr_FieldIndex enu = (ImageSpaceHdr_FieldIndex)index;
-            switch (enu)
-            {
-                case ImageSpaceHdr_FieldIndex.EyeAdaptSpeed:
-                case ImageSpaceHdr_FieldIndex.BloomBlurRadius:
-                case ImageSpaceHdr_FieldIndex.BloomThreshold:
-                case ImageSpaceHdr_FieldIndex.BloomScale:
-                case ImageSpaceHdr_FieldIndex.ReceiveBloomThreshold:
-                case ImageSpaceHdr_FieldIndex.White:
-                case ImageSpaceHdr_FieldIndex.SunlightScale:
-                case ImageSpaceHdr_FieldIndex.SkyScale:
-                case ImageSpaceHdr_FieldIndex.EyeAdaptStrength:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            ImageSpaceHdr_FieldIndex enu = (ImageSpaceHdr_FieldIndex)index;
-            switch (enu)
-            {
-                case ImageSpaceHdr_FieldIndex.EyeAdaptSpeed:
-                case ImageSpaceHdr_FieldIndex.BloomBlurRadius:
-                case ImageSpaceHdr_FieldIndex.BloomThreshold:
-                case ImageSpaceHdr_FieldIndex.BloomScale:
-                case ImageSpaceHdr_FieldIndex.ReceiveBloomThreshold:
-                case ImageSpaceHdr_FieldIndex.White:
-                case ImageSpaceHdr_FieldIndex.SunlightScale:
-                case ImageSpaceHdr_FieldIndex.SkyScale:
-                case ImageSpaceHdr_FieldIndex.EyeAdaptStrength:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            ImageSpaceHdr_FieldIndex enu = (ImageSpaceHdr_FieldIndex)index;
-            switch (enu)
-            {
-                case ImageSpaceHdr_FieldIndex.EyeAdaptSpeed:
-                    return typeof(Single);
-                case ImageSpaceHdr_FieldIndex.BloomBlurRadius:
-                    return typeof(Single);
-                case ImageSpaceHdr_FieldIndex.BloomThreshold:
-                    return typeof(Single);
-                case ImageSpaceHdr_FieldIndex.BloomScale:
-                    return typeof(Single);
-                case ImageSpaceHdr_FieldIndex.ReceiveBloomThreshold:
-                    return typeof(Single);
-                case ImageSpaceHdr_FieldIndex.White:
-                    return typeof(Single);
-                case ImageSpaceHdr_FieldIndex.SunlightScale:
-                    return typeof(Single);
-                case ImageSpaceHdr_FieldIndex.SkyScale:
-                    return typeof(Single);
-                case ImageSpaceHdr_FieldIndex.EyeAdaptStrength:
-                    return typeof(Single);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.HNAM;
         public static readonly Type BinaryWriteTranslation = typeof(ImageSpaceHdrBinaryWriteTranslation);
         #region Interface
@@ -1115,14 +932,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

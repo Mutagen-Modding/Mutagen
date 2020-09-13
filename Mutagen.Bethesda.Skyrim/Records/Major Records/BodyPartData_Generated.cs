@@ -55,8 +55,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Parts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<BodyPart> _Parts = new ExtendedList<BodyPart>();
-        public IExtendedList<BodyPart> Parts
+        private ExtendedList<BodyPart> _Parts = new ExtendedList<BodyPart>();
+        public ExtendedList<BodyPart> Parts
         {
             get => this._Parts;
             protected set => this._Parts = value;
@@ -573,7 +573,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new Model? Model { get; set; }
-        new IExtendedList<BodyPart> Parts { get; }
+        new ExtendedList<BodyPart> Parts { get; }
     }
 
     public partial interface IBodyPartDataInternal :
@@ -788,113 +788,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "MODEL":
-                    return (ushort)BodyPartData_FieldIndex.Model;
-                case "PARTS":
-                    return (ushort)BodyPartData_FieldIndex.Parts;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            BodyPartData_FieldIndex enu = (BodyPartData_FieldIndex)index;
-            switch (enu)
-            {
-                case BodyPartData_FieldIndex.Parts:
-                    return true;
-                case BodyPartData_FieldIndex.Model:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            BodyPartData_FieldIndex enu = (BodyPartData_FieldIndex)index;
-            switch (enu)
-            {
-                case BodyPartData_FieldIndex.Model:
-                case BodyPartData_FieldIndex.Parts:
-                    return true;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            BodyPartData_FieldIndex enu = (BodyPartData_FieldIndex)index;
-            switch (enu)
-            {
-                case BodyPartData_FieldIndex.Model:
-                case BodyPartData_FieldIndex.Parts:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            BodyPartData_FieldIndex enu = (BodyPartData_FieldIndex)index;
-            switch (enu)
-            {
-                case BodyPartData_FieldIndex.Model:
-                    return "Model";
-                case BodyPartData_FieldIndex.Parts:
-                    return "Parts";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            BodyPartData_FieldIndex enu = (BodyPartData_FieldIndex)index;
-            switch (enu)
-            {
-                case BodyPartData_FieldIndex.Model:
-                case BodyPartData_FieldIndex.Parts:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            BodyPartData_FieldIndex enu = (BodyPartData_FieldIndex)index;
-            switch (enu)
-            {
-                case BodyPartData_FieldIndex.Model:
-                case BodyPartData_FieldIndex.Parts:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            BodyPartData_FieldIndex enu = (BodyPartData_FieldIndex)index;
-            switch (enu)
-            {
-                case BodyPartData_FieldIndex.Model:
-                    return typeof(Model);
-                case BodyPartData_FieldIndex.Parts:
-                    return typeof(IExtendedList<BodyPart>);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.BPTD;
         public static readonly Type BinaryWriteTranslation = typeof(BodyPartDataBinaryWriteTranslation);
         #region Interface
@@ -915,14 +808,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

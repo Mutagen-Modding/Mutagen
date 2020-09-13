@@ -43,9 +43,7 @@ namespace Mutagen.Bethesda.Skyrim
         public MagicEffect.SoundType Type { get; set; } = default;
         #endregion
         #region Sound
-        public FormLink<SoundDescriptor> Sound { get; set; } = new FormLink<SoundDescriptor>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISoundDescriptorGetter> IMagicEffectSoundGetter.Sound => this.Sound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
+        public FormLink<ISoundDescriptorGetter> Sound { get; set; } = new FormLink<ISoundDescriptorGetter>();
         #endregion
 
         #region To String
@@ -451,7 +449,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new MagicEffect.SoundType Type { get; set; }
-        new FormLink<SoundDescriptor> Sound { get; set; }
+        new FormLink<ISoundDescriptorGetter> Sound { get; set; }
     }
 
     public partial interface IMagicEffectSoundGetter :
@@ -683,112 +681,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "TYPE":
-                    return (ushort)MagicEffectSound_FieldIndex.Type;
-                case "SOUND":
-                    return (ushort)MagicEffectSound_FieldIndex.Sound;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            MagicEffectSound_FieldIndex enu = (MagicEffectSound_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffectSound_FieldIndex.Type:
-                case MagicEffectSound_FieldIndex.Sound:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            MagicEffectSound_FieldIndex enu = (MagicEffectSound_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffectSound_FieldIndex.Type:
-                case MagicEffectSound_FieldIndex.Sound:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            MagicEffectSound_FieldIndex enu = (MagicEffectSound_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffectSound_FieldIndex.Type:
-                case MagicEffectSound_FieldIndex.Sound:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            MagicEffectSound_FieldIndex enu = (MagicEffectSound_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffectSound_FieldIndex.Type:
-                    return "Type";
-                case MagicEffectSound_FieldIndex.Sound:
-                    return "Sound";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            MagicEffectSound_FieldIndex enu = (MagicEffectSound_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffectSound_FieldIndex.Type:
-                case MagicEffectSound_FieldIndex.Sound:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            MagicEffectSound_FieldIndex enu = (MagicEffectSound_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffectSound_FieldIndex.Type:
-                case MagicEffectSound_FieldIndex.Sound:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            MagicEffectSound_FieldIndex enu = (MagicEffectSound_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffectSound_FieldIndex.Type:
-                    return typeof(MagicEffect.SoundType);
-                case MagicEffectSound_FieldIndex.Sound:
-                    return typeof(FormLink<SoundDescriptor>);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly Type BinaryWriteTranslation = typeof(MagicEffectSoundBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -808,14 +700,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -832,7 +724,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Type = default;
-            item.Sound = FormLink<SoundDescriptor>.Null;
+            item.Sound = FormLink<ISoundDescriptorGetter>.Null;
         }
         
         #region Binary Translation
@@ -991,7 +883,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffectSound_FieldIndex.Sound) ?? true))
             {
-                item.Sound = new FormLink<SoundDescriptor>(rhs.Sound.FormKey);
+                item.Sound = new FormLink<ISoundDescriptorGetter>(rhs.Sound.FormKey);
             }
         }
         

@@ -40,9 +40,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Grass
-        public FormLink<Grass> Grass { get; set; } = new FormLink<Grass>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IGrassGetter> IRegionGrassGetter.Grass => this.Grass.ToGetter<Grass, IGrassGetter>();
+        public FormLink<IGrassGetter> Grass { get; set; } = new FormLink<IGrassGetter>();
         #endregion
         #region Unknown
         public Int32 Unknown { get; set; } = default;
@@ -450,7 +448,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IRegionGrass>,
         ILinkedFormKeyContainer
     {
-        new FormLink<Grass> Grass { get; set; }
+        new FormLink<IGrassGetter> Grass { get; set; }
         new Int32 Unknown { get; set; }
     }
 
@@ -683,112 +681,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "GRASS":
-                    return (ushort)RegionGrass_FieldIndex.Grass;
-                case "UNKNOWN":
-                    return (ushort)RegionGrass_FieldIndex.Unknown;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            RegionGrass_FieldIndex enu = (RegionGrass_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionGrass_FieldIndex.Grass:
-                case RegionGrass_FieldIndex.Unknown:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            RegionGrass_FieldIndex enu = (RegionGrass_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionGrass_FieldIndex.Grass:
-                case RegionGrass_FieldIndex.Unknown:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            RegionGrass_FieldIndex enu = (RegionGrass_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionGrass_FieldIndex.Grass:
-                case RegionGrass_FieldIndex.Unknown:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            RegionGrass_FieldIndex enu = (RegionGrass_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionGrass_FieldIndex.Grass:
-                    return "Grass";
-                case RegionGrass_FieldIndex.Unknown:
-                    return "Unknown";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            RegionGrass_FieldIndex enu = (RegionGrass_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionGrass_FieldIndex.Grass:
-                case RegionGrass_FieldIndex.Unknown:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            RegionGrass_FieldIndex enu = (RegionGrass_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionGrass_FieldIndex.Grass:
-                case RegionGrass_FieldIndex.Unknown:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            RegionGrass_FieldIndex enu = (RegionGrass_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionGrass_FieldIndex.Grass:
-                    return typeof(FormLink<Grass>);
-                case RegionGrass_FieldIndex.Unknown:
-                    return typeof(Int32);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly Type BinaryWriteTranslation = typeof(RegionGrassBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -808,14 +700,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -831,7 +723,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IRegionGrass item)
         {
             ClearPartial();
-            item.Grass = FormLink<Grass>.Null;
+            item.Grass = FormLink<IGrassGetter>.Null;
             item.Unknown = default;
         }
         
@@ -987,7 +879,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RegionGrass_FieldIndex.Grass) ?? true))
             {
-                item.Grass = new FormLink<Grass>(rhs.Grass.FormKey);
+                item.Grass = new FormLink<IGrassGetter>(rhs.Grass.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)RegionGrass_FieldIndex.Unknown) ?? true))
             {

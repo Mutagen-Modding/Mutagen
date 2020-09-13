@@ -878,178 +878,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "AGGRESSION":
-                    return (ushort)AIData_FieldIndex.Aggression;
-                case "CONFIDENCE":
-                    return (ushort)AIData_FieldIndex.Confidence;
-                case "ENERGYLEVEL":
-                    return (ushort)AIData_FieldIndex.EnergyLevel;
-                case "RESPONSIBILITY":
-                    return (ushort)AIData_FieldIndex.Responsibility;
-                case "BUYSELLSERVICES":
-                    return (ushort)AIData_FieldIndex.BuySellServices;
-                case "TEACHES":
-                    return (ushort)AIData_FieldIndex.Teaches;
-                case "MAXIMUMTRAININGLEVEL":
-                    return (ushort)AIData_FieldIndex.MaximumTrainingLevel;
-                case "UNUSED":
-                    return (ushort)AIData_FieldIndex.Unused;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            AIData_FieldIndex enu = (AIData_FieldIndex)index;
-            switch (enu)
-            {
-                case AIData_FieldIndex.Aggression:
-                case AIData_FieldIndex.Confidence:
-                case AIData_FieldIndex.EnergyLevel:
-                case AIData_FieldIndex.Responsibility:
-                case AIData_FieldIndex.BuySellServices:
-                case AIData_FieldIndex.Teaches:
-                case AIData_FieldIndex.MaximumTrainingLevel:
-                case AIData_FieldIndex.Unused:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            AIData_FieldIndex enu = (AIData_FieldIndex)index;
-            switch (enu)
-            {
-                case AIData_FieldIndex.Aggression:
-                case AIData_FieldIndex.Confidence:
-                case AIData_FieldIndex.EnergyLevel:
-                case AIData_FieldIndex.Responsibility:
-                case AIData_FieldIndex.BuySellServices:
-                case AIData_FieldIndex.Teaches:
-                case AIData_FieldIndex.MaximumTrainingLevel:
-                case AIData_FieldIndex.Unused:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            AIData_FieldIndex enu = (AIData_FieldIndex)index;
-            switch (enu)
-            {
-                case AIData_FieldIndex.Aggression:
-                case AIData_FieldIndex.Confidence:
-                case AIData_FieldIndex.EnergyLevel:
-                case AIData_FieldIndex.Responsibility:
-                case AIData_FieldIndex.BuySellServices:
-                case AIData_FieldIndex.Teaches:
-                case AIData_FieldIndex.MaximumTrainingLevel:
-                case AIData_FieldIndex.Unused:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            AIData_FieldIndex enu = (AIData_FieldIndex)index;
-            switch (enu)
-            {
-                case AIData_FieldIndex.Aggression:
-                    return "Aggression";
-                case AIData_FieldIndex.Confidence:
-                    return "Confidence";
-                case AIData_FieldIndex.EnergyLevel:
-                    return "EnergyLevel";
-                case AIData_FieldIndex.Responsibility:
-                    return "Responsibility";
-                case AIData_FieldIndex.BuySellServices:
-                    return "BuySellServices";
-                case AIData_FieldIndex.Teaches:
-                    return "Teaches";
-                case AIData_FieldIndex.MaximumTrainingLevel:
-                    return "MaximumTrainingLevel";
-                case AIData_FieldIndex.Unused:
-                    return "Unused";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            AIData_FieldIndex enu = (AIData_FieldIndex)index;
-            switch (enu)
-            {
-                case AIData_FieldIndex.Aggression:
-                case AIData_FieldIndex.Confidence:
-                case AIData_FieldIndex.EnergyLevel:
-                case AIData_FieldIndex.Responsibility:
-                case AIData_FieldIndex.BuySellServices:
-                case AIData_FieldIndex.Teaches:
-                case AIData_FieldIndex.MaximumTrainingLevel:
-                case AIData_FieldIndex.Unused:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            AIData_FieldIndex enu = (AIData_FieldIndex)index;
-            switch (enu)
-            {
-                case AIData_FieldIndex.Aggression:
-                case AIData_FieldIndex.Confidence:
-                case AIData_FieldIndex.EnergyLevel:
-                case AIData_FieldIndex.Responsibility:
-                case AIData_FieldIndex.BuySellServices:
-                case AIData_FieldIndex.Teaches:
-                case AIData_FieldIndex.MaximumTrainingLevel:
-                case AIData_FieldIndex.Unused:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            AIData_FieldIndex enu = (AIData_FieldIndex)index;
-            switch (enu)
-            {
-                case AIData_FieldIndex.Aggression:
-                    return typeof(Byte);
-                case AIData_FieldIndex.Confidence:
-                    return typeof(Byte);
-                case AIData_FieldIndex.EnergyLevel:
-                    return typeof(Byte);
-                case AIData_FieldIndex.Responsibility:
-                    return typeof(Byte);
-                case AIData_FieldIndex.BuySellServices:
-                    return typeof(Npc.BuySellServiceFlag);
-                case AIData_FieldIndex.Teaches:
-                    return typeof(Skill);
-                case AIData_FieldIndex.MaximumTrainingLevel:
-                    return typeof(Byte);
-                case AIData_FieldIndex.Unused:
-                    return typeof(Int16);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.AIDT;
         public static readonly Type BinaryWriteTranslation = typeof(AIDataBinaryWriteTranslation);
         #region Interface
@@ -1070,14 +898,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

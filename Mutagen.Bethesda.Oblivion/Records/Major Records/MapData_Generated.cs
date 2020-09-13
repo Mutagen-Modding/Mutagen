@@ -708,123 +708,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "USABLEDIMENSIONS":
-                    return (ushort)MapData_FieldIndex.UsableDimensions;
-                case "CELLCOORDINATESNWCELL":
-                    return (ushort)MapData_FieldIndex.CellCoordinatesNWCell;
-                case "CELLCOORDINATESSECELL":
-                    return (ushort)MapData_FieldIndex.CellCoordinatesSECell;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            MapData_FieldIndex enu = (MapData_FieldIndex)index;
-            switch (enu)
-            {
-                case MapData_FieldIndex.UsableDimensions:
-                case MapData_FieldIndex.CellCoordinatesNWCell:
-                case MapData_FieldIndex.CellCoordinatesSECell:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            MapData_FieldIndex enu = (MapData_FieldIndex)index;
-            switch (enu)
-            {
-                case MapData_FieldIndex.UsableDimensions:
-                case MapData_FieldIndex.CellCoordinatesNWCell:
-                case MapData_FieldIndex.CellCoordinatesSECell:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            MapData_FieldIndex enu = (MapData_FieldIndex)index;
-            switch (enu)
-            {
-                case MapData_FieldIndex.UsableDimensions:
-                case MapData_FieldIndex.CellCoordinatesNWCell:
-                case MapData_FieldIndex.CellCoordinatesSECell:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            MapData_FieldIndex enu = (MapData_FieldIndex)index;
-            switch (enu)
-            {
-                case MapData_FieldIndex.UsableDimensions:
-                    return "UsableDimensions";
-                case MapData_FieldIndex.CellCoordinatesNWCell:
-                    return "CellCoordinatesNWCell";
-                case MapData_FieldIndex.CellCoordinatesSECell:
-                    return "CellCoordinatesSECell";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            MapData_FieldIndex enu = (MapData_FieldIndex)index;
-            switch (enu)
-            {
-                case MapData_FieldIndex.UsableDimensions:
-                case MapData_FieldIndex.CellCoordinatesNWCell:
-                case MapData_FieldIndex.CellCoordinatesSECell:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            MapData_FieldIndex enu = (MapData_FieldIndex)index;
-            switch (enu)
-            {
-                case MapData_FieldIndex.UsableDimensions:
-                case MapData_FieldIndex.CellCoordinatesNWCell:
-                case MapData_FieldIndex.CellCoordinatesSECell:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            MapData_FieldIndex enu = (MapData_FieldIndex)index;
-            switch (enu)
-            {
-                case MapData_FieldIndex.UsableDimensions:
-                    return typeof(P2Int);
-                case MapData_FieldIndex.CellCoordinatesNWCell:
-                    return typeof(P2Int16);
-                case MapData_FieldIndex.CellCoordinatesSECell:
-                    return typeof(P2Int16);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.MNAM;
         public static readonly Type BinaryWriteTranslation = typeof(MapDataBinaryWriteTranslation);
         #region Interface
@@ -845,14 +728,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

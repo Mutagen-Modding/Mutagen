@@ -49,8 +49,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Relations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Relation> _Relations = new ExtendedList<Relation>();
-        public IExtendedList<Relation> Relations
+        private ExtendedList<Relation> _Relations = new ExtendedList<Relation>();
+        public ExtendedList<Relation> Relations
         {
             get => this._Relations;
             protected set => this._Relations = value;
@@ -73,8 +73,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Ranks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Rank> _Ranks = new ExtendedList<Rank>();
-        public IExtendedList<Rank> Ranks
+        private ExtendedList<Rank> _Ranks = new ExtendedList<Rank>();
+        public ExtendedList<Rank> Ranks
         {
             get => this._Ranks;
             protected set => this._Ranks = value;
@@ -742,10 +742,10 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkedFormKeyContainer
     {
         new String? Name { get; set; }
-        new IExtendedList<Relation> Relations { get; }
+        new ExtendedList<Relation> Relations { get; }
         new Faction.FactionFlag? Flags { get; set; }
         new Single? CrimeGoldMultiplier { get; set; }
-        new IExtendedList<Rank> Ranks { get; }
+        new ExtendedList<Rank> Ranks { get; }
     }
 
     public partial interface IFactionInternal :
@@ -966,147 +966,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "NAME":
-                    return (ushort)Faction_FieldIndex.Name;
-                case "RELATIONS":
-                    return (ushort)Faction_FieldIndex.Relations;
-                case "FLAGS":
-                    return (ushort)Faction_FieldIndex.Flags;
-                case "CRIMEGOLDMULTIPLIER":
-                    return (ushort)Faction_FieldIndex.CrimeGoldMultiplier;
-                case "RANKS":
-                    return (ushort)Faction_FieldIndex.Ranks;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Faction_FieldIndex enu = (Faction_FieldIndex)index;
-            switch (enu)
-            {
-                case Faction_FieldIndex.Relations:
-                case Faction_FieldIndex.Ranks:
-                    return true;
-                case Faction_FieldIndex.Name:
-                case Faction_FieldIndex.Flags:
-                case Faction_FieldIndex.CrimeGoldMultiplier:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Faction_FieldIndex enu = (Faction_FieldIndex)index;
-            switch (enu)
-            {
-                case Faction_FieldIndex.Relations:
-                case Faction_FieldIndex.Ranks:
-                    return true;
-                case Faction_FieldIndex.Name:
-                case Faction_FieldIndex.Flags:
-                case Faction_FieldIndex.CrimeGoldMultiplier:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Faction_FieldIndex enu = (Faction_FieldIndex)index;
-            switch (enu)
-            {
-                case Faction_FieldIndex.Name:
-                case Faction_FieldIndex.Relations:
-                case Faction_FieldIndex.Flags:
-                case Faction_FieldIndex.CrimeGoldMultiplier:
-                case Faction_FieldIndex.Ranks:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Faction_FieldIndex enu = (Faction_FieldIndex)index;
-            switch (enu)
-            {
-                case Faction_FieldIndex.Name:
-                    return "Name";
-                case Faction_FieldIndex.Relations:
-                    return "Relations";
-                case Faction_FieldIndex.Flags:
-                    return "Flags";
-                case Faction_FieldIndex.CrimeGoldMultiplier:
-                    return "CrimeGoldMultiplier";
-                case Faction_FieldIndex.Ranks:
-                    return "Ranks";
-                default:
-                    return OblivionMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Faction_FieldIndex enu = (Faction_FieldIndex)index;
-            switch (enu)
-            {
-                case Faction_FieldIndex.Name:
-                case Faction_FieldIndex.Relations:
-                case Faction_FieldIndex.Flags:
-                case Faction_FieldIndex.CrimeGoldMultiplier:
-                case Faction_FieldIndex.Ranks:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Faction_FieldIndex enu = (Faction_FieldIndex)index;
-            switch (enu)
-            {
-                case Faction_FieldIndex.Name:
-                case Faction_FieldIndex.Relations:
-                case Faction_FieldIndex.Flags:
-                case Faction_FieldIndex.CrimeGoldMultiplier:
-                case Faction_FieldIndex.Ranks:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Faction_FieldIndex enu = (Faction_FieldIndex)index;
-            switch (enu)
-            {
-                case Faction_FieldIndex.Name:
-                    return typeof(String);
-                case Faction_FieldIndex.Relations:
-                    return typeof(IExtendedList<Relation>);
-                case Faction_FieldIndex.Flags:
-                    return typeof(Faction.FactionFlag);
-                case Faction_FieldIndex.CrimeGoldMultiplier:
-                    return typeof(Single);
-                case Faction_FieldIndex.Ranks:
-                    return typeof(IExtendedList<Rank>);
-                default:
-                    return OblivionMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.FACT;
         public static readonly Type BinaryWriteTranslation = typeof(FactionBinaryWriteTranslation);
         #region Interface
@@ -1127,14 +986,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

@@ -95,9 +95,7 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? ICellGetter.MaxHeightData => this.MaxHeightData;
         #endregion
         #region LightingTemplate
-        public FormLink<LightingTemplate> LightingTemplate { get; set; } = new FormLink<LightingTemplate>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ILightingTemplateGetter> ICellGetter.LightingTemplate => this.LightingTemplate.ToGetter<LightingTemplate, ILightingTemplateGetter>();
+        public FormLink<ILightingTemplateGetter> LightingTemplate { get; set; } = new FormLink<ILightingTemplateGetter>();
         #endregion
         #region LNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -122,8 +120,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Regions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Region>>? _Regions;
-        public IExtendedList<IFormLink<Region>>? Regions
+        private ExtendedList<IFormLink<IRegionGetter>>? _Regions;
+        public ExtendedList<IFormLink<IRegionGetter>>? Regions
         {
             get => this._Regions;
             set => this._Regions = value;
@@ -135,9 +133,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region Location
-        public FormLinkNullable<Location> Location { get; set; } = new FormLinkNullable<Location>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ILocationGetter> ICellGetter.Location => this.Location.ToGetter<Location, ILocationGetter>();
+        public FormLinkNullable<ILocationGetter> Location { get; set; } = new FormLinkNullable<ILocationGetter>();
         #endregion
         #region XWCN
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -173,9 +169,7 @@ namespace Mutagen.Bethesda.Skyrim
         ICellWaterVelocityGetter? ICellGetter.WaterVelocity => this.WaterVelocity;
         #endregion
         #region Water
-        public FormLinkNullable<Water> Water { get; set; } = new FormLinkNullable<Water>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IWaterGetter> ICellGetter.Water => this.Water.ToGetter<Water, IWaterGetter>();
+        public FormLinkNullable<IWaterGetter> Water { get; set; } = new FormLinkNullable<IWaterGetter>();
         #endregion
         #region Ownership
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -189,9 +183,7 @@ namespace Mutagen.Bethesda.Skyrim
         IOwnershipGetter? ICellGetter.Ownership => this.Ownership;
         #endregion
         #region LockList
-        public FormLinkNullable<ILockList> LockList { get; set; } = new FormLinkNullable<ILockList>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ILockListGetter> ICellGetter.LockList => this.LockList.ToGetter<ILockList, ILockListGetter>();
+        public FormLinkNullable<ILockListGetter> LockList { get; set; } = new FormLinkNullable<ILockListGetter>();
         #endregion
         #region WaterEnvironmentMap
         public String? WaterEnvironmentMap { get; set; }
@@ -199,29 +191,19 @@ namespace Mutagen.Bethesda.Skyrim
         String? ICellGetter.WaterEnvironmentMap => this.WaterEnvironmentMap;
         #endregion
         #region SkyAndWeatherFromRegion
-        public FormLinkNullable<Region> SkyAndWeatherFromRegion { get; set; } = new FormLinkNullable<Region>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IRegionGetter> ICellGetter.SkyAndWeatherFromRegion => this.SkyAndWeatherFromRegion.ToGetter<Region, IRegionGetter>();
+        public FormLinkNullable<IRegionGetter> SkyAndWeatherFromRegion { get; set; } = new FormLinkNullable<IRegionGetter>();
         #endregion
         #region AcousticSpace
-        public FormLinkNullable<AcousticSpace> AcousticSpace { get; set; } = new FormLinkNullable<AcousticSpace>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IAcousticSpaceGetter> ICellGetter.AcousticSpace => this.AcousticSpace.ToGetter<AcousticSpace, IAcousticSpaceGetter>();
+        public FormLinkNullable<IAcousticSpaceGetter> AcousticSpace { get; set; } = new FormLinkNullable<IAcousticSpaceGetter>();
         #endregion
         #region EncounterZone
-        public FormLinkNullable<EncounterZone> EncounterZone { get; set; } = new FormLinkNullable<EncounterZone>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IEncounterZoneGetter> ICellGetter.EncounterZone => this.EncounterZone.ToGetter<EncounterZone, IEncounterZoneGetter>();
+        public FormLinkNullable<IEncounterZoneGetter> EncounterZone { get; set; } = new FormLinkNullable<IEncounterZoneGetter>();
         #endregion
         #region Music
-        public FormLinkNullable<MusicType> Music { get; set; } = new FormLinkNullable<MusicType>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IMusicTypeGetter> ICellGetter.Music => this.Music.ToGetter<MusicType, IMusicTypeGetter>();
+        public FormLinkNullable<IMusicTypeGetter> Music { get; set; } = new FormLinkNullable<IMusicTypeGetter>();
         #endregion
         #region ImageSpace
-        public FormLinkNullable<ImageSpaceAdapter> ImageSpace { get; set; } = new FormLinkNullable<ImageSpaceAdapter>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IImageSpaceAdapterGetter> ICellGetter.ImageSpace => this.ImageSpace.ToGetter<ImageSpaceAdapter, IImageSpaceAdapterGetter>();
+        public FormLinkNullable<IImageSpaceAdapterGetter> ImageSpace { get; set; } = new FormLinkNullable<IImageSpaceAdapterGetter>();
         #endregion
         #region Landscape
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -236,8 +218,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region NavigationMeshes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<ANavigationMesh> _NavigationMeshes = new ExtendedList<ANavigationMesh>();
-        public IExtendedList<ANavigationMesh> NavigationMeshes
+        private ExtendedList<ANavigationMesh> _NavigationMeshes = new ExtendedList<ANavigationMesh>();
+        public ExtendedList<ANavigationMesh> NavigationMeshes
         {
             get => this._NavigationMeshes;
             protected set => this._NavigationMeshes = value;
@@ -262,8 +244,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Persistent
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IPlaced> _Persistent = new ExtendedList<IPlaced>();
-        public IExtendedList<IPlaced> Persistent
+        private ExtendedList<IPlaced> _Persistent = new ExtendedList<IPlaced>();
+        public ExtendedList<IPlaced> Persistent
         {
             get => this._Persistent;
             protected set => this._Persistent = value;
@@ -282,8 +264,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Temporary
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IPlaced> _Temporary = new ExtendedList<IPlaced>();
-        public IExtendedList<IPlaced> Temporary
+        private ExtendedList<IPlaced> _Temporary = new ExtendedList<IPlaced>();
+        public ExtendedList<IPlaced> Temporary
         {
             get => this._Temporary;
             protected set => this._Temporary = value;
@@ -1997,34 +1979,34 @@ namespace Mutagen.Bethesda.Skyrim
         new CellLighting? Lighting { get; set; }
         new MemorySlice<Byte>? OcclusionData { get; set; }
         new MemorySlice<Byte>? MaxHeightData { get; set; }
-        new FormLink<LightingTemplate> LightingTemplate { get; set; }
+        new FormLink<ILightingTemplateGetter> LightingTemplate { get; set; }
         new MemorySlice<Byte>? LNAM { get; set; }
         new Single? WaterHeight { get; set; }
         new String? WaterNoiseTexture { get; set; }
-        new IExtendedList<IFormLink<Region>>? Regions { get; set; }
-        new FormLinkNullable<Location> Location { get; set; }
+        new ExtendedList<IFormLink<IRegionGetter>>? Regions { get; set; }
+        new FormLinkNullable<ILocationGetter> Location { get; set; }
         new MemorySlice<Byte>? XWCN { get; set; }
         new MemorySlice<Byte>? XWCS { get; set; }
         new CellWaterVelocity? WaterVelocity { get; set; }
-        new FormLinkNullable<Water> Water { get; set; }
+        new FormLinkNullable<IWaterGetter> Water { get; set; }
         new Ownership? Ownership { get; set; }
-        new FormLinkNullable<ILockList> LockList { get; set; }
+        new FormLinkNullable<ILockListGetter> LockList { get; set; }
         new String? WaterEnvironmentMap { get; set; }
-        new FormLinkNullable<Region> SkyAndWeatherFromRegion { get; set; }
-        new FormLinkNullable<AcousticSpace> AcousticSpace { get; set; }
-        new FormLinkNullable<EncounterZone> EncounterZone { get; set; }
-        new FormLinkNullable<MusicType> Music { get; set; }
-        new FormLinkNullable<ImageSpaceAdapter> ImageSpace { get; set; }
+        new FormLinkNullable<IRegionGetter> SkyAndWeatherFromRegion { get; set; }
+        new FormLinkNullable<IAcousticSpaceGetter> AcousticSpace { get; set; }
+        new FormLinkNullable<IEncounterZoneGetter> EncounterZone { get; set; }
+        new FormLinkNullable<IMusicTypeGetter> Music { get; set; }
+        new FormLinkNullable<IImageSpaceAdapterGetter> ImageSpace { get; set; }
         new Landscape? Landscape { get; set; }
-        new IExtendedList<ANavigationMesh> NavigationMeshes { get; }
+        new ExtendedList<ANavigationMesh> NavigationMeshes { get; }
         new Int32 Timestamp { get; set; }
         new Int32 UnknownGroupData { get; set; }
         new Int32 PersistentTimestamp { get; set; }
         new Int32 PersistentUnknownGroupData { get; set; }
-        new IExtendedList<IPlaced> Persistent { get; }
+        new ExtendedList<IPlaced> Persistent { get; }
         new Int32 TemporaryTimestamp { get; set; }
         new Int32 TemporaryUnknownGroupData { get; set; }
-        new IExtendedList<IPlaced> Temporary { get; }
+        new ExtendedList<IPlaced> Temporary { get; }
         #region Mutagen
         new Cell.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -2528,466 +2510,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "NAME":
-                    return (ushort)Cell_FieldIndex.Name;
-                case "FLAGS":
-                    return (ushort)Cell_FieldIndex.Flags;
-                case "GRID":
-                    return (ushort)Cell_FieldIndex.Grid;
-                case "LIGHTING":
-                    return (ushort)Cell_FieldIndex.Lighting;
-                case "OCCLUSIONDATA":
-                    return (ushort)Cell_FieldIndex.OcclusionData;
-                case "MAXHEIGHTDATA":
-                    return (ushort)Cell_FieldIndex.MaxHeightData;
-                case "LIGHTINGTEMPLATE":
-                    return (ushort)Cell_FieldIndex.LightingTemplate;
-                case "LNAM":
-                    return (ushort)Cell_FieldIndex.LNAM;
-                case "WATERHEIGHT":
-                    return (ushort)Cell_FieldIndex.WaterHeight;
-                case "WATERNOISETEXTURE":
-                    return (ushort)Cell_FieldIndex.WaterNoiseTexture;
-                case "REGIONS":
-                    return (ushort)Cell_FieldIndex.Regions;
-                case "LOCATION":
-                    return (ushort)Cell_FieldIndex.Location;
-                case "XWCN":
-                    return (ushort)Cell_FieldIndex.XWCN;
-                case "XWCS":
-                    return (ushort)Cell_FieldIndex.XWCS;
-                case "WATERVELOCITY":
-                    return (ushort)Cell_FieldIndex.WaterVelocity;
-                case "WATER":
-                    return (ushort)Cell_FieldIndex.Water;
-                case "OWNERSHIP":
-                    return (ushort)Cell_FieldIndex.Ownership;
-                case "LOCKLIST":
-                    return (ushort)Cell_FieldIndex.LockList;
-                case "WATERENVIRONMENTMAP":
-                    return (ushort)Cell_FieldIndex.WaterEnvironmentMap;
-                case "SKYANDWEATHERFROMREGION":
-                    return (ushort)Cell_FieldIndex.SkyAndWeatherFromRegion;
-                case "ACOUSTICSPACE":
-                    return (ushort)Cell_FieldIndex.AcousticSpace;
-                case "ENCOUNTERZONE":
-                    return (ushort)Cell_FieldIndex.EncounterZone;
-                case "MUSIC":
-                    return (ushort)Cell_FieldIndex.Music;
-                case "IMAGESPACE":
-                    return (ushort)Cell_FieldIndex.ImageSpace;
-                case "LANDSCAPE":
-                    return (ushort)Cell_FieldIndex.Landscape;
-                case "NAVIGATIONMESHES":
-                    return (ushort)Cell_FieldIndex.NavigationMeshes;
-                case "TIMESTAMP":
-                    return (ushort)Cell_FieldIndex.Timestamp;
-                case "UNKNOWNGROUPDATA":
-                    return (ushort)Cell_FieldIndex.UnknownGroupData;
-                case "PERSISTENTTIMESTAMP":
-                    return (ushort)Cell_FieldIndex.PersistentTimestamp;
-                case "PERSISTENTUNKNOWNGROUPDATA":
-                    return (ushort)Cell_FieldIndex.PersistentUnknownGroupData;
-                case "PERSISTENT":
-                    return (ushort)Cell_FieldIndex.Persistent;
-                case "TEMPORARYTIMESTAMP":
-                    return (ushort)Cell_FieldIndex.TemporaryTimestamp;
-                case "TEMPORARYUNKNOWNGROUPDATA":
-                    return (ushort)Cell_FieldIndex.TemporaryUnknownGroupData;
-                case "TEMPORARY":
-                    return (ushort)Cell_FieldIndex.Temporary;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Cell_FieldIndex enu = (Cell_FieldIndex)index;
-            switch (enu)
-            {
-                case Cell_FieldIndex.Regions:
-                case Cell_FieldIndex.NavigationMeshes:
-                case Cell_FieldIndex.Persistent:
-                case Cell_FieldIndex.Temporary:
-                    return true;
-                case Cell_FieldIndex.Name:
-                case Cell_FieldIndex.Flags:
-                case Cell_FieldIndex.Grid:
-                case Cell_FieldIndex.Lighting:
-                case Cell_FieldIndex.OcclusionData:
-                case Cell_FieldIndex.MaxHeightData:
-                case Cell_FieldIndex.LightingTemplate:
-                case Cell_FieldIndex.LNAM:
-                case Cell_FieldIndex.WaterHeight:
-                case Cell_FieldIndex.WaterNoiseTexture:
-                case Cell_FieldIndex.Location:
-                case Cell_FieldIndex.XWCN:
-                case Cell_FieldIndex.XWCS:
-                case Cell_FieldIndex.WaterVelocity:
-                case Cell_FieldIndex.Water:
-                case Cell_FieldIndex.Ownership:
-                case Cell_FieldIndex.LockList:
-                case Cell_FieldIndex.WaterEnvironmentMap:
-                case Cell_FieldIndex.SkyAndWeatherFromRegion:
-                case Cell_FieldIndex.AcousticSpace:
-                case Cell_FieldIndex.EncounterZone:
-                case Cell_FieldIndex.Music:
-                case Cell_FieldIndex.ImageSpace:
-                case Cell_FieldIndex.Landscape:
-                case Cell_FieldIndex.Timestamp:
-                case Cell_FieldIndex.UnknownGroupData:
-                case Cell_FieldIndex.PersistentTimestamp:
-                case Cell_FieldIndex.PersistentUnknownGroupData:
-                case Cell_FieldIndex.TemporaryTimestamp:
-                case Cell_FieldIndex.TemporaryUnknownGroupData:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Cell_FieldIndex enu = (Cell_FieldIndex)index;
-            switch (enu)
-            {
-                case Cell_FieldIndex.Grid:
-                case Cell_FieldIndex.Lighting:
-                case Cell_FieldIndex.WaterVelocity:
-                case Cell_FieldIndex.Ownership:
-                case Cell_FieldIndex.Landscape:
-                case Cell_FieldIndex.NavigationMeshes:
-                case Cell_FieldIndex.Persistent:
-                case Cell_FieldIndex.Temporary:
-                    return true;
-                case Cell_FieldIndex.Name:
-                case Cell_FieldIndex.Flags:
-                case Cell_FieldIndex.OcclusionData:
-                case Cell_FieldIndex.MaxHeightData:
-                case Cell_FieldIndex.LightingTemplate:
-                case Cell_FieldIndex.LNAM:
-                case Cell_FieldIndex.WaterHeight:
-                case Cell_FieldIndex.WaterNoiseTexture:
-                case Cell_FieldIndex.Regions:
-                case Cell_FieldIndex.Location:
-                case Cell_FieldIndex.XWCN:
-                case Cell_FieldIndex.XWCS:
-                case Cell_FieldIndex.Water:
-                case Cell_FieldIndex.LockList:
-                case Cell_FieldIndex.WaterEnvironmentMap:
-                case Cell_FieldIndex.SkyAndWeatherFromRegion:
-                case Cell_FieldIndex.AcousticSpace:
-                case Cell_FieldIndex.EncounterZone:
-                case Cell_FieldIndex.Music:
-                case Cell_FieldIndex.ImageSpace:
-                case Cell_FieldIndex.Timestamp:
-                case Cell_FieldIndex.UnknownGroupData:
-                case Cell_FieldIndex.PersistentTimestamp:
-                case Cell_FieldIndex.PersistentUnknownGroupData:
-                case Cell_FieldIndex.TemporaryTimestamp:
-                case Cell_FieldIndex.TemporaryUnknownGroupData:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Cell_FieldIndex enu = (Cell_FieldIndex)index;
-            switch (enu)
-            {
-                case Cell_FieldIndex.Name:
-                case Cell_FieldIndex.Flags:
-                case Cell_FieldIndex.Grid:
-                case Cell_FieldIndex.Lighting:
-                case Cell_FieldIndex.OcclusionData:
-                case Cell_FieldIndex.MaxHeightData:
-                case Cell_FieldIndex.LightingTemplate:
-                case Cell_FieldIndex.LNAM:
-                case Cell_FieldIndex.WaterHeight:
-                case Cell_FieldIndex.WaterNoiseTexture:
-                case Cell_FieldIndex.Regions:
-                case Cell_FieldIndex.Location:
-                case Cell_FieldIndex.XWCN:
-                case Cell_FieldIndex.XWCS:
-                case Cell_FieldIndex.WaterVelocity:
-                case Cell_FieldIndex.Water:
-                case Cell_FieldIndex.Ownership:
-                case Cell_FieldIndex.LockList:
-                case Cell_FieldIndex.WaterEnvironmentMap:
-                case Cell_FieldIndex.SkyAndWeatherFromRegion:
-                case Cell_FieldIndex.AcousticSpace:
-                case Cell_FieldIndex.EncounterZone:
-                case Cell_FieldIndex.Music:
-                case Cell_FieldIndex.ImageSpace:
-                case Cell_FieldIndex.Landscape:
-                case Cell_FieldIndex.NavigationMeshes:
-                case Cell_FieldIndex.Timestamp:
-                case Cell_FieldIndex.UnknownGroupData:
-                case Cell_FieldIndex.PersistentTimestamp:
-                case Cell_FieldIndex.PersistentUnknownGroupData:
-                case Cell_FieldIndex.Persistent:
-                case Cell_FieldIndex.TemporaryTimestamp:
-                case Cell_FieldIndex.TemporaryUnknownGroupData:
-                case Cell_FieldIndex.Temporary:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Cell_FieldIndex enu = (Cell_FieldIndex)index;
-            switch (enu)
-            {
-                case Cell_FieldIndex.Name:
-                    return "Name";
-                case Cell_FieldIndex.Flags:
-                    return "Flags";
-                case Cell_FieldIndex.Grid:
-                    return "Grid";
-                case Cell_FieldIndex.Lighting:
-                    return "Lighting";
-                case Cell_FieldIndex.OcclusionData:
-                    return "OcclusionData";
-                case Cell_FieldIndex.MaxHeightData:
-                    return "MaxHeightData";
-                case Cell_FieldIndex.LightingTemplate:
-                    return "LightingTemplate";
-                case Cell_FieldIndex.LNAM:
-                    return "LNAM";
-                case Cell_FieldIndex.WaterHeight:
-                    return "WaterHeight";
-                case Cell_FieldIndex.WaterNoiseTexture:
-                    return "WaterNoiseTexture";
-                case Cell_FieldIndex.Regions:
-                    return "Regions";
-                case Cell_FieldIndex.Location:
-                    return "Location";
-                case Cell_FieldIndex.XWCN:
-                    return "XWCN";
-                case Cell_FieldIndex.XWCS:
-                    return "XWCS";
-                case Cell_FieldIndex.WaterVelocity:
-                    return "WaterVelocity";
-                case Cell_FieldIndex.Water:
-                    return "Water";
-                case Cell_FieldIndex.Ownership:
-                    return "Ownership";
-                case Cell_FieldIndex.LockList:
-                    return "LockList";
-                case Cell_FieldIndex.WaterEnvironmentMap:
-                    return "WaterEnvironmentMap";
-                case Cell_FieldIndex.SkyAndWeatherFromRegion:
-                    return "SkyAndWeatherFromRegion";
-                case Cell_FieldIndex.AcousticSpace:
-                    return "AcousticSpace";
-                case Cell_FieldIndex.EncounterZone:
-                    return "EncounterZone";
-                case Cell_FieldIndex.Music:
-                    return "Music";
-                case Cell_FieldIndex.ImageSpace:
-                    return "ImageSpace";
-                case Cell_FieldIndex.Landscape:
-                    return "Landscape";
-                case Cell_FieldIndex.NavigationMeshes:
-                    return "NavigationMeshes";
-                case Cell_FieldIndex.Timestamp:
-                    return "Timestamp";
-                case Cell_FieldIndex.UnknownGroupData:
-                    return "UnknownGroupData";
-                case Cell_FieldIndex.PersistentTimestamp:
-                    return "PersistentTimestamp";
-                case Cell_FieldIndex.PersistentUnknownGroupData:
-                    return "PersistentUnknownGroupData";
-                case Cell_FieldIndex.Persistent:
-                    return "Persistent";
-                case Cell_FieldIndex.TemporaryTimestamp:
-                    return "TemporaryTimestamp";
-                case Cell_FieldIndex.TemporaryUnknownGroupData:
-                    return "TemporaryUnknownGroupData";
-                case Cell_FieldIndex.Temporary:
-                    return "Temporary";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Cell_FieldIndex enu = (Cell_FieldIndex)index;
-            switch (enu)
-            {
-                case Cell_FieldIndex.Name:
-                case Cell_FieldIndex.Flags:
-                case Cell_FieldIndex.Grid:
-                case Cell_FieldIndex.Lighting:
-                case Cell_FieldIndex.OcclusionData:
-                case Cell_FieldIndex.MaxHeightData:
-                case Cell_FieldIndex.LightingTemplate:
-                case Cell_FieldIndex.LNAM:
-                case Cell_FieldIndex.WaterHeight:
-                case Cell_FieldIndex.WaterNoiseTexture:
-                case Cell_FieldIndex.Regions:
-                case Cell_FieldIndex.Location:
-                case Cell_FieldIndex.XWCN:
-                case Cell_FieldIndex.XWCS:
-                case Cell_FieldIndex.WaterVelocity:
-                case Cell_FieldIndex.Water:
-                case Cell_FieldIndex.Ownership:
-                case Cell_FieldIndex.LockList:
-                case Cell_FieldIndex.WaterEnvironmentMap:
-                case Cell_FieldIndex.SkyAndWeatherFromRegion:
-                case Cell_FieldIndex.AcousticSpace:
-                case Cell_FieldIndex.EncounterZone:
-                case Cell_FieldIndex.Music:
-                case Cell_FieldIndex.ImageSpace:
-                case Cell_FieldIndex.Landscape:
-                case Cell_FieldIndex.NavigationMeshes:
-                case Cell_FieldIndex.Timestamp:
-                case Cell_FieldIndex.UnknownGroupData:
-                case Cell_FieldIndex.PersistentTimestamp:
-                case Cell_FieldIndex.PersistentUnknownGroupData:
-                case Cell_FieldIndex.Persistent:
-                case Cell_FieldIndex.TemporaryTimestamp:
-                case Cell_FieldIndex.TemporaryUnknownGroupData:
-                case Cell_FieldIndex.Temporary:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Cell_FieldIndex enu = (Cell_FieldIndex)index;
-            switch (enu)
-            {
-                case Cell_FieldIndex.Name:
-                case Cell_FieldIndex.Flags:
-                case Cell_FieldIndex.Grid:
-                case Cell_FieldIndex.Lighting:
-                case Cell_FieldIndex.OcclusionData:
-                case Cell_FieldIndex.MaxHeightData:
-                case Cell_FieldIndex.LightingTemplate:
-                case Cell_FieldIndex.LNAM:
-                case Cell_FieldIndex.WaterHeight:
-                case Cell_FieldIndex.WaterNoiseTexture:
-                case Cell_FieldIndex.Regions:
-                case Cell_FieldIndex.Location:
-                case Cell_FieldIndex.XWCN:
-                case Cell_FieldIndex.XWCS:
-                case Cell_FieldIndex.WaterVelocity:
-                case Cell_FieldIndex.Water:
-                case Cell_FieldIndex.Ownership:
-                case Cell_FieldIndex.LockList:
-                case Cell_FieldIndex.WaterEnvironmentMap:
-                case Cell_FieldIndex.SkyAndWeatherFromRegion:
-                case Cell_FieldIndex.AcousticSpace:
-                case Cell_FieldIndex.EncounterZone:
-                case Cell_FieldIndex.Music:
-                case Cell_FieldIndex.ImageSpace:
-                case Cell_FieldIndex.Landscape:
-                case Cell_FieldIndex.NavigationMeshes:
-                case Cell_FieldIndex.Timestamp:
-                case Cell_FieldIndex.UnknownGroupData:
-                case Cell_FieldIndex.PersistentTimestamp:
-                case Cell_FieldIndex.PersistentUnknownGroupData:
-                case Cell_FieldIndex.Persistent:
-                case Cell_FieldIndex.TemporaryTimestamp:
-                case Cell_FieldIndex.TemporaryUnknownGroupData:
-                case Cell_FieldIndex.Temporary:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Cell_FieldIndex enu = (Cell_FieldIndex)index;
-            switch (enu)
-            {
-                case Cell_FieldIndex.Name:
-                    return typeof(TranslatedString);
-                case Cell_FieldIndex.Flags:
-                    return typeof(Cell.Flag);
-                case Cell_FieldIndex.Grid:
-                    return typeof(CellGrid);
-                case Cell_FieldIndex.Lighting:
-                    return typeof(CellLighting);
-                case Cell_FieldIndex.OcclusionData:
-                    return typeof(MemorySlice<Byte>);
-                case Cell_FieldIndex.MaxHeightData:
-                    return typeof(MemorySlice<Byte>);
-                case Cell_FieldIndex.LightingTemplate:
-                    return typeof(FormLink<LightingTemplate>);
-                case Cell_FieldIndex.LNAM:
-                    return typeof(MemorySlice<Byte>);
-                case Cell_FieldIndex.WaterHeight:
-                    return typeof(Single);
-                case Cell_FieldIndex.WaterNoiseTexture:
-                    return typeof(String);
-                case Cell_FieldIndex.Regions:
-                    return typeof(IExtendedList<IFormLink<Region>>);
-                case Cell_FieldIndex.Location:
-                    return typeof(FormLinkNullable<Location>);
-                case Cell_FieldIndex.XWCN:
-                    return typeof(MemorySlice<Byte>);
-                case Cell_FieldIndex.XWCS:
-                    return typeof(MemorySlice<Byte>);
-                case Cell_FieldIndex.WaterVelocity:
-                    return typeof(CellWaterVelocity);
-                case Cell_FieldIndex.Water:
-                    return typeof(FormLinkNullable<Water>);
-                case Cell_FieldIndex.Ownership:
-                    return typeof(Ownership);
-                case Cell_FieldIndex.LockList:
-                    return typeof(FormLinkNullable<ILockList>);
-                case Cell_FieldIndex.WaterEnvironmentMap:
-                    return typeof(String);
-                case Cell_FieldIndex.SkyAndWeatherFromRegion:
-                    return typeof(FormLinkNullable<Region>);
-                case Cell_FieldIndex.AcousticSpace:
-                    return typeof(FormLinkNullable<AcousticSpace>);
-                case Cell_FieldIndex.EncounterZone:
-                    return typeof(FormLinkNullable<EncounterZone>);
-                case Cell_FieldIndex.Music:
-                    return typeof(FormLinkNullable<MusicType>);
-                case Cell_FieldIndex.ImageSpace:
-                    return typeof(FormLinkNullable<ImageSpaceAdapter>);
-                case Cell_FieldIndex.Landscape:
-                    return typeof(Landscape);
-                case Cell_FieldIndex.NavigationMeshes:
-                    return typeof(IExtendedList<ANavigationMesh>);
-                case Cell_FieldIndex.Timestamp:
-                    return typeof(Int32);
-                case Cell_FieldIndex.UnknownGroupData:
-                    return typeof(Int32);
-                case Cell_FieldIndex.PersistentTimestamp:
-                    return typeof(Int32);
-                case Cell_FieldIndex.PersistentUnknownGroupData:
-                    return typeof(Int32);
-                case Cell_FieldIndex.Persistent:
-                    return typeof(IExtendedList<IPlaced>);
-                case Cell_FieldIndex.TemporaryTimestamp:
-                    return typeof(Int32);
-                case Cell_FieldIndex.TemporaryUnknownGroupData:
-                    return typeof(Int32);
-                case Cell_FieldIndex.Temporary:
-                    return typeof(IExtendedList<IPlaced>);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.CELL;
         public static readonly Type BinaryWriteTranslation = typeof(CellBinaryWriteTranslation);
         #region Interface
@@ -3008,14 +2530,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -3037,24 +2559,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Lighting = null;
             item.OcclusionData = default;
             item.MaxHeightData = default;
-            item.LightingTemplate = FormLink<LightingTemplate>.Null;
+            item.LightingTemplate = FormLink<ILightingTemplateGetter>.Null;
             item.LNAM = default;
             item.WaterHeight = default;
             item.WaterNoiseTexture = default;
             item.Regions = null;
-            item.Location = FormLinkNullable<Location>.Null;
+            item.Location = FormLinkNullable<ILocationGetter>.Null;
             item.XWCN = default;
             item.XWCS = default;
             item.WaterVelocity = null;
-            item.Water = FormLinkNullable<Water>.Null;
+            item.Water = FormLinkNullable<IWaterGetter>.Null;
             item.Ownership = null;
-            item.LockList = FormLinkNullable<ILockList>.Null;
+            item.LockList = FormLinkNullable<ILockListGetter>.Null;
             item.WaterEnvironmentMap = default;
-            item.SkyAndWeatherFromRegion = FormLinkNullable<Region>.Null;
-            item.AcousticSpace = FormLinkNullable<AcousticSpace>.Null;
-            item.EncounterZone = FormLinkNullable<EncounterZone>.Null;
-            item.Music = FormLinkNullable<MusicType>.Null;
-            item.ImageSpace = FormLinkNullable<ImageSpaceAdapter>.Null;
+            item.SkyAndWeatherFromRegion = FormLinkNullable<IRegionGetter>.Null;
+            item.AcousticSpace = FormLinkNullable<IAcousticSpaceGetter>.Null;
+            item.EncounterZone = FormLinkNullable<IEncounterZoneGetter>.Null;
+            item.Music = FormLinkNullable<IMusicTypeGetter>.Null;
+            item.ImageSpace = FormLinkNullable<IImageSpaceAdapterGetter>.Null;
             item.Landscape = null;
             item.NavigationMeshes.Clear();
             item.Timestamp = default;
@@ -4704,7 +4226,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.LightingTemplate) ?? true))
             {
-                item.LightingTemplate = new FormLink<LightingTemplate>(rhs.LightingTemplate.FormKey);
+                item.LightingTemplate = new FormLink<ILightingTemplateGetter>(rhs.LightingTemplate.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.LNAM) ?? true))
             {
@@ -4734,8 +4256,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Regions = 
                             rhs.Regions
-                            .Select(r => (IFormLink<Region>)new FormLink<Region>(r.FormKey))
-                            .ToExtendedList<IFormLink<Region>>();
+                            .Select(r => (IFormLink<IRegionGetter>)new FormLink<IRegionGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IRegionGetter>>();
                     }
                     else
                     {
@@ -4754,7 +4276,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Location) ?? true))
             {
-                item.Location = new FormLinkNullable<Location>(rhs.Location.FormKey);
+                item.Location = new FormLinkNullable<ILocationGetter>(rhs.Location.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.XWCN) ?? true))
             {
@@ -4806,7 +4328,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Water) ?? true))
             {
-                item.Water = new FormLinkNullable<Water>(rhs.Water.FormKey);
+                item.Water = new FormLinkNullable<IWaterGetter>(rhs.Water.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Ownership) ?? true))
             {
@@ -4836,7 +4358,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.LockList) ?? true))
             {
-                item.LockList = new FormLinkNullable<ILockList>(rhs.LockList.FormKey);
+                item.LockList = new FormLinkNullable<ILockListGetter>(rhs.LockList.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.WaterEnvironmentMap) ?? true))
             {
@@ -4844,23 +4366,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.SkyAndWeatherFromRegion) ?? true))
             {
-                item.SkyAndWeatherFromRegion = new FormLinkNullable<Region>(rhs.SkyAndWeatherFromRegion.FormKey);
+                item.SkyAndWeatherFromRegion = new FormLinkNullable<IRegionGetter>(rhs.SkyAndWeatherFromRegion.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.AcousticSpace) ?? true))
             {
-                item.AcousticSpace = new FormLinkNullable<AcousticSpace>(rhs.AcousticSpace.FormKey);
+                item.AcousticSpace = new FormLinkNullable<IAcousticSpaceGetter>(rhs.AcousticSpace.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.EncounterZone) ?? true))
             {
-                item.EncounterZone = new FormLinkNullable<EncounterZone>(rhs.EncounterZone.FormKey);
+                item.EncounterZone = new FormLinkNullable<IEncounterZoneGetter>(rhs.EncounterZone.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Music) ?? true))
             {
-                item.Music = new FormLinkNullable<MusicType>(rhs.Music.FormKey);
+                item.Music = new FormLinkNullable<IMusicTypeGetter>(rhs.Music.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.ImageSpace) ?? true))
             {
-                item.ImageSpace = new FormLinkNullable<ImageSpaceAdapter>(rhs.ImageSpace.FormKey);
+                item.ImageSpace = new FormLinkNullable<IImageSpaceAdapterGetter>(rhs.ImageSpace.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Landscape) ?? true))
             {
@@ -5432,10 +4954,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Regions = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Region>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IRegionGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<Region>>();
+                        .CastExtendedList<IFormLink<IRegionGetter>>();
                     return (int)Cell_FieldIndex.Regions;
                 }
                 case RecordTypeInts.XLCN:

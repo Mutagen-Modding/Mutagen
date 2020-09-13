@@ -105,8 +105,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public IExtendedList<Condition> Conditions
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -134,19 +134,13 @@ namespace Mutagen.Bethesda.Skyrim
         IPackageIdlesGetter? IPackageGetter.IdleAnimations => this.IdleAnimations;
         #endregion
         #region CombatStyle
-        public FormLinkNullable<CombatStyle> CombatStyle { get; set; } = new FormLinkNullable<CombatStyle>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ICombatStyleGetter> IPackageGetter.CombatStyle => this.CombatStyle.ToGetter<CombatStyle, ICombatStyleGetter>();
+        public FormLinkNullable<ICombatStyleGetter> CombatStyle { get; set; } = new FormLinkNullable<ICombatStyleGetter>();
         #endregion
         #region OwnerQuest
-        public FormLinkNullable<Quest> OwnerQuest { get; set; } = new FormLinkNullable<Quest>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IQuestGetter> IPackageGetter.OwnerQuest => this.OwnerQuest.ToGetter<Quest, IQuestGetter>();
+        public FormLinkNullable<IQuestGetter> OwnerQuest { get; set; } = new FormLinkNullable<IQuestGetter>();
         #endregion
         #region PackageTemplate
-        public FormLink<Package> PackageTemplate { get; set; } = new FormLink<Package>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IPackageGetter> IPackageGetter.PackageTemplate => this.PackageTemplate.ToGetter<Package, IPackageGetter>();
+        public FormLink<IPackageGetter> PackageTemplate { get; set; } = new FormLink<IPackageGetter>();
         #endregion
         #region DataInputVersion
         public Int32 DataInputVersion { get; set; } = default;
@@ -173,8 +167,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ProcedureTree
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<PackageBranch> _ProcedureTree = new ExtendedList<PackageBranch>();
-        public IExtendedList<PackageBranch> ProcedureTree
+        private ExtendedList<PackageBranch> _ProcedureTree = new ExtendedList<PackageBranch>();
+        public ExtendedList<PackageBranch> ProcedureTree
         {
             get => this._ProcedureTree;
             protected set => this._ProcedureTree = value;
@@ -1747,16 +1741,16 @@ namespace Mutagen.Bethesda.Skyrim
         new SByte ScheduleMinute { get; set; }
         new MemorySlice<Byte> Unknown3 { get; set; }
         new Int32 ScheduleDurationInMinutes { get; set; }
-        new IExtendedList<Condition> Conditions { get; }
+        new ExtendedList<Condition> Conditions { get; }
         new Int32? Unknown4 { get; set; }
         new PackageIdles? IdleAnimations { get; set; }
-        new FormLinkNullable<CombatStyle> CombatStyle { get; set; }
-        new FormLinkNullable<Quest> OwnerQuest { get; set; }
-        new FormLink<Package> PackageTemplate { get; set; }
+        new FormLinkNullable<ICombatStyleGetter> CombatStyle { get; set; }
+        new FormLinkNullable<IQuestGetter> OwnerQuest { get; set; }
+        new FormLink<IPackageGetter> PackageTemplate { get; set; }
         new Int32 DataInputVersion { get; set; }
         new IDictionary<SByte, APackageData> Data { get; }
         new MemorySlice<Byte> XnamMarker { get; set; }
-        new IExtendedList<PackageBranch> ProcedureTree { get; }
+        new ExtendedList<PackageBranch> ProcedureTree { get; }
         new PackageEvent? OnBegin { get; set; }
         new PackageEvent? OnEnd { get; set; }
         new PackageEvent? OnChange { get; set; }
@@ -2032,422 +2026,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "VIRTUALMACHINEADAPTER":
-                    return (ushort)Package_FieldIndex.VirtualMachineAdapter;
-                case "FLAGS":
-                    return (ushort)Package_FieldIndex.Flags;
-                case "TYPE":
-                    return (ushort)Package_FieldIndex.Type;
-                case "INTERRUPTOVERRIDE":
-                    return (ushort)Package_FieldIndex.InterruptOverride;
-                case "PREFERREDSPEED":
-                    return (ushort)Package_FieldIndex.PreferredSpeed;
-                case "UNKNOWN":
-                    return (ushort)Package_FieldIndex.Unknown;
-                case "INTERUPTFLAGS":
-                    return (ushort)Package_FieldIndex.InteruptFlags;
-                case "UNKNOWN2":
-                    return (ushort)Package_FieldIndex.Unknown2;
-                case "SCHEDULEMONTH":
-                    return (ushort)Package_FieldIndex.ScheduleMonth;
-                case "SCHEDULEDAYOFWEEK":
-                    return (ushort)Package_FieldIndex.ScheduleDayOfWeek;
-                case "SCHEDULEDATE":
-                    return (ushort)Package_FieldIndex.ScheduleDate;
-                case "SCHEDULEHOUR":
-                    return (ushort)Package_FieldIndex.ScheduleHour;
-                case "SCHEDULEMINUTE":
-                    return (ushort)Package_FieldIndex.ScheduleMinute;
-                case "UNKNOWN3":
-                    return (ushort)Package_FieldIndex.Unknown3;
-                case "SCHEDULEDURATIONINMINUTES":
-                    return (ushort)Package_FieldIndex.ScheduleDurationInMinutes;
-                case "CONDITIONS":
-                    return (ushort)Package_FieldIndex.Conditions;
-                case "UNKNOWN4":
-                    return (ushort)Package_FieldIndex.Unknown4;
-                case "IDLEANIMATIONS":
-                    return (ushort)Package_FieldIndex.IdleAnimations;
-                case "COMBATSTYLE":
-                    return (ushort)Package_FieldIndex.CombatStyle;
-                case "OWNERQUEST":
-                    return (ushort)Package_FieldIndex.OwnerQuest;
-                case "PACKAGETEMPLATE":
-                    return (ushort)Package_FieldIndex.PackageTemplate;
-                case "DATAINPUTVERSION":
-                    return (ushort)Package_FieldIndex.DataInputVersion;
-                case "DATA":
-                    return (ushort)Package_FieldIndex.Data;
-                case "XNAMMARKER":
-                    return (ushort)Package_FieldIndex.XnamMarker;
-                case "PROCEDURETREE":
-                    return (ushort)Package_FieldIndex.ProcedureTree;
-                case "ONBEGIN":
-                    return (ushort)Package_FieldIndex.OnBegin;
-                case "ONEND":
-                    return (ushort)Package_FieldIndex.OnEnd;
-                case "ONCHANGE":
-                    return (ushort)Package_FieldIndex.OnChange;
-                case "PKDTDATATYPESTATE":
-                    return (ushort)Package_FieldIndex.PKDTDataTypeState;
-                case "PSDTDATATYPESTATE":
-                    return (ushort)Package_FieldIndex.PSDTDataTypeState;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Package_FieldIndex enu = (Package_FieldIndex)index;
-            switch (enu)
-            {
-                case Package_FieldIndex.Conditions:
-                case Package_FieldIndex.ProcedureTree:
-                    return true;
-                case Package_FieldIndex.VirtualMachineAdapter:
-                case Package_FieldIndex.Flags:
-                case Package_FieldIndex.Type:
-                case Package_FieldIndex.InterruptOverride:
-                case Package_FieldIndex.PreferredSpeed:
-                case Package_FieldIndex.Unknown:
-                case Package_FieldIndex.InteruptFlags:
-                case Package_FieldIndex.Unknown2:
-                case Package_FieldIndex.ScheduleMonth:
-                case Package_FieldIndex.ScheduleDayOfWeek:
-                case Package_FieldIndex.ScheduleDate:
-                case Package_FieldIndex.ScheduleHour:
-                case Package_FieldIndex.ScheduleMinute:
-                case Package_FieldIndex.Unknown3:
-                case Package_FieldIndex.ScheduleDurationInMinutes:
-                case Package_FieldIndex.Unknown4:
-                case Package_FieldIndex.IdleAnimations:
-                case Package_FieldIndex.CombatStyle:
-                case Package_FieldIndex.OwnerQuest:
-                case Package_FieldIndex.PackageTemplate:
-                case Package_FieldIndex.DataInputVersion:
-                case Package_FieldIndex.Data:
-                case Package_FieldIndex.XnamMarker:
-                case Package_FieldIndex.OnBegin:
-                case Package_FieldIndex.OnEnd:
-                case Package_FieldIndex.OnChange:
-                case Package_FieldIndex.PKDTDataTypeState:
-                case Package_FieldIndex.PSDTDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Package_FieldIndex enu = (Package_FieldIndex)index;
-            switch (enu)
-            {
-                case Package_FieldIndex.VirtualMachineAdapter:
-                case Package_FieldIndex.Conditions:
-                case Package_FieldIndex.IdleAnimations:
-                case Package_FieldIndex.ProcedureTree:
-                case Package_FieldIndex.OnBegin:
-                case Package_FieldIndex.OnEnd:
-                case Package_FieldIndex.OnChange:
-                    return true;
-                case Package_FieldIndex.Flags:
-                case Package_FieldIndex.Type:
-                case Package_FieldIndex.InterruptOverride:
-                case Package_FieldIndex.PreferredSpeed:
-                case Package_FieldIndex.Unknown:
-                case Package_FieldIndex.InteruptFlags:
-                case Package_FieldIndex.Unknown2:
-                case Package_FieldIndex.ScheduleMonth:
-                case Package_FieldIndex.ScheduleDayOfWeek:
-                case Package_FieldIndex.ScheduleDate:
-                case Package_FieldIndex.ScheduleHour:
-                case Package_FieldIndex.ScheduleMinute:
-                case Package_FieldIndex.Unknown3:
-                case Package_FieldIndex.ScheduleDurationInMinutes:
-                case Package_FieldIndex.Unknown4:
-                case Package_FieldIndex.CombatStyle:
-                case Package_FieldIndex.OwnerQuest:
-                case Package_FieldIndex.PackageTemplate:
-                case Package_FieldIndex.DataInputVersion:
-                case Package_FieldIndex.Data:
-                case Package_FieldIndex.XnamMarker:
-                case Package_FieldIndex.PKDTDataTypeState:
-                case Package_FieldIndex.PSDTDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Package_FieldIndex enu = (Package_FieldIndex)index;
-            switch (enu)
-            {
-                case Package_FieldIndex.VirtualMachineAdapter:
-                case Package_FieldIndex.Flags:
-                case Package_FieldIndex.Type:
-                case Package_FieldIndex.InterruptOverride:
-                case Package_FieldIndex.PreferredSpeed:
-                case Package_FieldIndex.Unknown:
-                case Package_FieldIndex.InteruptFlags:
-                case Package_FieldIndex.Unknown2:
-                case Package_FieldIndex.ScheduleMonth:
-                case Package_FieldIndex.ScheduleDayOfWeek:
-                case Package_FieldIndex.ScheduleDate:
-                case Package_FieldIndex.ScheduleHour:
-                case Package_FieldIndex.ScheduleMinute:
-                case Package_FieldIndex.Unknown3:
-                case Package_FieldIndex.ScheduleDurationInMinutes:
-                case Package_FieldIndex.Conditions:
-                case Package_FieldIndex.Unknown4:
-                case Package_FieldIndex.IdleAnimations:
-                case Package_FieldIndex.CombatStyle:
-                case Package_FieldIndex.OwnerQuest:
-                case Package_FieldIndex.PackageTemplate:
-                case Package_FieldIndex.DataInputVersion:
-                case Package_FieldIndex.Data:
-                case Package_FieldIndex.XnamMarker:
-                case Package_FieldIndex.ProcedureTree:
-                case Package_FieldIndex.OnBegin:
-                case Package_FieldIndex.OnEnd:
-                case Package_FieldIndex.OnChange:
-                case Package_FieldIndex.PKDTDataTypeState:
-                case Package_FieldIndex.PSDTDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Package_FieldIndex enu = (Package_FieldIndex)index;
-            switch (enu)
-            {
-                case Package_FieldIndex.VirtualMachineAdapter:
-                    return "VirtualMachineAdapter";
-                case Package_FieldIndex.Flags:
-                    return "Flags";
-                case Package_FieldIndex.Type:
-                    return "Type";
-                case Package_FieldIndex.InterruptOverride:
-                    return "InterruptOverride";
-                case Package_FieldIndex.PreferredSpeed:
-                    return "PreferredSpeed";
-                case Package_FieldIndex.Unknown:
-                    return "Unknown";
-                case Package_FieldIndex.InteruptFlags:
-                    return "InteruptFlags";
-                case Package_FieldIndex.Unknown2:
-                    return "Unknown2";
-                case Package_FieldIndex.ScheduleMonth:
-                    return "ScheduleMonth";
-                case Package_FieldIndex.ScheduleDayOfWeek:
-                    return "ScheduleDayOfWeek";
-                case Package_FieldIndex.ScheduleDate:
-                    return "ScheduleDate";
-                case Package_FieldIndex.ScheduleHour:
-                    return "ScheduleHour";
-                case Package_FieldIndex.ScheduleMinute:
-                    return "ScheduleMinute";
-                case Package_FieldIndex.Unknown3:
-                    return "Unknown3";
-                case Package_FieldIndex.ScheduleDurationInMinutes:
-                    return "ScheduleDurationInMinutes";
-                case Package_FieldIndex.Conditions:
-                    return "Conditions";
-                case Package_FieldIndex.Unknown4:
-                    return "Unknown4";
-                case Package_FieldIndex.IdleAnimations:
-                    return "IdleAnimations";
-                case Package_FieldIndex.CombatStyle:
-                    return "CombatStyle";
-                case Package_FieldIndex.OwnerQuest:
-                    return "OwnerQuest";
-                case Package_FieldIndex.PackageTemplate:
-                    return "PackageTemplate";
-                case Package_FieldIndex.DataInputVersion:
-                    return "DataInputVersion";
-                case Package_FieldIndex.Data:
-                    return "Data";
-                case Package_FieldIndex.XnamMarker:
-                    return "XnamMarker";
-                case Package_FieldIndex.ProcedureTree:
-                    return "ProcedureTree";
-                case Package_FieldIndex.OnBegin:
-                    return "OnBegin";
-                case Package_FieldIndex.OnEnd:
-                    return "OnEnd";
-                case Package_FieldIndex.OnChange:
-                    return "OnChange";
-                case Package_FieldIndex.PKDTDataTypeState:
-                    return "PKDTDataTypeState";
-                case Package_FieldIndex.PSDTDataTypeState:
-                    return "PSDTDataTypeState";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Package_FieldIndex enu = (Package_FieldIndex)index;
-            switch (enu)
-            {
-                case Package_FieldIndex.VirtualMachineAdapter:
-                case Package_FieldIndex.Flags:
-                case Package_FieldIndex.Type:
-                case Package_FieldIndex.InterruptOverride:
-                case Package_FieldIndex.PreferredSpeed:
-                case Package_FieldIndex.Unknown:
-                case Package_FieldIndex.InteruptFlags:
-                case Package_FieldIndex.Unknown2:
-                case Package_FieldIndex.ScheduleMonth:
-                case Package_FieldIndex.ScheduleDayOfWeek:
-                case Package_FieldIndex.ScheduleDate:
-                case Package_FieldIndex.ScheduleHour:
-                case Package_FieldIndex.ScheduleMinute:
-                case Package_FieldIndex.Unknown3:
-                case Package_FieldIndex.ScheduleDurationInMinutes:
-                case Package_FieldIndex.Conditions:
-                case Package_FieldIndex.Unknown4:
-                case Package_FieldIndex.IdleAnimations:
-                case Package_FieldIndex.CombatStyle:
-                case Package_FieldIndex.OwnerQuest:
-                case Package_FieldIndex.PackageTemplate:
-                case Package_FieldIndex.DataInputVersion:
-                case Package_FieldIndex.Data:
-                case Package_FieldIndex.XnamMarker:
-                case Package_FieldIndex.ProcedureTree:
-                case Package_FieldIndex.OnBegin:
-                case Package_FieldIndex.OnEnd:
-                case Package_FieldIndex.OnChange:
-                case Package_FieldIndex.PKDTDataTypeState:
-                case Package_FieldIndex.PSDTDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Package_FieldIndex enu = (Package_FieldIndex)index;
-            switch (enu)
-            {
-                case Package_FieldIndex.VirtualMachineAdapter:
-                case Package_FieldIndex.Flags:
-                case Package_FieldIndex.Type:
-                case Package_FieldIndex.InterruptOverride:
-                case Package_FieldIndex.PreferredSpeed:
-                case Package_FieldIndex.Unknown:
-                case Package_FieldIndex.InteruptFlags:
-                case Package_FieldIndex.Unknown2:
-                case Package_FieldIndex.ScheduleMonth:
-                case Package_FieldIndex.ScheduleDayOfWeek:
-                case Package_FieldIndex.ScheduleDate:
-                case Package_FieldIndex.ScheduleHour:
-                case Package_FieldIndex.ScheduleMinute:
-                case Package_FieldIndex.Unknown3:
-                case Package_FieldIndex.ScheduleDurationInMinutes:
-                case Package_FieldIndex.Conditions:
-                case Package_FieldIndex.Unknown4:
-                case Package_FieldIndex.IdleAnimations:
-                case Package_FieldIndex.CombatStyle:
-                case Package_FieldIndex.OwnerQuest:
-                case Package_FieldIndex.PackageTemplate:
-                case Package_FieldIndex.DataInputVersion:
-                case Package_FieldIndex.Data:
-                case Package_FieldIndex.XnamMarker:
-                case Package_FieldIndex.ProcedureTree:
-                case Package_FieldIndex.OnBegin:
-                case Package_FieldIndex.OnEnd:
-                case Package_FieldIndex.OnChange:
-                case Package_FieldIndex.PKDTDataTypeState:
-                case Package_FieldIndex.PSDTDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Package_FieldIndex enu = (Package_FieldIndex)index;
-            switch (enu)
-            {
-                case Package_FieldIndex.VirtualMachineAdapter:
-                    return typeof(PackageAdapter);
-                case Package_FieldIndex.Flags:
-                    return typeof(Package.Flag);
-                case Package_FieldIndex.Type:
-                    return typeof(Package.Types);
-                case Package_FieldIndex.InterruptOverride:
-                    return typeof(Package.Interrupt);
-                case Package_FieldIndex.PreferredSpeed:
-                    return typeof(Package.Speed);
-                case Package_FieldIndex.Unknown:
-                    return typeof(Byte);
-                case Package_FieldIndex.InteruptFlags:
-                    return typeof(Package.InterruptFlag);
-                case Package_FieldIndex.Unknown2:
-                    return typeof(UInt16);
-                case Package_FieldIndex.ScheduleMonth:
-                    return typeof(SByte);
-                case Package_FieldIndex.ScheduleDayOfWeek:
-                    return typeof(Package.DayOfWeek);
-                case Package_FieldIndex.ScheduleDate:
-                    return typeof(Byte);
-                case Package_FieldIndex.ScheduleHour:
-                    return typeof(SByte);
-                case Package_FieldIndex.ScheduleMinute:
-                    return typeof(SByte);
-                case Package_FieldIndex.Unknown3:
-                    return typeof(MemorySlice<Byte>);
-                case Package_FieldIndex.ScheduleDurationInMinutes:
-                    return typeof(Int32);
-                case Package_FieldIndex.Conditions:
-                    return typeof(IExtendedList<Condition>);
-                case Package_FieldIndex.Unknown4:
-                    return typeof(Int32);
-                case Package_FieldIndex.IdleAnimations:
-                    return typeof(PackageIdles);
-                case Package_FieldIndex.CombatStyle:
-                    return typeof(FormLinkNullable<CombatStyle>);
-                case Package_FieldIndex.OwnerQuest:
-                    return typeof(FormLinkNullable<Quest>);
-                case Package_FieldIndex.PackageTemplate:
-                    return typeof(FormLink<Package>);
-                case Package_FieldIndex.DataInputVersion:
-                    return typeof(Int32);
-                case Package_FieldIndex.Data:
-                    return typeof(Dictionary<SByte, APackageData>);
-                case Package_FieldIndex.XnamMarker:
-                    return typeof(MemorySlice<Byte>);
-                case Package_FieldIndex.ProcedureTree:
-                    return typeof(IExtendedList<PackageBranch>);
-                case Package_FieldIndex.OnBegin:
-                    return typeof(PackageEvent);
-                case Package_FieldIndex.OnEnd:
-                    return typeof(PackageEvent);
-                case Package_FieldIndex.OnChange:
-                    return typeof(PackageEvent);
-                case Package_FieldIndex.PKDTDataTypeState:
-                    return typeof(Package.PKDTDataType);
-                case Package_FieldIndex.PSDTDataTypeState:
-                    return typeof(Package.PSDTDataType);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.PACK;
         public static readonly Type BinaryWriteTranslation = typeof(PackageBinaryWriteTranslation);
         #region Interface
@@ -2468,14 +2046,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -2509,9 +2087,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Conditions.Clear();
             item.Unknown4 = default;
             item.IdleAnimations = null;
-            item.CombatStyle = FormLinkNullable<CombatStyle>.Null;
-            item.OwnerQuest = FormLinkNullable<Quest>.Null;
-            item.PackageTemplate = FormLink<Package>.Null;
+            item.CombatStyle = FormLinkNullable<ICombatStyleGetter>.Null;
+            item.OwnerQuest = FormLinkNullable<IQuestGetter>.Null;
+            item.PackageTemplate = FormLink<IPackageGetter>.Null;
             item.DataInputVersion = default;
             item.Data.Clear();
             item.XnamMarker = new byte[0];
@@ -3300,15 +2878,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.CombatStyle) ?? true))
             {
-                item.CombatStyle = new FormLinkNullable<CombatStyle>(rhs.CombatStyle.FormKey);
+                item.CombatStyle = new FormLinkNullable<ICombatStyleGetter>(rhs.CombatStyle.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.OwnerQuest) ?? true))
             {
-                item.OwnerQuest = new FormLinkNullable<Quest>(rhs.OwnerQuest.FormKey);
+                item.OwnerQuest = new FormLinkNullable<IQuestGetter>(rhs.OwnerQuest.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.PackageTemplate) ?? true))
             {
-                item.PackageTemplate = new FormLink<Package>(rhs.PackageTemplate.FormKey);
+                item.PackageTemplate = new FormLink<IPackageGetter>(rhs.PackageTemplate.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.DataInputVersion) ?? true))
             {

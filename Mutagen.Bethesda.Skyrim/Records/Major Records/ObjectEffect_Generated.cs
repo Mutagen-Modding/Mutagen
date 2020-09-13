@@ -74,19 +74,15 @@ namespace Mutagen.Bethesda.Skyrim
         public Single ChargeTime { get; set; } = default;
         #endregion
         #region BaseEnchantment
-        public FormLink<ObjectEffect> BaseEnchantment { get; set; } = new FormLink<ObjectEffect>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IObjectEffectGetter> IObjectEffectGetter.BaseEnchantment => this.BaseEnchantment.ToGetter<ObjectEffect, IObjectEffectGetter>();
+        public FormLink<IObjectEffectGetter> BaseEnchantment { get; set; } = new FormLink<IObjectEffectGetter>();
         #endregion
         #region WornRestrictions
-        public FormLink<FormList> WornRestrictions { get; set; } = new FormLink<FormList>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IFormListGetter> IObjectEffectGetter.WornRestrictions => this.WornRestrictions.ToGetter<FormList, IFormListGetter>();
+        public FormLink<IFormListGetter> WornRestrictions { get; set; } = new FormLink<IFormListGetter>();
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<Effect> _Effects = new ExtendedList<Effect>();
-        public IExtendedList<Effect> Effects
+        private ExtendedList<Effect> _Effects = new ExtendedList<Effect>();
+        public ExtendedList<Effect> Effects
         {
             get => this._Effects;
             protected set => this._Effects = value;
@@ -929,9 +925,9 @@ namespace Mutagen.Bethesda.Skyrim
         new TargetType TargetType { get; set; }
         new ObjectEffect.EnchantTypeEnum EnchantType { get; set; }
         new Single ChargeTime { get; set; }
-        new FormLink<ObjectEffect> BaseEnchantment { get; set; }
-        new FormLink<FormList> WornRestrictions { get; set; }
-        new IExtendedList<Effect> Effects { get; }
+        new FormLink<IObjectEffectGetter> BaseEnchantment { get; set; }
+        new FormLink<IFormListGetter> WornRestrictions { get; set; }
+        new ExtendedList<Effect> Effects { get; }
         new ObjectEffect.ENITDataType ENITDataTypeState { get; set; }
     }
 
@@ -1171,235 +1167,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "OBJECTBOUNDS":
-                    return (ushort)ObjectEffect_FieldIndex.ObjectBounds;
-                case "NAME":
-                    return (ushort)ObjectEffect_FieldIndex.Name;
-                case "ENCHANTMENTCOST":
-                    return (ushort)ObjectEffect_FieldIndex.EnchantmentCost;
-                case "FLAGS":
-                    return (ushort)ObjectEffect_FieldIndex.Flags;
-                case "CASTTYPE":
-                    return (ushort)ObjectEffect_FieldIndex.CastType;
-                case "ENCHANTMENTAMOUNT":
-                    return (ushort)ObjectEffect_FieldIndex.EnchantmentAmount;
-                case "TARGETTYPE":
-                    return (ushort)ObjectEffect_FieldIndex.TargetType;
-                case "ENCHANTTYPE":
-                    return (ushort)ObjectEffect_FieldIndex.EnchantType;
-                case "CHARGETIME":
-                    return (ushort)ObjectEffect_FieldIndex.ChargeTime;
-                case "BASEENCHANTMENT":
-                    return (ushort)ObjectEffect_FieldIndex.BaseEnchantment;
-                case "WORNRESTRICTIONS":
-                    return (ushort)ObjectEffect_FieldIndex.WornRestrictions;
-                case "EFFECTS":
-                    return (ushort)ObjectEffect_FieldIndex.Effects;
-                case "ENITDATATYPESTATE":
-                    return (ushort)ObjectEffect_FieldIndex.ENITDataTypeState;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            ObjectEffect_FieldIndex enu = (ObjectEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case ObjectEffect_FieldIndex.Effects:
-                    return true;
-                case ObjectEffect_FieldIndex.ObjectBounds:
-                case ObjectEffect_FieldIndex.Name:
-                case ObjectEffect_FieldIndex.EnchantmentCost:
-                case ObjectEffect_FieldIndex.Flags:
-                case ObjectEffect_FieldIndex.CastType:
-                case ObjectEffect_FieldIndex.EnchantmentAmount:
-                case ObjectEffect_FieldIndex.TargetType:
-                case ObjectEffect_FieldIndex.EnchantType:
-                case ObjectEffect_FieldIndex.ChargeTime:
-                case ObjectEffect_FieldIndex.BaseEnchantment:
-                case ObjectEffect_FieldIndex.WornRestrictions:
-                case ObjectEffect_FieldIndex.ENITDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            ObjectEffect_FieldIndex enu = (ObjectEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case ObjectEffect_FieldIndex.ObjectBounds:
-                case ObjectEffect_FieldIndex.Effects:
-                    return true;
-                case ObjectEffect_FieldIndex.Name:
-                case ObjectEffect_FieldIndex.EnchantmentCost:
-                case ObjectEffect_FieldIndex.Flags:
-                case ObjectEffect_FieldIndex.CastType:
-                case ObjectEffect_FieldIndex.EnchantmentAmount:
-                case ObjectEffect_FieldIndex.TargetType:
-                case ObjectEffect_FieldIndex.EnchantType:
-                case ObjectEffect_FieldIndex.ChargeTime:
-                case ObjectEffect_FieldIndex.BaseEnchantment:
-                case ObjectEffect_FieldIndex.WornRestrictions:
-                case ObjectEffect_FieldIndex.ENITDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            ObjectEffect_FieldIndex enu = (ObjectEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case ObjectEffect_FieldIndex.ObjectBounds:
-                case ObjectEffect_FieldIndex.Name:
-                case ObjectEffect_FieldIndex.EnchantmentCost:
-                case ObjectEffect_FieldIndex.Flags:
-                case ObjectEffect_FieldIndex.CastType:
-                case ObjectEffect_FieldIndex.EnchantmentAmount:
-                case ObjectEffect_FieldIndex.TargetType:
-                case ObjectEffect_FieldIndex.EnchantType:
-                case ObjectEffect_FieldIndex.ChargeTime:
-                case ObjectEffect_FieldIndex.BaseEnchantment:
-                case ObjectEffect_FieldIndex.WornRestrictions:
-                case ObjectEffect_FieldIndex.Effects:
-                case ObjectEffect_FieldIndex.ENITDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            ObjectEffect_FieldIndex enu = (ObjectEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case ObjectEffect_FieldIndex.ObjectBounds:
-                    return "ObjectBounds";
-                case ObjectEffect_FieldIndex.Name:
-                    return "Name";
-                case ObjectEffect_FieldIndex.EnchantmentCost:
-                    return "EnchantmentCost";
-                case ObjectEffect_FieldIndex.Flags:
-                    return "Flags";
-                case ObjectEffect_FieldIndex.CastType:
-                    return "CastType";
-                case ObjectEffect_FieldIndex.EnchantmentAmount:
-                    return "EnchantmentAmount";
-                case ObjectEffect_FieldIndex.TargetType:
-                    return "TargetType";
-                case ObjectEffect_FieldIndex.EnchantType:
-                    return "EnchantType";
-                case ObjectEffect_FieldIndex.ChargeTime:
-                    return "ChargeTime";
-                case ObjectEffect_FieldIndex.BaseEnchantment:
-                    return "BaseEnchantment";
-                case ObjectEffect_FieldIndex.WornRestrictions:
-                    return "WornRestrictions";
-                case ObjectEffect_FieldIndex.Effects:
-                    return "Effects";
-                case ObjectEffect_FieldIndex.ENITDataTypeState:
-                    return "ENITDataTypeState";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            ObjectEffect_FieldIndex enu = (ObjectEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case ObjectEffect_FieldIndex.ObjectBounds:
-                case ObjectEffect_FieldIndex.Name:
-                case ObjectEffect_FieldIndex.EnchantmentCost:
-                case ObjectEffect_FieldIndex.Flags:
-                case ObjectEffect_FieldIndex.CastType:
-                case ObjectEffect_FieldIndex.EnchantmentAmount:
-                case ObjectEffect_FieldIndex.TargetType:
-                case ObjectEffect_FieldIndex.EnchantType:
-                case ObjectEffect_FieldIndex.ChargeTime:
-                case ObjectEffect_FieldIndex.BaseEnchantment:
-                case ObjectEffect_FieldIndex.WornRestrictions:
-                case ObjectEffect_FieldIndex.Effects:
-                case ObjectEffect_FieldIndex.ENITDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            ObjectEffect_FieldIndex enu = (ObjectEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case ObjectEffect_FieldIndex.ObjectBounds:
-                case ObjectEffect_FieldIndex.Name:
-                case ObjectEffect_FieldIndex.EnchantmentCost:
-                case ObjectEffect_FieldIndex.Flags:
-                case ObjectEffect_FieldIndex.CastType:
-                case ObjectEffect_FieldIndex.EnchantmentAmount:
-                case ObjectEffect_FieldIndex.TargetType:
-                case ObjectEffect_FieldIndex.EnchantType:
-                case ObjectEffect_FieldIndex.ChargeTime:
-                case ObjectEffect_FieldIndex.BaseEnchantment:
-                case ObjectEffect_FieldIndex.WornRestrictions:
-                case ObjectEffect_FieldIndex.Effects:
-                case ObjectEffect_FieldIndex.ENITDataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            ObjectEffect_FieldIndex enu = (ObjectEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case ObjectEffect_FieldIndex.ObjectBounds:
-                    return typeof(ObjectBounds);
-                case ObjectEffect_FieldIndex.Name:
-                    return typeof(TranslatedString);
-                case ObjectEffect_FieldIndex.EnchantmentCost:
-                    return typeof(UInt32);
-                case ObjectEffect_FieldIndex.Flags:
-                    return typeof(ObjectEffect.Flag);
-                case ObjectEffect_FieldIndex.CastType:
-                    return typeof(CastType);
-                case ObjectEffect_FieldIndex.EnchantmentAmount:
-                    return typeof(Int32);
-                case ObjectEffect_FieldIndex.TargetType:
-                    return typeof(TargetType);
-                case ObjectEffect_FieldIndex.EnchantType:
-                    return typeof(ObjectEffect.EnchantTypeEnum);
-                case ObjectEffect_FieldIndex.ChargeTime:
-                    return typeof(Single);
-                case ObjectEffect_FieldIndex.BaseEnchantment:
-                    return typeof(FormLink<ObjectEffect>);
-                case ObjectEffect_FieldIndex.WornRestrictions:
-                    return typeof(FormLink<FormList>);
-                case ObjectEffect_FieldIndex.Effects:
-                    return typeof(IExtendedList<Effect>);
-                case ObjectEffect_FieldIndex.ENITDataTypeState:
-                    return typeof(ObjectEffect.ENITDataType);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.ENCH;
         public static readonly Type BinaryWriteTranslation = typeof(ObjectEffectBinaryWriteTranslation);
         #region Interface
@@ -1420,14 +1187,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1452,8 +1219,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.TargetType = default;
             item.EnchantType = default;
             item.ChargeTime = default;
-            item.BaseEnchantment = FormLink<ObjectEffect>.Null;
-            item.WornRestrictions = FormLink<FormList>.Null;
+            item.BaseEnchantment = FormLink<IObjectEffectGetter>.Null;
+            item.WornRestrictions = FormLink<IFormListGetter>.Null;
             item.Effects.Clear();
             item.ENITDataTypeState = default;
             base.Clear(item);
@@ -1910,11 +1677,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.BaseEnchantment) ?? true))
             {
-                item.BaseEnchantment = new FormLink<ObjectEffect>(rhs.BaseEnchantment.FormKey);
+                item.BaseEnchantment = new FormLink<IObjectEffectGetter>(rhs.BaseEnchantment.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.WornRestrictions) ?? true))
             {
-                item.WornRestrictions = new FormLink<FormList>(rhs.WornRestrictions.FormKey);
+                item.WornRestrictions = new FormLink<IFormListGetter>(rhs.WornRestrictions.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.Effects) ?? true))
             {

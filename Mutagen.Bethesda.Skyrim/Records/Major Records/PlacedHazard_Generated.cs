@@ -43,9 +43,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Hazard
-        public FormLink<Hazard> Hazard { get; set; } = new FormLink<Hazard>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IHazardGetter> IPlacedHazardGetter.Hazard => this.Hazard.ToGetter<Hazard, IHazardGetter>();
+        public FormLink<IHazardGetter> Hazard { get; set; } = new FormLink<IHazardGetter>();
         #endregion
 
         #region To String
@@ -475,7 +473,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPlacedHazardInternal>,
         ILinkedFormKeyContainer
     {
-        new FormLink<Hazard> Hazard { get; set; }
+        new FormLink<IHazardGetter> Hazard { get; set; }
     }
 
     public partial interface IPlacedHazardInternal :
@@ -704,101 +702,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "HAZARD":
-                    return (ushort)PlacedHazard_FieldIndex.Hazard;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            PlacedHazard_FieldIndex enu = (PlacedHazard_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedHazard_FieldIndex.Hazard:
-                    return false;
-                default:
-                    return APlacedTrap_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            PlacedHazard_FieldIndex enu = (PlacedHazard_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedHazard_FieldIndex.Hazard:
-                    return false;
-                default:
-                    return APlacedTrap_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            PlacedHazard_FieldIndex enu = (PlacedHazard_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedHazard_FieldIndex.Hazard:
-                    return false;
-                default:
-                    return APlacedTrap_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            PlacedHazard_FieldIndex enu = (PlacedHazard_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedHazard_FieldIndex.Hazard:
-                    return "Hazard";
-                default:
-                    return APlacedTrap_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            PlacedHazard_FieldIndex enu = (PlacedHazard_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedHazard_FieldIndex.Hazard:
-                    return false;
-                default:
-                    return APlacedTrap_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            PlacedHazard_FieldIndex enu = (PlacedHazard_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedHazard_FieldIndex.Hazard:
-                    return false;
-                default:
-                    return APlacedTrap_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            PlacedHazard_FieldIndex enu = (PlacedHazard_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedHazard_FieldIndex.Hazard:
-                    return typeof(FormLink<Hazard>);
-                default:
-                    return APlacedTrap_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.PHZD;
         public static readonly Type BinaryWriteTranslation = typeof(PlacedHazardBinaryWriteTranslation);
         #region Interface
@@ -819,14 +722,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -842,7 +745,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IPlacedHazardInternal item)
         {
             ClearPartial();
-            item.Hazard = FormLink<Hazard>.Null;
+            item.Hazard = FormLink<IHazardGetter>.Null;
             base.Clear(item);
         }
         
@@ -1218,7 +1121,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PlacedHazard_FieldIndex.Hazard) ?? true))
             {
-                item.Hazard = new FormLink<Hazard>(rhs.Hazard.FormKey);
+                item.Hazard = new FormLink<IHazardGetter>(rhs.Hazard.FormKey);
             }
         }
         

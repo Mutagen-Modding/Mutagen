@@ -54,8 +54,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Entries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<LeveledEntry<ANpcSpawn>> _Entries = new ExtendedList<LeveledEntry<ANpcSpawn>>();
-        public IExtendedList<LeveledEntry<ANpcSpawn>> Entries
+        private ExtendedList<LeveledEntry<ANpcSpawn>> _Entries = new ExtendedList<LeveledEntry<ANpcSpawn>>();
+        public ExtendedList<LeveledEntry<ANpcSpawn>> Entries
         {
             get => this._Entries;
             protected set => this._Entries = value;
@@ -67,14 +67,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Script
-        public FormLinkNullable<Script> Script { get; set; } = new FormLinkNullable<Script>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IScriptGetter> ILeveledCreatureGetter.Script => this.Script.ToGetter<Script, IScriptGetter>();
+        public FormLinkNullable<IScriptGetter> Script { get; set; } = new FormLinkNullable<IScriptGetter>();
         #endregion
         #region Template
-        public FormLinkNullable<ANpc> Template { get; set; } = new FormLinkNullable<ANpc>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IANpcGetter> ILeveledCreatureGetter.Template => this.Template.ToGetter<ANpc, IANpcGetter>();
+        public FormLinkNullable<IANpcGetter> Template { get; set; } = new FormLinkNullable<IANpcGetter>();
         #endregion
 
         #region To String
@@ -657,9 +653,9 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new Byte? ChanceNone { get; set; }
         new LeveledFlag? Flags { get; set; }
-        new IExtendedList<LeveledEntry<ANpcSpawn>> Entries { get; }
-        new FormLinkNullable<Script> Script { get; set; }
-        new FormLinkNullable<ANpc> Template { get; set; }
+        new ExtendedList<LeveledEntry<ANpcSpawn>> Entries { get; }
+        new FormLinkNullable<IScriptGetter> Script { get; set; }
+        new FormLinkNullable<IANpcGetter> Template { get; set; }
     }
 
     public partial interface ILeveledCreatureInternal :
@@ -878,147 +874,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "CHANCENONE":
-                    return (ushort)LeveledCreature_FieldIndex.ChanceNone;
-                case "FLAGS":
-                    return (ushort)LeveledCreature_FieldIndex.Flags;
-                case "ENTRIES":
-                    return (ushort)LeveledCreature_FieldIndex.Entries;
-                case "SCRIPT":
-                    return (ushort)LeveledCreature_FieldIndex.Script;
-                case "TEMPLATE":
-                    return (ushort)LeveledCreature_FieldIndex.Template;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            LeveledCreature_FieldIndex enu = (LeveledCreature_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledCreature_FieldIndex.Entries:
-                    return true;
-                case LeveledCreature_FieldIndex.ChanceNone:
-                case LeveledCreature_FieldIndex.Flags:
-                case LeveledCreature_FieldIndex.Script:
-                case LeveledCreature_FieldIndex.Template:
-                    return false;
-                default:
-                    return ANpcSpawn_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            LeveledCreature_FieldIndex enu = (LeveledCreature_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledCreature_FieldIndex.Entries:
-                    return true;
-                case LeveledCreature_FieldIndex.ChanceNone:
-                case LeveledCreature_FieldIndex.Flags:
-                case LeveledCreature_FieldIndex.Script:
-                case LeveledCreature_FieldIndex.Template:
-                    return false;
-                default:
-                    return ANpcSpawn_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            LeveledCreature_FieldIndex enu = (LeveledCreature_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledCreature_FieldIndex.ChanceNone:
-                case LeveledCreature_FieldIndex.Flags:
-                case LeveledCreature_FieldIndex.Entries:
-                case LeveledCreature_FieldIndex.Script:
-                case LeveledCreature_FieldIndex.Template:
-                    return false;
-                default:
-                    return ANpcSpawn_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            LeveledCreature_FieldIndex enu = (LeveledCreature_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledCreature_FieldIndex.ChanceNone:
-                    return "ChanceNone";
-                case LeveledCreature_FieldIndex.Flags:
-                    return "Flags";
-                case LeveledCreature_FieldIndex.Entries:
-                    return "Entries";
-                case LeveledCreature_FieldIndex.Script:
-                    return "Script";
-                case LeveledCreature_FieldIndex.Template:
-                    return "Template";
-                default:
-                    return ANpcSpawn_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            LeveledCreature_FieldIndex enu = (LeveledCreature_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledCreature_FieldIndex.ChanceNone:
-                case LeveledCreature_FieldIndex.Flags:
-                case LeveledCreature_FieldIndex.Entries:
-                case LeveledCreature_FieldIndex.Script:
-                case LeveledCreature_FieldIndex.Template:
-                    return false;
-                default:
-                    return ANpcSpawn_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            LeveledCreature_FieldIndex enu = (LeveledCreature_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledCreature_FieldIndex.ChanceNone:
-                case LeveledCreature_FieldIndex.Flags:
-                case LeveledCreature_FieldIndex.Entries:
-                case LeveledCreature_FieldIndex.Script:
-                case LeveledCreature_FieldIndex.Template:
-                    return false;
-                default:
-                    return ANpcSpawn_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            LeveledCreature_FieldIndex enu = (LeveledCreature_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledCreature_FieldIndex.ChanceNone:
-                    return typeof(Byte);
-                case LeveledCreature_FieldIndex.Flags:
-                    return typeof(LeveledFlag);
-                case LeveledCreature_FieldIndex.Entries:
-                    return typeof(IExtendedList<LeveledEntry<ANpcSpawn>>);
-                case LeveledCreature_FieldIndex.Script:
-                    return typeof(FormLinkNullable<Script>);
-                case LeveledCreature_FieldIndex.Template:
-                    return typeof(FormLinkNullable<ANpc>);
-                default:
-                    return ANpcSpawn_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.LVLC;
         public static readonly Type BinaryWriteTranslation = typeof(LeveledCreatureBinaryWriteTranslation);
         #region Interface
@@ -1039,14 +894,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1065,8 +920,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ChanceNone = default;
             item.Flags = default;
             item.Entries.Clear();
-            item.Script = FormLinkNullable<Script>.Null;
-            item.Template = FormLinkNullable<ANpc>.Null;
+            item.Script = FormLinkNullable<IScriptGetter>.Null;
+            item.Template = FormLinkNullable<IANpcGetter>.Null;
             base.Clear(item);
         }
         
@@ -1500,11 +1355,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledCreature_FieldIndex.Script) ?? true))
             {
-                item.Script = new FormLinkNullable<Script>(rhs.Script.FormKey);
+                item.Script = new FormLinkNullable<IScriptGetter>(rhs.Script.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledCreature_FieldIndex.Template) ?? true))
             {
-                item.Template = new FormLinkNullable<ANpc>(rhs.Template.FormKey);
+                item.Template = new FormLinkNullable<IANpcGetter>(rhs.Template.FormKey);
             }
         }
         

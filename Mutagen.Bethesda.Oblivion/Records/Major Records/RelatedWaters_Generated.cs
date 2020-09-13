@@ -40,19 +40,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region RelatedWaterDaytime
-        public FormLink<Water> RelatedWaterDaytime { get; set; } = new FormLink<Water>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IWaterGetter> IRelatedWatersGetter.RelatedWaterDaytime => this.RelatedWaterDaytime.ToGetter<Water, IWaterGetter>();
+        public FormLink<IWaterGetter> RelatedWaterDaytime { get; set; } = new FormLink<IWaterGetter>();
         #endregion
         #region RelatedWaterNighttime
-        public FormLink<Water> RelatedWaterNighttime { get; set; } = new FormLink<Water>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IWaterGetter> IRelatedWatersGetter.RelatedWaterNighttime => this.RelatedWaterNighttime.ToGetter<Water, IWaterGetter>();
+        public FormLink<IWaterGetter> RelatedWaterNighttime { get; set; } = new FormLink<IWaterGetter>();
         #endregion
         #region RelatedWaterUnderwater
-        public FormLink<Water> RelatedWaterUnderwater { get; set; } = new FormLink<Water>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IWaterGetter> IRelatedWatersGetter.RelatedWaterUnderwater => this.RelatedWaterUnderwater.ToGetter<Water, IWaterGetter>();
+        public FormLink<IWaterGetter> RelatedWaterUnderwater { get; set; } = new FormLink<IWaterGetter>();
         #endregion
 
         #region To String
@@ -486,9 +480,9 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IRelatedWaters>,
         ILinkedFormKeyContainer
     {
-        new FormLink<Water> RelatedWaterDaytime { get; set; }
-        new FormLink<Water> RelatedWaterNighttime { get; set; }
-        new FormLink<Water> RelatedWaterUnderwater { get; set; }
+        new FormLink<IWaterGetter> RelatedWaterDaytime { get; set; }
+        new FormLink<IWaterGetter> RelatedWaterNighttime { get; set; }
+        new FormLink<IWaterGetter> RelatedWaterUnderwater { get; set; }
     }
 
     public partial interface IRelatedWatersGetter :
@@ -722,123 +716,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "RELATEDWATERDAYTIME":
-                    return (ushort)RelatedWaters_FieldIndex.RelatedWaterDaytime;
-                case "RELATEDWATERNIGHTTIME":
-                    return (ushort)RelatedWaters_FieldIndex.RelatedWaterNighttime;
-                case "RELATEDWATERUNDERWATER":
-                    return (ushort)RelatedWaters_FieldIndex.RelatedWaterUnderwater;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            RelatedWaters_FieldIndex enu = (RelatedWaters_FieldIndex)index;
-            switch (enu)
-            {
-                case RelatedWaters_FieldIndex.RelatedWaterDaytime:
-                case RelatedWaters_FieldIndex.RelatedWaterNighttime:
-                case RelatedWaters_FieldIndex.RelatedWaterUnderwater:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            RelatedWaters_FieldIndex enu = (RelatedWaters_FieldIndex)index;
-            switch (enu)
-            {
-                case RelatedWaters_FieldIndex.RelatedWaterDaytime:
-                case RelatedWaters_FieldIndex.RelatedWaterNighttime:
-                case RelatedWaters_FieldIndex.RelatedWaterUnderwater:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            RelatedWaters_FieldIndex enu = (RelatedWaters_FieldIndex)index;
-            switch (enu)
-            {
-                case RelatedWaters_FieldIndex.RelatedWaterDaytime:
-                case RelatedWaters_FieldIndex.RelatedWaterNighttime:
-                case RelatedWaters_FieldIndex.RelatedWaterUnderwater:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            RelatedWaters_FieldIndex enu = (RelatedWaters_FieldIndex)index;
-            switch (enu)
-            {
-                case RelatedWaters_FieldIndex.RelatedWaterDaytime:
-                    return "RelatedWaterDaytime";
-                case RelatedWaters_FieldIndex.RelatedWaterNighttime:
-                    return "RelatedWaterNighttime";
-                case RelatedWaters_FieldIndex.RelatedWaterUnderwater:
-                    return "RelatedWaterUnderwater";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            RelatedWaters_FieldIndex enu = (RelatedWaters_FieldIndex)index;
-            switch (enu)
-            {
-                case RelatedWaters_FieldIndex.RelatedWaterDaytime:
-                case RelatedWaters_FieldIndex.RelatedWaterNighttime:
-                case RelatedWaters_FieldIndex.RelatedWaterUnderwater:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            RelatedWaters_FieldIndex enu = (RelatedWaters_FieldIndex)index;
-            switch (enu)
-            {
-                case RelatedWaters_FieldIndex.RelatedWaterDaytime:
-                case RelatedWaters_FieldIndex.RelatedWaterNighttime:
-                case RelatedWaters_FieldIndex.RelatedWaterUnderwater:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            RelatedWaters_FieldIndex enu = (RelatedWaters_FieldIndex)index;
-            switch (enu)
-            {
-                case RelatedWaters_FieldIndex.RelatedWaterDaytime:
-                    return typeof(FormLink<Water>);
-                case RelatedWaters_FieldIndex.RelatedWaterNighttime:
-                    return typeof(FormLink<Water>);
-                case RelatedWaters_FieldIndex.RelatedWaterUnderwater:
-                    return typeof(FormLink<Water>);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.GNAM;
         public static readonly Type BinaryWriteTranslation = typeof(RelatedWatersBinaryWriteTranslation);
         #region Interface
@@ -859,14 +736,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -882,9 +759,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IRelatedWaters item)
         {
             ClearPartial();
-            item.RelatedWaterDaytime = FormLink<Water>.Null;
-            item.RelatedWaterNighttime = FormLink<Water>.Null;
-            item.RelatedWaterUnderwater = FormLink<Water>.Null;
+            item.RelatedWaterDaytime = FormLink<IWaterGetter>.Null;
+            item.RelatedWaterNighttime = FormLink<IWaterGetter>.Null;
+            item.RelatedWaterUnderwater = FormLink<IWaterGetter>.Null;
         }
         
         #region Binary Translation
@@ -1051,15 +928,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RelatedWaters_FieldIndex.RelatedWaterDaytime) ?? true))
             {
-                item.RelatedWaterDaytime = new FormLink<Water>(rhs.RelatedWaterDaytime.FormKey);
+                item.RelatedWaterDaytime = new FormLink<IWaterGetter>(rhs.RelatedWaterDaytime.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)RelatedWaters_FieldIndex.RelatedWaterNighttime) ?? true))
             {
-                item.RelatedWaterNighttime = new FormLink<Water>(rhs.RelatedWaterNighttime.FormKey);
+                item.RelatedWaterNighttime = new FormLink<IWaterGetter>(rhs.RelatedWaterNighttime.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)RelatedWaters_FieldIndex.RelatedWaterUnderwater) ?? true))
             {
-                item.RelatedWaterUnderwater = new FormLink<Water>(rhs.RelatedWaterUnderwater.FormKey);
+                item.RelatedWaterUnderwater = new FormLink<IWaterGetter>(rhs.RelatedWaterUnderwater.FormKey);
             }
         }
         

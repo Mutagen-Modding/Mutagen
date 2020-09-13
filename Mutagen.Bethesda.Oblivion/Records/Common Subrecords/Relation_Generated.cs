@@ -40,9 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Faction
-        public FormLink<Faction> Faction { get; set; } = new FormLink<Faction>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IFactionGetter> IRelationGetter.Faction => this.Faction.ToGetter<Faction, IFactionGetter>();
+        public FormLink<IFactionGetter> Faction { get; set; } = new FormLink<IFactionGetter>();
         #endregion
         #region Modifier
         public Int32 Modifier { get; set; } = default;
@@ -451,7 +449,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IRelation>,
         ILinkedFormKeyContainer
     {
-        new FormLink<Faction> Faction { get; set; }
+        new FormLink<IFactionGetter> Faction { get; set; }
         new Int32 Modifier { get; set; }
     }
 
@@ -684,112 +682,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "FACTION":
-                    return (ushort)Relation_FieldIndex.Faction;
-                case "MODIFIER":
-                    return (ushort)Relation_FieldIndex.Modifier;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Relation_FieldIndex enu = (Relation_FieldIndex)index;
-            switch (enu)
-            {
-                case Relation_FieldIndex.Faction:
-                case Relation_FieldIndex.Modifier:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Relation_FieldIndex enu = (Relation_FieldIndex)index;
-            switch (enu)
-            {
-                case Relation_FieldIndex.Faction:
-                case Relation_FieldIndex.Modifier:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Relation_FieldIndex enu = (Relation_FieldIndex)index;
-            switch (enu)
-            {
-                case Relation_FieldIndex.Faction:
-                case Relation_FieldIndex.Modifier:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Relation_FieldIndex enu = (Relation_FieldIndex)index;
-            switch (enu)
-            {
-                case Relation_FieldIndex.Faction:
-                    return "Faction";
-                case Relation_FieldIndex.Modifier:
-                    return "Modifier";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Relation_FieldIndex enu = (Relation_FieldIndex)index;
-            switch (enu)
-            {
-                case Relation_FieldIndex.Faction:
-                case Relation_FieldIndex.Modifier:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Relation_FieldIndex enu = (Relation_FieldIndex)index;
-            switch (enu)
-            {
-                case Relation_FieldIndex.Faction:
-                case Relation_FieldIndex.Modifier:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Relation_FieldIndex enu = (Relation_FieldIndex)index;
-            switch (enu)
-            {
-                case Relation_FieldIndex.Faction:
-                    return typeof(FormLink<Faction>);
-                case Relation_FieldIndex.Modifier:
-                    return typeof(Int32);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.XNAM;
         public static readonly Type BinaryWriteTranslation = typeof(RelationBinaryWriteTranslation);
         #region Interface
@@ -810,14 +702,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -833,7 +725,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IRelation item)
         {
             ClearPartial();
-            item.Faction = FormLink<Faction>.Null;
+            item.Faction = FormLink<IFactionGetter>.Null;
             item.Modifier = default;
         }
         
@@ -992,7 +884,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)Relation_FieldIndex.Faction) ?? true))
             {
-                item.Faction = new FormLink<Faction>(rhs.Faction.FormKey);
+                item.Faction = new FormLink<IFactionGetter>(rhs.Faction.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Relation_FieldIndex.Modifier) ?? true))
             {

@@ -65,8 +65,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region PotentialGrass
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Grass>> _PotentialGrass = new ExtendedList<IFormLink<Grass>>();
-        public IExtendedList<IFormLink<Grass>> PotentialGrass
+        private ExtendedList<IFormLink<IGrassGetter>> _PotentialGrass = new ExtendedList<IFormLink<IGrassGetter>>();
+        public ExtendedList<IFormLink<IGrassGetter>> PotentialGrass
         {
             get => this._PotentialGrass;
             protected set => this._PotentialGrass = value;
@@ -636,7 +636,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Icon { get; set; }
         new HavokData? Havok { get; set; }
         new Byte? TextureSpecularExponent { get; set; }
-        new IExtendedList<IFormLink<Grass>> PotentialGrass { get; }
+        new ExtendedList<IFormLink<IGrassGetter>> PotentialGrass { get; }
     }
 
     public partial interface ILandTextureInternal :
@@ -853,136 +853,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "ICON":
-                    return (ushort)LandTexture_FieldIndex.Icon;
-                case "HAVOK":
-                    return (ushort)LandTexture_FieldIndex.Havok;
-                case "TEXTURESPECULAREXPONENT":
-                    return (ushort)LandTexture_FieldIndex.TextureSpecularExponent;
-                case "POTENTIALGRASS":
-                    return (ushort)LandTexture_FieldIndex.PotentialGrass;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            LandTexture_FieldIndex enu = (LandTexture_FieldIndex)index;
-            switch (enu)
-            {
-                case LandTexture_FieldIndex.PotentialGrass:
-                    return true;
-                case LandTexture_FieldIndex.Icon:
-                case LandTexture_FieldIndex.Havok:
-                case LandTexture_FieldIndex.TextureSpecularExponent:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            LandTexture_FieldIndex enu = (LandTexture_FieldIndex)index;
-            switch (enu)
-            {
-                case LandTexture_FieldIndex.Havok:
-                    return true;
-                case LandTexture_FieldIndex.Icon:
-                case LandTexture_FieldIndex.TextureSpecularExponent:
-                case LandTexture_FieldIndex.PotentialGrass:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            LandTexture_FieldIndex enu = (LandTexture_FieldIndex)index;
-            switch (enu)
-            {
-                case LandTexture_FieldIndex.Icon:
-                case LandTexture_FieldIndex.Havok:
-                case LandTexture_FieldIndex.TextureSpecularExponent:
-                case LandTexture_FieldIndex.PotentialGrass:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            LandTexture_FieldIndex enu = (LandTexture_FieldIndex)index;
-            switch (enu)
-            {
-                case LandTexture_FieldIndex.Icon:
-                    return "Icon";
-                case LandTexture_FieldIndex.Havok:
-                    return "Havok";
-                case LandTexture_FieldIndex.TextureSpecularExponent:
-                    return "TextureSpecularExponent";
-                case LandTexture_FieldIndex.PotentialGrass:
-                    return "PotentialGrass";
-                default:
-                    return OblivionMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            LandTexture_FieldIndex enu = (LandTexture_FieldIndex)index;
-            switch (enu)
-            {
-                case LandTexture_FieldIndex.Icon:
-                case LandTexture_FieldIndex.Havok:
-                case LandTexture_FieldIndex.TextureSpecularExponent:
-                case LandTexture_FieldIndex.PotentialGrass:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            LandTexture_FieldIndex enu = (LandTexture_FieldIndex)index;
-            switch (enu)
-            {
-                case LandTexture_FieldIndex.Icon:
-                case LandTexture_FieldIndex.Havok:
-                case LandTexture_FieldIndex.TextureSpecularExponent:
-                case LandTexture_FieldIndex.PotentialGrass:
-                    return false;
-                default:
-                    return OblivionMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            LandTexture_FieldIndex enu = (LandTexture_FieldIndex)index;
-            switch (enu)
-            {
-                case LandTexture_FieldIndex.Icon:
-                    return typeof(String);
-                case LandTexture_FieldIndex.Havok:
-                    return typeof(HavokData);
-                case LandTexture_FieldIndex.TextureSpecularExponent:
-                    return typeof(Byte);
-                case LandTexture_FieldIndex.PotentialGrass:
-                    return typeof(IExtendedList<IFormLink<Grass>>);
-                default:
-                    return OblivionMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.LTEX;
         public static readonly Type BinaryWriteTranslation = typeof(LandTextureBinaryWriteTranslation);
         #region Interface
@@ -1003,14 +873,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1414,7 +1284,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.PotentialGrass.SetTo(
                         rhs.PotentialGrass
-                        .Select(r => (IFormLink<Grass>)new FormLink<Grass>(r.FormKey)));
+                        .Select(r => (IFormLink<IGrassGetter>)new FormLink<IGrassGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1715,7 +1585,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.GNAM:
                 {
                     item.PotentialGrass.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Grass>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IGrassGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.GNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));

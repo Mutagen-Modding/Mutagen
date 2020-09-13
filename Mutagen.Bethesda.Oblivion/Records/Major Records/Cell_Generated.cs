@@ -70,8 +70,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Regions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Region>>? _Regions;
-        public IExtendedList<IFormLink<Region>>? Regions
+        private ExtendedList<IFormLink<IRegionGetter>>? _Regions;
+        public ExtendedList<IFormLink<IRegionGetter>>? Regions
         {
             get => this._Regions;
             set => this._Regions = value;
@@ -93,19 +93,13 @@ namespace Mutagen.Bethesda.Oblivion
         Single? ICellGetter.WaterHeight => this.WaterHeight;
         #endregion
         #region Climate
-        public FormLinkNullable<Climate> Climate { get; set; } = new FormLinkNullable<Climate>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IClimateGetter> ICellGetter.Climate => this.Climate.ToGetter<Climate, IClimateGetter>();
+        public FormLinkNullable<IClimateGetter> Climate { get; set; } = new FormLinkNullable<IClimateGetter>();
         #endregion
         #region Water
-        public FormLinkNullable<Water> Water { get; set; } = new FormLinkNullable<Water>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IWaterGetter> ICellGetter.Water => this.Water.ToGetter<Water, IWaterGetter>();
+        public FormLinkNullable<IWaterGetter> Water { get; set; } = new FormLinkNullable<IWaterGetter>();
         #endregion
         #region Owner
-        public FormLinkNullable<Faction> Owner { get; set; } = new FormLinkNullable<Faction>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IFactionGetter> ICellGetter.Owner => this.Owner.ToGetter<Faction, IFactionGetter>();
+        public FormLinkNullable<IFactionGetter> Owner { get; set; } = new FormLinkNullable<IFactionGetter>();
         #endregion
         #region FactionRank
         public Int32? FactionRank { get; set; }
@@ -113,9 +107,7 @@ namespace Mutagen.Bethesda.Oblivion
         Int32? ICellGetter.FactionRank => this.FactionRank;
         #endregion
         #region GlobalVariable
-        public FormLinkNullable<Global> GlobalVariable { get; set; } = new FormLinkNullable<Global>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IGlobalGetter> ICellGetter.GlobalVariable => this.GlobalVariable.ToGetter<Global, IGlobalGetter>();
+        public FormLinkNullable<IGlobalGetter> GlobalVariable { get; set; } = new FormLinkNullable<IGlobalGetter>();
         #endregion
         #region PathGrid
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -147,8 +139,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Persistent
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IPlaced> _Persistent = new ExtendedList<IPlaced>();
-        public IExtendedList<IPlaced> Persistent
+        private ExtendedList<IPlaced> _Persistent = new ExtendedList<IPlaced>();
+        public ExtendedList<IPlaced> Persistent
         {
             get => this._Persistent;
             protected set => this._Persistent = value;
@@ -164,8 +156,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Temporary
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IPlaced> _Temporary = new ExtendedList<IPlaced>();
-        public IExtendedList<IPlaced> Temporary
+        private ExtendedList<IPlaced> _Temporary = new ExtendedList<IPlaced>();
+        public ExtendedList<IPlaced> Temporary
         {
             get => this._Temporary;
             protected set => this._Temporary = value;
@@ -181,8 +173,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region VisibleWhenDistant
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IPlaced> _VisibleWhenDistant = new ExtendedList<IPlaced>();
-        public IExtendedList<IPlaced> VisibleWhenDistant
+        private ExtendedList<IPlaced> _VisibleWhenDistant = new ExtendedList<IPlaced>();
+        public ExtendedList<IPlaced> VisibleWhenDistant
         {
             get => this._VisibleWhenDistant;
             protected set => this._VisibleWhenDistant = value;
@@ -1510,23 +1502,23 @@ namespace Mutagen.Bethesda.Oblivion
         new Cell.Flag? Flags { get; set; }
         new P2Int? Grid { get; set; }
         new CellLighting? Lighting { get; set; }
-        new IExtendedList<IFormLink<Region>>? Regions { get; set; }
+        new ExtendedList<IFormLink<IRegionGetter>>? Regions { get; set; }
         new MusicType? MusicType { get; set; }
         new Single? WaterHeight { get; set; }
-        new FormLinkNullable<Climate> Climate { get; set; }
-        new FormLinkNullable<Water> Water { get; set; }
-        new FormLinkNullable<Faction> Owner { get; set; }
+        new FormLinkNullable<IClimateGetter> Climate { get; set; }
+        new FormLinkNullable<IWaterGetter> Water { get; set; }
+        new FormLinkNullable<IFactionGetter> Owner { get; set; }
         new Int32? FactionRank { get; set; }
-        new FormLinkNullable<Global> GlobalVariable { get; set; }
+        new FormLinkNullable<IGlobalGetter> GlobalVariable { get; set; }
         new PathGrid? PathGrid { get; set; }
         new Landscape? Landscape { get; set; }
         new Int32 Timestamp { get; set; }
         new Int32 PersistentTimestamp { get; set; }
-        new IExtendedList<IPlaced> Persistent { get; }
+        new ExtendedList<IPlaced> Persistent { get; }
         new Int32 TemporaryTimestamp { get; set; }
-        new IExtendedList<IPlaced> Temporary { get; }
+        new ExtendedList<IPlaced> Temporary { get; }
         new Int32 VisibleWhenDistantTimestamp { get; set; }
-        new IExtendedList<IPlaced> VisibleWhenDistant { get; }
+        new ExtendedList<IPlaced> VisibleWhenDistant { get; }
     }
 
     public partial interface ICellInternal :
@@ -1994,323 +1986,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "NAME":
-                    return (ushort)Cell_FieldIndex.Name;
-                case "FLAGS":
-                    return (ushort)Cell_FieldIndex.Flags;
-                case "GRID":
-                    return (ushort)Cell_FieldIndex.Grid;
-                case "LIGHTING":
-                    return (ushort)Cell_FieldIndex.Lighting;
-                case "REGIONS":
-                    return (ushort)Cell_FieldIndex.Regions;
-                case "MUSICTYPE":
-                    return (ushort)Cell_FieldIndex.MusicType;
-                case "WATERHEIGHT":
-                    return (ushort)Cell_FieldIndex.WaterHeight;
-                case "CLIMATE":
-                    return (ushort)Cell_FieldIndex.Climate;
-                case "WATER":
-                    return (ushort)Cell_FieldIndex.Water;
-                case "OWNER":
-                    return (ushort)Cell_FieldIndex.Owner;
-                case "FACTIONRANK":
-                    return (ushort)Cell_FieldIndex.FactionRank;
-                case "GLOBALVARIABLE":
-                    return (ushort)Cell_FieldIndex.GlobalVariable;
-                case "PATHGRID":
-                    return (ushort)Cell_FieldIndex.PathGrid;
-                case "LANDSCAPE":
-                    return (ushort)Cell_FieldIndex.Landscape;
-                case "TIMESTAMP":
-                    return (ushort)Cell_FieldIndex.Timestamp;
-                case "PERSISTENTTIMESTAMP":
-                    return (ushort)Cell_FieldIndex.PersistentTimestamp;
-                case "PERSISTENT":
-                    return (ushort)Cell_FieldIndex.Persistent;
-                case "TEMPORARYTIMESTAMP":
-                    return (ushort)Cell_FieldIndex.TemporaryTimestamp;
-                case "TEMPORARY":
-                    return (ushort)Cell_FieldIndex.Temporary;
-                case "VISIBLEWHENDISTANTTIMESTAMP":
-                    return (ushort)Cell_FieldIndex.VisibleWhenDistantTimestamp;
-                case "VISIBLEWHENDISTANT":
-                    return (ushort)Cell_FieldIndex.VisibleWhenDistant;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Cell_FieldIndex enu = (Cell_FieldIndex)index;
-            switch (enu)
-            {
-                case Cell_FieldIndex.Regions:
-                case Cell_FieldIndex.Persistent:
-                case Cell_FieldIndex.Temporary:
-                case Cell_FieldIndex.VisibleWhenDistant:
-                    return true;
-                case Cell_FieldIndex.Name:
-                case Cell_FieldIndex.Flags:
-                case Cell_FieldIndex.Grid:
-                case Cell_FieldIndex.Lighting:
-                case Cell_FieldIndex.MusicType:
-                case Cell_FieldIndex.WaterHeight:
-                case Cell_FieldIndex.Climate:
-                case Cell_FieldIndex.Water:
-                case Cell_FieldIndex.Owner:
-                case Cell_FieldIndex.FactionRank:
-                case Cell_FieldIndex.GlobalVariable:
-                case Cell_FieldIndex.PathGrid:
-                case Cell_FieldIndex.Landscape:
-                case Cell_FieldIndex.Timestamp:
-                case Cell_FieldIndex.PersistentTimestamp:
-                case Cell_FieldIndex.TemporaryTimestamp:
-                case Cell_FieldIndex.VisibleWhenDistantTimestamp:
-                    return false;
-                default:
-                    return Place_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Cell_FieldIndex enu = (Cell_FieldIndex)index;
-            switch (enu)
-            {
-                case Cell_FieldIndex.Lighting:
-                case Cell_FieldIndex.PathGrid:
-                case Cell_FieldIndex.Landscape:
-                case Cell_FieldIndex.Persistent:
-                case Cell_FieldIndex.Temporary:
-                case Cell_FieldIndex.VisibleWhenDistant:
-                    return true;
-                case Cell_FieldIndex.Name:
-                case Cell_FieldIndex.Flags:
-                case Cell_FieldIndex.Grid:
-                case Cell_FieldIndex.Regions:
-                case Cell_FieldIndex.MusicType:
-                case Cell_FieldIndex.WaterHeight:
-                case Cell_FieldIndex.Climate:
-                case Cell_FieldIndex.Water:
-                case Cell_FieldIndex.Owner:
-                case Cell_FieldIndex.FactionRank:
-                case Cell_FieldIndex.GlobalVariable:
-                case Cell_FieldIndex.Timestamp:
-                case Cell_FieldIndex.PersistentTimestamp:
-                case Cell_FieldIndex.TemporaryTimestamp:
-                case Cell_FieldIndex.VisibleWhenDistantTimestamp:
-                    return false;
-                default:
-                    return Place_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Cell_FieldIndex enu = (Cell_FieldIndex)index;
-            switch (enu)
-            {
-                case Cell_FieldIndex.Name:
-                case Cell_FieldIndex.Flags:
-                case Cell_FieldIndex.Grid:
-                case Cell_FieldIndex.Lighting:
-                case Cell_FieldIndex.Regions:
-                case Cell_FieldIndex.MusicType:
-                case Cell_FieldIndex.WaterHeight:
-                case Cell_FieldIndex.Climate:
-                case Cell_FieldIndex.Water:
-                case Cell_FieldIndex.Owner:
-                case Cell_FieldIndex.FactionRank:
-                case Cell_FieldIndex.GlobalVariable:
-                case Cell_FieldIndex.PathGrid:
-                case Cell_FieldIndex.Landscape:
-                case Cell_FieldIndex.Timestamp:
-                case Cell_FieldIndex.PersistentTimestamp:
-                case Cell_FieldIndex.Persistent:
-                case Cell_FieldIndex.TemporaryTimestamp:
-                case Cell_FieldIndex.Temporary:
-                case Cell_FieldIndex.VisibleWhenDistantTimestamp:
-                case Cell_FieldIndex.VisibleWhenDistant:
-                    return false;
-                default:
-                    return Place_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Cell_FieldIndex enu = (Cell_FieldIndex)index;
-            switch (enu)
-            {
-                case Cell_FieldIndex.Name:
-                    return "Name";
-                case Cell_FieldIndex.Flags:
-                    return "Flags";
-                case Cell_FieldIndex.Grid:
-                    return "Grid";
-                case Cell_FieldIndex.Lighting:
-                    return "Lighting";
-                case Cell_FieldIndex.Regions:
-                    return "Regions";
-                case Cell_FieldIndex.MusicType:
-                    return "MusicType";
-                case Cell_FieldIndex.WaterHeight:
-                    return "WaterHeight";
-                case Cell_FieldIndex.Climate:
-                    return "Climate";
-                case Cell_FieldIndex.Water:
-                    return "Water";
-                case Cell_FieldIndex.Owner:
-                    return "Owner";
-                case Cell_FieldIndex.FactionRank:
-                    return "FactionRank";
-                case Cell_FieldIndex.GlobalVariable:
-                    return "GlobalVariable";
-                case Cell_FieldIndex.PathGrid:
-                    return "PathGrid";
-                case Cell_FieldIndex.Landscape:
-                    return "Landscape";
-                case Cell_FieldIndex.Timestamp:
-                    return "Timestamp";
-                case Cell_FieldIndex.PersistentTimestamp:
-                    return "PersistentTimestamp";
-                case Cell_FieldIndex.Persistent:
-                    return "Persistent";
-                case Cell_FieldIndex.TemporaryTimestamp:
-                    return "TemporaryTimestamp";
-                case Cell_FieldIndex.Temporary:
-                    return "Temporary";
-                case Cell_FieldIndex.VisibleWhenDistantTimestamp:
-                    return "VisibleWhenDistantTimestamp";
-                case Cell_FieldIndex.VisibleWhenDistant:
-                    return "VisibleWhenDistant";
-                default:
-                    return Place_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Cell_FieldIndex enu = (Cell_FieldIndex)index;
-            switch (enu)
-            {
-                case Cell_FieldIndex.Name:
-                case Cell_FieldIndex.Flags:
-                case Cell_FieldIndex.Grid:
-                case Cell_FieldIndex.Lighting:
-                case Cell_FieldIndex.Regions:
-                case Cell_FieldIndex.MusicType:
-                case Cell_FieldIndex.WaterHeight:
-                case Cell_FieldIndex.Climate:
-                case Cell_FieldIndex.Water:
-                case Cell_FieldIndex.Owner:
-                case Cell_FieldIndex.FactionRank:
-                case Cell_FieldIndex.GlobalVariable:
-                case Cell_FieldIndex.PathGrid:
-                case Cell_FieldIndex.Landscape:
-                case Cell_FieldIndex.Timestamp:
-                case Cell_FieldIndex.PersistentTimestamp:
-                case Cell_FieldIndex.Persistent:
-                case Cell_FieldIndex.TemporaryTimestamp:
-                case Cell_FieldIndex.Temporary:
-                case Cell_FieldIndex.VisibleWhenDistantTimestamp:
-                case Cell_FieldIndex.VisibleWhenDistant:
-                    return false;
-                default:
-                    return Place_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Cell_FieldIndex enu = (Cell_FieldIndex)index;
-            switch (enu)
-            {
-                case Cell_FieldIndex.Name:
-                case Cell_FieldIndex.Flags:
-                case Cell_FieldIndex.Grid:
-                case Cell_FieldIndex.Lighting:
-                case Cell_FieldIndex.Regions:
-                case Cell_FieldIndex.MusicType:
-                case Cell_FieldIndex.WaterHeight:
-                case Cell_FieldIndex.Climate:
-                case Cell_FieldIndex.Water:
-                case Cell_FieldIndex.Owner:
-                case Cell_FieldIndex.FactionRank:
-                case Cell_FieldIndex.GlobalVariable:
-                case Cell_FieldIndex.PathGrid:
-                case Cell_FieldIndex.Landscape:
-                case Cell_FieldIndex.Timestamp:
-                case Cell_FieldIndex.PersistentTimestamp:
-                case Cell_FieldIndex.Persistent:
-                case Cell_FieldIndex.TemporaryTimestamp:
-                case Cell_FieldIndex.Temporary:
-                case Cell_FieldIndex.VisibleWhenDistantTimestamp:
-                case Cell_FieldIndex.VisibleWhenDistant:
-                    return false;
-                default:
-                    return Place_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Cell_FieldIndex enu = (Cell_FieldIndex)index;
-            switch (enu)
-            {
-                case Cell_FieldIndex.Name:
-                    return typeof(String);
-                case Cell_FieldIndex.Flags:
-                    return typeof(Cell.Flag);
-                case Cell_FieldIndex.Grid:
-                    return typeof(P2Int);
-                case Cell_FieldIndex.Lighting:
-                    return typeof(CellLighting);
-                case Cell_FieldIndex.Regions:
-                    return typeof(IExtendedList<IFormLink<Region>>);
-                case Cell_FieldIndex.MusicType:
-                    return typeof(MusicType);
-                case Cell_FieldIndex.WaterHeight:
-                    return typeof(Single);
-                case Cell_FieldIndex.Climate:
-                    return typeof(FormLinkNullable<Climate>);
-                case Cell_FieldIndex.Water:
-                    return typeof(FormLinkNullable<Water>);
-                case Cell_FieldIndex.Owner:
-                    return typeof(FormLinkNullable<Faction>);
-                case Cell_FieldIndex.FactionRank:
-                    return typeof(Int32);
-                case Cell_FieldIndex.GlobalVariable:
-                    return typeof(FormLinkNullable<Global>);
-                case Cell_FieldIndex.PathGrid:
-                    return typeof(PathGrid);
-                case Cell_FieldIndex.Landscape:
-                    return typeof(Landscape);
-                case Cell_FieldIndex.Timestamp:
-                    return typeof(Int32);
-                case Cell_FieldIndex.PersistentTimestamp:
-                    return typeof(Int32);
-                case Cell_FieldIndex.Persistent:
-                    return typeof(IExtendedList<IPlaced>);
-                case Cell_FieldIndex.TemporaryTimestamp:
-                    return typeof(Int32);
-                case Cell_FieldIndex.Temporary:
-                    return typeof(IExtendedList<IPlaced>);
-                case Cell_FieldIndex.VisibleWhenDistantTimestamp:
-                    return typeof(Int32);
-                case Cell_FieldIndex.VisibleWhenDistant:
-                    return typeof(IExtendedList<IPlaced>);
-                default:
-                    return Place_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.CELL;
         public static readonly Type BinaryWriteTranslation = typeof(CellBinaryWriteTranslation);
         #region Interface
@@ -2331,14 +2006,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -2361,11 +2036,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Regions = null;
             item.MusicType = default;
             item.WaterHeight = default;
-            item.Climate = FormLinkNullable<Climate>.Null;
-            item.Water = FormLinkNullable<Water>.Null;
-            item.Owner = FormLinkNullable<Faction>.Null;
+            item.Climate = FormLinkNullable<IClimateGetter>.Null;
+            item.Water = FormLinkNullable<IWaterGetter>.Null;
+            item.Owner = FormLinkNullable<IFactionGetter>.Null;
             item.FactionRank = default;
-            item.GlobalVariable = FormLinkNullable<Global>.Null;
+            item.GlobalVariable = FormLinkNullable<IGlobalGetter>.Null;
             item.PathGrid = null;
             item.Landscape = null;
             item.Timestamp = default;
@@ -3706,8 +3381,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Regions = 
                             rhs.Regions
-                            .Select(r => (IFormLink<Region>)new FormLink<Region>(r.FormKey))
-                            .ToExtendedList<IFormLink<Region>>();
+                            .Select(r => (IFormLink<IRegionGetter>)new FormLink<IRegionGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IRegionGetter>>();
                     }
                     else
                     {
@@ -3734,15 +3409,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Climate) ?? true))
             {
-                item.Climate = new FormLinkNullable<Climate>(rhs.Climate.FormKey);
+                item.Climate = new FormLinkNullable<IClimateGetter>(rhs.Climate.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Water) ?? true))
             {
-                item.Water = new FormLinkNullable<Water>(rhs.Water.FormKey);
+                item.Water = new FormLinkNullable<IWaterGetter>(rhs.Water.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Owner) ?? true))
             {
-                item.Owner = new FormLinkNullable<Faction>(rhs.Owner.FormKey);
+                item.Owner = new FormLinkNullable<IFactionGetter>(rhs.Owner.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.FactionRank) ?? true))
             {
@@ -3750,7 +3425,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.GlobalVariable) ?? true))
             {
-                item.GlobalVariable = new FormLinkNullable<Global>(rhs.GlobalVariable.FormKey);
+                item.GlobalVariable = new FormLinkNullable<IGlobalGetter>(rhs.GlobalVariable.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.PathGrid) ?? true))
             {
@@ -4280,10 +3955,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Regions = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Region>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IRegionGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<Region>>();
+                        .CastExtendedList<IFormLink<IRegionGetter>>();
                     return (int)Cell_FieldIndex.Regions;
                 }
                 case RecordTypeInts.XCMT:

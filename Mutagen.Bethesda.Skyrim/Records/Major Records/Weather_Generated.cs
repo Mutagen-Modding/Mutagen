@@ -113,14 +113,10 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? IWeatherGetter.LNAM => this.LNAM;
         #endregion
         #region Precipitation
-        public FormLinkNullable<ShaderParticleGeometry> Precipitation { get; set; } = new FormLinkNullable<ShaderParticleGeometry>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IShaderParticleGeometryGetter> IWeatherGetter.Precipitation => this.Precipitation.ToGetter<ShaderParticleGeometry, IShaderParticleGeometryGetter>();
+        public FormLinkNullable<IShaderParticleGeometryGetter> Precipitation { get; set; } = new FormLinkNullable<IShaderParticleGeometryGetter>();
         #endregion
         #region VisualEffect
-        public FormLink<VisualEffect> VisualEffect { get; set; } = new FormLink<VisualEffect>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IVisualEffectGetter> IWeatherGetter.VisualEffect => this.VisualEffect.ToGetter<VisualEffect, IVisualEffectGetter>();
+        public FormLink<IVisualEffectGetter> VisualEffect { get; set; } = new FormLink<IVisualEffectGetter>();
         #endregion
         #region ONAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -309,8 +305,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<WeatherSound> _Sounds = new ExtendedList<WeatherSound>();
-        public IExtendedList<WeatherSound> Sounds
+        private ExtendedList<WeatherSound> _Sounds = new ExtendedList<WeatherSound>();
+        public ExtendedList<WeatherSound> Sounds
         {
             get => this._Sounds;
             protected set => this._Sounds = value;
@@ -323,8 +319,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region SkyStatics
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Static>> _SkyStatics = new ExtendedList<IFormLink<Static>>();
-        public IExtendedList<IFormLink<Static>> SkyStatics
+        private ExtendedList<IFormLink<IStaticGetter>> _SkyStatics = new ExtendedList<IFormLink<IStaticGetter>>();
+        public ExtendedList<IFormLink<IStaticGetter>> SkyStatics
         {
             get => this._SkyStatics;
             protected set => this._SkyStatics = value;
@@ -402,9 +398,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModelGetter? IWeatherGetter.Aurora => this.Aurora;
         #endregion
         #region SunGlareLensFlare
-        public FormLinkNullable<LensFlare> SunGlareLensFlare { get; set; } = new FormLinkNullable<LensFlare>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<ILensFlareGetter> IWeatherGetter.SunGlareLensFlare => this.SunGlareLensFlare.ToGetter<LensFlare, ILensFlareGetter>();
+        public FormLinkNullable<ILensFlareGetter> SunGlareLensFlare { get; set; } = new FormLinkNullable<ILensFlareGetter>();
         #endregion
         #region NAM0DataTypeState
         public Weather.NAM0DataType NAM0DataTypeState { get; set; } = default;
@@ -3008,8 +3002,8 @@ namespace Mutagen.Bethesda.Skyrim
         new MemorySlice<Byte>? ANAM { get; set; }
         new MemorySlice<Byte>? BNAM { get; set; }
         new MemorySlice<Byte>? LNAM { get; set; }
-        new FormLinkNullable<ShaderParticleGeometry> Precipitation { get; set; }
-        new FormLink<VisualEffect> VisualEffect { get; set; }
+        new FormLinkNullable<IShaderParticleGeometryGetter> Precipitation { get; set; }
+        new FormLink<IVisualEffectGetter> VisualEffect { get; set; }
         new MemorySlice<Byte>? ONAM { get; set; }
         new CloudLayer[] Clouds { get; }
         new WeatherColor SkyUpperColor { get; set; }
@@ -3053,15 +3047,15 @@ namespace Mutagen.Bethesda.Skyrim
         new Percent VisualEffectEnd { get; set; }
         new Single WindDirection { get; set; }
         new Single WindDirectionRange { get; set; }
-        new IExtendedList<WeatherSound> Sounds { get; }
-        new IExtendedList<IFormLink<Static>> SkyStatics { get; }
+        new ExtendedList<WeatherSound> Sounds { get; }
+        new ExtendedList<IFormLink<IStaticGetter>> SkyStatics { get; }
         new WeatherImageSpaces? ImageSpaces { get; set; }
         new WeatherVolumetricLighting? VolumetricLighting { get; set; }
         new WeatherAmbientColorSet? DirectionalAmbientLightingColors { get; set; }
         new MemorySlice<Byte>? NAM2 { get; set; }
         new MemorySlice<Byte>? NAM3 { get; set; }
         new Model? Aurora { get; set; }
-        new FormLinkNullable<LensFlare> SunGlareLensFlare { get; set; }
+        new FormLinkNullable<ILensFlareGetter> SunGlareLensFlare { get; set; }
         new Weather.NAM0DataType NAM0DataTypeState { get; set; }
         new Weather.FNAMDataType FNAMDataTypeState { get; set; }
         new Weather.DATADataType DATADataTypeState { get; set; }
@@ -3400,785 +3394,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "CLOUDTEXTURES":
-                    return (ushort)Weather_FieldIndex.CloudTextures;
-                case "DNAM":
-                    return (ushort)Weather_FieldIndex.DNAM;
-                case "CNAM":
-                    return (ushort)Weather_FieldIndex.CNAM;
-                case "ANAM":
-                    return (ushort)Weather_FieldIndex.ANAM;
-                case "BNAM":
-                    return (ushort)Weather_FieldIndex.BNAM;
-                case "LNAM":
-                    return (ushort)Weather_FieldIndex.LNAM;
-                case "PRECIPITATION":
-                    return (ushort)Weather_FieldIndex.Precipitation;
-                case "VISUALEFFECT":
-                    return (ushort)Weather_FieldIndex.VisualEffect;
-                case "ONAM":
-                    return (ushort)Weather_FieldIndex.ONAM;
-                case "CLOUDS":
-                    return (ushort)Weather_FieldIndex.Clouds;
-                case "SKYUPPERCOLOR":
-                    return (ushort)Weather_FieldIndex.SkyUpperColor;
-                case "FOGNEARCOLOR":
-                    return (ushort)Weather_FieldIndex.FogNearColor;
-                case "UNKNOWNCOLOR":
-                    return (ushort)Weather_FieldIndex.UnknownColor;
-                case "AMBIENTCOLOR":
-                    return (ushort)Weather_FieldIndex.AmbientColor;
-                case "SUNLIGHTCOLOR":
-                    return (ushort)Weather_FieldIndex.SunlightColor;
-                case "SUNCOLOR":
-                    return (ushort)Weather_FieldIndex.SunColor;
-                case "STARSCOLOR":
-                    return (ushort)Weather_FieldIndex.StarsColor;
-                case "SKYLOWERCOLOR":
-                    return (ushort)Weather_FieldIndex.SkyLowerColor;
-                case "HORIZONCOLOR":
-                    return (ushort)Weather_FieldIndex.HorizonColor;
-                case "EFFECTLIGHTINGCOLOR":
-                    return (ushort)Weather_FieldIndex.EffectLightingColor;
-                case "CLOUDLODDIFFUSECOLOR":
-                    return (ushort)Weather_FieldIndex.CloudLodDiffuseColor;
-                case "CLOUDLODAMBIENTCOLOR":
-                    return (ushort)Weather_FieldIndex.CloudLodAmbientColor;
-                case "FOGFARCOLOR":
-                    return (ushort)Weather_FieldIndex.FogFarColor;
-                case "SKYSTATICSCOLOR":
-                    return (ushort)Weather_FieldIndex.SkyStaticsColor;
-                case "WATERMULTIPLIERCOLOR":
-                    return (ushort)Weather_FieldIndex.WaterMultiplierColor;
-                case "SUNGLARECOLOR":
-                    return (ushort)Weather_FieldIndex.SunGlareColor;
-                case "MOONGLARECOLOR":
-                    return (ushort)Weather_FieldIndex.MoonGlareColor;
-                case "FOGDISTANCEDAYNEAR":
-                    return (ushort)Weather_FieldIndex.FogDistanceDayNear;
-                case "FOGDISTANCEDAYFAR":
-                    return (ushort)Weather_FieldIndex.FogDistanceDayFar;
-                case "FOGDISTANCENIGHTNEAR":
-                    return (ushort)Weather_FieldIndex.FogDistanceNightNear;
-                case "FOGDISTANCENIGHTFAR":
-                    return (ushort)Weather_FieldIndex.FogDistanceNightFar;
-                case "FOGDISTANCEDAYPOWER":
-                    return (ushort)Weather_FieldIndex.FogDistanceDayPower;
-                case "FOGDISTANCENIGHTPOWER":
-                    return (ushort)Weather_FieldIndex.FogDistanceNightPower;
-                case "FOGDISTANCEDAYMAX":
-                    return (ushort)Weather_FieldIndex.FogDistanceDayMax;
-                case "FOGDISTANCENIGHTMAX":
-                    return (ushort)Weather_FieldIndex.FogDistanceNightMax;
-                case "WINDSPEED":
-                    return (ushort)Weather_FieldIndex.WindSpeed;
-                case "UNKNOWN":
-                    return (ushort)Weather_FieldIndex.Unknown;
-                case "TRANSDELTA":
-                    return (ushort)Weather_FieldIndex.TransDelta;
-                case "SUNGLARE":
-                    return (ushort)Weather_FieldIndex.SunGlare;
-                case "SUNDAMAGE":
-                    return (ushort)Weather_FieldIndex.SunDamage;
-                case "PRECIPITATIONBEGINFADEIN":
-                    return (ushort)Weather_FieldIndex.PrecipitationBeginFadeIn;
-                case "PRECIPITATIONENDFADEOUT":
-                    return (ushort)Weather_FieldIndex.PrecipitationEndFadeOut;
-                case "THUNDERLIGHTNINGBEGINFADEIN":
-                    return (ushort)Weather_FieldIndex.ThunderLightningBeginFadeIn;
-                case "THUNDERLIGHTNINGENDFADEOUT":
-                    return (ushort)Weather_FieldIndex.ThunderLightningEndFadeOut;
-                case "THUNDERLIGHTNINGFREQUENCY":
-                    return (ushort)Weather_FieldIndex.ThunderLightningFrequency;
-                case "FLAGS":
-                    return (ushort)Weather_FieldIndex.Flags;
-                case "LIGHTNINGCOLOR":
-                    return (ushort)Weather_FieldIndex.LightningColor;
-                case "VISUALEFFECTBEGIN":
-                    return (ushort)Weather_FieldIndex.VisualEffectBegin;
-                case "VISUALEFFECTEND":
-                    return (ushort)Weather_FieldIndex.VisualEffectEnd;
-                case "WINDDIRECTION":
-                    return (ushort)Weather_FieldIndex.WindDirection;
-                case "WINDDIRECTIONRANGE":
-                    return (ushort)Weather_FieldIndex.WindDirectionRange;
-                case "SOUNDS":
-                    return (ushort)Weather_FieldIndex.Sounds;
-                case "SKYSTATICS":
-                    return (ushort)Weather_FieldIndex.SkyStatics;
-                case "IMAGESPACES":
-                    return (ushort)Weather_FieldIndex.ImageSpaces;
-                case "VOLUMETRICLIGHTING":
-                    return (ushort)Weather_FieldIndex.VolumetricLighting;
-                case "DIRECTIONALAMBIENTLIGHTINGCOLORS":
-                    return (ushort)Weather_FieldIndex.DirectionalAmbientLightingColors;
-                case "NAM2":
-                    return (ushort)Weather_FieldIndex.NAM2;
-                case "NAM3":
-                    return (ushort)Weather_FieldIndex.NAM3;
-                case "AURORA":
-                    return (ushort)Weather_FieldIndex.Aurora;
-                case "SUNGLARELENSFLARE":
-                    return (ushort)Weather_FieldIndex.SunGlareLensFlare;
-                case "NAM0DATATYPESTATE":
-                    return (ushort)Weather_FieldIndex.NAM0DataTypeState;
-                case "FNAMDATATYPESTATE":
-                    return (ushort)Weather_FieldIndex.FNAMDataTypeState;
-                case "DATADATATYPESTATE":
-                    return (ushort)Weather_FieldIndex.DATADataTypeState;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Weather_FieldIndex enu = (Weather_FieldIndex)index;
-            switch (enu)
-            {
-                case Weather_FieldIndex.CloudTextures:
-                case Weather_FieldIndex.Clouds:
-                case Weather_FieldIndex.Sounds:
-                case Weather_FieldIndex.SkyStatics:
-                    return true;
-                case Weather_FieldIndex.DNAM:
-                case Weather_FieldIndex.CNAM:
-                case Weather_FieldIndex.ANAM:
-                case Weather_FieldIndex.BNAM:
-                case Weather_FieldIndex.LNAM:
-                case Weather_FieldIndex.Precipitation:
-                case Weather_FieldIndex.VisualEffect:
-                case Weather_FieldIndex.ONAM:
-                case Weather_FieldIndex.SkyUpperColor:
-                case Weather_FieldIndex.FogNearColor:
-                case Weather_FieldIndex.UnknownColor:
-                case Weather_FieldIndex.AmbientColor:
-                case Weather_FieldIndex.SunlightColor:
-                case Weather_FieldIndex.SunColor:
-                case Weather_FieldIndex.StarsColor:
-                case Weather_FieldIndex.SkyLowerColor:
-                case Weather_FieldIndex.HorizonColor:
-                case Weather_FieldIndex.EffectLightingColor:
-                case Weather_FieldIndex.CloudLodDiffuseColor:
-                case Weather_FieldIndex.CloudLodAmbientColor:
-                case Weather_FieldIndex.FogFarColor:
-                case Weather_FieldIndex.SkyStaticsColor:
-                case Weather_FieldIndex.WaterMultiplierColor:
-                case Weather_FieldIndex.SunGlareColor:
-                case Weather_FieldIndex.MoonGlareColor:
-                case Weather_FieldIndex.FogDistanceDayNear:
-                case Weather_FieldIndex.FogDistanceDayFar:
-                case Weather_FieldIndex.FogDistanceNightNear:
-                case Weather_FieldIndex.FogDistanceNightFar:
-                case Weather_FieldIndex.FogDistanceDayPower:
-                case Weather_FieldIndex.FogDistanceNightPower:
-                case Weather_FieldIndex.FogDistanceDayMax:
-                case Weather_FieldIndex.FogDistanceNightMax:
-                case Weather_FieldIndex.WindSpeed:
-                case Weather_FieldIndex.Unknown:
-                case Weather_FieldIndex.TransDelta:
-                case Weather_FieldIndex.SunGlare:
-                case Weather_FieldIndex.SunDamage:
-                case Weather_FieldIndex.PrecipitationBeginFadeIn:
-                case Weather_FieldIndex.PrecipitationEndFadeOut:
-                case Weather_FieldIndex.ThunderLightningBeginFadeIn:
-                case Weather_FieldIndex.ThunderLightningEndFadeOut:
-                case Weather_FieldIndex.ThunderLightningFrequency:
-                case Weather_FieldIndex.Flags:
-                case Weather_FieldIndex.LightningColor:
-                case Weather_FieldIndex.VisualEffectBegin:
-                case Weather_FieldIndex.VisualEffectEnd:
-                case Weather_FieldIndex.WindDirection:
-                case Weather_FieldIndex.WindDirectionRange:
-                case Weather_FieldIndex.ImageSpaces:
-                case Weather_FieldIndex.VolumetricLighting:
-                case Weather_FieldIndex.DirectionalAmbientLightingColors:
-                case Weather_FieldIndex.NAM2:
-                case Weather_FieldIndex.NAM3:
-                case Weather_FieldIndex.Aurora:
-                case Weather_FieldIndex.SunGlareLensFlare:
-                case Weather_FieldIndex.NAM0DataTypeState:
-                case Weather_FieldIndex.FNAMDataTypeState:
-                case Weather_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Weather_FieldIndex enu = (Weather_FieldIndex)index;
-            switch (enu)
-            {
-                case Weather_FieldIndex.Clouds:
-                case Weather_FieldIndex.SkyUpperColor:
-                case Weather_FieldIndex.FogNearColor:
-                case Weather_FieldIndex.UnknownColor:
-                case Weather_FieldIndex.AmbientColor:
-                case Weather_FieldIndex.SunlightColor:
-                case Weather_FieldIndex.SunColor:
-                case Weather_FieldIndex.StarsColor:
-                case Weather_FieldIndex.SkyLowerColor:
-                case Weather_FieldIndex.HorizonColor:
-                case Weather_FieldIndex.EffectLightingColor:
-                case Weather_FieldIndex.CloudLodDiffuseColor:
-                case Weather_FieldIndex.CloudLodAmbientColor:
-                case Weather_FieldIndex.FogFarColor:
-                case Weather_FieldIndex.SkyStaticsColor:
-                case Weather_FieldIndex.WaterMultiplierColor:
-                case Weather_FieldIndex.SunGlareColor:
-                case Weather_FieldIndex.MoonGlareColor:
-                case Weather_FieldIndex.Sounds:
-                case Weather_FieldIndex.ImageSpaces:
-                case Weather_FieldIndex.VolumetricLighting:
-                case Weather_FieldIndex.DirectionalAmbientLightingColors:
-                case Weather_FieldIndex.Aurora:
-                    return true;
-                case Weather_FieldIndex.CloudTextures:
-                case Weather_FieldIndex.DNAM:
-                case Weather_FieldIndex.CNAM:
-                case Weather_FieldIndex.ANAM:
-                case Weather_FieldIndex.BNAM:
-                case Weather_FieldIndex.LNAM:
-                case Weather_FieldIndex.Precipitation:
-                case Weather_FieldIndex.VisualEffect:
-                case Weather_FieldIndex.ONAM:
-                case Weather_FieldIndex.FogDistanceDayNear:
-                case Weather_FieldIndex.FogDistanceDayFar:
-                case Weather_FieldIndex.FogDistanceNightNear:
-                case Weather_FieldIndex.FogDistanceNightFar:
-                case Weather_FieldIndex.FogDistanceDayPower:
-                case Weather_FieldIndex.FogDistanceNightPower:
-                case Weather_FieldIndex.FogDistanceDayMax:
-                case Weather_FieldIndex.FogDistanceNightMax:
-                case Weather_FieldIndex.WindSpeed:
-                case Weather_FieldIndex.Unknown:
-                case Weather_FieldIndex.TransDelta:
-                case Weather_FieldIndex.SunGlare:
-                case Weather_FieldIndex.SunDamage:
-                case Weather_FieldIndex.PrecipitationBeginFadeIn:
-                case Weather_FieldIndex.PrecipitationEndFadeOut:
-                case Weather_FieldIndex.ThunderLightningBeginFadeIn:
-                case Weather_FieldIndex.ThunderLightningEndFadeOut:
-                case Weather_FieldIndex.ThunderLightningFrequency:
-                case Weather_FieldIndex.Flags:
-                case Weather_FieldIndex.LightningColor:
-                case Weather_FieldIndex.VisualEffectBegin:
-                case Weather_FieldIndex.VisualEffectEnd:
-                case Weather_FieldIndex.WindDirection:
-                case Weather_FieldIndex.WindDirectionRange:
-                case Weather_FieldIndex.SkyStatics:
-                case Weather_FieldIndex.NAM2:
-                case Weather_FieldIndex.NAM3:
-                case Weather_FieldIndex.SunGlareLensFlare:
-                case Weather_FieldIndex.NAM0DataTypeState:
-                case Weather_FieldIndex.FNAMDataTypeState:
-                case Weather_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Weather_FieldIndex enu = (Weather_FieldIndex)index;
-            switch (enu)
-            {
-                case Weather_FieldIndex.CloudTextures:
-                case Weather_FieldIndex.DNAM:
-                case Weather_FieldIndex.CNAM:
-                case Weather_FieldIndex.ANAM:
-                case Weather_FieldIndex.BNAM:
-                case Weather_FieldIndex.LNAM:
-                case Weather_FieldIndex.Precipitation:
-                case Weather_FieldIndex.VisualEffect:
-                case Weather_FieldIndex.ONAM:
-                case Weather_FieldIndex.Clouds:
-                case Weather_FieldIndex.SkyUpperColor:
-                case Weather_FieldIndex.FogNearColor:
-                case Weather_FieldIndex.UnknownColor:
-                case Weather_FieldIndex.AmbientColor:
-                case Weather_FieldIndex.SunlightColor:
-                case Weather_FieldIndex.SunColor:
-                case Weather_FieldIndex.StarsColor:
-                case Weather_FieldIndex.SkyLowerColor:
-                case Weather_FieldIndex.HorizonColor:
-                case Weather_FieldIndex.EffectLightingColor:
-                case Weather_FieldIndex.CloudLodDiffuseColor:
-                case Weather_FieldIndex.CloudLodAmbientColor:
-                case Weather_FieldIndex.FogFarColor:
-                case Weather_FieldIndex.SkyStaticsColor:
-                case Weather_FieldIndex.WaterMultiplierColor:
-                case Weather_FieldIndex.SunGlareColor:
-                case Weather_FieldIndex.MoonGlareColor:
-                case Weather_FieldIndex.FogDistanceDayNear:
-                case Weather_FieldIndex.FogDistanceDayFar:
-                case Weather_FieldIndex.FogDistanceNightNear:
-                case Weather_FieldIndex.FogDistanceNightFar:
-                case Weather_FieldIndex.FogDistanceDayPower:
-                case Weather_FieldIndex.FogDistanceNightPower:
-                case Weather_FieldIndex.FogDistanceDayMax:
-                case Weather_FieldIndex.FogDistanceNightMax:
-                case Weather_FieldIndex.WindSpeed:
-                case Weather_FieldIndex.Unknown:
-                case Weather_FieldIndex.TransDelta:
-                case Weather_FieldIndex.SunGlare:
-                case Weather_FieldIndex.SunDamage:
-                case Weather_FieldIndex.PrecipitationBeginFadeIn:
-                case Weather_FieldIndex.PrecipitationEndFadeOut:
-                case Weather_FieldIndex.ThunderLightningBeginFadeIn:
-                case Weather_FieldIndex.ThunderLightningEndFadeOut:
-                case Weather_FieldIndex.ThunderLightningFrequency:
-                case Weather_FieldIndex.Flags:
-                case Weather_FieldIndex.LightningColor:
-                case Weather_FieldIndex.VisualEffectBegin:
-                case Weather_FieldIndex.VisualEffectEnd:
-                case Weather_FieldIndex.WindDirection:
-                case Weather_FieldIndex.WindDirectionRange:
-                case Weather_FieldIndex.Sounds:
-                case Weather_FieldIndex.SkyStatics:
-                case Weather_FieldIndex.ImageSpaces:
-                case Weather_FieldIndex.VolumetricLighting:
-                case Weather_FieldIndex.DirectionalAmbientLightingColors:
-                case Weather_FieldIndex.NAM2:
-                case Weather_FieldIndex.NAM3:
-                case Weather_FieldIndex.Aurora:
-                case Weather_FieldIndex.SunGlareLensFlare:
-                case Weather_FieldIndex.NAM0DataTypeState:
-                case Weather_FieldIndex.FNAMDataTypeState:
-                case Weather_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Weather_FieldIndex enu = (Weather_FieldIndex)index;
-            switch (enu)
-            {
-                case Weather_FieldIndex.CloudTextures:
-                    return "CloudTextures";
-                case Weather_FieldIndex.DNAM:
-                    return "DNAM";
-                case Weather_FieldIndex.CNAM:
-                    return "CNAM";
-                case Weather_FieldIndex.ANAM:
-                    return "ANAM";
-                case Weather_FieldIndex.BNAM:
-                    return "BNAM";
-                case Weather_FieldIndex.LNAM:
-                    return "LNAM";
-                case Weather_FieldIndex.Precipitation:
-                    return "Precipitation";
-                case Weather_FieldIndex.VisualEffect:
-                    return "VisualEffect";
-                case Weather_FieldIndex.ONAM:
-                    return "ONAM";
-                case Weather_FieldIndex.Clouds:
-                    return "Clouds";
-                case Weather_FieldIndex.SkyUpperColor:
-                    return "SkyUpperColor";
-                case Weather_FieldIndex.FogNearColor:
-                    return "FogNearColor";
-                case Weather_FieldIndex.UnknownColor:
-                    return "UnknownColor";
-                case Weather_FieldIndex.AmbientColor:
-                    return "AmbientColor";
-                case Weather_FieldIndex.SunlightColor:
-                    return "SunlightColor";
-                case Weather_FieldIndex.SunColor:
-                    return "SunColor";
-                case Weather_FieldIndex.StarsColor:
-                    return "StarsColor";
-                case Weather_FieldIndex.SkyLowerColor:
-                    return "SkyLowerColor";
-                case Weather_FieldIndex.HorizonColor:
-                    return "HorizonColor";
-                case Weather_FieldIndex.EffectLightingColor:
-                    return "EffectLightingColor";
-                case Weather_FieldIndex.CloudLodDiffuseColor:
-                    return "CloudLodDiffuseColor";
-                case Weather_FieldIndex.CloudLodAmbientColor:
-                    return "CloudLodAmbientColor";
-                case Weather_FieldIndex.FogFarColor:
-                    return "FogFarColor";
-                case Weather_FieldIndex.SkyStaticsColor:
-                    return "SkyStaticsColor";
-                case Weather_FieldIndex.WaterMultiplierColor:
-                    return "WaterMultiplierColor";
-                case Weather_FieldIndex.SunGlareColor:
-                    return "SunGlareColor";
-                case Weather_FieldIndex.MoonGlareColor:
-                    return "MoonGlareColor";
-                case Weather_FieldIndex.FogDistanceDayNear:
-                    return "FogDistanceDayNear";
-                case Weather_FieldIndex.FogDistanceDayFar:
-                    return "FogDistanceDayFar";
-                case Weather_FieldIndex.FogDistanceNightNear:
-                    return "FogDistanceNightNear";
-                case Weather_FieldIndex.FogDistanceNightFar:
-                    return "FogDistanceNightFar";
-                case Weather_FieldIndex.FogDistanceDayPower:
-                    return "FogDistanceDayPower";
-                case Weather_FieldIndex.FogDistanceNightPower:
-                    return "FogDistanceNightPower";
-                case Weather_FieldIndex.FogDistanceDayMax:
-                    return "FogDistanceDayMax";
-                case Weather_FieldIndex.FogDistanceNightMax:
-                    return "FogDistanceNightMax";
-                case Weather_FieldIndex.WindSpeed:
-                    return "WindSpeed";
-                case Weather_FieldIndex.Unknown:
-                    return "Unknown";
-                case Weather_FieldIndex.TransDelta:
-                    return "TransDelta";
-                case Weather_FieldIndex.SunGlare:
-                    return "SunGlare";
-                case Weather_FieldIndex.SunDamage:
-                    return "SunDamage";
-                case Weather_FieldIndex.PrecipitationBeginFadeIn:
-                    return "PrecipitationBeginFadeIn";
-                case Weather_FieldIndex.PrecipitationEndFadeOut:
-                    return "PrecipitationEndFadeOut";
-                case Weather_FieldIndex.ThunderLightningBeginFadeIn:
-                    return "ThunderLightningBeginFadeIn";
-                case Weather_FieldIndex.ThunderLightningEndFadeOut:
-                    return "ThunderLightningEndFadeOut";
-                case Weather_FieldIndex.ThunderLightningFrequency:
-                    return "ThunderLightningFrequency";
-                case Weather_FieldIndex.Flags:
-                    return "Flags";
-                case Weather_FieldIndex.LightningColor:
-                    return "LightningColor";
-                case Weather_FieldIndex.VisualEffectBegin:
-                    return "VisualEffectBegin";
-                case Weather_FieldIndex.VisualEffectEnd:
-                    return "VisualEffectEnd";
-                case Weather_FieldIndex.WindDirection:
-                    return "WindDirection";
-                case Weather_FieldIndex.WindDirectionRange:
-                    return "WindDirectionRange";
-                case Weather_FieldIndex.Sounds:
-                    return "Sounds";
-                case Weather_FieldIndex.SkyStatics:
-                    return "SkyStatics";
-                case Weather_FieldIndex.ImageSpaces:
-                    return "ImageSpaces";
-                case Weather_FieldIndex.VolumetricLighting:
-                    return "VolumetricLighting";
-                case Weather_FieldIndex.DirectionalAmbientLightingColors:
-                    return "DirectionalAmbientLightingColors";
-                case Weather_FieldIndex.NAM2:
-                    return "NAM2";
-                case Weather_FieldIndex.NAM3:
-                    return "NAM3";
-                case Weather_FieldIndex.Aurora:
-                    return "Aurora";
-                case Weather_FieldIndex.SunGlareLensFlare:
-                    return "SunGlareLensFlare";
-                case Weather_FieldIndex.NAM0DataTypeState:
-                    return "NAM0DataTypeState";
-                case Weather_FieldIndex.FNAMDataTypeState:
-                    return "FNAMDataTypeState";
-                case Weather_FieldIndex.DATADataTypeState:
-                    return "DATADataTypeState";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Weather_FieldIndex enu = (Weather_FieldIndex)index;
-            switch (enu)
-            {
-                case Weather_FieldIndex.CloudTextures:
-                case Weather_FieldIndex.DNAM:
-                case Weather_FieldIndex.CNAM:
-                case Weather_FieldIndex.ANAM:
-                case Weather_FieldIndex.BNAM:
-                case Weather_FieldIndex.LNAM:
-                case Weather_FieldIndex.Precipitation:
-                case Weather_FieldIndex.VisualEffect:
-                case Weather_FieldIndex.ONAM:
-                case Weather_FieldIndex.Clouds:
-                case Weather_FieldIndex.SkyUpperColor:
-                case Weather_FieldIndex.FogNearColor:
-                case Weather_FieldIndex.UnknownColor:
-                case Weather_FieldIndex.AmbientColor:
-                case Weather_FieldIndex.SunlightColor:
-                case Weather_FieldIndex.SunColor:
-                case Weather_FieldIndex.StarsColor:
-                case Weather_FieldIndex.SkyLowerColor:
-                case Weather_FieldIndex.HorizonColor:
-                case Weather_FieldIndex.EffectLightingColor:
-                case Weather_FieldIndex.CloudLodDiffuseColor:
-                case Weather_FieldIndex.CloudLodAmbientColor:
-                case Weather_FieldIndex.FogFarColor:
-                case Weather_FieldIndex.SkyStaticsColor:
-                case Weather_FieldIndex.WaterMultiplierColor:
-                case Weather_FieldIndex.SunGlareColor:
-                case Weather_FieldIndex.MoonGlareColor:
-                case Weather_FieldIndex.FogDistanceDayNear:
-                case Weather_FieldIndex.FogDistanceDayFar:
-                case Weather_FieldIndex.FogDistanceNightNear:
-                case Weather_FieldIndex.FogDistanceNightFar:
-                case Weather_FieldIndex.FogDistanceDayPower:
-                case Weather_FieldIndex.FogDistanceNightPower:
-                case Weather_FieldIndex.FogDistanceDayMax:
-                case Weather_FieldIndex.FogDistanceNightMax:
-                case Weather_FieldIndex.WindSpeed:
-                case Weather_FieldIndex.Unknown:
-                case Weather_FieldIndex.TransDelta:
-                case Weather_FieldIndex.SunGlare:
-                case Weather_FieldIndex.SunDamage:
-                case Weather_FieldIndex.PrecipitationBeginFadeIn:
-                case Weather_FieldIndex.PrecipitationEndFadeOut:
-                case Weather_FieldIndex.ThunderLightningBeginFadeIn:
-                case Weather_FieldIndex.ThunderLightningEndFadeOut:
-                case Weather_FieldIndex.ThunderLightningFrequency:
-                case Weather_FieldIndex.Flags:
-                case Weather_FieldIndex.LightningColor:
-                case Weather_FieldIndex.VisualEffectBegin:
-                case Weather_FieldIndex.VisualEffectEnd:
-                case Weather_FieldIndex.WindDirection:
-                case Weather_FieldIndex.WindDirectionRange:
-                case Weather_FieldIndex.Sounds:
-                case Weather_FieldIndex.SkyStatics:
-                case Weather_FieldIndex.ImageSpaces:
-                case Weather_FieldIndex.VolumetricLighting:
-                case Weather_FieldIndex.DirectionalAmbientLightingColors:
-                case Weather_FieldIndex.NAM2:
-                case Weather_FieldIndex.NAM3:
-                case Weather_FieldIndex.Aurora:
-                case Weather_FieldIndex.SunGlareLensFlare:
-                case Weather_FieldIndex.NAM0DataTypeState:
-                case Weather_FieldIndex.FNAMDataTypeState:
-                case Weather_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Weather_FieldIndex enu = (Weather_FieldIndex)index;
-            switch (enu)
-            {
-                case Weather_FieldIndex.CloudTextures:
-                case Weather_FieldIndex.DNAM:
-                case Weather_FieldIndex.CNAM:
-                case Weather_FieldIndex.ANAM:
-                case Weather_FieldIndex.BNAM:
-                case Weather_FieldIndex.LNAM:
-                case Weather_FieldIndex.Precipitation:
-                case Weather_FieldIndex.VisualEffect:
-                case Weather_FieldIndex.ONAM:
-                case Weather_FieldIndex.Clouds:
-                case Weather_FieldIndex.SkyUpperColor:
-                case Weather_FieldIndex.FogNearColor:
-                case Weather_FieldIndex.UnknownColor:
-                case Weather_FieldIndex.AmbientColor:
-                case Weather_FieldIndex.SunlightColor:
-                case Weather_FieldIndex.SunColor:
-                case Weather_FieldIndex.StarsColor:
-                case Weather_FieldIndex.SkyLowerColor:
-                case Weather_FieldIndex.HorizonColor:
-                case Weather_FieldIndex.EffectLightingColor:
-                case Weather_FieldIndex.CloudLodDiffuseColor:
-                case Weather_FieldIndex.CloudLodAmbientColor:
-                case Weather_FieldIndex.FogFarColor:
-                case Weather_FieldIndex.SkyStaticsColor:
-                case Weather_FieldIndex.WaterMultiplierColor:
-                case Weather_FieldIndex.SunGlareColor:
-                case Weather_FieldIndex.MoonGlareColor:
-                case Weather_FieldIndex.FogDistanceDayNear:
-                case Weather_FieldIndex.FogDistanceDayFar:
-                case Weather_FieldIndex.FogDistanceNightNear:
-                case Weather_FieldIndex.FogDistanceNightFar:
-                case Weather_FieldIndex.FogDistanceDayPower:
-                case Weather_FieldIndex.FogDistanceNightPower:
-                case Weather_FieldIndex.FogDistanceDayMax:
-                case Weather_FieldIndex.FogDistanceNightMax:
-                case Weather_FieldIndex.WindSpeed:
-                case Weather_FieldIndex.Unknown:
-                case Weather_FieldIndex.TransDelta:
-                case Weather_FieldIndex.SunGlare:
-                case Weather_FieldIndex.SunDamage:
-                case Weather_FieldIndex.PrecipitationBeginFadeIn:
-                case Weather_FieldIndex.PrecipitationEndFadeOut:
-                case Weather_FieldIndex.ThunderLightningBeginFadeIn:
-                case Weather_FieldIndex.ThunderLightningEndFadeOut:
-                case Weather_FieldIndex.ThunderLightningFrequency:
-                case Weather_FieldIndex.Flags:
-                case Weather_FieldIndex.LightningColor:
-                case Weather_FieldIndex.VisualEffectBegin:
-                case Weather_FieldIndex.VisualEffectEnd:
-                case Weather_FieldIndex.WindDirection:
-                case Weather_FieldIndex.WindDirectionRange:
-                case Weather_FieldIndex.Sounds:
-                case Weather_FieldIndex.SkyStatics:
-                case Weather_FieldIndex.ImageSpaces:
-                case Weather_FieldIndex.VolumetricLighting:
-                case Weather_FieldIndex.DirectionalAmbientLightingColors:
-                case Weather_FieldIndex.NAM2:
-                case Weather_FieldIndex.NAM3:
-                case Weather_FieldIndex.Aurora:
-                case Weather_FieldIndex.SunGlareLensFlare:
-                case Weather_FieldIndex.NAM0DataTypeState:
-                case Weather_FieldIndex.FNAMDataTypeState:
-                case Weather_FieldIndex.DATADataTypeState:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Weather_FieldIndex enu = (Weather_FieldIndex)index;
-            switch (enu)
-            {
-                case Weather_FieldIndex.CloudTextures:
-                    return typeof(String[]);
-                case Weather_FieldIndex.DNAM:
-                    return typeof(MemorySlice<Byte>);
-                case Weather_FieldIndex.CNAM:
-                    return typeof(MemorySlice<Byte>);
-                case Weather_FieldIndex.ANAM:
-                    return typeof(MemorySlice<Byte>);
-                case Weather_FieldIndex.BNAM:
-                    return typeof(MemorySlice<Byte>);
-                case Weather_FieldIndex.LNAM:
-                    return typeof(MemorySlice<Byte>);
-                case Weather_FieldIndex.Precipitation:
-                    return typeof(FormLinkNullable<ShaderParticleGeometry>);
-                case Weather_FieldIndex.VisualEffect:
-                    return typeof(FormLink<VisualEffect>);
-                case Weather_FieldIndex.ONAM:
-                    return typeof(MemorySlice<Byte>);
-                case Weather_FieldIndex.Clouds:
-                    return typeof(CloudLayer[]);
-                case Weather_FieldIndex.SkyUpperColor:
-                    return typeof(WeatherColor);
-                case Weather_FieldIndex.FogNearColor:
-                    return typeof(WeatherColor);
-                case Weather_FieldIndex.UnknownColor:
-                    return typeof(WeatherColor);
-                case Weather_FieldIndex.AmbientColor:
-                    return typeof(WeatherColor);
-                case Weather_FieldIndex.SunlightColor:
-                    return typeof(WeatherColor);
-                case Weather_FieldIndex.SunColor:
-                    return typeof(WeatherColor);
-                case Weather_FieldIndex.StarsColor:
-                    return typeof(WeatherColor);
-                case Weather_FieldIndex.SkyLowerColor:
-                    return typeof(WeatherColor);
-                case Weather_FieldIndex.HorizonColor:
-                    return typeof(WeatherColor);
-                case Weather_FieldIndex.EffectLightingColor:
-                    return typeof(WeatherColor);
-                case Weather_FieldIndex.CloudLodDiffuseColor:
-                    return typeof(WeatherColor);
-                case Weather_FieldIndex.CloudLodAmbientColor:
-                    return typeof(WeatherColor);
-                case Weather_FieldIndex.FogFarColor:
-                    return typeof(WeatherColor);
-                case Weather_FieldIndex.SkyStaticsColor:
-                    return typeof(WeatherColor);
-                case Weather_FieldIndex.WaterMultiplierColor:
-                    return typeof(WeatherColor);
-                case Weather_FieldIndex.SunGlareColor:
-                    return typeof(WeatherColor);
-                case Weather_FieldIndex.MoonGlareColor:
-                    return typeof(WeatherColor);
-                case Weather_FieldIndex.FogDistanceDayNear:
-                    return typeof(Single);
-                case Weather_FieldIndex.FogDistanceDayFar:
-                    return typeof(Single);
-                case Weather_FieldIndex.FogDistanceNightNear:
-                    return typeof(Single);
-                case Weather_FieldIndex.FogDistanceNightFar:
-                    return typeof(Single);
-                case Weather_FieldIndex.FogDistanceDayPower:
-                    return typeof(Single);
-                case Weather_FieldIndex.FogDistanceNightPower:
-                    return typeof(Single);
-                case Weather_FieldIndex.FogDistanceDayMax:
-                    return typeof(Single);
-                case Weather_FieldIndex.FogDistanceNightMax:
-                    return typeof(Single);
-                case Weather_FieldIndex.WindSpeed:
-                    return typeof(Percent);
-                case Weather_FieldIndex.Unknown:
-                    return typeof(UInt16);
-                case Weather_FieldIndex.TransDelta:
-                    return typeof(Single);
-                case Weather_FieldIndex.SunGlare:
-                    return typeof(Percent);
-                case Weather_FieldIndex.SunDamage:
-                    return typeof(Percent);
-                case Weather_FieldIndex.PrecipitationBeginFadeIn:
-                    return typeof(Percent);
-                case Weather_FieldIndex.PrecipitationEndFadeOut:
-                    return typeof(Percent);
-                case Weather_FieldIndex.ThunderLightningBeginFadeIn:
-                    return typeof(Percent);
-                case Weather_FieldIndex.ThunderLightningEndFadeOut:
-                    return typeof(Percent);
-                case Weather_FieldIndex.ThunderLightningFrequency:
-                    return typeof(Percent);
-                case Weather_FieldIndex.Flags:
-                    return typeof(Weather.Flag);
-                case Weather_FieldIndex.LightningColor:
-                    return typeof(Color);
-                case Weather_FieldIndex.VisualEffectBegin:
-                    return typeof(Percent);
-                case Weather_FieldIndex.VisualEffectEnd:
-                    return typeof(Percent);
-                case Weather_FieldIndex.WindDirection:
-                    return typeof(Single);
-                case Weather_FieldIndex.WindDirectionRange:
-                    return typeof(Single);
-                case Weather_FieldIndex.Sounds:
-                    return typeof(IExtendedList<WeatherSound>);
-                case Weather_FieldIndex.SkyStatics:
-                    return typeof(IExtendedList<IFormLink<Static>>);
-                case Weather_FieldIndex.ImageSpaces:
-                    return typeof(WeatherImageSpaces);
-                case Weather_FieldIndex.VolumetricLighting:
-                    return typeof(WeatherVolumetricLighting);
-                case Weather_FieldIndex.DirectionalAmbientLightingColors:
-                    return typeof(WeatherAmbientColorSet);
-                case Weather_FieldIndex.NAM2:
-                    return typeof(MemorySlice<Byte>);
-                case Weather_FieldIndex.NAM3:
-                    return typeof(MemorySlice<Byte>);
-                case Weather_FieldIndex.Aurora:
-                    return typeof(Model);
-                case Weather_FieldIndex.SunGlareLensFlare:
-                    return typeof(FormLinkNullable<LensFlare>);
-                case Weather_FieldIndex.NAM0DataTypeState:
-                    return typeof(Weather.NAM0DataType);
-                case Weather_FieldIndex.FNAMDataTypeState:
-                    return typeof(Weather.FNAMDataType);
-                case Weather_FieldIndex.DATADataTypeState:
-                    return typeof(Weather.DATADataType);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.WTHR;
         public static readonly Type BinaryWriteTranslation = typeof(WeatherBinaryWriteTranslation);
         #region Interface
@@ -4199,14 +3414,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -4228,8 +3443,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ANAM = default;
             item.BNAM = default;
             item.LNAM = default;
-            item.Precipitation = FormLinkNullable<ShaderParticleGeometry>.Null;
-            item.VisualEffect = FormLink<VisualEffect>.Null;
+            item.Precipitation = FormLinkNullable<IShaderParticleGeometryGetter>.Null;
+            item.VisualEffect = FormLink<IVisualEffectGetter>.Null;
             item.ONAM = default;
             item.Clouds.Fill(() => new CloudLayer());
             item.SkyUpperColor.Clear();
@@ -4281,7 +3496,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.NAM2 = default;
             item.NAM3 = default;
             item.Aurora = null;
-            item.SunGlareLensFlare = FormLinkNullable<LensFlare>.Null;
+            item.SunGlareLensFlare = FormLinkNullable<ILensFlareGetter>.Null;
             item.NAM0DataTypeState = default;
             item.FNAMDataTypeState = default;
             item.DATADataTypeState = default;
@@ -5237,11 +4452,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.Precipitation) ?? true))
             {
-                item.Precipitation = new FormLinkNullable<ShaderParticleGeometry>(rhs.Precipitation.FormKey);
+                item.Precipitation = new FormLinkNullable<IShaderParticleGeometryGetter>(rhs.Precipitation.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.VisualEffect) ?? true))
             {
-                item.VisualEffect = new FormLink<VisualEffect>(rhs.VisualEffect.FormKey);
+                item.VisualEffect = new FormLink<IVisualEffectGetter>(rhs.VisualEffect.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.ONAM) ?? true))
             {
@@ -5766,7 +4981,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.SkyStatics.SetTo(
                         rhs.SkyStatics
-                        .Select(r => (IFormLink<Static>)new FormLink<Static>(r.FormKey)));
+                        .Select(r => (IFormLink<IStaticGetter>)new FormLink<IStaticGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5906,7 +5121,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.SunGlareLensFlare) ?? true))
             {
-                item.SunGlareLensFlare = new FormLinkNullable<LensFlare>(rhs.SunGlareLensFlare.FormKey);
+                item.SunGlareLensFlare = new FormLinkNullable<ILensFlareGetter>(rhs.SunGlareLensFlare.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.NAM0DataTypeState) ?? true))
             {
@@ -6760,7 +5975,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.TNAM:
                 {
                     item.SkyStatics.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Static>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IStaticGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));

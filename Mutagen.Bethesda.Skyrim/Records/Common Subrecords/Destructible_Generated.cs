@@ -53,8 +53,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Stages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<DestructionStage> _Stages = new ExtendedList<DestructionStage>();
-        public IExtendedList<DestructionStage> Stages
+        private ExtendedList<DestructionStage> _Stages = new ExtendedList<DestructionStage>();
+        public ExtendedList<DestructionStage> Stages
         {
             get => this._Stages;
             protected set => this._Stages = value;
@@ -551,7 +551,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new DestructableData? Data { get; set; }
-        new IExtendedList<DestructionStage> Stages { get; }
+        new ExtendedList<DestructionStage> Stages { get; }
     }
 
     public partial interface IDestructibleGetter :
@@ -783,113 +783,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "DATA":
-                    return (ushort)Destructible_FieldIndex.Data;
-                case "STAGES":
-                    return (ushort)Destructible_FieldIndex.Stages;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            Destructible_FieldIndex enu = (Destructible_FieldIndex)index;
-            switch (enu)
-            {
-                case Destructible_FieldIndex.Stages:
-                    return true;
-                case Destructible_FieldIndex.Data:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            Destructible_FieldIndex enu = (Destructible_FieldIndex)index;
-            switch (enu)
-            {
-                case Destructible_FieldIndex.Data:
-                case Destructible_FieldIndex.Stages:
-                    return true;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            Destructible_FieldIndex enu = (Destructible_FieldIndex)index;
-            switch (enu)
-            {
-                case Destructible_FieldIndex.Data:
-                case Destructible_FieldIndex.Stages:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            Destructible_FieldIndex enu = (Destructible_FieldIndex)index;
-            switch (enu)
-            {
-                case Destructible_FieldIndex.Data:
-                    return "Data";
-                case Destructible_FieldIndex.Stages:
-                    return "Stages";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            Destructible_FieldIndex enu = (Destructible_FieldIndex)index;
-            switch (enu)
-            {
-                case Destructible_FieldIndex.Data:
-                case Destructible_FieldIndex.Stages:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            Destructible_FieldIndex enu = (Destructible_FieldIndex)index;
-            switch (enu)
-            {
-                case Destructible_FieldIndex.Data:
-                case Destructible_FieldIndex.Stages:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            Destructible_FieldIndex enu = (Destructible_FieldIndex)index;
-            switch (enu)
-            {
-                case Destructible_FieldIndex.Data:
-                    return typeof(DestructableData);
-                case Destructible_FieldIndex.Stages:
-                    return typeof(IExtendedList<DestructionStage>);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -922,14 +815,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }

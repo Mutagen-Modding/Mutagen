@@ -44,8 +44,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region SlotParents
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<EquipType>>? _SlotParents;
-        public IExtendedList<IFormLink<EquipType>>? SlotParents
+        private ExtendedList<IFormLink<IEquipTypeGetter>>? _SlotParents;
+        public ExtendedList<IFormLink<IEquipTypeGetter>>? SlotParents
         {
             get => this._SlotParents;
             set => this._SlotParents = value;
@@ -556,7 +556,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IEquipTypeInternal>,
         ILinkedFormKeyContainer
     {
-        new IExtendedList<IFormLink<EquipType>>? SlotParents { get; set; }
+        new ExtendedList<IFormLink<IEquipTypeGetter>>? SlotParents { get; set; }
         new Boolean? UseAllParents { get; set; }
     }
 
@@ -771,113 +771,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "SLOTPARENTS":
-                    return (ushort)EquipType_FieldIndex.SlotParents;
-                case "USEALLPARENTS":
-                    return (ushort)EquipType_FieldIndex.UseAllParents;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            EquipType_FieldIndex enu = (EquipType_FieldIndex)index;
-            switch (enu)
-            {
-                case EquipType_FieldIndex.SlotParents:
-                    return true;
-                case EquipType_FieldIndex.UseAllParents:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            EquipType_FieldIndex enu = (EquipType_FieldIndex)index;
-            switch (enu)
-            {
-                case EquipType_FieldIndex.SlotParents:
-                case EquipType_FieldIndex.UseAllParents:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            EquipType_FieldIndex enu = (EquipType_FieldIndex)index;
-            switch (enu)
-            {
-                case EquipType_FieldIndex.SlotParents:
-                case EquipType_FieldIndex.UseAllParents:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            EquipType_FieldIndex enu = (EquipType_FieldIndex)index;
-            switch (enu)
-            {
-                case EquipType_FieldIndex.SlotParents:
-                    return "SlotParents";
-                case EquipType_FieldIndex.UseAllParents:
-                    return "UseAllParents";
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            EquipType_FieldIndex enu = (EquipType_FieldIndex)index;
-            switch (enu)
-            {
-                case EquipType_FieldIndex.SlotParents:
-                case EquipType_FieldIndex.UseAllParents:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            EquipType_FieldIndex enu = (EquipType_FieldIndex)index;
-            switch (enu)
-            {
-                case EquipType_FieldIndex.SlotParents:
-                case EquipType_FieldIndex.UseAllParents:
-                    return false;
-                default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            EquipType_FieldIndex enu = (EquipType_FieldIndex)index;
-            switch (enu)
-            {
-                case EquipType_FieldIndex.SlotParents:
-                    return typeof(IExtendedList<IFormLink<EquipType>>);
-                case EquipType_FieldIndex.UseAllParents:
-                    return typeof(Boolean);
-                default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.EQUP;
         public static readonly Type BinaryWriteTranslation = typeof(EquipTypeBinaryWriteTranslation);
         #region Interface
@@ -898,14 +791,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1255,8 +1148,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.SlotParents = 
                             rhs.SlotParents
-                            .Select(r => (IFormLink<EquipType>)new FormLink<EquipType>(r.FormKey))
-                            .ToExtendedList<IFormLink<EquipType>>();
+                            .Select(r => (IFormLink<IEquipTypeGetter>)new FormLink<IEquipTypeGetter>(r.FormKey))
+                            .ToExtendedList<IFormLink<IEquipTypeGetter>>();
                     }
                     else
                     {
@@ -1537,10 +1430,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SlotParents = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<EquipType>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IEquipTypeGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<EquipType>>();
+                        .CastExtendedList<IFormLink<IEquipTypeGetter>>();
                     return (int)EquipType_FieldIndex.SlotParents;
                 }
                 case RecordTypeInts.DATA:

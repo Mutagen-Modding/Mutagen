@@ -48,9 +48,7 @@ namespace Mutagen.Bethesda.Skyrim
         public UInt16 Unknown2 { get; set; } = default;
         #endregion
         #region ParameterOneRecord
-        public FormLink<SkyrimMajorRecord> ParameterOneRecord { get; set; } = new FormLink<SkyrimMajorRecord>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISkyrimMajorRecordGetter> IFunctionConditionDataGetter.ParameterOneRecord => this.ParameterOneRecord.ToGetter<SkyrimMajorRecord, ISkyrimMajorRecordGetter>();
+        public FormLink<ISkyrimMajorRecordGetter> ParameterOneRecord { get; set; } = new FormLink<ISkyrimMajorRecordGetter>();
         #endregion
         #region ParameterOneNumber
         public Int32 ParameterOneNumber { get; set; } = default;
@@ -61,9 +59,7 @@ namespace Mutagen.Bethesda.Skyrim
         String? IFunctionConditionDataGetter.ParameterOneString => this.ParameterOneString;
         #endregion
         #region ParameterTwoRecord
-        public FormLink<SkyrimMajorRecord> ParameterTwoRecord { get; set; } = new FormLink<SkyrimMajorRecord>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<ISkyrimMajorRecordGetter> IFunctionConditionDataGetter.ParameterTwoRecord => this.ParameterTwoRecord.ToGetter<SkyrimMajorRecord, ISkyrimMajorRecordGetter>();
+        public FormLink<ISkyrimMajorRecordGetter> ParameterTwoRecord { get; set; } = new FormLink<ISkyrimMajorRecordGetter>();
         #endregion
         #region ParameterTwoNumber
         public Int32 ParameterTwoNumber { get; set; } = default;
@@ -729,10 +725,10 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new UInt16 Function { get; set; }
         new UInt16 Unknown2 { get; set; }
-        new FormLink<SkyrimMajorRecord> ParameterOneRecord { get; set; }
+        new FormLink<ISkyrimMajorRecordGetter> ParameterOneRecord { get; set; }
         new Int32 ParameterOneNumber { get; set; }
         new String? ParameterOneString { get; set; }
-        new FormLink<SkyrimMajorRecord> ParameterTwoRecord { get; set; }
+        new FormLink<ISkyrimMajorRecordGetter> ParameterTwoRecord { get; set; }
         new Int32 ParameterTwoNumber { get; set; }
         new String? ParameterTwoString { get; set; }
         new Int32 Unknown3 { get; set; }
@@ -956,211 +952,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "FUNCTION":
-                    return (ushort)FunctionConditionData_FieldIndex.Function;
-                case "UNKNOWN2":
-                    return (ushort)FunctionConditionData_FieldIndex.Unknown2;
-                case "PARAMETERONERECORD":
-                    return (ushort)FunctionConditionData_FieldIndex.ParameterOneRecord;
-                case "PARAMETERONENUMBER":
-                    return (ushort)FunctionConditionData_FieldIndex.ParameterOneNumber;
-                case "PARAMETERONESTRING":
-                    return (ushort)FunctionConditionData_FieldIndex.ParameterOneString;
-                case "PARAMETERTWORECORD":
-                    return (ushort)FunctionConditionData_FieldIndex.ParameterTwoRecord;
-                case "PARAMETERTWONUMBER":
-                    return (ushort)FunctionConditionData_FieldIndex.ParameterTwoNumber;
-                case "PARAMETERTWOSTRING":
-                    return (ushort)FunctionConditionData_FieldIndex.ParameterTwoString;
-                case "UNKNOWN3":
-                    return (ushort)FunctionConditionData_FieldIndex.Unknown3;
-                case "UNKNOWN4":
-                    return (ushort)FunctionConditionData_FieldIndex.Unknown4;
-                case "UNKNOWN5":
-                    return (ushort)FunctionConditionData_FieldIndex.Unknown5;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            FunctionConditionData_FieldIndex enu = (FunctionConditionData_FieldIndex)index;
-            switch (enu)
-            {
-                case FunctionConditionData_FieldIndex.Function:
-                case FunctionConditionData_FieldIndex.Unknown2:
-                case FunctionConditionData_FieldIndex.ParameterOneRecord:
-                case FunctionConditionData_FieldIndex.ParameterOneNumber:
-                case FunctionConditionData_FieldIndex.ParameterOneString:
-                case FunctionConditionData_FieldIndex.ParameterTwoRecord:
-                case FunctionConditionData_FieldIndex.ParameterTwoNumber:
-                case FunctionConditionData_FieldIndex.ParameterTwoString:
-                case FunctionConditionData_FieldIndex.Unknown3:
-                case FunctionConditionData_FieldIndex.Unknown4:
-                case FunctionConditionData_FieldIndex.Unknown5:
-                    return false;
-                default:
-                    return ConditionData_Registration.GetNthIsEnumerable(index);
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            FunctionConditionData_FieldIndex enu = (FunctionConditionData_FieldIndex)index;
-            switch (enu)
-            {
-                case FunctionConditionData_FieldIndex.Function:
-                case FunctionConditionData_FieldIndex.Unknown2:
-                case FunctionConditionData_FieldIndex.ParameterOneRecord:
-                case FunctionConditionData_FieldIndex.ParameterOneNumber:
-                case FunctionConditionData_FieldIndex.ParameterOneString:
-                case FunctionConditionData_FieldIndex.ParameterTwoRecord:
-                case FunctionConditionData_FieldIndex.ParameterTwoNumber:
-                case FunctionConditionData_FieldIndex.ParameterTwoString:
-                case FunctionConditionData_FieldIndex.Unknown3:
-                case FunctionConditionData_FieldIndex.Unknown4:
-                case FunctionConditionData_FieldIndex.Unknown5:
-                    return false;
-                default:
-                    return ConditionData_Registration.GetNthIsLoqui(index);
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            FunctionConditionData_FieldIndex enu = (FunctionConditionData_FieldIndex)index;
-            switch (enu)
-            {
-                case FunctionConditionData_FieldIndex.Function:
-                case FunctionConditionData_FieldIndex.Unknown2:
-                case FunctionConditionData_FieldIndex.ParameterOneRecord:
-                case FunctionConditionData_FieldIndex.ParameterOneNumber:
-                case FunctionConditionData_FieldIndex.ParameterOneString:
-                case FunctionConditionData_FieldIndex.ParameterTwoRecord:
-                case FunctionConditionData_FieldIndex.ParameterTwoNumber:
-                case FunctionConditionData_FieldIndex.ParameterTwoString:
-                case FunctionConditionData_FieldIndex.Unknown3:
-                case FunctionConditionData_FieldIndex.Unknown4:
-                case FunctionConditionData_FieldIndex.Unknown5:
-                    return false;
-                default:
-                    return ConditionData_Registration.GetNthIsSingleton(index);
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            FunctionConditionData_FieldIndex enu = (FunctionConditionData_FieldIndex)index;
-            switch (enu)
-            {
-                case FunctionConditionData_FieldIndex.Function:
-                    return "Function";
-                case FunctionConditionData_FieldIndex.Unknown2:
-                    return "Unknown2";
-                case FunctionConditionData_FieldIndex.ParameterOneRecord:
-                    return "ParameterOneRecord";
-                case FunctionConditionData_FieldIndex.ParameterOneNumber:
-                    return "ParameterOneNumber";
-                case FunctionConditionData_FieldIndex.ParameterOneString:
-                    return "ParameterOneString";
-                case FunctionConditionData_FieldIndex.ParameterTwoRecord:
-                    return "ParameterTwoRecord";
-                case FunctionConditionData_FieldIndex.ParameterTwoNumber:
-                    return "ParameterTwoNumber";
-                case FunctionConditionData_FieldIndex.ParameterTwoString:
-                    return "ParameterTwoString";
-                case FunctionConditionData_FieldIndex.Unknown3:
-                    return "Unknown3";
-                case FunctionConditionData_FieldIndex.Unknown4:
-                    return "Unknown4";
-                case FunctionConditionData_FieldIndex.Unknown5:
-                    return "Unknown5";
-                default:
-                    return ConditionData_Registration.GetNthName(index);
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            FunctionConditionData_FieldIndex enu = (FunctionConditionData_FieldIndex)index;
-            switch (enu)
-            {
-                case FunctionConditionData_FieldIndex.Function:
-                case FunctionConditionData_FieldIndex.Unknown2:
-                case FunctionConditionData_FieldIndex.ParameterOneRecord:
-                case FunctionConditionData_FieldIndex.ParameterOneNumber:
-                case FunctionConditionData_FieldIndex.ParameterOneString:
-                case FunctionConditionData_FieldIndex.ParameterTwoRecord:
-                case FunctionConditionData_FieldIndex.ParameterTwoNumber:
-                case FunctionConditionData_FieldIndex.ParameterTwoString:
-                case FunctionConditionData_FieldIndex.Unknown3:
-                case FunctionConditionData_FieldIndex.Unknown4:
-                case FunctionConditionData_FieldIndex.Unknown5:
-                    return false;
-                default:
-                    return ConditionData_Registration.IsNthDerivative(index);
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            FunctionConditionData_FieldIndex enu = (FunctionConditionData_FieldIndex)index;
-            switch (enu)
-            {
-                case FunctionConditionData_FieldIndex.Function:
-                case FunctionConditionData_FieldIndex.Unknown2:
-                case FunctionConditionData_FieldIndex.ParameterOneRecord:
-                case FunctionConditionData_FieldIndex.ParameterOneNumber:
-                case FunctionConditionData_FieldIndex.ParameterOneString:
-                case FunctionConditionData_FieldIndex.ParameterTwoRecord:
-                case FunctionConditionData_FieldIndex.ParameterTwoNumber:
-                case FunctionConditionData_FieldIndex.ParameterTwoString:
-                case FunctionConditionData_FieldIndex.Unknown3:
-                case FunctionConditionData_FieldIndex.Unknown4:
-                case FunctionConditionData_FieldIndex.Unknown5:
-                    return false;
-                default:
-                    return ConditionData_Registration.IsProtected(index);
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            FunctionConditionData_FieldIndex enu = (FunctionConditionData_FieldIndex)index;
-            switch (enu)
-            {
-                case FunctionConditionData_FieldIndex.Function:
-                    return typeof(UInt16);
-                case FunctionConditionData_FieldIndex.Unknown2:
-                    return typeof(UInt16);
-                case FunctionConditionData_FieldIndex.ParameterOneRecord:
-                    return typeof(FormLink<SkyrimMajorRecord>);
-                case FunctionConditionData_FieldIndex.ParameterOneNumber:
-                    return typeof(Int32);
-                case FunctionConditionData_FieldIndex.ParameterOneString:
-                    return typeof(String);
-                case FunctionConditionData_FieldIndex.ParameterTwoRecord:
-                    return typeof(FormLink<SkyrimMajorRecord>);
-                case FunctionConditionData_FieldIndex.ParameterTwoNumber:
-                    return typeof(Int32);
-                case FunctionConditionData_FieldIndex.ParameterTwoString:
-                    return typeof(String);
-                case FunctionConditionData_FieldIndex.Unknown3:
-                    return typeof(Int32);
-                case FunctionConditionData_FieldIndex.Unknown4:
-                    return typeof(Int32);
-                case FunctionConditionData_FieldIndex.Unknown5:
-                    return typeof(Int32);
-                default:
-                    return ConditionData_Registration.GetNthType(index);
-            }
-        }
-
         public static readonly Type BinaryWriteTranslation = typeof(FunctionConditionDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1180,14 +971,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1205,10 +996,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.Function = default;
             item.Unknown2 = default;
-            item.ParameterOneRecord = FormLink<SkyrimMajorRecord>.Null;
+            item.ParameterOneRecord = FormLink<ISkyrimMajorRecordGetter>.Null;
             item.ParameterOneNumber = default;
             item.ParameterOneString = default;
-            item.ParameterTwoRecord = FormLink<SkyrimMajorRecord>.Null;
+            item.ParameterTwoRecord = FormLink<ISkyrimMajorRecordGetter>.Null;
             item.ParameterTwoNumber = default;
             item.ParameterTwoString = default;
             item.Unknown3 = default;
@@ -1505,7 +1296,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterOneRecord) ?? true))
             {
-                item.ParameterOneRecord = new FormLink<SkyrimMajorRecord>(rhs.ParameterOneRecord.FormKey);
+                item.ParameterOneRecord = new FormLink<ISkyrimMajorRecordGetter>(rhs.ParameterOneRecord.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterOneNumber) ?? true))
             {
@@ -1517,7 +1308,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterTwoRecord) ?? true))
             {
-                item.ParameterTwoRecord = new FormLink<SkyrimMajorRecord>(rhs.ParameterTwoRecord.FormKey);
+                item.ParameterTwoRecord = new FormLink<ISkyrimMajorRecordGetter>(rhs.ParameterTwoRecord.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterTwoNumber) ?? true))
             {

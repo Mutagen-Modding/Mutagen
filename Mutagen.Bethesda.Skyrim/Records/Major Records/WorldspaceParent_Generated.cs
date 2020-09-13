@@ -40,9 +40,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Worldspace
-        public FormLink<Worldspace> Worldspace { get; set; } = new FormLink<Worldspace>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<IWorldspaceGetter> IWorldspaceParentGetter.Worldspace => this.Worldspace.ToGetter<Worldspace, IWorldspaceGetter>();
+        public FormLink<IWorldspaceGetter> Worldspace { get; set; } = new FormLink<IWorldspaceGetter>();
         #endregion
         #region Flags
         public WorldspaceParent.Flag Flags { get; set; } = default;
@@ -451,7 +449,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IWorldspaceParent>,
         ILinkedFormKeyContainer
     {
-        new FormLink<Worldspace> Worldspace { get; set; }
+        new FormLink<IWorldspaceGetter> Worldspace { get; set; }
         new WorldspaceParent.Flag Flags { get; set; }
     }
 
@@ -684,112 +682,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "WORLDSPACE":
-                    return (ushort)WorldspaceParent_FieldIndex.Worldspace;
-                case "FLAGS":
-                    return (ushort)WorldspaceParent_FieldIndex.Flags;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            WorldspaceParent_FieldIndex enu = (WorldspaceParent_FieldIndex)index;
-            switch (enu)
-            {
-                case WorldspaceParent_FieldIndex.Worldspace:
-                case WorldspaceParent_FieldIndex.Flags:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            WorldspaceParent_FieldIndex enu = (WorldspaceParent_FieldIndex)index;
-            switch (enu)
-            {
-                case WorldspaceParent_FieldIndex.Worldspace:
-                case WorldspaceParent_FieldIndex.Flags:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            WorldspaceParent_FieldIndex enu = (WorldspaceParent_FieldIndex)index;
-            switch (enu)
-            {
-                case WorldspaceParent_FieldIndex.Worldspace:
-                case WorldspaceParent_FieldIndex.Flags:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            WorldspaceParent_FieldIndex enu = (WorldspaceParent_FieldIndex)index;
-            switch (enu)
-            {
-                case WorldspaceParent_FieldIndex.Worldspace:
-                    return "Worldspace";
-                case WorldspaceParent_FieldIndex.Flags:
-                    return "Flags";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            WorldspaceParent_FieldIndex enu = (WorldspaceParent_FieldIndex)index;
-            switch (enu)
-            {
-                case WorldspaceParent_FieldIndex.Worldspace:
-                case WorldspaceParent_FieldIndex.Flags:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            WorldspaceParent_FieldIndex enu = (WorldspaceParent_FieldIndex)index;
-            switch (enu)
-            {
-                case WorldspaceParent_FieldIndex.Worldspace:
-                case WorldspaceParent_FieldIndex.Flags:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            WorldspaceParent_FieldIndex enu = (WorldspaceParent_FieldIndex)index;
-            switch (enu)
-            {
-                case WorldspaceParent_FieldIndex.Worldspace:
-                    return typeof(FormLink<Worldspace>);
-                case WorldspaceParent_FieldIndex.Flags:
-                    return typeof(WorldspaceParent.Flag);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.WNAM;
         public static readonly Type BinaryWriteTranslation = typeof(WorldspaceParentBinaryWriteTranslation);
         #region Interface
@@ -810,14 +702,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -833,7 +725,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IWorldspaceParent item)
         {
             ClearPartial();
-            item.Worldspace = FormLink<Worldspace>.Null;
+            item.Worldspace = FormLink<IWorldspaceGetter>.Null;
             item.Flags = default;
         }
         
@@ -990,7 +882,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)WorldspaceParent_FieldIndex.Worldspace) ?? true))
             {
-                item.Worldspace = new FormLink<Worldspace>(rhs.Worldspace.FormKey);
+                item.Worldspace = new FormLink<IWorldspaceGetter>(rhs.Worldspace.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)WorldspaceParent_FieldIndex.Flags) ?? true))
             {

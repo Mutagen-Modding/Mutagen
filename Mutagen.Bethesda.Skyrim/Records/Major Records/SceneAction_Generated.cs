@@ -91,8 +91,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Packages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<IFormLink<Package>> _Packages = new ExtendedList<IFormLink<Package>>();
-        public IExtendedList<IFormLink<Package>> Packages
+        private ExtendedList<IFormLink<IPackageGetter>> _Packages = new ExtendedList<IFormLink<IPackageGetter>>();
+        public ExtendedList<IFormLink<IPackageGetter>> Packages
         {
             get => this._Packages;
             protected set => this._Packages = value;
@@ -104,9 +104,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region Topic
-        public FormLinkNullable<DialogTopic> Topic { get; set; } = new FormLinkNullable<DialogTopic>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLinkNullable<IDialogTopicGetter> ISceneActionGetter.Topic => this.Topic.ToGetter<DialogTopic, IDialogTopicGetter>();
+        public FormLinkNullable<IDialogTopicGetter> Topic { get; set; } = new FormLinkNullable<IDialogTopicGetter>();
         #endregion
         #region HeadtrackActorID
         public Int32? HeadtrackActorID { get; set; }
@@ -1057,8 +1055,8 @@ namespace Mutagen.Bethesda.Skyrim
         new UInt32? StartPhase { get; set; }
         new UInt32? EndPhase { get; set; }
         new Single? TimerSeconds { get; set; }
-        new IExtendedList<IFormLink<Package>> Packages { get; }
-        new FormLinkNullable<DialogTopic> Topic { get; set; }
+        new ExtendedList<IFormLink<IPackageGetter>> Packages { get; }
+        new FormLinkNullable<IDialogTopicGetter> Topic { get; set; }
         new Int32? HeadtrackActorID { get; set; }
         new Single? LoopingMax { get; set; }
         new Single? LoopingMin { get; set; }
@@ -1326,279 +1324,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ushort? GetNameIndex(StringCaseAgnostic str)
-        {
-            switch (str.Upper)
-            {
-                case "TYPE":
-                    return (ushort)SceneAction_FieldIndex.Type;
-                case "NAME":
-                    return (ushort)SceneAction_FieldIndex.Name;
-                case "ACTORID":
-                    return (ushort)SceneAction_FieldIndex.ActorID;
-                case "LNAM":
-                    return (ushort)SceneAction_FieldIndex.LNAM;
-                case "INDEX":
-                    return (ushort)SceneAction_FieldIndex.Index;
-                case "FLAGS":
-                    return (ushort)SceneAction_FieldIndex.Flags;
-                case "STARTPHASE":
-                    return (ushort)SceneAction_FieldIndex.StartPhase;
-                case "ENDPHASE":
-                    return (ushort)SceneAction_FieldIndex.EndPhase;
-                case "TIMERSECONDS":
-                    return (ushort)SceneAction_FieldIndex.TimerSeconds;
-                case "PACKAGES":
-                    return (ushort)SceneAction_FieldIndex.Packages;
-                case "TOPIC":
-                    return (ushort)SceneAction_FieldIndex.Topic;
-                case "HEADTRACKACTORID":
-                    return (ushort)SceneAction_FieldIndex.HeadtrackActorID;
-                case "LOOPINGMAX":
-                    return (ushort)SceneAction_FieldIndex.LoopingMax;
-                case "LOOPINGMIN":
-                    return (ushort)SceneAction_FieldIndex.LoopingMin;
-                case "EMOTION":
-                    return (ushort)SceneAction_FieldIndex.Emotion;
-                case "EMOTIONVALUE":
-                    return (ushort)SceneAction_FieldIndex.EmotionValue;
-                case "UNUSED":
-                    return (ushort)SceneAction_FieldIndex.Unused;
-                default:
-                    return null;
-            }
-        }
-
-        public static bool GetNthIsEnumerable(ushort index)
-        {
-            SceneAction_FieldIndex enu = (SceneAction_FieldIndex)index;
-            switch (enu)
-            {
-                case SceneAction_FieldIndex.Packages:
-                    return true;
-                case SceneAction_FieldIndex.Type:
-                case SceneAction_FieldIndex.Name:
-                case SceneAction_FieldIndex.ActorID:
-                case SceneAction_FieldIndex.LNAM:
-                case SceneAction_FieldIndex.Index:
-                case SceneAction_FieldIndex.Flags:
-                case SceneAction_FieldIndex.StartPhase:
-                case SceneAction_FieldIndex.EndPhase:
-                case SceneAction_FieldIndex.TimerSeconds:
-                case SceneAction_FieldIndex.Topic:
-                case SceneAction_FieldIndex.HeadtrackActorID:
-                case SceneAction_FieldIndex.LoopingMax:
-                case SceneAction_FieldIndex.LoopingMin:
-                case SceneAction_FieldIndex.Emotion:
-                case SceneAction_FieldIndex.EmotionValue:
-                case SceneAction_FieldIndex.Unused:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsLoqui(ushort index)
-        {
-            SceneAction_FieldIndex enu = (SceneAction_FieldIndex)index;
-            switch (enu)
-            {
-                case SceneAction_FieldIndex.Unused:
-                    return true;
-                case SceneAction_FieldIndex.Type:
-                case SceneAction_FieldIndex.Name:
-                case SceneAction_FieldIndex.ActorID:
-                case SceneAction_FieldIndex.LNAM:
-                case SceneAction_FieldIndex.Index:
-                case SceneAction_FieldIndex.Flags:
-                case SceneAction_FieldIndex.StartPhase:
-                case SceneAction_FieldIndex.EndPhase:
-                case SceneAction_FieldIndex.TimerSeconds:
-                case SceneAction_FieldIndex.Packages:
-                case SceneAction_FieldIndex.Topic:
-                case SceneAction_FieldIndex.HeadtrackActorID:
-                case SceneAction_FieldIndex.LoopingMax:
-                case SceneAction_FieldIndex.LoopingMin:
-                case SceneAction_FieldIndex.Emotion:
-                case SceneAction_FieldIndex.EmotionValue:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthIsSingleton(ushort index)
-        {
-            SceneAction_FieldIndex enu = (SceneAction_FieldIndex)index;
-            switch (enu)
-            {
-                case SceneAction_FieldIndex.Type:
-                case SceneAction_FieldIndex.Name:
-                case SceneAction_FieldIndex.ActorID:
-                case SceneAction_FieldIndex.LNAM:
-                case SceneAction_FieldIndex.Index:
-                case SceneAction_FieldIndex.Flags:
-                case SceneAction_FieldIndex.StartPhase:
-                case SceneAction_FieldIndex.EndPhase:
-                case SceneAction_FieldIndex.TimerSeconds:
-                case SceneAction_FieldIndex.Packages:
-                case SceneAction_FieldIndex.Topic:
-                case SceneAction_FieldIndex.HeadtrackActorID:
-                case SceneAction_FieldIndex.LoopingMax:
-                case SceneAction_FieldIndex.LoopingMin:
-                case SceneAction_FieldIndex.Emotion:
-                case SceneAction_FieldIndex.EmotionValue:
-                case SceneAction_FieldIndex.Unused:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static string GetNthName(ushort index)
-        {
-            SceneAction_FieldIndex enu = (SceneAction_FieldIndex)index;
-            switch (enu)
-            {
-                case SceneAction_FieldIndex.Type:
-                    return "Type";
-                case SceneAction_FieldIndex.Name:
-                    return "Name";
-                case SceneAction_FieldIndex.ActorID:
-                    return "ActorID";
-                case SceneAction_FieldIndex.LNAM:
-                    return "LNAM";
-                case SceneAction_FieldIndex.Index:
-                    return "Index";
-                case SceneAction_FieldIndex.Flags:
-                    return "Flags";
-                case SceneAction_FieldIndex.StartPhase:
-                    return "StartPhase";
-                case SceneAction_FieldIndex.EndPhase:
-                    return "EndPhase";
-                case SceneAction_FieldIndex.TimerSeconds:
-                    return "TimerSeconds";
-                case SceneAction_FieldIndex.Packages:
-                    return "Packages";
-                case SceneAction_FieldIndex.Topic:
-                    return "Topic";
-                case SceneAction_FieldIndex.HeadtrackActorID:
-                    return "HeadtrackActorID";
-                case SceneAction_FieldIndex.LoopingMax:
-                    return "LoopingMax";
-                case SceneAction_FieldIndex.LoopingMin:
-                    return "LoopingMin";
-                case SceneAction_FieldIndex.Emotion:
-                    return "Emotion";
-                case SceneAction_FieldIndex.EmotionValue:
-                    return "EmotionValue";
-                case SceneAction_FieldIndex.Unused:
-                    return "Unused";
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsNthDerivative(ushort index)
-        {
-            SceneAction_FieldIndex enu = (SceneAction_FieldIndex)index;
-            switch (enu)
-            {
-                case SceneAction_FieldIndex.Type:
-                case SceneAction_FieldIndex.Name:
-                case SceneAction_FieldIndex.ActorID:
-                case SceneAction_FieldIndex.LNAM:
-                case SceneAction_FieldIndex.Index:
-                case SceneAction_FieldIndex.Flags:
-                case SceneAction_FieldIndex.StartPhase:
-                case SceneAction_FieldIndex.EndPhase:
-                case SceneAction_FieldIndex.TimerSeconds:
-                case SceneAction_FieldIndex.Packages:
-                case SceneAction_FieldIndex.Topic:
-                case SceneAction_FieldIndex.HeadtrackActorID:
-                case SceneAction_FieldIndex.LoopingMax:
-                case SceneAction_FieldIndex.LoopingMin:
-                case SceneAction_FieldIndex.Emotion:
-                case SceneAction_FieldIndex.EmotionValue:
-                case SceneAction_FieldIndex.Unused:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool IsProtected(ushort index)
-        {
-            SceneAction_FieldIndex enu = (SceneAction_FieldIndex)index;
-            switch (enu)
-            {
-                case SceneAction_FieldIndex.Type:
-                case SceneAction_FieldIndex.Name:
-                case SceneAction_FieldIndex.ActorID:
-                case SceneAction_FieldIndex.LNAM:
-                case SceneAction_FieldIndex.Index:
-                case SceneAction_FieldIndex.Flags:
-                case SceneAction_FieldIndex.StartPhase:
-                case SceneAction_FieldIndex.EndPhase:
-                case SceneAction_FieldIndex.TimerSeconds:
-                case SceneAction_FieldIndex.Packages:
-                case SceneAction_FieldIndex.Topic:
-                case SceneAction_FieldIndex.HeadtrackActorID:
-                case SceneAction_FieldIndex.LoopingMax:
-                case SceneAction_FieldIndex.LoopingMin:
-                case SceneAction_FieldIndex.Emotion:
-                case SceneAction_FieldIndex.EmotionValue:
-                case SceneAction_FieldIndex.Unused:
-                    return false;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static Type GetNthType(ushort index)
-        {
-            SceneAction_FieldIndex enu = (SceneAction_FieldIndex)index;
-            switch (enu)
-            {
-                case SceneAction_FieldIndex.Type:
-                    return typeof(SceneAction.TypeEnum);
-                case SceneAction_FieldIndex.Name:
-                    return typeof(String);
-                case SceneAction_FieldIndex.ActorID:
-                    return typeof(Int32);
-                case SceneAction_FieldIndex.LNAM:
-                    return typeof(MemorySlice<Byte>);
-                case SceneAction_FieldIndex.Index:
-                    return typeof(UInt32);
-                case SceneAction_FieldIndex.Flags:
-                    return typeof(SceneAction.Flag);
-                case SceneAction_FieldIndex.StartPhase:
-                    return typeof(UInt32);
-                case SceneAction_FieldIndex.EndPhase:
-                    return typeof(UInt32);
-                case SceneAction_FieldIndex.TimerSeconds:
-                    return typeof(Single);
-                case SceneAction_FieldIndex.Packages:
-                    return typeof(IExtendedList<IFormLink<Package>>);
-                case SceneAction_FieldIndex.Topic:
-                    return typeof(FormLinkNullable<DialogTopic>);
-                case SceneAction_FieldIndex.HeadtrackActorID:
-                    return typeof(Int32);
-                case SceneAction_FieldIndex.LoopingMax:
-                    return typeof(Single);
-                case SceneAction_FieldIndex.LoopingMin:
-                    return typeof(Single);
-                case SceneAction_FieldIndex.Emotion:
-                    return typeof(Emotion);
-                case SceneAction_FieldIndex.EmotionValue:
-                    return typeof(UInt32);
-                case SceneAction_FieldIndex.Unused:
-                    return typeof(ScenePhaseUnusedData);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static readonly RecordType TriggeringRecordType = RecordTypes.ANAM;
         public static readonly Type BinaryWriteTranslation = typeof(SceneActionBinaryWriteTranslation);
         #region Interface
@@ -1619,14 +1344,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
         Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
-        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
-        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
-        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
-        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => GetNthIsSingleton(index);
-        string ILoquiRegistration.GetNthName(ushort index) => GetNthName(index);
-        bool ILoquiRegistration.IsNthDerivative(ushort index) => IsNthDerivative(index);
-        bool ILoquiRegistration.IsProtected(ushort index) => IsProtected(index);
-        Type ILoquiRegistration.GetNthType(ushort index) => GetNthType(index);
+        ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsLoqui(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.GetNthIsSingleton(ushort index) => throw new NotImplementedException();
+        string ILoquiRegistration.GetNthName(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsNthDerivative(ushort index) => throw new NotImplementedException();
+        bool ILoquiRegistration.IsProtected(ushort index) => throw new NotImplementedException();
+        Type ILoquiRegistration.GetNthType(ushort index) => throw new NotImplementedException();
         #endregion
 
     }
@@ -1652,7 +1377,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.EndPhase = default;
             item.TimerSeconds = default;
             item.Packages.Clear();
-            item.Topic = FormLinkNullable<DialogTopic>.Null;
+            item.Topic = FormLinkNullable<IDialogTopicGetter>.Null;
             item.HeadtrackActorID = default;
             item.LoopingMax = default;
             item.LoopingMin = default;
@@ -2051,7 +1776,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Packages.SetTo(
                         rhs.Packages
-                        .Select(r => (IFormLink<Package>)new FormLink<Package>(r.FormKey)));
+                        .Select(r => (IFormLink<IPackageGetter>)new FormLink<IPackageGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2065,7 +1790,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SceneAction_FieldIndex.Topic) ?? true))
             {
-                item.Topic = new FormLinkNullable<DialogTopic>(rhs.Topic.FormKey);
+                item.Topic = new FormLinkNullable<IDialogTopicGetter>(rhs.Topic.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)SceneAction_FieldIndex.HeadtrackActorID) ?? true))
             {
@@ -2413,7 +2138,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.PNAM:
                 {
                     item.Packages.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Package>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPackageGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
