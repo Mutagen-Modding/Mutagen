@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Keyword" recordType="KYWD" objType="Record" baseClass="SkyrimMajorRecord" GUID="b9b08f3d-ada5-4b0f-b77f-9bde650623e0" ID="18">
+    <Interface>IKeywordCommon</Interface>
     <Fields>
       <Color name="Color" recordType="CNAM" binaryType="Alpha" />
     </Fields>

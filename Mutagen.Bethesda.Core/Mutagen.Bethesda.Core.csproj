@@ -57,9 +57,11 @@
     <Compile Include="Extensions\RemoveExt.cs" />
     <Compile Include="Extensions\LoadOrderExt.cs" />
     <Compile Include="Extensions\MutagenEnumExt.cs" />
+    <Compile Include="Interfaces\Aspect\IKeywordCommon.cs" />
     <Compile Include="Interfaces\IDuplicatable.cs" />
     <Compile Include="Interfaces\IGameSettingCommon.cs" />
     <Compile Include="Interfaces\IGroup.cs" />
+    <Compile Include="Interfaces\Aspect\IKeyworded.cs" />
     <Compile Include="Interfaces\ILinkInterfaceMapping.cs" />
     <Compile Include="Interfaces\IMajorRecordCommon.cs" />
     <Compile Include="Interfaces\IMajorRecordContextEnumerable.cs" />
@@ -67,8 +69,8 @@
     <Compile Include="Interfaces\IMod.cs" />
     <Compile Include="Interfaces\IModHeaderCommon.cs" />
     <Compile Include="Interfaces\IModKeyed.cs" />
-    <Compile Include="Interfaces\INamed.cs" />
-    <Compile Include="Interfaces\INamedRequired.cs" />
+    <Compile Include="Interfaces\Aspect\INamed.cs" />
+    <Compile Include="Interfaces\Aspect\INamedRequired.cs" />
     <Compile Include="Interfaces\ITranslatedNamed.cs" />
     <Compile Include="Interfaces\ITranslatedNamedRequired.cs" />
     <Compile Include="Interfaces\LinkInterfaceMapping.cs" />

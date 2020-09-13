@@ -2272,6 +2272,10 @@ namespace Mutagen.Bethesda.Generation
                                 }
                             }
                         }
+                        foreach (var mod in Gen.GenerationModules)
+                        {
+                            await mod.GenerateInField(obj, lengths.Field, fg, LoquiInterfaceType.IGetter);
+                        }
                     }
                 }
 
