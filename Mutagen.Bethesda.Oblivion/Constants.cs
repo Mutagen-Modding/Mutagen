@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Oblivion
 {
-    public static class Constants
+    // Keep non-static so users can extend to add their own ModKeys cleanly.  No harm no foul
+    public class Constants
     {
         public static readonly ModKey Oblivion = new ModKey("Oblivion", type: ModType.Master);
         public static readonly ModKey Knights = new ModKey("Knights", type: ModType.Plugin);

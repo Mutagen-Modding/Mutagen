@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public static class Constants
+    // Keep non-static so users can extend to add their own ModKeys cleanly.  No harm no foul
+    public class Constants
     {
         public static readonly ModKey Skyrim = new ModKey("Skyrim", type: ModType.Master);
         public static readonly ModKey Update = new ModKey("Update", type: ModType.Master);
