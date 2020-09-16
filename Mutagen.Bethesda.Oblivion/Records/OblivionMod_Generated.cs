@@ -2852,6 +2852,7 @@ namespace Mutagen.Bethesda.Oblivion
             _AnimatedObjects_Object = new Group<AnimatedObject>(this);
             _Waters_Object = new Group<Water>(this);
             _EffectShaders_Object = new Group<EffectShader>(this);
+            CustomCtor();
         }
         public void AddRecords(
             OblivionMod rhsMod,

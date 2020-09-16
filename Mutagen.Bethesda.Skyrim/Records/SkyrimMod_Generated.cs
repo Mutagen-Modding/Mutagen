@@ -5364,6 +5364,7 @@ namespace Mutagen.Bethesda.Skyrim
             _Colors_Object = new Group<ColorRecord>(this);
             _ReverbParameters_Object = new Group<ReverbParameters>(this);
             _VolumetricLightings_Object = new Group<VolumetricLighting>(this);
+            CustomCtor();
         }
         public void AddRecords(
             SkyrimMod rhsMod,
