@@ -4,25 +4,25 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 */
 #region Usings
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Loqui;
 using Loqui.Internal;
-using Noggog;
-using Mutagen.Bethesda.Skyrim.Internals;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using Mutagen.Bethesda.Skyrim;
-using System.Drawing;
 using Mutagen.Bethesda;
+using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Skyrim.Internals;
+using Noggog;
+using System;
+using System.Buffers.Binary;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Binary;
-using System.Buffers.Binary;
+using System.Drawing;
+using System.Linq;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Text;
 #endregion
 
 #nullable enable

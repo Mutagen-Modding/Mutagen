@@ -18,8 +18,8 @@
   <ItemGroup>
     <PackageReference Include="Compression.BSA" Version="2.2.1.1" />
     <PackageReference Include="DotNetZip" Version="1.13.8" />
-    <PackageReference Include="Loqui" Version="1.5.4" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.2.1" />
+    <PackageReference Include="Loqui" Version="1.5.5" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.2.3" />
   </ItemGroup>
   <PropertyGroup>
     <PackageId>Mutagen.Bethesda.Core</PackageId>
@@ -121,7 +121,6 @@
     <Compile Include="Translations\Binary\BinaryWriteParameters.cs" />
     <Compile Include="Utility\MajorRecordInstantiator.cs" />
     <Compile Include="Enums\StringBinaryType.cs" />
-    <Compile Include="Extensions\NullableExt.cs" />
     <Compile Include="Persistance\IFormKeyAllocator.cs" />
     <Compile Include="Records\GenderedItem.cs" />
     <Compile Include="Records\AListGroup.cs" />

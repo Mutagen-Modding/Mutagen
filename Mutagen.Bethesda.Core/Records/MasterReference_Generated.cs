@@ -4,21 +4,21 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 */
 #region Usings
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Loqui;
 using Loqui.Internal;
-using Noggog;
+using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
+using Noggog;
+using System;
+using System.Buffers.Binary;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Binary;
-using System.Buffers.Binary;
+using System.Linq;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Text;
 #endregion
 
 #nullable enable
