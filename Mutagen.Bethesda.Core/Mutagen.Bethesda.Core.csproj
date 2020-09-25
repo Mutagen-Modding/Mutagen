@@ -18,8 +18,9 @@
   <ItemGroup>
     <PackageReference Include="Compression.BSA" Version="2.2.1.1" />
     <PackageReference Include="DotNetZip" Version="1.13.8" />
-    <PackageReference Include="Loqui" Version="1.5.5" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.2.3" />
+    <PackageReference Include="DynamicData" Version="6.16.9" />
+    <PackageReference Include="Loqui" Version="1.5.6" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.2.5" />
   </ItemGroup>
   <PropertyGroup>
     <PackageId>Mutagen.Bethesda.Core</PackageId>

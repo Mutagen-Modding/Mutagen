@@ -23,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mutagen.Bethesda.Skyrim", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mutagen.Bethesda.Tests.GUI", "Mutagen.Bethesda.Tests.GUI\Mutagen.Bethesda.Tests.GUI.csproj", "{4C7C1AFA-F14A-47FA-99DC-2EEE284CDAD9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Kernel", "Mutagen.Bethesda.Kernel\Mutagen.Bethesda.Kernel.csproj", "{C9F9A3B4-7603-4D58-8D32-B92E5947EB66}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mutagen.Bethesda.Kernel", "Mutagen.Bethesda.Kernel\Mutagen.Bethesda.Kernel.csproj", "{C9F9A3B4-7603-4D58-8D32-B92E5947EB66}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
