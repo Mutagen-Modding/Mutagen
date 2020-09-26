@@ -4,12 +4,13 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.2.5" />
-    <PackageReference Include="Noggog.WPF" Version="1.2.5" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.2.6" />
+    <PackageReference Include="Noggog.WPF" Version="1.2.6" />
     <PackageReference Include="ReactiveUI" Version="11.4.17" />
     <PackageReference Include="ReactiveUI.Fody" Version="11.4.17" />
     <PackageReference Include="Simple.Wpf.Terminal" Version="2.3.15" />

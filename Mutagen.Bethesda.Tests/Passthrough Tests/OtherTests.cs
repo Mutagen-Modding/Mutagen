@@ -1,17 +1,13 @@
+using FluentAssertions;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
-using Mutagen.Bethesda.Oblivion.Internals;
 using Noggog;
 using Noggog.Utility;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using Xunit;
 
 namespace Mutagen.Bethesda.Tests
 {
@@ -87,8 +83,8 @@ namespace Mutagen.Bethesda.Tests
                 Path.Combine(settings.DataFolderLocations.Oblivion, target.Path));
             var set1 = new HashSet<FormKey>(mod.EnumerateMajorRecords().Select(m => m.FormKey));
             var set2 = new HashSet<FormKey>(mod.EnumerateMajorRecords<IMajorRecordCommonGetter>().Select(m => m.FormKey));
-            Assert.Equal(set1.Count, set2.Count);
-            Assert.Equal(set1, set2);
+            set1.Count.Should().Equals(set2.Count);
+            set1.Should().Equals(set2);
         }
     }
 }
