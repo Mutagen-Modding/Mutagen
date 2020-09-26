@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,8 +6,8 @@ namespace Mutagen.Bethesda.Skyrim
 {
     /// <summary>
     /// An abstract class representing a Perk entry point effect.
-    /// Implemented by: [PerkModifyValue, PerkAddRangeToValue, PerkModifyActorValue, PerkAbsoluteValue
-    /// PerkAddLeveledItem, PerkAddActivateChoice, PerkSelectSpell, PerkSelectText, PerkSetText]
+    /// Implemented by: [PerkEntryPointModifyValue, PerkEntryPointAddRangeToValue, PerkEntryPointModifyActorValue, PerkEntryPointAbsoluteValue
+    /// PerkEntryPointAddLeveledItem, PerkEntryPointAddActivateChoice, PerkEntryPointSelectSpell, PerkEntryPointSelectText, PerkEntryPointSetText]
     /// </summary>
     public partial class APerkEntryPointEffect
     {

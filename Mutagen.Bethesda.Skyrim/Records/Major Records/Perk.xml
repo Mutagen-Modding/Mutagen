@@ -52,53 +52,53 @@
       <CustomLogic name="FunctionParameters" recordType="EPFT" />
     </Fields>
   </Object>
-  <Object name="PerkModifyValue" objType="Subrecord" baseClass="APerkEntryPointEffect" GUID="1d49c96a-ffbd-42f5-8420-24ced8b5991e" ID="417">
+  <Object name="PerkEntryPointModifyValue" objType="Subrecord" baseClass="APerkEntryPointEffect" GUID="1d49c96a-ffbd-42f5-8420-24ced8b5991e" ID="417">
     <Fields>
-      <Enum name="Modification" enumName="PerkModifyValue.ModificationType" />
+      <Enum name="Modification" enumName="PerkEntryPointModifyValue.ModificationType" />
       <Float name="Value" recordType="EPFD" nullable="False" />
     </Fields>
   </Object>
-  <Object name="PerkAddRangeToValue" objType="Subrecord" baseClass="APerkEntryPointEffect" GUID="a626d85f-ad59-47fc-b686-15e424b8ec6f" ID="418">
+  <Object name="PerkEntryPointAddRangeToValue" objType="Subrecord" baseClass="APerkEntryPointEffect" GUID="a626d85f-ad59-47fc-b686-15e424b8ec6f" ID="418">
     <Fields>
       <Float name="From" />
       <Float name="To" />
     </Fields>
   </Object>
-  <Object name="PerkModifyActorValue" objType="Subrecord" baseClass="APerkEntryPointEffect" GUID="31a6011e-e36a-4837-954e-60ee728f750e" ID="419">
+  <Object name="PerkEntryPointModifyActorValue" objType="Subrecord" baseClass="APerkEntryPointEffect" GUID="31a6011e-e36a-4837-954e-60ee728f750e" ID="419">
     <Fields>
       <Enum name="ActorValue" enumName="ActorValue" />
       <Float name="Value" />
-      <Enum name="Modification" enumName="PerkModifyActorValue.ModificationType" />
+      <Enum name="Modification" enumName="PerkEntryPointModifyActorValue.ModificationType" />
     </Fields>
   </Object>
-  <Object name="PerkAbsoluteValue" objType="Subrecord" baseClass="APerkEntryPointEffect" GUID="65b0c2f1-c39b-412e-b77c-2294758f498b" ID="420">
+  <Object name="PerkEntryPointAbsoluteValue" objType="Subrecord" baseClass="APerkEntryPointEffect" GUID="65b0c2f1-c39b-412e-b77c-2294758f498b" ID="420">
     <Fields>
       <Bool name="Negative" />
     </Fields>
   </Object>
-  <Object name="PerkAddLeveledItem" objType="Subrecord" baseClass="APerkEntryPointEffect" GUID="f3687450-00d1-45e0-9645-140c7a5deead" ID="421">
+  <Object name="PerkEntryPointAddLeveledItem" objType="Subrecord" baseClass="APerkEntryPointEffect" GUID="f3687450-00d1-45e0-9645-140c7a5deead" ID="421">
     <Fields>
       <FormLink name="Item" refName="LeveledItem" />
     </Fields>
   </Object>
-  <Object name="PerkAddActivateChoice" objType="Subrecord" baseClass="APerkEntryPointEffect" GUID="628923c0-a9a0-489d-a73e-934ee88f5351" ID="422">
+  <Object name="PerkEntryPointAddActivateChoice" objType="Subrecord" baseClass="APerkEntryPointEffect" GUID="628923c0-a9a0-489d-a73e-934ee88f5351" ID="422">
     <Fields>
       <FormLink name="Spell" refName="Spell" nullable="True" />
       <String name="ButtonLabel" translated="Normal" recordType="EPF2" nullable="True" />
       <RefDirect name="Flags" refName="PerkScriptFlag" nullable="False" />
     </Fields>
   </Object>
-  <Object name="PerkSelectSpell" objType="Subrecord" baseClass="APerkEntryPointEffect" GUID="753005d8-0132-4c41-9b39-3fc1b63a0e44" ID="423">
+  <Object name="PerkEntryPointSelectSpell" objType="Subrecord" baseClass="APerkEntryPointEffect" GUID="753005d8-0132-4c41-9b39-3fc1b63a0e44" ID="423">
     <Fields>
       <FormLink name="Spell" refName="Spell" />
     </Fields>
   </Object>
-  <Object name="PerkSelectText" objType="Subrecord" baseClass="APerkEntryPointEffect" GUID="2fd6a5c4-2007-450b-8505-5af44523b46a" ID="424">
+  <Object name="PerkEntryPointSelectText" objType="Subrecord" baseClass="APerkEntryPointEffect" GUID="2fd6a5c4-2007-450b-8505-5af44523b46a" ID="424">
     <Fields>
       <String name="Text" />
     </Fields>
   </Object>
-  <Object name="PerkSetText" objType="Subrecord" baseClass="APerkEntryPointEffect" GUID="d22ea2b4-5063-4bc9-9a70-29081a7e9650" ID="425">
+  <Object name="PerkEntryPointSetText" objType="Subrecord" baseClass="APerkEntryPointEffect" GUID="d22ea2b4-5063-4bc9-9a70-29081a7e9650" ID="425">
     <Fields>
       <String name="Text" translated="Normal" />
     </Fields>
