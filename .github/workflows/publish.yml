@@ -17,10 +17,35 @@ jobs:
       run: dotnet build --no-restore -c Release /p:Version=${{ github.event.release.tag_name }} -p:PackageReleaseNotes="See https://github.com/Noggog/Mutagen/releases/tag/${{ github.event.release.tag_name }}"
     - name: Test
       run: dotnet test --no-build -c Release
-    - name: Publish to Github Release
-      uses: actions/upload-artifact@v2
+    - name: Publish Mutagen Bethesda to Github
+      uses: svenstaro/upload-release-action@v2
       with:
-        name: packages
-        path: "**/*.nupkg"
+        file: Mutagen.Bethesda/bin/Release/Mutagen.Bethesda.${{ github.event.release.tag_name }}.nupkg
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        tag: ${{ github.event.release.tag_name }}
+    - name: Publish Core to Github
+      uses: svenstaro/upload-release-action@v2
+      with:
+        file: Mutagen.Bethesda.Core/bin/Release/Mutagen.Bethesda.Core.${{ github.event.release.tag_name }}.nupkg
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        tag: ${{ github.event.release.tag_name }}
+    - name: Publish Kernel to Github
+      uses: svenstaro/upload-release-action@v2
+      with:
+        file: Mutagen.Bethesda.Kernel/bin/Release/Mutagen.Bethesda.Kernel.${{ github.event.release.tag_name }}.nupkg
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        tag: ${{ github.event.release.tag_name }}
+    - name: Publish Oblivion to Github
+      uses: svenstaro/upload-release-action@v2
+      with:
+        file: Mutagen.Bethesda.Oblivion/bin/Release/Mutagen.Bethesda.Oblivion.${{ github.event.release.tag_name }}.nupkg
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        tag: ${{ github.event.release.tag_name }}
+    - name: Publish Skyrim to Github
+      uses: svenstaro/upload-release-action@v2
+      with:
+        file: Mutagen.Bethesda.Skyrim/bin/Release/Mutagen.Bethesda.Skyrim.${{ github.event.release.tag_name }}.nupkg
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        tag: ${{ github.event.release.tag_name }}
     - name: Publish to Nuget.org
       run: dotnet nuget push **/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --no-symbols true
