@@ -1,0 +1,51 @@
+name: Publish
+
+on:
+  release:
+    types: [published]
+    
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore -c Release /p:Version=${{ github.event.release.tag_name }} -p:PackageReleaseNotes="See https://github.com/Noggog/Mutagen/releases/tag/${{ github.event.release.tag_name }}"
+    - name: Test
+      run: dotnet test --no-build -c Release
+    - name: Publish Mutagen Bethesda to Github
+      uses: svenstaro/upload-release-action@v2
+      with:
+        file: Mutagen.Bethesda/bin/Release/Mutagen.Bethesda.${{ github.event.release.tag_name }}.nupkg
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        tag: ${{ github.event.release.tag_name }}
+    - name: Publish Core to Github
+      uses: svenstaro/upload-release-action@v2
+      with:
+        file: Mutagen.Bethesda.Core/bin/Release/Mutagen.Bethesda.Core.${{ github.event.release.tag_name }}.nupkg
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        tag: ${{ github.event.release.tag_name }}
+    - name: Publish Kernel to Github
+      uses: svenstaro/upload-release-action@v2
+      with:
+        file: Mutagen.Bethesda.Kernel/bin/Release/Mutagen.Bethesda.Kernel.${{ github.event.release.tag_name }}.nupkg
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        tag: ${{ github.event.release.tag_name }}
+    - name: Publish Oblivion to Github
+      uses: svenstaro/upload-release-action@v2
+      with:
+        file: Mutagen.Bethesda.Oblivion/bin/Release/Mutagen.Bethesda.Oblivion.${{ github.event.release.tag_name }}.nupkg
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        tag: ${{ github.event.release.tag_name }}
+    - name: Publish Skyrim to Github
+      uses: svenstaro/upload-release-action@v2
+      with:
+        file: Mutagen.Bethesda.Skyrim/bin/Release/Mutagen.Bethesda.Skyrim.${{ github.event.release.tag_name }}.nupkg
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        tag: ${{ github.event.release.tag_name }}
+    - name: Publish to Nuget.org
+      run: dotnet nuget push **/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --no-symbols true
