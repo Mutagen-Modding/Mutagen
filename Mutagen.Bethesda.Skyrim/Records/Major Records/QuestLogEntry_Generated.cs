@@ -4,23 +4,23 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 */
 #region Usings
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Loqui;
 using Loqui.Internal;
-using Noggog;
-using Mutagen.Bethesda.Skyrim.Internals;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Skyrim.Internals;
+using Noggog;
+using System;
+using System.Buffers.Binary;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Binary;
-using System.Buffers.Binary;
-using Mutagen.Bethesda.Internals;
+using System.Linq;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Text;
 #endregion
 
 #nullable enable
@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Entry
         public TranslatedString? Entry { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TranslatedString? IQuestLogEntryGetter.Entry => this.Entry;
+        ITranslatedStringGetter? IQuestLogEntryGetter.Entry => this.Entry;
         #endregion
         #region NextQuest
         public FormLinkNullable<IQuestGetter> NextQuest { get; set; } = new FormLinkNullable<IQuestGetter>();
@@ -742,7 +742,7 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => QuestLogEntry_Registration.Instance;
         QuestLogEntry.Flag? Flags { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
-        TranslatedString? Entry { get; }
+        ITranslatedStringGetter? Entry { get; }
         FormLinkNullable<IQuestGetter> NextQuest { get; }
         ReadOnlyMemorySlice<Byte>? SCHR { get; }
         ReadOnlyMemorySlice<Byte>? SCTX { get; }
@@ -1081,7 +1081,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.Entry = string.Equals(item.Entry, rhs.Entry);
+            ret.Entry = object.Equals(item.Entry, rhs.Entry);
             ret.NextQuest = item.NextQuest.Equals(rhs.NextQuest);
             ret.SCHR = MemorySliceExt.Equal(item.SCHR, rhs.SCHR);
             ret.SCTX = MemorySliceExt.Equal(item.SCTX, rhs.SCTX);
@@ -1190,7 +1190,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null || rhs == null) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
-            if (!string.Equals(lhs.Entry, rhs.Entry)) return false;
+            if (!object.Equals(lhs.Entry, rhs.Entry)) return false;
             if (!lhs.NextQuest.Equals(rhs.NextQuest)) return false;
             if (!MemorySliceExt.Equal(lhs.SCHR, rhs.SCHR)) return false;
             if (!MemorySliceExt.Equal(lhs.SCTX, rhs.SCTX)) return false;
@@ -1295,7 +1295,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.Entry) ?? true))
             {
-                item.Entry = rhs.Entry;
+                item.Entry = rhs.Entry?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.NextQuest) ?? true))
             {
@@ -1667,7 +1667,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Entry
         private int? _EntryLocation;
-        public TranslatedString? Entry => _EntryLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _EntryLocation.Value, _package.MetaData.Constants), StringsSource.DL, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        public ITranslatedStringGetter? Entry => _EntryLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _EntryLocation.Value, _package.MetaData.Constants), StringsSource.DL, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         #region NextQuest
         private int? _NextQuestLocation;

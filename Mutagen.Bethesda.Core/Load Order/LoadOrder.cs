@@ -1,3 +1,4 @@
+using DynamicData;
 using Loqui;
 using Mutagen.Bethesda.Internals;
 using Noggog;
@@ -7,6 +8,9 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Reactive;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -209,6 +213,55 @@ namespace Mutagen.Bethesda
             }
         }
 
+        public static IObservable<IChangeSet<LoadOrderListing>> GetLiveLoadOrder(
+            GameRelease game,
+            FilePath loadOrderFilePath,
+            DirectoryPath dataFolderPath,
+            out IObservable<ErrorResponse> state,
+            bool throwOnMissingMods = true)
+        {
+            var results = ObservableExt.UsingWithCatch(
+                () =>
+                {
+                    var watcher = new FileSystemWatcher(Path.GetDirectoryName(loadOrderFilePath.Path), filter: Path.GetFileName(loadOrderFilePath.Path));
+                    watcher.EnableRaisingEvents = true;
+                    return watcher;
+                },
+                (watcher) =>
+                {
+                    if (watcher.Failed) return Observable.Return(watcher.BubbleFailure<IObservable<IChangeSet<LoadOrderListing>>>());
+                    return Observable.Merge(
+                            Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>(h => watcher.Value.Changed += h, h => watcher.Value.Changed -= h),
+                            Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>(h => watcher.Value.Created += h, h => watcher.Value.Created -= h),
+                            Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>(h => watcher.Value.Deleted += h, h => watcher.Value.Deleted -= h))
+                        .Where(x => x.EventArgs.FullPath.Equals(loadOrderFilePath.Path, StringComparison.OrdinalIgnoreCase))
+                        .Unit()
+                        .StartWith(Unit.Default)
+                        .Select(_ =>
+                        {
+                            try
+                            {
+                                return GetResponse<IObservable<IChangeSet<LoadOrderListing>>>.Succeed(
+                                    FromPath(loadOrderFilePath, game, dataFolderPath, throwOnMissingMods: throwOnMissingMods).AsObservableChangeSet());
+                            }
+                            catch (Exception ex)
+                            {
+                                return GetResponse<IObservable<IChangeSet<LoadOrderListing>>>.Fail(ex);
+                            }
+                        });
+                })
+                .Replay(1)
+                .RefCount();
+            state = results
+                .Select(r => (ErrorResponse)r);
+            return results
+                .Select(r =>
+                {
+                    return r.Value ?? Observable.Empty<IChangeSet<LoadOrderListing>>();
+                })
+                .Switch();
+        }
+
         private readonly static ModKey[] _sseImplicitMods = new ModKey[]
         {
             "Skyrim.esm",
@@ -261,7 +314,7 @@ namespace Mutagen.Bethesda
         /// <exception cref="ArgumentException">Line in plugin file is unexpected</exception>
         /// <exception cref="FileNotFoundException">If plugin file not located</exception>
         /// <exception cref="MissingModException">If throwOnMissingMods true and file is missing</exception>
-        public static IEnumerable<LoadOrderListing> GetUsualLoadOrder(
+        public static IEnumerable<LoadOrderListing> GetLoadOrder(
             GameRelease game,
             DirectoryPath dataPath,
             bool throwOnMissingMods = true)

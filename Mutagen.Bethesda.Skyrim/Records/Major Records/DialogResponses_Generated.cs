@@ -4,24 +4,24 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 */
 #region Usings
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Loqui;
 using Loqui.Internal;
-using Noggog;
-using Mutagen.Bethesda.Skyrim.Internals;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
+using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Skyrim.Internals;
+using Noggog;
+using System;
+using System.Buffers.Binary;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Binary;
-using System.Buffers.Binary;
+using System.Linq;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Text;
 #endregion
 
 #nullable enable
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Prompt
         public TranslatedString? Prompt { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TranslatedString? IDialogResponsesGetter.Prompt => this.Prompt;
+        ITranslatedStringGetter? IDialogResponsesGetter.Prompt => this.Prompt;
         #endregion
         #region Speaker
         public FormLinkNullable<INpcGetter> Speaker { get; set; } = new FormLinkNullable<INpcGetter>();
@@ -1310,7 +1310,7 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IDialogResponseGetter> Responses { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
         IReadOnlyList<IDialogResponsesUnknownDataGetter> UnknownData { get; }
-        TranslatedString? Prompt { get; }
+        ITranslatedStringGetter? Prompt { get; }
         FormLinkNullable<INpcGetter> Speaker { get; }
         FormLinkNullable<IDialogTopicGetter> WalkAwayTopic { get; }
         FormLinkNullable<ISoundOutputModelGetter> AudioOutputOverride { get; }
@@ -1692,7 +1692,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.UnknownData,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.Prompt = string.Equals(item.Prompt, rhs.Prompt);
+            ret.Prompt = object.Equals(item.Prompt, rhs.Prompt);
             ret.Speaker = item.Speaker.Equals(rhs.Speaker);
             ret.WalkAwayTopic = item.WalkAwayTopic.Equals(rhs.WalkAwayTopic);
             ret.AudioOutputOverride = item.AudioOutputOverride.Equals(rhs.AudioOutputOverride);
@@ -1927,7 +1927,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.Responses.SequenceEqualNullable(rhs.Responses)) return false;
             if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
             if (!lhs.UnknownData.SequenceEqualNullable(rhs.UnknownData)) return false;
-            if (!string.Equals(lhs.Prompt, rhs.Prompt)) return false;
+            if (!object.Equals(lhs.Prompt, rhs.Prompt)) return false;
             if (!lhs.Speaker.Equals(rhs.Speaker)) return false;
             if (!lhs.WalkAwayTopic.Equals(rhs.WalkAwayTopic)) return false;
             if (!lhs.AudioOutputOverride.Equals(rhs.AudioOutputOverride)) return false;
@@ -2285,7 +2285,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Prompt) ?? true))
             {
-                item.Prompt = rhs.Prompt;
+                item.Prompt = rhs.Prompt?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Speaker) ?? true))
             {
@@ -2862,7 +2862,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IDialogResponsesUnknownDataGetter> UnknownData { get; private set; } = ListExt.Empty<DialogResponsesUnknownDataBinaryOverlay>();
         #region Prompt
         private int? _PromptLocation;
-        public TranslatedString? Prompt => _PromptLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _PromptLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        public ITranslatedStringGetter? Prompt => _PromptLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _PromptLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         #region Speaker
         private int? _SpeakerLocation;

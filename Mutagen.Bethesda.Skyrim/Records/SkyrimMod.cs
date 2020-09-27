@@ -18,6 +18,16 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public const uint DefaultInitialNextFormID = 0x800;
         private uint GetDefaultInitialNextFormID() => DefaultInitialNextFormID;
+
+        partial void CustomCtor()
+        {
+            this.ModHeader.FormVersion = this.SkyrimRelease switch
+            {
+                SkyrimRelease.SkyrimLE => 43,
+                SkyrimRelease.SkyrimSE => 44,
+                _ => throw new NotImplementedException()
+            };
+        }
     }
 
     namespace Internals

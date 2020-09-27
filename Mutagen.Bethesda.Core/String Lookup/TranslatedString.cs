@@ -53,6 +53,9 @@ namespace Mutagen.Bethesda
             set => Set(TargetLanguage, value);
         }
 
+        private readonly static TranslatedString _empty = new TranslatedString(string.Empty);
+        public static ITranslatedStringGetter Empty => _empty;
+
         /// <summary>
         /// Creates a translated string with empty string set for the default language
         /// </summary>
@@ -278,9 +281,30 @@ namespace Mutagen.Bethesda
             return new TranslatedString(str);
         }
 
+        public static implicit operator string?(TranslatedString? str)
+        {
+            return str?.String;
+        }
+
         public override string ToString()
         {
             return this.String ?? string.Empty;
+        }
+
+        public TranslatedString DeepCopy()
+        {
+            if (_directString == null)
+            {
+                return new TranslatedString(
+                    language: this.TargetLanguage,
+                    strs: this.ToArray());
+            }
+            else
+            {
+                return new TranslatedString(
+                    language: this.TargetLanguage,
+                    directString: this._directString);
+            }
         }
     }
 }

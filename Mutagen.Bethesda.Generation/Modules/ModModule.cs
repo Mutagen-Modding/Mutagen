@@ -114,6 +114,7 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine($"this.{ReleaseEnumName(obj)} = release;");
                 }
                 await obj.GenerateInitializer(fg);
+                fg.AppendLine($"CustomCtor();");
             }
 
             using (var args = new FunctionWrapper(fg,

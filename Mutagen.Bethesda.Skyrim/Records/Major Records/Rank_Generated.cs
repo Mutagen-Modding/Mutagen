@@ -4,22 +4,22 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 */
 #region Usings
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Loqui;
 using Loqui.Internal;
-using Noggog;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
+using Noggog;
+using System;
+using System.Buffers.Binary;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Binary;
-using System.Buffers.Binary;
-using Mutagen.Bethesda.Internals;
+using System.Linq;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Text;
 #endregion
 
 #nullable enable
@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Title
         public GenderedItem<TranslatedString?>? Title { get; set; }
-        IGenderedItemGetter<TranslatedString?>? IRankGetter.Title => this.Title;
+        IGenderedItemGetter<ITranslatedStringGetter?>? IRankGetter.Title => this.Title;
         #endregion
         #region Insignia
         public String? Insignia { get; set; }
@@ -501,7 +501,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => Rank_Registration.Instance;
         UInt32? Number { get; }
-        IGenderedItemGetter<TranslatedString?>? Title { get; }
+        IGenderedItemGetter<ITranslatedStringGetter?>? Title { get; }
         String? Insignia { get; }
 
     }
@@ -825,7 +825,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Title = GenderedItem.EqualityMaskHelper(
                 lhs: item.Title,
                 rhs: rhs.Title,
-                maskGetter: (l, r, i) => EqualityComparer<TranslatedString?>.Default.Equals(l, r),
+                maskGetter: (l, r, i) => EqualityComparer<ITranslatedStringGetter?>.Default.Equals(l, r),
                 include: include);
             ret.Insignia = string.Equals(item.Insignia, rhs.Insignia);
         }
@@ -963,8 +963,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             else
             {
                 item.Title = new GenderedItem<TranslatedString?>(
-                    male: rhsTitleitem.Male,
-                    female: rhsTitleitem.Female);
+                    male: rhsTitleitem.Male?.DeepCopy(),
+                    female: rhsTitleitem.Female?.DeepCopy());
             }
             if ((copyMask?.GetShouldTranslate((int)Rank_FieldIndex.Insignia) ?? true))
             {
@@ -1076,7 +1076,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.Title,
                 maleMarker: RecordTypes.MNAM,
                 femaleMarker: RecordTypes.FNAM,
-                transl: (MutagenWriter subWriter, TranslatedString? subItem) =>
+                transl: (MutagenWriter subWriter, ITranslatedStringGetter? subItem) =>
                 {
                     Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                         writer: subWriter,
@@ -1246,8 +1246,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public UInt32? Number => _NumberLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _NumberLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
         #region Title
-        private IGenderedItemGetter<TranslatedString?>? _TitleOverlay;
-        public IGenderedItemGetter<TranslatedString?>? Title => _TitleOverlay;
+        private IGenderedItemGetter<ITranslatedStringGetter?>? _TitleOverlay;
+        public IGenderedItemGetter<ITranslatedStringGetter?>? Title => _TitleOverlay;
         #endregion
         #region Insignia
         private int? _InsigniaLocation;
@@ -1320,7 +1320,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.FNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Title) return ParseResult.Stop;
-                    _TitleOverlay = GenderedItemBinaryOverlay.Factory<TranslatedString>(
+                    _TitleOverlay = GenderedItemBinaryOverlay.Factory<ITranslatedStringGetter>(
                         package: _package,
                         male: RecordTypes.MNAM,
                         female: RecordTypes.FNAM,

@@ -4,26 +4,26 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 */
 #region Usings
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Loqui;
 using Loqui.Internal;
-using Noggog;
-using Mutagen.Bethesda.Skyrim.Internals;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Skyrim.Internals;
+using Noggog;
+using System;
+using System.Buffers.Binary;
+using System.Collections;
 using System.Collections.Concurrent;
-using System.Threading.Tasks;
-using System.IO;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Binary;
-using System.Buffers.Binary;
-using Mutagen.Bethesda.Internals;
+using System.IO;
+using System.Linq;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Text;
+using System.Threading.Tasks;
 #endregion
 
 #nullable enable
@@ -5364,6 +5364,7 @@ namespace Mutagen.Bethesda.Skyrim
             _Colors_Object = new Group<ColorRecord>(this);
             _ReverbParameters_Object = new Group<ReverbParameters>(this);
             _VolumetricLightings_Object = new Group<VolumetricLighting>(this);
+            CustomCtor();
         }
         public void AddRecords(
             SkyrimMod rhsMod,

@@ -4,24 +4,24 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 */
 #region Usings
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Loqui;
 using Loqui.Internal;
-using Noggog;
-using Mutagen.Bethesda.Skyrim.Internals;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
+using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Skyrim.Internals;
+using Noggog;
+using System;
+using System.Buffers.Binary;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Binary;
-using System.Buffers.Binary;
+using System.Linq;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Text;
 #endregion
 
 #nullable enable
@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Name
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TranslatedString? IQuestGetter.Name => this.Name;
+        ITranslatedStringGetter? IQuestGetter.Name => this.Name;
         #endregion
         #region Flags
         public Quest.Flag Flags { get; set; } = default;
@@ -170,7 +170,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Description
         public TranslatedString? Description { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TranslatedString? IQuestGetter.Description => this.Description;
+        ITranslatedStringGetter? IQuestGetter.Description => this.Description;
         #endregion
         #region DNAMDataTypeState
         public Quest.DNAMDataType DNAMDataTypeState { get; set; } = default;
@@ -1512,7 +1512,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         static new ILoquiRegistration Registration => Quest_Registration.Instance;
         IQuestAdapterGetter? VirtualMachineAdapter { get; }
-        TranslatedString? Name { get; }
+        ITranslatedStringGetter? Name { get; }
         Quest.Flag Flags { get; }
         Byte Priority { get; }
         Byte QuestFormVersion { get; }
@@ -1526,7 +1526,7 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IQuestStageGetter> Stages { get; }
         IReadOnlyList<IQuestObjectiveGetter> Objectives { get; }
         IReadOnlyList<IQuestAliasGetter> Aliases { get; }
-        TranslatedString? Description { get; }
+        ITranslatedStringGetter? Description { get; }
         Quest.DNAMDataType DNAMDataTypeState { get; }
 
     }
@@ -1880,7 +1880,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.VirtualMachineAdapter,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Flags = item.Flags == rhs.Flags;
             ret.Priority = item.Priority == rhs.Priority;
             ret.QuestFormVersion = item.QuestFormVersion == rhs.QuestFormVersion;
@@ -1912,7 +1912,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Aliases,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.Description = string.Equals(item.Description, rhs.Description);
+            ret.Description = object.Equals(item.Description, rhs.Description);
             ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -2171,7 +2171,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null || rhs == null) return false;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!object.Equals(lhs.Name, rhs.Name)) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (lhs.Priority != rhs.Priority) return false;
             if (lhs.QuestFormVersion != rhs.QuestFormVersion) return false;
@@ -2185,7 +2185,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.Stages.SequenceEqualNullable(rhs.Stages)) return false;
             if (!lhs.Objectives.SequenceEqualNullable(rhs.Objectives)) return false;
             if (!lhs.Aliases.SequenceEqualNullable(rhs.Aliases)) return false;
-            if (!string.Equals(lhs.Description, rhs.Description)) return false;
+            if (!object.Equals(lhs.Description, rhs.Description)) return false;
             if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
             return true;
         }
@@ -2385,7 +2385,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Name) ?? true))
             {
-                item.Name = rhs.Name;
+                item.Name = rhs.Name?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Flags) ?? true))
             {
@@ -2556,7 +2556,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Description) ?? true))
             {
-                item.Description = rhs.Description;
+                item.Description = rhs.Description?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.DNAMDataTypeState) ?? true))
             {
@@ -3130,7 +3130,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Name
         private int? _NameLocation;
-        public TranslatedString? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         private int? _DNAMLocation;
         public Quest.DNAMDataType DNAMDataTypeState { get; private set; }
@@ -3191,7 +3191,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IQuestAliasGetter> Aliases { get; private set; } = ListExt.Empty<QuestAliasBinaryOverlay>();
         #region Description
         private int? _DescriptionLocation;
-        public TranslatedString? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

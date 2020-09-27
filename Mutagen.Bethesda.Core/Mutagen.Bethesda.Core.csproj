@@ -18,12 +18,12 @@
   <ItemGroup>
     <PackageReference Include="Compression.BSA" Version="2.2.1.1" />
     <PackageReference Include="DotNetZip" Version="1.13.8" />
-    <PackageReference Include="Loqui" Version="1.5.4" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.1.5" />
+    <PackageReference Include="DynamicData" Version="6.16.9" />
+    <PackageReference Include="Loqui" Version="1.5.7" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.2.6" />
   </ItemGroup>
   <PropertyGroup>
     <PackageId>Mutagen.Bethesda.Core</PackageId>
-    <Version>0.16.0.0</Version>
     <Authors>Noggog</Authors>
     <Company>Mutagen</Company>
     <Product>Mutagen</Product>
@@ -70,8 +70,8 @@
     <Compile Include="Interfaces\IModKeyed.cs" />
     <Compile Include="Interfaces\Aspect\INamed.cs" />
     <Compile Include="Interfaces\Aspect\INamedRequired.cs" />
-    <Compile Include="Interfaces\ITranslatedNamed.cs" />
-    <Compile Include="Interfaces\ITranslatedNamedRequired.cs" />
+    <Compile Include="Interfaces\Aspect\ITranslatedNamed.cs" />
+    <Compile Include="Interfaces\Aspect\ITranslatedNamedRequired.cs" />
     <Compile Include="Interfaces\LinkInterfaceMapping.cs" />
     <Compile Include="Links\ImmutableModLinkCache.cs" />
     <Compile Include="Links\FormLinkNullable.cs" />
@@ -122,7 +122,6 @@
     <Compile Include="Translations\Binary\BinaryWriteParameters.cs" />
     <Compile Include="Utility\MajorRecordInstantiator.cs" />
     <Compile Include="Enums\StringBinaryType.cs" />
-    <Compile Include="Extensions\NullableExt.cs" />
     <Compile Include="Persistance\IFormKeyAllocator.cs" />
     <Compile Include="Records\GenderedItem.cs" />
     <Compile Include="Records\AListGroup.cs" />

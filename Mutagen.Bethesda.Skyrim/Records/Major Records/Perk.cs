@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -18,7 +18,9 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string? INamedGetter.Name => this.Name?.String;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TranslatedString ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequired.Name
         {
@@ -152,36 +154,36 @@ namespace Mutagen.Bethesda.Skyrim
                                 case APerkEntryPointEffect.FunctionType.SetValue:
                                 case APerkEntryPointEffect.FunctionType.AddValue:
                                 case APerkEntryPointEffect.FunctionType.MultiplyValue:
-                                    if (epf2.HasValue) throw new ArgumentException($"{nameof(PerkModifyValue)} had EPF2 unexpectedly");
-                                    if (epf3.HasValue) throw new ArgumentException($"{nameof(PerkModifyValue)} had EPF3 unexpectedly");
-                                    if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkModifyValue)} did not have expected EPFT record");
-                                    if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkModifyValue)} did not have expected EPFD record");
+                                    if (epf2.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointModifyValue)} had EPF2 unexpectedly");
+                                    if (epf3.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointModifyValue)} had EPF3 unexpectedly");
+                                    if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointModifyValue)} did not have expected EPFT record");
+                                    if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointModifyValue)} did not have expected EPFD record");
                                     if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.Float)
                                     {
-                                        throw new ArgumentException($"{nameof(PerkModifyValue)} did not have expected parameter type flag: {epft.Value[0]}");
+                                        throw new ArgumentException($"{nameof(PerkEntryPointModifyValue)} did not have expected parameter type flag: {epft.Value[0]}");
                                     }
-                                    entryPointEffect = new PerkModifyValue()
+                                    entryPointEffect = new PerkEntryPointModifyValue()
                                     {
                                         Value = epfd.Value.Float(),
                                         Modification = func switch
                                         {
-                                            APerkEntryPointEffect.FunctionType.SetValue => PerkModifyValue.ModificationType.Set,
-                                            APerkEntryPointEffect.FunctionType.MultiplyValue => PerkModifyValue.ModificationType.Multiply,
-                                            APerkEntryPointEffect.FunctionType.AddValue => PerkModifyValue.ModificationType.Add,
+                                            APerkEntryPointEffect.FunctionType.SetValue => PerkEntryPointModifyValue.ModificationType.Set,
+                                            APerkEntryPointEffect.FunctionType.MultiplyValue => PerkEntryPointModifyValue.ModificationType.Multiply,
+                                            APerkEntryPointEffect.FunctionType.AddValue => PerkEntryPointModifyValue.ModificationType.Add,
                                             _ => throw new ArgumentException(),
                                         }
                                     };
                                     break;
                                 case APerkEntryPointEffect.FunctionType.AddRangeToValue:
-                                    if (epf2.HasValue) throw new ArgumentException($"{nameof(PerkAddRangeToValue)} had EPF2 unexpectedly");
-                                    if (epf3.HasValue) throw new ArgumentException($"{nameof(PerkAddRangeToValue)} had EPF3 unexpectedly");
-                                    if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkAddRangeToValue)} did not have expected EPFT record");
-                                    if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkAddRangeToValue)} did not have expected EPFD record");
+                                    if (epf2.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointAddRangeToValue)} had EPF2 unexpectedly");
+                                    if (epf3.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointAddRangeToValue)} had EPF3 unexpectedly");
+                                    if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointAddRangeToValue)} did not have expected EPFT record");
+                                    if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointAddRangeToValue)} did not have expected EPFD record");
                                     if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.FloatFloat)
                                     {
-                                        throw new ArgumentException($"{nameof(PerkAddRangeToValue)} did not have expected parameter type flag: {epft.Value[0]}");
+                                        throw new ArgumentException($"{nameof(PerkEntryPointAddRangeToValue)} did not have expected parameter type flag: {epft.Value[0]}");
                                     }
-                                    entryPointEffect = new PerkAddRangeToValue()
+                                    entryPointEffect = new PerkEntryPointAddRangeToValue()
                                     {
                                         From = epfd.Value.Float(),
                                         To = epfd.Value.Slice(4).Float(),
@@ -191,63 +193,63 @@ namespace Mutagen.Bethesda.Skyrim
                                 case APerkEntryPointEffect.FunctionType.MultiplyActorValueMult:
                                 case APerkEntryPointEffect.FunctionType.MultiplyOnePlusActorValueMult:
                                 case APerkEntryPointEffect.FunctionType.AddActorValueMult:
-                                    if (epf2.HasValue) throw new ArgumentException($"{nameof(PerkModifyActorValue)} had EPF2 unexpectedly");
-                                    if (epf3.HasValue) throw new ArgumentException($"{nameof(PerkModifyActorValue)} had EPF3 unexpectedly");
-                                    if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkModifyActorValue)} did not have expected EPFT record");
-                                    if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkModifyActorValue)} did not have expected EPFD record");
+                                    if (epf2.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointModifyActorValue)} had EPF2 unexpectedly");
+                                    if (epf3.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointModifyActorValue)} had EPF3 unexpectedly");
+                                    if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointModifyActorValue)} did not have expected EPFT record");
+                                    if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointModifyActorValue)} did not have expected EPFD record");
                                     if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.FloatFloat)
                                     {
-                                        throw new ArgumentException($"{nameof(PerkModifyActorValue)} did not have expected parameter type flag: {epft.Value[0]}");
+                                        throw new ArgumentException($"{nameof(PerkEntryPointModifyActorValue)} did not have expected parameter type flag: {epft.Value[0]}");
                                     }
-                                    entryPointEffect = new PerkModifyActorValue()
+                                    entryPointEffect = new PerkEntryPointModifyActorValue()
                                     {
                                         ActorValue = (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(epfd.Value),
                                         Value = epfd.Value.Slice(4).Float(),
                                         Modification = func switch
                                         {
-                                            APerkEntryPointEffect.FunctionType.SetToActorValueMult => PerkModifyActorValue.ModificationType.SetToAVMult,
-                                            APerkEntryPointEffect.FunctionType.AddActorValueMult => PerkModifyActorValue.ModificationType.AddAVMult,
-                                            APerkEntryPointEffect.FunctionType.MultiplyActorValueMult => PerkModifyActorValue.ModificationType.MultiplyAVMult,
-                                            APerkEntryPointEffect.FunctionType.MultiplyOnePlusActorValueMult => PerkModifyActorValue.ModificationType.MultiplyOnePlusAVMult,
+                                            APerkEntryPointEffect.FunctionType.SetToActorValueMult => PerkEntryPointModifyActorValue.ModificationType.SetToAVMult,
+                                            APerkEntryPointEffect.FunctionType.AddActorValueMult => PerkEntryPointModifyActorValue.ModificationType.AddAVMult,
+                                            APerkEntryPointEffect.FunctionType.MultiplyActorValueMult => PerkEntryPointModifyActorValue.ModificationType.MultiplyAVMult,
+                                            APerkEntryPointEffect.FunctionType.MultiplyOnePlusActorValueMult => PerkEntryPointModifyActorValue.ModificationType.MultiplyOnePlusAVMult,
                                             _ => throw new ArgumentException(),
                                         }
                                     };
                                     break;
                                 case APerkEntryPointEffect.FunctionType.AbsoluteValue:
                                 case APerkEntryPointEffect.FunctionType.NegativeAbsoluteValue:
-                                    if (epf2.HasValue) throw new ArgumentException($"{nameof(PerkAbsoluteValue)} had EPF2 unexpectedly");
-                                    if (epf3.HasValue) throw new ArgumentException($"{nameof(PerkAbsoluteValue)} had EPF3 unexpectedly");
+                                    if (epf2.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointAbsoluteValue)} had EPF2 unexpectedly");
+                                    if (epf3.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointAbsoluteValue)} had EPF3 unexpectedly");
                                     if (epft.HasValue && epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.None)
                                     {
-                                        throw new ArgumentException($"{nameof(PerkAbsoluteValue)} did not have expected parameter type flag: {epft.Value[0]}");
+                                        throw new ArgumentException($"{nameof(PerkEntryPointAbsoluteValue)} did not have expected parameter type flag: {epft.Value[0]}");
                                     }
-                                    entryPointEffect = new PerkAbsoluteValue()
+                                    entryPointEffect = new PerkEntryPointAbsoluteValue()
                                     {
                                         Negative = func == APerkEntryPointEffect.FunctionType.NegativeAbsoluteValue
                                     };
                                     break;
                                 case APerkEntryPointEffect.FunctionType.AddLeveledList:
-                                    if (epf2.HasValue) throw new ArgumentException($"{nameof(PerkAddLeveledItem)} had EPF2 unexpectedly");
-                                    if (epf3.HasValue) throw new ArgumentException($"{nameof(PerkAddLeveledItem)} had EPF3 unexpectedly");
-                                    if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkAddLeveledItem)} did not have expected EPFT record");
-                                    if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkAddLeveledItem)} did not have expected EPFD record");
+                                    if (epf2.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointAddLeveledItem)} had EPF2 unexpectedly");
+                                    if (epf3.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointAddLeveledItem)} had EPF3 unexpectedly");
+                                    if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointAddLeveledItem)} did not have expected EPFT record");
+                                    if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointAddLeveledItem)} did not have expected EPFD record");
                                     if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.LeveledItem)
                                     {
-                                        throw new ArgumentException($"{nameof(PerkAddLeveledItem)} did not have expected parameter type flag: {epft.Value[0]}");
+                                        throw new ArgumentException($"{nameof(PerkEntryPointAddLeveledItem)} did not have expected parameter type flag: {epft.Value[0]}");
                                     }
-                                    entryPointEffect = new PerkAddLeveledItem()
+                                    entryPointEffect = new PerkEntryPointAddLeveledItem()
                                     {
                                         Item = FormKeyBinaryTranslation.Instance.Parse(epfd.Value, stream.MetaData.MasterReferences!)
                                     };
                                     break;
                                 case APerkEntryPointEffect.FunctionType.AddActivateChoice:
-                                    if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkAddActivateChoice)} did not have expected EPFT record");
-                                    if (!epf3.HasValue) throw new ArgumentException($"{nameof(PerkAddActivateChoice)} did not have expected EPF3 record");
+                                    if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointAddActivateChoice)} did not have expected EPFT record");
+                                    if (!epf3.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointAddActivateChoice)} did not have expected EPF3 record");
                                     if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.SpellWithStrings)
                                     {
-                                        throw new ArgumentException($"{nameof(PerkAddActivateChoice)} did not have expected parameter type flag: {epft.Value[0]}");
+                                        throw new ArgumentException($"{nameof(PerkEntryPointAddActivateChoice)} did not have expected parameter type flag: {epft.Value[0]}");
                                     }
-                                    entryPointEffect = new PerkAddActivateChoice()
+                                    entryPointEffect = new PerkEntryPointAddActivateChoice()
                                     {
                                         Spell = epfd.HasValue ? FormKeyBinaryTranslation.Instance.Parse(epfd.Value, stream.MetaData.MasterReferences!) : default(FormKey?),
                                         ButtonLabel = epf2.HasValue ? StringBinaryTranslation.Instance.Parse(epf2.Value, StringsSource.Normal, stream.MetaData.StringsLookup!) : null,
@@ -259,43 +261,43 @@ namespace Mutagen.Bethesda.Skyrim
                                     };
                                     break;
                                 case APerkEntryPointEffect.FunctionType.SelectSpell:
-                                    if (epf2.HasValue) throw new ArgumentException($"{nameof(PerkSelectSpell)} had EPF2 unexpectedly");
-                                    if (epf3.HasValue) throw new ArgumentException($"{nameof(PerkSelectSpell)} had EPF3 unexpectedly");
-                                    if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkSelectSpell)} did not have expected EPFT record");
-                                    if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkSelectSpell)} did not have expected EPFD record");
+                                    if (epf2.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointSelectSpell)} had EPF2 unexpectedly");
+                                    if (epf3.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointSelectSpell)} had EPF3 unexpectedly");
+                                    if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointSelectSpell)} did not have expected EPFT record");
+                                    if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointSelectSpell)} did not have expected EPFD record");
                                     if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.Spell)
                                     {
-                                        throw new ArgumentException($"{nameof(PerkSelectSpell)} did not have expected parameter type flag: {epft.Value[0]}");
+                                        throw new ArgumentException($"{nameof(PerkEntryPointSelectSpell)} did not have expected parameter type flag: {epft.Value[0]}");
                                     }
-                                    entryPointEffect = new PerkSelectSpell()
+                                    entryPointEffect = new PerkEntryPointSelectSpell()
                                     {
                                         Spell = FormKeyBinaryTranslation.Instance.Parse(epfd.Value, stream.MetaData.MasterReferences!),
                                     };
                                     break;
                                 case APerkEntryPointEffect.FunctionType.SelectText:
-                                    if (epf2.HasValue) throw new ArgumentException($"{nameof(PerkSelectText)} had EPF2 unexpectedly");
-                                    if (epf3.HasValue) throw new ArgumentException($"{nameof(PerkSelectText)} had EPF3 unexpectedly");
-                                    if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkSelectText)} did not have expected EPFT record");
-                                    if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkSelectText)} did not have expected EPFD record");
+                                    if (epf2.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointSelectText)} had EPF2 unexpectedly");
+                                    if (epf3.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointSelectText)} had EPF3 unexpectedly");
+                                    if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointSelectText)} did not have expected EPFT record");
+                                    if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointSelectText)} did not have expected EPFD record");
                                     if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.String)
                                     {
-                                        throw new ArgumentException($"{nameof(PerkSelectText)} did not have expected parameter type flag: {epft.Value[0]}");
+                                        throw new ArgumentException($"{nameof(PerkEntryPointSelectText)} did not have expected parameter type flag: {epft.Value[0]}");
                                     }
-                                    entryPointEffect = new PerkSelectText()
+                                    entryPointEffect = new PerkEntryPointSelectText()
                                     {
                                         Text = BinaryStringUtility.ProcessWholeToZString(epfd.Value)
                                     };
                                     break;
                                 case APerkEntryPointEffect.FunctionType.SetText:
-                                    if (epf2.HasValue) throw new ArgumentException($"{nameof(PerkSetText)} had EPF2 unexpectedly");
-                                    if (epf3.HasValue) throw new ArgumentException($"{nameof(PerkSetText)} had EPF3 unexpectedly");
-                                    if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkSetText)} did not have expected EPFT record");
-                                    if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkSetText)} did not have expected EPFD record");
+                                    if (epf2.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointSetText)} had EPF2 unexpectedly");
+                                    if (epf3.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointSetText)} had EPF3 unexpectedly");
+                                    if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointSetText)} did not have expected EPFT record");
+                                    if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointSetText)} did not have expected EPFD record");
                                     if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.LString)
                                     {
-                                        throw new ArgumentException($"{nameof(PerkSetText)} did not have expected parameter type flag: {epft.Value[0]}");
+                                        throw new ArgumentException($"{nameof(PerkEntryPointSetText)} did not have expected parameter type flag: {epft.Value[0]}");
                                     }
-                                    entryPointEffect = new PerkSetText()
+                                    entryPointEffect = new PerkEntryPointSetText()
                                     {
                                         Text = StringBinaryTranslation.Instance.Parse(epfd.Value, StringsSource.Normal, stream.MetaData.StringsLookup!),
                                     };
@@ -363,28 +365,28 @@ namespace Mutagen.Bethesda.Skyrim
                                 writer.Write((byte)entryPt.EntryPoint);
                                 writer.Write((byte)(entryPt switch
                                 {
-                                    PerkModifyValue modVal => modVal.Modification switch
+                                    PerkEntryPointModifyValue modVal => modVal.Modification switch
                                     {
-                                        PerkModifyValue.ModificationType.Add => APerkEntryPointEffect.FunctionType.AddValue,
-                                        PerkModifyValue.ModificationType.Set => APerkEntryPointEffect.FunctionType.SetValue,
-                                        PerkModifyValue.ModificationType.Multiply => APerkEntryPointEffect.FunctionType.MultiplyValue,
+                                        PerkEntryPointModifyValue.ModificationType.Add => APerkEntryPointEffect.FunctionType.AddValue,
+                                        PerkEntryPointModifyValue.ModificationType.Set => APerkEntryPointEffect.FunctionType.SetValue,
+                                        PerkEntryPointModifyValue.ModificationType.Multiply => APerkEntryPointEffect.FunctionType.MultiplyValue,
                                         _ => throw new NotImplementedException()
                                     },
-                                    PerkAddRangeToValue addRange => APerkEntryPointEffect.FunctionType.AddRangeToValue,
-                                    PerkModifyActorValue modActorVal => modActorVal.Modification switch
+                                    PerkEntryPointAddRangeToValue addRange => APerkEntryPointEffect.FunctionType.AddRangeToValue,
+                                    PerkEntryPointModifyActorValue modActorVal => modActorVal.Modification switch
                                     {
-                                        PerkModifyActorValue.ModificationType.AddAVMult => APerkEntryPointEffect.FunctionType.AddActorValueMult,
-                                        PerkModifyActorValue.ModificationType.MultiplyAVMult => APerkEntryPointEffect.FunctionType.MultiplyActorValueMult,
-                                        PerkModifyActorValue.ModificationType.MultiplyOnePlusAVMult => APerkEntryPointEffect.FunctionType.MultiplyOnePlusActorValueMult,
-                                        PerkModifyActorValue.ModificationType.SetToAVMult => APerkEntryPointEffect.FunctionType.SetToActorValueMult,
+                                        PerkEntryPointModifyActorValue.ModificationType.AddAVMult => APerkEntryPointEffect.FunctionType.AddActorValueMult,
+                                        PerkEntryPointModifyActorValue.ModificationType.MultiplyAVMult => APerkEntryPointEffect.FunctionType.MultiplyActorValueMult,
+                                        PerkEntryPointModifyActorValue.ModificationType.MultiplyOnePlusAVMult => APerkEntryPointEffect.FunctionType.MultiplyOnePlusActorValueMult,
+                                        PerkEntryPointModifyActorValue.ModificationType.SetToAVMult => APerkEntryPointEffect.FunctionType.SetToActorValueMult,
                                         _ => throw new NotImplementedException()
                                     },
-                                    PerkAbsoluteValue absVal => absVal.Negative ? APerkEntryPointEffect.FunctionType.NegativeAbsoluteValue : APerkEntryPointEffect.FunctionType.AbsoluteValue,
-                                    PerkAddLeveledItem levItem => APerkEntryPointEffect.FunctionType.AddLeveledList,
-                                    PerkAddActivateChoice activeChoice => APerkEntryPointEffect.FunctionType.AddActivateChoice,
-                                    PerkSelectSpell spell => APerkEntryPointEffect.FunctionType.SelectSpell,
-                                    PerkSelectText text => APerkEntryPointEffect.FunctionType.SelectText,
-                                    PerkSetText ltext => APerkEntryPointEffect.FunctionType.SetText,
+                                    PerkEntryPointAbsoluteValue absVal => absVal.Negative ? APerkEntryPointEffect.FunctionType.NegativeAbsoluteValue : APerkEntryPointEffect.FunctionType.AbsoluteValue,
+                                    PerkEntryPointAddLeveledItem levItem => APerkEntryPointEffect.FunctionType.AddLeveledList,
+                                    PerkEntryPointAddActivateChoice activeChoice => APerkEntryPointEffect.FunctionType.AddActivateChoice,
+                                    PerkEntryPointSelectSpell spell => APerkEntryPointEffect.FunctionType.SelectSpell,
+                                    PerkEntryPointSelectText text => APerkEntryPointEffect.FunctionType.SelectText,
+                                    PerkEntryPointSetText ltext => APerkEntryPointEffect.FunctionType.SetText,
                                     _ => throw new NotImplementedException()
                                 }));
                                 writer.Write(entryPt.PerkConditionTabCount);
@@ -401,22 +403,22 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var paramType = effect switch
                         {
-                            PerkModifyValue modVal => APerkEntryPointEffect.ParameterType.Float,
-                            PerkAddRangeToValue modVal => APerkEntryPointEffect.ParameterType.FloatFloat,
-                            PerkModifyActorValue modActorVal => APerkEntryPointEffect.ParameterType.FloatFloat,
-                            PerkAbsoluteValue absVal => APerkEntryPointEffect.ParameterType.None,
-                            PerkAddLeveledItem levItem => APerkEntryPointEffect.ParameterType.LeveledItem,
-                            PerkAddActivateChoice activateChoice => APerkEntryPointEffect.ParameterType.SpellWithStrings,
-                            PerkSelectSpell spell => APerkEntryPointEffect.ParameterType.Spell,
-                            PerkSelectText txt => APerkEntryPointEffect.ParameterType.String,
-                            PerkSetText ltxt => APerkEntryPointEffect.ParameterType.LString,
+                            PerkEntryPointModifyValue modVal => APerkEntryPointEffect.ParameterType.Float,
+                            PerkEntryPointAddRangeToValue modVal => APerkEntryPointEffect.ParameterType.FloatFloat,
+                            PerkEntryPointModifyActorValue modActorVal => APerkEntryPointEffect.ParameterType.FloatFloat,
+                            PerkEntryPointAbsoluteValue absVal => APerkEntryPointEffect.ParameterType.None,
+                            PerkEntryPointAddLeveledItem levItem => APerkEntryPointEffect.ParameterType.LeveledItem,
+                            PerkEntryPointAddActivateChoice activateChoice => APerkEntryPointEffect.ParameterType.SpellWithStrings,
+                            PerkEntryPointSelectSpell spell => APerkEntryPointEffect.ParameterType.Spell,
+                            PerkEntryPointSelectText txt => APerkEntryPointEffect.ParameterType.String,
+                            PerkEntryPointSetText ltxt => APerkEntryPointEffect.ParameterType.LString,
                             _ => throw new NotImplementedException()
                         };
                         using (HeaderExport.Subrecord(writer, RecordTypes.EPFT))
                         {
                             writer.Write((byte)paramType);
                         }
-                        if (effect is PerkAddActivateChoice choice)
+                        if (effect is PerkEntryPointAddActivateChoice choice)
                         {
                             if (choice.ButtonLabel != null)
                             {
@@ -429,33 +431,33 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                         switch (effect)
                         {
-                            case PerkModifyValue modVal:
+                            case PerkEntryPointModifyValue modVal:
                                 using (HeaderExport.Subrecord(writer, RecordTypes.EPFD))
                                 {
                                     writer.Write(modVal.Value);
                                 }
                                 break;
-                            case PerkAddRangeToValue range:
+                            case PerkEntryPointAddRangeToValue range:
                                 using (HeaderExport.Subrecord(writer, RecordTypes.EPFD))
                                 {
                                     writer.Write(range.From);
                                     writer.Write(range.To);
                                 }
                                 break;
-                            case PerkModifyActorValue actorVal:
+                            case PerkEntryPointModifyActorValue actorVal:
                                 using (HeaderExport.Subrecord(writer, RecordTypes.EPFD))
                                 {
                                     writer.Write((int)actorVal.ActorValue);
                                     writer.Write(actorVal.Value);
                                 }
                                 break;
-                            case PerkAddLeveledItem lev:
+                            case PerkEntryPointAddLeveledItem lev:
                                 using (HeaderExport.Subrecord(writer, RecordTypes.EPFD))
                                 {
                                     FormKeyBinaryTranslation.Instance.Write(writer, lev.Item.FormKey);
                                 }
                                 break;
-                            case PerkAddActivateChoice activateChoice:
+                            case PerkEntryPointAddActivateChoice activateChoice:
                                 if (activateChoice.Spell.FormKey != null)
                                 {
                                     using (HeaderExport.Subrecord(writer, RecordTypes.EPFD))
@@ -464,25 +466,25 @@ namespace Mutagen.Bethesda.Skyrim
                                     }
                                 }
                                 break;
-                            case PerkSelectSpell spell:
+                            case PerkEntryPointSelectSpell spell:
                                 using (HeaderExport.Subrecord(writer, RecordTypes.EPFD))
                                 {
                                     FormKeyBinaryTranslation.Instance.Write(writer, spell.Spell.FormKey);
                                 }
                                 break;
-                            case PerkSelectText text:
+                            case PerkEntryPointSelectText text:
                                 using (HeaderExport.Subrecord(writer, RecordTypes.EPFD))
                                 {
                                     writer.Write(text.Text, StringBinaryType.NullTerminate);
                                 }
                                 break;
-                            case PerkSetText ltext:
+                            case PerkEntryPointSetText ltext:
                                 using (HeaderExport.Subrecord(writer, RecordTypes.EPFD))
                                 {
                                     StringBinaryTranslation.Instance.Write(writer, ltext.Text, StringBinaryType.NullTerminate, StringsSource.Normal);
                                 }
                                 break;
-                            case PerkAbsoluteValue abs:
+                            case PerkEntryPointAbsoluteValue abs:
                                 break;
                             default:
                                 throw new NotImplementedException();
@@ -501,7 +503,7 @@ namespace Mutagen.Bethesda.Skyrim
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             string? INamedGetter.Name => this.Name?.String;
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            TranslatedString ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+            ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
             #endregion
 
             public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = ListExt.Empty<IConditionGetter>();

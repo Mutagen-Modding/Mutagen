@@ -17,6 +17,8 @@ namespace Mutagen.Bethesda.Skyrim
             set => this.Name = new TranslatedString(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IModeledGetter.Model => this.Model;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;

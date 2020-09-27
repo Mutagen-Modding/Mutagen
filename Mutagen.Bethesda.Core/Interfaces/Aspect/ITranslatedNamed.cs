@@ -25,6 +25,6 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// The display name of the record
         /// </summary>
-        new TranslatedString? Name { get; }
+        new ITranslatedStringGetter? Name { get; }
     }
 }

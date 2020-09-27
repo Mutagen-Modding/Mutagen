@@ -1,16 +1,9 @@
-using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Noggog;
-using Noggog.Utility;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reactive.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Xunit;
 using static Mutagen.Bethesda.Tests.ModRecordAligner;
 
 namespace Mutagen.Bethesda.Tests

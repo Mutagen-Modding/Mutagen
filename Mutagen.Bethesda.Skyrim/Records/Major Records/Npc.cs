@@ -15,7 +15,9 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string? INamedGetter.Name => this.Name?.String;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TranslatedString ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequired.Name
         {
@@ -80,7 +82,7 @@ namespace Mutagen.Bethesda.Skyrim
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             string? INamedGetter.Name => this.Name?.String;
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            TranslatedString ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+            ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
             #endregion
 
             partial void DataMarkerCustomParse(OverlayStream stream, int offset)

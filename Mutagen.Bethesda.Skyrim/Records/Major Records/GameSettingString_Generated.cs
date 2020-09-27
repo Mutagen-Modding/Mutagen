@@ -4,24 +4,24 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 */
 #region Usings
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Loqui;
 using Loqui.Internal;
-using Noggog;
-using Mutagen.Bethesda.Skyrim.Internals;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
+using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Skyrim.Internals;
+using Noggog;
+using System;
+using System.Buffers.Binary;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Binary;
-using System.Buffers.Binary;
+using System.Linq;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Text;
 #endregion
 
 #nullable enable
@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Data
         public TranslatedString? Data { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TranslatedString? IGameSettingStringGetter.Data => this.Data;
+        ITranslatedStringGetter? IGameSettingStringGetter.Data => this.Data;
         #endregion
 
         #region To String
@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static new ILoquiRegistration Registration => GameSettingString_Registration.Instance;
-        TranslatedString? Data { get; }
+        ITranslatedStringGetter? Data { get; }
 
     }
 
@@ -782,7 +782,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Data = string.Equals(item.Data, rhs.Data);
+            ret.Data = object.Equals(item.Data, rhs.Data);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -908,7 +908,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals((IGameSettingGetter)lhs, (IGameSettingGetter)rhs)) return false;
-            if (!string.Equals(lhs.Data, rhs.Data)) return false;
+            if (!object.Equals(lhs.Data, rhs.Data)) return false;
             return true;
         }
         
@@ -1033,7 +1033,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)GameSettingString_FieldIndex.Data) ?? true))
             {
-                item.Data = rhs.Data;
+                item.Data = rhs.Data?.DeepCopy();
             }
         }
         
@@ -1388,7 +1388,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Data
         private int? _DataLocation;
-        public TranslatedString? Data => _DataLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DataLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        public ITranslatedStringGetter? Data => _DataLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DataLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -4,23 +4,23 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 */
 #region Usings
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Loqui;
 using Loqui.Internal;
-using Noggog;
-using Mutagen.Bethesda.Skyrim.Internals;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Skyrim.Internals;
+using Noggog;
+using System;
+using System.Buffers.Binary;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Binary;
-using System.Buffers.Binary;
-using Mutagen.Bethesda.Internals;
+using System.Linq;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Text;
 #endregion
 
 #nullable enable
@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region DisplayText
         public TranslatedString? DisplayText { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TranslatedString? IQuestObjectiveGetter.DisplayText => this.DisplayText;
+        ITranslatedStringGetter? IQuestObjectiveGetter.DisplayText => this.DisplayText;
         #endregion
         #region Targets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -623,7 +623,7 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => QuestObjective_Registration.Instance;
         UInt16 Index { get; }
         QuestObjective.Flag? Flags { get; }
-        TranslatedString? DisplayText { get; }
+        ITranslatedStringGetter? DisplayText { get; }
         IReadOnlyList<IQuestObjectiveTargetGetter> Targets { get; }
 
     }
@@ -934,7 +934,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (rhs == null) return;
             ret.Index = item.Index == rhs.Index;
             ret.Flags = item.Flags == rhs.Flags;
-            ret.DisplayText = string.Equals(item.DisplayText, rhs.DisplayText);
+            ret.DisplayText = object.Equals(item.DisplayText, rhs.DisplayText);
             ret.Targets = item.Targets.CollectionEqualsHelper(
                 rhs.Targets,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1028,7 +1028,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null || rhs == null) return false;
             if (lhs.Index != rhs.Index) return false;
             if (lhs.Flags != rhs.Flags) return false;
-            if (!string.Equals(lhs.DisplayText, rhs.DisplayText)) return false;
+            if (!object.Equals(lhs.DisplayText, rhs.DisplayText)) return false;
             if (!lhs.Targets.SequenceEqualNullable(rhs.Targets)) return false;
             return true;
         }
@@ -1094,7 +1094,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)QuestObjective_FieldIndex.DisplayText) ?? true))
             {
-                item.DisplayText = rhs.DisplayText;
+                item.DisplayText = rhs.DisplayText?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)QuestObjective_FieldIndex.Targets) ?? true))
             {
@@ -1405,7 +1405,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region DisplayText
         private int? _DisplayTextLocation;
-        public TranslatedString? DisplayText => _DisplayTextLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DisplayTextLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        public ITranslatedStringGetter? DisplayText => _DisplayTextLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DisplayTextLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         public IReadOnlyList<IQuestObjectiveTargetGetter> Targets { get; private set; } = ListExt.Empty<QuestObjectiveTargetBinaryOverlay>();
         partial void CustomFactoryEnd(

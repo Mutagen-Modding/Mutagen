@@ -4,45 +4,45 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 */
 #region Usings
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Loqui;
 using Loqui.Internal;
-using Noggog;
-using Mutagen.Bethesda.Skyrim.Internals;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Skyrim.Internals;
+using Noggog;
+using System;
+using System.Buffers.Binary;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Binary;
-using System.Buffers.Binary;
-using Mutagen.Bethesda.Internals;
+using System.Linq;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Text;
 #endregion
 
 #nullable enable
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class PerkSelectText :
+    public partial class PerkEntryPointSelectSpell :
         APerkEntryPointEffect,
-        IPerkSelectText,
-        ILoquiObjectSetter<PerkSelectText>,
-        IEquatable<IPerkSelectTextGetter>
+        IPerkEntryPointSelectSpell,
+        ILoquiObjectSetter<PerkEntryPointSelectSpell>,
+        IEquatable<IPerkEntryPointSelectSpellGetter>
     {
         #region Ctor
-        public PerkSelectText()
+        public PerkEntryPointSelectSpell()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Text
-        public String Text { get; set; } = string.Empty;
+        #region Spell
+        public FormLink<ISpellGetter> Spell { get; set; } = new FormLink<ISpellGetter>();
         #endregion
 
         #region To String
@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Skyrim
             FileGeneration fg,
             string? name = null)
         {
-            PerkSelectTextMixIn.ToString(
+            PerkEntryPointSelectSpellMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -61,16 +61,16 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPerkSelectTextGetter rhs)) return false;
-            return ((PerkSelectTextCommon)((IPerkSelectTextGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is IPerkEntryPointSelectSpellGetter rhs)) return false;
+            return ((PerkEntryPointSelectSpellCommon)((IPerkEntryPointSelectSpellGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(IPerkSelectTextGetter? obj)
+        public bool Equals(IPerkEntryPointSelectSpellGetter? obj)
         {
-            return ((PerkSelectTextCommon)((IPerkSelectTextGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PerkEntryPointSelectSpellCommon)((IPerkEntryPointSelectSpellGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((PerkSelectTextCommon)((IPerkSelectTextGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((PerkEntryPointSelectSpellCommon)((IPerkEntryPointSelectSpellGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Text = initialValue;
+                this.Spell = initialValue;
             }
 
             public Mask(
@@ -94,7 +94,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem PRKEDataTypeState,
                 TItem EntryPoint,
                 TItem PerkConditionTabCount,
-                TItem Text)
+                TItem Spell)
             : base(
                 Rank: Rank,
                 Priority: Priority,
@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda.Skyrim
                 EntryPoint: EntryPoint,
                 PerkConditionTabCount: PerkConditionTabCount)
             {
-                this.Text = Text;
+                this.Spell = Spell;
             }
 
             #pragma warning disable CS8618
@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public TItem Text;
+            public TItem Spell;
             #endregion
 
             #region Equals
@@ -129,13 +129,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.Text, rhs.Text)) return false;
+                if (!object.Equals(this.Spell, rhs.Spell)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Text);
+                hash.Add(this.Spell);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -146,7 +146,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.Text)) return false;
+                if (!eval(this.Spell)) return false;
                 return true;
             }
             #endregion
@@ -155,7 +155,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.Text)) return true;
+                if (eval(this.Spell)) return true;
                 return false;
             }
             #endregion
@@ -163,7 +163,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new PerkSelectText.Mask<R>();
+                var ret = new PerkEntryPointSelectSpell.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -171,7 +171,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.Text = eval(this.Text);
+                obj.Spell = eval(this.Spell);
             }
             #endregion
 
@@ -181,22 +181,22 @@ namespace Mutagen.Bethesda.Skyrim
                 return ToString(printMask: null);
             }
 
-            public string ToString(PerkSelectText.Mask<bool>? printMask = null)
+            public string ToString(PerkEntryPointSelectSpell.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, PerkSelectText.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, PerkEntryPointSelectSpell.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(PerkSelectText.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(PerkEntryPointSelectSpell.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.Text ?? true)
+                    if (printMask?.Spell ?? true)
                     {
-                        fg.AppendItem(Text, "Text");
+                        fg.AppendItem(Spell, "Spell");
                     }
                 }
                 fg.AppendLine("]");
@@ -210,17 +210,17 @@ namespace Mutagen.Bethesda.Skyrim
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? Text;
+            public Exception? Spell;
             #endregion
 
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                PerkSelectText_FieldIndex enu = (PerkSelectText_FieldIndex)index;
+                PerkEntryPointSelectSpell_FieldIndex enu = (PerkEntryPointSelectSpell_FieldIndex)index;
                 switch (enu)
                 {
-                    case PerkSelectText_FieldIndex.Text:
-                        return Text;
+                    case PerkEntryPointSelectSpell_FieldIndex.Spell:
+                        return Spell;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -228,11 +228,11 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthException(int index, Exception ex)
             {
-                PerkSelectText_FieldIndex enu = (PerkSelectText_FieldIndex)index;
+                PerkEntryPointSelectSpell_FieldIndex enu = (PerkEntryPointSelectSpell_FieldIndex)index;
                 switch (enu)
                 {
-                    case PerkSelectText_FieldIndex.Text:
-                        this.Text = ex;
+                    case PerkEntryPointSelectSpell_FieldIndex.Spell:
+                        this.Spell = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -242,11 +242,11 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthMask(int index, object obj)
             {
-                PerkSelectText_FieldIndex enu = (PerkSelectText_FieldIndex)index;
+                PerkEntryPointSelectSpell_FieldIndex enu = (PerkEntryPointSelectSpell_FieldIndex)index;
                 switch (enu)
                 {
-                    case PerkSelectText_FieldIndex.Text:
-                        this.Text = (Exception?)obj;
+                    case PerkEntryPointSelectSpell_FieldIndex.Spell:
+                        this.Spell = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -257,7 +257,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Text != null) return true;
+                if (Spell != null) return true;
                 return false;
             }
             #endregion
@@ -293,7 +293,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendItem(Text, "Text");
+                fg.AppendItem(Spell, "Spell");
             }
             #endregion
 
@@ -302,7 +302,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Text = this.Text.Combine(rhs.Text);
+                ret.Spell = this.Spell.Combine(rhs.Spell);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -325,14 +325,14 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public bool Text;
+            public bool Spell;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.Text = defaultOn;
+                this.Spell = defaultOn;
             }
 
             #endregion
@@ -340,7 +340,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Text, null));
+                ret.Add((Spell, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -352,28 +352,34 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = PerkSelectText_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = PerkEntryPointSelectSpell_Registration.TriggeringRecordType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => PerkEntryPointSelectSpellCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PerkEntryPointSelectSpellCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkEntryPointSelectSpellCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkEntryPointSelectSpellCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => PerkSelectTextBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => PerkEntryPointSelectSpellBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((PerkSelectTextBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((PerkEntryPointSelectSpellBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        public new static PerkSelectText CreateFromBinary(
+        public new static PerkEntryPointSelectSpell CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new PerkSelectText();
-            ((PerkSelectTextSetterCommon)((IPerkSelectTextGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new PerkEntryPointSelectSpell();
+            ((PerkEntryPointSelectSpellSetterCommon)((IPerkEntryPointSelectSpellGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -384,7 +390,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out PerkSelectText item,
+            out PerkEntryPointSelectSpell item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
@@ -397,75 +403,77 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IClearable.Clear()
         {
-            ((PerkSelectTextSetterCommon)((IPerkSelectTextGetter)this).CommonSetterInstance()!).Clear(this);
+            ((PerkEntryPointSelectSpellSetterCommon)((IPerkEntryPointSelectSpellGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new PerkSelectText GetNew()
+        internal static new PerkEntryPointSelectSpell GetNew()
         {
-            return new PerkSelectText();
+            return new PerkEntryPointSelectSpell();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IPerkSelectText :
-        IPerkSelectTextGetter,
+    public partial interface IPerkEntryPointSelectSpell :
+        IPerkEntryPointSelectSpellGetter,
         IAPerkEntryPointEffect,
-        ILoquiObjectSetter<IPerkSelectText>
+        ILoquiObjectSetter<IPerkEntryPointSelectSpell>,
+        ILinkedFormKeyContainer
     {
-        new String Text { get; set; }
+        new FormLink<ISpellGetter> Spell { get; set; }
     }
 
-    public partial interface IPerkSelectTextGetter :
+    public partial interface IPerkEntryPointSelectSpellGetter :
         IAPerkEntryPointEffectGetter,
-        ILoquiObject<IPerkSelectTextGetter>,
+        ILoquiObject<IPerkEntryPointSelectSpellGetter>,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
-        static new ILoquiRegistration Registration => PerkSelectText_Registration.Instance;
-        String Text { get; }
+        static new ILoquiRegistration Registration => PerkEntryPointSelectSpell_Registration.Instance;
+        FormLink<ISpellGetter> Spell { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class PerkSelectTextMixIn
+    public static partial class PerkEntryPointSelectSpellMixIn
     {
-        public static void Clear(this IPerkSelectText item)
+        public static void Clear(this IPerkEntryPointSelectSpell item)
         {
-            ((PerkSelectTextSetterCommon)((IPerkSelectTextGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((PerkEntryPointSelectSpellSetterCommon)((IPerkEntryPointSelectSpellGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static PerkSelectText.Mask<bool> GetEqualsMask(
-            this IPerkSelectTextGetter item,
-            IPerkSelectTextGetter rhs,
+        public static PerkEntryPointSelectSpell.Mask<bool> GetEqualsMask(
+            this IPerkEntryPointSelectSpellGetter item,
+            IPerkEntryPointSelectSpellGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((PerkSelectTextCommon)((IPerkSelectTextGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((PerkEntryPointSelectSpellCommon)((IPerkEntryPointSelectSpellGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IPerkSelectTextGetter item,
+            this IPerkEntryPointSelectSpellGetter item,
             string? name = null,
-            PerkSelectText.Mask<bool>? printMask = null)
+            PerkEntryPointSelectSpell.Mask<bool>? printMask = null)
         {
-            return ((PerkSelectTextCommon)((IPerkSelectTextGetter)item).CommonInstance()!).ToString(
+            return ((PerkEntryPointSelectSpellCommon)((IPerkEntryPointSelectSpellGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IPerkSelectTextGetter item,
+            this IPerkEntryPointSelectSpellGetter item,
             FileGeneration fg,
             string? name = null,
-            PerkSelectText.Mask<bool>? printMask = null)
+            PerkEntryPointSelectSpell.Mask<bool>? printMask = null)
         {
-            ((PerkSelectTextCommon)((IPerkSelectTextGetter)item).CommonInstance()!).ToString(
+            ((PerkEntryPointSelectSpellCommon)((IPerkEntryPointSelectSpellGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -473,37 +481,37 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool Equals(
-            this IPerkSelectTextGetter item,
-            IPerkSelectTextGetter rhs)
+            this IPerkEntryPointSelectSpellGetter item,
+            IPerkEntryPointSelectSpellGetter rhs)
         {
-            return ((PerkSelectTextCommon)((IPerkSelectTextGetter)item).CommonInstance()!).Equals(
+            return ((PerkEntryPointSelectSpellCommon)((IPerkEntryPointSelectSpellGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyIn(
-            this IPerkSelectText lhs,
-            IPerkSelectTextGetter rhs,
-            out PerkSelectText.ErrorMask errorMask,
-            PerkSelectText.TranslationMask? copyMask = null)
+            this IPerkEntryPointSelectSpell lhs,
+            IPerkEntryPointSelectSpellGetter rhs,
+            out PerkEntryPointSelectSpell.ErrorMask errorMask,
+            PerkEntryPointSelectSpell.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((PerkSelectTextSetterTranslationCommon)((IPerkSelectTextGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((PerkEntryPointSelectSpellSetterTranslationCommon)((IPerkEntryPointSelectSpellGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = PerkSelectText.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PerkEntryPointSelectSpell.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IPerkSelectText lhs,
-            IPerkSelectTextGetter rhs,
+            this IPerkEntryPointSelectSpell lhs,
+            IPerkEntryPointSelectSpellGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((PerkSelectTextSetterTranslationCommon)((IPerkSelectTextGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((PerkEntryPointSelectSpellSetterTranslationCommon)((IPerkEntryPointSelectSpellGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -511,32 +519,32 @@ namespace Mutagen.Bethesda.Skyrim
                 deepCopy: false);
         }
 
-        public static PerkSelectText DeepCopy(
-            this IPerkSelectTextGetter item,
-            PerkSelectText.TranslationMask? copyMask = null)
+        public static PerkEntryPointSelectSpell DeepCopy(
+            this IPerkEntryPointSelectSpellGetter item,
+            PerkEntryPointSelectSpell.TranslationMask? copyMask = null)
         {
-            return ((PerkSelectTextSetterTranslationCommon)((IPerkSelectTextGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PerkEntryPointSelectSpellSetterTranslationCommon)((IPerkEntryPointSelectSpellGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static PerkSelectText DeepCopy(
-            this IPerkSelectTextGetter item,
-            out PerkSelectText.ErrorMask errorMask,
-            PerkSelectText.TranslationMask? copyMask = null)
+        public static PerkEntryPointSelectSpell DeepCopy(
+            this IPerkEntryPointSelectSpellGetter item,
+            out PerkEntryPointSelectSpell.ErrorMask errorMask,
+            PerkEntryPointSelectSpell.TranslationMask? copyMask = null)
         {
-            return ((PerkSelectTextSetterTranslationCommon)((IPerkSelectTextGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PerkEntryPointSelectSpellSetterTranslationCommon)((IPerkEntryPointSelectSpellGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static PerkSelectText DeepCopy(
-            this IPerkSelectTextGetter item,
+        public static PerkEntryPointSelectSpell DeepCopy(
+            this IPerkEntryPointSelectSpellGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((PerkSelectTextSetterTranslationCommon)((IPerkSelectTextGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PerkEntryPointSelectSpellSetterTranslationCommon)((IPerkEntryPointSelectSpellGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -544,11 +552,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IPerkSelectText item,
+            this IPerkEntryPointSelectSpell item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((PerkSelectTextSetterCommon)((IPerkSelectTextGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((PerkEntryPointSelectSpellSetterCommon)((IPerkEntryPointSelectSpellGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -564,7 +572,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     #region Field Index
-    public enum PerkSelectText_FieldIndex
+    public enum PerkEntryPointSelectSpell_FieldIndex
     {
         Rank = 0,
         Priority = 1,
@@ -572,45 +580,45 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         PRKEDataTypeState = 3,
         EntryPoint = 4,
         PerkConditionTabCount = 5,
-        Text = 6,
+        Spell = 6,
     }
     #endregion
 
     #region Registration
-    public partial class PerkSelectText_Registration : ILoquiRegistration
+    public partial class PerkEntryPointSelectSpell_Registration : ILoquiRegistration
     {
-        public static readonly PerkSelectText_Registration Instance = new PerkSelectText_Registration();
+        public static readonly PerkEntryPointSelectSpell_Registration Instance = new PerkEntryPointSelectSpell_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 424,
+            msgID: 423,
             version: 0);
 
-        public const string GUID = "2fd6a5c4-2007-450b-8505-5af44523b46a";
+        public const string GUID = "753005d8-0132-4c41-9b39-3fc1b63a0e44";
 
         public const ushort AdditionalFieldCount = 1;
 
         public const ushort FieldCount = 7;
 
-        public static readonly Type MaskType = typeof(PerkSelectText.Mask<>);
+        public static readonly Type MaskType = typeof(PerkEntryPointSelectSpell.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(PerkSelectText.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(PerkEntryPointSelectSpell.ErrorMask);
 
-        public static readonly Type ClassType = typeof(PerkSelectText);
+        public static readonly Type ClassType = typeof(PerkEntryPointSelectSpell);
 
-        public static readonly Type GetterType = typeof(IPerkSelectTextGetter);
+        public static readonly Type GetterType = typeof(IPerkEntryPointSelectSpellGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IPerkSelectText);
+        public static readonly Type SetterType = typeof(IPerkEntryPointSelectSpell);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.PerkSelectText";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.PerkEntryPointSelectSpell";
 
-        public const string Name = "PerkSelectText";
+        public const string Name = "PerkEntryPointSelectSpell";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -619,7 +627,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.PRKE;
-        public static readonly Type BinaryWriteTranslation = typeof(PerkSelectTextBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(PerkEntryPointSelectSpellBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -652,32 +660,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PerkSelectTextSetterCommon : APerkEntryPointEffectSetterCommon
+    public partial class PerkEntryPointSelectSpellSetterCommon : APerkEntryPointEffectSetterCommon
     {
-        public new static readonly PerkSelectTextSetterCommon Instance = new PerkSelectTextSetterCommon();
+        public new static readonly PerkEntryPointSelectSpellSetterCommon Instance = new PerkEntryPointSelectSpellSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IPerkSelectText item)
+        public void Clear(IPerkEntryPointSelectSpell item)
         {
             ClearPartial();
-            item.Text = string.Empty;
+            item.Spell = FormLink<ISpellGetter>.Null;
             base.Clear(item);
         }
         
         public override void Clear(IAPerkEntryPointEffect item)
         {
-            Clear(item: (IPerkSelectText)item);
+            Clear(item: (IPerkEntryPointSelectSpell)item);
         }
         
         public override void Clear(IAPerkEffect item)
         {
-            Clear(item: (IPerkSelectText)item);
+            Clear(item: (IPerkEntryPointSelectSpell)item);
         }
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IPerkSelectText item,
+            IPerkEntryPointSelectSpell item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -685,8 +693,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: PerkSelectTextBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: PerkSelectTextBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: PerkEntryPointSelectSpellBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: PerkEntryPointSelectSpellBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -695,7 +703,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             CopyInFromBinary(
-                item: (PerkSelectText)item,
+                item: (PerkEntryPointSelectSpell)item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -706,7 +714,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             CopyInFromBinary(
-                item: (PerkSelectText)item,
+                item: (PerkEntryPointSelectSpell)item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -714,17 +722,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PerkSelectTextCommon : APerkEntryPointEffectCommon
+    public partial class PerkEntryPointSelectSpellCommon : APerkEntryPointEffectCommon
     {
-        public new static readonly PerkSelectTextCommon Instance = new PerkSelectTextCommon();
+        public new static readonly PerkEntryPointSelectSpellCommon Instance = new PerkEntryPointSelectSpellCommon();
 
-        public PerkSelectText.Mask<bool> GetEqualsMask(
-            IPerkSelectTextGetter item,
-            IPerkSelectTextGetter rhs,
+        public PerkEntryPointSelectSpell.Mask<bool> GetEqualsMask(
+            IPerkEntryPointSelectSpellGetter item,
+            IPerkEntryPointSelectSpellGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new PerkSelectText.Mask<bool>(false);
-            ((PerkSelectTextCommon)((IPerkSelectTextGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new PerkEntryPointSelectSpell.Mask<bool>(false);
+            ((PerkEntryPointSelectSpellCommon)((IPerkEntryPointSelectSpellGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -733,20 +741,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillEqualsMask(
-            IPerkSelectTextGetter item,
-            IPerkSelectTextGetter rhs,
-            PerkSelectText.Mask<bool> ret,
+            IPerkEntryPointSelectSpellGetter item,
+            IPerkEntryPointSelectSpellGetter rhs,
+            PerkEntryPointSelectSpell.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Text = string.Equals(item.Text, rhs.Text);
+            ret.Spell = item.Spell.Equals(rhs.Spell);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string ToString(
-            IPerkSelectTextGetter item,
+            IPerkEntryPointSelectSpellGetter item,
             string? name = null,
-            PerkSelectText.Mask<bool>? printMask = null)
+            PerkEntryPointSelectSpell.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -758,18 +766,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void ToString(
-            IPerkSelectTextGetter item,
+            IPerkEntryPointSelectSpellGetter item,
             FileGeneration fg,
             string? name = null,
-            PerkSelectText.Mask<bool>? printMask = null)
+            PerkEntryPointSelectSpell.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"PerkSelectText =>");
+                fg.AppendLine($"PerkEntryPointSelectSpell =>");
             }
             else
             {
-                fg.AppendLine($"{name} (PerkSelectText) =>");
+                fg.AppendLine($"{name} (PerkEntryPointSelectSpell) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -783,53 +791,53 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         protected static void ToStringFields(
-            IPerkSelectTextGetter item,
+            IPerkEntryPointSelectSpellGetter item,
             FileGeneration fg,
-            PerkSelectText.Mask<bool>? printMask = null)
+            PerkEntryPointSelectSpell.Mask<bool>? printMask = null)
         {
             APerkEntryPointEffectCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Text ?? true)
+            if (printMask?.Spell ?? true)
             {
-                fg.AppendItem(item.Text, "Text");
+                fg.AppendItem(item.Spell.FormKey, "Spell");
             }
         }
         
-        public static PerkSelectText_FieldIndex ConvertFieldIndex(APerkEntryPointEffect_FieldIndex index)
+        public static PerkEntryPointSelectSpell_FieldIndex ConvertFieldIndex(APerkEntryPointEffect_FieldIndex index)
         {
             switch (index)
             {
                 case APerkEntryPointEffect_FieldIndex.Rank:
-                    return (PerkSelectText_FieldIndex)((int)index);
+                    return (PerkEntryPointSelectSpell_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.Priority:
-                    return (PerkSelectText_FieldIndex)((int)index);
+                    return (PerkEntryPointSelectSpell_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.Conditions:
-                    return (PerkSelectText_FieldIndex)((int)index);
+                    return (PerkEntryPointSelectSpell_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.PRKEDataTypeState:
-                    return (PerkSelectText_FieldIndex)((int)index);
+                    return (PerkEntryPointSelectSpell_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.EntryPoint:
-                    return (PerkSelectText_FieldIndex)((int)index);
+                    return (PerkEntryPointSelectSpell_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.PerkConditionTabCount:
-                    return (PerkSelectText_FieldIndex)((int)index);
+                    return (PerkEntryPointSelectSpell_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
         
-        public static new PerkSelectText_FieldIndex ConvertFieldIndex(APerkEffect_FieldIndex index)
+        public static new PerkEntryPointSelectSpell_FieldIndex ConvertFieldIndex(APerkEffect_FieldIndex index)
         {
             switch (index)
             {
                 case APerkEffect_FieldIndex.Rank:
-                    return (PerkSelectText_FieldIndex)((int)index);
+                    return (PerkEntryPointSelectSpell_FieldIndex)((int)index);
                 case APerkEffect_FieldIndex.Priority:
-                    return (PerkSelectText_FieldIndex)((int)index);
+                    return (PerkEntryPointSelectSpell_FieldIndex)((int)index);
                 case APerkEffect_FieldIndex.Conditions:
-                    return (PerkSelectText_FieldIndex)((int)index);
+                    return (PerkEntryPointSelectSpell_FieldIndex)((int)index);
                 case APerkEffect_FieldIndex.PRKEDataTypeState:
-                    return (PerkSelectText_FieldIndex)((int)index);
+                    return (PerkEntryPointSelectSpell_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -837,13 +845,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IPerkSelectTextGetter? lhs,
-            IPerkSelectTextGetter? rhs)
+            IPerkEntryPointSelectSpellGetter? lhs,
+            IPerkEntryPointSelectSpellGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals((IAPerkEntryPointEffectGetter)lhs, (IAPerkEntryPointEffectGetter)rhs)) return false;
-            if (!string.Equals(lhs.Text, rhs.Text)) return false;
+            if (!lhs.Spell.Equals(rhs.Spell)) return false;
             return true;
         }
         
@@ -852,8 +860,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAPerkEntryPointEffectGetter? rhs)
         {
             return Equals(
-                lhs: (IPerkSelectTextGetter?)lhs,
-                rhs: rhs as IPerkSelectTextGetter);
+                lhs: (IPerkEntryPointSelectSpellGetter?)lhs,
+                rhs: rhs as IPerkEntryPointSelectSpellGetter);
         }
         
         public override bool Equals(
@@ -861,26 +869,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAPerkEffectGetter? rhs)
         {
             return Equals(
-                lhs: (IPerkSelectTextGetter?)lhs,
-                rhs: rhs as IPerkSelectTextGetter);
+                lhs: (IPerkEntryPointSelectSpellGetter?)lhs,
+                rhs: rhs as IPerkEntryPointSelectSpellGetter);
         }
         
-        public virtual int GetHashCode(IPerkSelectTextGetter item)
+        public virtual int GetHashCode(IPerkEntryPointSelectSpellGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Text);
+            hash.Add(item.Spell);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
         
         public override int GetHashCode(IAPerkEntryPointEffectGetter item)
         {
-            return GetHashCode(item: (IPerkSelectTextGetter)item);
+            return GetHashCode(item: (IPerkEntryPointSelectSpellGetter)item);
         }
         
         public override int GetHashCode(IAPerkEffectGetter item)
         {
-            return GetHashCode(item: (IPerkSelectTextGetter)item);
+            return GetHashCode(item: (IPerkEntryPointSelectSpellGetter)item);
         }
         
         #endregion
@@ -888,31 +896,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override object GetNew()
         {
-            return PerkSelectText.GetNew();
+            return PerkEntryPointSelectSpell.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IPerkSelectTextGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IPerkEntryPointSelectSpellGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
             }
+            yield return obj.Spell.FormKey;
             yield break;
         }
         
-        public void RemapLinks(IPerkSelectTextGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
+        public void RemapLinks(IPerkEntryPointSelectSpellGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
-    public partial class PerkSelectTextSetterTranslationCommon : APerkEntryPointEffectSetterTranslationCommon
+    public partial class PerkEntryPointSelectSpellSetterTranslationCommon : APerkEntryPointEffectSetterTranslationCommon
     {
-        public new static readonly PerkSelectTextSetterTranslationCommon Instance = new PerkSelectTextSetterTranslationCommon();
+        public new static readonly PerkEntryPointSelectSpellSetterTranslationCommon Instance = new PerkEntryPointSelectSpellSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IPerkSelectText item,
-            IPerkSelectTextGetter rhs,
+            IPerkEntryPointSelectSpell item,
+            IPerkEntryPointSelectSpellGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -923,9 +932,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)PerkSelectText_FieldIndex.Text) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PerkEntryPointSelectSpell_FieldIndex.Spell) ?? true))
             {
-                item.Text = rhs.Text;
+                item.Spell = new FormLink<ISpellGetter>(rhs.Spell.FormKey);
             }
         }
         
@@ -938,8 +947,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IPerkSelectText)item,
-                rhs: (IPerkSelectTextGetter)rhs,
+                item: (IPerkEntryPointSelectSpell)item,
+                rhs: (IPerkEntryPointSelectSpellGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -954,8 +963,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IPerkSelectText)item,
-                rhs: (IPerkSelectTextGetter)rhs,
+                item: (IPerkEntryPointSelectSpell)item,
+                rhs: (IPerkEntryPointSelectSpellGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -963,12 +972,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #endregion
         
-        public PerkSelectText DeepCopy(
-            IPerkSelectTextGetter item,
-            PerkSelectText.TranslationMask? copyMask = null)
+        public PerkEntryPointSelectSpell DeepCopy(
+            IPerkEntryPointSelectSpellGetter item,
+            PerkEntryPointSelectSpell.TranslationMask? copyMask = null)
         {
-            PerkSelectText ret = (PerkSelectText)((PerkSelectTextCommon)((IPerkSelectTextGetter)item).CommonInstance()!).GetNew();
-            ((PerkSelectTextSetterTranslationCommon)((IPerkSelectTextGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            PerkEntryPointSelectSpell ret = (PerkEntryPointSelectSpell)((PerkEntryPointSelectSpellCommon)((IPerkEntryPointSelectSpellGetter)item).CommonInstance()!).GetNew();
+            ((PerkEntryPointSelectSpellSetterTranslationCommon)((IPerkEntryPointSelectSpellGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -977,30 +986,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
-        public PerkSelectText DeepCopy(
-            IPerkSelectTextGetter item,
-            out PerkSelectText.ErrorMask errorMask,
-            PerkSelectText.TranslationMask? copyMask = null)
+        public PerkEntryPointSelectSpell DeepCopy(
+            IPerkEntryPointSelectSpellGetter item,
+            out PerkEntryPointSelectSpell.ErrorMask errorMask,
+            PerkEntryPointSelectSpell.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            PerkSelectText ret = (PerkSelectText)((PerkSelectTextCommon)((IPerkSelectTextGetter)item).CommonInstance()!).GetNew();
-            ((PerkSelectTextSetterTranslationCommon)((IPerkSelectTextGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            PerkEntryPointSelectSpell ret = (PerkEntryPointSelectSpell)((PerkEntryPointSelectSpellCommon)((IPerkEntryPointSelectSpellGetter)item).CommonInstance()!).GetNew();
+            ((PerkEntryPointSelectSpellSetterTranslationCommon)((IPerkEntryPointSelectSpellGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = PerkSelectText.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PerkEntryPointSelectSpell.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public PerkSelectText DeepCopy(
-            IPerkSelectTextGetter item,
+        public PerkEntryPointSelectSpell DeepCopy(
+            IPerkEntryPointSelectSpellGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            PerkSelectText ret = (PerkSelectText)((PerkSelectTextCommon)((IPerkSelectTextGetter)item).CommonInstance()!).GetNew();
-            ((PerkSelectTextSetterTranslationCommon)((IPerkSelectTextGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            PerkEntryPointSelectSpell ret = (PerkEntryPointSelectSpell)((PerkEntryPointSelectSpellCommon)((IPerkEntryPointSelectSpellGetter)item).CommonInstance()!).GetNew();
+            ((PerkEntryPointSelectSpellSetterTranslationCommon)((IPerkEntryPointSelectSpellGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1016,21 +1025,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PerkSelectText
+    public partial class PerkEntryPointSelectSpell
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => PerkSelectText_Registration.Instance;
-        public new static PerkSelectText_Registration Registration => PerkSelectText_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => PerkEntryPointSelectSpell_Registration.Instance;
+        public new static PerkEntryPointSelectSpell_Registration Registration => PerkEntryPointSelectSpell_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => PerkSelectTextCommon.Instance;
+        protected override object CommonInstance() => PerkEntryPointSelectSpellCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return PerkSelectTextSetterCommon.Instance;
+            return PerkEntryPointSelectSpellSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => PerkSelectTextSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => PerkEntryPointSelectSpellSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1041,28 +1050,27 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class PerkSelectTextBinaryWriteTranslation :
+    public partial class PerkEntryPointSelectSpellBinaryWriteTranslation :
         APerkEntryPointEffectBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static PerkSelectTextBinaryWriteTranslation Instance = new PerkSelectTextBinaryWriteTranslation();
+        public new readonly static PerkEntryPointSelectSpellBinaryWriteTranslation Instance = new PerkEntryPointSelectSpellBinaryWriteTranslation();
 
         public static void WriteEmbedded(
-            IPerkSelectTextGetter item,
+            IPerkEntryPointSelectSpellGetter item,
             MutagenWriter writer)
         {
             APerkEntryPointEffectBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Text,
-                binaryType: StringBinaryType.NullTerminate);
+                item: item.Spell);
         }
 
         public void Write(
             MutagenWriter writer,
-            IPerkSelectTextGetter item,
+            IPerkEntryPointSelectSpellGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             WriteEmbedded(
@@ -1080,7 +1088,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IPerkSelectTextGetter)item,
+                item: (IPerkEntryPointSelectSpellGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1091,7 +1099,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IPerkSelectTextGetter)item,
+                item: (IPerkEntryPointSelectSpellGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1102,28 +1110,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IPerkSelectTextGetter)item,
+                item: (IPerkEntryPointSelectSpellGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
     }
 
-    public partial class PerkSelectTextBinaryCreateTranslation : APerkEntryPointEffectBinaryCreateTranslation
+    public partial class PerkEntryPointSelectSpellBinaryCreateTranslation : APerkEntryPointEffectBinaryCreateTranslation
     {
-        public new readonly static PerkSelectTextBinaryCreateTranslation Instance = new PerkSelectTextBinaryCreateTranslation();
+        public new readonly static PerkEntryPointSelectSpellBinaryCreateTranslation Instance = new PerkEntryPointSelectSpellBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IPerkSelectText item,
+            IPerkEntryPointSelectSpell item,
             MutagenFrame frame)
         {
             APerkEntryPointEffectBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.Text = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+            item.Spell = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
-                stringBinaryType: StringBinaryType.NullTerminate,
-                parseWhole: false);
+                defaultVal: FormKey.Null);
         }
 
     }
@@ -1132,7 +1139,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class PerkSelectTextBinaryTranslationMixIn
+    public static class PerkEntryPointSelectSpellBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1141,46 +1148,47 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class PerkSelectTextBinaryOverlay :
+    public partial class PerkEntryPointSelectSpellBinaryOverlay :
         APerkEntryPointEffectBinaryOverlay,
-        IPerkSelectTextGetter
+        IPerkEntryPointSelectSpellGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => PerkSelectText_Registration.Instance;
-        public new static PerkSelectText_Registration Registration => PerkSelectText_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => PerkEntryPointSelectSpell_Registration.Instance;
+        public new static PerkEntryPointSelectSpell_Registration Registration => PerkEntryPointSelectSpell_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => PerkSelectTextCommon.Instance;
+        protected override object CommonInstance() => PerkEntryPointSelectSpellCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => PerkSelectTextSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => PerkEntryPointSelectSpellSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => PerkSelectTextBinaryWriteTranslation.Instance;
+        protected override IEnumerable<FormKey> LinkFormKeys => PerkEntryPointSelectSpellCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PerkEntryPointSelectSpellCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override object BinaryWriteTranslator => PerkEntryPointSelectSpellBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((PerkSelectTextBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((PerkEntryPointSelectSpellBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
-        #region Text
-        public String Text { get; private set; } = string.Empty;
-        protected int TextEndingPos;
-        #endregion
+        public FormLink<ISpellGetter> Spell => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x2, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected PerkSelectTextBinaryOverlay(
+        protected PerkEntryPointSelectSpellBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1190,17 +1198,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.CustomCtor();
         }
 
-        public static PerkSelectTextBinaryOverlay PerkSelectTextFactory(
+        public static PerkEntryPointSelectSpellBinaryOverlay PerkEntryPointSelectSpellFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new PerkSelectTextBinaryOverlay(
+            var ret = new PerkEntryPointSelectSpellBinaryOverlay(
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
-            ret.Text = BinaryStringUtility.ParseUnknownLengthString(ret._data.Slice(0x2));
-            ret.TextEndingPos = 0x2 + ret.Text.Length + 1;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1210,12 +1216,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static PerkSelectTextBinaryOverlay PerkSelectTextFactory(
+        public static PerkEntryPointSelectSpellBinaryOverlay PerkEntryPointSelectSpellFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            return PerkSelectTextFactory(
+            return PerkEntryPointSelectSpellFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
@@ -1227,7 +1233,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             string? name = null)
         {
-            PerkSelectTextMixIn.ToString(
+            PerkEntryPointSelectSpellMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -1237,16 +1243,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPerkSelectTextGetter rhs)) return false;
-            return ((PerkSelectTextCommon)((IPerkSelectTextGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is IPerkEntryPointSelectSpellGetter rhs)) return false;
+            return ((PerkEntryPointSelectSpellCommon)((IPerkEntryPointSelectSpellGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(IPerkSelectTextGetter? obj)
+        public bool Equals(IPerkEntryPointSelectSpellGetter? obj)
         {
-            return ((PerkSelectTextCommon)((IPerkSelectTextGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PerkEntryPointSelectSpellCommon)((IPerkEntryPointSelectSpellGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((PerkSelectTextCommon)((IPerkSelectTextGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((PerkEntryPointSelectSpellCommon)((IPerkEntryPointSelectSpellGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

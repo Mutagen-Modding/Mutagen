@@ -1,10 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Version>0.16.0.0</Version>
     <Authors>Noggog</Authors>
     <Company>Mutagen</Company>
     <Product>Mutagen</Product>
@@ -545,10 +544,10 @@
     <Compile Include="Records\Major Records\PerkCondition.cs">
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\PerkModifyActorValue.cs">
+    <Compile Include="Records\Major Records\PerkEntryPointModifyActorValue.cs">
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\PerkModifyValue.cs">
+    <Compile Include="Records\Major Records\PerkEntryPointModifyValue.cs">
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\PerkScriptFlag.cs">
@@ -1611,60 +1610,6 @@
     <Compile Include="Records\Major Records\PackageScriptFragments_Generated.cs">
       <DependentUpon>Package.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Perk_Generated.cs">
-      <DependentUpon>Perk.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\APerkEffect_Generated.cs">
-      <DependentUpon>Perk.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\PerkQuestEffect_Generated.cs">
-      <DependentUpon>Perk.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\PerkAbilityEffect_Generated.cs">
-      <DependentUpon>Perk.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\APerkEntryPointEffect_Generated.cs">
-      <DependentUpon>Perk.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\PerkModifyValue_Generated.cs">
-      <DependentUpon>Perk.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\PerkAddRangeToValue_Generated.cs">
-      <DependentUpon>Perk.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\PerkModifyActorValue_Generated.cs">
-      <DependentUpon>Perk.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\PerkAbsoluteValue_Generated.cs">
-      <DependentUpon>Perk.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\PerkAddLeveledItem_Generated.cs">
-      <DependentUpon>Perk.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\PerkAddActivateChoice_Generated.cs">
-      <DependentUpon>Perk.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\PerkSelectSpell_Generated.cs">
-      <DependentUpon>Perk.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\PerkSelectText_Generated.cs">
-      <DependentUpon>Perk.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\PerkSetText_Generated.cs">
-      <DependentUpon>Perk.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\PerkCondition_Generated.cs">
-      <DependentUpon>Perk.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\PerkScriptFlag_Generated.cs">
-      <DependentUpon>Perk.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\PerkAdapter_Generated.cs">
-      <DependentUpon>Perk.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\PerkScriptFragments_Generated.cs">
-      <DependentUpon>Perk.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\PlacedNpc_Generated.cs">
       <DependentUpon>PlacedNpc.xml</DependentUpon>
     </Compile>
@@ -2103,10 +2048,64 @@
     <Compile Include="Records\SkyrimModHeader_Generated.cs">
       <DependentUpon>SkyrimModHeader.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Perk_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\APerkEffect_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkQuestEffect_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkAbilityEffect_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\APerkEntryPointEffect_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkEntryPointModifyValue_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkEntryPointAddRangeToValue_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkEntryPointModifyActorValue_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkEntryPointAbsoluteValue_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkEntryPointAddLeveledItem_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkEntryPointAddActivateChoice_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkEntryPointSelectSpell_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkEntryPointSelectText_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkEntryPointSetText_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkCondition_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkScriptFlag_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkAdapter_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkScriptFragments_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Loqui" Version="1.5.4" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.1.5" />
+    <PackageReference Include="Loqui" Version="1.5.7" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.2.6" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />
