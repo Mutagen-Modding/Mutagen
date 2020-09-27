@@ -17,10 +17,10 @@ jobs:
       run: dotnet build --no-restore -c Release /p:Version=${{ github.event.release.tag_name }} -p:PackageReleaseNotes="See https://github.com/Noggog/Mutagen/releases/tag/${{ github.event.release.tag_name }}"
     - name: Test
       run: dotnet test --no-build -c Release
-    - name: Publish to Nuget.org
-      run: dotnet nuget push **/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --no-symbols true
     - name: Publish to Github Release
       uses: actions/upload-artifact@v2
       with:
         name: packages
         path: "**/*.nupkg"
+    - name: Publish to Nuget.org
+      run: dotnet nuget push **/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --no-symbols true
