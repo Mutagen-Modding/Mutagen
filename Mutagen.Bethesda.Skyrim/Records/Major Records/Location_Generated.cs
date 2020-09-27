@@ -270,7 +270,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Name
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TranslatedString? ILocationGetter.Name => this.Name;
+        ITranslatedStringGetter? ILocationGetter.Name => this.Name;
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2701,7 +2701,7 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLink<IPlacedGetter>>? LocationCellMarkerReference { get; }
         IReadOnlyList<ILocationCellEnablePointGetter>? ActorCellEnablePoint { get; }
         IReadOnlyList<ILocationCellEnablePointGetter>? LocationCellEnablePoint { get; }
-        TranslatedString? Name { get; }
+        ITranslatedStringGetter? Name { get; }
         IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; }
         FormLinkNullable<ILocationGetter> ParentLocation { get; }
         FormLinkNullable<IMusicTypeGetter> Music { get; }
@@ -3137,7 +3137,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.LocationCellEnablePoint,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Keywords = item.Keywords.CollectionEqualsHelper(
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
@@ -3619,7 +3619,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.LocationCellMarkerReference.SequenceEqualNullable(rhs.LocationCellMarkerReference)) return false;
             if (!lhs.ActorCellEnablePoint.SequenceEqualNullable(rhs.ActorCellEnablePoint)) return false;
             if (!lhs.LocationCellEnablePoint.SequenceEqualNullable(rhs.LocationCellEnablePoint)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!object.Equals(lhs.Name, rhs.Name)) return false;
             if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             if (!lhs.ParentLocation.Equals(rhs.ParentLocation)) return false;
             if (!lhs.Music.Equals(rhs.Music)) return false;
@@ -4361,7 +4361,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.Name) ?? true))
             {
-                item.Name = rhs.Name;
+                item.Name = rhs.Name?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.Keywords) ?? true))
             {
@@ -5206,7 +5206,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<ILocationCellEnablePointGetter>? LocationCellEnablePoint { get; private set; }
         #region Name
         private int? _NameLocation;
-        public TranslatedString? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
         #region ParentLocation

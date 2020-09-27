@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Name
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TranslatedString? IShoutGetter.Name => this.Name;
+        ITranslatedStringGetter? IShoutGetter.Name => this.Name;
         #endregion
         #region MenuDisplayObject
         public FormLinkNullable<IStaticGetter> MenuDisplayObject { get; set; } = new FormLinkNullable<IStaticGetter>();
@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Description
         public TranslatedString? Description { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TranslatedString? IShoutGetter.Description => this.Description;
+        ITranslatedStringGetter? IShoutGetter.Description => this.Description;
         #endregion
         #region WordsOfPower
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -655,9 +655,9 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Shout_Registration.Instance;
-        TranslatedString? Name { get; }
+        ITranslatedStringGetter? Name { get; }
         FormLinkNullable<IStaticGetter> MenuDisplayObject { get; }
-        TranslatedString? Description { get; }
+        ITranslatedStringGetter? Description { get; }
         IReadOnlyList<IShoutWordGetter> WordsOfPower { get; }
 
         #region Mutagen
@@ -1000,9 +1000,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Name = object.Equals(item.Name, rhs.Name);
             ret.MenuDisplayObject = item.MenuDisplayObject.Equals(rhs.MenuDisplayObject);
-            ret.Description = string.Equals(item.Description, rhs.Description);
+            ret.Description = object.Equals(item.Description, rhs.Description);
             ret.WordsOfPower = item.WordsOfPower.CollectionEqualsHelper(
                 rhs.WordsOfPower,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1159,9 +1159,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals((IASpellGetter)lhs, (IASpellGetter)rhs)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!object.Equals(lhs.Name, rhs.Name)) return false;
             if (!lhs.MenuDisplayObject.Equals(rhs.MenuDisplayObject)) return false;
-            if (!string.Equals(lhs.Description, rhs.Description)) return false;
+            if (!object.Equals(lhs.Description, rhs.Description)) return false;
             if (!lhs.WordsOfPower.SequenceEqualNullable(rhs.WordsOfPower)) return false;
             return true;
         }
@@ -1301,7 +1301,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)Shout_FieldIndex.Name) ?? true))
             {
-                item.Name = rhs.Name;
+                item.Name = rhs.Name?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Shout_FieldIndex.MenuDisplayObject) ?? true))
             {
@@ -1309,7 +1309,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Shout_FieldIndex.Description) ?? true))
             {
-                item.Description = rhs.Description;
+                item.Description = rhs.Description?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Shout_FieldIndex.WordsOfPower) ?? true))
             {
@@ -1741,7 +1741,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Name
         private int? _NameLocation;
-        public TranslatedString? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         #region MenuDisplayObject
         private int? _MenuDisplayObjectLocation;
@@ -1749,7 +1749,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public TranslatedString? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         public IReadOnlyList<IShoutWordGetter> WordsOfPower { get; private set; } = ListExt.Empty<ShoutWordBinaryOverlay>();
         partial void CustomFactoryEnd(

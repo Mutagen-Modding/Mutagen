@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Name
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TranslatedString? ISoundCategoryGetter.Name => this.Name;
+        ITranslatedStringGetter? ISoundCategoryGetter.Name => this.Name;
         #endregion
         #region Flags
         public SoundCategory.Flag? Flags { get; set; }
@@ -594,7 +594,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static new ILoquiRegistration Registration => SoundCategory_Registration.Instance;
-        TranslatedString? Name { get; }
+        ITranslatedStringGetter? Name { get; }
         SoundCategory.Flag? Flags { get; }
         FormLinkNullable<ISoundDescriptorGetter> Parent { get; }
         Single? StaticVolumeMultiplier { get; }
@@ -922,7 +922,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Flags = item.Flags == rhs.Flags;
             ret.Parent = item.Parent.Equals(rhs.Parent);
             ret.StaticVolumeMultiplier = item.StaticVolumeMultiplier.EqualsWithin(rhs.StaticVolumeMultiplier);
@@ -1050,7 +1050,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!object.Equals(lhs.Name, rhs.Name)) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (!lhs.Parent.Equals(rhs.Parent)) return false;
             if (!lhs.StaticVolumeMultiplier.EqualsWithin(rhs.StaticVolumeMultiplier)) return false;
@@ -1182,7 +1182,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)SoundCategory_FieldIndex.Name) ?? true))
             {
-                item.Name = rhs.Name;
+                item.Name = rhs.Name?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)SoundCategory_FieldIndex.Flags) ?? true))
             {
@@ -1569,7 +1569,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Name
         private int? _NameLocation;
-        public TranslatedString? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         #region Flags
         private int? _FlagsLocation;

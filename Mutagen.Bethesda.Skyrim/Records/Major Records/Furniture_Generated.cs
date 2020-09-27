@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Name
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TranslatedString? IFurnitureGetter.Name => this.Name;
+        ITranslatedStringGetter? IFurnitureGetter.Name => this.Name;
         #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1112,7 +1112,7 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration Registration => Furniture_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
         IObjectBoundsGetter ObjectBounds { get; }
-        TranslatedString? Name { get; }
+        ITranslatedStringGetter? Name { get; }
         IModelGetter? Model { get; }
         IDestructibleGetter? Destructible { get; }
         IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; }
@@ -1472,7 +1472,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
-            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
                 rhs.Model,
@@ -1692,7 +1692,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!object.Equals(lhs.Name, rhs.Name)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
             if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
@@ -1937,7 +1937,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.Name) ?? true))
             {
-                item.Name = rhs.Name;
+                item.Name = rhs.Name?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.Model) ?? true))
             {
@@ -2673,7 +2673,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Name
         private int? _NameLocation;
-        public TranslatedString? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         public IModelGetter? Model { get; private set; }
         public IDestructibleGetter? Destructible { get; private set; }

@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Name
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TranslatedString? IMapMarkerGetter.Name => this.Name;
+        ITranslatedStringGetter? IMapMarkerGetter.Name => this.Name;
         #endregion
         #region Type
         public MapMarker.MarkerType Type { get; set; } = default;
@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => MapMarker_Registration.Instance;
         MapMarker.Flag Flags { get; }
-        TranslatedString? Name { get; }
+        ITranslatedStringGetter? Name { get; }
         MapMarker.MarkerType Type { get; }
 
     }
@@ -803,7 +803,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.Flags = item.Flags == rhs.Flags;
-            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Type = item.Type == rhs.Type;
         }
         
@@ -874,7 +874,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (lhs.Flags != rhs.Flags) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!object.Equals(lhs.Name, rhs.Name)) return false;
             if (lhs.Type != rhs.Type) return false;
             return true;
         }
@@ -927,7 +927,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MapMarker_FieldIndex.Name) ?? true))
             {
-                item.Name = rhs.Name;
+                item.Name = rhs.Name?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)MapMarker_FieldIndex.Type) ?? true))
             {
@@ -1190,7 +1190,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Name
         private int? _NameLocation;
-        public TranslatedString? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         #region Type
         private int? _TypeLocation;

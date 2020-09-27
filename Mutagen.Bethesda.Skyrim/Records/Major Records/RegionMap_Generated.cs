@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Name
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TranslatedString? IRegionMapGetter.Name => this.Name;
+        ITranslatedStringGetter? IRegionMapGetter.Name => this.Name;
         #endregion
 
         #region To String
@@ -413,7 +413,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static new ILoquiRegistration Registration => RegionMap_Registration.Instance;
-        TranslatedString? Name { get; }
+        ITranslatedStringGetter? Name { get; }
 
     }
 
@@ -720,7 +720,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Name = object.Equals(item.Name, rhs.Name);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -800,7 +800,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals((IRegionDataGetter)lhs, (IRegionDataGetter)rhs)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!object.Equals(lhs.Name, rhs.Name)) return false;
             return true;
         }
         
@@ -871,7 +871,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)RegionMap_FieldIndex.Name) ?? true))
             {
-                item.Name = rhs.Name;
+                item.Name = rhs.Name?.DeepCopy();
             }
         }
         
@@ -1117,7 +1117,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Name
         private int? _NameLocation;
-        public TranslatedString? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

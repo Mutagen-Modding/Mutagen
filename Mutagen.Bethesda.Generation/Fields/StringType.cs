@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda.Generation
         {
             if (this.Translated.HasValue)
             {
-                return nameof(TranslatedString);
+                return getter ? nameof(ITranslatedStringGetter) : nameof(TranslatedString);
             }
             else
             {
@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.Generation
                 }
                 else
                 {
-                    return $"string.Empty";
+                    return getter ? "TranslatedString.Empty" : "string.Empty";
                 }
             }
             else
@@ -65,6 +65,43 @@ namespace Mutagen.Bethesda.Generation
             {
                 base.GenerateClear(fg, identifier);
             }
+        }
+
+        public override string GenerateEqualsSnippet(Accessor accessor, Accessor rhsAccessor, bool negate)
+        {
+            if (this.Translated.HasValue)
+            {
+                return $"{(negate ? "!" : null)}object.Equals({accessor.Access}, {rhsAccessor.Access})";
+            }
+            else
+            {
+                return base.GenerateEqualsSnippet(accessor, rhsAccessor, negate);
+            }
+        }
+
+        public override void GenerateForCopy(FileGeneration fg, Accessor accessor, Accessor rhs, Accessor copyMaskAccessor, bool protectedMembers, bool deepCopy)
+        {
+            if (this.Translated.HasValue)
+            {
+                fg.AppendLine($"if ({(deepCopy ? this.GetTranslationIfAccessor(copyMaskAccessor) : this.SkipCheck(copyMaskAccessor, deepCopy))})");
+                using (new BraceWrapper(fg))
+                {
+                    fg.AppendLine($"{accessor.Access} = {rhs}{this.NullChar}.DeepCopy();");
+                }
+            }
+            else
+            {
+                base.GenerateForCopy(fg, accessor, rhs, copyMaskAccessor, protectedMembers, deepCopy);
+            }
+        }
+
+        public override string GetDuplicate(Accessor accessor)
+        {
+            if (this.Translated.HasValue)
+            {
+                return $"{accessor}{this.NullChar}.DeepCopy()";
+            }
+            return base.GetDuplicate(accessor);
         }
     }
 }

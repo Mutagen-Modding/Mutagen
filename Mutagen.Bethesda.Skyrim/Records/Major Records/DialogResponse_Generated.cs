@@ -81,6 +81,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Text
         public TranslatedString Text { get; set; } = string.Empty;
+        ITranslatedStringGetter IDialogResponseGetter.Text => this.Text;
         #endregion
         #region ScriptNotes
         public String ScriptNotes { get; set; } = string.Empty;
@@ -878,7 +879,7 @@ namespace Mutagen.Bethesda.Skyrim
         FormLink<ISoundDescriptorGetter> Sound { get; }
         DialogResponse.Flag Flags { get; }
         ReadOnlyMemorySlice<Byte> Unknown3 { get; }
-        TranslatedString Text { get; }
+        ITranslatedStringGetter Text { get; }
         String ScriptNotes { get; }
         String Edits { get; }
         FormLinkNullable<IIdleAnimationGetter> SpeakerIdleAnimation { get; }
@@ -1219,7 +1220,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Sound = item.Sound.Equals(rhs.Sound);
             ret.Flags = item.Flags == rhs.Flags;
             ret.Unknown3 = MemoryExtensions.SequenceEqual(item.Unknown3.Span, rhs.Unknown3.Span);
-            ret.Text = string.Equals(item.Text, rhs.Text);
+            ret.Text = object.Equals(item.Text, rhs.Text);
             ret.ScriptNotes = string.Equals(item.ScriptNotes, rhs.ScriptNotes);
             ret.Edits = string.Equals(item.Edits, rhs.Edits);
             ret.SpeakerIdleAnimation = item.SpeakerIdleAnimation.Equals(rhs.SpeakerIdleAnimation);
@@ -1344,7 +1345,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.Sound.Equals(rhs.Sound)) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (!MemoryExtensions.SequenceEqual(lhs.Unknown3.Span, rhs.Unknown3.Span)) return false;
-            if (!string.Equals(lhs.Text, rhs.Text)) return false;
+            if (!object.Equals(lhs.Text, rhs.Text)) return false;
             if (!string.Equals(lhs.ScriptNotes, rhs.ScriptNotes)) return false;
             if (!string.Equals(lhs.Edits, rhs.Edits)) return false;
             if (!lhs.SpeakerIdleAnimation.Equals(rhs.SpeakerIdleAnimation)) return false;
@@ -1446,7 +1447,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Text) ?? true))
             {
-                item.Text = rhs.Text;
+                item.Text = rhs.Text.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ScriptNotes) ?? true))
             {
@@ -1843,7 +1844,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Text
         private int? _TextLocation;
-        public TranslatedString Text => _TextLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _TextLocation.Value, _package.MetaData.Constants), StringsSource.IL, _package.MetaData.StringsLookup) : string.Empty;
+        public ITranslatedStringGetter Text => _TextLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _TextLocation.Value, _package.MetaData.Constants), StringsSource.IL, _package.MetaData.StringsLookup) : TranslatedString.Empty;
         #endregion
         #region ScriptNotes
         private int? _ScriptNotesLocation;

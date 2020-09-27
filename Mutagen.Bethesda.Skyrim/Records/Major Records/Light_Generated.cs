@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Name
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TranslatedString? ILightGetter.Name => this.Name;
+        ITranslatedStringGetter? ILightGetter.Name => this.Name;
         #endregion
         #region Icons
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1201,7 +1201,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundsGetter ObjectBounds { get; }
         IModelGetter? Model { get; }
         IDestructibleGetter? Destructible { get; }
-        TranslatedString? Name { get; }
+        ITranslatedStringGetter? Name { get; }
         IIconsGetter? Icons { get; }
         Int32 Time { get; }
         UInt32 Radius { get; }
@@ -1593,7 +1593,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Destructible,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Icons = EqualsMaskHelper.EqualsHelper(
                 item.Icons,
                 rhs.Icons,
@@ -1806,7 +1806,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!object.Equals(lhs.Name, rhs.Name)) return false;
             if (!object.Equals(lhs.Icons, rhs.Icons)) return false;
             if (lhs.Time != rhs.Time) return false;
             if (lhs.Radius != rhs.Radius) return false;
@@ -2090,7 +2090,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Name) ?? true))
             {
-                item.Name = rhs.Name;
+                item.Name = rhs.Name?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Icons) ?? true))
             {
@@ -2655,7 +2655,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IDestructibleGetter? Destructible { get; private set; }
         #region Name
         private int? _NameLocation;
-        public TranslatedString? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         public IIconsGetter? Icons { get; private set; }
         private int? _DATALocation;

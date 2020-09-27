@@ -60,6 +60,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Name
         public TranslatedString Name { get; set; } = string.Empty;
+        ITranslatedStringGetter IFloraGetter.Name => this.Name;
         #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -111,7 +112,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region ActivateTextOverride
         public TranslatedString? ActivateTextOverride { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TranslatedString? IFloraGetter.ActivateTextOverride => this.ActivateTextOverride;
+        ITranslatedStringGetter? IFloraGetter.ActivateTextOverride => this.ActivateTextOverride;
         #endregion
         #region FNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -989,12 +990,12 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration Registration => Flora_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
         IObjectBoundsGetter ObjectBounds { get; }
-        TranslatedString Name { get; }
+        ITranslatedStringGetter Name { get; }
         IModelGetter? Model { get; }
         IDestructibleGetter? Destructible { get; }
         IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; }
         ReadOnlyMemorySlice<Byte>? PNAM { get; }
-        TranslatedString? ActivateTextOverride { get; }
+        ITranslatedStringGetter? ActivateTextOverride { get; }
         ReadOnlyMemorySlice<Byte>? FNAM { get; }
         FormLinkNullable<IHarvestTargetGetter> Ingredient { get; }
         FormLinkNullable<ISoundDescriptorGetter> HarvestSound { get; }
@@ -1342,7 +1343,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
-            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
                 rhs.Model,
@@ -1358,7 +1359,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (l, r) => object.Equals(l, r),
                 include);
             ret.PNAM = MemorySliceExt.Equal(item.PNAM, rhs.PNAM);
-            ret.ActivateTextOverride = string.Equals(item.ActivateTextOverride, rhs.ActivateTextOverride);
+            ret.ActivateTextOverride = object.Equals(item.ActivateTextOverride, rhs.ActivateTextOverride);
             ret.FNAM = MemorySliceExt.Equal(item.FNAM, rhs.FNAM);
             ret.Ingredient = item.Ingredient.Equals(rhs.Ingredient);
             ret.HarvestSound = item.HarvestSound.Equals(rhs.HarvestSound);
@@ -1538,12 +1539,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!object.Equals(lhs.Name, rhs.Name)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
             if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             if (!MemorySliceExt.Equal(lhs.PNAM, rhs.PNAM)) return false;
-            if (!string.Equals(lhs.ActivateTextOverride, rhs.ActivateTextOverride)) return false;
+            if (!object.Equals(lhs.ActivateTextOverride, rhs.ActivateTextOverride)) return false;
             if (!MemorySliceExt.Equal(lhs.FNAM, rhs.FNAM)) return false;
             if (!lhs.Ingredient.Equals(rhs.Ingredient)) return false;
             if (!lhs.HarvestSound.Equals(rhs.HarvestSound)) return false;
@@ -1771,7 +1772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Name) ?? true))
             {
-                item.Name = rhs.Name;
+                item.Name = rhs.Name.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Model) ?? true))
             {
@@ -1865,7 +1866,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.ActivateTextOverride) ?? true))
             {
-                item.ActivateTextOverride = rhs.ActivateTextOverride;
+                item.ActivateTextOverride = rhs.ActivateTextOverride?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.FNAM) ?? true))
             {
@@ -2385,7 +2386,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Name
         private int? _NameLocation;
-        public TranslatedString Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : string.Empty;
+        public ITranslatedStringGetter Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : TranslatedString.Empty;
         #endregion
         public IModelGetter? Model { get; private set; }
         public IDestructibleGetter? Destructible { get; private set; }
@@ -2396,7 +2397,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region ActivateTextOverride
         private int? _ActivateTextOverrideLocation;
-        public TranslatedString? ActivateTextOverride => _ActivateTextOverrideLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _ActivateTextOverrideLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        public ITranslatedStringGetter? ActivateTextOverride => _ActivateTextOverrideLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _ActivateTextOverrideLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         #region FNAM
         private int? _FNAMLocation;

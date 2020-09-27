@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
@@ -28,6 +28,8 @@ namespace Mutagen.Bethesda
         /// <param name="str">String if located</param>
         /// <returns>True if string was located for given language</returns>
         bool TryLookup(Language language, [MaybeNullWhen(false)] out string str);
+
+        TranslatedString DeepCopy();
     }
 
     /// <summary>

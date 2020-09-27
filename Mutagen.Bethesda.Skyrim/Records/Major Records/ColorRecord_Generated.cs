@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Name
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TranslatedString? IColorRecordGetter.Name => this.Name;
+        ITranslatedStringGetter? IColorRecordGetter.Name => this.Name;
         #endregion
         #region Color
         public Color Color { get; set; } = default;
@@ -517,7 +517,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static new ILoquiRegistration Registration => ColorRecord_Registration.Instance;
-        TranslatedString? Name { get; }
+        ITranslatedStringGetter? Name { get; }
         Color Color { get; }
         Boolean Playable { get; }
 
@@ -839,7 +839,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Color = item.Color.ColorOnlyEquals(rhs.Color);
             ret.Playable = item.Playable == rhs.Playable;
             base.FillEqualsMask(item, rhs, ret, include);
@@ -954,7 +954,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!object.Equals(lhs.Name, rhs.Name)) return false;
             if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
             if (lhs.Playable != rhs.Playable) return false;
             return true;
@@ -1069,7 +1069,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)ColorRecord_FieldIndex.Name) ?? true))
             {
-                item.Name = rhs.Name;
+                item.Name = rhs.Name?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)ColorRecord_FieldIndex.Color) ?? true))
             {
@@ -1414,7 +1414,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Name
         private int? _NameLocation;
-        public TranslatedString? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         #region Color
         private int? _ColorLocation;

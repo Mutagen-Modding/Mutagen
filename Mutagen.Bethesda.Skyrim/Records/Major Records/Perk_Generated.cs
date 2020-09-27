@@ -56,10 +56,11 @@ namespace Mutagen.Bethesda.Skyrim
         #region Name
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TranslatedString? IPerkGetter.Name => this.Name;
+        ITranslatedStringGetter? IPerkGetter.Name => this.Name;
         #endregion
         #region Description
         public TranslatedString Description { get; set; } = string.Empty;
+        ITranslatedStringGetter IPerkGetter.Description => this.Description;
         #endregion
         #region Icons
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1062,8 +1063,8 @@ namespace Mutagen.Bethesda.Skyrim
     {
         static new ILoquiRegistration Registration => Perk_Registration.Instance;
         IPerkAdapterGetter? VirtualMachineAdapter { get; }
-        TranslatedString? Name { get; }
-        TranslatedString Description { get; }
+        ITranslatedStringGetter? Name { get; }
+        ITranslatedStringGetter Description { get; }
         IIconsGetter? Icons { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
         Boolean Trait { get; }
@@ -1422,8 +1423,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.VirtualMachineAdapter,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Name = string.Equals(item.Name, rhs.Name);
-            ret.Description = string.Equals(item.Description, rhs.Description);
+            ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.Description = object.Equals(item.Description, rhs.Description);
             ret.Icons = EqualsMaskHelper.EqualsHelper(
                 item.Icons,
                 rhs.Icons,
@@ -1627,8 +1628,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null || rhs == null) return false;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!string.Equals(lhs.Description, rhs.Description)) return false;
+            if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            if (!object.Equals(lhs.Description, rhs.Description)) return false;
             if (!object.Equals(lhs.Icons, rhs.Icons)) return false;
             if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
             if (lhs.Trait != rhs.Trait) return false;
@@ -1814,11 +1815,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.Name) ?? true))
             {
-                item.Name = rhs.Name;
+                item.Name = rhs.Name?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.Description) ?? true))
             {
-                item.Description = rhs.Description;
+                item.Description = rhs.Description.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.Icons) ?? true))
             {
@@ -2378,11 +2379,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Name
         private int? _NameLocation;
-        public TranslatedString? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public TranslatedString Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, _package.MetaData.StringsLookup) : string.Empty;
+        public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, _package.MetaData.StringsLookup) : TranslatedString.Empty;
         #endregion
         public IIconsGetter? Icons { get; private set; }
         #region Conditions

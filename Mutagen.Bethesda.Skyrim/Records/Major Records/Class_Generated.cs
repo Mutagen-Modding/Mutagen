@@ -44,6 +44,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Name
         public TranslatedString Name { get; set; } = string.Empty;
+        ITranslatedStringGetter IClassGetter.Name => this.Name;
         #endregion
         #region Description
         public String Description { get; set; } = string.Empty;
@@ -1028,7 +1029,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Class_Registration.Instance;
-        TranslatedString Name { get; }
+        ITranslatedStringGetter Name { get; }
         String Description { get; }
         String? Icon { get; }
         Int32 Unknown { get; }
@@ -1377,7 +1378,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Description = string.Equals(item.Description, rhs.Description);
             ret.Icon = string.Equals(item.Icon, rhs.Icon);
             ret.Unknown = item.Unknown == rhs.Unknown;
@@ -1574,7 +1575,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!object.Equals(lhs.Name, rhs.Name)) return false;
             if (!string.Equals(lhs.Description, rhs.Description)) return false;
             if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
             if (lhs.Unknown != rhs.Unknown) return false;
@@ -1710,7 +1711,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.Name) ?? true))
             {
-                item.Name = rhs.Name;
+                item.Name = rhs.Name.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.Description) ?? true))
             {
@@ -2145,7 +2146,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Name
         private int? _NameLocation;
-        public TranslatedString Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : string.Empty;
+        public ITranslatedStringGetter Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : TranslatedString.Empty;
         #endregion
         #region Description
         private int? _DescriptionLocation;

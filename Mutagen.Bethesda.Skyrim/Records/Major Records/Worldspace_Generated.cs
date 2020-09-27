@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Name
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TranslatedString? IWorldspaceGetter.Name => this.Name;
+        ITranslatedStringGetter? IWorldspaceGetter.Name => this.Name;
         #endregion
         #region FixedDimensionsCenterCell
         public P2Int16? FixedDimensionsCenterCell { get; set; }
@@ -1781,7 +1781,7 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration Registration => Worldspace_Registration.Instance;
         IReadOnlyList<IWorldspaceGridReferenceGetter> LargeReferences { get; }
         IWorldspaceMaxHeightGetter? MaxHeight { get; }
-        TranslatedString? Name { get; }
+        ITranslatedStringGetter? Name { get; }
         P2Int16? FixedDimensionsCenterCell { get; }
         FormLinkNullable<ILightingTemplateGetter> InteriorLighting { get; }
         FormLinkNullable<IEncounterZoneGetter> EncounterZone { get; }
@@ -2669,7 +2669,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.MaxHeight,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Name = object.Equals(item.Name, rhs.Name);
             ret.FixedDimensionsCenterCell = item.FixedDimensionsCenterCell.Equals(rhs.FixedDimensionsCenterCell);
             ret.InteriorLighting = item.InteriorLighting.Equals(rhs.InteriorLighting);
             ret.EncounterZone = item.EncounterZone.Equals(rhs.EncounterZone);
@@ -2996,7 +2996,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!lhs.LargeReferences.SequenceEqualNullable(rhs.LargeReferences)) return false;
             if (!object.Equals(lhs.MaxHeight, rhs.MaxHeight)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!object.Equals(lhs.Name, rhs.Name)) return false;
             if (!lhs.FixedDimensionsCenterCell.Equals(rhs.FixedDimensionsCenterCell)) return false;
             if (!lhs.InteriorLighting.Equals(rhs.InteriorLighting)) return false;
             if (!lhs.EncounterZone.Equals(rhs.EncounterZone)) return false;
@@ -4328,7 +4328,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Name) ?? true))
             {
-                item.Name = rhs.Name;
+                item.Name = rhs.Name?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.FixedDimensionsCenterCell) ?? true))
             {
@@ -5311,7 +5311,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Name
         private int? _NameLocation;
-        public TranslatedString? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         #region FixedDimensionsCenterCell
         private int? _FixedDimensionsCenterCellLocation;

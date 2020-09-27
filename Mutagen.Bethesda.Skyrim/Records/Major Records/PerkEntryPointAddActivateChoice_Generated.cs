@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region ButtonLabel
         public TranslatedString? ButtonLabel { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TranslatedString? IPerkEntryPointAddActivateChoiceGetter.ButtonLabel => this.ButtonLabel;
+        ITranslatedStringGetter? IPerkEntryPointAddActivateChoiceGetter.ButtonLabel => this.ButtonLabel;
         #endregion
         #region Flags
         public PerkScriptFlag Flags { get; set; } = new PerkScriptFlag();
@@ -507,7 +507,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         static new ILoquiRegistration Registration => PerkEntryPointAddActivateChoice_Registration.Instance;
         FormLinkNullable<ISpellGetter> Spell { get; }
-        TranslatedString? ButtonLabel { get; }
+        ITranslatedStringGetter? ButtonLabel { get; }
         IPerkScriptFlagGetter Flags { get; }
 
     }
@@ -829,7 +829,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.Spell = item.Spell.Equals(rhs.Spell);
-            ret.ButtonLabel = string.Equals(item.ButtonLabel, rhs.ButtonLabel);
+            ret.ButtonLabel = object.Equals(item.ButtonLabel, rhs.ButtonLabel);
             ret.Flags = MaskItemExt.Factory(item.Flags.GetEqualsMask(rhs.Flags, include), include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -944,7 +944,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null || rhs == null) return false;
             if (!base.Equals((IAPerkEntryPointEffectGetter)lhs, (IAPerkEntryPointEffectGetter)rhs)) return false;
             if (!lhs.Spell.Equals(rhs.Spell)) return false;
-            if (!string.Equals(lhs.ButtonLabel, rhs.ButtonLabel)) return false;
+            if (!object.Equals(lhs.ButtonLabel, rhs.ButtonLabel)) return false;
             if (!object.Equals(lhs.Flags, rhs.Flags)) return false;
             return true;
         }
@@ -1040,7 +1040,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.ButtonLabel) ?? true))
             {
-                item.ButtonLabel = rhs.ButtonLabel;
+                item.ButtonLabel = rhs.ButtonLabel?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.Flags) ?? true))
             {
@@ -1372,7 +1372,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public FormLinkNullable<ISpellGetter> Spell => new FormLinkNullable<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x2, 0x4))));
         #region ButtonLabel
         private int? _ButtonLabelLocation;
-        public TranslatedString? ButtonLabel => _ButtonLabelLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _ButtonLabelLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        public ITranslatedStringGetter? ButtonLabel => _ButtonLabelLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _ButtonLabelLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         #region Flags
         private RangeInt32? _FlagsLocation;

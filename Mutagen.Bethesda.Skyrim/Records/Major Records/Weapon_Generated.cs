@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Name
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TranslatedString? IWeaponGetter.Name => this.Name;
+        ITranslatedStringGetter? IWeaponGetter.Name => this.Name;
         #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -136,7 +136,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Description
         public TranslatedString? Description { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TranslatedString? IWeaponGetter.Description => this.Description;
+        ITranslatedStringGetter? IWeaponGetter.Description => this.Description;
         #endregion
         #region ScopeModel
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1668,7 +1668,7 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration Registration => Weapon_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
         IObjectBoundsGetter ObjectBounds { get; }
-        TranslatedString? Name { get; }
+        ITranslatedStringGetter? Name { get; }
         IModelGetter? Model { get; }
         IIconsGetter? Icons { get; }
         FormLinkNullable<IEffectRecordGetter> ObjectEffect { get; }
@@ -1680,7 +1680,7 @@ namespace Mutagen.Bethesda.Skyrim
         FormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; }
         FormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; }
         IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; }
-        TranslatedString? Description { get; }
+        ITranslatedStringGetter? Description { get; }
         IModelGetter? ScopeModel { get; }
         ReadOnlyMemorySlice<Byte>? Unused { get; }
         FormLinkNullable<IImpactDataSetGetter> ImpactDataSet { get; }
@@ -2092,7 +2092,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
-            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
                 rhs.Model,
@@ -2119,7 +2119,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.Description = string.Equals(item.Description, rhs.Description);
+            ret.Description = object.Equals(item.Description, rhs.Description);
             ret.ScopeModel = EqualsMaskHelper.EqualsHelper(
                 item.ScopeModel,
                 rhs.ScopeModel,
@@ -2405,7 +2405,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!object.Equals(lhs.Name, rhs.Name)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!object.Equals(lhs.Icons, rhs.Icons)) return false;
             if (!lhs.ObjectEffect.Equals(rhs.ObjectEffect)) return false;
@@ -2417,7 +2417,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
             if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
             if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
-            if (!string.Equals(lhs.Description, rhs.Description)) return false;
+            if (!object.Equals(lhs.Description, rhs.Description)) return false;
             if (!object.Equals(lhs.ScopeModel, rhs.ScopeModel)) return false;
             if (!MemorySliceExt.Equal(lhs.Unused, rhs.Unused)) return false;
             if (!lhs.ImpactDataSet.Equals(rhs.ImpactDataSet)) return false;
@@ -2764,7 +2764,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Name) ?? true))
             {
-                item.Name = rhs.Name;
+                item.Name = rhs.Name?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Model) ?? true))
             {
@@ -2901,7 +2901,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Description) ?? true))
             {
-                item.Description = rhs.Description;
+                item.Description = rhs.Description?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.ScopeModel) ?? true))
             {
@@ -3767,7 +3767,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Name
         private int? _NameLocation;
-        public TranslatedString? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         public IModelGetter? Model { get; private set; }
         public IIconsGetter? Icons { get; private set; }
@@ -3803,7 +3803,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
         #region Description
         private int? _DescriptionLocation;
-        public TranslatedString? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         public IModelGetter? ScopeModel { get; private set; }
         #region Unused

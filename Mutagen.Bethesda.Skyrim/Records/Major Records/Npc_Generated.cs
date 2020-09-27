@@ -217,12 +217,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Name
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TranslatedString? INpcGetter.Name => this.Name;
+        ITranslatedStringGetter? INpcGetter.Name => this.Name;
         #endregion
         #region ShortName
         public TranslatedString? ShortName { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TranslatedString? INpcGetter.ShortName => this.ShortName;
+        ITranslatedStringGetter? INpcGetter.ShortName => this.ShortName;
         #endregion
         #region PlayerSkills
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2800,8 +2800,8 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLink<IPackageGetter>> Packages { get; }
         IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; }
         FormLink<IClassGetter> Class { get; }
-        TranslatedString? Name { get; }
-        TranslatedString? ShortName { get; }
+        ITranslatedStringGetter? Name { get; }
+        ITranslatedStringGetter? ShortName { get; }
         IPlayerSkillsGetter? PlayerSkills { get; }
         IReadOnlyList<IFormLink<IHeadPartGetter>> HeadParts { get; }
         FormLinkNullable<IColorRecordGetter> HairColor { get; }
@@ -3281,8 +3281,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (l, r) => object.Equals(l, r),
                 include);
             ret.Class = item.Class.Equals(rhs.Class);
-            ret.Name = string.Equals(item.Name, rhs.Name);
-            ret.ShortName = string.Equals(item.ShortName, rhs.ShortName);
+            ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.ShortName = object.Equals(item.ShortName, rhs.ShortName);
             ret.PlayerSkills = EqualsMaskHelper.EqualsHelper(
                 item.PlayerSkills,
                 rhs.PlayerSkills,
@@ -3766,8 +3766,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.Packages.SequenceEqualNullable(rhs.Packages)) return false;
             if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             if (!lhs.Class.Equals(rhs.Class)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!string.Equals(lhs.ShortName, rhs.ShortName)) return false;
+            if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            if (!object.Equals(lhs.ShortName, rhs.ShortName)) return false;
             if (!object.Equals(lhs.PlayerSkills, rhs.PlayerSkills)) return false;
             if (!lhs.HeadParts.SequenceEqualNullable(rhs.HeadParts)) return false;
             if (!lhs.HairColor.Equals(rhs.HairColor)) return false;
@@ -4456,11 +4456,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Name) ?? true))
             {
-                item.Name = rhs.Name;
+                item.Name = rhs.Name?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.ShortName) ?? true))
             {
-                item.ShortName = rhs.ShortName;
+                item.ShortName = rhs.ShortName?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.PlayerSkills) ?? true))
             {
@@ -5714,11 +5714,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Name
         private int? _NameLocation;
-        public TranslatedString? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         #region ShortName
         private int? _ShortNameLocation;
-        public TranslatedString? ShortName => _ShortNameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _ShortNameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        public ITranslatedStringGetter? ShortName => _ShortNameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _ShortNameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         #region DataMarker
         partial void DataMarkerCustomParse(

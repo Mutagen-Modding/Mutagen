@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Skyrim;
 using Noggog;
 using System;
 using System.Collections.Generic;

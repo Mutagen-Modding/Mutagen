@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TranslatedString ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequired.Name
         {
@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Skyrim
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            TranslatedString ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+            ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
             #endregion
         }
     }

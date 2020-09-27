@@ -50,7 +50,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Name
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TranslatedString? ISpellGetter.Name => this.Name;
+        ITranslatedStringGetter? ISpellGetter.Name => this.Name;
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -74,6 +74,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Description
         public TranslatedString Description { get; set; } = string.Empty;
+        ITranslatedStringGetter ISpellGetter.Description => this.Description;
         #endregion
         #region BaseCost
         public UInt32 BaseCost { get; set; } = default;
@@ -1164,11 +1165,11 @@ namespace Mutagen.Bethesda.Skyrim
     {
         static new ILoquiRegistration Registration => Spell_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }
-        TranslatedString? Name { get; }
+        ITranslatedStringGetter? Name { get; }
         IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; }
         FormLinkNullable<IStaticGetter> MenuDisplayObject { get; }
         FormLinkNullable<IEquipTypeGetter> EquipmentType { get; }
-        TranslatedString Description { get; }
+        ITranslatedStringGetter Description { get; }
         UInt32 BaseCost { get; }
         SpellDataFlag Flags { get; }
         SpellType Type { get; }
@@ -1544,14 +1545,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
-            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Keywords = item.Keywords.CollectionEqualsHelper(
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
                 include);
             ret.MenuDisplayObject = item.MenuDisplayObject.Equals(rhs.MenuDisplayObject);
             ret.EquipmentType = item.EquipmentType.Equals(rhs.EquipmentType);
-            ret.Description = string.Equals(item.Description, rhs.Description);
+            ret.Description = object.Equals(item.Description, rhs.Description);
             ret.BaseCost = item.BaseCost == rhs.BaseCost;
             ret.Flags = item.Flags == rhs.Flags;
             ret.Type = item.Type == rhs.Type;
@@ -1785,11 +1786,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null || rhs == null) return false;
             if (!base.Equals((IASpellGetter)lhs, (IASpellGetter)rhs)) return false;
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!object.Equals(lhs.Name, rhs.Name)) return false;
             if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             if (!lhs.MenuDisplayObject.Equals(rhs.MenuDisplayObject)) return false;
             if (!lhs.EquipmentType.Equals(rhs.EquipmentType)) return false;
-            if (!string.Equals(lhs.Description, rhs.Description)) return false;
+            if (!object.Equals(lhs.Description, rhs.Description)) return false;
             if (lhs.BaseCost != rhs.BaseCost) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (lhs.Type != rhs.Type) return false;
@@ -1983,7 +1984,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.Name) ?? true))
             {
-                item.Name = rhs.Name;
+                item.Name = rhs.Name?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.Keywords) ?? true))
             {
@@ -2022,7 +2023,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.Description) ?? true))
             {
-                item.Description = rhs.Description;
+                item.Description = rhs.Description.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.BaseCost) ?? true))
             {
@@ -2605,7 +2606,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Name
         private int? _NameLocation;
-        public TranslatedString? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
         #region MenuDisplayObject
@@ -2618,7 +2619,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public TranslatedString Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, _package.MetaData.StringsLookup) : string.Empty;
+        public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, _package.MetaData.StringsLookup) : TranslatedString.Empty;
         #endregion
         private int? _SPITLocation;
         public Spell.SPITDataType SPITDataTypeState { get; private set; }

@@ -41,6 +41,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Name
         public TranslatedString Name { get; set; } = string.Empty;
+        ITranslatedStringGetter IBodyPartGetter.Name => this.Name;
         #endregion
         #region PoseMatching
         public String? PoseMatching { get; set; }
@@ -1474,7 +1475,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => BodyPart_Registration.Instance;
-        TranslatedString Name { get; }
+        ITranslatedStringGetter Name { get; }
         String? PoseMatching { get; }
         String PartNode { get; }
         String VatsTarget { get; }
@@ -1872,7 +1873,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Name = object.Equals(item.Name, rhs.Name);
             ret.PoseMatching = string.Equals(item.PoseMatching, rhs.PoseMatching);
             ret.PartNode = string.Equals(item.PartNode, rhs.PartNode);
             ret.VatsTarget = string.Equals(item.VatsTarget, rhs.VatsTarget);
@@ -2094,7 +2095,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!object.Equals(lhs.Name, rhs.Name)) return false;
             if (!string.Equals(lhs.PoseMatching, rhs.PoseMatching)) return false;
             if (!string.Equals(lhs.PartNode, rhs.PartNode)) return false;
             if (!string.Equals(lhs.VatsTarget, rhs.VatsTarget)) return false;
@@ -2213,7 +2214,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.Name) ?? true))
             {
-                item.Name = rhs.Name;
+                item.Name = rhs.Name.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.PoseMatching) ?? true))
             {
@@ -2786,7 +2787,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Name
         private int? _NameLocation;
-        public TranslatedString Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : string.Empty;
+        public ITranslatedStringGetter Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : TranslatedString.Empty;
         #endregion
         #region PoseMatching
         private int? _PoseMatchingLocation;

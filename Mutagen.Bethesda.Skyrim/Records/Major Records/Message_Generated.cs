@@ -44,11 +44,12 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Description
         public TranslatedString Description { get; set; } = string.Empty;
+        ITranslatedStringGetter IMessageGetter.Description => this.Description;
         #endregion
         #region Name
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TranslatedString? IMessageGetter.Name => this.Name;
+        ITranslatedStringGetter? IMessageGetter.Name => this.Name;
         #endregion
         #region INAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -748,8 +749,8 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Message_Registration.Instance;
-        TranslatedString Description { get; }
-        TranslatedString? Name { get; }
+        ITranslatedStringGetter Description { get; }
+        ITranslatedStringGetter? Name { get; }
         ReadOnlyMemorySlice<Byte> INAM { get; }
         FormLinkNullable<IQuestGetter> Quest { get; }
         Message.Flag Flags { get; }
@@ -1082,8 +1083,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Description = string.Equals(item.Description, rhs.Description);
-            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Description = object.Equals(item.Description, rhs.Description);
+            ret.Name = object.Equals(item.Name, rhs.Name);
             ret.INAM = MemoryExtensions.SequenceEqual(item.INAM.Span, rhs.INAM.Span);
             ret.Quest = item.Quest.Equals(rhs.Quest);
             ret.Flags = item.Flags == rhs.Flags;
@@ -1235,8 +1236,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!string.Equals(lhs.Description, rhs.Description)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!object.Equals(lhs.Description, rhs.Description)) return false;
+            if (!object.Equals(lhs.Name, rhs.Name)) return false;
             if (!MemoryExtensions.SequenceEqual(lhs.INAM.Span, rhs.INAM.Span)) return false;
             if (!lhs.Quest.Equals(rhs.Quest)) return false;
             if (lhs.Flags != rhs.Flags) return false;
@@ -1370,11 +1371,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)Message_FieldIndex.Description) ?? true))
             {
-                item.Description = rhs.Description;
+                item.Description = rhs.Description.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Message_FieldIndex.Name) ?? true))
             {
-                item.Name = rhs.Name;
+                item.Name = rhs.Name?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Message_FieldIndex.INAM) ?? true))
             {
@@ -1812,11 +1813,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Description
         private int? _DescriptionLocation;
-        public TranslatedString Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, _package.MetaData.StringsLookup) : string.Empty;
+        public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, _package.MetaData.StringsLookup) : TranslatedString.Empty;
         #endregion
         #region Name
         private int? _NameLocation;
-        public TranslatedString? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         #region INAM
         private int? _INAMLocation;

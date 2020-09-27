@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Name
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TranslatedString? ITreeGetter.Name => this.Name;
+        ITranslatedStringGetter? ITreeGetter.Name => this.Name;
         #endregion
         #region TrunkFlexibility
         public Single TrunkFlexibility { get; set; } = default;
@@ -933,7 +933,7 @@ namespace Mutagen.Bethesda.Skyrim
         FormLinkNullable<IHarvestTargetGetter> Ingredient { get; }
         FormLinkNullable<ISoundDescriptorGetter> HarvestSound { get; }
         ISeasonalIngredientProductionGetter? Production { get; }
-        TranslatedString? Name { get; }
+        ITranslatedStringGetter? Name { get; }
         Single TrunkFlexibility { get; }
         Single BranchFlexibility { get; }
         ReadOnlyMemorySlice<Byte> Unknown { get; }
@@ -1301,7 +1301,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Production,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Name = object.Equals(item.Name, rhs.Name);
             ret.TrunkFlexibility = item.TrunkFlexibility.EqualsWithin(rhs.TrunkFlexibility);
             ret.BranchFlexibility = item.BranchFlexibility.EqualsWithin(rhs.BranchFlexibility);
             ret.Unknown = MemoryExtensions.SequenceEqual(item.Unknown.Span, rhs.Unknown.Span);
@@ -1469,7 +1469,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.Ingredient.Equals(rhs.Ingredient)) return false;
             if (!lhs.HarvestSound.Equals(rhs.HarvestSound)) return false;
             if (!object.Equals(lhs.Production, rhs.Production)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!object.Equals(lhs.Name, rhs.Name)) return false;
             if (!lhs.TrunkFlexibility.EqualsWithin(rhs.TrunkFlexibility)) return false;
             if (!lhs.BranchFlexibility.EqualsWithin(rhs.BranchFlexibility)) return false;
             if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
@@ -1737,7 +1737,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.Name) ?? true))
             {
-                item.Name = rhs.Name;
+                item.Name = rhs.Name?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.TrunkFlexibility) ?? true))
             {
@@ -2212,7 +2212,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Name
         private int? _NameLocation;
-        public TranslatedString? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         private int? _CNAMLocation;
         public Tree.CNAMDataType CNAMDataTypeState { get; private set; }

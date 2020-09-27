@@ -43,6 +43,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Text
         public TranslatedString Text { get; set; } = string.Empty;
+        ITranslatedStringGetter IPerkEntryPointSetTextGetter.Text => this.Text;
         #endregion
 
         #region To String
@@ -423,7 +424,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static new ILoquiRegistration Registration => PerkEntryPointSetText_Registration.Instance;
-        TranslatedString Text { get; }
+        ITranslatedStringGetter Text { get; }
 
     }
 
@@ -739,7 +740,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Text = string.Equals(item.Text, rhs.Text);
+            ret.Text = object.Equals(item.Text, rhs.Text);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -843,7 +844,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals((IAPerkEntryPointEffectGetter)lhs, (IAPerkEntryPointEffectGetter)rhs)) return false;
-            if (!string.Equals(lhs.Text, rhs.Text)) return false;
+            if (!object.Equals(lhs.Text, rhs.Text)) return false;
             return true;
         }
         
@@ -925,7 +926,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PerkEntryPointSetText_FieldIndex.Text) ?? true))
             {
-                item.Text = rhs.Text;
+                item.Text = rhs.Text.DeepCopy();
             }
         }
         
@@ -1173,7 +1174,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #region Text
-        public TranslatedString Text { get; private set; } = string.Empty;
+        public ITranslatedStringGetter Text { get; private set; } = TranslatedString.Empty;
         protected int TextEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1201,7 +1202,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
-            ret.Text = BinaryStringUtility.ParseUnknownLengthString(ret._data.Slice(0x2));
+            ret.Text = (TranslatedString)BinaryStringUtility.ParseUnknownLengthString(ret._data.Slice(0x2));
             ret.TextEndingPos = 0x2 + 5;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,

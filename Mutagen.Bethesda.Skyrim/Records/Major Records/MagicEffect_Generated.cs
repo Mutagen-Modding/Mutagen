@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Name
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TranslatedString? IMagicEffectGetter.Name => this.Name;
+        ITranslatedStringGetter? IMagicEffectGetter.Name => this.Name;
         #endregion
         #region MenuDisplayObject
         public FormLinkNullable<IStaticGetter> MenuDisplayObject { get; set; } = new FormLinkNullable<IStaticGetter>();
@@ -222,7 +222,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Description
         public TranslatedString? Description { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TranslatedString? IMagicEffectGetter.Description => this.Description;
+        ITranslatedStringGetter? IMagicEffectGetter.Description => this.Description;
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2274,7 +2274,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         static new ILoquiRegistration Registration => MagicEffect_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
-        TranslatedString? Name { get; }
+        ITranslatedStringGetter? Name { get; }
         FormLinkNullable<IStaticGetter> MenuDisplayObject { get; }
         IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; }
         MagicEffect.Flag Flags { get; }
@@ -2316,7 +2316,7 @@ namespace Mutagen.Bethesda.Skyrim
         Single ScriptEffectAIDelayTime { get; }
         IReadOnlyList<IFormLink<IMagicEffectGetter>> CounterEffects { get; }
         IReadOnlyList<IMagicEffectSoundGetter>? Sounds { get; }
-        TranslatedString? Description { get; }
+        ITranslatedStringGetter? Description { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
         MagicEffect.DATADataType DATADataTypeState { get; }
 
@@ -2729,7 +2729,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.VirtualMachineAdapter,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Name = object.Equals(item.Name, rhs.Name);
             ret.MenuDisplayObject = item.MenuDisplayObject.Equals(rhs.MenuDisplayObject);
             ret.Keywords = item.Keywords.CollectionEqualsHelper(
                 rhs.Keywords,
@@ -2780,7 +2780,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Sounds,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.Description = string.Equals(item.Description, rhs.Description);
+            ret.Description = object.Equals(item.Description, rhs.Description);
             ret.Conditions = item.Conditions.CollectionEqualsHelper(
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -3131,7 +3131,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null || rhs == null) return false;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!object.Equals(lhs.Name, rhs.Name)) return false;
             if (!lhs.MenuDisplayObject.Equals(rhs.MenuDisplayObject)) return false;
             if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             if (lhs.Flags != rhs.Flags) return false;
@@ -3173,7 +3173,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.ScriptEffectAIDelayTime.EqualsWithin(rhs.ScriptEffectAIDelayTime)) return false;
             if (!lhs.CounterEffects.SequenceEqualNullable(rhs.CounterEffects)) return false;
             if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds)) return false;
-            if (!string.Equals(lhs.Description, rhs.Description)) return false;
+            if (!object.Equals(lhs.Description, rhs.Description)) return false;
             if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
             if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
@@ -3412,7 +3412,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Name) ?? true))
             {
-                item.Name = rhs.Name;
+                item.Name = rhs.Name?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.MenuDisplayObject) ?? true))
             {
@@ -3664,7 +3664,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Description) ?? true))
             {
-                item.Description = rhs.Description;
+                item.Description = rhs.Description?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Conditions) ?? true))
             {
@@ -4383,7 +4383,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Name
         private int? _NameLocation;
-        public TranslatedString? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         #region MenuDisplayObject
         private int? _MenuDisplayObjectLocation;
@@ -4585,7 +4585,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IMagicEffectSoundGetter>? Sounds { get; private set; }
         #region Description
         private int? _DescriptionLocation;
-        public TranslatedString? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         #region Conditions
         partial void ConditionsCustomParse(

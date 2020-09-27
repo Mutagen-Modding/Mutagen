@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Text
         public TranslatedString? Text { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TranslatedString? IMessageButtonGetter.Text => this.Text;
+        ITranslatedStringGetter? IMessageButtonGetter.Text => this.Text;
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -554,7 +554,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => MessageButton_Registration.Instance;
-        TranslatedString? Text { get; }
+        ITranslatedStringGetter? Text { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
 
     }
@@ -870,7 +870,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Text = string.Equals(item.Text, rhs.Text);
+            ret.Text = object.Equals(item.Text, rhs.Text);
             ret.Conditions = item.Conditions.CollectionEqualsHelper(
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -953,7 +953,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!string.Equals(lhs.Text, rhs.Text)) return false;
+            if (!object.Equals(lhs.Text, rhs.Text)) return false;
             if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
             return true;
         }
@@ -1006,7 +1006,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)MessageButton_FieldIndex.Text) ?? true))
             {
-                item.Text = rhs.Text;
+                item.Text = rhs.Text?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)MessageButton_FieldIndex.Conditions) ?? true))
             {
@@ -1295,7 +1295,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Text
         private int? _TextLocation;
-        public TranslatedString? Text => _TextLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _TextLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        public ITranslatedStringGetter? Text => _TextLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _TextLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         #region Conditions
         partial void ConditionsCustomParse(

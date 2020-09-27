@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Name
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TranslatedString? IBookGetter.Name => this.Name;
+        ITranslatedStringGetter? IBookGetter.Name => this.Name;
         #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -87,6 +87,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region BookText
         public TranslatedString BookText { get; set; } = string.Empty;
+        ITranslatedStringGetter IBookGetter.BookText => this.BookText;
         #endregion
         #region Destructible
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -151,7 +152,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Description
         public TranslatedString? Description { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TranslatedString? IBookGetter.Description => this.Description;
+        ITranslatedStringGetter? IBookGetter.Description => this.Description;
         #endregion
         #region DATADataTypeState
         public Book.DATADataType DATADataTypeState { get; set; } = default;
@@ -1224,10 +1225,10 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration Registration => Book_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
         IObjectBoundsGetter ObjectBounds { get; }
-        TranslatedString? Name { get; }
+        ITranslatedStringGetter? Name { get; }
         IModelGetter? Model { get; }
         IIconsGetter? Icons { get; }
-        TranslatedString BookText { get; }
+        ITranslatedStringGetter BookText { get; }
         IDestructibleGetter? Destructible { get; }
         FormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; }
         FormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; }
@@ -1239,7 +1240,7 @@ namespace Mutagen.Bethesda.Skyrim
         UInt32 Value { get; }
         Single Weight { get; }
         FormLinkNullable<IStaticGetter> InventoryArt { get; }
-        TranslatedString? Description { get; }
+        ITranslatedStringGetter? Description { get; }
         Book.DATADataType DATADataTypeState { get; }
 
     }
@@ -1598,7 +1599,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
-            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
                 rhs.Model,
@@ -1609,7 +1610,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Icons,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.BookText = string.Equals(item.BookText, rhs.BookText);
+            ret.BookText = object.Equals(item.BookText, rhs.BookText);
             ret.Destructible = EqualsMaskHelper.EqualsHelper(
                 item.Destructible,
                 rhs.Destructible,
@@ -1632,7 +1633,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Value = item.Value == rhs.Value;
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
             ret.InventoryArt = item.InventoryArt.Equals(rhs.InventoryArt);
-            ret.Description = string.Equals(item.Description, rhs.Description);
+            ret.Description = object.Equals(item.Description, rhs.Description);
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -1833,10 +1834,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!object.Equals(lhs.Name, rhs.Name)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!object.Equals(lhs.Icons, rhs.Icons)) return false;
-            if (!string.Equals(lhs.BookText, rhs.BookText)) return false;
+            if (!object.Equals(lhs.BookText, rhs.BookText)) return false;
             if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
             if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
             if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
@@ -1848,7 +1849,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs.Value != rhs.Value) return false;
             if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
             if (!lhs.InventoryArt.Equals(rhs.InventoryArt)) return false;
-            if (!string.Equals(lhs.Description, rhs.Description)) return false;
+            if (!object.Equals(lhs.Description, rhs.Description)) return false;
             if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
@@ -2091,7 +2092,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.Name) ?? true))
             {
-                item.Name = rhs.Name;
+                item.Name = rhs.Name?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.Model) ?? true))
             {
@@ -2147,7 +2148,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.BookText) ?? true))
             {
-                item.BookText = rhs.BookText;
+                item.BookText = rhs.BookText.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.Destructible) ?? true))
             {
@@ -2262,7 +2263,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.Description) ?? true))
             {
-                item.Description = rhs.Description;
+                item.Description = rhs.Description?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.DATADataTypeState) ?? true))
             {
@@ -2827,13 +2828,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Name
         private int? _NameLocation;
-        public TranslatedString? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         public IModelGetter? Model { get; private set; }
         public IIconsGetter? Icons { get; private set; }
         #region BookText
         private int? _BookTextLocation;
-        public TranslatedString BookText => _BookTextLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _BookTextLocation.Value, _package.MetaData.Constants), StringsSource.DL, _package.MetaData.StringsLookup) : string.Empty;
+        public ITranslatedStringGetter BookText => _BookTextLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _BookTextLocation.Value, _package.MetaData.Constants), StringsSource.DL, _package.MetaData.StringsLookup) : TranslatedString.Empty;
         #endregion
         public IDestructibleGetter? Destructible { get; private set; }
         #region PickUpSound
@@ -2881,7 +2882,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public TranslatedString? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
