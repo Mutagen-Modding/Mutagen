@@ -7671,7 +7671,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj: obj,
                 type: typeof(TGetter),
                 throwIfUnknown: throwIfUnknown)
-                .Select(m => new ModContext<ISkyrimMod, TSetter, TGetter>((TGetter)m.Record, (mod, rec) => (TSetter)m.GetOrAddAsOverride(mod)))
+                .Select(m => new ModContext<ISkyrimMod, TSetter, TGetter>(m.ModKey, (TGetter)m.Record, (mod, rec) => (TSetter)m.GetOrAddAsOverride(mod)))
                 .Catch(e => throw RecordException.Factory(e, obj.ModKey));
         }
 
@@ -14418,6 +14418,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.GameSettings.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.GameSettings.GetOrAddAsOverride((IGameSettingGetter)r));
                     }
@@ -14429,6 +14430,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Keywords.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Keywords.GetOrAddAsOverride((IKeywordGetter)r));
                     }
@@ -14440,6 +14442,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.LocationReferenceTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.LocationReferenceTypes.GetOrAddAsOverride((ILocationReferenceTypeGetter)r));
                     }
@@ -14451,6 +14454,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Actions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Actions.GetOrAddAsOverride((IActionRecordGetter)r));
                     }
@@ -14462,6 +14466,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.TextureSets.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.TextureSets.GetOrAddAsOverride((ITextureSetGetter)r));
                     }
@@ -14473,6 +14478,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Globals.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Globals.GetOrAddAsOverride((IGlobalGetter)r));
                     }
@@ -14484,6 +14490,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Classes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Classes.GetOrAddAsOverride((IClassGetter)r));
                     }
@@ -14495,6 +14502,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Factions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Factions.GetOrAddAsOverride((IFactionGetter)r));
                     }
@@ -14506,6 +14514,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.HeadParts.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.HeadParts.GetOrAddAsOverride((IHeadPartGetter)r));
                     }
@@ -14517,6 +14526,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Hairs.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Hairs.GetOrAddAsOverride((IHairGetter)r));
                     }
@@ -14528,6 +14538,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Eyes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Eyes.GetOrAddAsOverride((IEyesGetter)r));
                     }
@@ -14539,6 +14550,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Races.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Races.GetOrAddAsOverride((IRaceGetter)r));
                     }
@@ -14550,6 +14562,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.SoundMarkers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.SoundMarkers.GetOrAddAsOverride((ISoundMarkerGetter)r));
                     }
@@ -14561,6 +14574,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.AcousticSpaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.AcousticSpaces.GetOrAddAsOverride((IAcousticSpaceGetter)r));
                     }
@@ -14572,6 +14586,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.MagicEffects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.MagicEffects.GetOrAddAsOverride((IMagicEffectGetter)r));
                     }
@@ -14583,6 +14598,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.LandscapeTextures.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.LandscapeTextures.GetOrAddAsOverride((ILandscapeTextureGetter)r));
                     }
@@ -14594,6 +14610,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.ObjectEffects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.ObjectEffects.GetOrAddAsOverride((IObjectEffectGetter)r));
                     }
@@ -14605,6 +14622,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Spells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Spells.GetOrAddAsOverride((ISpellGetter)r));
                     }
@@ -14616,6 +14634,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Scrolls.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Scrolls.GetOrAddAsOverride((IScrollGetter)r));
                     }
@@ -14627,6 +14646,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Activators.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Activators.GetOrAddAsOverride((IActivatorGetter)r));
                     }
@@ -14638,6 +14658,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.TalkingActivators.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.TalkingActivators.GetOrAddAsOverride((ITalkingActivatorGetter)r));
                     }
@@ -14649,6 +14670,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Armors.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Armors.GetOrAddAsOverride((IArmorGetter)r));
                     }
@@ -14660,6 +14682,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Books.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Books.GetOrAddAsOverride((IBookGetter)r));
                     }
@@ -14671,6 +14694,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Containers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Containers.GetOrAddAsOverride((IContainerGetter)r));
                     }
@@ -14682,6 +14706,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Doors.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Doors.GetOrAddAsOverride((IDoorGetter)r));
                     }
@@ -14693,6 +14718,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Ingredients.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Ingredients.GetOrAddAsOverride((IIngredientGetter)r));
                     }
@@ -14704,6 +14730,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Lights.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Lights.GetOrAddAsOverride((ILightGetter)r));
                     }
@@ -14715,6 +14742,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.MiscItems.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.MiscItems.GetOrAddAsOverride((IMiscItemGetter)r));
                     }
@@ -14726,6 +14754,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.AlchemicalApparatuses.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.AlchemicalApparatuses.GetOrAddAsOverride((IAlchemicalApparatusGetter)r));
                     }
@@ -14737,6 +14766,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Statics.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Statics.GetOrAddAsOverride((IStaticGetter)r));
                     }
@@ -14748,6 +14778,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.MoveableStatics.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.MoveableStatics.GetOrAddAsOverride((IMoveableStaticGetter)r));
                     }
@@ -14759,6 +14790,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Grasses.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Grasses.GetOrAddAsOverride((IGrassGetter)r));
                     }
@@ -14770,6 +14802,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Trees.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Trees.GetOrAddAsOverride((ITreeGetter)r));
                     }
@@ -14781,6 +14814,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Florae.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Florae.GetOrAddAsOverride((IFloraGetter)r));
                     }
@@ -14792,6 +14826,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Furniture.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Furniture.GetOrAddAsOverride((IFurnitureGetter)r));
                     }
@@ -14803,6 +14838,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Weapons.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Weapons.GetOrAddAsOverride((IWeaponGetter)r));
                     }
@@ -14814,6 +14850,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Ammunitions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Ammunitions.GetOrAddAsOverride((IAmmunitionGetter)r));
                     }
@@ -14825,6 +14862,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Npcs.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Npcs.GetOrAddAsOverride((INpcGetter)r));
                     }
@@ -14836,6 +14874,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.LeveledNpcs.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.LeveledNpcs.GetOrAddAsOverride((ILeveledNpcGetter)r));
                     }
@@ -14847,6 +14886,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Keys.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Keys.GetOrAddAsOverride((IKeyGetter)r));
                     }
@@ -14858,6 +14898,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Ingestibles.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Ingestibles.GetOrAddAsOverride((IIngestibleGetter)r));
                     }
@@ -14869,6 +14910,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.IdleMarkers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.IdleMarkers.GetOrAddAsOverride((IIdleMarkerGetter)r));
                     }
@@ -14880,6 +14922,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.ConstructibleObjects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.ConstructibleObjects.GetOrAddAsOverride((IConstructibleObjectGetter)r));
                     }
@@ -14891,6 +14934,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Projectiles.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Projectiles.GetOrAddAsOverride((IProjectileGetter)r));
                     }
@@ -14902,6 +14946,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Hazards.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Hazards.GetOrAddAsOverride((IHazardGetter)r));
                     }
@@ -14913,6 +14958,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.SoulGems.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.SoulGems.GetOrAddAsOverride((ISoulGemGetter)r));
                     }
@@ -14924,6 +14970,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.LeveledItems.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.LeveledItems.GetOrAddAsOverride((ILeveledItemGetter)r));
                     }
@@ -14935,6 +14982,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Weathers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Weathers.GetOrAddAsOverride((IWeatherGetter)r));
                     }
@@ -14946,6 +14994,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Climates.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Climates.GetOrAddAsOverride((IClimateGetter)r));
                     }
@@ -14957,6 +15006,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.ShaderParticleGeometries.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.ShaderParticleGeometries.GetOrAddAsOverride((IShaderParticleGeometryGetter)r));
                     }
@@ -14968,6 +15018,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.VisualEffects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.VisualEffects.GetOrAddAsOverride((IVisualEffectGetter)r));
                     }
@@ -14979,6 +15030,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Regions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Regions.GetOrAddAsOverride((IRegionGetter)r));
                     }
@@ -14990,6 +15042,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.NavigationMeshInfoMaps.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.NavigationMeshInfoMaps.GetOrAddAsOverride((INavigationMeshInfoMapGetter)r));
                     }
@@ -15001,6 +15054,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Worldspaces.GetOrAddAsOverride((IWorldspaceGetter)r));
                     }
@@ -15012,6 +15066,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.DialogTopics.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.DialogTopics.GetOrAddAsOverride((IDialogTopicGetter)r));
                     }
@@ -15023,6 +15078,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Quests.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Quests.GetOrAddAsOverride((IQuestGetter)r));
                     }
@@ -15034,6 +15090,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.IdleAnimations.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.IdleAnimations.GetOrAddAsOverride((IIdleAnimationGetter)r));
                     }
@@ -15045,6 +15102,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Packages.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Packages.GetOrAddAsOverride((IPackageGetter)r));
                     }
@@ -15056,6 +15114,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.CombatStyles.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.CombatStyles.GetOrAddAsOverride((ICombatStyleGetter)r));
                     }
@@ -15067,6 +15126,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.LoadScreens.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.LoadScreens.GetOrAddAsOverride((ILoadScreenGetter)r));
                     }
@@ -15078,6 +15138,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.LeveledSpells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.LeveledSpells.GetOrAddAsOverride((ILeveledSpellGetter)r));
                     }
@@ -15089,6 +15150,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.AnimatedObjects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.AnimatedObjects.GetOrAddAsOverride((IAnimatedObjectGetter)r));
                     }
@@ -15100,6 +15162,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Waters.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Waters.GetOrAddAsOverride((IWaterGetter)r));
                     }
@@ -15111,6 +15174,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.EffectShaders.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.EffectShaders.GetOrAddAsOverride((IEffectShaderGetter)r));
                     }
@@ -15122,6 +15186,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Explosions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Explosions.GetOrAddAsOverride((IExplosionGetter)r));
                     }
@@ -15133,6 +15198,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Debris.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Debris.GetOrAddAsOverride((IDebrisGetter)r));
                     }
@@ -15144,6 +15210,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.ImageSpaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.ImageSpaces.GetOrAddAsOverride((IImageSpaceGetter)r));
                     }
@@ -15155,6 +15222,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.ImageSpaceAdapters.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.ImageSpaceAdapters.GetOrAddAsOverride((IImageSpaceAdapterGetter)r));
                     }
@@ -15166,6 +15234,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.FormLists.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.FormLists.GetOrAddAsOverride((IFormListGetter)r));
                     }
@@ -15177,6 +15246,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Perks.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Perks.GetOrAddAsOverride((IPerkGetter)r));
                     }
@@ -15188,6 +15258,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.BodyParts.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.BodyParts.GetOrAddAsOverride((IBodyPartDataGetter)r));
                     }
@@ -15199,6 +15270,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.AddonNodes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.AddonNodes.GetOrAddAsOverride((IAddonNodeGetter)r));
                     }
@@ -15210,6 +15282,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.ActorValueInformation.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.ActorValueInformation.GetOrAddAsOverride((IActorValueInformationGetter)r));
                     }
@@ -15221,6 +15294,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.CameraShots.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.CameraShots.GetOrAddAsOverride((ICameraShotGetter)r));
                     }
@@ -15232,6 +15306,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.CameraPaths.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.CameraPaths.GetOrAddAsOverride((ICameraPathGetter)r));
                     }
@@ -15243,6 +15318,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.VoiceTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.VoiceTypes.GetOrAddAsOverride((IVoiceTypeGetter)r));
                     }
@@ -15254,6 +15330,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.MaterialTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.MaterialTypes.GetOrAddAsOverride((IMaterialTypeGetter)r));
                     }
@@ -15265,6 +15342,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Impacts.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Impacts.GetOrAddAsOverride((IImpactGetter)r));
                     }
@@ -15276,6 +15354,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.ImpactDataSets.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.ImpactDataSets.GetOrAddAsOverride((IImpactDataSetGetter)r));
                     }
@@ -15287,6 +15366,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.ArmorAddons.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.ArmorAddons.GetOrAddAsOverride((IArmorAddonGetter)r));
                     }
@@ -15298,6 +15378,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.EncounterZones.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.EncounterZones.GetOrAddAsOverride((IEncounterZoneGetter)r));
                     }
@@ -15309,6 +15390,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Locations.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Locations.GetOrAddAsOverride((ILocationGetter)r));
                     }
@@ -15320,6 +15402,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Messages.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Messages.GetOrAddAsOverride((IMessageGetter)r));
                     }
@@ -15331,6 +15414,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.DefaultObjectManagers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.DefaultObjectManagers.GetOrAddAsOverride((IDefaultObjectManagerGetter)r));
                     }
@@ -15342,6 +15426,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.LightingTemplates.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.LightingTemplates.GetOrAddAsOverride((ILightingTemplateGetter)r));
                     }
@@ -15353,6 +15438,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.MusicTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.MusicTypes.GetOrAddAsOverride((IMusicTypeGetter)r));
                     }
@@ -15364,6 +15450,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Footsteps.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Footsteps.GetOrAddAsOverride((IFootstepGetter)r));
                     }
@@ -15375,6 +15462,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.FootstepSets.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.FootstepSets.GetOrAddAsOverride((IFootstepSetGetter)r));
                     }
@@ -15386,6 +15474,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.StoryManagerBranchNodes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.StoryManagerBranchNodes.GetOrAddAsOverride((IStoryManagerBranchNodeGetter)r));
                     }
@@ -15397,6 +15486,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.StoryManagerQuestNodes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.StoryManagerQuestNodes.GetOrAddAsOverride((IStoryManagerQuestNodeGetter)r));
                     }
@@ -15408,6 +15498,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.StoryManagerEventNodes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.StoryManagerEventNodes.GetOrAddAsOverride((IStoryManagerEventNodeGetter)r));
                     }
@@ -15419,6 +15510,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.DialogBranches.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.DialogBranches.GetOrAddAsOverride((IDialogBranchGetter)r));
                     }
@@ -15430,6 +15522,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.MusicTracks.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.MusicTracks.GetOrAddAsOverride((IMusicTrackGetter)r));
                     }
@@ -15441,6 +15534,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.DialogViews.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.DialogViews.GetOrAddAsOverride((IDialogViewGetter)r));
                     }
@@ -15452,6 +15546,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.WordsOfPower.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.WordsOfPower.GetOrAddAsOverride((IWordOfPowerGetter)r));
                     }
@@ -15463,6 +15558,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Shouts.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Shouts.GetOrAddAsOverride((IShoutGetter)r));
                     }
@@ -15474,6 +15570,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.EquipTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.EquipTypes.GetOrAddAsOverride((IEquipTypeGetter)r));
                     }
@@ -15485,6 +15582,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Relationships.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Relationships.GetOrAddAsOverride((IRelationshipGetter)r));
                     }
@@ -15496,6 +15594,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Scenes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Scenes.GetOrAddAsOverride((ISceneGetter)r));
                     }
@@ -15507,6 +15606,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.AssociationTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.AssociationTypes.GetOrAddAsOverride((IAssociationTypeGetter)r));
                     }
@@ -15518,6 +15618,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Outfits.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Outfits.GetOrAddAsOverride((IOutfitGetter)r));
                     }
@@ -15529,6 +15630,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.ArtObjects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.ArtObjects.GetOrAddAsOverride((IArtObjectGetter)r));
                     }
@@ -15540,6 +15642,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.MaterialObjects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.MaterialObjects.GetOrAddAsOverride((IMaterialObjectGetter)r));
                     }
@@ -15551,6 +15654,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.MovementTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.MovementTypes.GetOrAddAsOverride((IMovementTypeGetter)r));
                     }
@@ -15562,6 +15666,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.SoundDescriptors.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.SoundDescriptors.GetOrAddAsOverride((ISoundDescriptorGetter)r));
                     }
@@ -15573,6 +15678,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.DualCastData.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.DualCastData.GetOrAddAsOverride((IDualCastDataGetter)r));
                     }
@@ -15584,6 +15690,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.SoundCategories.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.SoundCategories.GetOrAddAsOverride((ISoundCategoryGetter)r));
                     }
@@ -15595,6 +15702,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.SoundOutputModels.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.SoundOutputModels.GetOrAddAsOverride((ISoundOutputModelGetter)r));
                     }
@@ -15606,6 +15714,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.CollisionLayers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.CollisionLayers.GetOrAddAsOverride((ICollisionLayerGetter)r));
                     }
@@ -15617,6 +15726,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.Colors.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Colors.GetOrAddAsOverride((IColorRecordGetter)r));
                     }
@@ -15628,6 +15738,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.ReverbParameters.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.ReverbParameters.GetOrAddAsOverride((IReverbParametersGetter)r));
                     }
@@ -15639,6 +15750,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in obj.VolumetricLightings.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.VolumetricLightings.GetOrAddAsOverride((IVolumetricLightingGetter)r));
                     }
@@ -15649,13 +15761,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ICellInternal":
                     foreach (var item in obj.Cells.EnumerateMajorRecordContexts(type, throwIfUnknown: throwIfUnknown))
                     {
-                        yield return item;
+                        yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
                         foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, type, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(r)))
                         {
-                            yield return item;
+                            yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                         }
                     }
                     yield break;
@@ -15665,13 +15777,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILandscapeInternal":
                     foreach (var item in obj.Cells.EnumerateMajorRecordContexts(type, throwIfUnknown: throwIfUnknown))
                     {
-                        yield return item;
+                        yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
                         foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, type, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(r)))
                         {
-                            yield return item;
+                            yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                         }
                     }
                     yield break;
@@ -15681,13 +15793,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IANavigationMeshInternal":
                     foreach (var item in obj.Cells.EnumerateMajorRecordContexts(type, throwIfUnknown: throwIfUnknown))
                     {
-                        yield return item;
+                        yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
                         foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, type, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(r)))
                         {
-                            yield return item;
+                            yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                         }
                     }
                     yield break;
@@ -15697,13 +15809,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedNpcInternal":
                     foreach (var item in obj.Cells.EnumerateMajorRecordContexts(type, throwIfUnknown: throwIfUnknown))
                     {
-                        yield return item;
+                        yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
                         foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, type, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(r)))
                         {
-                            yield return item;
+                            yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                         }
                     }
                     yield break;
@@ -15713,13 +15825,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedObjectInternal":
                     foreach (var item in obj.Cells.EnumerateMajorRecordContexts(type, throwIfUnknown: throwIfUnknown))
                     {
-                        yield return item;
+                        yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
                         foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, type, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(r)))
                         {
-                            yield return item;
+                            yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                         }
                     }
                     yield break;
@@ -15729,13 +15841,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAPlacedTrapInternal":
                     foreach (var item in obj.Cells.EnumerateMajorRecordContexts(type, throwIfUnknown: throwIfUnknown))
                     {
-                        yield return item;
+                        yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
                         foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, type, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(r)))
                         {
-                            yield return item;
+                            yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                         }
                     }
                     yield break;
@@ -15747,7 +15859,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         foreach (var item in DialogTopicCommon.Instance.EnumerateMajorRecordContexts(groupItem, type, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.DialogTopics.GetOrAddAsOverride(r)))
                         {
-                            yield return item;
+                            yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                         }
                     }
                     yield break;
@@ -15944,7 +16056,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var item in obj.Cells.EnumerateMajorRecordContexts(type, throwIfUnknown: throwIfUnknown))
                     {
-                        yield return item;
+                        yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                     }
                     yield break;
                 }
@@ -15966,13 +16078,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var item in obj.Cells.EnumerateMajorRecordContexts(type, throwIfUnknown: throwIfUnknown))
                     {
-                        yield return item;
+                        yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
                         foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, type, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(r)))
                         {
-                            yield return item;
+                            yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                         }
                     }
                     yield break;
@@ -15986,13 +16098,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var item in obj.Cells.EnumerateMajorRecordContexts(type, throwIfUnknown: throwIfUnknown))
                     {
-                        yield return item;
+                        yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
                         foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, type, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(r)))
                         {
-                            yield return item;
+                            yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                         }
                     }
                     yield break;
@@ -16174,13 +16286,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     foreach (var item in obj.Cells.EnumerateMajorRecordContexts(type, throwIfUnknown: throwIfUnknown))
                     {
-                        yield return item;
+                        yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
                         foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, type, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(r)))
                         {
-                            yield return item;
+                            yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                         }
                     }
                     yield break;
@@ -16190,13 +16302,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     foreach (var item in obj.Cells.EnumerateMajorRecordContexts(type, throwIfUnknown: throwIfUnknown))
                     {
-                        yield return item;
+                        yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
                         foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, type, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(r)))
                         {
-                            yield return item;
+                            yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                         }
                     }
                     yield break;
@@ -16206,13 +16318,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     foreach (var item in obj.Cells.EnumerateMajorRecordContexts(type, throwIfUnknown: throwIfUnknown))
                     {
-                        yield return item;
+                        yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
                         foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, type, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(r)))
                         {
-                            yield return item;
+                            yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                         }
                     }
                     yield break;
@@ -16222,13 +16334,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     foreach (var item in obj.Cells.EnumerateMajorRecordContexts(type, throwIfUnknown: throwIfUnknown))
                     {
-                        yield return item;
+                        yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
                         foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, type, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(r)))
                         {
-                            yield return item;
+                            yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                         }
                     }
                     yield break;

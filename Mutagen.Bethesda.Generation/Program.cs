@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "SkyrimModBinaryTranslationMixIn";
+            string testString = "r copy = (IPlaced)((IPlacedGetter)r).DeepCo";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>
