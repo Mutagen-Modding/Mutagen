@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Core;
 using Noggog;
 using System;
@@ -222,8 +222,9 @@ namespace Mutagen.Bethesda.Internals
                     {
                         modKeys.Sort(ModKey.LoadOrderComparer(lo.LoadOrder));
                     }
-                    catch (InvalidOperationException)
+                    catch (Exception ex)
                     {
+                        if (!(ex is ArgumentOutOfRangeException) && !(ex is InvalidOperationException)) throw;
                         var keys = modKeys.ToHashSet();
                         keys.Remove(lo.LoadOrder);
                         var modToComplainAbout = keys.First();
