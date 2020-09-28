@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda
             }
             catch (Exception ex)
             {
-                throw RecordException.Factory(ex, Record);
+                throw RecordException.Factory(ex, ModKey, Record);
             }
         }
 
