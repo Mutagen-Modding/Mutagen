@@ -1940,7 +1940,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: null!,
+                                modKey: ModKey.Null,
                                 record: subItem,
                                 getter: (m, r) =>
                                 {
