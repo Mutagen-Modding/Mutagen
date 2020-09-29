@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Generation
                 }
                 using (new DepthWrapper(fg))
                 {
-                    fg.AppendLine($".Select(m => new ModContext<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, TSetter, TGetter>((TGetter)m.Record, (mod, rec) => (TSetter)m.GetOrAddAsOverride(mod))){enderSemi}");
+                    fg.AppendLine($".Select(m => new ModContext<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, TSetter, TGetter>(m.ModKey, (TGetter)m.Record, (mod, rec) => (TSetter)m.GetOrAddAsOverride(mod))){enderSemi}");
                     if (needsCatch)
                     {
                         fg.AppendLine($"{catchLine};");
@@ -121,6 +121,7 @@ namespace Mutagen.Bethesda.Generation
                     using (var args = new ArgsWrapper(fg,
                         $"yield return new ModContext<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, IMajorRecordCommon, IMajorRecordCommonGetter>"))
                     {
+                        args.Add("modKey: null!");
                         args.Add($"record: {loquiAccessor}");
                         addGetOrAddArg(args);
                     }
@@ -140,6 +141,7 @@ namespace Mutagen.Bethesda.Generation
                     using (var args = new ArgsWrapper(fg,
                         $"yield return new ModContext<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, IMajorRecordCommon, IMajorRecordCommonGetter>"))
                     {
+                        args.Add("modKey: null!");
                         args.Add($"record: {loquiAccessor}");
                         addGetOrAddArg(args);
                     }
@@ -159,6 +161,7 @@ namespace Mutagen.Bethesda.Generation
                     using (var args = new ArgsWrapper(fg,
                         $"yield return new ModContext<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, IMajorRecordCommon, IMajorRecordCommonGetter>"))
                     {
+                        args.Add("modKey: null!");
                         args.Add("record: item");
                         args.Add($"getOrAddAsOverride: (m, r) => m.{loquiType.Name}.GetOrAddAsOverride(({loquiType.GetGroupTarget().Interface(getter: true, internalInterface: true)})r)");
                     }
@@ -438,6 +441,7 @@ namespace Mutagen.Bethesda.Generation
                         using (var args = new ArgsWrapper(fieldGen,
                             $"yield return new ModContext<{obj.Interface(getter: false)}, IMajorRecordCommon, IMajorRecordCommonGetter>"))
                         {
+                            args.Add("modKey: obj.ModKey");
                             args.Add("record: item");
                             args.Add($"getter: (m, r) => m.{group.Name}.GetOrAddAsOverride(({group.GetGroupTarget().Interface(getter: true, internalInterface: true)})r)");
                         }
@@ -452,7 +456,14 @@ namespace Mutagen.Bethesda.Generation
 
                         using (new BraceWrapper(fieldGen))
                         {
-                            fieldGen.AppendLine("yield return item;");
+                            if (obj.GetObjectType() == ObjectType.Mod)
+                            {
+                                fieldGen.AppendLine("yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);");
+                            }
+                            else
+                            {
+                                fieldGen.AppendLine("yield return item;");
+                            }
                         }
                     }
                 }
@@ -466,7 +477,14 @@ namespace Mutagen.Bethesda.Generation
                     fieldGen.AppendLine($"foreach (var item in obj.{field.Name}.EnumerateMajorRecordContexts(type, throwIfUnknown: throwIfUnknown))");
                     using (new BraceWrapper(fieldGen))
                     {
-                        fieldGen.AppendLine("yield return item;");
+                        if (obj.GetObjectType() == ObjectType.Mod)
+                        {
+                            fieldGen.AppendLine("yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);");
+                        }
+                        else
+                        {
+                            fieldGen.AppendLine("yield return item;");
+                        }
                     }
                     return;
                 }

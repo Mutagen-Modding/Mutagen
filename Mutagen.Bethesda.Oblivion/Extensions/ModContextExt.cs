@@ -1,4 +1,4 @@
-﻿using Loqui;
+using Loqui;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System;
 using System.Collections.Generic;
@@ -76,6 +76,7 @@ namespace Mutagen.Bethesda.Oblivion
                             && regis.ClassType == typeof(Cell))
                         {
                             yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                modKey: null!,
                                 record: readOnlyCell,
                                 getter: (m, r) => cellGetter(m, (ICellGetter)r));
                         }
@@ -151,6 +152,7 @@ namespace Mutagen.Bethesda.Oblivion
                             && regis.ClassType == typeof(Cell))
                         {
                             yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                modKey: null!,
                                 record: readOnlyCell,
                                 getter: (m, r) => cellGetter(m, (ICellGetter)r));
                         }

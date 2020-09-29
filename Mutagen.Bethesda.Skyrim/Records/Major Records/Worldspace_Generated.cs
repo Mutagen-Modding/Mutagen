@@ -3743,6 +3743,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                modKey: null!,
                                 record: WorldspaceTopCellitem,
                                 getter: (m, r) =>
                                 {
@@ -3794,6 +3795,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                modKey: null!,
                                 record: WorldspaceTopCellitem,
                                 getter: (m, r) =>
                                 {
@@ -3833,6 +3835,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                modKey: null!,
                                 record: WorldspaceTopCellitem,
                                 getter: (m, r) =>
                                 {
@@ -3872,6 +3875,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                modKey: null!,
                                 record: WorldspaceTopCellitem,
                                 getter: (m, r) =>
                                 {
@@ -3911,6 +3915,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                modKey: null!,
                                 record: WorldspaceTopCellitem,
                                 getter: (m, r) =>
                                 {
@@ -3950,6 +3955,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                modKey: null!,
                                 record: WorldspaceTopCellitem,
                                 getter: (m, r) =>
                                 {
@@ -4001,6 +4007,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                modKey: null!,
                                 record: WorldspaceTopCellitem,
                                 getter: (m, r) =>
                                 {
@@ -4040,6 +4047,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                modKey: null!,
                                 record: WorldspaceTopCellitem,
                                 getter: (m, r) =>
                                 {
@@ -4079,6 +4087,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                modKey: null!,
                                 record: WorldspaceTopCellitem,
                                 getter: (m, r) =>
                                 {
@@ -4118,6 +4127,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                modKey: null!,
                                 record: WorldspaceTopCellitem,
                                 getter: (m, r) =>
                                 {
@@ -4157,6 +4167,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                modKey: null!,
                                 record: WorldspaceTopCellitem,
                                 getter: (m, r) =>
                                 {
@@ -4196,6 +4207,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                modKey: null!,
                                 record: WorldspaceTopCellitem,
                                 getter: (m, r) =>
                                 {

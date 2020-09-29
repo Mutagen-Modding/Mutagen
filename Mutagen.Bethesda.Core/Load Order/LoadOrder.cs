@@ -220,35 +220,19 @@ namespace Mutagen.Bethesda
             out IObservable<ErrorResponse> state,
             bool throwOnMissingMods = true)
         {
-            var results = ObservableExt.UsingWithCatch(
-                () =>
+            var results = ObservableExt.WatchFile(loadOrderFilePath.Path)
+                .StartWith(Unit.Default)
+                .Select(_ =>
                 {
-                    var watcher = new FileSystemWatcher(Path.GetDirectoryName(loadOrderFilePath.Path), filter: Path.GetFileName(loadOrderFilePath.Path));
-                    watcher.EnableRaisingEvents = true;
-                    return watcher;
-                },
-                (watcher) =>
-                {
-                    if (watcher.Failed) return Observable.Return(watcher.BubbleFailure<IObservable<IChangeSet<LoadOrderListing>>>());
-                    return Observable.Merge(
-                            Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>(h => watcher.Value.Changed += h, h => watcher.Value.Changed -= h),
-                            Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>(h => watcher.Value.Created += h, h => watcher.Value.Created -= h),
-                            Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>(h => watcher.Value.Deleted += h, h => watcher.Value.Deleted -= h))
-                        .Where(x => x.EventArgs.FullPath.Equals(loadOrderFilePath.Path, StringComparison.OrdinalIgnoreCase))
-                        .Unit()
-                        .StartWith(Unit.Default)
-                        .Select(_ =>
-                        {
-                            try
-                            {
-                                return GetResponse<IObservable<IChangeSet<LoadOrderListing>>>.Succeed(
-                                    FromPath(loadOrderFilePath, game, dataFolderPath, throwOnMissingMods: throwOnMissingMods).AsObservableChangeSet());
-                            }
-                            catch (Exception ex)
-                            {
-                                return GetResponse<IObservable<IChangeSet<LoadOrderListing>>>.Fail(ex);
-                            }
-                        });
+                    try
+                    {
+                        return GetResponse<IObservable<IChangeSet<LoadOrderListing>>>.Succeed(
+                            FromPath(loadOrderFilePath, game, dataFolderPath, throwOnMissingMods: throwOnMissingMods).AsObservableChangeSet());
+                    }
+                    catch (Exception ex)
+                    {
+                        return GetResponse<IObservable<IChangeSet<LoadOrderListing>>>.Fail(ex);
+                    }
                 })
                 .Replay(1)
                 .RefCount();

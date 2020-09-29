@@ -4305,7 +4305,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj: obj,
                 type: typeof(TGetter),
                 throwIfUnknown: throwIfUnknown)
-                .Select(m => new ModContext<IOblivionMod, TSetter, TGetter>((TGetter)m.Record, (mod, rec) => (TSetter)m.GetOrAddAsOverride(mod)))
+                .Select(m => new ModContext<IOblivionMod, TSetter, TGetter>(m.ModKey, (TGetter)m.Record, (mod, rec) => (TSetter)m.GetOrAddAsOverride(mod)))
                 .Catch(e => throw RecordException.Factory(e, obj.ModKey));
         }
 
@@ -7481,6 +7481,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.GameSettings.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.GameSettings.GetOrAddAsOverride((IGameSettingGetter)r));
                     }
@@ -7492,6 +7493,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Globals.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Globals.GetOrAddAsOverride((IGlobalGetter)r));
                     }
@@ -7503,6 +7505,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Classes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Classes.GetOrAddAsOverride((IClassGetter)r));
                     }
@@ -7514,6 +7517,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Factions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Factions.GetOrAddAsOverride((IFactionGetter)r));
                     }
@@ -7525,6 +7529,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Hairs.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Hairs.GetOrAddAsOverride((IHairGetter)r));
                     }
@@ -7536,6 +7541,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Eyes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Eyes.GetOrAddAsOverride((IEyeGetter)r));
                     }
@@ -7547,6 +7553,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Races.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Races.GetOrAddAsOverride((IRaceGetter)r));
                     }
@@ -7558,6 +7565,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Sounds.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Sounds.GetOrAddAsOverride((ISoundGetter)r));
                     }
@@ -7569,6 +7577,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Skills.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Skills.GetOrAddAsOverride((ISkillRecordGetter)r));
                     }
@@ -7580,6 +7589,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.MagicEffects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.MagicEffects.GetOrAddAsOverride((IMagicEffectGetter)r));
                     }
@@ -7591,6 +7601,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Scripts.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Scripts.GetOrAddAsOverride((IScriptGetter)r));
                     }
@@ -7602,6 +7613,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.LandTextures.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.LandTextures.GetOrAddAsOverride((ILandTextureGetter)r));
                     }
@@ -7613,6 +7625,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Enchantments.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Enchantments.GetOrAddAsOverride((IEnchantmentGetter)r));
                     }
@@ -7624,6 +7637,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Spells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Spells.GetOrAddAsOverride((ISpellUnleveledGetter)r));
                     }
@@ -7635,6 +7649,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Birthsigns.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Birthsigns.GetOrAddAsOverride((IBirthsignGetter)r));
                     }
@@ -7646,6 +7661,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Activators.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Activators.GetOrAddAsOverride((IActivatorGetter)r));
                     }
@@ -7657,6 +7673,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.AlchemicalApparatus.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.AlchemicalApparatus.GetOrAddAsOverride((IAlchemicalApparatusGetter)r));
                     }
@@ -7668,6 +7685,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Armors.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Armors.GetOrAddAsOverride((IArmorGetter)r));
                     }
@@ -7679,6 +7697,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Books.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Books.GetOrAddAsOverride((IBookGetter)r));
                     }
@@ -7690,6 +7709,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Clothes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Clothes.GetOrAddAsOverride((IClothingGetter)r));
                     }
@@ -7701,6 +7721,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Containers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Containers.GetOrAddAsOverride((IContainerGetter)r));
                     }
@@ -7712,6 +7733,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Doors.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Doors.GetOrAddAsOverride((IDoorGetter)r));
                     }
@@ -7723,6 +7745,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Ingredients.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Ingredients.GetOrAddAsOverride((IIngredientGetter)r));
                     }
@@ -7734,6 +7757,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Lights.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Lights.GetOrAddAsOverride((ILightGetter)r));
                     }
@@ -7745,6 +7769,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Miscellaneous.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Miscellaneous.GetOrAddAsOverride((IMiscellaneousGetter)r));
                     }
@@ -7756,6 +7781,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Statics.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Statics.GetOrAddAsOverride((IStaticGetter)r));
                     }
@@ -7767,6 +7793,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Grasses.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Grasses.GetOrAddAsOverride((IGrassGetter)r));
                     }
@@ -7778,6 +7805,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Trees.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Trees.GetOrAddAsOverride((ITreeGetter)r));
                     }
@@ -7789,6 +7817,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Flora.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Flora.GetOrAddAsOverride((IFloraGetter)r));
                     }
@@ -7800,6 +7829,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Furniture.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Furniture.GetOrAddAsOverride((IFurnitureGetter)r));
                     }
@@ -7811,6 +7841,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Weapons.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Weapons.GetOrAddAsOverride((IWeaponGetter)r));
                     }
@@ -7822,6 +7853,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Ammunitions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Ammunitions.GetOrAddAsOverride((IAmmunitionGetter)r));
                     }
@@ -7833,6 +7865,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Npcs.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Npcs.GetOrAddAsOverride((INpcGetter)r));
                     }
@@ -7844,6 +7877,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Creatures.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Creatures.GetOrAddAsOverride((ICreatureGetter)r));
                     }
@@ -7855,6 +7889,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.LeveledCreatures.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.LeveledCreatures.GetOrAddAsOverride((ILeveledCreatureGetter)r));
                     }
@@ -7866,6 +7901,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.SoulGems.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.SoulGems.GetOrAddAsOverride((ISoulGemGetter)r));
                     }
@@ -7877,6 +7913,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Keys.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Keys.GetOrAddAsOverride((IKeyGetter)r));
                     }
@@ -7888,6 +7925,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Potions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Potions.GetOrAddAsOverride((IPotionGetter)r));
                     }
@@ -7899,6 +7937,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Subspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Subspaces.GetOrAddAsOverride((ISubspaceGetter)r));
                     }
@@ -7910,6 +7949,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.SigilStones.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.SigilStones.GetOrAddAsOverride((ISigilStoneGetter)r));
                     }
@@ -7921,6 +7961,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.LeveledItems.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.LeveledItems.GetOrAddAsOverride((ILeveledItemGetter)r));
                     }
@@ -7932,6 +7973,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Weathers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Weathers.GetOrAddAsOverride((IWeatherGetter)r));
                     }
@@ -7943,6 +7985,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Climates.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Climates.GetOrAddAsOverride((IClimateGetter)r));
                     }
@@ -7954,6 +7997,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Regions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Regions.GetOrAddAsOverride((IRegionGetter)r));
                     }
@@ -7965,6 +8009,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Worldspaces.GetOrAddAsOverride((IWorldspaceGetter)r));
                     }
@@ -7976,6 +8021,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.DialogTopics.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.DialogTopics.GetOrAddAsOverride((IDialogTopicGetter)r));
                     }
@@ -7987,6 +8033,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Quests.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Quests.GetOrAddAsOverride((IQuestGetter)r));
                     }
@@ -7998,6 +8045,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.IdleAnimations.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.IdleAnimations.GetOrAddAsOverride((IIdleAnimationGetter)r));
                     }
@@ -8009,6 +8057,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.AIPackages.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.AIPackages.GetOrAddAsOverride((IAIPackageGetter)r));
                     }
@@ -8020,6 +8069,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.CombatStyles.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.CombatStyles.GetOrAddAsOverride((ICombatStyleGetter)r));
                     }
@@ -8031,6 +8081,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.LoadScreens.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.LoadScreens.GetOrAddAsOverride((ILoadScreenGetter)r));
                     }
@@ -8042,6 +8093,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.LeveledSpells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.LeveledSpells.GetOrAddAsOverride((ILeveledSpellGetter)r));
                     }
@@ -8053,6 +8105,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.AnimatedObjects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.AnimatedObjects.GetOrAddAsOverride((IAnimatedObjectGetter)r));
                     }
@@ -8064,6 +8117,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.Waters.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.Waters.GetOrAddAsOverride((IWaterGetter)r));
                     }
@@ -8075,6 +8129,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in obj.EffectShaders.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            modKey: obj.ModKey,
                             record: item,
                             getter: (m, r) => m.EffectShaders.GetOrAddAsOverride((IEffectShaderGetter)r));
                     }
@@ -8085,13 +8140,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ICellInternal":
                     foreach (var item in obj.Cells.EnumerateMajorRecordContexts(type, throwIfUnknown: throwIfUnknown))
                     {
-                        yield return item;
+                        yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
                         foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, type, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(r)))
                         {
-                            yield return item;
+                            yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                         }
                     }
                     yield break;
@@ -8101,13 +8156,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IPathGridInternal":
                     foreach (var item in obj.Cells.EnumerateMajorRecordContexts(type, throwIfUnknown: throwIfUnknown))
                     {
-                        yield return item;
+                        yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
                         foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, type, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(r)))
                         {
-                            yield return item;
+                            yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                         }
                     }
                     yield break;
@@ -8117,13 +8172,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ILandscapeInternal":
                     foreach (var item in obj.Cells.EnumerateMajorRecordContexts(type, throwIfUnknown: throwIfUnknown))
                     {
-                        yield return item;
+                        yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
                         foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, type, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(r)))
                         {
-                            yield return item;
+                            yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                         }
                     }
                     yield break;
@@ -8133,13 +8188,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IPlacedCreatureInternal":
                     foreach (var item in obj.Cells.EnumerateMajorRecordContexts(type, throwIfUnknown: throwIfUnknown))
                     {
-                        yield return item;
+                        yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
                         foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, type, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(r)))
                         {
-                            yield return item;
+                            yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                         }
                     }
                     yield break;
@@ -8149,13 +8204,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IPlacedNpcInternal":
                     foreach (var item in obj.Cells.EnumerateMajorRecordContexts(type, throwIfUnknown: throwIfUnknown))
                     {
-                        yield return item;
+                        yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
                         foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, type, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(r)))
                         {
-                            yield return item;
+                            yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                         }
                     }
                     yield break;
@@ -8165,13 +8220,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IPlacedObjectInternal":
                     foreach (var item in obj.Cells.EnumerateMajorRecordContexts(type, throwIfUnknown: throwIfUnknown))
                     {
-                        yield return item;
+                        yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
                         foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, type, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(r)))
                         {
-                            yield return item;
+                            yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                         }
                     }
                     yield break;
@@ -8183,7 +8238,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, type, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(r)))
                         {
-                            yield return item;
+                            yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                         }
                     }
                     yield break;
@@ -8195,7 +8250,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         foreach (var item in DialogTopicCommon.Instance.EnumerateMajorRecordContexts(groupItem, type, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.DialogTopics.GetOrAddAsOverride(r)))
                         {
-                            yield return item;
+                            yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                         }
                     }
                     yield break;
@@ -8217,13 +8272,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     foreach (var item in obj.Cells.EnumerateMajorRecordContexts(type, throwIfUnknown: throwIfUnknown))
                     {
-                        yield return item;
+                        yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
                         foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, type, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(r)))
                         {
-                            yield return item;
+                            yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
                         }
                     }
                     yield break;

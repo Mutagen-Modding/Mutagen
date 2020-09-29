@@ -2,6 +2,6 @@
   <PropertyGroup>
     <Nullable>enable</Nullable>
     <WarningsAsErrors>nullable</WarningsAsErrors>
-    <Version>0.17</Version>
+    <Version>0.17.1-dev</Version>
   </PropertyGroup>
 </Project>

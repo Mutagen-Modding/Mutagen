@@ -2557,6 +2557,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         if (obj.Road.TryGet(out var WorldspaceRoaditem))
                         {
                             yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                modKey: null!,
                                 record: WorldspaceRoaditem,
                                 getter: (m, r) =>
                                 {
@@ -2575,6 +2576,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                         {
                             yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                modKey: null!,
                                 record: WorldspaceTopCellitem,
                                 getter: (m, r) =>
                                 {
@@ -2626,6 +2628,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                         {
                             yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                modKey: null!,
                                 record: WorldspaceTopCellitem,
                                 getter: (m, r) =>
                                 {
@@ -2665,6 +2668,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                         {
                             yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                modKey: null!,
                                 record: WorldspaceTopCellitem,
                                 getter: (m, r) =>
                                 {
@@ -2704,6 +2708,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                         {
                             yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                modKey: null!,
                                 record: WorldspaceTopCellitem,
                                 getter: (m, r) =>
                                 {
@@ -2743,6 +2748,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                         {
                             yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                modKey: null!,
                                 record: WorldspaceTopCellitem,
                                 getter: (m, r) =>
                                 {
@@ -2782,6 +2788,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                         {
                             yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                modKey: null!,
                                 record: WorldspaceTopCellitem,
                                 getter: (m, r) =>
                                 {
@@ -2820,6 +2827,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                         {
                             yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                modKey: null!,
                                 record: WorldspaceTopCellitem,
                                 getter: (m, r) =>
                                 {

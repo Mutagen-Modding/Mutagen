@@ -1738,6 +1738,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                modKey: null!,
                                 record: subItem,
                                 getter: (m, r) =>
                                 {
