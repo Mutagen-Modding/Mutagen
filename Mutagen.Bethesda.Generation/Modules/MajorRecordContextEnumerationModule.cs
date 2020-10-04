@@ -121,7 +121,7 @@ namespace Mutagen.Bethesda.Generation
                     using (var args = new ArgsWrapper(fg,
                         $"yield return new ModContext<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, IMajorRecordCommon, IMajorRecordCommonGetter>"))
                     {
-                        args.Add("modKey: null!");
+                        args.Add("modKey: ModKey.Null");
                         args.Add($"record: {loquiAccessor}");
                         addGetOrAddArg(args);
                     }
@@ -141,7 +141,7 @@ namespace Mutagen.Bethesda.Generation
                     using (var args = new ArgsWrapper(fg,
                         $"yield return new ModContext<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, IMajorRecordCommon, IMajorRecordCommonGetter>"))
                     {
-                        args.Add("modKey: null!");
+                        args.Add("modKey: ModKey.Null");
                         args.Add($"record: {loquiAccessor}");
                         addGetOrAddArg(args);
                     }
@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Generation
                     using (var args = new ArgsWrapper(fg,
                         $"yield return new ModContext<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, IMajorRecordCommon, IMajorRecordCommonGetter>"))
                     {
-                        args.Add("modKey: null!");
+                        args.Add("modKey: ModKey.Null");
                         args.Add("record: item");
                         args.Add($"getOrAddAsOverride: (m, r) => m.{loquiType.Name}.GetOrAddAsOverride(({loquiType.GetGroupTarget().Interface(getter: true, internalInterface: true)})r)");
                     }

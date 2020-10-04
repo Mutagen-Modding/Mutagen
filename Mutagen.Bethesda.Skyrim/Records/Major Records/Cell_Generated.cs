@@ -3770,7 +3770,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (obj.Landscape.TryGet(out var CellLandscapeitem))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: null!,
+                                modKey: ModKey.Null,
                                 record: CellLandscapeitem,
                                 getter: (m, r) =>
                                 {
@@ -3790,7 +3790,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: null!,
+                                modKey: ModKey.Null,
                                 record: subItem,
                                 getter: (m, r) =>
                                 {
@@ -3808,7 +3808,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: null!,
+                                modKey: ModKey.Null,
                                 record: subItem,
                                 getter: (m, r) =>
                                 {
@@ -3823,7 +3823,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: null!,
+                                modKey: ModKey.Null,
                                 record: subItem,
                                 getter: (m, r) =>
                                 {
@@ -3843,7 +3843,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: null!,
+                                modKey: ModKey.Null,
                                 record: subItem,
                                 getter: (m, r) =>
                                 {
@@ -3858,7 +3858,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: null!,
+                                modKey: ModKey.Null,
                                 record: subItem,
                                 getter: (m, r) =>
                                 {
@@ -3878,7 +3878,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: null!,
+                                modKey: ModKey.Null,
                                 record: subItem,
                                 getter: (m, r) =>
                                 {
@@ -3893,7 +3893,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: null!,
+                                modKey: ModKey.Null,
                                 record: subItem,
                                 getter: (m, r) =>
                                 {
@@ -3913,7 +3913,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: null!,
+                                modKey: ModKey.Null,
                                 record: subItem,
                                 getter: (m, r) =>
                                 {
@@ -3928,7 +3928,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: null!,
+                                modKey: ModKey.Null,
                                 record: subItem,
                                 getter: (m, r) =>
                                 {
@@ -3947,7 +3947,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: null!,
+                                modKey: ModKey.Null,
                                 record: subItem,
                                 getter: (m, r) =>
                                 {
@@ -3962,7 +3962,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: null!,
+                                modKey: ModKey.Null,
                                 record: subItem,
                                 getter: (m, r) =>
                                 {
@@ -3982,7 +3982,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: null!,
+                                modKey: ModKey.Null,
                                 record: subItem,
                                 getter: (m, r) =>
                                 {
@@ -3997,7 +3997,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: null!,
+                                modKey: ModKey.Null,
                                 record: subItem,
                                 getter: (m, r) =>
                                 {
@@ -4017,7 +4017,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: null!,
+                                modKey: ModKey.Null,
                                 record: subItem,
                                 getter: (m, r) =>
                                 {
@@ -4032,7 +4032,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: null!,
+                                modKey: ModKey.Null,
                                 record: subItem,
                                 getter: (m, r) =>
                                 {
@@ -4052,7 +4052,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: null!,
+                                modKey: ModKey.Null,
                                 record: subItem,
                                 getter: (m, r) =>
                                 {
@@ -4067,7 +4067,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: null!,
+                                modKey: ModKey.Null,
                                 record: subItem,
                                 getter: (m, r) =>
                                 {
@@ -4087,7 +4087,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: null!,
+                                modKey: ModKey.Null,
                                 record: subItem,
                                 getter: (m, r) =>
                                 {
@@ -4102,7 +4102,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: null!,
+                                modKey: ModKey.Null,
                                 record: subItem,
                                 getter: (m, r) =>
                                 {

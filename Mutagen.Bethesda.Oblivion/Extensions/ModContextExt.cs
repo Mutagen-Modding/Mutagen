@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Oblivion
                             && regis.ClassType == typeof(Cell))
                         {
                             yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: null!,
+                                modKey: ModKey.Null,
                                 record: readOnlyCell,
                                 getter: (m, r) => cellGetter(m, (ICellGetter)r));
                         }
@@ -152,7 +152,7 @@ namespace Mutagen.Bethesda.Oblivion
                             && regis.ClassType == typeof(Cell))
                         {
                             yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: null!,
+                                modKey: ModKey.Null,
                                 record: readOnlyCell,
                                 getter: (m, r) => cellGetter(m, (ICellGetter)r));
                         }
