@@ -1,4 +1,4 @@
-﻿using ReactiveUI;
+using ReactiveUI;
 using System.Reactive.Linq;
 using System;
 using System.Collections.Generic;
@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Tests.GUI.Views
             InitializeComponent();
             this.WhenActivated(disposable =>
             {
-                this.WhenAnyValue(x => x.ViewModel.GameRelease)
+                this.WhenAnyFallback(x => x.ViewModel!.GameRelease)
                     .Select(x => x.ToString())
                     .BindToStrict(this, x => x.Name.Text)
                     .DisposeWith(disposable);

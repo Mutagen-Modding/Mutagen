@@ -1,4 +1,4 @@
-﻿using Noggog.WPF;
+using Noggog.WPF;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -21,10 +21,10 @@ namespace Mutagen.Bethesda.Tests.GUI.Views
             {
                 this.BindStrict(this.ViewModel, vm => vm.NicknameSuffix, view => view.NicknameSuffix.Text)
                     .DisposeWith(disposable);
-                this.WhenAnyValue(x => x.ViewModel.AddPassthroughCommand)
+                this.WhenAnyFallback(x => x.ViewModel!.AddPassthroughCommand)
                     .BindToStrict(this, x => x.AddButton.Command)
                     .DisposeWith(disposable);
-                this.WhenAnyValue(x => x.ViewModel.Passthroughs)
+                this.WhenAnyFallback(x => x.ViewModel!.Passthroughs)
                     .BindToStrict(this, x => x.PassthroughsControl.ItemsSource)
                     .DisposeWith(disposable);
                 this.BindStrict(this.ViewModel, vm => vm.Do, view => view.DoCheckbox.IsChecked)
@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Tests.GUI.Views
                     .DisposeWith(disposable);
 
                 // Wire Delete Button
-                this.WhenAnyValue(x => x.ViewModel.DeleteCommand)
+                this.WhenAnyFallback(x => x.ViewModel!.DeleteCommand)
                     .BindToStrict(this, v => v.DeleteGroupButton.Command)
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.TopGrid.IsMouseOver)

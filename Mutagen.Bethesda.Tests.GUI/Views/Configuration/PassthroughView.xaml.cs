@@ -1,4 +1,4 @@
-﻿using Noggog.WPF;
+using Noggog.WPF;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using System;
@@ -24,14 +24,14 @@ namespace Mutagen.Bethesda.Tests.GUI.Views
             InitializeComponent();
             this.WhenActivated(disposable =>
             {
-                this.WhenAnyValue(x => x.ViewModel.Path)
+                this.WhenAnyFallback(x => x.ViewModel!.Path)
                     .BindToStrict(this, x => x.PathPicker.PickerVM)
                     .DisposeWith(disposable);
                 this.BindStrict(this.ViewModel, vm => vm.Do, v => v.DoCheckbox.IsChecked)
                     .DisposeWith(disposable);
 
                 // Wire Delete Button
-                this.WhenAnyValue(x => x.ViewModel.DeleteCommand)
+                this.WhenAnyFallback(x => x.ViewModel!.DeleteCommand)
                     .BindToStrict(this, v => v.DeleteButton.Command)
                     .DisposeWith(disposable);
             });

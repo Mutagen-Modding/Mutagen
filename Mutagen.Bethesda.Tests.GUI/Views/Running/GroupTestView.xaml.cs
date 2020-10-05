@@ -1,4 +1,4 @@
-﻿using Noggog.WPF;
+using Noggog.WPF;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -28,10 +28,10 @@ namespace Mutagen.Bethesda.Tests.GUI.Views
             InitializeComponent();
             this.WhenActivated(disposable =>
             {
-                this.WhenAnyValue(x => x.ViewModel.Name)
+                this.WhenAnyFallback(x => x.ViewModel!.Name)
                     .BindToStrict(this, x => x.Name.Text)
                     .DisposeWith(disposable);
-                this.WhenAnyValue(x => x.ViewModel.PassthroughDisplay)
+                this.WhenAnyFallback(x => x.ViewModel!.PassthroughDisplay)
                     .BindToStrict(this, x => x.PassthroughsControl.ItemsSource)
                     .DisposeWith(disposable);
             });

@@ -1,4 +1,4 @@
-﻿using Noggog.WPF;
+using Noggog.WPF;
 using System;
 using System.Collections.Generic;
 using System.Text;

@@ -1,4 +1,4 @@
-﻿using Noggog.WPF;
+using Noggog.WPF;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Tests.GUI.Views
                 this.WhenAnyValue(x => x.ViewModel!.Groups)
                     .BindToStrict(this, x => x.PassthroughGroupsList.ItemsSource)
                     .DisposeWith(disposable);
-                this.WhenAnyValue(x => x.ViewModel.SelectedPassthrough!.TestsDisplay)
+                this.WhenAnyFallback(x => x.ViewModel!.SelectedPassthrough!.TestsDisplay)
                     .BindToStrict(this, x => x.SelectedTestsControl.ItemsSource)
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.ViewModel!.SelectedTest!.Output)
