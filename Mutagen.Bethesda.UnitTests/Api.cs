@@ -56,5 +56,13 @@ namespace Mutagen.Bethesda.UnitTests
             test.Add(key);
             test.Add(keyword);
         }
+
+        [Fact]
+        public static void FormLinkSetToNull()
+        {
+            var cameraShot = new CameraShot(Utility.Form1);
+            cameraShot.ImageSpaceModifier = default;
+            cameraShot.ImageSpaceModifier = FormKey.Null;
+        }
     }
 }
