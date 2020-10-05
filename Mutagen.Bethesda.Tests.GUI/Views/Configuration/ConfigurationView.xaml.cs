@@ -1,4 +1,4 @@
-﻿using ReactiveUI;
+using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -24,25 +24,25 @@ namespace Mutagen.Bethesda.Tests.GUI.Views
             {
                 this.SettingsView.ViewModel = this.ViewModel;
 
-                this.WhenAnyValue(x => x.ViewModel.SelectedConfigPath)
+                this.WhenAnyFallback(x => x.ViewModel!.SelectedConfigPath)
                     .BindToStrict(this, x => x.SettingsPicker.PickerVM)
                     .DisposeWith(disposable);
 
                 // Set up passthrough group pane
-                this.WhenAnyValue(x => x.ViewModel.Groups)
+                this.WhenAnyFallback(x => x.ViewModel!.Groups)
                     .BindToStrict(this, x => x.PassthroughGroupsList.ItemsSource)
                     .DisposeWith(disposable);
-                this.WhenAnyValue(x => x.ViewModel.AddPassthroughGroupCommand)
+                this.WhenAnyFallback(x => x.ViewModel!.AddPassthroughGroupCommand)
                     .BindToStrict(this, x => x.AddPassthroughButton.Command)
                     .DisposeWith(disposable);
 
                 // Setup run button
-                this.WhenAnyValue(x => x.ViewModel.RunAllCommand)
+                this.WhenAnyFallback(x => x.ViewModel!.RunAllCommand)
                     .BindToStrict(this, x => x.RunButton.Command)
                     .DisposeWith(disposable);
 
                 // Set up valid enabled states
-                var enabledObs = this.WhenAnyValue(x => x.ViewModel.SelectedSettings)
+                var enabledObs = this.WhenAnyFallback(x => x.ViewModel!.SelectedSettings)
                     .Select(x => x != null)
                     .Replay(1)
                     .RefCount();

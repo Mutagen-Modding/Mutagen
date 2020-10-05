@@ -1,4 +1,4 @@
-﻿using Noggog;
+using Noggog;
 using Noggog.WPF;
 using ReactiveUI;
 using System;
@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Tests.GUI.Views
             InitializeComponent();
             this.WhenActivated(disposable =>
             {
-                this.WhenAnyValue(x => x.ViewModel.Test)
+                this.WhenAnyFallback(x => x.ViewModel!.Test)
                     .Select(t =>
                     {
                         if (t.FilePath == null) return t.Name;
@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Tests.GUI.Views
                     .DisposeWith(disposable);
                 this.TopBorder.Events().MouseUp
                     .Unit()
-                    .InvokeCommandStrict(this, x => x.ViewModel.SelectCommand)
+                    .InvokeCommandStrict(this, x => x.ViewModel!.SelectCommand)
                     .DisposeWith(disposable);
             });
         }

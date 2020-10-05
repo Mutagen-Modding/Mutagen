@@ -1,4 +1,4 @@
-﻿using Noggog.WPF;
+using Noggog.WPF;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Tests.GUI.Views
                 this.BindStrict(this.ViewModel, x => x.CacheProcessing, x => x.CacheProcessing.IsChecked)
                     .DisposeWith(disposable);
 
-                this.WhenAnyValue(x => x.ViewModel.DataFoldersDisplay)
+                this.WhenAnyFallback(x => x.ViewModel!.DataFoldersDisplay)
                     .BindToStrict(this, x => x.DataFolders.ItemsSource)
                     .DisposeWith(disposable);
             });

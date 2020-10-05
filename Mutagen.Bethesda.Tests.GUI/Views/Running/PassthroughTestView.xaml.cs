@@ -1,4 +1,4 @@
-﻿using Noggog;
+using Noggog;
 using Noggog.WPF;
 using ReactiveUI;
 using System;
@@ -30,14 +30,14 @@ namespace Mutagen.Bethesda.Tests.GUI.Views
             InitializeComponent();
             this.WhenActivated(disposable =>
             {
-                this.WhenAnyValue(x => x.ViewModel.Name)
+                this.WhenAnyFallback(x => x.ViewModel!.Name)
                     .BindToStrict(this, x => x.Name.Text)
                     .DisposeWith(disposable);
                 this.TopBorder.Events().MouseUp
                     .Unit()
-                    .InvokeCommandStrict(this, x => x.ViewModel.SelectCommand)
+                    .InvokeCommandStrict(this, x => x.ViewModel!.SelectCommand)
                     .DisposeWith(disposable);
-                this.WhenAnyValue(x => x.ViewModel.TimeSpent)
+                this.WhenAnyFallback(x => x.ViewModel!.TimeSpent)
                     .Select(x =>
                     {
                         if (x == null) return null;
