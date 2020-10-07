@@ -65,6 +65,10 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLink<IKeywordGetter>>? ISpellGetter.Keywords => _Keywords;
         #endregion
 
+        #region Aspects
+        IReadOnlyList<IFormLink<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
         #endregion
         #region MenuDisplayObject
         public FormLinkNullable<IStaticGetter> MenuDisplayObject { get; set; } = new FormLinkNullable<IStaticGetter>();
@@ -1123,6 +1127,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISpellSpawn,
         ITranslatedNamed,
         IObjectBounded,
+        IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<ISpellInternal>,
         ILinkedFormKeyContainer
     {
@@ -1159,6 +1164,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISpellSpawnGetter,
         ITranslatedNamedGetter,
         IObjectBoundedGetter,
+        IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<ISpellGetter>,
         ILinkedFormKeyContainerGetter,
         IBinaryItem
@@ -2608,7 +2614,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _NameLocation;
         public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
+        #region Keywords
         public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
+        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
         #region MenuDisplayObject
         private int? _MenuDisplayObjectLocation;
         public FormLinkNullable<IStaticGetter> MenuDisplayObject => _MenuDisplayObjectLocation.HasValue ? new FormLinkNullable<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MenuDisplayObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticGetter>.Null;

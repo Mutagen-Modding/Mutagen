@@ -110,6 +110,10 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLink<IKeywordGetter>>? ISoulGemGetter.Keywords => _Keywords;
         #endregion
 
+        #region Aspects
+        IReadOnlyList<IFormLink<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
         #endregion
         #region Value
         public UInt32 Value { get; set; } = default;
@@ -997,6 +1001,7 @@ namespace Mutagen.Bethesda.Skyrim
         IItem,
         IObjectBoundedOptional,
         IWeightValue,
+        IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<ISoulGemInternal>,
         ILinkedFormKeyContainer
     {
@@ -1032,6 +1037,7 @@ namespace Mutagen.Bethesda.Skyrim
         IItemGetter,
         IObjectBoundedOptionalGetter,
         IWeightValueGetter,
+        IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<ISoulGemGetter>,
         ILinkedFormKeyContainerGetter,
         IBinaryItem
@@ -2448,7 +2454,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _PutDownSoundLocation;
         public FormLinkNullable<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PutDownSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
+        #region Keywords
         public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
+        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
         private int? _DATALocation;
         public SoulGem.DATADataType DATADataTypeState { get; private set; }
         #region Value

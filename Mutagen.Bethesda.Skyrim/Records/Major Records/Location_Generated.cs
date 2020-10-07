@@ -285,6 +285,10 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLink<IKeywordGetter>>? ILocationGetter.Keywords => _Keywords;
         #endregion
 
+        #region Aspects
+        IReadOnlyList<IFormLink<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
         #endregion
         #region ParentLocation
         public FormLinkNullable<ILocationGetter> ParentLocation { get; set; } = new FormLinkNullable<ILocationGetter>();
@@ -2639,6 +2643,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILocationRecord,
         ITranslatedNamed,
+        IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<ILocationInternal>,
         ILinkedFormKeyContainer
     {
@@ -2680,6 +2685,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         ILocationRecordGetter,
         ITranslatedNamedGetter,
+        IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<ILocationGetter>,
         ILinkedFormKeyContainerGetter,
         IBinaryItem
@@ -5208,7 +5214,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _NameLocation;
         public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
+        #region Keywords
         public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
+        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
         #region ParentLocation
         private int? _ParentLocationLocation;
         public FormLinkNullable<ILocationGetter> ParentLocation => _ParentLocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ParentLocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;

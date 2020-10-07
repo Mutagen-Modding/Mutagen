@@ -65,6 +65,10 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLink<IKeywordGetter>>? IIngestibleGetter.Keywords => _Keywords;
         #endregion
 
+        #region Aspects
+        IReadOnlyList<IFormLink<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
         #endregion
         #region Description
         public TranslatedString? Description { get; set; }
@@ -1205,6 +1209,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectId,
         IObjectBounded,
         IWeightValue,
+        IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IIngestibleInternal>,
         ILinkedFormKeyContainer
     {
@@ -1246,6 +1251,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectIdGetter,
         IObjectBoundedGetter,
         IWeightValueGetter,
+        IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IIngestibleGetter>,
         ILinkedFormKeyContainerGetter,
         IBinaryItem
@@ -2784,7 +2790,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _NameLocation;
         public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
+        #region Keywords
         public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
+        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
         #region Description
         private int? _DescriptionLocation;
         public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, _package.MetaData.StringsLookup) : default(TranslatedString?);

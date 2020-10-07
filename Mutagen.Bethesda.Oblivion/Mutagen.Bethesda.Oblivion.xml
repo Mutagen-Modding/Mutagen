@@ -82,19 +82,19 @@
             <summary>Branch: dev</summary>
         </member>
         <member name="F:ThisAssembly.Git.Commit">
-            <summary>Commit: 919a4a6de</summary>
+            <summary>Commit: 2f8ec3aba</summary>
         </member>
         <member name="F:ThisAssembly.Git.Sha">
-            <summary>Sha: 919a4a6de980cd5e8200769a9f17a6c6a1862d37</summary>
+            <summary>Sha: 2f8ec3abab22af685e8a28c22be78713176cc447</summary>
         </member>
         <member name="F:ThisAssembly.Git.CommitDate">
-            <summary>Commit date: 2020-10-05T22:16:08-05:00</summary>
+            <summary>Commit date: 2020-10-05T23:42:38-05:00</summary>
         </member>
         <member name="F:ThisAssembly.Git.Commits">
             <summary>Commits on top of base version: 3</summary>
         </member>
         <member name="F:ThisAssembly.Git.Tag">
-            <summary>Tag: 0.18.1-3-g919a4a6de</summary>
+            <summary>Tag: 0.18.1-3-g2f8ec3aba</summary>
         </member>
         <member name="F:ThisAssembly.Git.BaseTag">
             <summary>Base tag: 0.18.1</summary>

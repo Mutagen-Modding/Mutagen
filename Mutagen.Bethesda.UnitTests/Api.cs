@@ -64,5 +64,20 @@ namespace Mutagen.Bethesda.UnitTests
             cameraShot.ImageSpaceModifier = default;
             cameraShot.ImageSpaceModifier = FormKey.Null;
         }
+
+        [Fact]
+        public static void IKeyworded()
+        {
+            void TestFunction<T>()
+                where T : IKeywordedGetter<Mutagen.Bethesda.Skyrim.IKeywordGetter>
+            {
+            }
+            void TestFunction2<T>()
+                where T : IKeywordedGetter
+            {
+            }
+            TestFunction<IWeaponGetter>();
+            TestFunction2<IWeaponGetter>();
+        }
     }
 }

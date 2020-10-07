@@ -99,6 +99,10 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLink<IKeywordGetter>>? IActivatorGetter.Keywords => _Keywords;
         #endregion
 
+        #region Aspects
+        IReadOnlyList<IFormLink<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
         #endregion
         #region MarkerColor
         public Color? MarkerColor { get; set; }
@@ -964,6 +968,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamed,
         IModeled,
         IObjectBounded,
+        IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IActivatorInternal>,
         ILinkedFormKeyContainer
     {
@@ -999,6 +1004,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         IModeledGetter,
         IObjectBoundedGetter,
+        IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IActivatorGetter>,
         ILinkedFormKeyContainerGetter,
         IBinaryItem
@@ -2406,7 +2412,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         public IModelGetter? Model { get; private set; }
         public IDestructibleGetter? Destructible { get; private set; }
+        #region Keywords
         public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
+        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
         #region MarkerColor
         private int? _MarkerColorLocation;
         public Color? MarkerColor => _MarkerColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _MarkerColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color?);
