@@ -106,7 +106,8 @@ namespace Mutagen.Bethesda.Generation
             LoquiType loquiType,
             Action<ArgsWrapper> addGetOrAddArg,
             string generic,
-            bool checkType)
+            bool checkType,
+            bool includeSelf = true)
         {
             // ToDo  
             // Quick hack.  Real solution should use reflection to investigate the interface  
@@ -129,7 +130,8 @@ namespace Mutagen.Bethesda.Generation
                 return;
             }
 
-            if (loquiType.TargetObjectGeneration != null
+            if (includeSelf
+                && loquiType.TargetObjectGeneration != null
                 && await loquiType.TargetObjectGeneration.IsMajorRecord())
             {
                 if (checkType)
@@ -281,7 +283,7 @@ namespace Mutagen.Bethesda.Generation
                             FileGeneration deepFg = generationDict.GetOrAdd(deepRec.Key);
                             foreach (var field in deepRec.Value)
                             {
-                                await ApplyIterationLines(obj, field, deepFg, accessor, getter, hasTarget: true);
+                                await ApplyIterationLines(obj, field, deepFg, accessor, getter, hasTarget: true, includeSelf: false);
                             }
                         }
 
@@ -378,7 +380,7 @@ namespace Mutagen.Bethesda.Generation
                                 }
                                 foreach (var deepObj in deepObjects)
                                 {
-                                    await ApplyIterationLines(obj, deepObj, subFg, accessor, getter, blackList: passedObjects, hasTarget: true);
+                                    await ApplyIterationLines(obj, deepObj, subFg, accessor, getter, blackList: passedObjects, hasTarget: true, includeSelf: false);
                                 }
                                 if (!subFg.Empty)
                                 {
@@ -428,7 +430,8 @@ namespace Mutagen.Bethesda.Generation
             Accessor accessor,
             bool getter,
             bool hasTarget = false,
-            HashSet<ObjectGeneration> blackList = null)
+            HashSet<ObjectGeneration> blackList = null,
+            bool includeSelf = true)
         {
             if (field is GroupType group)
             {
@@ -496,6 +499,7 @@ namespace Mutagen.Bethesda.Generation
                     loqui, 
                     generic: "TMajor",
                     checkType: false,
+                    includeSelf: includeSelf,
                     addGetOrAddArg: (args) =>
                     {
                         args.Add(subFg =>
