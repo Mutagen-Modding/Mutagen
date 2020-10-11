@@ -92,6 +92,10 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLink<IKeywordGetter>>? IRaceGetter.Keywords => _Keywords;
         #endregion
 
+        #region Aspects
+        IReadOnlyList<IFormLink<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
         #endregion
         #region SkillBoost0
         public SkillBoost SkillBoost0 { get; set; } = new SkillBoost();
@@ -3818,6 +3822,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         IRelatable,
         ITranslatedNamed,
+        IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IRaceInternal>,
         ILinkedFormKeyContainer
     {
@@ -3922,6 +3927,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IRelatableGetter,
         ITranslatedNamedGetter,
+        IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IRaceGetter>,
         ILinkedFormKeyContainerGetter,
         IBinaryItem
@@ -7541,7 +7547,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset);
         public IBodyTemplateGetter? BodyTemplate => GetBodyTemplateCustom();
         #endregion
+        #region Keywords
         public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
+        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
         private int? _DATALocation;
         public Race.DATADataType DATADataTypeState { get; private set; }
         #region SkillBoost0

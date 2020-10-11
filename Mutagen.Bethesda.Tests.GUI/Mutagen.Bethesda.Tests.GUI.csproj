@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -8,9 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="GitInfo" Version="2.1.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.5.0" />
-    <PackageReference Include="Noggog.WPF" Version="1.5.0" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.5.3" />
+    <PackageReference Include="Noggog.WPF" Version="1.5.3" />
     <PackageReference Include="ReactiveUI" Version="11.5.35" />
     <PackageReference Include="ReactiveUI.Fody" Version="11.5.35" />
     <PackageReference Include="Simple.Wpf.Terminal" Version="2.3.15" />
@@ -25,4 +29,12 @@
     <ProjectReference Include="..\Mutagen.Bethesda\Mutagen.Bethesda.csproj" />
   </ItemGroup>
 
+  <Target Name="SetVersion" BeforeTargets="GetAssemblyVersion;GetPackageVersion" Condition="'$(ExcludeRestorePackageImports)' != 'true'">
+    <PropertyGroup>
+      <AssemblyVersion>0.0.1.0</AssemblyVersion>
+      <FileVersion>0.0.1.0</FileVersion>
+      <PackageVersion>0.0.1.0</PackageVersion>
+      <InformationalVersion>0.0.1.0</InformationalVersion>
+    </PropertyGroup>
+  </Target>
 </Project>

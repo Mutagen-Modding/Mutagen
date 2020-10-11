@@ -210,6 +210,10 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLink<IKeywordGetter>>? INpcGetter.Keywords => _Keywords;
         #endregion
 
+        #region Aspects
+        IReadOnlyList<IFormLink<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
         #endregion
         #region Class
         public FormLink<IClassGetter> Class { get; set; } = new FormLink<IClassGetter>();
@@ -2702,6 +2706,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectId,
         IObjectBounded,
         ITranslatedNamed,
+        IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<INpcInternal>,
         ILinkedFormKeyContainer
     {
@@ -2771,6 +2776,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectIdGetter,
         IObjectBoundedGetter,
         ITranslatedNamedGetter,
+        IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<INpcGetter>,
         ILinkedFormKeyContainerGetter,
         IBinaryItem
@@ -5707,7 +5713,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IAIDataGetter AIData => _AIData ?? new AIData();
         #endregion
         public IReadOnlyList<IFormLink<IPackageGetter>> Packages { get; private set; } = ListExt.Empty<IFormLink<IPackageGetter>>();
+        #region Keywords
         public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
+        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
         #region Class
         private int? _ClassLocation;
         public FormLink<IClassGetter> Class => _ClassLocation.HasValue ? new FormLink<IClassGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ClassLocation.Value, _package.MetaData.Constants)))) : FormLink<IClassGetter>.Null;

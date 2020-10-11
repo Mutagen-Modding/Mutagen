@@ -97,6 +97,10 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLink<IKeywordGetter>>? IFloraGetter.Keywords => _Keywords;
         #endregion
 
+        #region Aspects
+        IReadOnlyList<IFormLink<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
         #endregion
         #region PNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -953,6 +957,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedRequired,
         IModeled,
         IObjectBounded,
+        IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IFloraInternal>,
         ILinkedFormKeyContainer
     {
@@ -983,6 +988,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedRequiredGetter,
         IModeledGetter,
         IObjectBoundedGetter,
+        IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IFloraGetter>,
         ILinkedFormKeyContainerGetter,
         IBinaryItem
@@ -2390,7 +2396,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         public IModelGetter? Model { get; private set; }
         public IDestructibleGetter? Destructible { get; private set; }
+        #region Keywords
         public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
+        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
         #region PNAM
         private int? _PNAMLocation;
         public ReadOnlyMemorySlice<Byte>? PNAM => _PNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _PNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);

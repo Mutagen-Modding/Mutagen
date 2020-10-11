@@ -1,4 +1,4 @@
-﻿using Noggog;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda
     /// <summary>
     /// An interface implemented by Major Records that have keywords
     /// </summary>
-    public interface IKeyworded<TKeyword> : IKeywordedGetter<TKeyword>, IMajorRecordCommon
+    public interface IKeyworded<TKeyword> : IKeywordedGetter<TKeyword>
         where TKeyword : IKeywordCommonGetter
     {
         new ExtendedList<IFormLink<TKeyword>>? Keywords { get; }
@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda
     /// <summary>
     /// An interface implemented by Major Records that have keywords
     /// </summary>
-    public interface IKeywordedGetter : IMajorRecordCommonGetter
+    public interface IKeywordedGetter
     {
         IReadOnlyList<IFormLink<IKeywordCommonGetter>>? Keywords { get; }
     }
@@ -30,14 +30,5 @@ namespace Mutagen.Bethesda
         where TKeyword : IKeywordCommonGetter
     {
         new IReadOnlyList<IFormLink<TKeyword>>? Keywords { get; }
-    }
-
-    public static class IKeywordedExt
-    {
-        public static bool HasKeyword(this IKeywordedGetter keyworded, IKeywordCommonGetter keyword)
-        {
-            var fk = keyword.FormKey;
-            return keyworded.Keywords.Any(k => k.FormKey == fk);
-        }
     }
 }

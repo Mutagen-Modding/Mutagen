@@ -74,6 +74,10 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLink<IKeywordGetter>>? IMagicEffectGetter.Keywords => _Keywords;
         #endregion
 
+        #region Aspects
+        IReadOnlyList<IFormLink<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
         #endregion
         #region Flags
         public MagicEffect.Flag Flags { get; set; } = default;
@@ -2207,6 +2211,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMagicEffectGetter,
         ISkyrimMajorRecord,
         ITranslatedNamed,
+        IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IMagicEffectInternal>,
         ILinkedFormKeyContainer
     {
@@ -2268,6 +2273,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IMagicEffectGetter :
         ISkyrimMajorRecordGetter,
         ITranslatedNamedGetter,
+        IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IMagicEffectGetter>,
         ILinkedFormKeyContainerGetter,
         IBinaryItem
@@ -4389,7 +4395,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _MenuDisplayObjectLocation;
         public FormLinkNullable<IStaticGetter> MenuDisplayObject => _MenuDisplayObjectLocation.HasValue ? new FormLinkNullable<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MenuDisplayObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticGetter>.Null;
         #endregion
+        #region Keywords
         public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
+        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
         private int? _DATALocation;
         public MagicEffect.DATADataType DATADataTypeState { get; private set; }
         #region Flags

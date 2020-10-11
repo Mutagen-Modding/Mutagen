@@ -152,6 +152,10 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLink<IKeywordGetter>>? IQuestAliasGetter.Keywords => _Keywords;
         #endregion
 
+        #region Aspects
+        IReadOnlyList<IFormLink<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1748,6 +1752,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IQuestAlias :
         IQuestAliasGetter,
+        IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IQuestAlias>,
         ILinkedFormKeyContainer
     {
@@ -1780,6 +1785,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IQuestAliasGetter :
         ILoquiObject,
+        IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IQuestAliasGetter>,
         ILinkedFormKeyContainerGetter,
         IBinaryItem
@@ -3693,7 +3699,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             int? lastParsed);
         #endregion
+        #region Keywords
         public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
+        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
         public IReadOnlyList<IContainerEntryGetter>? Items { get; private set; }
         #region SpectatorOverridePackageList
         private int? _SpectatorOverridePackageListLocation;

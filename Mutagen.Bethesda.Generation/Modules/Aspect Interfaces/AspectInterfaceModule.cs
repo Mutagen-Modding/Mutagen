@@ -1,4 +1,4 @@
-﻿using Loqui.Generation;
+using Loqui.Generation;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -16,8 +16,12 @@ namespace Mutagen.Bethesda.Generation
 
         public AspectInterfaceModule()
         {
-            Definitions.AddReturn(new AspectInterfaceDefinition(o => 
-                typeof(FormLinkType).Equals(o.Fields.FirstOrDefault(x => x.Name == "Keywords")?.GetType()))
+            // Keyworded
+            Definitions.AddReturn(new AspectInterfaceDefinition(o =>
+            {
+                if (!(o.Fields.FirstOrDefault(x => x.Name == "Keywords") is ContainerType cont)) return false;
+                return typeof(FormLinkType).Equals(cont.SubTypeGeneration.GetType());
+            })
             {
                 Interfaces = new List<(LoquiInterfaceDefinitionType Type, string Interface)>()
                 {

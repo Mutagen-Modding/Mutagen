@@ -109,6 +109,10 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLink<IKeywordGetter>>? IAmmunitionGetter.Keywords => _Keywords;
         #endregion
 
+        #region Aspects
+        IReadOnlyList<IFormLink<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
         #endregion
         #region Projectile
         public FormLink<IProjectileGetter> Projectile { get; set; } = new FormLink<IProjectileGetter>();
@@ -1061,6 +1065,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeled,
         IHasIcons,
         IWeightValue,
+        IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IAmmunitionInternal>,
         ILinkedFormKeyContainer
     {
@@ -1102,6 +1107,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeledGetter,
         IHasIconsGetter,
         IWeightValueGetter,
+        IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IAmmunitionGetter>,
         ILinkedFormKeyContainerGetter,
         IBinaryItem
@@ -2557,7 +2563,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _DescriptionLocation;
         public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
+        #region Keywords
         public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
+        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
         private int? _DATALocation;
         public Ammunition.DATADataType DATADataTypeState { get; private set; }
         #region Projectile

@@ -132,6 +132,10 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLink<IKeywordGetter>>? IWeaponGetter.Keywords => _Keywords;
         #endregion
 
+        #region Aspects
+        IReadOnlyList<IFormLink<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
         #endregion
         #region Description
         public TranslatedString? Description { get; set; }
@@ -1606,6 +1610,7 @@ namespace Mutagen.Bethesda.Skyrim
         IHasIcons,
         IModeled,
         IObjectBounded,
+        IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IWeaponInternal>,
         ILinkedFormKeyContainer
     {
@@ -1661,6 +1666,7 @@ namespace Mutagen.Bethesda.Skyrim
         IHasIconsGetter,
         IModeledGetter,
         IObjectBoundedGetter,
+        IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IWeaponGetter>,
         ILinkedFormKeyContainerGetter,
         IBinaryItem
@@ -3800,7 +3806,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _PutDownSoundLocation;
         public FormLinkNullable<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PutDownSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
+        #region Keywords
         public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
+        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
         #region Description
         private int? _DescriptionLocation;
         public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, _package.MetaData.StringsLookup) : default(TranslatedString?);

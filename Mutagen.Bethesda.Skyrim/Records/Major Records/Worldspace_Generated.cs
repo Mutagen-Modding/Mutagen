@@ -3794,15 +3794,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                         {
-                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
-                                record: WorldspaceTopCellitem,
-                                getter: (m, r) =>
-                                {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
-                                    getter(m, obj).TopCell = copy;
-                                    return copy;
-                                });
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
                                 type: type,
@@ -3834,15 +3825,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                         {
-                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
-                                record: WorldspaceTopCellitem,
-                                getter: (m, r) =>
-                                {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
-                                    getter(m, obj).TopCell = copy;
-                                    return copy;
-                                });
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
                                 type: type,
@@ -3874,15 +3856,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                         {
-                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
-                                record: WorldspaceTopCellitem,
-                                getter: (m, r) =>
-                                {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
-                                    getter(m, obj).TopCell = copy;
-                                    return copy;
-                                });
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
                                 type: type,
@@ -3914,15 +3887,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                         {
-                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
-                                record: WorldspaceTopCellitem,
-                                getter: (m, r) =>
-                                {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
-                                    getter(m, obj).TopCell = copy;
-                                    return copy;
-                                });
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
                                 type: type,
@@ -3954,15 +3918,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                         {
-                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
-                                record: WorldspaceTopCellitem,
-                                getter: (m, r) =>
-                                {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
-                                    getter(m, obj).TopCell = copy;
-                                    return copy;
-                                });
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
                                 type: type,
@@ -4006,15 +3961,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                         {
-                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
-                                record: WorldspaceTopCellitem,
-                                getter: (m, r) =>
-                                {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
-                                    getter(m, obj).TopCell = copy;
-                                    return copy;
-                                });
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
                                 type: type,
@@ -4046,15 +3992,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                         {
-                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
-                                record: WorldspaceTopCellitem,
-                                getter: (m, r) =>
-                                {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
-                                    getter(m, obj).TopCell = copy;
-                                    return copy;
-                                });
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
                                 type: type,
@@ -4086,15 +4023,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                         {
-                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
-                                record: WorldspaceTopCellitem,
-                                getter: (m, r) =>
-                                {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
-                                    getter(m, obj).TopCell = copy;
-                                    return copy;
-                                });
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
                                 type: type,
@@ -4126,15 +4054,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                         {
-                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
-                                record: WorldspaceTopCellitem,
-                                getter: (m, r) =>
-                                {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
-                                    getter(m, obj).TopCell = copy;
-                                    return copy;
-                                });
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
                                 type: type,
@@ -4166,15 +4085,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                         {
-                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
-                                record: WorldspaceTopCellitem,
-                                getter: (m, r) =>
-                                {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
-                                    getter(m, obj).TopCell = copy;
-                                    return copy;
-                                });
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
                                 type: type,
@@ -4206,15 +4116,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                         {
-                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
-                                record: WorldspaceTopCellitem,
-                                getter: (m, r) =>
-                                {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
-                                    getter(m, obj).TopCell = copy;
-                                    return copy;
-                                });
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
                                 type: type,
