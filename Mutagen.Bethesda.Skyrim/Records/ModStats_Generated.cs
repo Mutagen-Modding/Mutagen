@@ -40,7 +40,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Version
-        public Single Version { get; set; } = default;
+        public readonly static Single _Version_Default = 1.7;
+        public Single Version { get; set; } = _Version_Default;
         #endregion
         #region NumRecords
         public UInt32 NumRecords { get; set; } = default;
@@ -751,7 +752,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IModStats item)
         {
             ClearPartial();
-            item.Version = default;
+            item.Version = ModStats._Version_Default;
             item.NumRecords = default;
             item.NextFormID = default;
         }

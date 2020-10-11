@@ -22,7 +22,7 @@
   </Object>
   <Object name="ModStats" recordType="HEDR" objType="Subrecord" GUID="14fe521a-e32e-433c-9915-71a5f7ca5c5b" ID="64">
     <Fields>
-      <Float name="Version" />
+      <Float name="Version" default="1.7" />
       <UInt32 name="NumRecords" />
       <UInt32 name="NextFormID" />
     </Fields>
