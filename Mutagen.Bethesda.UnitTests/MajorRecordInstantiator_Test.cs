@@ -15,6 +15,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void Direct()
         {
+            WarmupOblivion.Init();
             var form = new FormKey(Mutagen.Bethesda.Oblivion.Constants.Oblivion, 0x123456);
             var ret = MajorRecordInstantiator<Oblivion.Ammunition>.Activator(form);
             Assert.IsType<Oblivion.Ammunition>(ret);
@@ -24,6 +25,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void Setter()
         {
+            WarmupOblivion.Init();
             var form = new FormKey(Mutagen.Bethesda.Oblivion.Constants.Oblivion, 0x123456);
             var ret = MajorRecordInstantiator<Oblivion.IAmmunition>.Activator(form);
             Assert.IsType<Oblivion.Ammunition>(ret);
@@ -33,6 +35,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void Getter()
         {
+            WarmupOblivion.Init();
             var form = new FormKey(Mutagen.Bethesda.Oblivion.Constants.Oblivion, 0x123456);
             var ret = MajorRecordInstantiator<Oblivion.IAmmunitionGetter>.Activator(form);
             Assert.IsType<Oblivion.Ammunition>(ret);
