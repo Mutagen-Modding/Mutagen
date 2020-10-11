@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Version
-        public readonly static Single _Version_Default = 1.7;
+        public readonly static Single _Version_Default = 1.7f;
         public Single Version { get; set; } = _Version_Default;
         #endregion
         #region NumRecords
