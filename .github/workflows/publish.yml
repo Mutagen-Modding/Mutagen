@@ -20,7 +20,7 @@ jobs:
     - name: Publish to Github
       uses: svenstaro/upload-release-action@v2
       with:
-        file: Mutagen.Bethesda/bin/Release/Mutagen.Bethesda.*.nupkg
+        file: **/*.nupkg
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         tag: ${{ github.event.release.tag_name }}
         file_glob: "true"
