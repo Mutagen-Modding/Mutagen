@@ -1,8 +1,9 @@
-using Alphaleonis.Win32.Filesystem;
 using DynamicData;
+using FluentAssertions;
 using Noggog.Utility;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -183,6 +184,29 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.Equal(Skyrim.Constants.Skyrim, list.Items.ElementAt(0).ModKey);
             Assert.Equal(Skyrim.Constants.Dawnguard, list.Items.ElementAt(1).ModKey);
             Assert.Equal(Skyrim.Constants.Dragonborn, list.Items.ElementAt(2).ModKey);
+        }
+
+        [Fact]
+        public void FromPathNullWithImplicit()
+        {
+            using var tmp = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(FromPathNullWithImplicit)));
+            using var file = File.Create(Path.Combine(tmp.Dir.Path, "Skyrim.esm"));
+            LoadOrder.FromPath(
+                path: null,
+                game: GameRelease.SkyrimSE,
+                dataPath: tmp.Dir.Path)
+                .Should().Equal(new LoadOrderListing("Skyrim.esm", true));
+        }
+
+        [Fact]
+        public void FromPathNull()
+        {
+            Action a = () =>
+                LoadOrder.FromPath(
+                    path: null,
+                    game: GameRelease.Oblivion,
+                    dataPath: default);
+            a.Should().Throw<FileNotFoundException>();
         }
     }
 }

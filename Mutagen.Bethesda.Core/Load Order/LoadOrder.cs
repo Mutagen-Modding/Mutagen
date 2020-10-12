@@ -21,6 +21,17 @@ namespace Mutagen.Bethesda
     /// </summary>
     public static class LoadOrder
     {
+        public static string GetPluginsPath(GameRelease game)
+        {
+            return game switch
+            {
+                GameRelease.Oblivion => "Oblivion/Plugins.txt",
+                GameRelease.SkyrimLE => "Skyrim/Plugins.txt",
+                GameRelease.SkyrimSE => "Skyrim Special Edition/Plugins.txt",
+                _ => throw new NotImplementedException()
+            };
+        }
+
         /// <summary>
         /// Attempts to locate the path to a game's load order file
         /// </summary>
@@ -29,13 +40,7 @@ namespace Mutagen.Bethesda
         /// <returns>True if file located</returns>
         public static bool TryGetPluginsFile(GameRelease game, out FilePath path)
         {
-            string pluginPath = game switch
-            {
-                GameRelease.Oblivion => "Oblivion/Plugins.txt",
-                GameRelease.SkyrimLE => "Skyrim/Plugins.txt",
-                GameRelease.SkyrimSE => "Skyrim Special Edition/Plugins.txt",
-                _ => throw new NotImplementedException()
-            };
+            string pluginPath = GetPluginsPath(game);
             path = new FilePath(
                 Path.Combine(
                     Environment.GetEnvironmentVariable("LocalAppData"),
@@ -195,14 +200,26 @@ namespace Mutagen.Bethesda
         /// <returns>Enumerable of modkeys representing a load order</returns>
         /// <exception cref="ArgumentException">Line in plugin file is unexpected</exception>
         public static IEnumerable<LoadOrderListing> FromPath(
-            FilePath path,
+            FilePath? path,
             GameRelease game,
             DirectoryPath dataPath,
             bool throwOnMissingMods = true)
         {
-            using var stream = new FileStream(path.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
-            var mods = FromStream(stream, game).ToList();
+            List<LoadOrderListing> mods;
+            if (path != null)
+            {
+                using var stream = new FileStream(path.Value.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
+                mods = FromStream(stream, game).ToList();
+            }
+            else
+            {
+                mods = new List<LoadOrderListing>();
+            }
             AddImplicitMods(game, dataPath, mods);
+            if (mods.Count == 0)
+            {
+                throw new FileNotFoundException("Could not locate plugins file");
+            }
             if (NeedsTimestampAlignment(game.ToCategory()))
             {
                 return AlignToTimestamps(mods, dataPath, throwOnMissingMods: throwOnMissingMods);
