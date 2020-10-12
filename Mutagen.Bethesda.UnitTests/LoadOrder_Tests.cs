@@ -187,23 +187,26 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Fact]
-        public void FromPathNullWithImplicit()
+        public void FromPathMissingWithImplicit()
         {
-            using var tmp = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(FromPathNullWithImplicit)));
+            using var tmp = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(FromPathMissingWithImplicit)));
             using var file = File.Create(Path.Combine(tmp.Dir.Path, "Skyrim.esm"));
+            var missingPath = Path.Combine(tmp.Dir.Path, "Plugins.txt");
             LoadOrder.FromPath(
-                path: null,
+                path: missingPath,
                 game: GameRelease.SkyrimSE,
                 dataPath: tmp.Dir.Path)
                 .Should().Equal(new LoadOrderListing("Skyrim.esm", true));
         }
 
         [Fact]
-        public void FromPathNull()
+        public void FromPathMissing()
         {
+            using var tmp = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(FromPathMissing)));
+            var missingPath = Path.Combine(tmp.Dir.Path, "Plugins.txt");
             Action a = () =>
                 LoadOrder.FromPath(
-                    path: null,
+                    path: missingPath,
                     game: GameRelease.Oblivion,
                     dataPath: default);
             a.Should().Throw<FileNotFoundException>();

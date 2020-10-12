@@ -200,15 +200,15 @@ namespace Mutagen.Bethesda
         /// <returns>Enumerable of modkeys representing a load order</returns>
         /// <exception cref="ArgumentException">Line in plugin file is unexpected</exception>
         public static IEnumerable<LoadOrderListing> FromPath(
-            FilePath? path,
+            FilePath path,
             GameRelease game,
             DirectoryPath dataPath,
             bool throwOnMissingMods = true)
         {
             List<LoadOrderListing> mods;
-            if (path != null)
+            if (path.Exists)
             {
-                using var stream = new FileStream(path.Value.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
+                using var stream = new FileStream(path.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
                 mods = FromStream(stream, game).ToList();
             }
             else
