@@ -66,6 +66,7 @@
           <Float name="DepthNormals" />
           <Float name="DepthSpecularLighting" />
           <Float name="SpecularSunSparklePower" />
+          <Break />
           <Float name="NoiseFlowmapScale" >
             <Versioning formVersion="44" />
           </Float>

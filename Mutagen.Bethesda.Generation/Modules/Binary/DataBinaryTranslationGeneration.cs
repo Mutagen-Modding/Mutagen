@@ -234,25 +234,25 @@ namespace Mutagen.Bethesda.Generation
         {
             var fieldData = typeGen.GetFieldData();
             var dataMeta = dataType.IterateFieldsWithMeta().First(item => item.Field == typeGen);
-            StringBuilder extraChecks = new StringBuilder();
+            List<string> extraChecks = new List<string>();
             if (dataMeta.EncounteredBreaks.Any())
             {
                 var breakIndex = dataMeta.EncounteredBreaks.Last();
-                extraChecks.Append($"!{dataType.StateName}.HasFlag({objGen.Name}.{dataType.EnumName}.Break{breakIndex})");
+                extraChecks.Add($"!{dataType.StateName}.HasFlag({objGen.Name}.{dataType.EnumName}.Break{breakIndex})");
             }
             if (dataMeta.RangeIndex != -1)
             {
-                extraChecks.Append($"{dataType.StateName}.HasFlag({objGen.Name}.{dataType.EnumName}.Range{dataMeta.RangeIndex})");
+                extraChecks.Add($"{dataType.StateName}.HasFlag({objGen.Name}.{dataType.EnumName}.Range{dataMeta.RangeIndex})");
             }
             if (fieldData.HasVersioning)
             {
-                extraChecks.Append(VersioningModule.GetVersionIfCheck(fieldData, "_package.FormVersion!.FormVersion!.Value"));
+                extraChecks.Add(VersioningModule.GetVersionIfCheck(fieldData, "_package.FormVersion!.FormVersion!.Value"));
             }
             fg.AppendLine($"private int _{typeGen.Name}Location => {posAccessor};");
             switch (typeGen.GetFieldData().BinaryOverlayFallback)
             {
                 case BinaryGenerationType.Normal:
-                    fg.AppendLine($"private bool _{typeGen.Name}_IsSet => _{dataType.GetFieldData().RecordType}Location.HasValue{(extraChecks.Length > 0 ? $" && {extraChecks}" : null)};");
+                    fg.AppendLine($"private bool _{typeGen.Name}_IsSet => _{dataType.GetFieldData().RecordType}Location.HasValue{(extraChecks.Count > 0 ? $" && {string.Join(" && ", extraChecks)}" : null)};");
                     break;
                 case BinaryGenerationType.Custom:
                     break;
