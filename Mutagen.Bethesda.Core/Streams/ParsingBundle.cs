@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Internals;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -68,6 +68,11 @@ namespace Mutagen.Bethesda.Binary
         public static implicit operator GameConstants(ParsingBundle bundle)
         {
             return bundle.Constants;
+        }
+
+        public void ReportIssue(RecordType? recordType, string note)
+        {
+            // Nothing for now.  Need to implement
         }
     }
 }
