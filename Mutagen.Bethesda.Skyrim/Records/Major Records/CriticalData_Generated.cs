@@ -39,6 +39,9 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region Versioning
+        public CriticalData.VersioningBreaks Versioning { get; set; } = default;
+        #endregion
         #region Damage
         public UInt16 Damage { get; set; } = default;
         #endregion
@@ -109,6 +112,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public Mask(TItem initialValue)
             {
+                this.Versioning = initialValue;
                 this.Damage = initialValue;
                 this.Unused = initialValue;
                 this.PercentMult = initialValue;
@@ -120,6 +124,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
 
             public Mask(
+                TItem Versioning,
                 TItem Damage,
                 TItem Unused,
                 TItem PercentMult,
@@ -129,6 +134,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Effect,
                 TItem Unused4)
             {
+                this.Versioning = Versioning;
                 this.Damage = Damage;
                 this.Unused = Unused;
                 this.PercentMult = PercentMult;
@@ -148,6 +154,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
+            public TItem Versioning;
             public TItem Damage;
             public TItem Unused;
             public TItem PercentMult;
@@ -168,6 +175,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
+                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 if (!object.Equals(this.Damage, rhs.Damage)) return false;
                 if (!object.Equals(this.Unused, rhs.Unused)) return false;
                 if (!object.Equals(this.PercentMult, rhs.PercentMult)) return false;
@@ -181,6 +189,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Versioning);
                 hash.Add(this.Damage);
                 hash.Add(this.Unused);
                 hash.Add(this.PercentMult);
@@ -197,6 +206,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region All
             public bool All(Func<TItem, bool> eval)
             {
+                if (!eval(this.Versioning)) return false;
                 if (!eval(this.Damage)) return false;
                 if (!eval(this.Unused)) return false;
                 if (!eval(this.PercentMult)) return false;
@@ -212,6 +222,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
+                if (eval(this.Versioning)) return true;
                 if (eval(this.Damage)) return true;
                 if (eval(this.Unused)) return true;
                 if (eval(this.PercentMult)) return true;
@@ -234,6 +245,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
+                obj.Versioning = eval(this.Versioning);
                 obj.Damage = eval(this.Damage);
                 obj.Unused = eval(this.Unused);
                 obj.PercentMult = eval(this.PercentMult);
@@ -264,6 +276,10 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.Versioning ?? true)
+                    {
+                        fg.AppendItem(Versioning, "Versioning");
+                    }
                     if (printMask?.Damage ?? true)
                     {
                         fg.AppendItem(Damage, "Damage");
@@ -321,6 +337,7 @@ namespace Mutagen.Bethesda.Skyrim
                     return _warnings;
                 }
             }
+            public Exception? Versioning;
             public Exception? Damage;
             public Exception? Unused;
             public Exception? PercentMult;
@@ -337,6 +354,8 @@ namespace Mutagen.Bethesda.Skyrim
                 CriticalData_FieldIndex enu = (CriticalData_FieldIndex)index;
                 switch (enu)
                 {
+                    case CriticalData_FieldIndex.Versioning:
+                        return Versioning;
                     case CriticalData_FieldIndex.Damage:
                         return Damage;
                     case CriticalData_FieldIndex.Unused:
@@ -363,6 +382,9 @@ namespace Mutagen.Bethesda.Skyrim
                 CriticalData_FieldIndex enu = (CriticalData_FieldIndex)index;
                 switch (enu)
                 {
+                    case CriticalData_FieldIndex.Versioning:
+                        this.Versioning = ex;
+                        break;
                     case CriticalData_FieldIndex.Damage:
                         this.Damage = ex;
                         break;
@@ -397,6 +419,9 @@ namespace Mutagen.Bethesda.Skyrim
                 CriticalData_FieldIndex enu = (CriticalData_FieldIndex)index;
                 switch (enu)
                 {
+                    case CriticalData_FieldIndex.Versioning:
+                        this.Versioning = (Exception?)obj;
+                        break;
                     case CriticalData_FieldIndex.Damage:
                         this.Damage = (Exception?)obj;
                         break;
@@ -429,6 +454,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Versioning != null) return true;
                 if (Damage != null) return true;
                 if (Unused != null) return true;
                 if (PercentMult != null) return true;
@@ -471,6 +497,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
+                fg.AppendItem(Versioning, "Versioning");
                 fg.AppendItem(Damage, "Damage");
                 fg.AppendItem(Unused, "Unused");
                 fg.AppendItem(PercentMult, "PercentMult");
@@ -487,6 +514,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 ret.Damage = this.Damage.Combine(rhs.Damage);
                 ret.Unused = this.Unused.Combine(rhs.Unused);
                 ret.PercentMult = this.PercentMult.Combine(rhs.PercentMult);
@@ -517,6 +545,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
+            public bool Versioning;
             public bool Damage;
             public bool Unused;
             public bool PercentMult;
@@ -531,6 +560,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TranslationMask(bool defaultOn)
             {
                 this.DefaultOn = defaultOn;
+                this.Versioning = defaultOn;
                 this.Damage = defaultOn;
                 this.Unused = defaultOn;
                 this.PercentMult = defaultOn;
@@ -554,6 +584,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
+                ret.Add((Versioning, null));
                 ret.Add((Damage, null));
                 ret.Add((Unused, null));
                 ret.Add((PercentMult, null));
@@ -574,6 +605,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = CriticalData_Registration.TriggeringRecordType;
+        [Flags]
+        public enum VersioningBreaks
+        {
+            Break0 = 1
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => CriticalDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -643,6 +679,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ICriticalData>,
         ILinkedFormKeyContainer
     {
+        new CriticalData.VersioningBreaks Versioning { get; set; }
         new UInt16 Damage { get; set; }
         new Int16 Unused { get; set; }
         new Single PercentMult { get; set; }
@@ -666,6 +703,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => CriticalData_Registration.Instance;
+        CriticalData.VersioningBreaks Versioning { get; }
         UInt16 Damage { get; }
         Int16 Unused { get; }
         Single PercentMult { get; }
@@ -841,14 +879,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #region Field Index
     public enum CriticalData_FieldIndex
     {
-        Damage = 0,
-        Unused = 1,
-        PercentMult = 2,
-        Flags = 3,
-        Unused2 = 4,
-        Unused3 = 5,
-        Effect = 6,
-        Unused4 = 7,
+        Versioning = 0,
+        Damage = 1,
+        Unused = 2,
+        PercentMult = 3,
+        Flags = 4,
+        Unused2 = 5,
+        Unused3 = 6,
+        Effect = 7,
+        Unused4 = 8,
     }
     #endregion
 
@@ -866,9 +905,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "cceb2d63-f5de-413e-9150-086047c758a8";
 
-        public const ushort AdditionalFieldCount = 8;
+        public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(CriticalData.Mask<>);
 
@@ -937,6 +976,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ICriticalData item)
         {
             ClearPartial();
+            item.Versioning = default;
             item.Damage = default;
             item.Unused = default;
             item.PercentMult = default;
@@ -991,6 +1031,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Versioning = item.Versioning == rhs.Versioning;
             ret.Damage = item.Damage == rhs.Damage;
             ret.Unused = item.Unused == rhs.Unused;
             ret.PercentMult = item.PercentMult.EqualsWithin(rhs.PercentMult);
@@ -1045,6 +1086,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             CriticalData.Mask<bool>? printMask = null)
         {
+            if (printMask?.Versioning ?? true)
+            {
+                fg.AppendItem(item.Versioning, "Versioning");
+            }
             if (printMask?.Damage ?? true)
             {
                 fg.AppendItem(item.Damage, "Damage");
@@ -1086,6 +1131,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
+            if (lhs.Versioning != rhs.Versioning) return false;
             if (lhs.Damage != rhs.Damage) return false;
             if (lhs.Unused != rhs.Unused) return false;
             if (!lhs.PercentMult.EqualsWithin(rhs.PercentMult)) return false;
@@ -1100,6 +1146,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(ICriticalDataGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Versioning);
             hash.Add(item.Damage);
             hash.Add(item.Unused);
             hash.Add(item.PercentMult);
@@ -1142,6 +1189,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
+            if ((copyMask?.GetShouldTranslate((int)CriticalData_FieldIndex.Versioning) ?? true))
+            {
+                item.Versioning = rhs.Versioning;
+            }
             if ((copyMask?.GetShouldTranslate((int)CriticalData_FieldIndex.Damage) ?? true))
             {
                 item.Damage = rhs.Damage;
@@ -1166,6 +1217,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Unused3 = rhs.Unused3;
             }
+            if (rhs.Versioning.HasFlag(CriticalData.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)CriticalData_FieldIndex.Effect) ?? true))
             {
                 item.Effect = new FormLink<ISpellGetter>(rhs.Effect.FormKey);
@@ -1286,12 +1338,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 writer.Write(item.Unused3);
             }
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Effect);
-            if (writer.MetaData.FormVersion!.Value >= 44)
+            if (!item.Versioning.HasFlag(CriticalData.VersioningBreaks.Break0))
             {
-                writer.Write(item.Unused4);
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Effect);
+                if (writer.MetaData.FormVersion!.Value >= 44)
+                {
+                    writer.Write(item.Unused4);
+                }
             }
         }
 
@@ -1340,6 +1395,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (frame.MetaData.FormVersion!.Value >= 44)
             {
                 item.Unused3 = frame.ReadInt32();
+            }
+            if (frame.Complete)
+            {
+                item.Versioning |= CriticalData.VersioningBreaks.Break0;
+                return;
             }
             item.Effect = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
@@ -1417,6 +1477,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public CriticalData.VersioningBreaks Versioning { get; private set; }
         public UInt16 Damage => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x0, 0x2));
         public Int16 Unused => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x2, 0x2));
         public Single PercentMult => _data.Slice(0x4, 0x4).Float();
@@ -1457,7 +1518,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 package: package);
             var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            stream.Position += 0x18 + package.MetaData.Constants.SubConstants.HeaderLength;
+            if (ret._data.Length <= ret.Unused3VersioningOffset + 0x10)
+            {
+                ret.Versioning |= CriticalData.VersioningBreaks.Break0;
+            }
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

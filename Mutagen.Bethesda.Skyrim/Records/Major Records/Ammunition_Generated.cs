@@ -127,7 +127,17 @@ namespace Mutagen.Bethesda.Skyrim
         public UInt32 Value { get; set; } = default;
         #endregion
         #region Weight
-        public Single Weight { get; set; } = default;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _Weight;
+        public Single Weight
+        {
+            get => this._Weight;
+            set
+            {
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this._Weight = value;
+            }
+        }
         #endregion
         #region ShortName
         public String? ShortName { get; set; }
@@ -998,6 +1008,7 @@ namespace Mutagen.Bethesda.Skyrim
         [Flags]
         public enum DATADataType
         {
+            Break0 = 1
         }
         #endregion
 
@@ -2285,11 +2296,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     item: item.Damage);
                 writer.Write(item.Value);
-                if (writer.MetaData.FormVersion!.Value >= 44)
+                if (!item.DATADataTypeState.HasFlag(Ammunition.DATADataType.Break0))
                 {
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Weight);
+                    if (writer.MetaData.FormVersion!.Value >= 44)
+                    {
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.Weight);
+                    }
                 }
             }
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
@@ -2466,6 +2480,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Flags = EnumBinaryTranslation<Ammunition.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     item.Damage = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.Value = dataFrame.ReadUInt32();
+                    if (dataFrame.Complete)
+                    {
+                        item.DATADataTypeState |= Ammunition.DATADataType.Break0;
+                        return (int)Ammunition_FieldIndex.Value;
+                    }
                     if (frame.MetaData.FormVersion!.Value >= 44)
                     {
                         item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
@@ -2591,7 +2610,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Weight
         private int _WeightLocation => _DATALocation!.Value + 0x10;
-        private bool _Weight_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 44;
+        private bool _Weight_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Ammunition.DATADataType.Break0) && _package.FormVersion!.FormVersion!.Value >= 44;
         public Single Weight => _Weight_IsSet ? _data.Slice(_WeightLocation, 4).Float() : default;
         int WeightVersioningOffset => _package.FormVersion!.FormVersion!.Value < 44 ? -4 : 0;
         #endregion
@@ -2731,6 +2750,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
+                    if (subLen <= 0x10)
+                    {
+                        this.DATADataTypeState |= Ammunition.DATADataType.Break0;
+                    }
                     return (int)Ammunition_FieldIndex.Weight;
                 }
                 case RecordTypeInts.ONAM:

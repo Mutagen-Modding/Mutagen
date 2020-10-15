@@ -24,6 +24,7 @@
           <Enum name="Flags" enumName="Ammunition.Flag" byteLength="4" />
           <Float name="Damage" />
           <UInt32 name="Value" />
+          <Break />
           <Float name="Weight" >
             <Versioning formVersion="44" />
           </Float>
