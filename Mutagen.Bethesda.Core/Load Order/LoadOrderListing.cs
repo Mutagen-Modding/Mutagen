@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda
 
         public override string ToString()
         {
-            return $"{ModKey} => {(Enabled ? "On" : "Off")}";
+            return $"[{(Enabled ? "X" : "_")}] {ModKey}";
         }
 
         public static implicit operator LoadOrderListing(ModKey modKey)

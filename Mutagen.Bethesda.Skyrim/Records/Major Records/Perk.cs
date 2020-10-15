@@ -154,8 +154,8 @@ namespace Mutagen.Bethesda.Skyrim
                                 case APerkEntryPointEffect.FunctionType.SetValue:
                                 case APerkEntryPointEffect.FunctionType.AddValue:
                                 case APerkEntryPointEffect.FunctionType.MultiplyValue:
-                                    if (epf2.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointModifyValue)} had EPF2 unexpectedly");
-                                    if (epf3.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointModifyValue)} had EPF3 unexpectedly");
+                                    if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointModifyValue)} had EPF2 unexpectedly");
+                                    if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointModifyValue)} had EPF3 unexpectedly");
                                     if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointModifyValue)} did not have expected EPFT record");
                                     if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointModifyValue)} did not have expected EPFD record");
                                     if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.Float)
@@ -175,8 +175,8 @@ namespace Mutagen.Bethesda.Skyrim
                                     };
                                     break;
                                 case APerkEntryPointEffect.FunctionType.AddRangeToValue:
-                                    if (epf2.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointAddRangeToValue)} had EPF2 unexpectedly");
-                                    if (epf3.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointAddRangeToValue)} had EPF3 unexpectedly");
+                                    if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointModifyValue)} had EPF2 unexpectedly");
+                                    if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointModifyValue)} had EPF3 unexpectedly");
                                     if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointAddRangeToValue)} did not have expected EPFT record");
                                     if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointAddRangeToValue)} did not have expected EPFD record");
                                     if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.FloatFloat)
@@ -193,8 +193,8 @@ namespace Mutagen.Bethesda.Skyrim
                                 case APerkEntryPointEffect.FunctionType.MultiplyActorValueMult:
                                 case APerkEntryPointEffect.FunctionType.MultiplyOnePlusActorValueMult:
                                 case APerkEntryPointEffect.FunctionType.AddActorValueMult:
-                                    if (epf2.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointModifyActorValue)} had EPF2 unexpectedly");
-                                    if (epf3.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointModifyActorValue)} had EPF3 unexpectedly");
+                                    if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointModifyValue)} had EPF2 unexpectedly");
+                                    if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointModifyValue)} had EPF3 unexpectedly");
                                     if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointModifyActorValue)} did not have expected EPFT record");
                                     if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointModifyActorValue)} did not have expected EPFD record");
                                     if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.FloatFloat)
@@ -217,8 +217,8 @@ namespace Mutagen.Bethesda.Skyrim
                                     break;
                                 case APerkEntryPointEffect.FunctionType.AbsoluteValue:
                                 case APerkEntryPointEffect.FunctionType.NegativeAbsoluteValue:
-                                    if (epf2.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointAbsoluteValue)} had EPF2 unexpectedly");
-                                    if (epf3.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointAbsoluteValue)} had EPF3 unexpectedly");
+                                    if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointModifyValue)} had EPF2 unexpectedly");
+                                    if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointModifyValue)} had EPF3 unexpectedly");
                                     if (epft.HasValue && epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.None)
                                     {
                                         throw new ArgumentException($"{nameof(PerkEntryPointAbsoluteValue)} did not have expected parameter type flag: {epft.Value[0]}");
@@ -229,8 +229,8 @@ namespace Mutagen.Bethesda.Skyrim
                                     };
                                     break;
                                 case APerkEntryPointEffect.FunctionType.AddLeveledList:
-                                    if (epf2.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointAddLeveledItem)} had EPF2 unexpectedly");
-                                    if (epf3.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointAddLeveledItem)} had EPF3 unexpectedly");
+                                    if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointModifyValue)} had EPF2 unexpectedly");
+                                    if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointModifyValue)} had EPF3 unexpectedly");
                                     if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointAddLeveledItem)} did not have expected EPFT record");
                                     if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointAddLeveledItem)} did not have expected EPFD record");
                                     if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.LeveledItem)
@@ -261,8 +261,8 @@ namespace Mutagen.Bethesda.Skyrim
                                     };
                                     break;
                                 case APerkEntryPointEffect.FunctionType.SelectSpell:
-                                    if (epf2.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointSelectSpell)} had EPF2 unexpectedly");
-                                    if (epf3.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointSelectSpell)} had EPF3 unexpectedly");
+                                    if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointModifyValue)} had EPF2 unexpectedly");
+                                    if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointModifyValue)} had EPF3 unexpectedly");
                                     if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointSelectSpell)} did not have expected EPFT record");
                                     if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointSelectSpell)} did not have expected EPFD record");
                                     if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.Spell)
@@ -275,8 +275,8 @@ namespace Mutagen.Bethesda.Skyrim
                                     };
                                     break;
                                 case APerkEntryPointEffect.FunctionType.SelectText:
-                                    if (epf2.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointSelectText)} had EPF2 unexpectedly");
-                                    if (epf3.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointSelectText)} had EPF3 unexpectedly");
+                                    if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointModifyValue)} had EPF2 unexpectedly");
+                                    if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointModifyValue)} had EPF3 unexpectedly");
                                     if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointSelectText)} did not have expected EPFT record");
                                     if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointSelectText)} did not have expected EPFD record");
                                     if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.String)
@@ -289,8 +289,8 @@ namespace Mutagen.Bethesda.Skyrim
                                     };
                                     break;
                                 case APerkEntryPointEffect.FunctionType.SetText:
-                                    if (epf2.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointSetText)} had EPF2 unexpectedly");
-                                    if (epf3.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointSetText)} had EPF3 unexpectedly");
+                                    if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointModifyValue)} had EPF2 unexpectedly");
+                                    if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointModifyValue)} had EPF3 unexpectedly");
                                     if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointSetText)} did not have expected EPFT record");
                                     if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointSetText)} did not have expected EPFD record");
                                     if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.LString)
