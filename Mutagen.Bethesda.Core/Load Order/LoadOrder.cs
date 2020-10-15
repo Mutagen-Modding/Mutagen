@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda
 
         public static string GetPluginsPath(GameRelease game)
         {
-            string pluginPath = GetPluginsPath(game);
+            string pluginPath = GetRelativePluginsPath(game);
             return Path.Combine(
                 Environment.GetEnvironmentVariable("LocalAppData"),
                 pluginPath);
