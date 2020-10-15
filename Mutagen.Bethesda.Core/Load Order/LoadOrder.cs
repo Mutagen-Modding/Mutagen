@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda
     /// </summary>
     public static class LoadOrder
     {
-        public static string GetPluginsPath(GameRelease game)
+        private static string GetRelativePluginsPath(GameRelease game)
         {
             return game switch
             {
@@ -32,6 +32,14 @@ namespace Mutagen.Bethesda
             };
         }
 
+        public static string GetPluginsPath(GameRelease game)
+        {
+            string pluginPath = GetPluginsPath(game);
+            return Path.Combine(
+                Environment.GetEnvironmentVariable("LocalAppData"),
+                pluginPath);
+        }
+
         /// <summary>
         /// Attempts to locate the path to a game's load order file
         /// </summary>
@@ -40,11 +48,7 @@ namespace Mutagen.Bethesda
         /// <returns>True if file located</returns>
         public static bool TryGetPluginsFile(GameRelease game, out FilePath path)
         {
-            string pluginPath = GetPluginsPath(game);
-            path = new FilePath(
-                Path.Combine(
-                    Environment.GetEnvironmentVariable("LocalAppData"),
-                    pluginPath));
+            path = new FilePath(GetPluginsPath(game));
             return path.Exists;
         }
 
