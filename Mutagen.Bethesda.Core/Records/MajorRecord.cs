@@ -49,6 +49,16 @@ namespace Mutagen.Bethesda
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool IMajorRecordCommonGetter.IsCompressed => this.IsCompressed;
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public bool IsDeleted
+        {
+            get => EnumExt.HasFlag(this.MajorRecordFlagsRaw, Mutagen.Bethesda.Internals.Constants.DeletedFlag);
+            set => this.MajorRecordFlagsRaw = EnumExt.SetFlag(this.MajorRecordFlagsRaw, Mutagen.Bethesda.Internals.Constants.DeletedFlag, value);
+        }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IMajorRecordCommonGetter.IsDeleted => this.IsDeleted;
+
         protected abstract ushort? FormVersionAbstract { get; }
         ushort? IMajorRecordCommonGetter.FormVersion => FormVersionAbstract;
         ushort? IFormVersionGetter.FormVersion => FormVersionAbstract;
@@ -66,6 +76,7 @@ namespace Mutagen.Bethesda.Internals
     public abstract partial class MajorRecordBinaryOverlay : IMajorRecordCommonGetter
     {
         public bool IsCompressed => EnumExt.HasFlag(this.MajorRecordFlagsRaw, Mutagen.Bethesda.Internals.Constants.CompressedFlag);
+        public bool IsDeleted => EnumExt.HasFlag(this.MajorRecordFlagsRaw, Mutagen.Bethesda.Internals.Constants.DeletedFlag);
 
         protected abstract ushort? FormVersionAbstract { get; }
         ushort? IMajorRecordCommonGetter.FormVersion => FormVersionAbstract;
