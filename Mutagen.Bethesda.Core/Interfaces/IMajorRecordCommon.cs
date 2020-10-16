@@ -16,6 +16,11 @@ namespace Mutagen.Bethesda
         new bool IsCompressed { get; set; }
 
         /// <summary>
+        /// Marker of whether the content is deleted
+        /// </summary>
+        new bool IsDeleted { get; set; }
+
+        /// <summary>
         /// Raw integer flag data
         /// </summary>
         new int MajorRecordFlagsRaw { get; set; }
@@ -35,6 +40,11 @@ namespace Mutagen.Bethesda
         /// Marker of whether the content is compressed
         /// </summary>
         bool IsCompressed { get; }
+
+        /// <summary>
+        /// Marker of whether the content is deleted
+        /// </summary>
+        bool IsDeleted { get; }
 
         /// <summary>
         /// Raw integer flag data

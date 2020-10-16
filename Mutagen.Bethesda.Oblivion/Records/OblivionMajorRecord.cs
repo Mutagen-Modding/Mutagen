@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda.Oblivion
         public enum OblivionMajorRecordFlag
         {
             ESM = 0x00000001,
-            Deleted = 0x00000020,
+            Deleted = Mutagen.Bethesda.Internals.Constants.DeletedFlag,
             BorderRegion_ActorValue = 0x00000040,
             TurnOffFire_ActorValue = 0x00000080,
             CastsShadows = 0x00000200,
@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Oblivion
             Ignored = 0x00001000,
             VisibleWhenDistant = 0x00008000,
             Dangerous_OffLimits_InteriorCell = 0x00020000,
-            Compressed = 0x00040000,
+            Compressed = Mutagen.Bethesda.Internals.Constants.CompressedFlag,
             CantWait = 0x00080000,
         }
 
