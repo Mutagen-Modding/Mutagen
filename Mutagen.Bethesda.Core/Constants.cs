@@ -16,5 +16,6 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType Group = new RecordType("GRUP");
         public const int LightMasterLimit = 2048;
         public const int CompressedFlag = 0x0004_0000;
+        public const int DeletedFlag = 0x0000_0020;
     }
 }
