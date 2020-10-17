@@ -380,7 +380,7 @@ namespace Mutagen.Bethesda.Binary
         {
             List<int> ret = new List<int>();
             var startingPos = stream.Position;
-            for (uint i = 0; i < count; i++)
+            for (uint i = 0; i < count;)
             {
                 var varMeta = constants.GetVariableMeta(stream);
                 var recType = varMeta.RecordType;
@@ -397,6 +397,7 @@ namespace Mutagen.Bethesda.Binary
                         ret.Add(stream.Position - startingPos);
                         stream.Position += (int)varMeta.TotalLength;
                     }
+                    i++;
                 }
                 else
                 {

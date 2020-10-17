@@ -44,8 +44,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region RawOwnerData
         public UInt32 RawOwnerData { get; set; } = default;
         #endregion
-        #region Global
-        public FormLink<IGlobalGetter> Global { get; set; } = new FormLink<IGlobalGetter>();
+        #region RawVariableData
+        public UInt32 RawVariableData { get; set; } = default;
         #endregion
 
         #region To String
@@ -88,16 +88,16 @@ namespace Mutagen.Bethesda.Skyrim
             : base(initialValue)
             {
                 this.RawOwnerData = initialValue;
-                this.Global = initialValue;
+                this.RawVariableData = initialValue;
             }
 
             public Mask(
                 TItem RawOwnerData,
-                TItem Global)
+                TItem RawVariableData)
             : base()
             {
                 this.RawOwnerData = RawOwnerData;
-                this.Global = Global;
+                this.RawVariableData = RawVariableData;
             }
 
             #pragma warning disable CS8618
@@ -110,7 +110,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             #region Members
             public TItem RawOwnerData;
-            public TItem Global;
+            public TItem RawVariableData;
             #endregion
 
             #region Equals
@@ -125,14 +125,14 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.RawOwnerData, rhs.RawOwnerData)) return false;
-                if (!object.Equals(this.Global, rhs.Global)) return false;
+                if (!object.Equals(this.RawVariableData, rhs.RawVariableData)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.RawOwnerData);
-                hash.Add(this.Global);
+                hash.Add(this.RawVariableData);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.RawOwnerData)) return false;
-                if (!eval(this.Global)) return false;
+                if (!eval(this.RawVariableData)) return false;
                 return true;
             }
             #endregion
@@ -154,7 +154,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.RawOwnerData)) return true;
-                if (eval(this.Global)) return true;
+                if (eval(this.RawVariableData)) return true;
                 return false;
             }
             #endregion
@@ -171,7 +171,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.RawOwnerData = eval(this.RawOwnerData);
-                obj.Global = eval(this.Global);
+                obj.RawVariableData = eval(this.RawVariableData);
             }
             #endregion
 
@@ -198,9 +198,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(RawOwnerData, "RawOwnerData");
                     }
-                    if (printMask?.Global ?? true)
+                    if (printMask?.RawVariableData ?? true)
                     {
-                        fg.AppendItem(Global, "Global");
+                        fg.AppendItem(RawVariableData, "RawVariableData");
                     }
                 }
                 fg.AppendLine("]");
@@ -215,7 +215,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             public Exception? RawOwnerData;
-            public Exception? Global;
+            public Exception? RawVariableData;
             #endregion
 
             #region IErrorMask
@@ -226,8 +226,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     case NoOwner_FieldIndex.RawOwnerData:
                         return RawOwnerData;
-                    case NoOwner_FieldIndex.Global:
-                        return Global;
+                    case NoOwner_FieldIndex.RawVariableData:
+                        return RawVariableData;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -241,8 +241,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case NoOwner_FieldIndex.RawOwnerData:
                         this.RawOwnerData = ex;
                         break;
-                    case NoOwner_FieldIndex.Global:
-                        this.Global = ex;
+                    case NoOwner_FieldIndex.RawVariableData:
+                        this.RawVariableData = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -258,8 +258,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case NoOwner_FieldIndex.RawOwnerData:
                         this.RawOwnerData = (Exception?)obj;
                         break;
-                    case NoOwner_FieldIndex.Global:
-                        this.Global = (Exception?)obj;
+                    case NoOwner_FieldIndex.RawVariableData:
+                        this.RawVariableData = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -271,7 +271,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (Overall != null) return true;
                 if (RawOwnerData != null) return true;
-                if (Global != null) return true;
+                if (RawVariableData != null) return true;
                 return false;
             }
             #endregion
@@ -308,7 +308,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.ToString_FillInternal(fg);
                 fg.AppendItem(RawOwnerData, "RawOwnerData");
-                fg.AppendItem(Global, "Global");
+                fg.AppendItem(RawVariableData, "RawVariableData");
             }
             #endregion
 
@@ -318,7 +318,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.RawOwnerData = this.RawOwnerData.Combine(rhs.RawOwnerData);
-                ret.Global = this.Global.Combine(rhs.Global);
+                ret.RawVariableData = this.RawVariableData.Combine(rhs.RawVariableData);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -342,7 +342,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             public bool RawOwnerData;
-            public bool Global;
+            public bool RawVariableData;
             #endregion
 
             #region Ctors
@@ -350,7 +350,7 @@ namespace Mutagen.Bethesda.Skyrim
                 : base(defaultOn)
             {
                 this.RawOwnerData = defaultOn;
-                this.Global = defaultOn;
+                this.RawVariableData = defaultOn;
             }
 
             #endregion
@@ -359,7 +359,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.GetCrystal(ret);
                 ret.Add((RawOwnerData, null));
-                ret.Add((Global, null));
+                ret.Add((RawVariableData, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -368,15 +368,6 @@ namespace Mutagen.Bethesda.Skyrim
             }
 
         }
-        #endregion
-
-        #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => NoOwnerCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => NoOwnerCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NoOwnerCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NoOwnerCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -436,22 +427,20 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface INoOwner :
         INoOwnerGetter,
         IOwnerTarget,
-        ILoquiObjectSetter<INoOwner>,
-        ILinkedFormKeyContainer
+        ILoquiObjectSetter<INoOwner>
     {
         new UInt32 RawOwnerData { get; set; }
-        new FormLink<IGlobalGetter> Global { get; set; }
+        new UInt32 RawVariableData { get; set; }
     }
 
     public partial interface INoOwnerGetter :
         IOwnerTargetGetter,
         ILoquiObject<INoOwnerGetter>,
-        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => NoOwner_Registration.Instance;
         UInt32 RawOwnerData { get; }
-        FormLink<IGlobalGetter> Global { get; }
+        UInt32 RawVariableData { get; }
 
     }
 
@@ -595,7 +584,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public enum NoOwner_FieldIndex
     {
         RawOwnerData = 0,
-        Global = 1,
+        RawVariableData = 1,
     }
     #endregion
 
@@ -684,7 +673,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.RawOwnerData = default;
-            item.Global = FormLink<IGlobalGetter>.Null;
+            item.RawVariableData = default;
             base.Clear(item);
         }
         
@@ -746,7 +735,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.RawOwnerData = item.RawOwnerData == rhs.RawOwnerData;
-            ret.Global = item.Global.Equals(rhs.Global);
+            ret.RawVariableData = item.RawVariableData == rhs.RawVariableData;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -802,9 +791,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.RawOwnerData, "RawOwnerData");
             }
-            if (printMask?.Global ?? true)
+            if (printMask?.RawVariableData ?? true)
             {
-                fg.AppendItem(item.Global.FormKey, "Global");
+                fg.AppendItem(item.RawVariableData, "RawVariableData");
             }
         }
         
@@ -826,7 +815,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null || rhs == null) return false;
             if (!base.Equals((IOwnerTargetGetter)lhs, (IOwnerTargetGetter)rhs)) return false;
             if (lhs.RawOwnerData != rhs.RawOwnerData) return false;
-            if (!lhs.Global.Equals(rhs.Global)) return false;
+            if (lhs.RawVariableData != rhs.RawVariableData) return false;
             return true;
         }
         
@@ -843,7 +832,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.RawOwnerData);
-            hash.Add(item.Global);
+            hash.Add(item.RawVariableData);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -868,7 +857,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            yield return obj.Global.FormKey;
             yield break;
         }
         
@@ -898,9 +886,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.RawOwnerData = rhs.RawOwnerData;
             }
-            if ((copyMask?.GetShouldTranslate((int)NoOwner_FieldIndex.Global) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)NoOwner_FieldIndex.RawVariableData) ?? true))
             {
-                item.Global = new FormLink<IGlobalGetter>(rhs.Global.FormKey);
+                item.RawVariableData = rhs.RawVariableData;
             }
         }
         
@@ -1011,9 +999,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer)
         {
             writer.Write(item.RawOwnerData);
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Global);
+            writer.Write(item.RawVariableData);
         }
 
         public void Write(
@@ -1059,9 +1045,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame)
         {
             item.RawOwnerData = frame.ReadUInt32();
-            item.Global = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.RawVariableData = frame.ReadUInt32();
         }
 
     }
@@ -1097,10 +1081,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => NoOwnerCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => NoOwnerCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => NoOwnerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -1113,7 +1093,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public UInt32 RawOwnerData => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x0, 0x4));
-        public FormLink<IGlobalGetter> Global => new FormLink<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public UInt32 RawVariableData => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

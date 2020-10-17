@@ -44,8 +44,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Npc
         public FormLink<INpcGetter> Npc { get; set; } = new FormLink<INpcGetter>();
         #endregion
-        #region RawVariableData
-        public UInt32 RawVariableData { get; set; } = default;
+        #region Global
+        public FormLink<IGlobalGetter> Global { get; set; } = new FormLink<IGlobalGetter>();
         #endregion
 
         #region To String
@@ -88,16 +88,16 @@ namespace Mutagen.Bethesda.Skyrim
             : base(initialValue)
             {
                 this.Npc = initialValue;
-                this.RawVariableData = initialValue;
+                this.Global = initialValue;
             }
 
             public Mask(
                 TItem Npc,
-                TItem RawVariableData)
+                TItem Global)
             : base()
             {
                 this.Npc = Npc;
-                this.RawVariableData = RawVariableData;
+                this.Global = Global;
             }
 
             #pragma warning disable CS8618
@@ -110,7 +110,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             #region Members
             public TItem Npc;
-            public TItem RawVariableData;
+            public TItem Global;
             #endregion
 
             #region Equals
@@ -125,14 +125,14 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.Npc, rhs.Npc)) return false;
-                if (!object.Equals(this.RawVariableData, rhs.RawVariableData)) return false;
+                if (!object.Equals(this.Global, rhs.Global)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Npc);
-                hash.Add(this.RawVariableData);
+                hash.Add(this.Global);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.Npc)) return false;
-                if (!eval(this.RawVariableData)) return false;
+                if (!eval(this.Global)) return false;
                 return true;
             }
             #endregion
@@ -154,7 +154,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.Npc)) return true;
-                if (eval(this.RawVariableData)) return true;
+                if (eval(this.Global)) return true;
                 return false;
             }
             #endregion
@@ -171,7 +171,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Npc = eval(this.Npc);
-                obj.RawVariableData = eval(this.RawVariableData);
+                obj.Global = eval(this.Global);
             }
             #endregion
 
@@ -198,9 +198,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(Npc, "Npc");
                     }
-                    if (printMask?.RawVariableData ?? true)
+                    if (printMask?.Global ?? true)
                     {
-                        fg.AppendItem(RawVariableData, "RawVariableData");
+                        fg.AppendItem(Global, "Global");
                     }
                 }
                 fg.AppendLine("]");
@@ -215,7 +215,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             public Exception? Npc;
-            public Exception? RawVariableData;
+            public Exception? Global;
             #endregion
 
             #region IErrorMask
@@ -226,8 +226,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     case NpcOwner_FieldIndex.Npc:
                         return Npc;
-                    case NpcOwner_FieldIndex.RawVariableData:
-                        return RawVariableData;
+                    case NpcOwner_FieldIndex.Global:
+                        return Global;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -241,8 +241,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case NpcOwner_FieldIndex.Npc:
                         this.Npc = ex;
                         break;
-                    case NpcOwner_FieldIndex.RawVariableData:
-                        this.RawVariableData = ex;
+                    case NpcOwner_FieldIndex.Global:
+                        this.Global = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -258,8 +258,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case NpcOwner_FieldIndex.Npc:
                         this.Npc = (Exception?)obj;
                         break;
-                    case NpcOwner_FieldIndex.RawVariableData:
-                        this.RawVariableData = (Exception?)obj;
+                    case NpcOwner_FieldIndex.Global:
+                        this.Global = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -271,7 +271,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (Overall != null) return true;
                 if (Npc != null) return true;
-                if (RawVariableData != null) return true;
+                if (Global != null) return true;
                 return false;
             }
             #endregion
@@ -308,7 +308,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.ToString_FillInternal(fg);
                 fg.AppendItem(Npc, "Npc");
-                fg.AppendItem(RawVariableData, "RawVariableData");
+                fg.AppendItem(Global, "Global");
             }
             #endregion
 
@@ -318,7 +318,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Npc = this.Npc.Combine(rhs.Npc);
-                ret.RawVariableData = this.RawVariableData.Combine(rhs.RawVariableData);
+                ret.Global = this.Global.Combine(rhs.Global);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -342,7 +342,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             public bool Npc;
-            public bool RawVariableData;
+            public bool Global;
             #endregion
 
             #region Ctors
@@ -350,7 +350,7 @@ namespace Mutagen.Bethesda.Skyrim
                 : base(defaultOn)
             {
                 this.Npc = defaultOn;
-                this.RawVariableData = defaultOn;
+                this.Global = defaultOn;
             }
 
             #endregion
@@ -359,7 +359,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.GetCrystal(ret);
                 ret.Add((Npc, null));
-                ret.Add((RawVariableData, null));
+                ret.Add((Global, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -440,7 +440,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer
     {
         new FormLink<INpcGetter> Npc { get; set; }
-        new UInt32 RawVariableData { get; set; }
+        new FormLink<IGlobalGetter> Global { get; set; }
     }
 
     public partial interface INpcOwnerGetter :
@@ -451,7 +451,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         static new ILoquiRegistration Registration => NpcOwner_Registration.Instance;
         FormLink<INpcGetter> Npc { get; }
-        UInt32 RawVariableData { get; }
+        FormLink<IGlobalGetter> Global { get; }
 
     }
 
@@ -595,7 +595,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public enum NpcOwner_FieldIndex
     {
         Npc = 0,
-        RawVariableData = 1,
+        Global = 1,
     }
     #endregion
 
@@ -684,7 +684,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Npc = FormLink<INpcGetter>.Null;
-            item.RawVariableData = default;
+            item.Global = FormLink<IGlobalGetter>.Null;
             base.Clear(item);
         }
         
@@ -746,7 +746,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.Npc = item.Npc.Equals(rhs.Npc);
-            ret.RawVariableData = item.RawVariableData == rhs.RawVariableData;
+            ret.Global = item.Global.Equals(rhs.Global);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -802,9 +802,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.Npc.FormKey, "Npc");
             }
-            if (printMask?.RawVariableData ?? true)
+            if (printMask?.Global ?? true)
             {
-                fg.AppendItem(item.RawVariableData, "RawVariableData");
+                fg.AppendItem(item.Global.FormKey, "Global");
             }
         }
         
@@ -826,7 +826,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null || rhs == null) return false;
             if (!base.Equals((IOwnerTargetGetter)lhs, (IOwnerTargetGetter)rhs)) return false;
             if (!lhs.Npc.Equals(rhs.Npc)) return false;
-            if (lhs.RawVariableData != rhs.RawVariableData) return false;
+            if (!lhs.Global.Equals(rhs.Global)) return false;
             return true;
         }
         
@@ -843,7 +843,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Npc);
-            hash.Add(item.RawVariableData);
+            hash.Add(item.Global);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -869,6 +869,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             yield return obj.Npc.FormKey;
+            yield return obj.Global.FormKey;
             yield break;
         }
         
@@ -898,9 +899,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Npc = new FormLink<INpcGetter>(rhs.Npc.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)NpcOwner_FieldIndex.RawVariableData) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)NpcOwner_FieldIndex.Global) ?? true))
             {
-                item.RawVariableData = rhs.RawVariableData;
+                item.Global = new FormLink<IGlobalGetter>(rhs.Global.FormKey);
             }
         }
         
@@ -1013,7 +1014,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Npc);
-            writer.Write(item.RawVariableData);
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Global);
         }
 
         public void Write(
@@ -1061,7 +1064,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Npc = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
-            item.RawVariableData = frame.ReadUInt32();
+            item.Global = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
         }
 
     }
@@ -1113,7 +1118,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public FormLink<INpcGetter> Npc => new FormLink<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public UInt32 RawVariableData => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x4, 0x4));
+        public FormLink<IGlobalGetter> Global => new FormLink<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

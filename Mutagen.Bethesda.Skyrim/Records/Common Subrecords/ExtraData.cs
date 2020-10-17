@@ -27,7 +27,7 @@ namespace Mutagen.Bethesda.Skyrim
                     return new NpcOwner()
                     {
                         Npc = FormKeyBinaryTranslation.Instance.Parse(span, masters),
-                        RawVariableData = BinaryPrimitives.ReadUInt32LittleEndian(span.Slice(4))
+                        Global = FormKeyBinaryTranslation.Instance.Parse(span.Slice(4), masters)
                     };
                 }
                 else if (cache.IsOfRecordType<Faction>(form))
@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Skyrim
                     return new NoOwner()
                     {
                         RawOwnerData = BinaryPrimitives.ReadUInt32LittleEndian(span),
-                        Global = FormKeyBinaryTranslation.Instance.Parse(span, masters)
+                        RawVariableData = BinaryPrimitives.ReadUInt32LittleEndian(span.Slice(4))
                     };
                 }
             }
@@ -62,11 +62,11 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     case NoOwner noOwner:
                         writer.Write(noOwner.RawOwnerData);
-                        FormKeyBinaryTranslation.Instance.Write(writer, noOwner.Global.FormKey);
+                        writer.Write(noOwner.RawVariableData);
                         break;
                     case NpcOwner npcOwner:
                         FormKeyBinaryTranslation.Instance.Write(writer, npcOwner.Npc.FormKey);
-                        writer.Write(npcOwner.RawVariableData);
+                        FormKeyBinaryTranslation.Instance.Write(writer, npcOwner.Global.FormKey);
                         break;
                     case FactionOwner factionOwner:
                         FormKeyBinaryTranslation.Instance.Write(writer, factionOwner.Faction.FormKey);
