@@ -212,6 +212,10 @@ namespace Mutagen.Bethesda.Tests
             ret.AddAlignments(
                 PlacedTrap_Registration.TriggeringRecordType,
                 trapRules);
+            ret.SetGroupAlignment(
+                GroupTypeEnum.CellTemporaryChildren,
+                RecordTypes.LAND,
+                RecordTypes.NAVM);
             return ret;
         }
 
