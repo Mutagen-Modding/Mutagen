@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
@@ -919,6 +919,7 @@
     <Compile Include="Records\OblivionModHeader_Generated.cs">
       <DependentUpon>OblivionModHeader.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\TypeSolidifier_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.1.2">

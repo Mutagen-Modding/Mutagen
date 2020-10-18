@@ -2,6 +2,7 @@ using Mutagen.Bethesda.Skyrim;
 using Noggog;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Xunit;
 
@@ -78,6 +79,17 @@ namespace Mutagen.Bethesda.UnitTests
             }
             TestFunction<IWeaponGetter>();
             TestFunction2<IWeaponGetter>();
+        }
+
+        [Fact]
+        public static void TypeSolidifier()
+        {
+            IEnumerable<IModListing<ISkyrimModGetter>> listings = Enumerable.Empty<IModListing<ISkyrimModGetter>>();
+            IEnumerable<IAmmunitionGetter> ammun = listings.Ammunition();
+            IEnumerable<IPlacedGetter> placed = listings.IPlaced();
+            IEnumerable<ISkyrimModGetter> mods = Enumerable.Empty<ISkyrimModGetter>();
+            ammun = mods.Ammunition();
+            placed = mods.IPlaced();
         }
     }
 }
