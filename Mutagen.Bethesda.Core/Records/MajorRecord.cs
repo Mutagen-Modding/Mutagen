@@ -39,7 +39,6 @@ namespace Mutagen.Bethesda
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public string TitleString => $"{this.EditorID} - {this.FormKey}";
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public bool IsCompressed
         {
             get => EnumExt.HasFlag(this.MajorRecordFlagsRaw, Mutagen.Bethesda.Internals.Constants.CompressedFlag);
@@ -49,7 +48,6 @@ namespace Mutagen.Bethesda
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool IMajorRecordCommonGetter.IsCompressed => this.IsCompressed;
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public bool IsDeleted
         {
             get => EnumExt.HasFlag(this.MajorRecordFlagsRaw, Mutagen.Bethesda.Internals.Constants.DeletedFlag);
