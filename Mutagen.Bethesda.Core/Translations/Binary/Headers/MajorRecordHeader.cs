@@ -293,7 +293,7 @@ namespace Mutagen.Bethesda.Binary
     /// </summary>
     public struct MajorRecordFrame : IEnumerable<SubrecordPinFrame>
     {
-        private readonly MajorRecordHeader _header;
+        public readonly MajorRecordHeader Header;
         
         /// <summary>
         /// Raw bytes of both header and content data
@@ -303,7 +303,7 @@ namespace Mutagen.Bethesda.Binary
         /// <summary>
         /// Raw bytes of the content data, excluding the header
         /// </summary>
-        public ReadOnlyMemorySlice<byte> Content => HeaderAndContentData.Slice(this._header.HeaderLength, checked((int)this._header.ContentLength));
+        public ReadOnlyMemorySlice<byte> Content => HeaderAndContentData.Slice(this.Header.HeaderLength, checked((int)this.Header.ContentLength));
 
         /// <summary>
         /// Total length of the Major Record, including the header and its content.
@@ -317,8 +317,8 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="span">Span to overlay on, aligned to the start of the header</param>
         public MajorRecordFrame(GameConstants meta, ReadOnlyMemorySlice<byte> span)
         {
-            this._header = meta.MajorRecord(span);
-            this.HeaderAndContentData = span.Slice(0, checked((int)this._header.TotalLength));
+            this.Header = meta.MajorRecord(span);
+            this.HeaderAndContentData = span.Slice(0, checked((int)this.Header.TotalLength));
         }
 
         /// <summary>
@@ -328,12 +328,12 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="span">Span to overlay on, aligned to the start of the header</param>
         public MajorRecordFrame(MajorRecordHeader header, ReadOnlyMemorySlice<byte> span)
         {
-            this._header = header;
-            this.HeaderAndContentData = span.Slice(0, checked((int)this._header.TotalLength));
+            this.Header = header;
+            this.HeaderAndContentData = span.Slice(0, checked((int)this.Header.TotalLength));
         }
 
         /// <inheritdoc/>
-        public override string ToString() => this._header.ToString();
+        public override string ToString() => this.Header.ToString();
 
         /// <inheritdoc/>
         public IEnumerator<SubrecordPinFrame> GetEnumerator() => HeaderExt.EnumerateSubrecords(this).GetEnumerator();
@@ -344,33 +344,33 @@ namespace Mutagen.Bethesda.Binary
         /// <summary>
         /// Raw bytes of header
         /// </summary>
-        public ReadOnlyMemorySlice<byte> HeaderData => _header.HeaderData;
+        public ReadOnlyMemorySlice<byte> HeaderData => Header.HeaderData;
 
         /// <summary>
         /// Game metadata to use as reference for alignment
         /// </summary>
-        public GameConstants Meta => _header.Meta;
+        public GameConstants Meta => Header.Meta;
 
         /// <summary>
         /// Game release associated with header
         /// </summary>
-        public GameRelease Release => _header.Release;
+        public GameRelease Release => Header.Release;
 
         /// <summary>
         /// The length that the header itself takes
         /// </summary>
-        public sbyte HeaderLength => _header.HeaderLength;
+        public sbyte HeaderLength => Header.HeaderLength;
 
         /// <summary>
         /// RecordType of the header
         /// </summary>
-        public RecordType RecordType => _header.RecordType;
+        public RecordType RecordType => Header.RecordType;
 
         /// <summary>
         /// The length explicitly contained in the length bytes of the header
         /// Note that for Major Records, this is equivalent to ContentLength
         /// </summary>
-        public uint RecordLength => _header.RecordLength;
+        public uint RecordLength => Header.RecordLength;
 
         /// <summary>
         /// The length of the content of the MajorRecord, excluding the header bytes.
@@ -382,32 +382,167 @@ namespace Mutagen.Bethesda.Binary
         /// Since each game has its own flag Enum, this field is offered as an int that should
         /// be casted to the appropriate enum for use.
         /// </summary>
-        public int MajorRecordFlags => _header.MajorRecordFlags;
+        public int MajorRecordFlags => Header.MajorRecordFlags;
 
         /// <summary>
         /// FormID of the Major Record
         /// </summary>
-        public FormID FormID => _header.FormID;
+        public FormID FormID => Header.FormID;
 
         /// <summary>
         /// Version control of the Major Record
         /// </summary>
-        public int VersionControl => _header.VersionControl;
+        public int VersionControl => Header.VersionControl;
 
         /// <summary>
         /// Whether the compression flag is on
         /// </summary>
-        public bool IsCompressed => _header.IsCompressed;
+        public bool IsCompressed => Header.IsCompressed;
 
         /// <summary>
         /// Returns the Form Version of the Major Record
         /// </summary>
-        public short? FormVersion => _header.FormVersion;
+        public short? FormVersion => Header.FormVersion;
 
         /// <summary>
         /// Returns the second Version Control of the Major Record
         /// </summary>
-        public short? VersionControl2 => _header.VersionControl2;
+        public short? VersionControl2 => Header.VersionControl2;
         #endregion
+    }
+
+    /// <summary>
+    /// A struct that overlays on top of bytes that is able to retrive Major Record data on demand.
+    /// In addition, it keeps track of its location relative to its parent MajorRecordFrame
+    /// </summary>
+    public struct MajorRecordPinFrame
+    {
+        /// <summary>
+        /// Frame struct contained in the pin
+        /// </summary>
+        public MajorRecordFrame Frame { get; }
+
+        /// <summary>
+        /// Location of the major record relative to the parent GroupFrame's data.<br/>
+        /// E.g., relative to the position of the RecordType of the parent MajorRecord.
+        /// </summary>
+        public int Location { get; }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="meta">Game metadata to use as reference for alignment</param>
+        /// <param name="span">Span to overlay on, aligned to the start of the header</param>
+        /// <param name="pinLocation">Location pin tracker relative to parent MajorRecordFrame</param>
+        public MajorRecordPinFrame(GameConstants meta, ReadOnlyMemorySlice<byte> span, int pinLocation)
+        {
+            this.Frame = new MajorRecordFrame(meta, span);
+            this.Location = pinLocation;
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="header">Existing MajorRecordHeader struct</param>
+        /// <param name="span">Span to overlay on, aligned to the start of the header</param>
+        /// <param name="pinLocation">Location pin tracker relative to parent MajorRecordFrame</param>
+        public MajorRecordPinFrame(MajorRecordHeader header, ReadOnlyMemorySlice<byte> span, int pinLocation)
+        {
+            this.Frame = new MajorRecordFrame(header, span);
+            this.Location = pinLocation;
+        }
+
+        /// <inheritdoc/>
+        public override string ToString() => $"{this.Frame} @ {Location}";
+
+        #region Header Forwarding
+        /// <summary>
+        /// Header struct contained in the pin
+        /// </summary>
+        public MajorRecordHeader Header => Frame.Header;
+
+        /// <summary>
+        /// Total length of the Major Record, including the header and its content.
+        /// </summary>
+        public long TotalLength => Header.TotalLength;
+
+        /// <summary>
+        /// Raw bytes of header
+        /// </summary>
+        public ReadOnlyMemorySlice<byte> HeaderData => Header.HeaderData;
+
+        /// <summary>
+        /// Game metadata to use as reference for alignment
+        /// </summary>
+        public GameConstants Meta => Header.Meta;
+
+        /// <summary>
+        /// Game release associated with header
+        /// </summary>
+        public GameRelease Release => Header.Release;
+
+        /// <summary>
+        /// The length that the header itself takes
+        /// </summary>
+        public sbyte HeaderLength => Header.HeaderLength;
+
+        /// <summary>
+        /// RecordType of the header
+        /// </summary>
+        public RecordType RecordType => Header.RecordType;
+
+        /// <summary>
+        /// The length explicitly contained in the length bytes of the header
+        /// Note that for Major Records, this is equivalent to ContentLength
+        /// </summary>
+        public uint RecordLength => Header.RecordLength;
+
+        /// <summary>
+        /// The length of the content of the MajorRecord, excluding the header bytes.
+        /// </summary>
+        public uint ContentLength => Frame.ContentLength;
+
+        /// <summary>
+        /// The integer representing a Major Record's flags enum.
+        /// Since each game has its own flag Enum, this field is offered as an int that should
+        /// be casted to the appropriate enum for use.
+        /// </summary>
+        public int MajorRecordFlags => Header.MajorRecordFlags;
+
+        /// <summary>
+        /// FormID of the Major Record
+        /// </summary>
+        public FormID FormID => Header.FormID;
+
+        /// <summary>
+        /// Version control of the Major Record
+        /// </summary>
+        public int VersionControl => Header.VersionControl;
+
+        /// <summary>
+        /// Whether the compression flag is on
+        /// </summary>
+        public bool IsCompressed => Header.IsCompressed;
+
+        /// <summary>
+        /// Returns the Form Version of the Major Record
+        /// </summary>
+        public short? FormVersion => Header.FormVersion;
+
+        /// <summary>
+        /// Returns the second Version Control of the Major Record
+        /// </summary>
+        public short? VersionControl2 => Header.VersionControl2;
+        #endregion
+
+        public static implicit operator MajorRecordHeader(MajorRecordPinFrame pin)
+        {
+            return pin.Header;
+        }
+
+        public static implicit operator MajorRecordFrame(MajorRecordPinFrame pin)
+        {
+            return pin.Frame;
+        }
     }
 }

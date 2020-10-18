@@ -2,6 +2,7 @@ using Mutagen.Bethesda.Internals;
 using Noggog;
 using System;
 using System.Buffers.Binary;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
@@ -110,7 +111,7 @@ namespace Mutagen.Bethesda.Binary
     /// <summary>
     /// A struct that overlays on top of bytes that is able to retrive Group data on demand.
     /// </summary>
-    public struct GroupFrame
+    public struct GroupFrame : IEnumerable<MajorRecordPinFrame>
     {
         private readonly GroupHeader _header { get; }
         
@@ -153,6 +154,11 @@ namespace Mutagen.Bethesda.Binary
         
         /// <inheritdoc/>
         public override string ToString() => this._header.ToString();
+
+        /// <inheritdoc/>
+        public IEnumerator<MajorRecordPinFrame> GetEnumerator() => HeaderExt.EnumerateRecords(this).GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
 
         #region Header Forwarding
         public GameConstants Meta => _header.Meta;

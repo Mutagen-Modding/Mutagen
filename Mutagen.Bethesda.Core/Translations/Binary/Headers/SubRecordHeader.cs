@@ -213,7 +213,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         /// <inheritdoc/>
-        public override string ToString() => $"{this.Frame.ToString()} @ {Location}";
+        public override string ToString() => $"{this.Frame} @ {Location}";
 
         #region Forwarding
         /// <summary>
