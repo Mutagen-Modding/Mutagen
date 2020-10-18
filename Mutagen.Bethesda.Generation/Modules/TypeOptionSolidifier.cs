@@ -25,6 +25,8 @@ namespace Mutagen.Bethesda.Generation
             FileGeneration fg = new FileGeneration();
 
             fg.AppendLine("using System.Collections.Generic;");
+            fg.AppendLine("using Mutagen.Bethesda.Internals;");
+            fg.AppendLine();
             using (var n = new NamespaceWrapper(fg, proto.DefaultNamespace))
             {
                 using (var c = new ClassWrapper(fg, "TypeOptionSolidifierMixIns"))
@@ -42,26 +44,36 @@ namespace Mutagen.Bethesda.Generation
                             if (!await obj.IsMajorRecord()) continue;
 
                             using (var args = new FunctionWrapper(fg,
-                                $"public static TypedLoadOrderAccess<{obj.Interface(getter: true)}> {obj.Name}"))
+                                $"public static TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}> {obj.Name}"))
                             {
                                 args.Add($"this IEnumerable<IModListing<I{proto.Protocol.Namespace}ModGetter>> listings");
                                 args.Add("bool includeDeletedRecords = false");
                             }
                             using (new BraceWrapper(fg))
                             {
-                                fg.AppendLine($"return new TypedLoadOrderAccess<{obj.Interface(getter: true)}>(() => listings.WinningOverrides<{obj.Interface(getter: true)}>(includeDeletedRecords: includeDeletedRecords));");
+                                using (var args = new ArgsWrapper(fg,
+                                    $"return new TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>"))
+                                {
+                                    args.Add($"() => listings.WinningOverrides<{obj.Interface(getter: true)}>(includeDeletedRecords: includeDeletedRecords)");
+                                    args.Add($"() => listings.WinningOverrideContexts<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>(includeDeletedRecords: includeDeletedRecords)");
+                                }
                             }
                             fg.AppendLine();
 
                             using (var args = new FunctionWrapper(fg,
-                                $"public static TypedLoadOrderAccess<{obj.Interface(getter: true)}> {obj.Name}"))
+                                $"public static TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}> {obj.Name}"))
                             {
                                 args.Add($"this IEnumerable<I{proto.Protocol.Namespace}ModGetter> mods");
                                 args.Add("bool includeDeletedRecords = false");
                             }
                             using (new BraceWrapper(fg))
                             {
-                                fg.AppendLine($"return new TypedLoadOrderAccess<{obj.Interface(getter: true)}>(() => mods.WinningOverrides<{obj.Interface(getter: true)}>(includeDeletedRecords: includeDeletedRecords));");
+                                using (var args = new ArgsWrapper(fg,
+                                    $"return new TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>"))
+                                {
+                                    args.Add($"() => mods.WinningOverrides<{obj.Interface(getter: true)}>(includeDeletedRecords: includeDeletedRecords)");
+                                    args.Add($"() => mods.WinningOverrideContexts<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>(includeDeletedRecords: includeDeletedRecords)");
+                                }
                             }
                             fg.AppendLine();
                             generate = true;
@@ -76,26 +88,36 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 var getter = $"{interf.Key}Getter";
                                 using (var args = new FunctionWrapper(fg,
-                                    $"public static TypedLoadOrderAccess<{getter}> {interf.Key}"))
+                                    $"public static TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, {interf.Key}, {getter}> {interf.Key}"))
                                 {
                                     args.Add($"this IEnumerable<IModListing<I{proto.Protocol.Namespace}ModGetter>> listings");
                                     args.Add("bool includeDeletedRecords = false");
                                 }
                                 using (new BraceWrapper(fg))
                                 {
-                                    fg.AppendLine($"return new TypedLoadOrderAccess<{getter}>(() => listings.WinningOverrides<{getter}>(includeDeletedRecords: includeDeletedRecords));");
+                                    using (var args = new ArgsWrapper(fg,
+                                        $"return new TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, {interf.Key}, {getter}>"))
+                                    {
+                                        args.Add($"() => listings.WinningOverrides<{getter}>(includeDeletedRecords: includeDeletedRecords)");
+                                        args.Add($"() => listings.WinningOverrideContexts<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {interf.Key}, {getter}>(includeDeletedRecords: includeDeletedRecords)");
+                                    }
                                 }
                                 fg.AppendLine();
 
                                 using (var args = new FunctionWrapper(fg,
-                                    $"public static TypedLoadOrderAccess<{getter}> {interf.Key}"))
+                                    $"public static TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, {interf.Key}, {getter}> {interf.Key}"))
                                 {
                                     args.Add($"this IEnumerable<I{proto.Protocol.Namespace}ModGetter> mods");
                                     args.Add("bool includeDeletedRecords = false");
                                 }
                                 using (new BraceWrapper(fg))
                                 {
-                                    fg.AppendLine($"return new TypedLoadOrderAccess<{getter}>(() => mods.WinningOverrides<{getter}>(includeDeletedRecords: includeDeletedRecords));");
+                                    using (var args = new ArgsWrapper(fg,
+                                        $"return new TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, {interf.Key}, {getter}>"))
+                                    {
+                                        args.Add($"() => mods.WinningOverrides<{getter}>(includeDeletedRecords: includeDeletedRecords)");
+                                        args.Add($"() => mods.WinningOverrideContexts<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {interf.Key}, {getter}>(includeDeletedRecords: includeDeletedRecords)");
+                                    }
                                 }
                                 fg.AppendLine();
                             }
