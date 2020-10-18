@@ -4,2317 +4,2317 @@ namespace Mutagen.Bethesda.Skyrim
     public static class TypeOptionSolidifierMixIns
     {
         #region Normal
-        public static IEnumerable<IAcousticSpaceGetter> AcousticSpace(
+        public static TypedLoadOrderAccess<IAcousticSpaceGetter> AcousticSpace(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IAcousticSpaceGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IAcousticSpaceGetter>(() => listings.WinningOverrides<IAcousticSpaceGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IAcousticSpaceGetter> AcousticSpace(
+        public static TypedLoadOrderAccess<IAcousticSpaceGetter> AcousticSpace(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IAcousticSpaceGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IAcousticSpaceGetter>(() => mods.WinningOverrides<IAcousticSpaceGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IActionRecordGetter> ActionRecord(
+        public static TypedLoadOrderAccess<IActionRecordGetter> ActionRecord(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IActionRecordGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IActionRecordGetter>(() => listings.WinningOverrides<IActionRecordGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IActionRecordGetter> ActionRecord(
+        public static TypedLoadOrderAccess<IActionRecordGetter> ActionRecord(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IActionRecordGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IActionRecordGetter>(() => mods.WinningOverrides<IActionRecordGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IActivatorGetter> Activator(
+        public static TypedLoadOrderAccess<IActivatorGetter> Activator(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IActivatorGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IActivatorGetter>(() => listings.WinningOverrides<IActivatorGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IActivatorGetter> Activator(
+        public static TypedLoadOrderAccess<IActivatorGetter> Activator(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IActivatorGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IActivatorGetter>(() => mods.WinningOverrides<IActivatorGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IActorValueInformationGetter> ActorValueInformation(
+        public static TypedLoadOrderAccess<IActorValueInformationGetter> ActorValueInformation(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IActorValueInformationGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IActorValueInformationGetter>(() => listings.WinningOverrides<IActorValueInformationGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IActorValueInformationGetter> ActorValueInformation(
+        public static TypedLoadOrderAccess<IActorValueInformationGetter> ActorValueInformation(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IActorValueInformationGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IActorValueInformationGetter>(() => mods.WinningOverrides<IActorValueInformationGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IAddonNodeGetter> AddonNode(
+        public static TypedLoadOrderAccess<IAddonNodeGetter> AddonNode(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IAddonNodeGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IAddonNodeGetter>(() => listings.WinningOverrides<IAddonNodeGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IAddonNodeGetter> AddonNode(
+        public static TypedLoadOrderAccess<IAddonNodeGetter> AddonNode(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IAddonNodeGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IAddonNodeGetter>(() => mods.WinningOverrides<IAddonNodeGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IAlchemicalApparatusGetter> AlchemicalApparatus(
+        public static TypedLoadOrderAccess<IAlchemicalApparatusGetter> AlchemicalApparatus(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IAlchemicalApparatusGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IAlchemicalApparatusGetter>(() => listings.WinningOverrides<IAlchemicalApparatusGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IAlchemicalApparatusGetter> AlchemicalApparatus(
+        public static TypedLoadOrderAccess<IAlchemicalApparatusGetter> AlchemicalApparatus(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IAlchemicalApparatusGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IAlchemicalApparatusGetter>(() => mods.WinningOverrides<IAlchemicalApparatusGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IAmmunitionGetter> Ammunition(
+        public static TypedLoadOrderAccess<IAmmunitionGetter> Ammunition(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IAmmunitionGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IAmmunitionGetter>(() => listings.WinningOverrides<IAmmunitionGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IAmmunitionGetter> Ammunition(
+        public static TypedLoadOrderAccess<IAmmunitionGetter> Ammunition(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IAmmunitionGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IAmmunitionGetter>(() => mods.WinningOverrides<IAmmunitionGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IANavigationMeshGetter> ANavigationMesh(
+        public static TypedLoadOrderAccess<IANavigationMeshGetter> ANavigationMesh(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IANavigationMeshGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IANavigationMeshGetter>(() => listings.WinningOverrides<IANavigationMeshGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IANavigationMeshGetter> ANavigationMesh(
+        public static TypedLoadOrderAccess<IANavigationMeshGetter> ANavigationMesh(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IANavigationMeshGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IANavigationMeshGetter>(() => mods.WinningOverrides<IANavigationMeshGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IAnimatedObjectGetter> AnimatedObject(
+        public static TypedLoadOrderAccess<IAnimatedObjectGetter> AnimatedObject(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IAnimatedObjectGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IAnimatedObjectGetter>(() => listings.WinningOverrides<IAnimatedObjectGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IAnimatedObjectGetter> AnimatedObject(
+        public static TypedLoadOrderAccess<IAnimatedObjectGetter> AnimatedObject(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IAnimatedObjectGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IAnimatedObjectGetter>(() => mods.WinningOverrides<IAnimatedObjectGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IAPlacedTrapGetter> APlacedTrap(
+        public static TypedLoadOrderAccess<IAPlacedTrapGetter> APlacedTrap(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IAPlacedTrapGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IAPlacedTrapGetter>(() => listings.WinningOverrides<IAPlacedTrapGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IAPlacedTrapGetter> APlacedTrap(
+        public static TypedLoadOrderAccess<IAPlacedTrapGetter> APlacedTrap(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IAPlacedTrapGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IAPlacedTrapGetter>(() => mods.WinningOverrides<IAPlacedTrapGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IArmorGetter> Armor(
+        public static TypedLoadOrderAccess<IArmorGetter> Armor(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IArmorGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IArmorGetter>(() => listings.WinningOverrides<IArmorGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IArmorGetter> Armor(
+        public static TypedLoadOrderAccess<IArmorGetter> Armor(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IArmorGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IArmorGetter>(() => mods.WinningOverrides<IArmorGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IArmorAddonGetter> ArmorAddon(
+        public static TypedLoadOrderAccess<IArmorAddonGetter> ArmorAddon(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IArmorAddonGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IArmorAddonGetter>(() => listings.WinningOverrides<IArmorAddonGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IArmorAddonGetter> ArmorAddon(
+        public static TypedLoadOrderAccess<IArmorAddonGetter> ArmorAddon(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IArmorAddonGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IArmorAddonGetter>(() => mods.WinningOverrides<IArmorAddonGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IArtObjectGetter> ArtObject(
+        public static TypedLoadOrderAccess<IArtObjectGetter> ArtObject(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IArtObjectGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IArtObjectGetter>(() => listings.WinningOverrides<IArtObjectGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IArtObjectGetter> ArtObject(
+        public static TypedLoadOrderAccess<IArtObjectGetter> ArtObject(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IArtObjectGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IArtObjectGetter>(() => mods.WinningOverrides<IArtObjectGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IASpellGetter> ASpell(
+        public static TypedLoadOrderAccess<IASpellGetter> ASpell(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IASpellGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IASpellGetter>(() => listings.WinningOverrides<IASpellGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IASpellGetter> ASpell(
+        public static TypedLoadOrderAccess<IASpellGetter> ASpell(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IASpellGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IASpellGetter>(() => mods.WinningOverrides<IASpellGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IAssociationTypeGetter> AssociationType(
+        public static TypedLoadOrderAccess<IAssociationTypeGetter> AssociationType(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IAssociationTypeGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IAssociationTypeGetter>(() => listings.WinningOverrides<IAssociationTypeGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IAssociationTypeGetter> AssociationType(
+        public static TypedLoadOrderAccess<IAssociationTypeGetter> AssociationType(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IAssociationTypeGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IAssociationTypeGetter>(() => mods.WinningOverrides<IAssociationTypeGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IAStoryManagerNodeGetter> AStoryManagerNode(
+        public static TypedLoadOrderAccess<IAStoryManagerNodeGetter> AStoryManagerNode(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IAStoryManagerNodeGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IAStoryManagerNodeGetter>(() => listings.WinningOverrides<IAStoryManagerNodeGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IAStoryManagerNodeGetter> AStoryManagerNode(
+        public static TypedLoadOrderAccess<IAStoryManagerNodeGetter> AStoryManagerNode(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IAStoryManagerNodeGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IAStoryManagerNodeGetter>(() => mods.WinningOverrides<IAStoryManagerNodeGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IBodyPartDataGetter> BodyPartData(
+        public static TypedLoadOrderAccess<IBodyPartDataGetter> BodyPartData(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IBodyPartDataGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IBodyPartDataGetter>(() => listings.WinningOverrides<IBodyPartDataGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IBodyPartDataGetter> BodyPartData(
+        public static TypedLoadOrderAccess<IBodyPartDataGetter> BodyPartData(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IBodyPartDataGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IBodyPartDataGetter>(() => mods.WinningOverrides<IBodyPartDataGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IBookGetter> Book(
+        public static TypedLoadOrderAccess<IBookGetter> Book(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IBookGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IBookGetter>(() => listings.WinningOverrides<IBookGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IBookGetter> Book(
+        public static TypedLoadOrderAccess<IBookGetter> Book(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IBookGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IBookGetter>(() => mods.WinningOverrides<IBookGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ICameraPathGetter> CameraPath(
+        public static TypedLoadOrderAccess<ICameraPathGetter> CameraPath(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<ICameraPathGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ICameraPathGetter>(() => listings.WinningOverrides<ICameraPathGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ICameraPathGetter> CameraPath(
+        public static TypedLoadOrderAccess<ICameraPathGetter> CameraPath(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<ICameraPathGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ICameraPathGetter>(() => mods.WinningOverrides<ICameraPathGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ICameraShotGetter> CameraShot(
+        public static TypedLoadOrderAccess<ICameraShotGetter> CameraShot(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<ICameraShotGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ICameraShotGetter>(() => listings.WinningOverrides<ICameraShotGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ICameraShotGetter> CameraShot(
+        public static TypedLoadOrderAccess<ICameraShotGetter> CameraShot(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<ICameraShotGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ICameraShotGetter>(() => mods.WinningOverrides<ICameraShotGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ICellGetter> Cell(
+        public static TypedLoadOrderAccess<ICellGetter> Cell(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<ICellGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ICellGetter>(() => listings.WinningOverrides<ICellGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ICellGetter> Cell(
+        public static TypedLoadOrderAccess<ICellGetter> Cell(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<ICellGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ICellGetter>(() => mods.WinningOverrides<ICellGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ICellNavigationMeshGetter> CellNavigationMesh(
+        public static TypedLoadOrderAccess<ICellNavigationMeshGetter> CellNavigationMesh(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<ICellNavigationMeshGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ICellNavigationMeshGetter>(() => listings.WinningOverrides<ICellNavigationMeshGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ICellNavigationMeshGetter> CellNavigationMesh(
+        public static TypedLoadOrderAccess<ICellNavigationMeshGetter> CellNavigationMesh(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<ICellNavigationMeshGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ICellNavigationMeshGetter>(() => mods.WinningOverrides<ICellNavigationMeshGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IClassGetter> Class(
+        public static TypedLoadOrderAccess<IClassGetter> Class(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IClassGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IClassGetter>(() => listings.WinningOverrides<IClassGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IClassGetter> Class(
+        public static TypedLoadOrderAccess<IClassGetter> Class(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IClassGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IClassGetter>(() => mods.WinningOverrides<IClassGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IClimateGetter> Climate(
+        public static TypedLoadOrderAccess<IClimateGetter> Climate(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IClimateGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IClimateGetter>(() => listings.WinningOverrides<IClimateGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IClimateGetter> Climate(
+        public static TypedLoadOrderAccess<IClimateGetter> Climate(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IClimateGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IClimateGetter>(() => mods.WinningOverrides<IClimateGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ICollisionLayerGetter> CollisionLayer(
+        public static TypedLoadOrderAccess<ICollisionLayerGetter> CollisionLayer(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<ICollisionLayerGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ICollisionLayerGetter>(() => listings.WinningOverrides<ICollisionLayerGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ICollisionLayerGetter> CollisionLayer(
+        public static TypedLoadOrderAccess<ICollisionLayerGetter> CollisionLayer(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<ICollisionLayerGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ICollisionLayerGetter>(() => mods.WinningOverrides<ICollisionLayerGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IColorRecordGetter> ColorRecord(
+        public static TypedLoadOrderAccess<IColorRecordGetter> ColorRecord(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IColorRecordGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IColorRecordGetter>(() => listings.WinningOverrides<IColorRecordGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IColorRecordGetter> ColorRecord(
+        public static TypedLoadOrderAccess<IColorRecordGetter> ColorRecord(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IColorRecordGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IColorRecordGetter>(() => mods.WinningOverrides<IColorRecordGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ICombatStyleGetter> CombatStyle(
+        public static TypedLoadOrderAccess<ICombatStyleGetter> CombatStyle(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<ICombatStyleGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ICombatStyleGetter>(() => listings.WinningOverrides<ICombatStyleGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ICombatStyleGetter> CombatStyle(
+        public static TypedLoadOrderAccess<ICombatStyleGetter> CombatStyle(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<ICombatStyleGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ICombatStyleGetter>(() => mods.WinningOverrides<ICombatStyleGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IConstructibleObjectGetter> ConstructibleObject(
+        public static TypedLoadOrderAccess<IConstructibleObjectGetter> ConstructibleObject(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IConstructibleObjectGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IConstructibleObjectGetter>(() => listings.WinningOverrides<IConstructibleObjectGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IConstructibleObjectGetter> ConstructibleObject(
+        public static TypedLoadOrderAccess<IConstructibleObjectGetter> ConstructibleObject(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IConstructibleObjectGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IConstructibleObjectGetter>(() => mods.WinningOverrides<IConstructibleObjectGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IContainerGetter> Container(
+        public static TypedLoadOrderAccess<IContainerGetter> Container(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IContainerGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IContainerGetter>(() => listings.WinningOverrides<IContainerGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IContainerGetter> Container(
+        public static TypedLoadOrderAccess<IContainerGetter> Container(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IContainerGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IContainerGetter>(() => mods.WinningOverrides<IContainerGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IDebrisGetter> Debris(
+        public static TypedLoadOrderAccess<IDebrisGetter> Debris(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IDebrisGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IDebrisGetter>(() => listings.WinningOverrides<IDebrisGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IDebrisGetter> Debris(
+        public static TypedLoadOrderAccess<IDebrisGetter> Debris(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IDebrisGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IDebrisGetter>(() => mods.WinningOverrides<IDebrisGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IDefaultObjectManagerGetter> DefaultObjectManager(
+        public static TypedLoadOrderAccess<IDefaultObjectManagerGetter> DefaultObjectManager(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IDefaultObjectManagerGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IDefaultObjectManagerGetter>(() => listings.WinningOverrides<IDefaultObjectManagerGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IDefaultObjectManagerGetter> DefaultObjectManager(
+        public static TypedLoadOrderAccess<IDefaultObjectManagerGetter> DefaultObjectManager(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IDefaultObjectManagerGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IDefaultObjectManagerGetter>(() => mods.WinningOverrides<IDefaultObjectManagerGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IDialogBranchGetter> DialogBranch(
+        public static TypedLoadOrderAccess<IDialogBranchGetter> DialogBranch(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IDialogBranchGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IDialogBranchGetter>(() => listings.WinningOverrides<IDialogBranchGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IDialogBranchGetter> DialogBranch(
+        public static TypedLoadOrderAccess<IDialogBranchGetter> DialogBranch(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IDialogBranchGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IDialogBranchGetter>(() => mods.WinningOverrides<IDialogBranchGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IDialogResponsesGetter> DialogResponses(
+        public static TypedLoadOrderAccess<IDialogResponsesGetter> DialogResponses(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IDialogResponsesGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IDialogResponsesGetter>(() => listings.WinningOverrides<IDialogResponsesGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IDialogResponsesGetter> DialogResponses(
+        public static TypedLoadOrderAccess<IDialogResponsesGetter> DialogResponses(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IDialogResponsesGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IDialogResponsesGetter>(() => mods.WinningOverrides<IDialogResponsesGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IDialogTopicGetter> DialogTopic(
+        public static TypedLoadOrderAccess<IDialogTopicGetter> DialogTopic(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IDialogTopicGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IDialogTopicGetter>(() => listings.WinningOverrides<IDialogTopicGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IDialogTopicGetter> DialogTopic(
+        public static TypedLoadOrderAccess<IDialogTopicGetter> DialogTopic(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IDialogTopicGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IDialogTopicGetter>(() => mods.WinningOverrides<IDialogTopicGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IDialogViewGetter> DialogView(
+        public static TypedLoadOrderAccess<IDialogViewGetter> DialogView(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IDialogViewGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IDialogViewGetter>(() => listings.WinningOverrides<IDialogViewGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IDialogViewGetter> DialogView(
+        public static TypedLoadOrderAccess<IDialogViewGetter> DialogView(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IDialogViewGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IDialogViewGetter>(() => mods.WinningOverrides<IDialogViewGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IDoorGetter> Door(
+        public static TypedLoadOrderAccess<IDoorGetter> Door(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IDoorGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IDoorGetter>(() => listings.WinningOverrides<IDoorGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IDoorGetter> Door(
+        public static TypedLoadOrderAccess<IDoorGetter> Door(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IDoorGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IDoorGetter>(() => mods.WinningOverrides<IDoorGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IDualCastDataGetter> DualCastData(
+        public static TypedLoadOrderAccess<IDualCastDataGetter> DualCastData(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IDualCastDataGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IDualCastDataGetter>(() => listings.WinningOverrides<IDualCastDataGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IDualCastDataGetter> DualCastData(
+        public static TypedLoadOrderAccess<IDualCastDataGetter> DualCastData(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IDualCastDataGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IDualCastDataGetter>(() => mods.WinningOverrides<IDualCastDataGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IEffectShaderGetter> EffectShader(
+        public static TypedLoadOrderAccess<IEffectShaderGetter> EffectShader(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IEffectShaderGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IEffectShaderGetter>(() => listings.WinningOverrides<IEffectShaderGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IEffectShaderGetter> EffectShader(
+        public static TypedLoadOrderAccess<IEffectShaderGetter> EffectShader(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IEffectShaderGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IEffectShaderGetter>(() => mods.WinningOverrides<IEffectShaderGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IEncounterZoneGetter> EncounterZone(
+        public static TypedLoadOrderAccess<IEncounterZoneGetter> EncounterZone(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IEncounterZoneGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IEncounterZoneGetter>(() => listings.WinningOverrides<IEncounterZoneGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IEncounterZoneGetter> EncounterZone(
+        public static TypedLoadOrderAccess<IEncounterZoneGetter> EncounterZone(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IEncounterZoneGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IEncounterZoneGetter>(() => mods.WinningOverrides<IEncounterZoneGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IEquipTypeGetter> EquipType(
+        public static TypedLoadOrderAccess<IEquipTypeGetter> EquipType(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IEquipTypeGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IEquipTypeGetter>(() => listings.WinningOverrides<IEquipTypeGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IEquipTypeGetter> EquipType(
+        public static TypedLoadOrderAccess<IEquipTypeGetter> EquipType(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IEquipTypeGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IEquipTypeGetter>(() => mods.WinningOverrides<IEquipTypeGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IExplosionGetter> Explosion(
+        public static TypedLoadOrderAccess<IExplosionGetter> Explosion(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IExplosionGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IExplosionGetter>(() => listings.WinningOverrides<IExplosionGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IExplosionGetter> Explosion(
+        public static TypedLoadOrderAccess<IExplosionGetter> Explosion(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IExplosionGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IExplosionGetter>(() => mods.WinningOverrides<IExplosionGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IEyesGetter> Eyes(
+        public static TypedLoadOrderAccess<IEyesGetter> Eyes(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IEyesGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IEyesGetter>(() => listings.WinningOverrides<IEyesGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IEyesGetter> Eyes(
+        public static TypedLoadOrderAccess<IEyesGetter> Eyes(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IEyesGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IEyesGetter>(() => mods.WinningOverrides<IEyesGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IFactionGetter> Faction(
+        public static TypedLoadOrderAccess<IFactionGetter> Faction(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IFactionGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IFactionGetter>(() => listings.WinningOverrides<IFactionGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IFactionGetter> Faction(
+        public static TypedLoadOrderAccess<IFactionGetter> Faction(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IFactionGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IFactionGetter>(() => mods.WinningOverrides<IFactionGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IFloraGetter> Flora(
+        public static TypedLoadOrderAccess<IFloraGetter> Flora(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IFloraGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IFloraGetter>(() => listings.WinningOverrides<IFloraGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IFloraGetter> Flora(
+        public static TypedLoadOrderAccess<IFloraGetter> Flora(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IFloraGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IFloraGetter>(() => mods.WinningOverrides<IFloraGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IFootstepGetter> Footstep(
+        public static TypedLoadOrderAccess<IFootstepGetter> Footstep(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IFootstepGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IFootstepGetter>(() => listings.WinningOverrides<IFootstepGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IFootstepGetter> Footstep(
+        public static TypedLoadOrderAccess<IFootstepGetter> Footstep(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IFootstepGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IFootstepGetter>(() => mods.WinningOverrides<IFootstepGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IFootstepSetGetter> FootstepSet(
+        public static TypedLoadOrderAccess<IFootstepSetGetter> FootstepSet(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IFootstepSetGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IFootstepSetGetter>(() => listings.WinningOverrides<IFootstepSetGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IFootstepSetGetter> FootstepSet(
+        public static TypedLoadOrderAccess<IFootstepSetGetter> FootstepSet(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IFootstepSetGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IFootstepSetGetter>(() => mods.WinningOverrides<IFootstepSetGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IFormListGetter> FormList(
+        public static TypedLoadOrderAccess<IFormListGetter> FormList(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IFormListGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IFormListGetter>(() => listings.WinningOverrides<IFormListGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IFormListGetter> FormList(
+        public static TypedLoadOrderAccess<IFormListGetter> FormList(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IFormListGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IFormListGetter>(() => mods.WinningOverrides<IFormListGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IFurnitureGetter> Furniture(
+        public static TypedLoadOrderAccess<IFurnitureGetter> Furniture(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IFurnitureGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IFurnitureGetter>(() => listings.WinningOverrides<IFurnitureGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IFurnitureGetter> Furniture(
+        public static TypedLoadOrderAccess<IFurnitureGetter> Furniture(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IFurnitureGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IFurnitureGetter>(() => mods.WinningOverrides<IFurnitureGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IGameSettingGetter> GameSetting(
+        public static TypedLoadOrderAccess<IGameSettingGetter> GameSetting(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IGameSettingGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IGameSettingGetter>(() => listings.WinningOverrides<IGameSettingGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IGameSettingGetter> GameSetting(
+        public static TypedLoadOrderAccess<IGameSettingGetter> GameSetting(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IGameSettingGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IGameSettingGetter>(() => mods.WinningOverrides<IGameSettingGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IGameSettingBoolGetter> GameSettingBool(
+        public static TypedLoadOrderAccess<IGameSettingBoolGetter> GameSettingBool(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IGameSettingBoolGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IGameSettingBoolGetter>(() => listings.WinningOverrides<IGameSettingBoolGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IGameSettingBoolGetter> GameSettingBool(
+        public static TypedLoadOrderAccess<IGameSettingBoolGetter> GameSettingBool(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IGameSettingBoolGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IGameSettingBoolGetter>(() => mods.WinningOverrides<IGameSettingBoolGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IGameSettingFloatGetter> GameSettingFloat(
+        public static TypedLoadOrderAccess<IGameSettingFloatGetter> GameSettingFloat(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IGameSettingFloatGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IGameSettingFloatGetter>(() => listings.WinningOverrides<IGameSettingFloatGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IGameSettingFloatGetter> GameSettingFloat(
+        public static TypedLoadOrderAccess<IGameSettingFloatGetter> GameSettingFloat(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IGameSettingFloatGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IGameSettingFloatGetter>(() => mods.WinningOverrides<IGameSettingFloatGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IGameSettingIntGetter> GameSettingInt(
+        public static TypedLoadOrderAccess<IGameSettingIntGetter> GameSettingInt(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IGameSettingIntGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IGameSettingIntGetter>(() => listings.WinningOverrides<IGameSettingIntGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IGameSettingIntGetter> GameSettingInt(
+        public static TypedLoadOrderAccess<IGameSettingIntGetter> GameSettingInt(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IGameSettingIntGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IGameSettingIntGetter>(() => mods.WinningOverrides<IGameSettingIntGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IGameSettingStringGetter> GameSettingString(
+        public static TypedLoadOrderAccess<IGameSettingStringGetter> GameSettingString(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IGameSettingStringGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IGameSettingStringGetter>(() => listings.WinningOverrides<IGameSettingStringGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IGameSettingStringGetter> GameSettingString(
+        public static TypedLoadOrderAccess<IGameSettingStringGetter> GameSettingString(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IGameSettingStringGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IGameSettingStringGetter>(() => mods.WinningOverrides<IGameSettingStringGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IGlobalGetter> Global(
+        public static TypedLoadOrderAccess<IGlobalGetter> Global(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IGlobalGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IGlobalGetter>(() => listings.WinningOverrides<IGlobalGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IGlobalGetter> Global(
+        public static TypedLoadOrderAccess<IGlobalGetter> Global(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IGlobalGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IGlobalGetter>(() => mods.WinningOverrides<IGlobalGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IGlobalFloatGetter> GlobalFloat(
+        public static TypedLoadOrderAccess<IGlobalFloatGetter> GlobalFloat(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IGlobalFloatGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IGlobalFloatGetter>(() => listings.WinningOverrides<IGlobalFloatGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IGlobalFloatGetter> GlobalFloat(
+        public static TypedLoadOrderAccess<IGlobalFloatGetter> GlobalFloat(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IGlobalFloatGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IGlobalFloatGetter>(() => mods.WinningOverrides<IGlobalFloatGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IGlobalIntGetter> GlobalInt(
+        public static TypedLoadOrderAccess<IGlobalIntGetter> GlobalInt(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IGlobalIntGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IGlobalIntGetter>(() => listings.WinningOverrides<IGlobalIntGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IGlobalIntGetter> GlobalInt(
+        public static TypedLoadOrderAccess<IGlobalIntGetter> GlobalInt(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IGlobalIntGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IGlobalIntGetter>(() => mods.WinningOverrides<IGlobalIntGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IGlobalShortGetter> GlobalShort(
+        public static TypedLoadOrderAccess<IGlobalShortGetter> GlobalShort(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IGlobalShortGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IGlobalShortGetter>(() => listings.WinningOverrides<IGlobalShortGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IGlobalShortGetter> GlobalShort(
+        public static TypedLoadOrderAccess<IGlobalShortGetter> GlobalShort(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IGlobalShortGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IGlobalShortGetter>(() => mods.WinningOverrides<IGlobalShortGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IGrassGetter> Grass(
+        public static TypedLoadOrderAccess<IGrassGetter> Grass(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IGrassGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IGrassGetter>(() => listings.WinningOverrides<IGrassGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IGrassGetter> Grass(
+        public static TypedLoadOrderAccess<IGrassGetter> Grass(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IGrassGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IGrassGetter>(() => mods.WinningOverrides<IGrassGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IHairGetter> Hair(
+        public static TypedLoadOrderAccess<IHairGetter> Hair(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IHairGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IHairGetter>(() => listings.WinningOverrides<IHairGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IHairGetter> Hair(
+        public static TypedLoadOrderAccess<IHairGetter> Hair(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IHairGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IHairGetter>(() => mods.WinningOverrides<IHairGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IHazardGetter> Hazard(
+        public static TypedLoadOrderAccess<IHazardGetter> Hazard(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IHazardGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IHazardGetter>(() => listings.WinningOverrides<IHazardGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IHazardGetter> Hazard(
+        public static TypedLoadOrderAccess<IHazardGetter> Hazard(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IHazardGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IHazardGetter>(() => mods.WinningOverrides<IHazardGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IHeadPartGetter> HeadPart(
+        public static TypedLoadOrderAccess<IHeadPartGetter> HeadPart(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IHeadPartGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IHeadPartGetter>(() => listings.WinningOverrides<IHeadPartGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IHeadPartGetter> HeadPart(
+        public static TypedLoadOrderAccess<IHeadPartGetter> HeadPart(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IHeadPartGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IHeadPartGetter>(() => mods.WinningOverrides<IHeadPartGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IIdleAnimationGetter> IdleAnimation(
+        public static TypedLoadOrderAccess<IIdleAnimationGetter> IdleAnimation(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IIdleAnimationGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IIdleAnimationGetter>(() => listings.WinningOverrides<IIdleAnimationGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IIdleAnimationGetter> IdleAnimation(
+        public static TypedLoadOrderAccess<IIdleAnimationGetter> IdleAnimation(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IIdleAnimationGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IIdleAnimationGetter>(() => mods.WinningOverrides<IIdleAnimationGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IIdleMarkerGetter> IdleMarker(
+        public static TypedLoadOrderAccess<IIdleMarkerGetter> IdleMarker(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IIdleMarkerGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IIdleMarkerGetter>(() => listings.WinningOverrides<IIdleMarkerGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IIdleMarkerGetter> IdleMarker(
+        public static TypedLoadOrderAccess<IIdleMarkerGetter> IdleMarker(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IIdleMarkerGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IIdleMarkerGetter>(() => mods.WinningOverrides<IIdleMarkerGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IImageSpaceGetter> ImageSpace(
+        public static TypedLoadOrderAccess<IImageSpaceGetter> ImageSpace(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IImageSpaceGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IImageSpaceGetter>(() => listings.WinningOverrides<IImageSpaceGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IImageSpaceGetter> ImageSpace(
+        public static TypedLoadOrderAccess<IImageSpaceGetter> ImageSpace(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IImageSpaceGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IImageSpaceGetter>(() => mods.WinningOverrides<IImageSpaceGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IImageSpaceAdapterGetter> ImageSpaceAdapter(
+        public static TypedLoadOrderAccess<IImageSpaceAdapterGetter> ImageSpaceAdapter(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IImageSpaceAdapterGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IImageSpaceAdapterGetter>(() => listings.WinningOverrides<IImageSpaceAdapterGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IImageSpaceAdapterGetter> ImageSpaceAdapter(
+        public static TypedLoadOrderAccess<IImageSpaceAdapterGetter> ImageSpaceAdapter(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IImageSpaceAdapterGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IImageSpaceAdapterGetter>(() => mods.WinningOverrides<IImageSpaceAdapterGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IImpactGetter> Impact(
+        public static TypedLoadOrderAccess<IImpactGetter> Impact(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IImpactGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IImpactGetter>(() => listings.WinningOverrides<IImpactGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IImpactGetter> Impact(
+        public static TypedLoadOrderAccess<IImpactGetter> Impact(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IImpactGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IImpactGetter>(() => mods.WinningOverrides<IImpactGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IImpactDataSetGetter> ImpactDataSet(
+        public static TypedLoadOrderAccess<IImpactDataSetGetter> ImpactDataSet(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IImpactDataSetGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IImpactDataSetGetter>(() => listings.WinningOverrides<IImpactDataSetGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IImpactDataSetGetter> ImpactDataSet(
+        public static TypedLoadOrderAccess<IImpactDataSetGetter> ImpactDataSet(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IImpactDataSetGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IImpactDataSetGetter>(() => mods.WinningOverrides<IImpactDataSetGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IIngestibleGetter> Ingestible(
+        public static TypedLoadOrderAccess<IIngestibleGetter> Ingestible(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IIngestibleGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IIngestibleGetter>(() => listings.WinningOverrides<IIngestibleGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IIngestibleGetter> Ingestible(
+        public static TypedLoadOrderAccess<IIngestibleGetter> Ingestible(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IIngestibleGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IIngestibleGetter>(() => mods.WinningOverrides<IIngestibleGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IIngredientGetter> Ingredient(
+        public static TypedLoadOrderAccess<IIngredientGetter> Ingredient(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IIngredientGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IIngredientGetter>(() => listings.WinningOverrides<IIngredientGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IIngredientGetter> Ingredient(
+        public static TypedLoadOrderAccess<IIngredientGetter> Ingredient(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IIngredientGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IIngredientGetter>(() => mods.WinningOverrides<IIngredientGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IKeyGetter> Key(
+        public static TypedLoadOrderAccess<IKeyGetter> Key(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IKeyGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IKeyGetter>(() => listings.WinningOverrides<IKeyGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IKeyGetter> Key(
+        public static TypedLoadOrderAccess<IKeyGetter> Key(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IKeyGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IKeyGetter>(() => mods.WinningOverrides<IKeyGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IKeywordGetter> Keyword(
+        public static TypedLoadOrderAccess<IKeywordGetter> Keyword(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IKeywordGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IKeywordGetter>(() => listings.WinningOverrides<IKeywordGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IKeywordGetter> Keyword(
+        public static TypedLoadOrderAccess<IKeywordGetter> Keyword(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IKeywordGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IKeywordGetter>(() => mods.WinningOverrides<IKeywordGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ILandscapeGetter> Landscape(
+        public static TypedLoadOrderAccess<ILandscapeGetter> Landscape(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<ILandscapeGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ILandscapeGetter>(() => listings.WinningOverrides<ILandscapeGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ILandscapeGetter> Landscape(
+        public static TypedLoadOrderAccess<ILandscapeGetter> Landscape(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<ILandscapeGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ILandscapeGetter>(() => mods.WinningOverrides<ILandscapeGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ILandscapeTextureGetter> LandscapeTexture(
+        public static TypedLoadOrderAccess<ILandscapeTextureGetter> LandscapeTexture(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<ILandscapeTextureGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ILandscapeTextureGetter>(() => listings.WinningOverrides<ILandscapeTextureGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ILandscapeTextureGetter> LandscapeTexture(
+        public static TypedLoadOrderAccess<ILandscapeTextureGetter> LandscapeTexture(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<ILandscapeTextureGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ILandscapeTextureGetter>(() => mods.WinningOverrides<ILandscapeTextureGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ILensFlareGetter> LensFlare(
+        public static TypedLoadOrderAccess<ILensFlareGetter> LensFlare(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<ILensFlareGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ILensFlareGetter>(() => listings.WinningOverrides<ILensFlareGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ILensFlareGetter> LensFlare(
+        public static TypedLoadOrderAccess<ILensFlareGetter> LensFlare(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<ILensFlareGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ILensFlareGetter>(() => mods.WinningOverrides<ILensFlareGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ILeveledItemGetter> LeveledItem(
+        public static TypedLoadOrderAccess<ILeveledItemGetter> LeveledItem(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<ILeveledItemGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ILeveledItemGetter>(() => listings.WinningOverrides<ILeveledItemGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ILeveledItemGetter> LeveledItem(
+        public static TypedLoadOrderAccess<ILeveledItemGetter> LeveledItem(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<ILeveledItemGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ILeveledItemGetter>(() => mods.WinningOverrides<ILeveledItemGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ILeveledNpcGetter> LeveledNpc(
+        public static TypedLoadOrderAccess<ILeveledNpcGetter> LeveledNpc(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<ILeveledNpcGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ILeveledNpcGetter>(() => listings.WinningOverrides<ILeveledNpcGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ILeveledNpcGetter> LeveledNpc(
+        public static TypedLoadOrderAccess<ILeveledNpcGetter> LeveledNpc(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<ILeveledNpcGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ILeveledNpcGetter>(() => mods.WinningOverrides<ILeveledNpcGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ILeveledSpellGetter> LeveledSpell(
+        public static TypedLoadOrderAccess<ILeveledSpellGetter> LeveledSpell(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<ILeveledSpellGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ILeveledSpellGetter>(() => listings.WinningOverrides<ILeveledSpellGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ILeveledSpellGetter> LeveledSpell(
+        public static TypedLoadOrderAccess<ILeveledSpellGetter> LeveledSpell(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<ILeveledSpellGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ILeveledSpellGetter>(() => mods.WinningOverrides<ILeveledSpellGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ILightGetter> Light(
+        public static TypedLoadOrderAccess<ILightGetter> Light(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<ILightGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ILightGetter>(() => listings.WinningOverrides<ILightGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ILightGetter> Light(
+        public static TypedLoadOrderAccess<ILightGetter> Light(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<ILightGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ILightGetter>(() => mods.WinningOverrides<ILightGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ILightingTemplateGetter> LightingTemplate(
+        public static TypedLoadOrderAccess<ILightingTemplateGetter> LightingTemplate(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<ILightingTemplateGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ILightingTemplateGetter>(() => listings.WinningOverrides<ILightingTemplateGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ILightingTemplateGetter> LightingTemplate(
+        public static TypedLoadOrderAccess<ILightingTemplateGetter> LightingTemplate(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<ILightingTemplateGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ILightingTemplateGetter>(() => mods.WinningOverrides<ILightingTemplateGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ILoadScreenGetter> LoadScreen(
+        public static TypedLoadOrderAccess<ILoadScreenGetter> LoadScreen(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<ILoadScreenGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ILoadScreenGetter>(() => listings.WinningOverrides<ILoadScreenGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ILoadScreenGetter> LoadScreen(
+        public static TypedLoadOrderAccess<ILoadScreenGetter> LoadScreen(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<ILoadScreenGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ILoadScreenGetter>(() => mods.WinningOverrides<ILoadScreenGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ILocationGetter> Location(
+        public static TypedLoadOrderAccess<ILocationGetter> Location(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<ILocationGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ILocationGetter>(() => listings.WinningOverrides<ILocationGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ILocationGetter> Location(
+        public static TypedLoadOrderAccess<ILocationGetter> Location(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<ILocationGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ILocationGetter>(() => mods.WinningOverrides<ILocationGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ILocationReferenceTypeGetter> LocationReferenceType(
+        public static TypedLoadOrderAccess<ILocationReferenceTypeGetter> LocationReferenceType(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<ILocationReferenceTypeGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ILocationReferenceTypeGetter>(() => listings.WinningOverrides<ILocationReferenceTypeGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ILocationReferenceTypeGetter> LocationReferenceType(
+        public static TypedLoadOrderAccess<ILocationReferenceTypeGetter> LocationReferenceType(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<ILocationReferenceTypeGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ILocationReferenceTypeGetter>(() => mods.WinningOverrides<ILocationReferenceTypeGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IMagicEffectGetter> MagicEffect(
+        public static TypedLoadOrderAccess<IMagicEffectGetter> MagicEffect(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IMagicEffectGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IMagicEffectGetter>(() => listings.WinningOverrides<IMagicEffectGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IMagicEffectGetter> MagicEffect(
+        public static TypedLoadOrderAccess<IMagicEffectGetter> MagicEffect(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IMagicEffectGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IMagicEffectGetter>(() => mods.WinningOverrides<IMagicEffectGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IMaterialObjectGetter> MaterialObject(
+        public static TypedLoadOrderAccess<IMaterialObjectGetter> MaterialObject(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IMaterialObjectGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IMaterialObjectGetter>(() => listings.WinningOverrides<IMaterialObjectGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IMaterialObjectGetter> MaterialObject(
+        public static TypedLoadOrderAccess<IMaterialObjectGetter> MaterialObject(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IMaterialObjectGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IMaterialObjectGetter>(() => mods.WinningOverrides<IMaterialObjectGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IMaterialTypeGetter> MaterialType(
+        public static TypedLoadOrderAccess<IMaterialTypeGetter> MaterialType(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IMaterialTypeGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IMaterialTypeGetter>(() => listings.WinningOverrides<IMaterialTypeGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IMaterialTypeGetter> MaterialType(
+        public static TypedLoadOrderAccess<IMaterialTypeGetter> MaterialType(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IMaterialTypeGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IMaterialTypeGetter>(() => mods.WinningOverrides<IMaterialTypeGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IMessageGetter> Message(
+        public static TypedLoadOrderAccess<IMessageGetter> Message(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IMessageGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IMessageGetter>(() => listings.WinningOverrides<IMessageGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IMessageGetter> Message(
+        public static TypedLoadOrderAccess<IMessageGetter> Message(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IMessageGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IMessageGetter>(() => mods.WinningOverrides<IMessageGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IMiscItemGetter> MiscItem(
+        public static TypedLoadOrderAccess<IMiscItemGetter> MiscItem(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IMiscItemGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IMiscItemGetter>(() => listings.WinningOverrides<IMiscItemGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IMiscItemGetter> MiscItem(
+        public static TypedLoadOrderAccess<IMiscItemGetter> MiscItem(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IMiscItemGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IMiscItemGetter>(() => mods.WinningOverrides<IMiscItemGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IMoveableStaticGetter> MoveableStatic(
+        public static TypedLoadOrderAccess<IMoveableStaticGetter> MoveableStatic(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IMoveableStaticGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IMoveableStaticGetter>(() => listings.WinningOverrides<IMoveableStaticGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IMoveableStaticGetter> MoveableStatic(
+        public static TypedLoadOrderAccess<IMoveableStaticGetter> MoveableStatic(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IMoveableStaticGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IMoveableStaticGetter>(() => mods.WinningOverrides<IMoveableStaticGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IMovementTypeGetter> MovementType(
+        public static TypedLoadOrderAccess<IMovementTypeGetter> MovementType(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IMovementTypeGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IMovementTypeGetter>(() => listings.WinningOverrides<IMovementTypeGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IMovementTypeGetter> MovementType(
+        public static TypedLoadOrderAccess<IMovementTypeGetter> MovementType(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IMovementTypeGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IMovementTypeGetter>(() => mods.WinningOverrides<IMovementTypeGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IMusicTrackGetter> MusicTrack(
+        public static TypedLoadOrderAccess<IMusicTrackGetter> MusicTrack(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IMusicTrackGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IMusicTrackGetter>(() => listings.WinningOverrides<IMusicTrackGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IMusicTrackGetter> MusicTrack(
+        public static TypedLoadOrderAccess<IMusicTrackGetter> MusicTrack(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IMusicTrackGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IMusicTrackGetter>(() => mods.WinningOverrides<IMusicTrackGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IMusicTypeGetter> MusicType(
+        public static TypedLoadOrderAccess<IMusicTypeGetter> MusicType(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IMusicTypeGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IMusicTypeGetter>(() => listings.WinningOverrides<IMusicTypeGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IMusicTypeGetter> MusicType(
+        public static TypedLoadOrderAccess<IMusicTypeGetter> MusicType(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IMusicTypeGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IMusicTypeGetter>(() => mods.WinningOverrides<IMusicTypeGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<INavigationMeshInfoMapGetter> NavigationMeshInfoMap(
+        public static TypedLoadOrderAccess<INavigationMeshInfoMapGetter> NavigationMeshInfoMap(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<INavigationMeshInfoMapGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<INavigationMeshInfoMapGetter>(() => listings.WinningOverrides<INavigationMeshInfoMapGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<INavigationMeshInfoMapGetter> NavigationMeshInfoMap(
+        public static TypedLoadOrderAccess<INavigationMeshInfoMapGetter> NavigationMeshInfoMap(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<INavigationMeshInfoMapGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<INavigationMeshInfoMapGetter>(() => mods.WinningOverrides<INavigationMeshInfoMapGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<INpcGetter> Npc(
+        public static TypedLoadOrderAccess<INpcGetter> Npc(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<INpcGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<INpcGetter>(() => listings.WinningOverrides<INpcGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<INpcGetter> Npc(
+        public static TypedLoadOrderAccess<INpcGetter> Npc(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<INpcGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<INpcGetter>(() => mods.WinningOverrides<INpcGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IObjectEffectGetter> ObjectEffect(
+        public static TypedLoadOrderAccess<IObjectEffectGetter> ObjectEffect(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IObjectEffectGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IObjectEffectGetter>(() => listings.WinningOverrides<IObjectEffectGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IObjectEffectGetter> ObjectEffect(
+        public static TypedLoadOrderAccess<IObjectEffectGetter> ObjectEffect(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IObjectEffectGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IObjectEffectGetter>(() => mods.WinningOverrides<IObjectEffectGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IOutfitGetter> Outfit(
+        public static TypedLoadOrderAccess<IOutfitGetter> Outfit(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IOutfitGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IOutfitGetter>(() => listings.WinningOverrides<IOutfitGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IOutfitGetter> Outfit(
+        public static TypedLoadOrderAccess<IOutfitGetter> Outfit(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IOutfitGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IOutfitGetter>(() => mods.WinningOverrides<IOutfitGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IPackageGetter> Package(
+        public static TypedLoadOrderAccess<IPackageGetter> Package(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IPackageGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IPackageGetter>(() => listings.WinningOverrides<IPackageGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IPackageGetter> Package(
+        public static TypedLoadOrderAccess<IPackageGetter> Package(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IPackageGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IPackageGetter>(() => mods.WinningOverrides<IPackageGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IPerkGetter> Perk(
+        public static TypedLoadOrderAccess<IPerkGetter> Perk(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IPerkGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IPerkGetter>(() => listings.WinningOverrides<IPerkGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IPerkGetter> Perk(
+        public static TypedLoadOrderAccess<IPerkGetter> Perk(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IPerkGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IPerkGetter>(() => mods.WinningOverrides<IPerkGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IPlacedArrowGetter> PlacedArrow(
+        public static TypedLoadOrderAccess<IPlacedArrowGetter> PlacedArrow(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IPlacedArrowGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IPlacedArrowGetter>(() => listings.WinningOverrides<IPlacedArrowGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IPlacedArrowGetter> PlacedArrow(
+        public static TypedLoadOrderAccess<IPlacedArrowGetter> PlacedArrow(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IPlacedArrowGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IPlacedArrowGetter>(() => mods.WinningOverrides<IPlacedArrowGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IPlacedBarrierGetter> PlacedBarrier(
+        public static TypedLoadOrderAccess<IPlacedBarrierGetter> PlacedBarrier(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IPlacedBarrierGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IPlacedBarrierGetter>(() => listings.WinningOverrides<IPlacedBarrierGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IPlacedBarrierGetter> PlacedBarrier(
+        public static TypedLoadOrderAccess<IPlacedBarrierGetter> PlacedBarrier(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IPlacedBarrierGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IPlacedBarrierGetter>(() => mods.WinningOverrides<IPlacedBarrierGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IPlacedBeamGetter> PlacedBeam(
+        public static TypedLoadOrderAccess<IPlacedBeamGetter> PlacedBeam(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IPlacedBeamGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IPlacedBeamGetter>(() => listings.WinningOverrides<IPlacedBeamGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IPlacedBeamGetter> PlacedBeam(
+        public static TypedLoadOrderAccess<IPlacedBeamGetter> PlacedBeam(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IPlacedBeamGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IPlacedBeamGetter>(() => mods.WinningOverrides<IPlacedBeamGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IPlacedConeGetter> PlacedCone(
+        public static TypedLoadOrderAccess<IPlacedConeGetter> PlacedCone(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IPlacedConeGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IPlacedConeGetter>(() => listings.WinningOverrides<IPlacedConeGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IPlacedConeGetter> PlacedCone(
+        public static TypedLoadOrderAccess<IPlacedConeGetter> PlacedCone(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IPlacedConeGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IPlacedConeGetter>(() => mods.WinningOverrides<IPlacedConeGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IPlacedFlameGetter> PlacedFlame(
+        public static TypedLoadOrderAccess<IPlacedFlameGetter> PlacedFlame(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IPlacedFlameGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IPlacedFlameGetter>(() => listings.WinningOverrides<IPlacedFlameGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IPlacedFlameGetter> PlacedFlame(
+        public static TypedLoadOrderAccess<IPlacedFlameGetter> PlacedFlame(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IPlacedFlameGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IPlacedFlameGetter>(() => mods.WinningOverrides<IPlacedFlameGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IPlacedHazardGetter> PlacedHazard(
+        public static TypedLoadOrderAccess<IPlacedHazardGetter> PlacedHazard(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IPlacedHazardGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IPlacedHazardGetter>(() => listings.WinningOverrides<IPlacedHazardGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IPlacedHazardGetter> PlacedHazard(
+        public static TypedLoadOrderAccess<IPlacedHazardGetter> PlacedHazard(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IPlacedHazardGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IPlacedHazardGetter>(() => mods.WinningOverrides<IPlacedHazardGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IPlacedMissileGetter> PlacedMissile(
+        public static TypedLoadOrderAccess<IPlacedMissileGetter> PlacedMissile(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IPlacedMissileGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IPlacedMissileGetter>(() => listings.WinningOverrides<IPlacedMissileGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IPlacedMissileGetter> PlacedMissile(
+        public static TypedLoadOrderAccess<IPlacedMissileGetter> PlacedMissile(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IPlacedMissileGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IPlacedMissileGetter>(() => mods.WinningOverrides<IPlacedMissileGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IPlacedNpcGetter> PlacedNpc(
+        public static TypedLoadOrderAccess<IPlacedNpcGetter> PlacedNpc(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IPlacedNpcGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IPlacedNpcGetter>(() => listings.WinningOverrides<IPlacedNpcGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IPlacedNpcGetter> PlacedNpc(
+        public static TypedLoadOrderAccess<IPlacedNpcGetter> PlacedNpc(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IPlacedNpcGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IPlacedNpcGetter>(() => mods.WinningOverrides<IPlacedNpcGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IPlacedObjectGetter> PlacedObject(
+        public static TypedLoadOrderAccess<IPlacedObjectGetter> PlacedObject(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IPlacedObjectGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IPlacedObjectGetter>(() => listings.WinningOverrides<IPlacedObjectGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IPlacedObjectGetter> PlacedObject(
+        public static TypedLoadOrderAccess<IPlacedObjectGetter> PlacedObject(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IPlacedObjectGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IPlacedObjectGetter>(() => mods.WinningOverrides<IPlacedObjectGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IPlacedTrapGetter> PlacedTrap(
+        public static TypedLoadOrderAccess<IPlacedTrapGetter> PlacedTrap(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IPlacedTrapGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IPlacedTrapGetter>(() => listings.WinningOverrides<IPlacedTrapGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IPlacedTrapGetter> PlacedTrap(
+        public static TypedLoadOrderAccess<IPlacedTrapGetter> PlacedTrap(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IPlacedTrapGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IPlacedTrapGetter>(() => mods.WinningOverrides<IPlacedTrapGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IProjectileGetter> Projectile(
+        public static TypedLoadOrderAccess<IProjectileGetter> Projectile(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IProjectileGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IProjectileGetter>(() => listings.WinningOverrides<IProjectileGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IProjectileGetter> Projectile(
+        public static TypedLoadOrderAccess<IProjectileGetter> Projectile(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IProjectileGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IProjectileGetter>(() => mods.WinningOverrides<IProjectileGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IQuestGetter> Quest(
+        public static TypedLoadOrderAccess<IQuestGetter> Quest(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IQuestGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IQuestGetter>(() => listings.WinningOverrides<IQuestGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IQuestGetter> Quest(
+        public static TypedLoadOrderAccess<IQuestGetter> Quest(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IQuestGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IQuestGetter>(() => mods.WinningOverrides<IQuestGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IRaceGetter> Race(
+        public static TypedLoadOrderAccess<IRaceGetter> Race(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IRaceGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IRaceGetter>(() => listings.WinningOverrides<IRaceGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IRaceGetter> Race(
+        public static TypedLoadOrderAccess<IRaceGetter> Race(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IRaceGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IRaceGetter>(() => mods.WinningOverrides<IRaceGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IRegionGetter> Region(
+        public static TypedLoadOrderAccess<IRegionGetter> Region(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IRegionGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IRegionGetter>(() => listings.WinningOverrides<IRegionGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IRegionGetter> Region(
+        public static TypedLoadOrderAccess<IRegionGetter> Region(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IRegionGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IRegionGetter>(() => mods.WinningOverrides<IRegionGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IRelationshipGetter> Relationship(
+        public static TypedLoadOrderAccess<IRelationshipGetter> Relationship(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IRelationshipGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IRelationshipGetter>(() => listings.WinningOverrides<IRelationshipGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IRelationshipGetter> Relationship(
+        public static TypedLoadOrderAccess<IRelationshipGetter> Relationship(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IRelationshipGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IRelationshipGetter>(() => mods.WinningOverrides<IRelationshipGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IReverbParametersGetter> ReverbParameters(
+        public static TypedLoadOrderAccess<IReverbParametersGetter> ReverbParameters(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IReverbParametersGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IReverbParametersGetter>(() => listings.WinningOverrides<IReverbParametersGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IReverbParametersGetter> ReverbParameters(
+        public static TypedLoadOrderAccess<IReverbParametersGetter> ReverbParameters(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IReverbParametersGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IReverbParametersGetter>(() => mods.WinningOverrides<IReverbParametersGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ISceneGetter> Scene(
+        public static TypedLoadOrderAccess<ISceneGetter> Scene(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<ISceneGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ISceneGetter>(() => listings.WinningOverrides<ISceneGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ISceneGetter> Scene(
+        public static TypedLoadOrderAccess<ISceneGetter> Scene(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<ISceneGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ISceneGetter>(() => mods.WinningOverrides<ISceneGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IScrollGetter> Scroll(
+        public static TypedLoadOrderAccess<IScrollGetter> Scroll(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IScrollGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IScrollGetter>(() => listings.WinningOverrides<IScrollGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IScrollGetter> Scroll(
+        public static TypedLoadOrderAccess<IScrollGetter> Scroll(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IScrollGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IScrollGetter>(() => mods.WinningOverrides<IScrollGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IShaderParticleGeometryGetter> ShaderParticleGeometry(
+        public static TypedLoadOrderAccess<IShaderParticleGeometryGetter> ShaderParticleGeometry(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IShaderParticleGeometryGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IShaderParticleGeometryGetter>(() => listings.WinningOverrides<IShaderParticleGeometryGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IShaderParticleGeometryGetter> ShaderParticleGeometry(
+        public static TypedLoadOrderAccess<IShaderParticleGeometryGetter> ShaderParticleGeometry(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IShaderParticleGeometryGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IShaderParticleGeometryGetter>(() => mods.WinningOverrides<IShaderParticleGeometryGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IShoutGetter> Shout(
+        public static TypedLoadOrderAccess<IShoutGetter> Shout(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IShoutGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IShoutGetter>(() => listings.WinningOverrides<IShoutGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IShoutGetter> Shout(
+        public static TypedLoadOrderAccess<IShoutGetter> Shout(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IShoutGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IShoutGetter>(() => mods.WinningOverrides<IShoutGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ISkyrimMajorRecordGetter> SkyrimMajorRecord(
+        public static TypedLoadOrderAccess<ISkyrimMajorRecordGetter> SkyrimMajorRecord(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<ISkyrimMajorRecordGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ISkyrimMajorRecordGetter>(() => listings.WinningOverrides<ISkyrimMajorRecordGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ISkyrimMajorRecordGetter> SkyrimMajorRecord(
+        public static TypedLoadOrderAccess<ISkyrimMajorRecordGetter> SkyrimMajorRecord(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<ISkyrimMajorRecordGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ISkyrimMajorRecordGetter>(() => mods.WinningOverrides<ISkyrimMajorRecordGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ISoulGemGetter> SoulGem(
+        public static TypedLoadOrderAccess<ISoulGemGetter> SoulGem(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<ISoulGemGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ISoulGemGetter>(() => listings.WinningOverrides<ISoulGemGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ISoulGemGetter> SoulGem(
+        public static TypedLoadOrderAccess<ISoulGemGetter> SoulGem(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<ISoulGemGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ISoulGemGetter>(() => mods.WinningOverrides<ISoulGemGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ISoundCategoryGetter> SoundCategory(
+        public static TypedLoadOrderAccess<ISoundCategoryGetter> SoundCategory(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<ISoundCategoryGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ISoundCategoryGetter>(() => listings.WinningOverrides<ISoundCategoryGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ISoundCategoryGetter> SoundCategory(
+        public static TypedLoadOrderAccess<ISoundCategoryGetter> SoundCategory(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<ISoundCategoryGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ISoundCategoryGetter>(() => mods.WinningOverrides<ISoundCategoryGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ISoundDescriptorGetter> SoundDescriptor(
+        public static TypedLoadOrderAccess<ISoundDescriptorGetter> SoundDescriptor(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<ISoundDescriptorGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ISoundDescriptorGetter>(() => listings.WinningOverrides<ISoundDescriptorGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ISoundDescriptorGetter> SoundDescriptor(
+        public static TypedLoadOrderAccess<ISoundDescriptorGetter> SoundDescriptor(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<ISoundDescriptorGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ISoundDescriptorGetter>(() => mods.WinningOverrides<ISoundDescriptorGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ISoundMarkerGetter> SoundMarker(
+        public static TypedLoadOrderAccess<ISoundMarkerGetter> SoundMarker(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<ISoundMarkerGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ISoundMarkerGetter>(() => listings.WinningOverrides<ISoundMarkerGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ISoundMarkerGetter> SoundMarker(
+        public static TypedLoadOrderAccess<ISoundMarkerGetter> SoundMarker(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<ISoundMarkerGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ISoundMarkerGetter>(() => mods.WinningOverrides<ISoundMarkerGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ISoundOutputModelGetter> SoundOutputModel(
+        public static TypedLoadOrderAccess<ISoundOutputModelGetter> SoundOutputModel(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<ISoundOutputModelGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ISoundOutputModelGetter>(() => listings.WinningOverrides<ISoundOutputModelGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ISoundOutputModelGetter> SoundOutputModel(
+        public static TypedLoadOrderAccess<ISoundOutputModelGetter> SoundOutputModel(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<ISoundOutputModelGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ISoundOutputModelGetter>(() => mods.WinningOverrides<ISoundOutputModelGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ISpellGetter> Spell(
+        public static TypedLoadOrderAccess<ISpellGetter> Spell(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<ISpellGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ISpellGetter>(() => listings.WinningOverrides<ISpellGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ISpellGetter> Spell(
+        public static TypedLoadOrderAccess<ISpellGetter> Spell(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<ISpellGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ISpellGetter>(() => mods.WinningOverrides<ISpellGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IStaticGetter> Static(
+        public static TypedLoadOrderAccess<IStaticGetter> Static(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IStaticGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IStaticGetter>(() => listings.WinningOverrides<IStaticGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IStaticGetter> Static(
+        public static TypedLoadOrderAccess<IStaticGetter> Static(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IStaticGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IStaticGetter>(() => mods.WinningOverrides<IStaticGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IStoryManagerBranchNodeGetter> StoryManagerBranchNode(
+        public static TypedLoadOrderAccess<IStoryManagerBranchNodeGetter> StoryManagerBranchNode(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IStoryManagerBranchNodeGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IStoryManagerBranchNodeGetter>(() => listings.WinningOverrides<IStoryManagerBranchNodeGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IStoryManagerBranchNodeGetter> StoryManagerBranchNode(
+        public static TypedLoadOrderAccess<IStoryManagerBranchNodeGetter> StoryManagerBranchNode(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IStoryManagerBranchNodeGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IStoryManagerBranchNodeGetter>(() => mods.WinningOverrides<IStoryManagerBranchNodeGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IStoryManagerEventNodeGetter> StoryManagerEventNode(
+        public static TypedLoadOrderAccess<IStoryManagerEventNodeGetter> StoryManagerEventNode(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IStoryManagerEventNodeGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IStoryManagerEventNodeGetter>(() => listings.WinningOverrides<IStoryManagerEventNodeGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IStoryManagerEventNodeGetter> StoryManagerEventNode(
+        public static TypedLoadOrderAccess<IStoryManagerEventNodeGetter> StoryManagerEventNode(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IStoryManagerEventNodeGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IStoryManagerEventNodeGetter>(() => mods.WinningOverrides<IStoryManagerEventNodeGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IStoryManagerQuestNodeGetter> StoryManagerQuestNode(
+        public static TypedLoadOrderAccess<IStoryManagerQuestNodeGetter> StoryManagerQuestNode(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IStoryManagerQuestNodeGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IStoryManagerQuestNodeGetter>(() => listings.WinningOverrides<IStoryManagerQuestNodeGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IStoryManagerQuestNodeGetter> StoryManagerQuestNode(
+        public static TypedLoadOrderAccess<IStoryManagerQuestNodeGetter> StoryManagerQuestNode(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IStoryManagerQuestNodeGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IStoryManagerQuestNodeGetter>(() => mods.WinningOverrides<IStoryManagerQuestNodeGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ITalkingActivatorGetter> TalkingActivator(
+        public static TypedLoadOrderAccess<ITalkingActivatorGetter> TalkingActivator(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<ITalkingActivatorGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ITalkingActivatorGetter>(() => listings.WinningOverrides<ITalkingActivatorGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ITalkingActivatorGetter> TalkingActivator(
+        public static TypedLoadOrderAccess<ITalkingActivatorGetter> TalkingActivator(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<ITalkingActivatorGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ITalkingActivatorGetter>(() => mods.WinningOverrides<ITalkingActivatorGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ITextureSetGetter> TextureSet(
+        public static TypedLoadOrderAccess<ITextureSetGetter> TextureSet(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<ITextureSetGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ITextureSetGetter>(() => listings.WinningOverrides<ITextureSetGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ITextureSetGetter> TextureSet(
+        public static TypedLoadOrderAccess<ITextureSetGetter> TextureSet(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<ITextureSetGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ITextureSetGetter>(() => mods.WinningOverrides<ITextureSetGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ITreeGetter> Tree(
+        public static TypedLoadOrderAccess<ITreeGetter> Tree(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<ITreeGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ITreeGetter>(() => listings.WinningOverrides<ITreeGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ITreeGetter> Tree(
+        public static TypedLoadOrderAccess<ITreeGetter> Tree(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<ITreeGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ITreeGetter>(() => mods.WinningOverrides<ITreeGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IVisualEffectGetter> VisualEffect(
+        public static TypedLoadOrderAccess<IVisualEffectGetter> VisualEffect(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IVisualEffectGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IVisualEffectGetter>(() => listings.WinningOverrides<IVisualEffectGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IVisualEffectGetter> VisualEffect(
+        public static TypedLoadOrderAccess<IVisualEffectGetter> VisualEffect(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IVisualEffectGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IVisualEffectGetter>(() => mods.WinningOverrides<IVisualEffectGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IVoiceTypeGetter> VoiceType(
+        public static TypedLoadOrderAccess<IVoiceTypeGetter> VoiceType(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IVoiceTypeGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IVoiceTypeGetter>(() => listings.WinningOverrides<IVoiceTypeGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IVoiceTypeGetter> VoiceType(
+        public static TypedLoadOrderAccess<IVoiceTypeGetter> VoiceType(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IVoiceTypeGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IVoiceTypeGetter>(() => mods.WinningOverrides<IVoiceTypeGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IVolumetricLightingGetter> VolumetricLighting(
+        public static TypedLoadOrderAccess<IVolumetricLightingGetter> VolumetricLighting(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IVolumetricLightingGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IVolumetricLightingGetter>(() => listings.WinningOverrides<IVolumetricLightingGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IVolumetricLightingGetter> VolumetricLighting(
+        public static TypedLoadOrderAccess<IVolumetricLightingGetter> VolumetricLighting(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IVolumetricLightingGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IVolumetricLightingGetter>(() => mods.WinningOverrides<IVolumetricLightingGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IWaterGetter> Water(
+        public static TypedLoadOrderAccess<IWaterGetter> Water(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IWaterGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IWaterGetter>(() => listings.WinningOverrides<IWaterGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IWaterGetter> Water(
+        public static TypedLoadOrderAccess<IWaterGetter> Water(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IWaterGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IWaterGetter>(() => mods.WinningOverrides<IWaterGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IWeaponGetter> Weapon(
+        public static TypedLoadOrderAccess<IWeaponGetter> Weapon(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IWeaponGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IWeaponGetter>(() => listings.WinningOverrides<IWeaponGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IWeaponGetter> Weapon(
+        public static TypedLoadOrderAccess<IWeaponGetter> Weapon(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IWeaponGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IWeaponGetter>(() => mods.WinningOverrides<IWeaponGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IWeatherGetter> Weather(
+        public static TypedLoadOrderAccess<IWeatherGetter> Weather(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IWeatherGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IWeatherGetter>(() => listings.WinningOverrides<IWeatherGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IWeatherGetter> Weather(
+        public static TypedLoadOrderAccess<IWeatherGetter> Weather(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IWeatherGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IWeatherGetter>(() => mods.WinningOverrides<IWeatherGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IWordOfPowerGetter> WordOfPower(
+        public static TypedLoadOrderAccess<IWordOfPowerGetter> WordOfPower(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IWordOfPowerGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IWordOfPowerGetter>(() => listings.WinningOverrides<IWordOfPowerGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IWordOfPowerGetter> WordOfPower(
+        public static TypedLoadOrderAccess<IWordOfPowerGetter> WordOfPower(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IWordOfPowerGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IWordOfPowerGetter>(() => mods.WinningOverrides<IWordOfPowerGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IWorldspaceGetter> Worldspace(
+        public static TypedLoadOrderAccess<IWorldspaceGetter> Worldspace(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IWorldspaceGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IWorldspaceGetter>(() => listings.WinningOverrides<IWorldspaceGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IWorldspaceGetter> Worldspace(
+        public static TypedLoadOrderAccess<IWorldspaceGetter> Worldspace(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IWorldspaceGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IWorldspaceGetter>(() => mods.WinningOverrides<IWorldspaceGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IWorldspaceNavigationMeshGetter> WorldspaceNavigationMesh(
+        public static TypedLoadOrderAccess<IWorldspaceNavigationMeshGetter> WorldspaceNavigationMesh(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IWorldspaceNavigationMeshGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IWorldspaceNavigationMeshGetter>(() => listings.WinningOverrides<IWorldspaceNavigationMeshGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IWorldspaceNavigationMeshGetter> WorldspaceNavigationMesh(
+        public static TypedLoadOrderAccess<IWorldspaceNavigationMeshGetter> WorldspaceNavigationMesh(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IWorldspaceNavigationMeshGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IWorldspaceNavigationMeshGetter>(() => mods.WinningOverrides<IWorldspaceNavigationMeshGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
         #endregion
 
         #region Link Interfaces
-        public static IEnumerable<IIdleRelationGetter> IIdleRelation(
+        public static TypedLoadOrderAccess<IIdleRelationGetter> IIdleRelation(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IIdleRelationGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IIdleRelationGetter>(() => listings.WinningOverrides<IIdleRelationGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IIdleRelationGetter> IIdleRelation(
+        public static TypedLoadOrderAccess<IIdleRelationGetter> IIdleRelation(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IIdleRelationGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IIdleRelationGetter>(() => mods.WinningOverrides<IIdleRelationGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IObjectIdGetter> IObjectId(
+        public static TypedLoadOrderAccess<IObjectIdGetter> IObjectId(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IObjectIdGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IObjectIdGetter>(() => listings.WinningOverrides<IObjectIdGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IObjectIdGetter> IObjectId(
+        public static TypedLoadOrderAccess<IObjectIdGetter> IObjectId(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IObjectIdGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IObjectIdGetter>(() => mods.WinningOverrides<IObjectIdGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IItemGetter> IItem(
+        public static TypedLoadOrderAccess<IItemGetter> IItem(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IItemGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IItemGetter>(() => listings.WinningOverrides<IItemGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IItemGetter> IItem(
+        public static TypedLoadOrderAccess<IItemGetter> IItem(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IItemGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IItemGetter>(() => mods.WinningOverrides<IItemGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IOutfitTargetGetter> IOutfitTarget(
+        public static TypedLoadOrderAccess<IOutfitTargetGetter> IOutfitTarget(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IOutfitTargetGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IOutfitTargetGetter>(() => listings.WinningOverrides<IOutfitTargetGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IOutfitTargetGetter> IOutfitTarget(
+        public static TypedLoadOrderAccess<IOutfitTargetGetter> IOutfitTarget(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IOutfitTargetGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IOutfitTargetGetter>(() => mods.WinningOverrides<IOutfitTargetGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IComplexLocationGetter> IComplexLocation(
+        public static TypedLoadOrderAccess<IComplexLocationGetter> IComplexLocation(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IComplexLocationGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IComplexLocationGetter>(() => listings.WinningOverrides<IComplexLocationGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IComplexLocationGetter> IComplexLocation(
+        public static TypedLoadOrderAccess<IComplexLocationGetter> IComplexLocation(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IComplexLocationGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IComplexLocationGetter>(() => mods.WinningOverrides<IComplexLocationGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IDialogGetter> IDialog(
+        public static TypedLoadOrderAccess<IDialogGetter> IDialog(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IDialogGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IDialogGetter>(() => listings.WinningOverrides<IDialogGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IDialogGetter> IDialog(
+        public static TypedLoadOrderAccess<IDialogGetter> IDialog(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IDialogGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IDialogGetter>(() => mods.WinningOverrides<IDialogGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ILocationTargetableGetter> ILocationTargetable(
+        public static TypedLoadOrderAccess<ILocationTargetableGetter> ILocationTargetable(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<ILocationTargetableGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ILocationTargetableGetter>(() => listings.WinningOverrides<ILocationTargetableGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ILocationTargetableGetter> ILocationTargetable(
+        public static TypedLoadOrderAccess<ILocationTargetableGetter> ILocationTargetable(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<ILocationTargetableGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ILocationTargetableGetter>(() => mods.WinningOverrides<ILocationTargetableGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IOwnerGetter> IOwner(
+        public static TypedLoadOrderAccess<IOwnerGetter> IOwner(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IOwnerGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IOwnerGetter>(() => listings.WinningOverrides<IOwnerGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IOwnerGetter> IOwner(
+        public static TypedLoadOrderAccess<IOwnerGetter> IOwner(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IOwnerGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IOwnerGetter>(() => mods.WinningOverrides<IOwnerGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IRelatableGetter> IRelatable(
+        public static TypedLoadOrderAccess<IRelatableGetter> IRelatable(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IRelatableGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IRelatableGetter>(() => listings.WinningOverrides<IRelatableGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IRelatableGetter> IRelatable(
+        public static TypedLoadOrderAccess<IRelatableGetter> IRelatable(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IRelatableGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IRelatableGetter>(() => mods.WinningOverrides<IRelatableGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IRegionTargetGetter> IRegionTarget(
+        public static TypedLoadOrderAccess<IRegionTargetGetter> IRegionTarget(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IRegionTargetGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IRegionTargetGetter>(() => listings.WinningOverrides<IRegionTargetGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IRegionTargetGetter> IRegionTarget(
+        public static TypedLoadOrderAccess<IRegionTargetGetter> IRegionTarget(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IRegionTargetGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IRegionTargetGetter>(() => mods.WinningOverrides<IRegionTargetGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IAliasVoiceTypeGetter> IAliasVoiceType(
+        public static TypedLoadOrderAccess<IAliasVoiceTypeGetter> IAliasVoiceType(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IAliasVoiceTypeGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IAliasVoiceTypeGetter>(() => listings.WinningOverrides<IAliasVoiceTypeGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IAliasVoiceTypeGetter> IAliasVoiceType(
+        public static TypedLoadOrderAccess<IAliasVoiceTypeGetter> IAliasVoiceType(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IAliasVoiceTypeGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IAliasVoiceTypeGetter>(() => mods.WinningOverrides<IAliasVoiceTypeGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ILockListGetter> ILockList(
+        public static TypedLoadOrderAccess<ILockListGetter> ILockList(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<ILockListGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ILockListGetter>(() => listings.WinningOverrides<ILockListGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ILockListGetter> ILockList(
+        public static TypedLoadOrderAccess<ILockListGetter> ILockList(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<ILockListGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ILockListGetter>(() => mods.WinningOverrides<ILockListGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IPlacedTrapTargetGetter> IPlacedTrapTarget(
+        public static TypedLoadOrderAccess<IPlacedTrapTargetGetter> IPlacedTrapTarget(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IPlacedTrapTargetGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IPlacedTrapTargetGetter>(() => listings.WinningOverrides<IPlacedTrapTargetGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IPlacedTrapTargetGetter> IPlacedTrapTarget(
+        public static TypedLoadOrderAccess<IPlacedTrapTargetGetter> IPlacedTrapTarget(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IPlacedTrapTargetGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IPlacedTrapTargetGetter>(() => mods.WinningOverrides<IPlacedTrapTargetGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IHarvestTargetGetter> IHarvestTarget(
+        public static TypedLoadOrderAccess<IHarvestTargetGetter> IHarvestTarget(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IHarvestTargetGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IHarvestTargetGetter>(() => listings.WinningOverrides<IHarvestTargetGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IHarvestTargetGetter> IHarvestTarget(
+        public static TypedLoadOrderAccess<IHarvestTargetGetter> IHarvestTarget(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IHarvestTargetGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IHarvestTargetGetter>(() => mods.WinningOverrides<IHarvestTargetGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IKeywordLinkedReferenceGetter> IKeywordLinkedReference(
+        public static TypedLoadOrderAccess<IKeywordLinkedReferenceGetter> IKeywordLinkedReference(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IKeywordLinkedReferenceGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IKeywordLinkedReferenceGetter>(() => listings.WinningOverrides<IKeywordLinkedReferenceGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IKeywordLinkedReferenceGetter> IKeywordLinkedReference(
+        public static TypedLoadOrderAccess<IKeywordLinkedReferenceGetter> IKeywordLinkedReference(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IKeywordLinkedReferenceGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IKeywordLinkedReferenceGetter>(() => mods.WinningOverrides<IKeywordLinkedReferenceGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<INpcSpawnGetter> INpcSpawn(
+        public static TypedLoadOrderAccess<INpcSpawnGetter> INpcSpawn(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<INpcSpawnGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<INpcSpawnGetter>(() => listings.WinningOverrides<INpcSpawnGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<INpcSpawnGetter> INpcSpawn(
+        public static TypedLoadOrderAccess<INpcSpawnGetter> INpcSpawn(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<INpcSpawnGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<INpcSpawnGetter>(() => mods.WinningOverrides<INpcSpawnGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ISpellSpawnGetter> ISpellSpawn(
+        public static TypedLoadOrderAccess<ISpellSpawnGetter> ISpellSpawn(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<ISpellSpawnGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ISpellSpawnGetter>(() => listings.WinningOverrides<ISpellSpawnGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ISpellSpawnGetter> ISpellSpawn(
+        public static TypedLoadOrderAccess<ISpellSpawnGetter> ISpellSpawn(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<ISpellSpawnGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ISpellSpawnGetter>(() => mods.WinningOverrides<ISpellSpawnGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IEmittanceGetter> IEmittance(
+        public static TypedLoadOrderAccess<IEmittanceGetter> IEmittance(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IEmittanceGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IEmittanceGetter>(() => listings.WinningOverrides<IEmittanceGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IEmittanceGetter> IEmittance(
+        public static TypedLoadOrderAccess<IEmittanceGetter> IEmittance(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IEmittanceGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IEmittanceGetter>(() => mods.WinningOverrides<IEmittanceGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ILocationRecordGetter> ILocationRecord(
+        public static TypedLoadOrderAccess<ILocationRecordGetter> ILocationRecord(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<ILocationRecordGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ILocationRecordGetter>(() => listings.WinningOverrides<ILocationRecordGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ILocationRecordGetter> ILocationRecord(
+        public static TypedLoadOrderAccess<ILocationRecordGetter> ILocationRecord(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<ILocationRecordGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ILocationRecordGetter>(() => mods.WinningOverrides<ILocationRecordGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IEffectRecordGetter> IEffectRecord(
+        public static TypedLoadOrderAccess<IEffectRecordGetter> IEffectRecord(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IEffectRecordGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IEffectRecordGetter>(() => listings.WinningOverrides<IEffectRecordGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IEffectRecordGetter> IEffectRecord(
+        public static TypedLoadOrderAccess<IEffectRecordGetter> IEffectRecord(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IEffectRecordGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IEffectRecordGetter>(() => mods.WinningOverrides<IEffectRecordGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ILinkedReferenceGetter> ILinkedReference(
+        public static TypedLoadOrderAccess<ILinkedReferenceGetter> ILinkedReference(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<ILinkedReferenceGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ILinkedReferenceGetter>(() => listings.WinningOverrides<ILinkedReferenceGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ILinkedReferenceGetter> ILinkedReference(
+        public static TypedLoadOrderAccess<ILinkedReferenceGetter> ILinkedReference(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<ILinkedReferenceGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ILinkedReferenceGetter>(() => mods.WinningOverrides<ILinkedReferenceGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IPlacedGetter> IPlaced(
+        public static TypedLoadOrderAccess<IPlacedGetter> IPlaced(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IPlacedGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IPlacedGetter>(() => listings.WinningOverrides<IPlacedGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IPlacedGetter> IPlaced(
+        public static TypedLoadOrderAccess<IPlacedGetter> IPlaced(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IPlacedGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IPlacedGetter>(() => mods.WinningOverrides<IPlacedGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IPlacedSimpleGetter> IPlacedSimple(
+        public static TypedLoadOrderAccess<IPlacedSimpleGetter> IPlacedSimple(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IPlacedSimpleGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IPlacedSimpleGetter>(() => listings.WinningOverrides<IPlacedSimpleGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IPlacedSimpleGetter> IPlacedSimple(
+        public static TypedLoadOrderAccess<IPlacedSimpleGetter> IPlacedSimple(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IPlacedSimpleGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IPlacedSimpleGetter>(() => mods.WinningOverrides<IPlacedSimpleGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IPlacedThingGetter> IPlacedThing(
+        public static TypedLoadOrderAccess<IPlacedThingGetter> IPlacedThing(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<IPlacedThingGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IPlacedThingGetter>(() => listings.WinningOverrides<IPlacedThingGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<IPlacedThingGetter> IPlacedThing(
+        public static TypedLoadOrderAccess<IPlacedThingGetter> IPlacedThing(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<IPlacedThingGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<IPlacedThingGetter>(() => mods.WinningOverrides<IPlacedThingGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ISoundGetter> ISound(
+        public static TypedLoadOrderAccess<ISoundGetter> ISound(
             this IEnumerable<IModListing<ISkyrimModGetter>> listings,
             bool includeDeletedRecords = false)
         {
-            return listings.WinningOverrides<ISoundGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ISoundGetter>(() => listings.WinningOverrides<ISoundGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
-        public static IEnumerable<ISoundGetter> ISound(
+        public static TypedLoadOrderAccess<ISoundGetter> ISound(
             this IEnumerable<ISkyrimModGetter> mods,
             bool includeDeletedRecords = false)
         {
-            return mods.WinningOverrides<ISoundGetter>(includeDeletedRecords: includeDeletedRecords);
+            return new TypedLoadOrderAccess<ISoundGetter>(() => mods.WinningOverrides<ISoundGetter>(includeDeletedRecords: includeDeletedRecords));
         }
 
         #endregion

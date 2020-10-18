@@ -12,7 +12,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
   </PropertyGroup>
   <ItemGroup>
+    <EmbeddedResource Remove="Properties\**" />
     <EmbeddedResource Remove="Translations\Binary\WriteParameters\**" />
+    <None Remove="Properties\**" />
     <None Remove="Translations\Binary\WriteParameters\**" />
   </ItemGroup>
   <ItemGroup>
@@ -40,9 +42,6 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\ColorBinaryType.cs" />
     <Compile Include="Enums\FloatIntegerType.cs" />
@@ -104,6 +103,7 @@
     <Compile Include="Structs\FormKey.cs" />
     <Compile Include="Structs\ModIndex.cs" />
     <Compile Include="Structs\RecordType.cs" />
+    <Compile Include="Structs\TypedLoadOrderAccess.cs" />
     <Compile Include="TestingPermissions.cs" />
     <Compile Include="Interfaces\IFormVersionGetter.cs" />
     <Compile Include="Translations\Binary\Binary Overlay\FormVersionGetter.cs" />

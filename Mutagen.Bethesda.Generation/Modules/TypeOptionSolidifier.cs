@@ -42,26 +42,26 @@ namespace Mutagen.Bethesda.Generation
                             if (!await obj.IsMajorRecord()) continue;
 
                             using (var args = new FunctionWrapper(fg,
-                                $"public static IEnumerable<{obj.Interface(getter: true)}> {obj.Name}"))
+                                $"public static TypedLoadOrderAccess<{obj.Interface(getter: true)}> {obj.Name}"))
                             {
                                 args.Add($"this IEnumerable<IModListing<I{proto.Protocol.Namespace}ModGetter>> listings");
                                 args.Add("bool includeDeletedRecords = false");
                             }
                             using (new BraceWrapper(fg))
                             {
-                                fg.AppendLine($"return listings.WinningOverrides<{obj.Interface(getter: true)}>(includeDeletedRecords: includeDeletedRecords);");
+                                fg.AppendLine($"return new TypedLoadOrderAccess<{obj.Interface(getter: true)}>(() => listings.WinningOverrides<{obj.Interface(getter: true)}>(includeDeletedRecords: includeDeletedRecords));");
                             }
                             fg.AppendLine();
 
                             using (var args = new FunctionWrapper(fg,
-                                $"public static IEnumerable<{obj.Interface(getter: true)}> {obj.Name}"))
+                                $"public static TypedLoadOrderAccess<{obj.Interface(getter: true)}> {obj.Name}"))
                             {
                                 args.Add($"this IEnumerable<I{proto.Protocol.Namespace}ModGetter> mods");
                                 args.Add("bool includeDeletedRecords = false");
                             }
                             using (new BraceWrapper(fg))
                             {
-                                fg.AppendLine($"return mods.WinningOverrides<{obj.Interface(getter: true)}>(includeDeletedRecords: includeDeletedRecords);");
+                                fg.AppendLine($"return new TypedLoadOrderAccess<{obj.Interface(getter: true)}>(() => mods.WinningOverrides<{obj.Interface(getter: true)}>(includeDeletedRecords: includeDeletedRecords));");
                             }
                             fg.AppendLine();
                             generate = true;
@@ -76,26 +76,26 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 var getter = $"{interf.Key}Getter";
                                 using (var args = new FunctionWrapper(fg,
-                                    $"public static IEnumerable<{getter}> {interf.Key}"))
+                                    $"public static TypedLoadOrderAccess<{getter}> {interf.Key}"))
                                 {
                                     args.Add($"this IEnumerable<IModListing<I{proto.Protocol.Namespace}ModGetter>> listings");
                                     args.Add("bool includeDeletedRecords = false");
                                 }
                                 using (new BraceWrapper(fg))
                                 {
-                                    fg.AppendLine($"return listings.WinningOverrides<{getter}>(includeDeletedRecords: includeDeletedRecords);");
+                                    fg.AppendLine($"return new TypedLoadOrderAccess<{getter}>(() => listings.WinningOverrides<{getter}>(includeDeletedRecords: includeDeletedRecords));");
                                 }
                                 fg.AppendLine();
 
                                 using (var args = new FunctionWrapper(fg,
-                                    $"public static IEnumerable<{getter}> {interf.Key}"))
+                                    $"public static TypedLoadOrderAccess<{getter}> {interf.Key}"))
                                 {
                                     args.Add($"this IEnumerable<I{proto.Protocol.Namespace}ModGetter> mods");
                                     args.Add("bool includeDeletedRecords = false");
                                 }
                                 using (new BraceWrapper(fg))
                                 {
-                                    fg.AppendLine($"return mods.WinningOverrides<{getter}>(includeDeletedRecords: includeDeletedRecords);");
+                                    fg.AppendLine($"return new TypedLoadOrderAccess<{getter}>(() => mods.WinningOverrides<{getter}>(includeDeletedRecords: includeDeletedRecords));");
                                 }
                                 fg.AppendLine();
                             }
