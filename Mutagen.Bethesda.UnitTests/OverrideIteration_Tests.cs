@@ -36,6 +36,38 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Fact]
+        public void WinningOverrides_Deleted()
+        {
+            var master = new SkyrimMod(new ModKey("Base", ModType.Master), SkyrimRelease.SkyrimSE);
+            var baseNpc = master.Npcs.AddNew();
+            var otherMasterNpc = master.Npcs.AddNew();
+            var plugin = new SkyrimMod(new ModKey("Plugin", ModType.Plugin), SkyrimRelease.SkyrimSE);
+            var pluginNpc = plugin.Npcs.AddNew();
+            var overrideNpc = (Npc)baseNpc.DeepCopy();
+            plugin.Npcs.RecordCache.Set(overrideNpc);
+            overrideNpc.Name = "Override";
+            overrideNpc.IsDeleted = true;
+
+            var winningOverrides = plugin.AsEnumerable().And(master)
+                .WinningOverrides<Npc>(includeDeletedRecords: true)
+                .ToDictionary(n => n.FormKey);
+
+            Assert.Equal(3, winningOverrides.Count);
+            Assert.Same(otherMasterNpc, winningOverrides[otherMasterNpc.FormKey]);
+            Assert.Same(pluginNpc, winningOverrides[pluginNpc.FormKey]);
+            Assert.Equal(overrideNpc.FormKey, baseNpc.FormKey);
+            Assert.Same(overrideNpc, winningOverrides[baseNpc.FormKey]);
+
+            winningOverrides = plugin.AsEnumerable().And(master)
+                .WinningOverrides<Npc>(includeDeletedRecords: false)
+                .ToDictionary(n => n.FormKey);
+
+            Assert.Equal(2, winningOverrides.Count);
+            Assert.Same(otherMasterNpc, winningOverrides[otherMasterNpc.FormKey]);
+            Assert.Same(pluginNpc, winningOverrides[pluginNpc.FormKey]);
+        }
+
+        [Fact]
         public void Worldspace_GetOrAddAsOverride_Clean()
         {
             WarmupSkyrim.Init();

@@ -535,6 +535,22 @@ namespace Mutagen.Bethesda.Binary
                 }
             }
         }
+
+        // Not an extension method, as we don't want it to show up as intellisense, as it's already part of a GroupFrame's enumerator.
+        /// <summary>
+        /// Enumerates locations of the contained subrecords.<br/>
+        /// Locations are relative to the RecordType of the MajorRecordFrame.
+        /// </summary>
+        public static IEnumerable<MajorRecordPinFrame> EnumerateRecords(GroupFrame group)
+        {
+            int loc = group.HeaderLength;
+            while (loc < group.HeaderAndContentData.Length)
+            {
+                var subHeader = new MajorRecordPinFrame(group.Meta, group.HeaderAndContentData.Slice(loc), loc);
+                yield return subHeader;
+                loc = checked((int)(loc + subHeader.TotalLength));
+            }
+        }
         #endregion
     }
 }

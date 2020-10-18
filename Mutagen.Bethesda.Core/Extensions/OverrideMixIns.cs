@@ -1,138 +1,382 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Runtime.ExceptionServices;
-using System.Text;
 
 namespace Mutagen.Bethesda
 {
     public static class OverrideMixIns
     {
-        public static IEnumerable<TMajor> WinningOverrides<TMod, TMajor>(this LoadOrder<TMod> loadOrder)
+        /// <summary>
+        /// Will find and return the most overridden version of each record in the load order of the given type 
+        /// USAGE NOTE: <br/>
+        /// Typically you should only supply the Getter interfaces for the type. <br/>
+        /// A setter interface being given can result in no records being found, as most LoadOrders are readonly.
+        /// </summary>
+        /// <typeparam name="TMod">Mod type that the load order contains</typeparam>
+        /// <typeparam name="TMajor">
+        /// Type of record to search for and iterate. <br/>
+        /// USAGE NOTE: <br/>
+        /// Typically you should only supply the Getter interfaces for the type. <br/>
+        /// A setter interface being given can result in no records being found, as most LoadOrders are readonly.
+        /// </typeparam>
+        /// <param name="loadOrder">LoadOrder to iterate over</param>
+        /// <param name="includeDeletedRecords">Whether to include deleted records in the output</param>
+        /// <returns>Enumerable of the most overridden version of each record of the given type, optionally including deleted ones</returns>
+        public static IEnumerable<TMajor> WinningOverrides<TMod, TMajor>(
+            this LoadOrder<TMod> loadOrder,
+            bool includeDeletedRecords = true)
             where TMod : class, IModGetter
             where TMajor : class, IMajorRecordCommonGetter
         {
-            return loadOrder.PriorityOrder.WinningOverrides<TMajor>();
+            return loadOrder.PriorityOrder.WinningOverrides<TMajor>(includeDeletedRecords: includeDeletedRecords);
         }
 
-        public static IEnumerable<IMajorRecordCommonGetter> WinningOverrides<TMod>(this LoadOrder<TMod> loadOrder, Type type)
+        /// <summary>
+        /// Will find and return the most overridden version of each record in the load order of the given type 
+        /// USAGE NOTE: <br/>
+        /// Typically you should only supply the Getter interfaces for the type. <br/>
+        /// A setter interface being given can result in no records being found, as most LoadOrders are readonly.
+        /// </summary>
+        /// <typeparam name="TMod">Mod type that the load order contains</typeparam>
+        /// <param name="loadOrder">LoadOrder to iterate over</param>
+        /// <param name="type">
+        /// Type of record to search for and iterate. <br/>
+        /// USAGE NOTE: <br/>
+        /// Typically you should only supply the Getter interfaces for the type. <br/>
+        /// A setter interface being given can result in no records being found, as most LoadOrders are readonly.
+        /// </param>
+        /// <param name="includeDeletedRecords">Whether to include deleted records in the output</param>
+        /// <returns>Enumerable of the most overridden version of each record of the given type, optionally including deleted ones</returns>
+        public static IEnumerable<IMajorRecordCommonGetter> WinningOverrides<TMod>(
+            this LoadOrder<TMod> loadOrder, 
+            Type type,
+            bool includeDeletedRecords = true)
             where TMod : class, IModGetter
         {
-            return loadOrder.PriorityOrder.WinningOverrides(type);
+            return loadOrder.PriorityOrder.WinningOverrides(type, includeDeletedRecords: includeDeletedRecords);
         }
 
-        public static IEnumerable<TMajor> WinningOverrides<TMajor>(this IEnumerable<IModListing<IModGetter>> priorityOrder)
+        /// <summary>
+        /// Will find and return the most overridden version of each record in the list of mods of the given type 
+        /// USAGE NOTE: <br/>
+        /// Typically you should only supply the Getter interfaces for the type. <br/>
+        /// A setter interface being given can result in no records being found, as most LoadOrders are readonly.
+        /// </summary>
+        /// <typeparam name="TMajor">
+        /// Type of record to search for and iterate. <br/>
+        /// USAGE NOTE: <br/>
+        /// Typically you should only supply the Getter interfaces for the type. <br/>
+        /// A setter interface being given can result in no records being found, as most LoadOrders are readonly.
+        /// </typeparam>
+        /// <param name="modListings">Mod listings to source from, in priority order</param>
+        /// <param name="includeDeletedRecords">Whether to include deleted records in the output</param>
+        /// <returns>Enumerable of the most overridden version of each record of the given type, optionally including deleted ones</returns>
+        public static IEnumerable<TMajor> WinningOverrides<TMajor>(
+            this IEnumerable<IModListing<IModGetter>> modListings,
+            bool includeDeletedRecords = true)
             where TMajor : class, IMajorRecordCommonGetter
         {
-            return priorityOrder
+            return modListings
                 .Select(l => l.Mod)
                 .NotNull()
-                .WinningOverrides<TMajor>();
+                .WinningOverrides<TMajor>(includeDeletedRecords: includeDeletedRecords);
         }
 
-        public static IEnumerable<IMajorRecordCommonGetter> WinningOverrides(this IEnumerable<IModListing<IModGetter>> priorityOrder, Type type)
+        /// <summary>
+        /// Will find and return the most overridden version of each record in the list of mods of the given type 
+        /// USAGE NOTE: <br/>
+        /// Typically you should only supply the Getter interfaces for the type. <br/>
+        /// A setter interface being given can result in no records being found, as most LoadOrders are readonly.
+        /// </summary>
+        /// <param name="modListings">Mod listings to source from, in priority order</param>
+        /// <param name="type">
+        /// Type of record to search for and iterate. <br/>
+        /// USAGE NOTE: <br/>
+        /// Typically you should only supply the Getter interfaces for the type. <br/>
+        /// A setter interface being given can result in no records being found, as most LoadOrders are readonly.
+        /// </param>
+        /// <param name="includeDeletedRecords">Whether to include deleted records in the output</param>
+        /// <returns>Enumerable of the most overridden version of each record of the given type, optionally including deleted ones</returns>
+        public static IEnumerable<IMajorRecordCommonGetter> WinningOverrides(
+            this IEnumerable<IModListing<IModGetter>> modListings, 
+            Type type,
+            bool includeDeletedRecords = true)
         {
-            return priorityOrder
+            return modListings
                 .Select(l => l.Mod)
                 .NotNull()
-                .WinningOverrides(type);
+                .WinningOverrides(type, includeDeletedRecords: includeDeletedRecords);
         }
 
-        public static IEnumerable<TMajor> WinningOverrides<TMajor>(this IEnumerable<IModGetter> priorityOrder)
+        /// <summary>
+        /// Will find and return the most overridden version of each record in the list of mods of the given type 
+        /// USAGE NOTE: <br/>
+        /// Typically you should only supply the Getter interfaces for the type. <br/>
+        /// A setter interface being given can result in no records being found, as most LoadOrders are readonly.
+        /// </summary>
+        /// <typeparam name="TMajor">
+        /// Type of record to search for and iterate. <br/>
+        /// USAGE NOTE: <br/>
+        /// Typically you should only supply the Getter interfaces for the type. <br/>
+        /// A setter interface being given can result in no records being found, as most LoadOrders are readonly.
+        /// </typeparam>
+        /// <param name="mods">Mods to source from, in priority order</param>
+        /// <param name="includeDeletedRecords">Whether to include deleted records in the output</param>
+        /// <returns>Enumerable of the most overridden version of each record of the given type, optionally including deleted ones</returns>
+        public static IEnumerable<TMajor> WinningOverrides<TMajor>(
+            this IEnumerable<IModGetter> mods,
+            bool includeDeletedRecords = true)
             where TMajor : class, IMajorRecordCommonGetter
         {
             var passedRecords = new HashSet<FormKey>();
-            foreach (var mod in priorityOrder)
+            foreach (var mod in mods)
             {
                 foreach (var record in mod.EnumerateMajorRecords<TMajor>())
                 {
                     if (!passedRecords.Add(record.FormKey)) continue;
+                    if (!includeDeletedRecords && record.IsDeleted) continue;
                     yield return record;
                 }
             }
         }
 
-        public static IEnumerable<IMajorRecordCommonGetter> WinningOverrides(this IEnumerable<IModGetter> priorityOrder, Type type)
+        /// <summary>
+        /// Will find and return the most overridden version of each record in the list of mods of the given type 
+        /// USAGE NOTE: <br/>
+        /// Typically you should only supply the Getter interfaces for the type. <br/>
+        /// A setter interface being given can result in no records being found, as most LoadOrders are readonly.
+        /// </summary>
+        /// <param name="mods">Mods to source from, in priority order</param>
+        /// <param name="type">
+        /// Type of record to search for and iterate. <br/>
+        /// USAGE NOTE: <br/>
+        /// Typically you should only supply the Getter interfaces for the type. <br/>
+        /// A setter interface being given can result in no records being found, as most LoadOrders are readonly.
+        /// </param>
+        /// <param name="includeDeletedRecords">Whether to include deleted records in the output</param>
+        /// <returns>Enumerable of the most overridden version of each record of the given type, optionally including deleted ones</returns>
+        public static IEnumerable<IMajorRecordCommonGetter> WinningOverrides(
+            this IEnumerable<IModGetter> mods,
+            Type type,
+            bool includeDeletedRecords = true)
         {
             var passedRecords = new HashSet<FormKey>();
-            foreach (var mod in priorityOrder)
+            foreach (var mod in mods)
             {
                 foreach (var record in mod.EnumerateMajorRecords(type))
                 {
                     if (!passedRecords.Add(record.FormKey)) continue;
+                    if (!includeDeletedRecords && record.IsDeleted) continue;
                     yield return record;
                 }
             }
         }
 
-        public static IEnumerable<ModContext<TMod, TSetter, TGetter>> WinningOverrideContexts<TMod, TModGetter, TSetter, TGetter>(this LoadOrder<TModGetter> loadOrder)
+        /// <summary>
+        /// Will find and return the most overridden version of each record in the list of mods of the given type. <br/>
+        /// <br />
+        /// Additionally, it will come wrapped in a context object that has knowledge of where each record came from. <br/>
+        /// This context helps when trying to override deep records such as Cells/PlacedObjects/etc, as the context is able to navigate
+        /// and insert the record into the proper location for you. <br />
+        /// <br />
+        /// This system is overkill for simpler top-level records.
+        /// </summary>
+        /// <typeparam name="TMod">Setter Mod type to target</typeparam>
+        /// <typeparam name="TModGetter">Getter Mod type to target</typeparam>
+        /// <typeparam name="TSetter">
+        /// Setter interface type of record to search for and iterate.
+        /// </typeparam>
+        /// <typeparam name="TGetter">
+        /// Getter interface type of record to search for and iterate.
+        /// </typeparam>
+        /// <param name="loadOrder">LoadOrder to iterate over</param>
+        /// <param name="includeDeletedRecords">Whether to include deleted records in the output</param>
+        /// <returns>Enumerable of the most overridden version of each record of the given type, optionally including deleted ones</returns>
+        public static IEnumerable<ModContext<TMod, TSetter, TGetter>> WinningOverrideContexts<TMod, TModGetter, TSetter, TGetter>(
+            this LoadOrder<TModGetter> loadOrder,
+            bool includeDeletedRecords = true)
             where TMod : class, IMod, TModGetter
             where TModGetter : class, IModGetter, IMajorRecordContextEnumerable<TMod>
             where TSetter : class, IMajorRecordCommon, TGetter
             where TGetter : class, IMajorRecordCommonGetter
         {
-            return loadOrder.PriorityOrder.WinningOverrideContexts<TMod, TModGetter, TSetter, TGetter>();
+            return loadOrder.PriorityOrder.WinningOverrideContexts<TMod, TModGetter, TSetter, TGetter>(includeDeletedRecords: includeDeletedRecords);
         }
 
-        public static IEnumerable<ModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> WinningOverrideContexts<TMod, TModGetter>(this LoadOrder<TModGetter> loadOrder, Type type)
+        /// <summary>
+        /// Will find and return the most overridden version of each record in the list of mods of the given type. <br/>
+        /// <br />
+        /// Additionally, it will come wrapped in a context object that has knowledge of where each record came from. <br/>
+        /// This context helps when trying to override deep records such as Cells/PlacedObjects/etc, as the context is able to navigate
+        /// and insert the record into the proper location for you. <br />
+        /// <br />
+        /// This system is overkill for simpler top-level records.
+        /// </summary>
+        /// <typeparam name="TMod">Setter Mod type to target</typeparam>
+        /// <typeparam name="TModGetter">Getter Mod type to target</typeparam>
+        /// <param name="loadOrder">LoadOrder to iterate over</param>
+        /// <param name="type">
+        /// Type of record to search for and iterate. <br/>
+        /// USAGE NOTE: <br/>
+        /// Typically you should only supply the Getter interfaces for the type. <br/>
+        /// A setter interface being given can result in no records being found, as most LoadOrders are readonly.
+        /// </param>
+        /// <param name="includeDeletedRecords">Whether to include deleted records in the output</param>
+        /// <returns>Enumerable of the most overridden version of each record of the given type, optionally including deleted ones</returns>
+        public static IEnumerable<ModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> WinningOverrideContexts<TMod, TModGetter>(
+            this LoadOrder<TModGetter> loadOrder,
+            Type type,
+            bool includeDeletedRecords = true)
             where TMod : class, IMod, TModGetter
             where TModGetter : class, IModGetter, IMajorRecordContextEnumerable<TMod>
         {
-            return loadOrder.PriorityOrder.WinningOverrideContexts<TMod, TModGetter>(type);
+            return loadOrder.PriorityOrder.WinningOverrideContexts<TMod, TModGetter>(type, includeDeletedRecords: includeDeletedRecords);
         }
 
-        public static IEnumerable<ModContext<TMod, TSetter, TGetter>> WinningOverrideContexts<TMod, TModGetter, TSetter, TGetter>(this IEnumerable<IModListing<TModGetter>> priorityOrder)
+        /// <summary>
+        /// Will find and return the most overridden version of each record in the list of mods of the given type. <br/>
+        /// <br />
+        /// Additionally, it will come wrapped in a context object that has knowledge of where each record came from. <br/>
+        /// This context helps when trying to override deep records such as Cells/PlacedObjects/etc, as the context is able to navigate
+        /// and insert the record into the proper location for you. <br />
+        /// <br />
+        /// This system is overkill for simpler top-level records.
+        /// </summary>
+        /// <typeparam name="TMod">Setter Mod type to target</typeparam>
+        /// <typeparam name="TModGetter">Getter Mod type to target</typeparam>
+        /// <typeparam name="TSetter">
+        /// Setter interface type of record to search for and iterate.
+        /// </typeparam>
+        /// <typeparam name="TGetter">
+        /// Getter interface type of record to search for and iterate.
+        /// </typeparam>
+        /// <param name="modListings">Mod listings to source from, in priority order</param>
+        /// <param name="includeDeletedRecords">Whether to include deleted records in the output</param>
+        /// <returns>Enumerable of the most overridden version of each record of the given type, optionally including deleted ones</returns>
+        public static IEnumerable<ModContext<TMod, TSetter, TGetter>> WinningOverrideContexts<TMod, TModGetter, TSetter, TGetter>(
+            this IEnumerable<IModListing<TModGetter>> modListings,
+            bool includeDeletedRecords = true)
             where TMod : class, IMod, TModGetter
             where TModGetter : class, IModGetter, IMajorRecordContextEnumerable<TMod>
             where TSetter : class, IMajorRecordCommon, TGetter
             where TGetter : class, IMajorRecordCommonGetter
         {
-            return priorityOrder
+            return modListings
                 .Select(l => l.Mod)
                 .NotNull()
-                .WinningOverrideContexts<TMod, TModGetter, TSetter, TGetter>();
+                .WinningOverrideContexts<TMod, TModGetter, TSetter, TGetter>(includeDeletedRecords: includeDeletedRecords);
         }
 
-        public static IEnumerable<ModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> WinningOverrideContexts<TMod, TModGetter>(this IEnumerable<IModListing<TModGetter>> priorityOrder, Type type)
+        /// <summary>
+        /// Will find and return the most overridden version of each record in the list of mods of the given type. <br/>
+        /// <br />
+        /// Additionally, it will come wrapped in a context object that has knowledge of where each record came from. <br/>
+        /// This context helps when trying to override deep records such as Cells/PlacedObjects/etc, as the context is able to navigate
+        /// and insert the record into the proper location for you. <br />
+        /// <br />
+        /// This system is overkill for simpler top-level records.
+        /// </summary>
+        /// <typeparam name="TMod">Setter Mod type to target</typeparam>
+        /// <typeparam name="TModGetter">Getter Mod type to target</typeparam>
+        /// <param name="modListings">Mod listings to source from, in priority order</param>
+        /// <param name="type">
+        /// Type of record to search for and iterate. <br/>
+        /// USAGE NOTE: <br/>
+        /// Typically you should only supply the Getter interfaces for the type. <br/>
+        /// A setter interface being given can result in no records being found, as most LoadOrders are readonly.
+        /// </param>
+        /// <param name="includeDeletedRecords">Whether to include deleted records in the output</param>
+        /// <returns>Enumerable of the most overridden version of each record of the given type, optionally including deleted ones</returns>
+        public static IEnumerable<ModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> WinningOverrideContexts<TMod, TModGetter>(
+            this IEnumerable<IModListing<TModGetter>> modListings, 
+            Type type,
+            bool includeDeletedRecords = true)
             where TMod : class, IMod, TModGetter
             where TModGetter : class, IModGetter, IMajorRecordContextEnumerable<TMod>
         {
-            return priorityOrder
+            return modListings
                 .Select(l => l.Mod)
                 .NotNull()
-                .WinningOverrideContexts<TMod, TModGetter>(type);
+                .WinningOverrideContexts<TMod, TModGetter>(type, includeDeletedRecords: includeDeletedRecords);
         }
 
-        public static IEnumerable<ModContext<TMod, TSetter, TGetter>> WinningOverrideContexts<TMod, TModGetter, TSetter, TGetter>(this IEnumerable<TModGetter> priorityOrder)
+        /// <summary>
+        /// Will find and return the most overridden version of each record in the list of mods of the given type. <br/>
+        /// <br />
+        /// Additionally, it will come wrapped in a context object that has knowledge of where each record came from. <br/>
+        /// This context helps when trying to override deep records such as Cells/PlacedObjects/etc, as the context is able to navigate
+        /// and insert the record into the proper location for you. <br />
+        /// <br />
+        /// This system is overkill for simpler top-level records.
+        /// </summary>
+        /// <typeparam name="TMod">Setter Mod type to target</typeparam>
+        /// <typeparam name="TModGetter">Getter Mod type to target</typeparam>
+        /// <typeparam name="TSetter">
+        /// Setter interface type of record to search for and iterate.
+        /// </typeparam>
+        /// <typeparam name="TGetter">
+        /// Getter interface type of record to search for and iterate.
+        /// </typeparam>
+        /// <param name="mods">Mods to source from, in priority order</param>
+        /// <param name="includeDeletedRecords">Whether to include deleted records in the output</param>
+        /// <returns>Enumerable of the most overridden version of each record of the given type, optionally including deleted ones</returns>
+        public static IEnumerable<ModContext<TMod, TSetter, TGetter>> WinningOverrideContexts<TMod, TModGetter, TSetter, TGetter>(
+            this IEnumerable<TModGetter> mods,
+            bool includeDeletedRecords = true)
             where TMod : class, IMod, TModGetter
             where TModGetter : class, IModGetter, IMajorRecordContextEnumerable<TMod>
             where TSetter : class, IMajorRecordCommon, TGetter
             where TGetter : class, IMajorRecordCommonGetter
         {
             var passedRecords = new HashSet<FormKey>();
-            foreach (var mod in priorityOrder)
+            foreach (var mod in mods)
             {
                 foreach (var record in mod.EnumerateMajorRecordContexts<TSetter, TGetter>())
                 {
                     if (!passedRecords.Add(record.Record.FormKey)) continue;
+                    if (!includeDeletedRecords && record.Record.IsDeleted) continue;
                     yield return record;
                 }
             }
         }
 
-        public static IEnumerable<ModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> WinningOverrideContexts<TMod, TModGetter>(this IEnumerable<TModGetter> priorityOrder, Type type)
+        /// <summary>
+        /// Will find and return the most overridden version of each record in the list of mods of the given type. <br/>
+        /// <br />
+        /// Additionally, it will come wrapped in a context object that has knowledge of where each record came from. <br/>
+        /// This context helps when trying to override deep records such as Cells/PlacedObjects/etc, as the context is able to navigate
+        /// and insert the record into the proper location for you. <br />
+        /// <br />
+        /// This system is overkill for simpler top-level records.
+        /// </summary>
+        /// <typeparam name="TMod">Setter Mod type to target</typeparam>
+        /// <typeparam name="TModGetter">Getter Mod type to target</typeparam>
+        /// <param name="mods">Mods to source from, in priority order</param>
+        /// <param name="type">
+        /// Type of record to search for and iterate. <br/>
+        /// USAGE NOTE: <br/>
+        /// Typically you should only supply the Getter interfaces for the type. <br/>
+        /// A setter interface being given can result in no records being found, as most LoadOrders are readonly.
+        /// </param>
+        /// <param name="includeDeletedRecords">Whether to include deleted records in the output</param>
+        /// <returns>Enumerable of the most overridden version of each record of the given type, optionally including deleted ones</returns>
+        public static IEnumerable<ModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> WinningOverrideContexts<TMod, TModGetter>(
+            this IEnumerable<TModGetter> mods,
+            Type type,
+            bool includeDeletedRecords = true)
             where TMod : class, IMod, TModGetter
             where TModGetter : class, IModGetter, IMajorRecordContextEnumerable<TMod>
         {
             var passedRecords = new HashSet<FormKey>();
-            foreach (var mod in priorityOrder)
+            foreach (var mod in mods)
             {
                 foreach (var record in mod.EnumerateMajorRecordContexts(type))
                 {
                     if (!passedRecords.Add(record.Record.FormKey)) continue;
+                    if (!includeDeletedRecords && record.Record.IsDeleted) continue;
                     yield return record;
                 }
             }

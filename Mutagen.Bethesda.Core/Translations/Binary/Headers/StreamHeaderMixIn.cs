@@ -965,7 +965,7 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="checkIsGroup">Whether to throw exception if header is aligned on top of bytes that are not a GRUP</param>
         /// <exception cref="System.ArgumentException">Thrown if checkIsGroup is on, and bytes not aligned on a GRUP.</exception>
         /// <returns>A GroupFrame struct</returns>
-        public static GroupFrame GetGroupFrame(IMutagenReadStream stream, int offset = 0, bool readSafe = true, bool checkIsGroup = true)
+        public static GroupFrame GetGroupFrame(this IMutagenReadStream stream, int offset = 0, bool readSafe = true, bool checkIsGroup = true)
         {
             return GetGroupFrame(stream, stream.MetaData.Constants, offset: offset, checkIsGroup: checkIsGroup, readSafe: readSafe);
         }

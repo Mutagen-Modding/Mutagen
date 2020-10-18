@@ -278,9 +278,19 @@ namespace Mutagen.Bethesda.Tests
             }
             else
             {
-                using var inputStream = new MutagenBinaryReadStream(inputPath.Path, gameMode);
-                using var writer = new MutagenWriter(outputPath.Path, gameMode);
-                AlignMajorRecordsByRules(inputStream, writer, alignmentRules, fileLocs);
+                var alignedMajorRecordsFile = Path.Combine(temp.Dir.Path, "alignedRules");
+                using (var inputStream = new MutagenBinaryReadStream(inputPath.Path, gameMode))
+                {
+                    using var writer = new MutagenWriter(alignedMajorRecordsFile, gameMode);
+                    AlignMajorRecordsByRules(inputStream, writer, alignmentRules, fileLocs);
+                }
+
+                var alignedGroupsFile = Path.Combine(temp.Dir.Path, "alignedGroups");
+                using (var inputStream = new MutagenBinaryReadStream(alignedMajorRecordsFile, gameMode))
+                {
+                    using var writer = new MutagenWriter(new FileStream(outputPath.Path, FileMode.Create), gameMode);
+                    AlignGroupsByRules(inputStream, writer, alignmentRules, fileLocs);
+                }
             }
         }
 
