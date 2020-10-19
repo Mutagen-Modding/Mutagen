@@ -85,11 +85,13 @@ namespace Mutagen.Bethesda.UnitTests
         public static void TypeSolidifier()
         {
             IEnumerable<IModListing<ISkyrimModGetter>> listings = Enumerable.Empty<IModListing<ISkyrimModGetter>>();
-            IEnumerable<IAmmunitionGetter> ammun = listings.Ammunition();
-            IEnumerable<IPlacedGetter> placed = listings.IPlaced();
+            IEnumerable<IAmmunitionGetter> ammun = listings.Ammunition().WinningOverrides();
+            IEnumerable<IPlacedGetter> placed = listings.IPlaced().WinningOverrides();
+            IEnumerable<ModContext<ISkyrimMod, ICell, ICellGetter>> cells = listings.Cell().WinningContextOverrides();
             IEnumerable<ISkyrimModGetter> mods = Enumerable.Empty<ISkyrimModGetter>();
-            ammun = mods.Ammunition();
-            placed = mods.IPlaced();
+            ammun = mods.Ammunition().WinningOverrides();
+            placed = mods.IPlaced().WinningOverrides();
+            cells = mods.Cell().WinningContextOverrides();
         }
     }
 }
