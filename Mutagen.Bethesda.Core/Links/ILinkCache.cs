@@ -62,6 +62,25 @@ namespace Mutagen.Bethesda
         bool TryLookup(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec);
 
         /// <summary>
+        /// Retrieves the record that matches the FormKey relative to the source the cache was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
+        /// the function will throw a KeyNotFoundException.
+        /// </summary>
+        /// <param name="formKey">FormKey to look for</param>
+        /// <exception cref="ArgumentException">
+        /// An unexpected TMajor type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        /// <exception cref="KeyNotFoundException">
+        /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
+        /// </exception>
+        /// <returns>True if a matching record was found</returns>
+        IMajorRecordCommonGetter Lookup(FormKey formKey);
+
+        /// <summary>
         /// Iterates through the contained mods in the order they were listed, with the least prioritized mod first.
         /// </summary>
         public IReadOnlyList<IModGetter> ListedOrder { get; }

@@ -211,5 +211,12 @@ namespace Mutagen.Bethesda
                 return false;
             }
         }
+
+        /// <inheritdoc />
+        public IMajorRecordCommonGetter Lookup(FormKey formKey)
+        {
+            if (TryLookup<IMajorRecordCommonGetter>(formKey, out var commonRec)) return commonRec;
+            throw new KeyNotFoundException($"Form ID {formKey.ID} could not be found.");
+        }
     }
 }
