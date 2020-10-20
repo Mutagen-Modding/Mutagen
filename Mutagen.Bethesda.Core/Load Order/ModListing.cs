@@ -7,37 +7,38 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
+    public interface IModListing<out TMod> : IModListing, IDisposable
+        where TMod : class, IModGetter
+    {
+        /// <summary>
+        /// Mod object
+        /// </summary>
+        TMod? Mod { get; }
+    }
+
     /// <summary>
     /// Class associating a ModKey with a Mod object that may or may not exist.
     /// </summary>
     [DebuggerDisplay("ModListing {ToString()}")]
-    public class ModListing<TMod> : IModListing<TMod>
+    public class ModListing<TMod> : ModKeyListing, IModListing<TMod>
         where TMod : class, IModGetter
     {
         /// <inheritdoc />
         public TMod? Mod { get; }
 
-        /// <inheritdoc />
-        public ModKey ModKey { get; }
-
-        /// <inheritdoc />
-        public bool Enabled { get; }
-
         private ModListing(ModKey key, TMod? mod, bool enabled)
+            : base (key, enabled)
         {
-            this.ModKey = key;
             this.Mod = mod;
-            this.Enabled = enabled;
         }
 
         /// <summary>
         /// Constructor
         /// </summary>
         public ModListing(TMod mod, bool enabled)
+            : base(mod.ModKey, enabled)
         {
-            this.ModKey = mod.ModKey;
             this.Mod = mod;
-            this.Enabled = enabled;
         }
 
         /// <summary>
@@ -64,19 +65,5 @@ namespace Mutagen.Bethesda
                 disp.Dispose();
             }
         }
-    }
-
-    public interface IModListing<out TMod> : IModKeyed, IDisposable
-        where TMod : class, IModGetter
-    {
-        /// <summary>
-        /// Mod object
-        /// </summary>
-        TMod? Mod { get; }
-
-        /// <summary>
-        /// Whether the listing is enabled in the load order
-        /// </summary>
-        bool Enabled { get; }
     }
 }
