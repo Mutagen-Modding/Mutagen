@@ -1,4 +1,4 @@
-﻿using Noggog;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -92,6 +92,14 @@ namespace Mutagen.Bethesda
 
             majorRec = default;
             return false;
+        }
+
+        /// <inheritdoc />
+        public IMajorRecordCommonGetter Lookup(FormKey formKey)
+        {
+            IMajorRecordCommonGetter majorRec;
+            if (TryLookup<IMajorRecordCommonGetter>(formKey, out majorRec!)) return majorRec;
+            throw new KeyNotFoundException($"Form ID {formKey.ID} could not be found.");
         }
     }
 }
