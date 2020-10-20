@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda
         bool TryLookup(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec);
 
         /// <summary>
-        /// Retrieves the record that matches the FormKey relative to the source the package was attached to.<br/>
+        /// Retrieves the record that matches the FormKey relative to the source the cache was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
         /// the function will throw a KeyNotFoundException.
@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         /// <exception cref="KeyNotFoundException">
-        /// When the FormKey having the specified Major Record type cannot be found under the attached package.<br/>
+        /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
         /// </exception>
         /// <returns>True if a matching record was found</returns>
         IMajorRecordCommonGetter Lookup(FormKey formKey);
