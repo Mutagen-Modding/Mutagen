@@ -73,8 +73,7 @@ namespace Mutagen.Bethesda
         /// <inheritdoc />
         public IMajorRecordCommonGetter Lookup(FormKey formKey)
         {
-            IMajorRecordCommonGetter majorRec;
-            if (TryLookup<IMajorRecordCommonGetter>(formKey, out majorRec!)) return majorRec;
+            if (TryLookup<IMajorRecordCommonGetter>(formKey, out var majorRec)) return majorRec;
             throw new KeyNotFoundException($"Form ID {formKey.ID} could not be found.");
         }
 
