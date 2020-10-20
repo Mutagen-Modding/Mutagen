@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -68,6 +68,13 @@ namespace Mutagen.Bethesda
                 if (_mutableMods[i].TryLookup(formKey, type, out majorRec)) return true;
             }
             return WrappedImmutableCache.TryLookup(formKey, type, out majorRec);
+        }
+
+        /// <inheritdoc />
+        public IMajorRecordCommonGetter Lookup(FormKey formKey)
+        {
+            if (TryLookup<IMajorRecordCommonGetter>(formKey, out var majorRec)) return majorRec;
+            throw new KeyNotFoundException($"Form ID {formKey.ID} could not be found.");
         }
 
         /// <summary>
