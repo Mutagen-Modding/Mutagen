@@ -176,6 +176,10 @@ namespace Mutagen.Bethesda.Generation
                         break;
                     case ListBinaryType.Trigger:
                         args.Add($"recordType: recordTypeConverter.ConvertToCustom({data.TriggeringRecordSetAccessor})");
+                        if (data.OverflowRecordType.HasValue)
+                        {
+                            args.Add($"overflowRecord: {objGen.RecordTypeHeaderName(data.OverflowRecordType.Value)}");
+                        }
                         break;
                     case ListBinaryType.CounterRecord:
                         var counterType = new RecordType(list.CustomData[CounterRecordType] as string);
@@ -872,8 +876,27 @@ namespace Mutagen.Bethesda.Generation
                     }
                     break;
                 case ListBinaryType.Trigger:
-                    fg.AppendLine($"var subMeta = stream.ReadSubrecord();");
-                    fg.AppendLine("var subLen = subMeta.ContentLength;");
+                    if (data.OverflowRecordType.HasValue)
+                    {
+                        fg.AppendLine($"var subMeta = stream.ReadSubrecord();");
+                        fg.AppendLine("int subLen;");
+                        fg.AppendLine($"if (subMeta.RecordType == {objGen.RecordTypeHeaderName(data.OverflowRecordType.Value)})");
+                        using (new BraceWrapper(fg))
+                        {
+                            fg.AppendLine("subLen = checked((int)stream.ReadUInt32());");
+                            fg.AppendLine($"stream.ReadSubrecord();");
+                        }
+                        fg.AppendLine("else");
+                        using (new BraceWrapper(fg))
+                        {
+                            fg.AppendLine("subLen = subMeta.ContentLength;");
+                        }
+                    }
+                    else
+                    {
+                        fg.AppendLine($"var subMeta = stream.ReadSubrecord();");
+                        fg.AppendLine("var subLen = subMeta.ContentLength;");
+                    }
                     if (expectedLen.HasValue)
                     {
                         using (var args = new ArgsWrapper(fg,

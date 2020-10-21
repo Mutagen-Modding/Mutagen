@@ -1,4 +1,4 @@
-﻿using Noggog;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,18 +10,18 @@ namespace Mutagen.Bethesda.Binary
         MemoryTributary _tributary = new MemoryTributary();
         MutagenWriter _writer;
         RecordType _mainRecord;
-        RecordType _extraLengthRecord;
+        RecordType _overflowRecord;
 
         public MutagenWriter PrepWriter { get; }
 
         public ExtraLengthHeaderExport(
             MutagenWriter writer,
             RecordType mainRecord,
-            RecordType extraLengthRecord)
+            RecordType overflowRecord)
         {
             this._writer = writer;
             this._mainRecord = mainRecord;
-            this._extraLengthRecord = extraLengthRecord;
+            this._overflowRecord = overflowRecord;
             PrepWriter = new MutagenWriter(_tributary, writer.MetaData);
         }
 
@@ -37,7 +37,7 @@ namespace Mutagen.Bethesda.Binary
             }
             else
             {
-                using (HeaderExport.Subrecord(_writer, _extraLengthRecord))
+                using (HeaderExport.Subrecord(_writer, _overflowRecord))
                 {
                     _writer.Write(checked((uint)_tributary.Length));
                 }
