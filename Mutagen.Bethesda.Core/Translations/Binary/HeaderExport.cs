@@ -109,17 +109,24 @@ namespace Mutagen.Bethesda.Binary
                 diff -= this.RecordConstants.LengthAfterType;
             }
 
+            // If negative, we're likely mid-exception.
+            // We want exit out and trickle up the original
+            if (diff < 0)
+            {
+                return;
+            }
+
             switch (this.RecordConstants.ObjectType)
             {
                 case ObjectType.Subrecord:
                     {
-                        this.Writer.Write((ushort)diff);
+                        this.Writer.Write(checked((ushort)diff));
                     }
                     break;
                 case ObjectType.Record:
                 case ObjectType.Group:
                     {
-                        this.Writer.Write((uint)diff);
+                        this.Writer.Write(checked((uint)diff));
                     }
                     break;
                 default:
