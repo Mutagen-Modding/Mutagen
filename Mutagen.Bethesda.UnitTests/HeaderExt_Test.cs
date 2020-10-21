@@ -1,15 +1,17 @@
-﻿using Mutagen.Bethesda.Binary;
+using FluentAssertions;
+using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests
 {
-    public class HeaderQuery_Test
+    public class HeaderExt_Test
     {
         /// NPC, /w EDID followed by DATA
         public readonly static byte[] _majorBytes = new byte[]
@@ -91,6 +93,26 @@ namespace Mutagen.Bethesda.UnitTests
             var subFrame = majorFrame.LocateSubrecordFrame(RecordTypes.DATA, out var loc);
             Assert.Equal(DataPos, loc);
             Assert.Equal(DataValue, subFrame.AsInt32());
+        }
+
+        [Fact]
+        public void EnumerateSubrecordsDirect()
+        {
+            byte[] b = new byte[]
+            {
+                0x01, 0x02,
+                0x4D, 0x41, 0x53, 0x54, 0x4, 0x00, 0x01, 0x02, 0x03, 0x04,
+                0x44, 0x41, 0x54, 0x41, 0x4, 0x00, 0x09, 0x08, 0x07, 0x06
+            };
+            var recs = HeaderExt.EnumerateSubrecords(b, GameConstants.Oblivion, 2)
+                .ToList();
+            recs.Should().HaveCount(2);
+            recs[0].RecordType.Should().Be(RecordTypes.MAST);
+            recs[1].RecordType.Should().Be(RecordTypes.DATA);
+            recs[0].RecordLength.Should().Be(4);
+            recs[1].RecordLength.Should().Be(4);
+            recs[0].AsInt32().Should().Be(0x04030201);
+            recs[1].AsInt32().Should().Be(0x06070809);
         }
     }
 }

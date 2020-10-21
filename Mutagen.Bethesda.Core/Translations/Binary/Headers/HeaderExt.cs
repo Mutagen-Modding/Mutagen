@@ -567,51 +567,32 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
-        /// <summary>
-        /// Enumerates locations of the contained subrecords.<br/>
-        /// Locations are relative to the RecordType of the MajorRecord.
-        /// </summary>
-        public static IEnumerable<int> SubrecordLocations(this MajorRecordFrame majorFrame)
+        internal static IEnumerable<SubrecordPinFrame> EnumerateSubrecords(ReadOnlyMemorySlice<byte> span, GameConstants meta, int loc)
         {
-            int loc = majorFrame.HeaderLength;
-            while (loc < majorFrame.HeaderAndContentData.Length)
+            while (loc < span.Length)
             {
-                yield return loc;
-                var subHeader = new SubrecordHeader(majorFrame.Meta, majorFrame.HeaderAndContentData.Slice(loc));
-                loc += subHeader.TotalLength;
-            }
-        }
-
-        // Not an extension method, as we don't want it to show up as intellisense, as it's already part of a MajorRecordFrame's enumerator.
-        /// <summary>
-        /// Enumerates locations of the contained subrecords.<br/>
-        /// Locations are relative to the RecordType of the MajorRecordFrame.
-        /// </summary>
-        public static IEnumerable<SubrecordPinFrame> EnumerateSubrecords(MajorRecordFrame majorFrame)
-        {
-            int loc = majorFrame.HeaderLength;
-            while (loc < majorFrame.HeaderAndContentData.Length)
-            {
-                var subHeader = new SubrecordPinFrame(majorFrame.Meta, majorFrame.HeaderAndContentData.Slice(loc), loc);
+                var subHeader = new SubrecordPinFrame(meta, span.Slice(loc), loc);
                 yield return subHeader;
                 loc += subHeader.TotalLength;
             }
         }
+
+        /// <summary>
+        /// Enumerates locations of the contained subrecords.<br/>
+        /// Locations are relative to the RecordType of the MajorRecordFrame.
+        /// </summary>
+        /// <param name="majorFrame">MajorRecordFrame to iterate</param>
+        public static IEnumerable<SubrecordPinFrame> EnumerateSubrecords(this MajorRecordFrame majorFrame) => EnumerateSubrecords(majorFrame.HeaderAndContentData, majorFrame.Meta, majorFrame.HeaderLength);
+
 
         // Not an extension method, as we don't want it to show up as intellisense, as it's already part of a MajorRecordFrame's enumerator.
         /// <summary>
         /// Enumerates locations of the contained subrecords.<br/>
         /// Locations are relative to the RecordType of the ModHeaderFrame.
         /// </summary>
-        public static IEnumerable<SubrecordPinFrame> EnumerateSubrecords(ModHeaderFrame modHeader)
+        public static IEnumerable<SubrecordPinFrame> EnumerateSubrecords(this ModHeaderFrame modHeader)
         {
-            int loc = modHeader.HeaderLength;
-            while (loc < modHeader.HeaderAndContentData.Length)
-            {
-                var subHeader = new SubrecordPinFrame(modHeader.Meta, modHeader.HeaderAndContentData.Slice(loc), loc);
-                yield return subHeader;
-                loc += subHeader.TotalLength;
-            }
+            return EnumerateSubrecords(modHeader.HeaderAndContentData, modHeader.Meta, modHeader.HeaderLength);
         }
 
         public static IEnumerable<SubrecordPinFrame> Masters(this ModHeaderFrame modHeader)
