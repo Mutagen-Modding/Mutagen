@@ -51,16 +51,10 @@ namespace Mutagen.Bethesda.Binary
         public RecordType RecordType => new RecordType(BinaryPrimitives.ReadInt32LittleEndian(this.HeaderData.Slice(0, 4)));
         
         /// <summary>
-        /// The length explicitly contained in the length bytes of the header
-        /// Note that for Major Records, this is equivalent to ContentLength
-        /// </summary>
-        public uint RecordLength => BinaryPrimitives.ReadUInt32LittleEndian(this.HeaderData.Slice(4, this.Meta.MajorConstants.LengthLength));
-        
-        /// <summary>
         /// The length of the content of the MajorRecord, excluding the header bytes.
         /// </summary>
-        public uint ContentLength => RecordLength;
-        
+        public uint ContentLength => BinaryPrimitives.ReadUInt32LittleEndian(this.HeaderData.Slice(4, this.Meta.MajorConstants.LengthLength));
+
         /// <summary>
         /// The integer representing a Major Record's flags enum.
         /// Since each game has its own flag Enum, this field is offered as an int that should
@@ -169,16 +163,6 @@ namespace Mutagen.Bethesda.Binary
         /// </summary>
         public uint ContentLength
         {
-            get => RecordLength;
-            set => RecordLength = value;
-        }
-        
-        /// <summary>
-        /// The length explicitly contained in the length bytes of the header
-        /// Note that for Major Records, this is equivalent to ContentLength
-        /// </summary>
-        public uint RecordLength
-        {
             get => BinaryPrimitives.ReadUInt32LittleEndian(this.HeaderData.Slice(4, 4));
             set => BinaryPrimitives.WriteUInt32LittleEndian(this.HeaderData.Slice(4, 4), value);
         }
@@ -215,7 +199,7 @@ namespace Mutagen.Bethesda.Binary
         /// <summary>
         /// Total length of the Major Record, including the header and its content.
         /// </summary>
-        public long TotalLength => this.HeaderLength + this.RecordLength;
+        public long TotalLength => this.HeaderLength + this.ContentLength;
 
         /// <summary>
         /// Form Version of the Major Record
@@ -367,12 +351,6 @@ namespace Mutagen.Bethesda.Binary
         public RecordType RecordType => Header.RecordType;
 
         /// <summary>
-        /// The length explicitly contained in the length bytes of the header
-        /// Note that for Major Records, this is equivalent to ContentLength
-        /// </summary>
-        public uint RecordLength => Header.RecordLength;
-
-        /// <summary>
         /// The length of the content of the MajorRecord, excluding the header bytes.
         /// </summary>
         public uint ContentLength => (uint)Content.Length;
@@ -490,12 +468,6 @@ namespace Mutagen.Bethesda.Binary
         /// RecordType of the header
         /// </summary>
         public RecordType RecordType => Header.RecordType;
-
-        /// <summary>
-        /// The length explicitly contained in the length bytes of the header
-        /// Note that for Major Records, this is equivalent to ContentLength
-        /// </summary>
-        public uint RecordLength => Header.RecordLength;
 
         /// <summary>
         /// The length of the content of the MajorRecord, excluding the header bytes.

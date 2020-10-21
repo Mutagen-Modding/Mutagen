@@ -109,8 +109,8 @@ namespace Mutagen.Bethesda.UnitTests
             recs.Should().HaveCount(2);
             recs[0].RecordType.Should().Be(RecordTypes.MAST);
             recs[1].RecordType.Should().Be(RecordTypes.DATA);
-            recs[0].RecordLength.Should().Be(4);
-            recs[1].RecordLength.Should().Be(4);
+            recs[0].ContentLength.Should().Be(4);
+            recs[1].ContentLength.Should().Be(4);
             recs[0].AsInt32().Should().Be(0x04030201);
             recs[1].AsInt32().Should().Be(0x06070809);
         }

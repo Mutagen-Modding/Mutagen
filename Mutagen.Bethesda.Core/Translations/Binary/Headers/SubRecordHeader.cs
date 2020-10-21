@@ -53,16 +53,10 @@ namespace Mutagen.Bethesda.Binary
         public int RecordTypeInt => BinaryPrimitives.ReadInt32LittleEndian(this.HeaderData.Slice(0, 4));
         
         /// <summary>
-        /// The length explicitly contained in the length bytes of the header
-        /// Note that for Sub Records, this is equivalent to ContentLength
-        /// </summary>
-        public ushort RecordLength => BinaryPrimitives.ReadUInt16LittleEndian(this.HeaderData.Slice(4, 2));
-        
-        /// <summary>
         /// The length of the content of the Sub Record, excluding the header bytes.
         /// </summary>
-        public ushort ContentLength => RecordLength;
-        
+        public ushort ContentLength => BinaryPrimitives.ReadUInt16LittleEndian(this.HeaderData.Slice(4, 2));
+
         /// <summary>
         /// Total length of the Sub Record, including the header and its content.
         /// </summary>
@@ -167,12 +161,6 @@ namespace Mutagen.Bethesda.Binary
         /// RecordType of the header, represented as an int
         /// </summary>
         public int RecordTypeInt => Header.RecordTypeInt;
-
-        /// <summary>
-        /// The length explicitly contained in the length bytes of the header
-        /// Note that for Sub Records, this is equivalent to ContentLength
-        /// </summary>
-        public ushort RecordLength => Header.RecordLength;
 
         /// <summary>
         /// The length of the content of the Sub Record, excluding the header bytes.
@@ -302,12 +290,6 @@ namespace Mutagen.Bethesda.Binary
         /// RecordType of the header, represented as an int
         /// </summary>
         public int RecordTypeInt => Frame.RecordTypeInt;
-
-        /// <summary>
-        /// The length explicitly contained in the length bytes of the header
-        /// Note that for Sub Records, this is equivalent to ContentLength
-        /// </summary>
-        public ushort RecordLength => Frame.RecordLength;
 
         /// <summary>
         /// The length of the content of the Sub Record, excluding the header bytes.

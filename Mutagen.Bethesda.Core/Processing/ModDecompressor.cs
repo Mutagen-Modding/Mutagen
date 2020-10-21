@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Processing
                     // Write major Meta
                     var writableMajorMeta = meta.Constants.MajorRecordWritable(majorMetaSpan.AsSpan());
                     writableMajorMeta.IsCompressed = false;
-                    writableMajorMeta.RecordLength = (uint)(len + lengthDiff);
+                    writableMajorMeta.ContentLength = (uint)(len + lengthDiff);
                     writer.Write(majorMetaSpan);
                     writer.Write(decompressed.ReadRemainingSpan(readSafe: false));
 
