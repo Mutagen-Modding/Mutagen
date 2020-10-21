@@ -509,7 +509,7 @@ namespace Mutagen.Bethesda.Binary
         public static SubrecordFrame GetSubrecordFrame(this IBinaryReadStream stream, GameConstants constants, int offset = 0, bool readSafe = true)
         {
             var meta = GetSubrecord(stream, constants, offset, readSafe: readSafe);
-            return new SubrecordFrame(meta, stream.GetMemory(meta.TotalLength, offset: offset, readSafe: readSafe));
+            return SubrecordFrame.FactoryNoTrim(meta, stream.GetMemory(meta.TotalLength, offset: offset, readSafe: readSafe));
         }
 
         /// <summary>
@@ -532,7 +532,7 @@ namespace Mutagen.Bethesda.Binary
                 frame = default;
                 return false;
             }
-            frame = new SubrecordFrame(meta, stream.GetMemory(meta.TotalLength, readSafe: readSafe));
+            frame = SubrecordFrame.FactoryNoTrim(meta, stream.GetMemory(meta.TotalLength, readSafe: readSafe));
             return true;
         }
 
@@ -557,7 +557,7 @@ namespace Mutagen.Bethesda.Binary
                 frame = default;
                 return false;
             }
-            frame = new SubrecordFrame(meta, stream.GetMemory(meta.TotalLength, readSafe: readSafe));
+            frame = SubrecordFrame.FactoryNoTrim(meta, stream.GetMemory(meta.TotalLength, readSafe: readSafe));
             return true;
         }
 
@@ -669,7 +669,7 @@ namespace Mutagen.Bethesda.Binary
         public static SubrecordFrame ReadSubrecordFrame(this IBinaryReadStream stream, GameConstants constants, bool readSafe = true)
         {
             var meta = GetSubrecord(stream, constants, readSafe: readSafe, offset: 0);
-            return new SubrecordFrame(meta, stream.ReadMemory(meta.TotalLength, readSafe: readSafe));
+            return SubrecordFrame.FactoryNoTrim(meta, stream.ReadMemory(meta.TotalLength, readSafe: readSafe));
         }
 
         /// <summary>
@@ -692,7 +692,7 @@ namespace Mutagen.Bethesda.Binary
             {
                 throw new ArgumentException($"Unexpected header type: {meta.RecordType}");
             }
-            return new SubrecordFrame(meta, stream.ReadMemory(meta.TotalLength, readSafe: readSafe));
+            return SubrecordFrame.FactoryNoTrim(meta, stream.ReadMemory(meta.TotalLength, readSafe: readSafe));
         }
 
         /// <summary>
@@ -714,7 +714,7 @@ namespace Mutagen.Bethesda.Binary
                 frame = default;
                 return false;
             }
-            frame = new SubrecordFrame(meta, stream.ReadMemory(meta.TotalLength, readSafe: readSafe));
+            frame = SubrecordFrame.FactoryNoTrim(meta, stream.ReadMemory(meta.TotalLength, readSafe: readSafe));
             return true;
         }
 
@@ -738,7 +738,7 @@ namespace Mutagen.Bethesda.Binary
                 frame = default;
                 return false;
             }
-            frame = new SubrecordFrame(meta, stream.ReadMemory(meta.TotalLength, readSafe: readSafe));
+            frame = SubrecordFrame.FactoryNoTrim(meta, stream.ReadMemory(meta.TotalLength, readSafe: readSafe));
             return true;
         }
 

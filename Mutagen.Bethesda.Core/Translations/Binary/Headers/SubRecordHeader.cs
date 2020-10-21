@@ -108,15 +108,30 @@ namespace Mutagen.Bethesda.Binary
             this.HeaderAndContentData = span.Slice(0, checked((int)this.Header.TotalLength));
         }
 
+        private SubrecordFrame(SubrecordHeader header, ReadOnlyMemorySlice<byte> span)
+        {
+            this.Header = header;
+            this.HeaderAndContentData = span;
+        }
+
         /// <summary>
-        /// Constructor
+        /// Factory
         /// </summary>
         /// <param name="header">Existing SubrecordHeader struct</param>
         /// <param name="span">Span to overlay on, aligned to the start of the header</param>
-        public SubrecordFrame(SubrecordHeader header, ReadOnlyMemorySlice<byte> span)
+        public static SubrecordFrame Factory(SubrecordHeader header, ReadOnlyMemorySlice<byte> span)
         {
-            this.Header = header;
-            this.HeaderAndContentData = span.Slice(0, checked((int)this.Header.TotalLength));
+            return new SubrecordFrame(header, span.Slice(0, header.TotalLength));
+        }
+
+        /// <summary>
+        /// Factory
+        /// </summary>
+        /// <param name="header">Existing SubrecordHeader struct</param>
+        /// <param name="span">Span to overlay on, aligned to the start of the header</param>
+        public static SubrecordFrame FactoryNoTrim(SubrecordHeader header, ReadOnlyMemorySlice<byte> span)
+        {
+            return new SubrecordFrame(header, span);
         }
 
         /// <inheritdoc/>
@@ -200,16 +215,38 @@ namespace Mutagen.Bethesda.Binary
             this.Location = pinLocation;
         }
 
+        private SubrecordPinFrame(SubrecordFrame frame, ReadOnlyMemorySlice<byte> span, int pinLocation)
+        {
+            this.Frame = frame;
+            this.Location = pinLocation;
+        }
+
         /// <summary>
-        /// Constructor
+        /// Factory
         /// </summary>
         /// <param name="header">Existing SubrecordHeader struct</param>
         /// <param name="span">Span to overlay on, aligned to the start of the header</param>
         /// <param name="pinLocation">Location pin tracker relative to parent MajorRecordFrame</param>
-        public SubrecordPinFrame(SubrecordHeader header, ReadOnlyMemorySlice<byte> span, int pinLocation)
+        public static SubrecordPinFrame Factory(SubrecordHeader header, ReadOnlyMemorySlice<byte> span, int pinLocation)
         {
-            this.Frame = new SubrecordFrame(header, span);
-            this.Location = pinLocation;
+            return new SubrecordPinFrame(
+                SubrecordFrame.Factory(header, span),
+                span,
+                pinLocation);
+        }
+
+        /// <summary>
+        /// Factory
+        /// </summary>
+        /// <param name="header">Existing SubrecordHeader struct</param>
+        /// <param name="span">Span to overlay on, aligned to the start of the header</param>
+        /// <param name="pinLocation">Location pin tracker relative to parent MajorRecordFrame</param>
+        public static SubrecordPinFrame FactoryNoTrim(SubrecordHeader header, ReadOnlyMemorySlice<byte> span, int pinLocation)
+        {
+            return new SubrecordPinFrame(
+                SubrecordFrame.FactoryNoTrim(header, span),
+                span,
+                pinLocation);
         }
 
         /// <inheritdoc/>
