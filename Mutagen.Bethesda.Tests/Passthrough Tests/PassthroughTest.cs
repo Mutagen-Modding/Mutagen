@@ -314,6 +314,7 @@ namespace Mutagen.Bethesda.Tests
                 RecordCount = BinaryWriteParameters.RecordCountOption.NoCheck,
                 NextFormID = BinaryWriteParameters.NextFormIDOption.NoCheck,
                 FormIDUniqueness = BinaryWriteParameters.FormIDUniquenessOption.NoCheck,
+                MasterFlag = BinaryWriteParameters.MasterFlagOption.NoCheck,
                 MastersListOrdering = masterRefs,
                 StringsWriter = stringsWriter,
             };
