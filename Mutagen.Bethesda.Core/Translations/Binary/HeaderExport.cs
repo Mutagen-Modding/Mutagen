@@ -79,17 +79,17 @@ namespace Mutagen.Bethesda.Binary
         /// </summary>
         /// <param name="writer">Writer to export header to</param>
         /// <param name="record">RecordType of the header</param>
-        /// <param name="largeLengthRecord">RecordType to use for an extra preceding subrecord, if the length is too large</param>
+        /// <param name="overflowRecord">RecordType to use for an extra preceding subrecord, if the length is too large</param>
         /// <returns>Object to dispose when header's content has been written</returns>
         public static ExtraLengthHeaderExport Subrecord(
             MutagenWriter writer,
             RecordType record,
-            RecordType largeLengthRecord)
+            RecordType overflowRecord)
         {
             return new ExtraLengthHeaderExport(
                 writer,
                 record,
-                largeLengthRecord);
+                overflowRecord);
         }
 
         /// <summary>
@@ -109,17 +109,24 @@ namespace Mutagen.Bethesda.Binary
                 diff -= this.RecordConstants.LengthAfterType;
             }
 
+            // If negative, we're likely mid-exception.
+            // We want exit out and trickle up the original
+            if (diff < 0)
+            {
+                return;
+            }
+
             switch (this.RecordConstants.ObjectType)
             {
                 case ObjectType.Subrecord:
                     {
-                        this.Writer.Write((ushort)diff);
+                        this.Writer.Write(checked((ushort)diff));
                     }
                     break;
                 case ObjectType.Record:
                 case ObjectType.Group:
                     {
-                        this.Writer.Write((uint)diff);
+                        this.Writer.Write(checked((uint)diff));
                     }
                     break;
                 default:

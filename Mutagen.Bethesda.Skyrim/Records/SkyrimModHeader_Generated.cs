@@ -1942,6 +1942,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.OverriddenForms,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.ONAM),
+                overflowRecord: RecordTypes.XXXX,
                 transl: (MutagenWriter subWriter, IFormLink<ISkyrimMajorRecordGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
@@ -2058,7 +2059,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (int)SkyrimModHeader_FieldIndex.MasterReferences;
                 }
                 case RecordTypeInts.ONAM:
+                case RecordTypeInts.XXXX:
                 {
+                    if (nextRecordType == RecordTypes.XXXX)
+                    {
+                        var overflowHeader = frame.ReadSubrecordFrame();
+                        contentLength = checked((int)BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                    }
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.OverriddenForms = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ISkyrimMajorRecordGetter>>.Instance.Parse(
@@ -2290,9 +2297,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (int)SkyrimModHeader_FieldIndex.MasterReferences;
                 }
                 case RecordTypeInts.ONAM:
+                case RecordTypeInts.XXXX:
                 {
                     var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    int subLen;
+                    if (subMeta.RecordType == RecordTypes.XXXX)
+                    {
+                        subLen = checked((int)stream.ReadUInt32());
+                        stream.ReadSubrecord();
+                    }
+                    else
+                    {
+                        subLen = subMeta.ContentLength;
+                    }
                     this.OverriddenForms = BinaryOverlayList.FactoryByStartIndex<IFormLink<ISkyrimMajorRecordGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,

@@ -50,11 +50,7 @@ namespace Mutagen.Bethesda.Binary
         /// </summary>
         public RecordType RecordType => new RecordType(BinaryPrimitives.ReadInt32LittleEndian(this.HeaderData.Slice(0, 4)));
         
-        /// <summary>
-        /// The length explicitly contained in the length bytes of the header
-        /// Note that for Groups, this is equivalent to TotalLength
-        /// </summary>
-        public uint RecordLength => BinaryPrimitives.ReadUInt32LittleEndian(this.HeaderData.Slice(4, 4));
+        private uint RecordLength => BinaryPrimitives.ReadUInt32LittleEndian(this.HeaderData.Slice(4, 4));
         
         /// <summary>
         /// The raw bytes of the RecordType of the records contained by the Group
@@ -183,12 +179,6 @@ namespace Mutagen.Bethesda.Binary
         /// Should always be GRUP, unless struct is overlaid on bad data.
         /// </summary>
         public RecordType RecordType => _header.RecordType;
-
-        /// <summary>
-        /// The length explicitly contained in the length bytes of the header
-        /// Note that for Groups, this is equivalent to TotalLength
-        /// </summary>
-        public uint RecordLength => _header.RecordLength;
 
         /// <summary>
         /// The raw bytes of the RecordType of the records contained by the Group

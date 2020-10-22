@@ -45,10 +45,7 @@ namespace Mutagen.Bethesda.Binary
         /// </summary>
         public RecordType RecordType => new RecordType(this.RecordTypeInt);
         
-        /// <summary>
-        /// The length explicitly contained in the length bytes of the header
-        /// </summary>
-        public uint RecordLength
+        private uint RecordLength
         {
             get
             {

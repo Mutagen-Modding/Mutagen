@@ -177,7 +177,7 @@ namespace Mutagen.Bethesda.Binary
             {
                 throw new ArgumentException($"Unexpected header type: {meta.RecordType}");
             }
-            return new SubrecordFrame(meta, span);
+            return Binary.SubrecordFrame.Factory(meta, span);
         }
 
         public bool TrySubrecordFrame(ReadOnlyMemorySlice<byte> span, RecordType targetType, out SubrecordFrame header)
@@ -193,7 +193,7 @@ namespace Mutagen.Bethesda.Binary
                 header = default;
                 return false;
             }
-            header = new SubrecordFrame(meta, span);
+            header = Binary.SubrecordFrame.Factory(meta, span);
             return true;
         }
 

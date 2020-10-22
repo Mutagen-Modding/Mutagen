@@ -267,7 +267,7 @@ namespace Mutagen.Bethesda.Binary
         {
             GroupHeader groupMeta = reader.GetGroup();
             RecordType ret = groupMeta.RecordType;
-            contentLength = checked((int)groupMeta.RecordLength);
+            contentLength = checked((int)groupMeta.TotalLength);
             if (groupMeta.IsGroup)
             {
                 if (hopGroup)
