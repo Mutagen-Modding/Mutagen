@@ -11,9 +11,9 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Loqui" Version="1.5.8" />
-    <PackageReference Include="Loqui.Generation" Version="1.5.8" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.5.3" />
+    <PackageReference Include="Loqui" Version="1.5.9" />
+    <PackageReference Include="Loqui.Generation" Version="1.5.9" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.6.0" />
     <PackageReference Include="System.Linq.Async" Version="4.1.1" />
   </ItemGroup>
 

@@ -1325,10 +1325,7 @@ namespace Mutagen.Bethesda.Internals
         {
             if (deepCopy)
             {
-                if ((copyMask?.GetShouldTranslate((int)MajorRecord_FieldIndex.FormKey) ?? true))
-                {
-                    item.FormKey = rhs.FormKey;
-                }
+                item.FormKey = rhs.FormKey;
             }
             DeepCopyIn(
                 (IMajorRecord)item,
