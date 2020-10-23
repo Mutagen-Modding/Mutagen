@@ -655,7 +655,7 @@ namespace Mutagen.Bethesda.Generation
                     if (data.OverflowRecordType.HasValue)
                     {
                         data.TriggeringRecordTypes.Add(data.OverflowRecordType.Value);
-                        data.TriggeringRecordSetAccessor = $"{obj.RegistrationName}.{field.Name}_TriggeringRecordTypes";
+                        data.TriggeringRecordSetAccessor = obj.RecordTypeHeaderName(data.RecordType.Value);
                     }
                 }
                 else if (data.TriggeringRecordTypes.Count > 0)

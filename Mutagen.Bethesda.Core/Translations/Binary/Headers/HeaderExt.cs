@@ -3,7 +3,7 @@ using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace Mutagen.Bethesda.Binary
 {
@@ -156,6 +156,95 @@ namespace Mutagen.Bethesda.Binary
         {
             return BinaryStringUtility.ProcessWholeToZString(frame.Content);
         }
+
+        #region Pin Forwarding
+        /// <summary>
+        /// Interprets a subrecord's content as a byte.
+        /// </summary>
+        /// <param name="pin">Frame to read from</param>
+        /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 1</exception>
+        /// <returns>Subrecord's content as a byte</returns>
+        public static byte AsUInt8(this SubrecordPinFrame pin) => pin.Frame.AsUInt8();
+
+        /// <summary>
+        /// Interprets a subrecord's content as a sbyte.
+        /// </summary>
+        /// <param name="pin">Frame to read from</param>
+        /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 1</exception>
+        /// <returns>Subrecord's content as a sbyte</returns>
+        public static sbyte AsInt8(this SubrecordPinFrame pin) => pin.Frame.AsInt8();
+
+        /// <summary>
+        /// Interprets a subrecord's content as a ushort.
+        /// </summary>
+        /// <param name="pin">Frame to read from</param>
+        /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 2</exception>
+        /// <returns>Subrecord's content as a ushort</returns>
+        public static ushort AsUInt16(this SubrecordPinFrame pin) => pin.Frame.AsUInt16();
+
+        /// <summary>
+        /// Interprets a subrecord's content as a short.
+        /// </summary>
+        /// <param name="pin">Frame to read from</param>
+        /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 2</exception>
+        /// <returns>Subrecord's content as a short</returns>
+        public static short AsInt16(this SubrecordPinFrame pin) => pin.Frame.AsInt16();
+
+        /// <summary>
+        /// Interprets a subrecord's content as a uint.
+        /// </summary>
+        /// <param name="pin">Frame to read from</param>
+        /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 4</exception>
+        /// <returns>Subrecord's content as a uint</returns>
+        public static uint AsUInt32(this SubrecordPinFrame pin) => pin.Frame.AsUInt32();
+
+        /// <summary>
+        /// Interprets a subrecord's content as a int.
+        /// </summary>
+        /// <param name="pin">Frame to read from</param>
+        /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 4</exception>
+        /// <returns>Subrecord's content as a int</returns>
+        public static int AsInt32(this SubrecordPinFrame pin) => pin.Frame.AsInt32();
+
+        /// <summary>
+        /// Interprets a subrecord's content as a ulong.
+        /// </summary>
+        /// <param name="pin">Frame to read from</param>
+        /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 8</exception>
+        /// <returns>Subrecord's content as a ulong</returns>
+        public static ulong AsUInt64(this SubrecordPinFrame pin) => pin.Frame.AsUInt64();
+
+        /// <summary>
+        /// Interprets a subrecord's content as a long.
+        /// </summary>
+        /// <param name="pin">Frame to read from</param>
+        /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 8</exception>
+        /// <returns>Subrecord's content as a long</returns>
+        public static long AsInt64(this SubrecordPinFrame pin) => pin.Frame.AsInt64();
+
+        /// <summary>
+        /// Interprets a subrecord's content as a float.
+        /// </summary>
+        /// <param name="pin">Frame to read from</param>
+        /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 4</exception>
+        /// <returns>Subrecord's content as a float</returns>
+        public static float AsFloat(this SubrecordPinFrame pin) => pin.Frame.AsFloat();
+
+        /// <summary>
+        /// Interprets a subrecord's content as a double.
+        /// </summary>
+        /// <param name="pin">Frame to read from</param>
+        /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 8</exception>
+        /// <returns>Subrecord's content as a double</returns>
+        public static double AsDouble(this SubrecordPinFrame pin) => pin.Frame.AsDouble();
+
+        /// <summary>
+        /// Interprets a subrecord's content as a string.
+        /// </summary>
+        /// <param name="pin">Frame to read from</param>
+        /// <returns>Subrecord's content as a string, null trimmed if applicable</returns>
+        public static string AsString(this SubrecordPinFrame pin) => pin.Frame.AsString();
+        #endregion
         #endregion
 
         #region Locate
@@ -478,51 +567,91 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
-        /// <summary>
-        /// Enumerates locations of the contained subrecords.<br/>
-        /// Locations are relative to the RecordType of the MajorRecord.
-        /// </summary>
-        public static IEnumerable<int> SubrecordLocations(this MajorRecordFrame majorFrame)
+        internal static IEnumerable<SubrecordPinFrame> EnumerateSubrecords(ReadOnlyMemorySlice<byte> span, GameConstants meta, int loc)
         {
-            int loc = majorFrame.HeaderLength;
-            while (loc < majorFrame.HeaderAndContentData.Length)
+            while (loc < span.Length)
             {
-                yield return loc;
-                var subHeader = new SubrecordHeader(majorFrame.Meta, majorFrame.HeaderAndContentData.Slice(loc));
+                var subHeader = new SubrecordPinFrame(meta, span.Slice(loc), loc);
+                yield return subHeader;
                 loc += subHeader.TotalLength;
             }
         }
 
-        // Not an extension method, as we don't want it to show up as intellisense, as it's already part of a MajorRecordFrame's enumerator.
+        internal static IEnumerable<SubrecordPinFrame> EnumerateSubrecords(ReadOnlyMemorySlice<byte> span, GameConstants meta, int loc, ICollection<RecordType> lengthOverflowTypes)
+        {
+            while (loc < span.Length)
+            {
+                var subFrame = new SubrecordPinFrame(meta, span.Slice(loc), loc);
+                if (lengthOverflowTypes.Contains(subFrame.RecordType))
+                { // Length overflow record
+                    var nextLen = subFrame.AsUInt32();
+                    loc += subFrame.TotalLength;
+                    var nextSpan = span.Slice(loc, checked((int)(nextLen + meta.SubConstants.HeaderLength)));
+                    var subHeader = new SubrecordHeader(meta, nextSpan);
+                    yield return SubrecordPinFrame.FactoryNoTrim(subHeader, nextSpan, loc);
+                    loc += checked((int)(subHeader.HeaderLength + nextLen));
+                    continue;
+                }
+                yield return subFrame;
+                loc += subFrame.TotalLength;
+            }
+        }
+
         /// <summary>
         /// Enumerates locations of the contained subrecords.<br/>
         /// Locations are relative to the RecordType of the MajorRecordFrame.
         /// </summary>
-        public static IEnumerable<SubrecordPinFrame> EnumerateSubrecords(MajorRecordFrame majorFrame)
+        /// <param name="majorFrame">MajorRecordFrame to iterate</param>
+        public static IEnumerable<SubrecordPinFrame> EnumerateSubrecords(this MajorRecordFrame majorFrame) => EnumerateSubrecords(majorFrame.HeaderAndContentData, majorFrame.Meta, majorFrame.HeaderLength);
+
+        /// <summary>
+        /// Enumerates locations of the contained subrecords, while considering some specified RecordTypes as special length overflow subrecords.<br/>
+        /// These length overflow subrecords will be skipped, and simply used to parse the next subrecord properly.<br />
+        /// Locations are relative to the RecordType of the MajorRecordFrame.
+        /// </summary>
+        /// <param name="majorFrame">MajorRecordFrame to iterate</param>
+        /// <param name="lengthOverflowTypes">Known RecordTypes that signify a length overflow subrecord</param>
+        public static IEnumerable<SubrecordPinFrame> EnumerateSubrecordsWithLengthOverflow(this MajorRecordFrame majorFrame, params RecordType[] lengthOverflowTypes)
+        {
+            return EnumerateSubrecords(majorFrame, (ICollection<RecordType>)lengthOverflowTypes.ToHashSet());
+        }
+
+        /// <summary>
+        /// Enumerates locations of the contained subrecords, while considering some specified RecordTypes as special length overflow subrecords.<br/>
+        /// These length overflow subrecords will be skipped, and simply used to parse the next subrecord properly.<br />
+        /// Locations are relative to the RecordType of the MajorRecordFrame.
+        /// </summary>
+        /// <param name="majorFrame">MajorRecordFrame to iterate</param>
+        /// <param name="lengthOverflowTypes">Collection of known RecordTypes that signify a length overflow subrecord</param>
+        public static IEnumerable<SubrecordPinFrame> EnumerateSubrecords(this MajorRecordFrame majorFrame, ICollection<RecordType> lengthOverflowTypes)
         {
             int loc = majorFrame.HeaderLength;
             while (loc < majorFrame.HeaderAndContentData.Length)
             {
-                var subHeader = new SubrecordPinFrame(majorFrame.Meta, majorFrame.HeaderAndContentData.Slice(loc), loc);
-                yield return subHeader;
-                loc += subHeader.TotalLength;
+                var subFrame = new SubrecordPinFrame(majorFrame.Meta, majorFrame.HeaderAndContentData.Slice(loc), loc);
+                if (lengthOverflowTypes.Contains(subFrame.RecordType))
+                { // Length overflow record
+                    var nextLen = subFrame.AsUInt32();
+                    loc += subFrame.TotalLength;
+                    var span = majorFrame.HeaderAndContentData.Slice(loc, checked((int)(nextLen + majorFrame.Meta.SubConstants.HeaderLength)));
+                    var subHeader = new SubrecordHeader(majorFrame.Meta, span);
+                    yield return SubrecordPinFrame.FactoryNoTrim(subHeader, span, loc);
+                    continue;
+                }
+                yield return subFrame;
+                loc += subFrame.TotalLength;
             }
         }
 
-        // Not an extension method, as we don't want it to show up as intellisense, as it's already part of a MajorRecordFrame's enumerator.
+        private static readonly ICollection<RecordType> _headerOverflow = new List<RecordType>() { RecordTypes.XXXX };
+
         /// <summary>
         /// Enumerates locations of the contained subrecords.<br/>
         /// Locations are relative to the RecordType of the ModHeaderFrame.
         /// </summary>
-        public static IEnumerable<SubrecordPinFrame> EnumerateSubrecords(ModHeaderFrame modHeader)
+        public static IEnumerable<SubrecordPinFrame> EnumerateSubrecords(this ModHeaderFrame modHeader)
         {
-            int loc = modHeader.HeaderLength;
-            while (loc < modHeader.HeaderAndContentData.Length)
-            {
-                var subHeader = new SubrecordPinFrame(modHeader.Meta, modHeader.HeaderAndContentData.Slice(loc), loc);
-                yield return subHeader;
-                loc += subHeader.TotalLength;
-            }
+            return EnumerateSubrecords(modHeader.HeaderAndContentData, modHeader.Meta, modHeader.HeaderLength, _headerOverflow);
         }
 
         public static IEnumerable<SubrecordPinFrame> Masters(this ModHeaderFrame modHeader)
