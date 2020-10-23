@@ -13,7 +13,7 @@
       <String name="Author" recordType="CNAM" maxLength="512" />
       <String name="Description" recordType="SNAM" maxLength="512" />
       <RefList name="MasterReferences" refName="Bethesda.MasterReference" nullable="False" binary="Custom" binaryOverlay="Normal" />
-      <List name="OverriddenForms" recordType="ONAM">
+      <List name="OverriddenForms" recordType="ONAM" overflowRecordType="XXXX" >
         <FormLink refName="SkyrimMajorRecord" />
       </List>
       <Int32 name="INTV" recordType="INTV" />

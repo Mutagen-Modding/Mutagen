@@ -53,16 +53,10 @@ namespace Mutagen.Bethesda.Binary
         public int RecordTypeInt => BinaryPrimitives.ReadInt32LittleEndian(this.HeaderData.Slice(0, 4));
         
         /// <summary>
-        /// The length explicitly contained in the length bytes of the header
-        /// Note that for Sub Records, this is equivalent to ContentLength
-        /// </summary>
-        public ushort RecordLength => BinaryPrimitives.ReadUInt16LittleEndian(this.HeaderData.Slice(4, 2));
-        
-        /// <summary>
         /// The length of the content of the Sub Record, excluding the header bytes.
         /// </summary>
-        public ushort ContentLength => RecordLength;
-        
+        public ushort ContentLength => BinaryPrimitives.ReadUInt16LittleEndian(this.HeaderData.Slice(4, 2));
+
         /// <summary>
         /// Total length of the Sub Record, including the header and its content.
         /// </summary>
@@ -95,7 +89,7 @@ namespace Mutagen.Bethesda.Binary
         /// <summary>
         /// Raw bytes of the content data, excluding the header
         /// </summary>
-        public ReadOnlyMemorySlice<byte> Content => HeaderAndContentData.Slice(this.Header.HeaderLength, checked((int)this.Header.ContentLength));
+        public ReadOnlyMemorySlice<byte> Content => HeaderAndContentData.Slice(this.Header.HeaderLength);
 
         /// <summary>
         /// Constructor
@@ -108,15 +102,30 @@ namespace Mutagen.Bethesda.Binary
             this.HeaderAndContentData = span.Slice(0, checked((int)this.Header.TotalLength));
         }
 
+        private SubrecordFrame(SubrecordHeader header, ReadOnlyMemorySlice<byte> span)
+        {
+            this.Header = header;
+            this.HeaderAndContentData = span;
+        }
+
         /// <summary>
-        /// Constructor
+        /// Factory
         /// </summary>
         /// <param name="header">Existing SubrecordHeader struct</param>
         /// <param name="span">Span to overlay on, aligned to the start of the header</param>
-        public SubrecordFrame(SubrecordHeader header, ReadOnlyMemorySlice<byte> span)
+        public static SubrecordFrame Factory(SubrecordHeader header, ReadOnlyMemorySlice<byte> span)
         {
-            this.Header = header;
-            this.HeaderAndContentData = span.Slice(0, checked((int)this.Header.TotalLength));
+            return new SubrecordFrame(header, span.Slice(0, header.TotalLength));
+        }
+
+        /// <summary>
+        /// Factory
+        /// </summary>
+        /// <param name="header">Existing SubrecordHeader struct</param>
+        /// <param name="span">Span to overlay on, aligned to the start of the header</param>
+        public static SubrecordFrame FactoryNoTrim(SubrecordHeader header, ReadOnlyMemorySlice<byte> span)
+        {
+            return new SubrecordFrame(header, span);
         }
 
         /// <inheritdoc/>
@@ -152,12 +161,6 @@ namespace Mutagen.Bethesda.Binary
         /// RecordType of the header, represented as an int
         /// </summary>
         public int RecordTypeInt => Header.RecordTypeInt;
-
-        /// <summary>
-        /// The length explicitly contained in the length bytes of the header
-        /// Note that for Sub Records, this is equivalent to ContentLength
-        /// </summary>
-        public ushort RecordLength => Header.RecordLength;
 
         /// <summary>
         /// The length of the content of the Sub Record, excluding the header bytes.
@@ -200,16 +203,38 @@ namespace Mutagen.Bethesda.Binary
             this.Location = pinLocation;
         }
 
+        private SubrecordPinFrame(SubrecordFrame frame, ReadOnlyMemorySlice<byte> span, int pinLocation)
+        {
+            this.Frame = frame;
+            this.Location = pinLocation;
+        }
+
         /// <summary>
-        /// Constructor
+        /// Factory
         /// </summary>
         /// <param name="header">Existing SubrecordHeader struct</param>
         /// <param name="span">Span to overlay on, aligned to the start of the header</param>
         /// <param name="pinLocation">Location pin tracker relative to parent MajorRecordFrame</param>
-        public SubrecordPinFrame(SubrecordHeader header, ReadOnlyMemorySlice<byte> span, int pinLocation)
+        public static SubrecordPinFrame Factory(SubrecordHeader header, ReadOnlyMemorySlice<byte> span, int pinLocation)
         {
-            this.Frame = new SubrecordFrame(header, span);
-            this.Location = pinLocation;
+            return new SubrecordPinFrame(
+                SubrecordFrame.Factory(header, span),
+                span,
+                pinLocation);
+        }
+
+        /// <summary>
+        /// Factory
+        /// </summary>
+        /// <param name="header">Existing SubrecordHeader struct</param>
+        /// <param name="span">Span to overlay on, aligned to the start of the header</param>
+        /// <param name="pinLocation">Location pin tracker relative to parent MajorRecordFrame</param>
+        public static SubrecordPinFrame FactoryNoTrim(SubrecordHeader header, ReadOnlyMemorySlice<byte> span, int pinLocation)
+        {
+            return new SubrecordPinFrame(
+                SubrecordFrame.FactoryNoTrim(header, span),
+                span,
+                pinLocation);
         }
 
         /// <inheritdoc/>
@@ -265,12 +290,6 @@ namespace Mutagen.Bethesda.Binary
         /// RecordType of the header, represented as an int
         /// </summary>
         public int RecordTypeInt => Frame.RecordTypeInt;
-
-        /// <summary>
-        /// The length explicitly contained in the length bytes of the header
-        /// Note that for Sub Records, this is equivalent to ContentLength
-        /// </summary>
-        public ushort RecordLength => Frame.RecordLength;
 
         /// <summary>
         /// The length of the content of the Sub Record, excluding the header bytes.

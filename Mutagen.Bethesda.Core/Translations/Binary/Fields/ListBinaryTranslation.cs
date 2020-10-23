@@ -721,6 +721,24 @@ namespace Mutagen.Bethesda.Binary
             MutagenWriter writer,
             IReadOnlyList<T>? items,
             RecordType recordType,
+            RecordType overflowRecord,
+            BinaryMasterWriteDelegate<T> transl,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            if (items == null) return;
+            using (var header = HeaderExport.Subrecord(writer, recordType, overflowRecord: overflowRecord))
+            {
+                foreach (var item in items)
+                {
+                    transl(header.PrepWriter, item, recordTypeConverter);
+                }
+            }
+        }
+
+        public void Write(
+            MutagenWriter writer,
+            IReadOnlyList<T>? items,
+            RecordType recordType,
             BinaryMasterWriteDelegate<T> transl,
             RecordTypeConverter? recordTypeConverter = null)
         {

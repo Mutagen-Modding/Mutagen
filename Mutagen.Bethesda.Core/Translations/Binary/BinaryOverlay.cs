@@ -253,7 +253,7 @@ namespace Mutagen.Bethesda.Binary
                 {
                     stream.Position += varMeta.HeaderLength;
                     ret.Add(stream.Position - startingPos);
-                    stream.Position += (int)varMeta.RecordLength;
+                    stream.Position += (int)varMeta.ContentLength;
                 }
                 else
                 {
@@ -282,7 +282,7 @@ namespace Mutagen.Bethesda.Binary
                 {
                     stream.Position += varMeta.HeaderLength;
                     ret.Add(stream.Position - startingPos);
-                    stream.Position += (int)varMeta.RecordLength;
+                    stream.Position += (int)varMeta.ContentLength;
                 }
                 else
                 {
@@ -316,7 +316,7 @@ namespace Mutagen.Bethesda.Binary
                     {
                         stream.Position += varMeta.HeaderLength;
                         ret.Add(stream.Position - startingPos);
-                        stream.Position += (int)varMeta.RecordLength;
+                        stream.Position += (int)varMeta.ContentLength;
                     }
                     else
                     {
@@ -355,7 +355,7 @@ namespace Mutagen.Bethesda.Binary
                     {
                         stream.Position += varMeta.HeaderLength;
                         ret.Add(stream.Position - startingPos);
-                        stream.Position += (int)varMeta.RecordLength;
+                        stream.Position += (int)varMeta.ContentLength;
                     }
                     else
                     {
@@ -390,7 +390,7 @@ namespace Mutagen.Bethesda.Binary
                     {
                         stream.Position += varMeta.HeaderLength;
                         ret.Add(stream.Position - startingPos);
-                        stream.Position += (int)varMeta.RecordLength;
+                        stream.Position += (int)varMeta.ContentLength;
                     }
                     else
                     {
@@ -445,7 +445,7 @@ namespace Mutagen.Bethesda.Binary
                     {
                         stream.Position += varMeta.HeaderLength;
                         ret.Add(stream.Position - startingPos);
-                        stream.Position += (int)varMeta.RecordLength;
+                        stream.Position += (int)varMeta.ContentLength;
                     }
                     else
                     {
@@ -492,7 +492,7 @@ namespace Mutagen.Bethesda.Binary
                     {
                         stream.Position += varMeta.HeaderLength;
                         ret.Add(stream.Position - startingPos);
-                        stream.Position += (int)varMeta.RecordLength;
+                        stream.Position += (int)varMeta.ContentLength;
                     }
                     else
                     {
@@ -531,7 +531,7 @@ namespace Mutagen.Bethesda.Binary
                     {
                         stream.Position += varMeta.HeaderLength;
                         ret.Add(stream.Position - startingPos);
-                        stream.Position += (int)varMeta.RecordLength;
+                        stream.Position += (int)varMeta.ContentLength;
                     }
                     else
                     {

@@ -1,4 +1,4 @@
-﻿using Loqui;
+using Loqui;
 using Loqui.Xml;
 using Mutagen.Bethesda.Binary;
 using Noggog;
@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda.Skyrim
                 using (var header = HeaderExport.Subrecord(
                     writer,
                     RecordTypes.NVNM,
-                    largeLengthRecord: RecordTypes.XXXX))
+                    overflowRecord: RecordTypes.XXXX))
                 {
                     data.WriteToBinary(header.PrepWriter);
                 }
