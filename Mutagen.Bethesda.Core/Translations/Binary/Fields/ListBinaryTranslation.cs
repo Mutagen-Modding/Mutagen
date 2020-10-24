@@ -347,6 +347,7 @@ namespace Mutagen.Bethesda.Binary
             BinaryMasterParseDelegate<T> transl,
             RecordTypeConverter? recordTypeConverter = null)
         {
+            if (amount == 0) return new ExtendedList<T>();
             var subHeader = frame.GetSubrecord();
             if (subHeader.RecordType != triggeringRecord)
             {
@@ -483,6 +484,7 @@ namespace Mutagen.Bethesda.Binary
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new ExtendedList<T>();
+            if (amount == 0) return ret;
             var startingPos = frame.Position;
             for (int i = 0; i < amount; i++)
             {
@@ -551,6 +553,7 @@ namespace Mutagen.Bethesda.Binary
             BinarySubParseDelegate<T> transl)
         {
             var ret = new ExtendedList<T>();
+            if (amount == 0) return ret;
             var startingPos = frame.Position;
             for (int i = 0; i < amount; i++)
             {
