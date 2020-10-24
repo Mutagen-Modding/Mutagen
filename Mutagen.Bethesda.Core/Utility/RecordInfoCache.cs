@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Internals
                         stream,
                         new RecordInterest(
                             interestingTypes: UtilityTranslation.GetRecordType<T>()));
-                    cache = locs.FormIDs.ToHashSet();
+                    cache = locs.FormKeys.ToHashSet();
 
                     _cachedLocs.Add(typeof(T), cache);
                 }
