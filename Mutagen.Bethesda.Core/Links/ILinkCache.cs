@@ -75,10 +75,49 @@ namespace Mutagen.Bethesda
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         /// <exception cref="KeyNotFoundException">
-        /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
+        /// When the FormKey cannot be found under the attached cache.<br/>
         /// </exception>
         /// <returns>True if a matching record was found</returns>
         IMajorRecordCommonGetter Lookup(FormKey formKey);
+
+        /// <summary>
+        /// Retrieves the record that matches the FormKey relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the FormKey, but does not inherit from the given type, it will be seen as not a match.
+        /// </summary>
+        /// <param name="formKey">FormKey to look for</param>
+        /// <param name="type">The type of Major Record to look up</param>
+        /// <exception cref="ArgumentException">
+        /// An unexpected TMajor type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        /// <returns>record if successful</returns>
+        /// <exception cref="KeyNotFoundException">
+        /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
+        /// </exception>
+        IMajorRecordCommonGetter Lookup(FormKey formKey, Type type);
+
+        /// <summary>
+        /// Retrieves the record that matches the FormKey relative to the source the package was attached to.
+        /// <br/>
+        /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will be seen as not a match.
+        /// </summary>
+        /// <param name="formKey">FormKey to look for</param>
+        /// <typeparam name="TMajor">The type of Major Record to look up</typeparam>
+        /// <returns>record if successful</returns>
+        /// <exception cref="ArgumentException">
+        /// An unexpected TMajor type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        /// <exception cref="KeyNotFoundException">
+        /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
+        /// </exception>
+        TMajor Lookup<TMajor>(FormKey formKey)
+            where TMajor : class, IMajorRecordCommonGetter;
 
         /// <summary>
         /// Iterates through the contained mods in the order they were listed, with the least prioritized mod first.

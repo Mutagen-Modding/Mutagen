@@ -13,7 +13,10 @@ namespace Mutagen.Bethesda
 {
     public class StringsFolderLookupOverlay : IStringsFolderLookup
     {
-        private Lazy<DictionaryBundle> _dictionaries;
+        private readonly Lazy<DictionaryBundle> _dictionaries;
+
+        public string DataPath { get; }
+        public ModKey ModKey { get; }
 
         class DictionaryBundle
         {
@@ -40,9 +43,11 @@ namespace Mutagen.Bethesda
 
         public bool Empty => _dictionaries.Value.Empty;
 
-        private StringsFolderLookupOverlay(Lazy<DictionaryBundle> instantiator)
+        private StringsFolderLookupOverlay(Lazy<DictionaryBundle> instantiator, string dataPath, ModKey modKey)
         {
             _dictionaries = instantiator;
+            DataPath = dataPath;
+            ModKey = modKey;
         }
 
         public static StringsFolderLookupOverlay TypicalFactory(string dataPath, StringsReadParameters? instructions, ModKey modKey)
@@ -86,7 +91,9 @@ namespace Mutagen.Bethesda
                         }
                     }
                     return bundle;
-                }));
+                }),
+                dataPath: dataPath,
+                modKey: modKey);
         }
 
         /// <inheritdoc />

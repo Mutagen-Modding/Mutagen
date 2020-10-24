@@ -347,6 +347,7 @@ namespace Mutagen.Bethesda.Binary
             BinaryMasterParseDelegate<T> transl,
             RecordTypeConverter? recordTypeConverter = null)
         {
+            if (amount == 0) return new ExtendedList<T>();
             var subHeader = frame.GetSubrecord();
             if (subHeader.RecordType != triggeringRecord)
             {
@@ -415,7 +416,8 @@ namespace Mutagen.Bethesda.Binary
             RecordType triggeringRecord,
             BinarySubParseDelegate<T> transl)
         {
-            if (amount == 0) return Enumerable.Empty<T>();
+            // Don't return early if count is zero, as we're expecting one
+            // Content record still that is empty
             var subHeader = frame.GetSubrecord();
             if (subHeader.RecordType != triggeringRecord)
             {
@@ -434,7 +436,7 @@ namespace Mutagen.Bethesda.Binary
                     ret.Add(subIitem);
                 }
             }
-            if (frame.Position == startingPos)
+            if (amount != 0 && frame.Position == startingPos)
             {
                 throw new ArgumentException($"Parsed item on the list consumed no data.");
             }
@@ -483,6 +485,7 @@ namespace Mutagen.Bethesda.Binary
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new ExtendedList<T>();
+            if (amount == 0) return ret;
             var startingPos = frame.Position;
             for (int i = 0; i < amount; i++)
             {
@@ -551,6 +554,7 @@ namespace Mutagen.Bethesda.Binary
             BinarySubParseDelegate<T> transl)
         {
             var ret = new ExtendedList<T>();
+            if (amount == 0) return ret;
             var startingPos = frame.Position;
             for (int i = 0; i < amount; i++)
             {

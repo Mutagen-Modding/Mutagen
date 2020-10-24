@@ -77,6 +77,21 @@ namespace Mutagen.Bethesda
             throw new KeyNotFoundException($"Form ID {formKey.ID} could not be found.");
         }
 
+        /// <inheritdoc />
+        public IMajorRecordCommonGetter Lookup(FormKey formKey, Type type)
+        {
+            if (TryLookup(formKey, type, out var commonRec)) return commonRec;
+            throw new KeyNotFoundException($"Form ID {formKey.ID} could not be found.");
+        }
+
+        /// <inheritdoc />
+        public TMajor Lookup<TMajor>(FormKey formKey)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            if (TryLookup<TMajor>(formKey, out var commonRec)) return commonRec;
+            throw new KeyNotFoundException($"Form ID {formKey.ID} could not be found.");
+        }
+
         /// <summary>
         /// Adds a mutable mod to the end of the load order
         /// </summary>
