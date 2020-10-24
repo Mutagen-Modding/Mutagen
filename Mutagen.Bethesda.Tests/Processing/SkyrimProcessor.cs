@@ -174,9 +174,10 @@ namespace Mutagen.Bethesda.Tests
             MajorRecordFrame majorFrame,
             long fileOffset)
         {
+            var formKey = FormKey.Factory(stream.MetaData.MasterReferences!, majorFrame.FormID.Raw);
             CleanEmptyCellGroups(
                 stream,
-                majorFrame.FormID,
+                formKey,
                 fileOffset,
                 numSubGroups: 2);
 
@@ -207,9 +208,10 @@ namespace Mutagen.Bethesda.Tests
             MajorRecordFrame majorFrame,
             long fileOffset)
         {
+            var formKey = FormKey.Factory(stream.MetaData.MasterReferences!, majorFrame.FormID.Raw);
             CleanEmptyDialogGroups(
                 stream,
-                majorFrame.FormID,
+                formKey,
                 fileOffset);
 
             // Reset misnumbered counter
