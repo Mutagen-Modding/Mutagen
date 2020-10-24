@@ -13,17 +13,17 @@ namespace Mutagen.Bethesda.Internals
     public class RecordInfoCache
     {
         private readonly Func<IMutagenReadStream> _streamCreator;
-        private readonly Dictionary<Type, HashSet<FormID>> _cachedLocs = new Dictionary<Type, HashSet<FormID>>();
+        private readonly Dictionary<Type, HashSet<FormKey>> _cachedLocs = new Dictionary<Type, HashSet<FormKey>>();
 
         public RecordInfoCache(Func<IMutagenReadStream> streamCreator)
         {
             this._streamCreator = streamCreator;
         }
 
-        public bool IsOfRecordType<T>(FormID formID)
+        public bool IsOfRecordType<T>(FormKey formKey)
             where T : IMajorRecordCommonGetter
         {
-            if (formID == FormID.Null) return false;
+            if (formKey.IsNull) return false;
             lock (_cachedLocs)
             {
                 if (!_cachedLocs.TryGetValue(typeof(T), out var cache))
@@ -37,7 +37,7 @@ namespace Mutagen.Bethesda.Internals
 
                     _cachedLocs.Add(typeof(T), cache);
                 }
-                return cache.Contains(formID);
+                return cache.Contains(formKey);
             }
         }
     }
