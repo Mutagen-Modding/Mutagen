@@ -732,8 +732,10 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
-                : base(defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
+                : base(defaultOn, onOverall)
             {
                 this.Icon = defaultOn;
                 this.MapColor = defaultOn;
@@ -749,16 +751,16 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((MapColor, null));
                 ret.Add((Worldspace, null));
                 ret.Add((Areas == null ? DefaultOn : !Areas.GetCrystal().CopyNothing, Areas?.GetCrystal()));
-                ret.Add((Objects != null || DefaultOn, Objects?.GetCrystal()));
-                ret.Add((Weather != null || DefaultOn, Weather?.GetCrystal()));
-                ret.Add((MapName != null || DefaultOn, MapName?.GetCrystal()));
-                ret.Add((Grasses != null || DefaultOn, Grasses?.GetCrystal()));
-                ret.Add((Sounds != null || DefaultOn, Sounds?.GetCrystal()));
+                ret.Add((Objects != null ? Objects.OnOverall : DefaultOn, Objects?.GetCrystal()));
+                ret.Add((Weather != null ? Weather.OnOverall : DefaultOn, Weather?.GetCrystal()));
+                ret.Add((MapName != null ? MapName.OnOverall : DefaultOn, MapName?.GetCrystal()));
+                ret.Add((Grasses != null ? Grasses.OnOverall : DefaultOn, Grasses?.GetCrystal()));
+                ret.Add((Sounds != null ? Sounds.OnOverall : DefaultOn, Sounds?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

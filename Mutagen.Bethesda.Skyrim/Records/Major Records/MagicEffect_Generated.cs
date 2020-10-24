@@ -2014,8 +2014,10 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
-                : base(defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
+                : base(defaultOn, onOverall)
             {
                 this.Name = defaultOn;
                 this.MenuDisplayObject = defaultOn;
@@ -2066,7 +2068,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((VirtualMachineAdapter != null || DefaultOn, VirtualMachineAdapter?.GetCrystal()));
+                ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((Name, null));
                 ret.Add((MenuDisplayObject, null));
                 ret.Add((Keywords, null));
@@ -2086,7 +2088,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((TaperCurve, null));
                 ret.Add((TaperDuration, null));
                 ret.Add((SecondActorValueWeight, null));
-                ret.Add((Archetype != null || DefaultOn, Archetype?.GetCrystal()));
+                ret.Add((Archetype != null ? Archetype.OnOverall : DefaultOn, Archetype?.GetCrystal()));
                 ret.Add((Projectile, null));
                 ret.Add((Explosion, null));
                 ret.Add((CastType, null));
@@ -2116,7 +2118,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

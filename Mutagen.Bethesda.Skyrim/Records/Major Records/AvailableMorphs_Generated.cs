@@ -462,6 +462,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
+            public bool OnOverall;
             public Morph.TranslationMask? Nose;
             public Morph.TranslationMask? Brow;
             public Morph.TranslationMask? Eye;
@@ -469,9 +470,12 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
             {
                 this.DefaultOn = defaultOn;
+                this.OnOverall = onOverall;
             }
 
             #endregion
@@ -487,15 +491,15 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Nose != null || DefaultOn, Nose?.GetCrystal()));
-                ret.Add((Brow != null || DefaultOn, Brow?.GetCrystal()));
-                ret.Add((Eye != null || DefaultOn, Eye?.GetCrystal()));
-                ret.Add((Lip != null || DefaultOn, Lip?.GetCrystal()));
+                ret.Add((Nose != null ? Nose.OnOverall : DefaultOn, Nose?.GetCrystal()));
+                ret.Add((Brow != null ? Brow.OnOverall : DefaultOn, Brow?.GetCrystal()));
+                ret.Add((Eye != null ? Eye.OnOverall : DefaultOn, Eye?.GetCrystal()));
+                ret.Add((Lip != null ? Lip.OnOverall : DefaultOn, Lip?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

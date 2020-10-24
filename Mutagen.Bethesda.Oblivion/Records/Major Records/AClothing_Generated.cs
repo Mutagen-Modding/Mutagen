@@ -706,8 +706,10 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
-                : base(defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
+                : base(defaultOn, onOverall)
             {
                 this.Name = defaultOn;
                 this.Script = defaultOn;
@@ -726,18 +728,18 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Script, null));
                 ret.Add((Enchantment, null));
                 ret.Add((EnchantmentPoints, null));
-                ret.Add((ClothingFlags != null || DefaultOn, ClothingFlags?.GetCrystal()));
-                ret.Add((MaleBipedModel != null || DefaultOn, MaleBipedModel?.GetCrystal()));
-                ret.Add((MaleWorldModel != null || DefaultOn, MaleWorldModel?.GetCrystal()));
+                ret.Add((ClothingFlags != null ? ClothingFlags.OnOverall : DefaultOn, ClothingFlags?.GetCrystal()));
+                ret.Add((MaleBipedModel != null ? MaleBipedModel.OnOverall : DefaultOn, MaleBipedModel?.GetCrystal()));
+                ret.Add((MaleWorldModel != null ? MaleWorldModel.OnOverall : DefaultOn, MaleWorldModel?.GetCrystal()));
                 ret.Add((MaleIcon, null));
-                ret.Add((FemaleBipedModel != null || DefaultOn, FemaleBipedModel?.GetCrystal()));
-                ret.Add((FemaleWorldModel != null || DefaultOn, FemaleWorldModel?.GetCrystal()));
+                ret.Add((FemaleBipedModel != null ? FemaleBipedModel.OnOverall : DefaultOn, FemaleBipedModel?.GetCrystal()));
+                ret.Add((FemaleWorldModel != null ? FemaleWorldModel.OnOverall : DefaultOn, FemaleWorldModel?.GetCrystal()));
                 ret.Add((FemaleIcon, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

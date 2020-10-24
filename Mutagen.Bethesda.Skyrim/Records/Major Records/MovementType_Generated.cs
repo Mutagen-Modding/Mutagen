@@ -735,8 +735,10 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
-                : base(defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
+                : base(defaultOn, onOverall)
             {
                 this.Name = defaultOn;
                 this.LeftWalk = defaultOn;
@@ -770,13 +772,13 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((RotateInPlaceWalk, null));
                 ret.Add((RotateInPlaceRun, null));
                 ret.Add((RotateWhileMovingRun, null));
-                ret.Add((AnimationChangeThresholds != null || DefaultOn, AnimationChangeThresholds?.GetCrystal()));
+                ret.Add((AnimationChangeThresholds != null ? AnimationChangeThresholds.OnOverall : DefaultOn, AnimationChangeThresholds?.GetCrystal()));
                 ret.Add((SPEDDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

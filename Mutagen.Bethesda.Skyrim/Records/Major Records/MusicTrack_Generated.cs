@@ -841,8 +841,10 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
-                : base(defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
+                : base(defaultOn, onOverall)
             {
                 this.Type = defaultOn;
                 this.Duration = defaultOn;
@@ -863,7 +865,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((FadeOut, null));
                 ret.Add((TrackFilename, null));
                 ret.Add((FinaleFilename, null));
-                ret.Add((LoopData != null || DefaultOn, LoopData?.GetCrystal()));
+                ret.Add((LoopData != null ? LoopData.OnOverall : DefaultOn, LoopData?.GetCrystal()));
                 ret.Add((CuePoints, null));
                 ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
                 ret.Add((Tracks, null));
@@ -871,7 +873,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

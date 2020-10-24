@@ -1649,8 +1649,10 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
-                : base(defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
+                : base(defaultOn, onOverall)
             {
                 this.Name = defaultOn;
                 this.Spells = defaultOn;
@@ -1676,19 +1678,19 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 base.GetCrystal(ret);
                 ret.Add((Name, null));
-                ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
+                ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
                 ret.Add((Items == null ? DefaultOn : !Items.GetCrystal().CopyNothing, Items?.GetCrystal()));
                 ret.Add((Spells, null));
                 ret.Add((Models, null));
                 ret.Add((NIFT, null));
-                ret.Add((Configuration != null || DefaultOn, Configuration?.GetCrystal()));
+                ret.Add((Configuration != null ? Configuration.OnOverall : DefaultOn, Configuration?.GetCrystal()));
                 ret.Add((Factions == null ? DefaultOn : !Factions.GetCrystal().CopyNothing, Factions?.GetCrystal()));
                 ret.Add((DeathItem, null));
                 ret.Add((Script, null));
-                ret.Add((AIData != null || DefaultOn, AIData?.GetCrystal()));
+                ret.Add((AIData != null ? AIData.OnOverall : DefaultOn, AIData?.GetCrystal()));
                 ret.Add((AIPackages, null));
                 ret.Add((Animations, null));
-                ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
+                ret.Add((Data != null ? Data.OnOverall : DefaultOn, Data?.GetCrystal()));
                 ret.Add((AttackReach, null));
                 ret.Add((CombatStyle, null));
                 ret.Add((TurningSpeed, null));
@@ -1702,7 +1704,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

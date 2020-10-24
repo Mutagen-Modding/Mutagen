@@ -936,8 +936,10 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
-                : base(defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
+                : base(defaultOn, onOverall)
             {
                 this.OffensiveMult = defaultOn;
                 this.DefensiveMult = defaultOn;
@@ -971,17 +973,17 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((EquipmentScoreMultStaff, null));
                 ret.Add((AvoidThreatChance, null));
                 ret.Add((CSMD, null));
-                ret.Add((Melee != null || DefaultOn, Melee?.GetCrystal()));
-                ret.Add((CloseRange != null || DefaultOn, CloseRange?.GetCrystal()));
+                ret.Add((Melee != null ? Melee.OnOverall : DefaultOn, Melee?.GetCrystal()));
+                ret.Add((CloseRange != null ? CloseRange.OnOverall : DefaultOn, CloseRange?.GetCrystal()));
                 ret.Add((LongRangeStrafeMult, null));
-                ret.Add((Flight != null || DefaultOn, Flight?.GetCrystal()));
+                ret.Add((Flight != null ? Flight.OnOverall : DefaultOn, Flight?.GetCrystal()));
                 ret.Add((Flags, null));
                 ret.Add((CSGDDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

@@ -670,6 +670,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Members
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
+            public bool OnOverall;
             public SkillBoost.TranslationMask? SkillBoost0;
             public SkillBoost.TranslationMask? SkillBoost1;
             public SkillBoost.TranslationMask? SkillBoost2;
@@ -684,9 +685,12 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
             {
                 this.DefaultOn = defaultOn;
+                this.OnOverall = onOverall;
                 this.Unused = defaultOn;
                 this.Flags = defaultOn;
             }
@@ -704,13 +708,13 @@ namespace Mutagen.Bethesda.Oblivion
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((SkillBoost0 != null || DefaultOn, SkillBoost0?.GetCrystal()));
-                ret.Add((SkillBoost1 != null || DefaultOn, SkillBoost1?.GetCrystal()));
-                ret.Add((SkillBoost2 != null || DefaultOn, SkillBoost2?.GetCrystal()));
-                ret.Add((SkillBoost3 != null || DefaultOn, SkillBoost3?.GetCrystal()));
-                ret.Add((SkillBoost4 != null || DefaultOn, SkillBoost4?.GetCrystal()));
-                ret.Add((SkillBoost5 != null || DefaultOn, SkillBoost5?.GetCrystal()));
-                ret.Add((SkillBoost6 != null || DefaultOn, SkillBoost6?.GetCrystal()));
+                ret.Add((SkillBoost0 != null ? SkillBoost0.OnOverall : DefaultOn, SkillBoost0?.GetCrystal()));
+                ret.Add((SkillBoost1 != null ? SkillBoost1.OnOverall : DefaultOn, SkillBoost1?.GetCrystal()));
+                ret.Add((SkillBoost2 != null ? SkillBoost2.OnOverall : DefaultOn, SkillBoost2?.GetCrystal()));
+                ret.Add((SkillBoost3 != null ? SkillBoost3.OnOverall : DefaultOn, SkillBoost3?.GetCrystal()));
+                ret.Add((SkillBoost4 != null ? SkillBoost4.OnOverall : DefaultOn, SkillBoost4?.GetCrystal()));
+                ret.Add((SkillBoost5 != null ? SkillBoost5.OnOverall : DefaultOn, SkillBoost5?.GetCrystal()));
+                ret.Add((SkillBoost6 != null ? SkillBoost6.OnOverall : DefaultOn, SkillBoost6?.GetCrystal()));
                 ret.Add((Unused, null));
                 ret.Add((Height != null || DefaultOn, null));
                 ret.Add((Weight != null || DefaultOn, null));
@@ -719,7 +723,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

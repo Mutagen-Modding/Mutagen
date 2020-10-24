@@ -748,8 +748,10 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
-                : base(defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
+                : base(defaultOn, onOverall)
             {
                 this.MapColor = defaultOn;
                 this.Worldspace = defaultOn;
@@ -763,17 +765,17 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((MapColor, null));
                 ret.Add((Worldspace, null));
                 ret.Add((RegionAreas == null ? DefaultOn : !RegionAreas.GetCrystal().CopyNothing, RegionAreas?.GetCrystal()));
-                ret.Add((Objects != null || DefaultOn, Objects?.GetCrystal()));
-                ret.Add((Weather != null || DefaultOn, Weather?.GetCrystal()));
-                ret.Add((Map != null || DefaultOn, Map?.GetCrystal()));
-                ret.Add((Land != null || DefaultOn, Land?.GetCrystal()));
-                ret.Add((Grasses != null || DefaultOn, Grasses?.GetCrystal()));
-                ret.Add((Sounds != null || DefaultOn, Sounds?.GetCrystal()));
+                ret.Add((Objects != null ? Objects.OnOverall : DefaultOn, Objects?.GetCrystal()));
+                ret.Add((Weather != null ? Weather.OnOverall : DefaultOn, Weather?.GetCrystal()));
+                ret.Add((Map != null ? Map.OnOverall : DefaultOn, Map?.GetCrystal()));
+                ret.Add((Land != null ? Land.OnOverall : DefaultOn, Land?.GetCrystal()));
+                ret.Add((Grasses != null ? Grasses.OnOverall : DefaultOn, Grasses?.GetCrystal()));
+                ret.Add((Sounds != null ? Sounds.OnOverall : DefaultOn, Sounds?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

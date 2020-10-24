@@ -757,8 +757,10 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
-                : base(defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
+                : base(defaultOn, onOverall)
             {
                 this.SunTexture = defaultOn;
                 this.SunGlareTexture = defaultOn;
@@ -780,7 +782,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((WeatherTypes == null ? DefaultOn : !WeatherTypes.GetCrystal().CopyNothing, WeatherTypes?.GetCrystal()));
                 ret.Add((SunTexture, null));
                 ret.Add((SunGlareTexture, null));
-                ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
+                ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
                 ret.Add((SunriseBeginRaw, null));
                 ret.Add((SunriseEndRaw, null));
                 ret.Add((SunsetBeginRaw, null));
@@ -793,7 +795,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

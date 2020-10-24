@@ -518,8 +518,10 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
-                : base(defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
+                : base(defaultOn, onOverall)
             {
                 this.ENAM = defaultOn;
             }
@@ -530,15 +532,15 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.GetCrystal(ret);
                 ret.Add((ENAM, null));
-                ret.Add((Hdr != null || DefaultOn, Hdr?.GetCrystal()));
-                ret.Add((Cinematic != null || DefaultOn, Cinematic?.GetCrystal()));
-                ret.Add((Tint != null || DefaultOn, Tint?.GetCrystal()));
-                ret.Add((DepthOfField != null || DefaultOn, DepthOfField?.GetCrystal()));
+                ret.Add((Hdr != null ? Hdr.OnOverall : DefaultOn, Hdr?.GetCrystal()));
+                ret.Add((Cinematic != null ? Cinematic.OnOverall : DefaultOn, Cinematic?.GetCrystal()));
+                ret.Add((Tint != null ? Tint.OnOverall : DefaultOn, Tint?.GetCrystal()));
+                ret.Add((DepthOfField != null ? DepthOfField.OnOverall : DefaultOn, DepthOfField?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

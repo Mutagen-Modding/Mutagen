@@ -519,8 +519,10 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
-                : base(defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
+                : base(defaultOn, onOverall)
             {
                 this.Icon = defaultOn;
                 this.TextureSpecularExponent = defaultOn;
@@ -533,14 +535,14 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 base.GetCrystal(ret);
                 ret.Add((Icon, null));
-                ret.Add((Havok != null || DefaultOn, Havok?.GetCrystal()));
+                ret.Add((Havok != null ? Havok.OnOverall : DefaultOn, Havok?.GetCrystal()));
                 ret.Add((TextureSpecularExponent, null));
                 ret.Add((PotentialGrass, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

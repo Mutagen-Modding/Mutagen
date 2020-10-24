@@ -1076,8 +1076,10 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
-                : base(defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
+                : base(defaultOn, onOverall)
             {
                 this.Name = defaultOn;
                 this.Flags = defaultOn;
@@ -1105,18 +1107,18 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((PlayerInventoryContainer, null));
                 ret.Add((SharedCrimeFactionList, null));
                 ret.Add((JailOutfit, null));
-                ret.Add((CrimeValues != null || DefaultOn, CrimeValues?.GetCrystal()));
+                ret.Add((CrimeValues != null ? CrimeValues.OnOverall : DefaultOn, CrimeValues?.GetCrystal()));
                 ret.Add((Ranks == null ? DefaultOn : !Ranks.GetCrystal().CopyNothing, Ranks?.GetCrystal()));
                 ret.Add((VendorBuySellList, null));
                 ret.Add((MerchantContainer, null));
-                ret.Add((VendorValues != null || DefaultOn, VendorValues?.GetCrystal()));
-                ret.Add((VendorLocation != null || DefaultOn, VendorLocation?.GetCrystal()));
+                ret.Add((VendorValues != null ? VendorValues.OnOverall : DefaultOn, VendorValues?.GetCrystal()));
+                ret.Add((VendorLocation != null ? VendorLocation.OnOverall : DefaultOn, VendorLocation?.GetCrystal()));
                 ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }
