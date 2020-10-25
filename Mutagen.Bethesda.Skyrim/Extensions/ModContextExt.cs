@@ -15,12 +15,22 @@ namespace Mutagen.Bethesda.Skyrim
             Temporary = false,
             Landscape = false,
             NavigationMeshes = false,
+            Timestamp = false,
+            PersistentTimestamp = false,
+            TemporaryTimestamp = false,
+            UnknownGroupData = false,
+            PersistentUnknownGroupData = false,
+            TemporaryUnknownGroupData = false,
         };
 
         public static readonly Worldspace.TranslationMask WorldspaceCopyMask = new Worldspace.TranslationMask(true)
         {
             SubCells = false,
             TopCell = false,
+            LargeReferences = false,
+            OffsetData = false,
+            SubCellsUnknown = false,
+            SubCellsTimestamp = false,
         };
 
         internal static IEnumerable<ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
@@ -29,11 +39,9 @@ namespace Mutagen.Bethesda.Skyrim
             foreach (var readOnlyBlock in cellBlocks.Records)
             {
                 var blockNum = readOnlyBlock.BlockNumber;
-                var blockModified = readOnlyBlock.LastModified;
                 foreach (var readOnlySubBlock in readOnlyBlock.SubBlocks)
                 {
                     var subBlockNum = readOnlySubBlock.BlockNumber;
-                    var subBlockModified = readOnlySubBlock.LastModified;
                     foreach (var readOnlyCell in readOnlySubBlock.Cells)
                     {
                         Func<ISkyrimMod, ICellGetter, ICell> cellGetter = (m, r) =>
@@ -46,7 +54,6 @@ namespace Mutagen.Bethesda.Skyrim
                                 {
                                     BlockNumber = blockNum,
                                     GroupType = GroupTypeEnum.InteriorCellBlock,
-                                    LastModified = blockModified,
                                 };
                                 m.Cells.Records.Add(retrievedBlock);
                             }
@@ -57,7 +64,6 @@ namespace Mutagen.Bethesda.Skyrim
                                 {
                                     BlockNumber = subBlockNum,
                                     GroupType = GroupTypeEnum.InteriorCellSubBlock,
-                                    LastModified = subBlockModified,
                                 };
                                 retrievedBlock.SubBlocks.Add(subBlock);
                             }
@@ -101,12 +107,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 var blockNumX = readOnlyBlock.BlockNumberX;
                 var blockNumY = readOnlyBlock.BlockNumberY;
-                var blockModified = readOnlyBlock.LastModified;
                 foreach (var readOnlySubBlock in readOnlyBlock.Items)
                 {
                     var subBlockNumY = readOnlySubBlock.BlockNumberY;
                     var subBlockNumX = readOnlySubBlock.BlockNumberX;
-                    var subBlockModified = readOnlySubBlock.LastModified;
                     foreach (var readOnlyCell in readOnlySubBlock.Items)
                     {
                         Func<ISkyrimMod, ICellGetter, ICell> cellGetter = (m, r) =>
@@ -121,7 +125,6 @@ namespace Mutagen.Bethesda.Skyrim
                                     BlockNumberX = blockNumX,
                                     BlockNumberY = blockNumY,
                                     GroupType = GroupTypeEnum.ExteriorCellBlock,
-                                    LastModified = blockModified,
                                 };
                                 worldspaceCopy.SubCells.Add(retrievedBlock);
                             }
@@ -133,7 +136,6 @@ namespace Mutagen.Bethesda.Skyrim
                                     BlockNumberX = subBlockNumX,
                                     BlockNumberY = subBlockNumY,
                                     GroupType = GroupTypeEnum.ExteriorCellSubBlock,
-                                    LastModified = readOnlySubBlock.LastModified,
                                 };
                                 retrievedBlock.Items.Add(subBlock);
                             }
