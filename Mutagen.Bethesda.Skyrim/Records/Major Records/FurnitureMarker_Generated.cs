@@ -430,6 +430,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
+            public bool OnOverall;
             public bool Enabled;
             public EntryPoints.TranslationMask? DisabledEntryPoints;
             public bool MarkerKeyword;
@@ -437,9 +438,12 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
             {
                 this.DefaultOn = defaultOn;
+                this.OnOverall = onOverall;
                 this.Enabled = defaultOn;
                 this.MarkerKeyword = defaultOn;
             }
@@ -458,14 +462,14 @@ namespace Mutagen.Bethesda.Skyrim
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Enabled, null));
-                ret.Add((DisabledEntryPoints != null || DefaultOn, DisabledEntryPoints?.GetCrystal()));
+                ret.Add((DisabledEntryPoints != null ? DisabledEntryPoints.OnOverall : DefaultOn, DisabledEntryPoints?.GetCrystal()));
                 ret.Add((MarkerKeyword, null));
-                ret.Add((EntryPoints != null || DefaultOn, EntryPoints?.GetCrystal()));
+                ret.Add((EntryPoints != null ? EntryPoints.OnOverall : DefaultOn, EntryPoints?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

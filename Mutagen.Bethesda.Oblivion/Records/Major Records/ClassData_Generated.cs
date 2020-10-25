@@ -660,6 +660,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Members
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
+            public bool OnOverall;
             public bool Versioning;
             public bool PrimaryAttributes;
             public bool Specialization;
@@ -670,9 +671,12 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
             {
                 this.DefaultOn = defaultOn;
+                this.OnOverall = onOverall;
                 this.Versioning = defaultOn;
                 this.PrimaryAttributes = defaultOn;
                 this.Specialization = defaultOn;
@@ -700,12 +704,12 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((SecondaryAttributes, null));
                 ret.Add((Flags, null));
                 ret.Add((ClassServices, null));
-                ret.Add((Training != null || DefaultOn, Training?.GetCrystal()));
+                ret.Add((Training != null ? Training.OnOverall : DefaultOn, Training?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

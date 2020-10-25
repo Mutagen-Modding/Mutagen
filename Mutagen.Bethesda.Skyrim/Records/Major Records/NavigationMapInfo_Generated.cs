@@ -893,6 +893,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
+            public bool OnOverall;
             public bool NavigationMesh;
             public bool Unknown;
             public bool Point;
@@ -908,9 +909,12 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
             {
                 this.DefaultOn = defaultOn;
+                this.OnOverall = onOverall;
                 this.NavigationMesh = defaultOn;
                 this.Unknown = defaultOn;
                 this.Point = defaultOn;
@@ -943,7 +947,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((MergedTo, null));
                 ret.Add((PreferredMerges, null));
                 ret.Add((LinkedDoors == null ? DefaultOn : !LinkedDoors.GetCrystal().CopyNothing, LinkedDoors?.GetCrystal()));
-                ret.Add((Island != null || DefaultOn, Island?.GetCrystal()));
+                ret.Add((Island != null ? Island.OnOverall : DefaultOn, Island?.GetCrystal()));
                 ret.Add((Unknown2, null));
                 ret.Add((ParentWorldspace, null));
                 ret.Add((ParentWorldspaceCoord, null));
@@ -952,7 +956,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

@@ -399,6 +399,7 @@ namespace Mutagen.Bethesda
             #region Members
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
+            public bool OnOverall;
             public bool MajorRecordFlagsRaw;
             public bool FormKey;
             public bool VersionControl;
@@ -406,9 +407,12 @@ namespace Mutagen.Bethesda
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
             {
                 this.DefaultOn = defaultOn;
+                this.OnOverall = onOverall;
                 this.MajorRecordFlagsRaw = defaultOn;
                 this.FormKey = defaultOn;
                 this.VersionControl = defaultOn;
@@ -436,7 +440,7 @@ namespace Mutagen.Bethesda
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }
@@ -1325,10 +1329,7 @@ namespace Mutagen.Bethesda.Internals
         {
             if (deepCopy)
             {
-                if ((copyMask?.GetShouldTranslate((int)MajorRecord_FieldIndex.FormKey) ?? true))
-                {
-                    item.FormKey = rhs.FormKey;
-                }
+                item.FormKey = rhs.FormKey;
             }
             DeepCopyIn(
                 (IMajorRecord)item,

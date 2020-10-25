@@ -904,8 +904,10 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
-                : base(defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
+                : base(defaultOn, onOverall)
             {
                 this.CNAM = defaultOn;
                 this.Category = defaultOn;
@@ -933,7 +935,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((OutputModel, null));
                 ret.Add((String, null));
                 ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
-                ret.Add((LoopAndRumble != null || DefaultOn, LoopAndRumble?.GetCrystal()));
+                ret.Add((LoopAndRumble != null ? LoopAndRumble.OnOverall : DefaultOn, LoopAndRumble?.GetCrystal()));
                 ret.Add((PercentFrequencyShift, null));
                 ret.Add((PercentFrequencyVariance, null));
                 ret.Add((Priority, null));
@@ -944,7 +946,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

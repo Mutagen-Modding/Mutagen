@@ -968,6 +968,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
+            public bool OnOverall;
             public HeadPartReference.TranslationMask? HeadParts;
             public AvailableMorphs.TranslationMask? AvailableMorphs;
             public bool RacePresets;
@@ -979,9 +980,12 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
             {
                 this.DefaultOn = defaultOn;
+                this.OnOverall = onOverall;
                 this.RacePresets = defaultOn;
                 this.AvailableHairColors = defaultOn;
                 this.FaceDetails = defaultOn;
@@ -1002,18 +1006,18 @@ namespace Mutagen.Bethesda.Skyrim
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((HeadParts == null ? DefaultOn : !HeadParts.GetCrystal().CopyNothing, HeadParts?.GetCrystal()));
-                ret.Add((AvailableMorphs != null || DefaultOn, AvailableMorphs?.GetCrystal()));
+                ret.Add((AvailableMorphs != null ? AvailableMorphs.OnOverall : DefaultOn, AvailableMorphs?.GetCrystal()));
                 ret.Add((RacePresets, null));
                 ret.Add((AvailableHairColors, null));
                 ret.Add((FaceDetails, null));
                 ret.Add((DefaultFaceTexture, null));
                 ret.Add((TintMasks == null ? DefaultOn : !TintMasks.GetCrystal().CopyNothing, TintMasks?.GetCrystal()));
-                ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
+                ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

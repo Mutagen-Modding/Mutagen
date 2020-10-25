@@ -2624,6 +2624,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Members
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
+            public bool OnOverall;
             public OblivionModHeader.TranslationMask? ModHeader;
             public Group.TranslationMask<GameSetting.TranslationMask>? GameSettings;
             public Group.TranslationMask<Global.TranslationMask>? Globals;
@@ -2684,9 +2685,12 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
             {
                 this.DefaultOn = defaultOn;
+                this.OnOverall = onOverall;
             }
 
             #endregion
@@ -2702,68 +2706,68 @@ namespace Mutagen.Bethesda.Oblivion
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((ModHeader != null || DefaultOn, ModHeader?.GetCrystal()));
-                ret.Add((GameSettings != null || DefaultOn, GameSettings?.GetCrystal()));
-                ret.Add((Globals != null || DefaultOn, Globals?.GetCrystal()));
-                ret.Add((Classes != null || DefaultOn, Classes?.GetCrystal()));
-                ret.Add((Factions != null || DefaultOn, Factions?.GetCrystal()));
-                ret.Add((Hairs != null || DefaultOn, Hairs?.GetCrystal()));
-                ret.Add((Eyes != null || DefaultOn, Eyes?.GetCrystal()));
-                ret.Add((Races != null || DefaultOn, Races?.GetCrystal()));
-                ret.Add((Sounds != null || DefaultOn, Sounds?.GetCrystal()));
-                ret.Add((Skills != null || DefaultOn, Skills?.GetCrystal()));
-                ret.Add((MagicEffects != null || DefaultOn, MagicEffects?.GetCrystal()));
-                ret.Add((Scripts != null || DefaultOn, Scripts?.GetCrystal()));
-                ret.Add((LandTextures != null || DefaultOn, LandTextures?.GetCrystal()));
-                ret.Add((Enchantments != null || DefaultOn, Enchantments?.GetCrystal()));
-                ret.Add((Spells != null || DefaultOn, Spells?.GetCrystal()));
-                ret.Add((Birthsigns != null || DefaultOn, Birthsigns?.GetCrystal()));
-                ret.Add((Activators != null || DefaultOn, Activators?.GetCrystal()));
-                ret.Add((AlchemicalApparatus != null || DefaultOn, AlchemicalApparatus?.GetCrystal()));
-                ret.Add((Armors != null || DefaultOn, Armors?.GetCrystal()));
-                ret.Add((Books != null || DefaultOn, Books?.GetCrystal()));
-                ret.Add((Clothes != null || DefaultOn, Clothes?.GetCrystal()));
-                ret.Add((Containers != null || DefaultOn, Containers?.GetCrystal()));
-                ret.Add((Doors != null || DefaultOn, Doors?.GetCrystal()));
-                ret.Add((Ingredients != null || DefaultOn, Ingredients?.GetCrystal()));
-                ret.Add((Lights != null || DefaultOn, Lights?.GetCrystal()));
-                ret.Add((Miscellaneous != null || DefaultOn, Miscellaneous?.GetCrystal()));
-                ret.Add((Statics != null || DefaultOn, Statics?.GetCrystal()));
-                ret.Add((Grasses != null || DefaultOn, Grasses?.GetCrystal()));
-                ret.Add((Trees != null || DefaultOn, Trees?.GetCrystal()));
-                ret.Add((Flora != null || DefaultOn, Flora?.GetCrystal()));
-                ret.Add((Furniture != null || DefaultOn, Furniture?.GetCrystal()));
-                ret.Add((Weapons != null || DefaultOn, Weapons?.GetCrystal()));
-                ret.Add((Ammunitions != null || DefaultOn, Ammunitions?.GetCrystal()));
-                ret.Add((Npcs != null || DefaultOn, Npcs?.GetCrystal()));
-                ret.Add((Creatures != null || DefaultOn, Creatures?.GetCrystal()));
-                ret.Add((LeveledCreatures != null || DefaultOn, LeveledCreatures?.GetCrystal()));
-                ret.Add((SoulGems != null || DefaultOn, SoulGems?.GetCrystal()));
-                ret.Add((Keys != null || DefaultOn, Keys?.GetCrystal()));
-                ret.Add((Potions != null || DefaultOn, Potions?.GetCrystal()));
-                ret.Add((Subspaces != null || DefaultOn, Subspaces?.GetCrystal()));
-                ret.Add((SigilStones != null || DefaultOn, SigilStones?.GetCrystal()));
-                ret.Add((LeveledItems != null || DefaultOn, LeveledItems?.GetCrystal()));
-                ret.Add((Weathers != null || DefaultOn, Weathers?.GetCrystal()));
-                ret.Add((Climates != null || DefaultOn, Climates?.GetCrystal()));
-                ret.Add((Regions != null || DefaultOn, Regions?.GetCrystal()));
-                ret.Add((Cells != null || DefaultOn, Cells?.GetCrystal()));
-                ret.Add((Worldspaces != null || DefaultOn, Worldspaces?.GetCrystal()));
-                ret.Add((DialogTopics != null || DefaultOn, DialogTopics?.GetCrystal()));
-                ret.Add((Quests != null || DefaultOn, Quests?.GetCrystal()));
-                ret.Add((IdleAnimations != null || DefaultOn, IdleAnimations?.GetCrystal()));
-                ret.Add((AIPackages != null || DefaultOn, AIPackages?.GetCrystal()));
-                ret.Add((CombatStyles != null || DefaultOn, CombatStyles?.GetCrystal()));
-                ret.Add((LoadScreens != null || DefaultOn, LoadScreens?.GetCrystal()));
-                ret.Add((LeveledSpells != null || DefaultOn, LeveledSpells?.GetCrystal()));
-                ret.Add((AnimatedObjects != null || DefaultOn, AnimatedObjects?.GetCrystal()));
-                ret.Add((Waters != null || DefaultOn, Waters?.GetCrystal()));
-                ret.Add((EffectShaders != null || DefaultOn, EffectShaders?.GetCrystal()));
+                ret.Add((ModHeader != null ? ModHeader.OnOverall : DefaultOn, ModHeader?.GetCrystal()));
+                ret.Add((GameSettings != null ? GameSettings.OnOverall : DefaultOn, GameSettings?.GetCrystal()));
+                ret.Add((Globals != null ? Globals.OnOverall : DefaultOn, Globals?.GetCrystal()));
+                ret.Add((Classes != null ? Classes.OnOverall : DefaultOn, Classes?.GetCrystal()));
+                ret.Add((Factions != null ? Factions.OnOverall : DefaultOn, Factions?.GetCrystal()));
+                ret.Add((Hairs != null ? Hairs.OnOverall : DefaultOn, Hairs?.GetCrystal()));
+                ret.Add((Eyes != null ? Eyes.OnOverall : DefaultOn, Eyes?.GetCrystal()));
+                ret.Add((Races != null ? Races.OnOverall : DefaultOn, Races?.GetCrystal()));
+                ret.Add((Sounds != null ? Sounds.OnOverall : DefaultOn, Sounds?.GetCrystal()));
+                ret.Add((Skills != null ? Skills.OnOverall : DefaultOn, Skills?.GetCrystal()));
+                ret.Add((MagicEffects != null ? MagicEffects.OnOverall : DefaultOn, MagicEffects?.GetCrystal()));
+                ret.Add((Scripts != null ? Scripts.OnOverall : DefaultOn, Scripts?.GetCrystal()));
+                ret.Add((LandTextures != null ? LandTextures.OnOverall : DefaultOn, LandTextures?.GetCrystal()));
+                ret.Add((Enchantments != null ? Enchantments.OnOverall : DefaultOn, Enchantments?.GetCrystal()));
+                ret.Add((Spells != null ? Spells.OnOverall : DefaultOn, Spells?.GetCrystal()));
+                ret.Add((Birthsigns != null ? Birthsigns.OnOverall : DefaultOn, Birthsigns?.GetCrystal()));
+                ret.Add((Activators != null ? Activators.OnOverall : DefaultOn, Activators?.GetCrystal()));
+                ret.Add((AlchemicalApparatus != null ? AlchemicalApparatus.OnOverall : DefaultOn, AlchemicalApparatus?.GetCrystal()));
+                ret.Add((Armors != null ? Armors.OnOverall : DefaultOn, Armors?.GetCrystal()));
+                ret.Add((Books != null ? Books.OnOverall : DefaultOn, Books?.GetCrystal()));
+                ret.Add((Clothes != null ? Clothes.OnOverall : DefaultOn, Clothes?.GetCrystal()));
+                ret.Add((Containers != null ? Containers.OnOverall : DefaultOn, Containers?.GetCrystal()));
+                ret.Add((Doors != null ? Doors.OnOverall : DefaultOn, Doors?.GetCrystal()));
+                ret.Add((Ingredients != null ? Ingredients.OnOverall : DefaultOn, Ingredients?.GetCrystal()));
+                ret.Add((Lights != null ? Lights.OnOverall : DefaultOn, Lights?.GetCrystal()));
+                ret.Add((Miscellaneous != null ? Miscellaneous.OnOverall : DefaultOn, Miscellaneous?.GetCrystal()));
+                ret.Add((Statics != null ? Statics.OnOverall : DefaultOn, Statics?.GetCrystal()));
+                ret.Add((Grasses != null ? Grasses.OnOverall : DefaultOn, Grasses?.GetCrystal()));
+                ret.Add((Trees != null ? Trees.OnOverall : DefaultOn, Trees?.GetCrystal()));
+                ret.Add((Flora != null ? Flora.OnOverall : DefaultOn, Flora?.GetCrystal()));
+                ret.Add((Furniture != null ? Furniture.OnOverall : DefaultOn, Furniture?.GetCrystal()));
+                ret.Add((Weapons != null ? Weapons.OnOverall : DefaultOn, Weapons?.GetCrystal()));
+                ret.Add((Ammunitions != null ? Ammunitions.OnOverall : DefaultOn, Ammunitions?.GetCrystal()));
+                ret.Add((Npcs != null ? Npcs.OnOverall : DefaultOn, Npcs?.GetCrystal()));
+                ret.Add((Creatures != null ? Creatures.OnOverall : DefaultOn, Creatures?.GetCrystal()));
+                ret.Add((LeveledCreatures != null ? LeveledCreatures.OnOverall : DefaultOn, LeveledCreatures?.GetCrystal()));
+                ret.Add((SoulGems != null ? SoulGems.OnOverall : DefaultOn, SoulGems?.GetCrystal()));
+                ret.Add((Keys != null ? Keys.OnOverall : DefaultOn, Keys?.GetCrystal()));
+                ret.Add((Potions != null ? Potions.OnOverall : DefaultOn, Potions?.GetCrystal()));
+                ret.Add((Subspaces != null ? Subspaces.OnOverall : DefaultOn, Subspaces?.GetCrystal()));
+                ret.Add((SigilStones != null ? SigilStones.OnOverall : DefaultOn, SigilStones?.GetCrystal()));
+                ret.Add((LeveledItems != null ? LeveledItems.OnOverall : DefaultOn, LeveledItems?.GetCrystal()));
+                ret.Add((Weathers != null ? Weathers.OnOverall : DefaultOn, Weathers?.GetCrystal()));
+                ret.Add((Climates != null ? Climates.OnOverall : DefaultOn, Climates?.GetCrystal()));
+                ret.Add((Regions != null ? Regions.OnOverall : DefaultOn, Regions?.GetCrystal()));
+                ret.Add((Cells != null ? Cells.OnOverall : DefaultOn, Cells?.GetCrystal()));
+                ret.Add((Worldspaces != null ? Worldspaces.OnOverall : DefaultOn, Worldspaces?.GetCrystal()));
+                ret.Add((DialogTopics != null ? DialogTopics.OnOverall : DefaultOn, DialogTopics?.GetCrystal()));
+                ret.Add((Quests != null ? Quests.OnOverall : DefaultOn, Quests?.GetCrystal()));
+                ret.Add((IdleAnimations != null ? IdleAnimations.OnOverall : DefaultOn, IdleAnimations?.GetCrystal()));
+                ret.Add((AIPackages != null ? AIPackages.OnOverall : DefaultOn, AIPackages?.GetCrystal()));
+                ret.Add((CombatStyles != null ? CombatStyles.OnOverall : DefaultOn, CombatStyles?.GetCrystal()));
+                ret.Add((LoadScreens != null ? LoadScreens.OnOverall : DefaultOn, LoadScreens?.GetCrystal()));
+                ret.Add((LeveledSpells != null ? LeveledSpells.OnOverall : DefaultOn, LeveledSpells?.GetCrystal()));
+                ret.Add((AnimatedObjects != null ? AnimatedObjects.OnOverall : DefaultOn, AnimatedObjects?.GetCrystal()));
+                ret.Add((Waters != null ? Waters.OnOverall : DefaultOn, Waters?.GetCrystal()));
+                ret.Add((EffectShaders != null ? EffectShaders.OnOverall : DefaultOn, EffectShaders?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

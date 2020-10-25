@@ -438,6 +438,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
+            public bool OnOverall;
             public AmbientColors.TranslationMask? Sunrise;
             public AmbientColors.TranslationMask? Day;
             public AmbientColors.TranslationMask? Sunset;
@@ -445,9 +446,12 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
             {
                 this.DefaultOn = defaultOn;
+                this.OnOverall = onOverall;
             }
 
             #endregion
@@ -463,15 +467,15 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Sunrise != null || DefaultOn, Sunrise?.GetCrystal()));
-                ret.Add((Day != null || DefaultOn, Day?.GetCrystal()));
-                ret.Add((Sunset != null || DefaultOn, Sunset?.GetCrystal()));
-                ret.Add((Night != null || DefaultOn, Night?.GetCrystal()));
+                ret.Add((Sunrise != null ? Sunrise.OnOverall : DefaultOn, Sunrise?.GetCrystal()));
+                ret.Add((Day != null ? Day.OnOverall : DefaultOn, Day?.GetCrystal()));
+                ret.Add((Sunset != null ? Sunset.OnOverall : DefaultOn, Sunset?.GetCrystal()));
+                ret.Add((Night != null ? Night.OnOverall : DefaultOn, Night?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

@@ -592,8 +592,10 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
-                : base(defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
+                : base(defaultOn, onOverall)
             {
                 this.Name = defaultOn;
                 this.Description = defaultOn;
@@ -610,13 +612,13 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Description, null));
                 ret.Add((Abbreviation, null));
                 ret.Add((CNAM, null));
-                ret.Add((Skill != null || DefaultOn, Skill?.GetCrystal()));
+                ret.Add((Skill != null ? Skill.OnOverall : DefaultOn, Skill?.GetCrystal()));
                 ret.Add((PerkTree == null ? DefaultOn : !PerkTree.GetCrystal().CopyNothing, PerkTree?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

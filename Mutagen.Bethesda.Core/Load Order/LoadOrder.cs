@@ -367,7 +367,7 @@ namespace Mutagen.Bethesda
         /// Constructs a load order filled with mods constructed
         /// </summary>
         /// <param name="dataFolder">Path data folder containing mods</param>
-        /// <param name="loadOrder">Unique list of mod keys to import</param>
+        /// <param name="loadOrder">Unique list of listings to import</param>
         /// <param name="gameRelease">GameRelease associated with the mods to create<br/>
         /// This may be unapplicable to some games with only one release, but should still be passed in.
         /// </param>
@@ -384,10 +384,48 @@ namespace Mutagen.Bethesda
         }
 
         /// <summary>
+        /// Constructs a load order filled with mods constructed
+        /// </summary>
+        /// <param name="dataFolder">Path data folder containing mods</param>
+        /// <param name="loadOrder">Unique list of mod keys to import</param>
+        /// <param name="gameRelease">GameRelease associated with the mods to create<br/>
+        /// This may be unapplicable to some games with only one release, but should still be passed in.
+        /// </param>
+        public static LoadOrder<IModListing<TMod>> Import<TMod>(
+            DirectoryPath dataFolder,
+            IEnumerable<ModKey> loadOrder,
+            GameRelease gameRelease)
+            where TMod : class, IModGetter
+        {
+            return Import(
+                dataFolder,
+                loadOrder.Select(m => new LoadOrderListing(m, enabled: true)),
+                (modPath) => ModInstantiator<TMod>.Importer(modPath, gameRelease));
+        }
+
+        /// <summary>
         /// Constructs a load order filled with mods constructed by given importer func
         /// </summary>
         /// <param name="dataFolder">Path data folder containing mods</param>
         /// <param name="loadOrder">Unique list of mod keys to import</param>
+        /// <param name="factory">Func to use to create a new mod from a path</param>
+        public static LoadOrder<IModListing<TMod>> Import<TMod>(
+            DirectoryPath dataFolder,
+            IEnumerable<ModKey> loadOrder,
+            Func<ModPath, TMod> factory)
+            where TMod : class, IModGetter
+        {
+            return Import(
+                dataFolder,
+                loadOrder.Select(m => new LoadOrderListing(m, enabled: true)),
+                factory);
+        }
+
+        /// <summary>
+        /// Constructs a load order filled with mods constructed by given importer func
+        /// </summary>
+        /// <param name="dataFolder">Path data folder containing mods</param>
+        /// <param name="loadOrder">Unique list of listings to import</param>
         /// <param name="factory">Func to use to create a new mod from a path</param>
         public static LoadOrder<IModListing<TMod>> Import<TMod>(
             DirectoryPath dataFolder,

@@ -690,8 +690,10 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
-                : base(defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
+                : base(defaultOn, onOverall)
             {
                 this.Description = defaultOn;
                 this.LoadingScreenNif = defaultOn;
@@ -706,20 +708,20 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Icons != null || DefaultOn, Icons?.GetCrystal()));
+                ret.Add((Icons != null ? Icons.OnOverall : DefaultOn, Icons?.GetCrystal()));
                 ret.Add((Description, null));
                 ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
                 ret.Add((LoadingScreenNif, null));
                 ret.Add((InitialScale, null));
                 ret.Add((InitialRotation, null));
-                ret.Add((RotationOffsetConstraints != null || DefaultOn, RotationOffsetConstraints?.GetCrystal()));
+                ret.Add((RotationOffsetConstraints != null ? RotationOffsetConstraints.OnOverall : DefaultOn, RotationOffsetConstraints?.GetCrystal()));
                 ret.Add((InitialTranslationOffset, null));
                 ret.Add((CameraPath, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

@@ -1118,8 +1118,10 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
-                : base(defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
+                : base(defaultOn, onOverall)
             {
                 this.AmbientColor = defaultOn;
                 this.DirectionalColor = defaultOn;
@@ -1175,13 +1177,13 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((LightFadeStartDistance, null));
                 ret.Add((LightFadeEndDistance, null));
                 ret.Add((Unknown, null));
-                ret.Add((DirectionalAmbientColors != null || DefaultOn, DirectionalAmbientColors?.GetCrystal()));
+                ret.Add((DirectionalAmbientColors != null ? DirectionalAmbientColors.OnOverall : DefaultOn, DirectionalAmbientColors?.GetCrystal()));
                 ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

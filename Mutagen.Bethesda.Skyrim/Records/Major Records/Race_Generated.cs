@@ -3583,8 +3583,10 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
-                : base(defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
+                : base(defaultOn, onOverall)
             {
                 this.Name = defaultOn;
                 this.Description = defaultOn;
@@ -3648,15 +3650,15 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Description, null));
                 ret.Add((ActorEffect, null));
                 ret.Add((Skin, null));
-                ret.Add((BodyTemplate != null || DefaultOn, BodyTemplate?.GetCrystal()));
+                ret.Add((BodyTemplate != null ? BodyTemplate.OnOverall : DefaultOn, BodyTemplate?.GetCrystal()));
                 ret.Add((Keywords, null));
-                ret.Add((SkillBoost0 != null || DefaultOn, SkillBoost0?.GetCrystal()));
-                ret.Add((SkillBoost1 != null || DefaultOn, SkillBoost1?.GetCrystal()));
-                ret.Add((SkillBoost2 != null || DefaultOn, SkillBoost2?.GetCrystal()));
-                ret.Add((SkillBoost3 != null || DefaultOn, SkillBoost3?.GetCrystal()));
-                ret.Add((SkillBoost4 != null || DefaultOn, SkillBoost4?.GetCrystal()));
-                ret.Add((SkillBoost5 != null || DefaultOn, SkillBoost5?.GetCrystal()));
-                ret.Add((SkillBoost6 != null || DefaultOn, SkillBoost6?.GetCrystal()));
+                ret.Add((SkillBoost0 != null ? SkillBoost0.OnOverall : DefaultOn, SkillBoost0?.GetCrystal()));
+                ret.Add((SkillBoost1 != null ? SkillBoost1.OnOverall : DefaultOn, SkillBoost1?.GetCrystal()));
+                ret.Add((SkillBoost2 != null ? SkillBoost2.OnOverall : DefaultOn, SkillBoost2?.GetCrystal()));
+                ret.Add((SkillBoost3 != null ? SkillBoost3.OnOverall : DefaultOn, SkillBoost3?.GetCrystal()));
+                ret.Add((SkillBoost4 != null ? SkillBoost4.OnOverall : DefaultOn, SkillBoost4?.GetCrystal()));
+                ret.Add((SkillBoost5 != null ? SkillBoost5.OnOverall : DefaultOn, SkillBoost5?.GetCrystal()));
+                ret.Add((SkillBoost6 != null ? SkillBoost6.OnOverall : DefaultOn, SkillBoost6?.GetCrystal()));
                 ret.Add((Unknown, null));
                 ret.Add((Height != null || DefaultOn, null));
                 ret.Add((Weight != null || DefaultOn, null));
@@ -3679,7 +3681,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((FlightRadius, null));
                 ret.Add((AngularAccelerationRate, null));
                 ret.Add((AngularTolerance, null));
-                ret.Add((MountData != null || DefaultOn, MountData?.GetCrystal()));
+                ret.Add((MountData != null ? MountData.OnOverall : DefaultOn, MountData?.GetCrystal()));
                 ret.Add((SkeletalModel != null || DefaultOn, null));
                 ret.Add((MovementTypeNames, null));
                 ret.Add((Voices != null || DefaultOn, null));
@@ -3705,7 +3707,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((EquipmentFlags, null));
                 ret.Add((EquipmentSlots, null));
                 ret.Add((UnarmedEquipSlot, null));
-                ret.Add((FaceFxPhonemes != null || DefaultOn, FaceFxPhonemes?.GetCrystal()));
+                ret.Add((FaceFxPhonemes != null ? FaceFxPhonemes.OnOverall : DefaultOn, FaceFxPhonemes?.GetCrystal()));
                 ret.Add((BaseMovementDefaultWalk, null));
                 ret.Add((BaseMovementDefaultRun, null));
                 ret.Add((BaseMovementDefaultSwim, null));
@@ -3720,7 +3722,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

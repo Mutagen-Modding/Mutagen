@@ -561,8 +561,10 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
-                : base(defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
+                : base(defaultOn, onOverall)
             {
                 this.Description = defaultOn;
                 this.Index = defaultOn;
@@ -587,7 +589,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }
@@ -1672,6 +1674,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.INTV),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM),
+                            nullIfZero: true,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedListIfAny<IFormLink<ICollisionLayerGetter>>();
                     return (int)CollisionLayer_FieldIndex.CollidesWith;

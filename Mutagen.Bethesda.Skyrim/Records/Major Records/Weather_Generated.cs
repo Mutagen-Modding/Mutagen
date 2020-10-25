@@ -2772,8 +2772,10 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
-                : base(defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
+                : base(defaultOn, onOverall)
             {
                 this.CloudTextures = defaultOn;
                 this.DNAM = defaultOn;
@@ -2832,23 +2834,23 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((VisualEffect, null));
                 ret.Add((ONAM, null));
                 ret.Add((Clouds == null ? DefaultOn : !Clouds.GetCrystal().CopyNothing, Clouds?.GetCrystal()));
-                ret.Add((SkyUpperColor != null || DefaultOn, SkyUpperColor?.GetCrystal()));
-                ret.Add((FogNearColor != null || DefaultOn, FogNearColor?.GetCrystal()));
-                ret.Add((UnknownColor != null || DefaultOn, UnknownColor?.GetCrystal()));
-                ret.Add((AmbientColor != null || DefaultOn, AmbientColor?.GetCrystal()));
-                ret.Add((SunlightColor != null || DefaultOn, SunlightColor?.GetCrystal()));
-                ret.Add((SunColor != null || DefaultOn, SunColor?.GetCrystal()));
-                ret.Add((StarsColor != null || DefaultOn, StarsColor?.GetCrystal()));
-                ret.Add((SkyLowerColor != null || DefaultOn, SkyLowerColor?.GetCrystal()));
-                ret.Add((HorizonColor != null || DefaultOn, HorizonColor?.GetCrystal()));
-                ret.Add((EffectLightingColor != null || DefaultOn, EffectLightingColor?.GetCrystal()));
-                ret.Add((CloudLodDiffuseColor != null || DefaultOn, CloudLodDiffuseColor?.GetCrystal()));
-                ret.Add((CloudLodAmbientColor != null || DefaultOn, CloudLodAmbientColor?.GetCrystal()));
-                ret.Add((FogFarColor != null || DefaultOn, FogFarColor?.GetCrystal()));
-                ret.Add((SkyStaticsColor != null || DefaultOn, SkyStaticsColor?.GetCrystal()));
-                ret.Add((WaterMultiplierColor != null || DefaultOn, WaterMultiplierColor?.GetCrystal()));
-                ret.Add((SunGlareColor != null || DefaultOn, SunGlareColor?.GetCrystal()));
-                ret.Add((MoonGlareColor != null || DefaultOn, MoonGlareColor?.GetCrystal()));
+                ret.Add((SkyUpperColor != null ? SkyUpperColor.OnOverall : DefaultOn, SkyUpperColor?.GetCrystal()));
+                ret.Add((FogNearColor != null ? FogNearColor.OnOverall : DefaultOn, FogNearColor?.GetCrystal()));
+                ret.Add((UnknownColor != null ? UnknownColor.OnOverall : DefaultOn, UnknownColor?.GetCrystal()));
+                ret.Add((AmbientColor != null ? AmbientColor.OnOverall : DefaultOn, AmbientColor?.GetCrystal()));
+                ret.Add((SunlightColor != null ? SunlightColor.OnOverall : DefaultOn, SunlightColor?.GetCrystal()));
+                ret.Add((SunColor != null ? SunColor.OnOverall : DefaultOn, SunColor?.GetCrystal()));
+                ret.Add((StarsColor != null ? StarsColor.OnOverall : DefaultOn, StarsColor?.GetCrystal()));
+                ret.Add((SkyLowerColor != null ? SkyLowerColor.OnOverall : DefaultOn, SkyLowerColor?.GetCrystal()));
+                ret.Add((HorizonColor != null ? HorizonColor.OnOverall : DefaultOn, HorizonColor?.GetCrystal()));
+                ret.Add((EffectLightingColor != null ? EffectLightingColor.OnOverall : DefaultOn, EffectLightingColor?.GetCrystal()));
+                ret.Add((CloudLodDiffuseColor != null ? CloudLodDiffuseColor.OnOverall : DefaultOn, CloudLodDiffuseColor?.GetCrystal()));
+                ret.Add((CloudLodAmbientColor != null ? CloudLodAmbientColor.OnOverall : DefaultOn, CloudLodAmbientColor?.GetCrystal()));
+                ret.Add((FogFarColor != null ? FogFarColor.OnOverall : DefaultOn, FogFarColor?.GetCrystal()));
+                ret.Add((SkyStaticsColor != null ? SkyStaticsColor.OnOverall : DefaultOn, SkyStaticsColor?.GetCrystal()));
+                ret.Add((WaterMultiplierColor != null ? WaterMultiplierColor.OnOverall : DefaultOn, WaterMultiplierColor?.GetCrystal()));
+                ret.Add((SunGlareColor != null ? SunGlareColor.OnOverall : DefaultOn, SunGlareColor?.GetCrystal()));
+                ret.Add((MoonGlareColor != null ? MoonGlareColor.OnOverall : DefaultOn, MoonGlareColor?.GetCrystal()));
                 ret.Add((FogDistanceDayNear, null));
                 ret.Add((FogDistanceDayFar, null));
                 ret.Add((FogDistanceNightNear, null));
@@ -2875,12 +2877,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((WindDirectionRange, null));
                 ret.Add((Sounds == null ? DefaultOn : !Sounds.GetCrystal().CopyNothing, Sounds?.GetCrystal()));
                 ret.Add((SkyStatics, null));
-                ret.Add((ImageSpaces != null || DefaultOn, ImageSpaces?.GetCrystal()));
-                ret.Add((VolumetricLighting != null || DefaultOn, VolumetricLighting?.GetCrystal()));
-                ret.Add((DirectionalAmbientLightingColors != null || DefaultOn, DirectionalAmbientLightingColors?.GetCrystal()));
+                ret.Add((ImageSpaces != null ? ImageSpaces.OnOverall : DefaultOn, ImageSpaces?.GetCrystal()));
+                ret.Add((VolumetricLighting != null ? VolumetricLighting.OnOverall : DefaultOn, VolumetricLighting?.GetCrystal()));
+                ret.Add((DirectionalAmbientLightingColors != null ? DirectionalAmbientLightingColors.OnOverall : DefaultOn, DirectionalAmbientLightingColors?.GetCrystal()));
                 ret.Add((NAM2, null));
                 ret.Add((NAM3, null));
-                ret.Add((Aurora != null || DefaultOn, Aurora?.GetCrystal()));
+                ret.Add((Aurora != null ? Aurora.OnOverall : DefaultOn, Aurora?.GetCrystal()));
                 ret.Add((SunGlareLensFlare, null));
                 ret.Add((NAM0DataTypeState, null));
                 ret.Add((FNAMDataTypeState, null));
@@ -2889,7 +2891,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }
