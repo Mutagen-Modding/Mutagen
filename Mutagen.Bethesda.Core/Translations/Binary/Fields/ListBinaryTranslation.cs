@@ -414,8 +414,11 @@ namespace Mutagen.Bethesda.Binary
             MutagenFrame frame,
             int amount,
             RecordType triggeringRecord,
-            BinarySubParseDelegate<T> transl)
+            BinarySubParseDelegate<T> transl,
+            bool nullIfZero = false)
         {
+            if (amount == 0 && nullIfZero) return Enumerable.Empty<T>();
+
             // Don't return early if count is zero, as we're expecting one
             // Content record still that is empty
             var subHeader = frame.GetSubrecord();
@@ -448,7 +451,8 @@ namespace Mutagen.Bethesda.Binary
             RecordType triggeringRecord,
             RecordType countRecord,
             int countLengthLength,
-            BinarySubParseDelegate<T> transl)
+            BinarySubParseDelegate<T> transl,
+            bool nullIfZero = false)
         {
             var subHeader = frame.GetSubrecordFrame();
             var recType = subHeader.RecordType;
@@ -466,7 +470,8 @@ namespace Mutagen.Bethesda.Binary
                     frame,
                     count,
                     triggeringRecord,
-                    transl);
+                    transl,
+                    nullIfZero: nullIfZero);
             }
             else
             {

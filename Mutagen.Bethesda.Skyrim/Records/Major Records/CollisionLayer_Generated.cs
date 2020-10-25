@@ -1674,6 +1674,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.INTV),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM),
+                            nullIfZero: true,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedListIfAny<IFormLink<ICollisionLayerGetter>>();
                     return (int)CollisionLayer_FieldIndex.CollidesWith;
