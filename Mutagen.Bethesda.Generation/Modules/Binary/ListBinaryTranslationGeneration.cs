@@ -386,6 +386,11 @@ namespace Mutagen.Bethesda.Generation
                                         args.Add($"triggeringRecord: recordTypeConverter.ConvertToCustom({subData.TriggeringRecordSetAccessor})");
                                     }
                                 }
+                                if (list.CustomData.TryGetValue(NullIfCounterZero, out var nullIf)
+                                    && (bool)nullIf)
+                                {
+                                    args.Add("nullIfZero: true");
+                                }
                                 break;
                             case ListBinaryType.PrependCount:
                                 byte countLen = (byte)list.CustomData[CounterByteLength];
