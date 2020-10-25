@@ -1586,6 +1586,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
+            public bool OnOverall;
             public bool ID;
             public bool Type;
             public bool Name;
@@ -1614,9 +1615,12 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
             {
                 this.DefaultOn = defaultOn;
+                this.OnOverall = onOverall;
                 this.ID = defaultOn;
                 this.Type = defaultOn;
                 this.Name = defaultOn;
@@ -1658,11 +1662,11 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((SpecificLocation, null));
                 ret.Add((ForcedReference, null));
                 ret.Add((UniqueActor, null));
-                ret.Add((Location != null || DefaultOn, Location?.GetCrystal()));
-                ret.Add((External != null || DefaultOn, External?.GetCrystal()));
-                ret.Add((CreateReferenceToObject != null || DefaultOn, CreateReferenceToObject?.GetCrystal()));
-                ret.Add((FindMatchingRefNearAlias != null || DefaultOn, FindMatchingRefNearAlias?.GetCrystal()));
-                ret.Add((FindMatchingRefFromEvent != null || DefaultOn, FindMatchingRefFromEvent?.GetCrystal()));
+                ret.Add((Location != null ? Location.OnOverall : DefaultOn, Location?.GetCrystal()));
+                ret.Add((External != null ? External.OnOverall : DefaultOn, External?.GetCrystal()));
+                ret.Add((CreateReferenceToObject != null ? CreateReferenceToObject.OnOverall : DefaultOn, CreateReferenceToObject?.GetCrystal()));
+                ret.Add((FindMatchingRefNearAlias != null ? FindMatchingRefNearAlias.OnOverall : DefaultOn, FindMatchingRefNearAlias?.GetCrystal()));
+                ret.Add((FindMatchingRefFromEvent != null ? FindMatchingRefFromEvent.OnOverall : DefaultOn, FindMatchingRefFromEvent?.GetCrystal()));
                 ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
                 ret.Add((Keywords, null));
                 ret.Add((Items == null ? DefaultOn : !Items.GetCrystal().CopyNothing, Items?.GetCrystal()));
@@ -1679,7 +1683,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

@@ -1876,15 +1876,19 @@ namespace Mutagen.Bethesda.Oblivion
             #region Members
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
+            public bool OnOverall;
             public bool Type;
             public bool LastModified;
             public T_TranslMask? Records;
             #endregion
         
             #region Ctors
-            public TranslationMask(bool defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
             {
                 this.DefaultOn = defaultOn;
+                this.OnOverall = onOverall;
                 this.Type = defaultOn;
                 this.LastModified = defaultOn;
             }
@@ -1909,7 +1913,7 @@ namespace Mutagen.Bethesda.Oblivion
         
             public static implicit operator TranslationMask<T_TranslMask>(bool defaultOn)
             {
-                return new TranslationMask<T_TranslMask>(defaultOn);
+                return new TranslationMask<T_TranslMask>(defaultOn: defaultOn, onOverall: defaultOn);
             }
         
         }

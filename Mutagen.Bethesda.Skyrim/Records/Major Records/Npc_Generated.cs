@@ -2515,8 +2515,10 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
-                : base(defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
+                : base(defaultOn, onOverall)
             {
                 this.DeathItem = defaultOn;
                 this.Voice = defaultOn;
@@ -2556,16 +2558,16 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((VirtualMachineAdapter != null || DefaultOn, VirtualMachineAdapter?.GetCrystal()));
-                ret.Add((ObjectBounds != null || DefaultOn, ObjectBounds?.GetCrystal()));
-                ret.Add((Configuration != null || DefaultOn, Configuration?.GetCrystal()));
+                ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
+                ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
+                ret.Add((Configuration != null ? Configuration.OnOverall : DefaultOn, Configuration?.GetCrystal()));
                 ret.Add((Factions == null ? DefaultOn : !Factions.GetCrystal().CopyNothing, Factions?.GetCrystal()));
                 ret.Add((DeathItem, null));
                 ret.Add((Voice, null));
                 ret.Add((Template, null));
                 ret.Add((Race, null));
                 ret.Add((ActorEffect, null));
-                ret.Add((Destructible != null || DefaultOn, Destructible?.GetCrystal()));
+                ret.Add((Destructible != null ? Destructible.OnOverall : DefaultOn, Destructible?.GetCrystal()));
                 ret.Add((WornArmor, null));
                 ret.Add((FarAwayModel, null));
                 ret.Add((AttackRace, null));
@@ -2576,13 +2578,13 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((CombatOverridePackageList, null));
                 ret.Add((Perks == null ? DefaultOn : !Perks.GetCrystal().CopyNothing, Perks?.GetCrystal()));
                 ret.Add((Items == null ? DefaultOn : !Items.GetCrystal().CopyNothing, Items?.GetCrystal()));
-                ret.Add((AIData != null || DefaultOn, AIData?.GetCrystal()));
+                ret.Add((AIData != null ? AIData.OnOverall : DefaultOn, AIData?.GetCrystal()));
                 ret.Add((Packages, null));
                 ret.Add((Keywords, null));
                 ret.Add((Class, null));
                 ret.Add((Name, null));
                 ret.Add((ShortName, null));
-                ret.Add((PlayerSkills != null || DefaultOn, PlayerSkills?.GetCrystal()));
+                ret.Add((PlayerSkills != null ? PlayerSkills.OnOverall : DefaultOn, PlayerSkills?.GetCrystal()));
                 ret.Add((HeadParts, null));
                 ret.Add((HairColor, null));
                 ret.Add((CombatStyle, null));
@@ -2591,21 +2593,21 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Height, null));
                 ret.Add((Weight, null));
                 ret.Add((SoundLevel, null));
-                ret.Add((Sound != null || DefaultOn, Sound?.GetCrystal()));
+                ret.Add((Sound != null ? Sound.OnOverall : DefaultOn, Sound?.GetCrystal()));
                 ret.Add((DefaultOutfit, null));
                 ret.Add((SleepingOutfit, null));
                 ret.Add((DefaultPackageList, null));
                 ret.Add((CrimeFaction, null));
                 ret.Add((HeadTexture, null));
                 ret.Add((TextureLighting, null));
-                ret.Add((FaceMorph != null || DefaultOn, FaceMorph?.GetCrystal()));
-                ret.Add((FaceParts != null || DefaultOn, FaceParts?.GetCrystal()));
+                ret.Add((FaceMorph != null ? FaceMorph.OnOverall : DefaultOn, FaceMorph?.GetCrystal()));
+                ret.Add((FaceParts != null ? FaceParts.OnOverall : DefaultOn, FaceParts?.GetCrystal()));
                 ret.Add((TintLayers == null ? DefaultOn : !TintLayers.GetCrystal().CopyNothing, TintLayers?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

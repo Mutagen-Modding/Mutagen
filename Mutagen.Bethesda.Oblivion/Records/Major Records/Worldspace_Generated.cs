@@ -889,8 +889,10 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
-                : base(defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
+                : base(defaultOn, onOverall)
             {
                 this.Name = defaultOn;
                 this.Parent = defaultOn;
@@ -915,21 +917,21 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Climate, null));
                 ret.Add((Water, null));
                 ret.Add((Icon, null));
-                ret.Add((MapData != null || DefaultOn, MapData?.GetCrystal()));
+                ret.Add((MapData != null ? MapData.OnOverall : DefaultOn, MapData?.GetCrystal()));
                 ret.Add((Flags, null));
                 ret.Add((ObjectBoundsMin, null));
                 ret.Add((ObjectBoundsMax, null));
                 ret.Add((Music, null));
                 ret.Add((OffsetData, null));
-                ret.Add((Road != null || DefaultOn, Road?.GetCrystal()));
-                ret.Add((TopCell != null || DefaultOn, TopCell?.GetCrystal()));
+                ret.Add((Road != null ? Road.OnOverall : DefaultOn, Road?.GetCrystal()));
+                ret.Add((TopCell != null ? TopCell.OnOverall : DefaultOn, TopCell?.GetCrystal()));
                 ret.Add((SubCellsTimestamp, null));
                 ret.Add((SubCells == null ? DefaultOn : !SubCells.GetCrystal().CopyNothing, SubCells?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

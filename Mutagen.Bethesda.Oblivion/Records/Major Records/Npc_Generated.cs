@@ -1579,8 +1579,10 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
-                : base(defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
+                : base(defaultOn, onOverall)
             {
                 this.Name = defaultOn;
                 this.DeathItem = defaultOn;
@@ -1607,19 +1609,19 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 base.GetCrystal(ret);
                 ret.Add((Name, null));
-                ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
-                ret.Add((Configuration != null || DefaultOn, Configuration?.GetCrystal()));
+                ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
+                ret.Add((Configuration != null ? Configuration.OnOverall : DefaultOn, Configuration?.GetCrystal()));
                 ret.Add((Factions == null ? DefaultOn : !Factions.GetCrystal().CopyNothing, Factions?.GetCrystal()));
                 ret.Add((DeathItem, null));
                 ret.Add((Race, null));
                 ret.Add((Spells, null));
                 ret.Add((Script, null));
                 ret.Add((Items == null ? DefaultOn : !Items.GetCrystal().CopyNothing, Items?.GetCrystal()));
-                ret.Add((AIData != null || DefaultOn, AIData?.GetCrystal()));
+                ret.Add((AIData != null ? AIData.OnOverall : DefaultOn, AIData?.GetCrystal()));
                 ret.Add((AIPackages, null));
                 ret.Add((Animations, null));
                 ret.Add((Class, null));
-                ret.Add((Stats != null || DefaultOn, Stats?.GetCrystal()));
+                ret.Add((Stats != null ? Stats.OnOverall : DefaultOn, Stats?.GetCrystal()));
                 ret.Add((Hair, null));
                 ret.Add((HairLength, null));
                 ret.Add((Eyes, null));
@@ -1633,7 +1635,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

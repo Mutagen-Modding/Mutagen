@@ -400,15 +400,19 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
+            public bool OnOverall;
             public SoundOutputChannel.TranslationMask? Channel0;
             public SoundOutputChannel.TranslationMask? Channel1;
             public SoundOutputChannel.TranslationMask? Channel2;
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
             {
                 this.DefaultOn = defaultOn;
+                this.OnOverall = onOverall;
             }
 
             #endregion
@@ -424,14 +428,14 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Channel0 != null || DefaultOn, Channel0?.GetCrystal()));
-                ret.Add((Channel1 != null || DefaultOn, Channel1?.GetCrystal()));
-                ret.Add((Channel2 != null || DefaultOn, Channel2?.GetCrystal()));
+                ret.Add((Channel0 != null ? Channel0.OnOverall : DefaultOn, Channel0?.GetCrystal()));
+                ret.Add((Channel1 != null ? Channel1.OnOverall : DefaultOn, Channel1?.GetCrystal()));
+                ret.Add((Channel2 != null ? Channel2.OnOverall : DefaultOn, Channel2?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

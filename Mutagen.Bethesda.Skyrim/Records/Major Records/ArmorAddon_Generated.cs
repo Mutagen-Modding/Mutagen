@@ -917,8 +917,10 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
-                : base(defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
+                : base(defaultOn, onOverall)
             {
                 this.Race = defaultOn;
                 this.Unknown = defaultOn;
@@ -936,7 +938,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((BodyTemplate != null || DefaultOn, BodyTemplate?.GetCrystal()));
+                ret.Add((BodyTemplate != null ? BodyTemplate.OnOverall : DefaultOn, BodyTemplate?.GetCrystal()));
                 ret.Add((Race, null));
                 ret.Add((Priority != null || DefaultOn, null));
                 ret.Add((WeightSliderEnabled != null || DefaultOn, null));
@@ -956,7 +958,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

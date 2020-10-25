@@ -567,8 +567,10 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
-                : base(defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
+                : base(defaultOn, onOverall)
             {
                 this.SunTexture = defaultOn;
                 this.SunGlareTexture = defaultOn;
@@ -582,13 +584,13 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Weathers == null ? DefaultOn : !Weathers.GetCrystal().CopyNothing, Weathers?.GetCrystal()));
                 ret.Add((SunTexture, null));
                 ret.Add((SunGlareTexture, null));
-                ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
-                ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
+                ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
+                ret.Add((Data != null ? Data.OnOverall : DefaultOn, Data?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

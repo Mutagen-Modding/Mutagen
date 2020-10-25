@@ -664,6 +664,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
+            public bool OnOverall;
             public bool Name;
             public Condition.TranslationMask? StartConditions;
             public Condition.TranslationMask? CompletionConditions;
@@ -673,9 +674,12 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
             {
                 this.DefaultOn = defaultOn;
+                this.OnOverall = onOverall;
                 this.Name = defaultOn;
                 this.EditorWidth = defaultOn;
             }
@@ -696,14 +700,14 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Name, null));
                 ret.Add((StartConditions == null ? DefaultOn : !StartConditions.GetCrystal().CopyNothing, StartConditions?.GetCrystal()));
                 ret.Add((CompletionConditions == null ? DefaultOn : !CompletionConditions.GetCrystal().CopyNothing, CompletionConditions?.GetCrystal()));
-                ret.Add((Unused != null || DefaultOn, Unused?.GetCrystal()));
-                ret.Add((Unused2 != null || DefaultOn, Unused2?.GetCrystal()));
+                ret.Add((Unused != null ? Unused.OnOverall : DefaultOn, Unused?.GetCrystal()));
+                ret.Add((Unused2 != null ? Unused2.OnOverall : DefaultOn, Unused2?.GetCrystal()));
                 ret.Add((EditorWidth, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

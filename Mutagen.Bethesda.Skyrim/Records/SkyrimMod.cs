@@ -204,6 +204,7 @@ namespace Mutagen.Bethesda.Skyrim
                         worldspace.FormKey);
                     worldGroupWriter.Write((int)GroupTypeEnum.WorldChildren);
                     worldGroupWriter.Write(worldspace.SubCellsTimestamp);
+                    worldGroupWriter.Write(worldspace.SubCellsUnknown);
                     topCell?.WriteToBinary(worldGroupWriter);
                     subStreams[0] = worldGroupTrib;
 

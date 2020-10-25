@@ -884,6 +884,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
+            public bool OnOverall;
             public bool Flags;
             public bool FormID;
             public bool Version;
@@ -901,9 +902,12 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
             {
                 this.DefaultOn = defaultOn;
+                this.OnOverall = onOverall;
                 this.Flags = defaultOn;
                 this.FormID = defaultOn;
                 this.Version = defaultOn;
@@ -936,7 +940,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Version, null));
                 ret.Add((FormVersion, null));
                 ret.Add((Version2, null));
-                ret.Add((Stats != null || DefaultOn, Stats?.GetCrystal()));
+                ret.Add((Stats != null ? Stats.OnOverall : DefaultOn, Stats?.GetCrystal()));
                 ret.Add((TypeOffsets, null));
                 ret.Add((Deleted, null));
                 ret.Add((Author, null));
@@ -949,7 +953,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

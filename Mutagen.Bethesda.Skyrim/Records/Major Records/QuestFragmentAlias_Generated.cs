@@ -497,6 +497,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
+            public bool OnOverall;
             public ScriptObjectProperty.TranslationMask? Property;
             public bool Version;
             public bool ObjectFormat;
@@ -504,9 +505,12 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
             {
                 this.DefaultOn = defaultOn;
+                this.OnOverall = onOverall;
                 this.Version = defaultOn;
                 this.ObjectFormat = defaultOn;
             }
@@ -524,7 +528,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Property != null || DefaultOn, Property?.GetCrystal()));
+                ret.Add((Property != null ? Property.OnOverall : DefaultOn, Property?.GetCrystal()));
                 ret.Add((Version, null));
                 ret.Add((ObjectFormat, null));
                 ret.Add((Scripts == null ? DefaultOn : !Scripts.GetCrystal().CopyNothing, Scripts?.GetCrystal()));
@@ -532,7 +536,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

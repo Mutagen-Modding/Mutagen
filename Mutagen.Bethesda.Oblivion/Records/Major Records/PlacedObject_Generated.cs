@@ -1131,8 +1131,10 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
-                : base(defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
+                : base(defaultOn, onOverall)
             {
                 this.Base = defaultOn;
                 this.XPCIFluff = defaultOn;
@@ -1162,32 +1164,32 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Base, null));
                 ret.Add((XPCIFluff, null));
                 ret.Add((FULLFluff, null));
-                ret.Add((TeleportDestination != null || DefaultOn, TeleportDestination?.GetCrystal()));
-                ret.Add((Lock != null || DefaultOn, Lock?.GetCrystal()));
+                ret.Add((TeleportDestination != null ? TeleportDestination.OnOverall : DefaultOn, TeleportDestination?.GetCrystal()));
+                ret.Add((Lock != null ? Lock.OnOverall : DefaultOn, Lock?.GetCrystal()));
                 ret.Add((Owner, null));
                 ret.Add((FactionRank, null));
                 ret.Add((GlobalVariable, null));
-                ret.Add((EnableParent != null || DefaultOn, EnableParent?.GetCrystal()));
+                ret.Add((EnableParent != null ? EnableParent.OnOverall : DefaultOn, EnableParent?.GetCrystal()));
                 ret.Add((Target, null));
                 ret.Add((SpeedTreeSeed, null));
-                ret.Add((DistantLODData != null || DefaultOn, DistantLODData?.GetCrystal()));
+                ret.Add((DistantLODData != null ? DistantLODData.OnOverall : DefaultOn, DistantLODData?.GetCrystal()));
                 ret.Add((Charge, null));
                 ret.Add((Health, null));
                 ret.Add((LevelModifier, null));
                 ret.Add((XRTM, null));
                 ret.Add((ActionFlags, null));
                 ret.Add((Count, null));
-                ret.Add((MapMarker != null || DefaultOn, MapMarker?.GetCrystal()));
+                ret.Add((MapMarker != null ? MapMarker.OnOverall : DefaultOn, MapMarker?.GetCrystal()));
                 ret.Add((OpenByDefault, null));
                 ret.Add((RagdollData, null));
                 ret.Add((Scale, null));
                 ret.Add((ContainedSoul, null));
-                ret.Add((Location != null || DefaultOn, Location?.GetCrystal()));
+                ret.Add((Location != null ? Location.OnOverall : DefaultOn, Location?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

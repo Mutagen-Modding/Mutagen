@@ -663,8 +663,10 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
-                : base(defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
+                : base(defaultOn, onOverall)
             {
                 this.Base = defaultOn;
                 this.XPCIFluff = defaultOn;
@@ -683,18 +685,18 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Base, null));
                 ret.Add((XPCIFluff, null));
                 ret.Add((FULLFluff, null));
-                ret.Add((DistantLODData != null || DefaultOn, DistantLODData?.GetCrystal()));
-                ret.Add((EnableParent != null || DefaultOn, EnableParent?.GetCrystal()));
+                ret.Add((DistantLODData != null ? DistantLODData.OnOverall : DefaultOn, DistantLODData?.GetCrystal()));
+                ret.Add((EnableParent != null ? EnableParent.OnOverall : DefaultOn, EnableParent?.GetCrystal()));
                 ret.Add((MerchantContainer, null));
                 ret.Add((Horse, null));
                 ret.Add((RagdollData, null));
                 ret.Add((Scale, null));
-                ret.Add((Location != null || DefaultOn, Location?.GetCrystal()));
+                ret.Add((Location != null ? Location.OnOverall : DefaultOn, Location?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

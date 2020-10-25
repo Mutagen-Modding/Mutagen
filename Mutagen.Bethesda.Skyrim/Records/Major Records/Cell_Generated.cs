@@ -1762,8 +1762,10 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
-                : base(defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
+                : base(defaultOn, onOverall)
             {
                 this.Name = defaultOn;
                 this.Flags = defaultOn;
@@ -1802,8 +1804,8 @@ namespace Mutagen.Bethesda.Skyrim
                 base.GetCrystal(ret);
                 ret.Add((Name, null));
                 ret.Add((Flags, null));
-                ret.Add((Grid != null || DefaultOn, Grid?.GetCrystal()));
-                ret.Add((Lighting != null || DefaultOn, Lighting?.GetCrystal()));
+                ret.Add((Grid != null ? Grid.OnOverall : DefaultOn, Grid?.GetCrystal()));
+                ret.Add((Lighting != null ? Lighting.OnOverall : DefaultOn, Lighting?.GetCrystal()));
                 ret.Add((OcclusionData, null));
                 ret.Add((MaxHeightData, null));
                 ret.Add((LightingTemplate, null));
@@ -1814,9 +1816,9 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Location, null));
                 ret.Add((XWCN, null));
                 ret.Add((XWCS, null));
-                ret.Add((WaterVelocity != null || DefaultOn, WaterVelocity?.GetCrystal()));
+                ret.Add((WaterVelocity != null ? WaterVelocity.OnOverall : DefaultOn, WaterVelocity?.GetCrystal()));
                 ret.Add((Water, null));
-                ret.Add((Ownership != null || DefaultOn, Ownership?.GetCrystal()));
+                ret.Add((Ownership != null ? Ownership.OnOverall : DefaultOn, Ownership?.GetCrystal()));
                 ret.Add((LockList, null));
                 ret.Add((WaterEnvironmentMap, null));
                 ret.Add((SkyAndWeatherFromRegion, null));
@@ -1824,7 +1826,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((EncounterZone, null));
                 ret.Add((Music, null));
                 ret.Add((ImageSpace, null));
-                ret.Add((Landscape != null || DefaultOn, Landscape?.GetCrystal()));
+                ret.Add((Landscape != null ? Landscape.OnOverall : DefaultOn, Landscape?.GetCrystal()));
                 ret.Add((NavigationMeshes == null ? DefaultOn : !NavigationMeshes.GetCrystal().CopyNothing, NavigationMeshes?.GetCrystal()));
                 ret.Add((Timestamp, null));
                 ret.Add((UnknownGroupData, null));
@@ -1838,7 +1840,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

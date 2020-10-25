@@ -399,8 +399,10 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
-                : base(defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
+                : base(defaultOn, onOverall)
             {
                 this.Spell = defaultOn;
                 this.ButtonLabel = defaultOn;
@@ -413,12 +415,12 @@ namespace Mutagen.Bethesda.Skyrim
                 base.GetCrystal(ret);
                 ret.Add((Spell, null));
                 ret.Add((ButtonLabel, null));
-                ret.Add((Flags != null || DefaultOn, Flags?.GetCrystal()));
+                ret.Add((Flags != null ? Flags.OnOverall : DefaultOn, Flags?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

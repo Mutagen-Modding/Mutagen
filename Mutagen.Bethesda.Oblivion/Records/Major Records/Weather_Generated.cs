@@ -773,8 +773,10 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
-                : base(defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
+                : base(defaultOn, onOverall)
             {
                 this.TextureLowerLayer = defaultOn;
                 this.TextureUpperLayer = defaultOn;
@@ -787,17 +789,17 @@ namespace Mutagen.Bethesda.Oblivion
                 base.GetCrystal(ret);
                 ret.Add((TextureLowerLayer, null));
                 ret.Add((TextureUpperLayer, null));
-                ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));
+                ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
                 ret.Add((Colors == null ? DefaultOn : !Colors.GetCrystal().CopyNothing, Colors?.GetCrystal()));
-                ret.Add((FogDistance != null || DefaultOn, FogDistance?.GetCrystal()));
-                ret.Add((HDRData != null || DefaultOn, HDRData?.GetCrystal()));
-                ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
+                ret.Add((FogDistance != null ? FogDistance.OnOverall : DefaultOn, FogDistance?.GetCrystal()));
+                ret.Add((HDRData != null ? HDRData.OnOverall : DefaultOn, HDRData?.GetCrystal()));
+                ret.Add((Data != null ? Data.OnOverall : DefaultOn, Data?.GetCrystal()));
                 ret.Add((Sounds == null ? DefaultOn : !Sounds.GetCrystal().CopyNothing, Sounds?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

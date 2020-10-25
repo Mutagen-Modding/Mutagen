@@ -1308,8 +1308,10 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
-                : base(defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
+                : base(defaultOn, onOverall)
             {
                 this.Name = defaultOn;
                 this.Description = defaultOn;
@@ -1331,7 +1333,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Description, null));
                 ret.Add((Spells, null));
                 ret.Add((Relations == null ? DefaultOn : !Relations.GetCrystal().CopyNothing, Relations?.GetCrystal()));
-                ret.Add((Data != null || DefaultOn, Data?.GetCrystal()));
+                ret.Add((Data != null ? Data.OnOverall : DefaultOn, Data?.GetCrystal()));
                 ret.Add((Voices != null || DefaultOn, null));
                 ret.Add((DefaultHair != null || DefaultOn, null));
                 ret.Add((DefaultHairColor, null));
@@ -1342,13 +1344,13 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((BodyData != null || DefaultOn, null));
                 ret.Add((Hairs, null));
                 ret.Add((Eyes, null));
-                ret.Add((FaceGenData != null || DefaultOn, FaceGenData?.GetCrystal()));
+                ret.Add((FaceGenData != null ? FaceGenData.OnOverall : DefaultOn, FaceGenData?.GetCrystal()));
                 ret.Add((SNAM, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

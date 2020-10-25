@@ -599,6 +599,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
+            public bool OnOverall;
             public bool Flags;
             public bool MagickaOffset;
             public bool StaminaOffset;
@@ -613,9 +614,12 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
             {
                 this.DefaultOn = defaultOn;
+                this.OnOverall = onOverall;
                 this.Flags = defaultOn;
                 this.MagickaOffset = defaultOn;
                 this.StaminaOffset = defaultOn;
@@ -644,7 +648,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Flags, null));
                 ret.Add((MagickaOffset, null));
                 ret.Add((StaminaOffset, null));
-                ret.Add((Level != null || DefaultOn, Level?.GetCrystal()));
+                ret.Add((Level != null ? Level.OnOverall : DefaultOn, Level?.GetCrystal()));
                 ret.Add((CalcMinLevel, null));
                 ret.Add((CalcMaxLevel, null));
                 ret.Add((SpeedMultiplier, null));
@@ -656,7 +660,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

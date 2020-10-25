@@ -1028,8 +1028,10 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
-                : base(defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
+                : base(defaultOn, onOverall)
             {
                 this.Flags = defaultOn;
                 this.Quest = defaultOn;
@@ -1042,13 +1044,13 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((VirtualMachineAdapter != null || DefaultOn, VirtualMachineAdapter?.GetCrystal()));
+                ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((Flags, null));
                 ret.Add((Phases == null ? DefaultOn : !Phases.GetCrystal().CopyNothing, Phases?.GetCrystal()));
                 ret.Add((Actors == null ? DefaultOn : !Actors.GetCrystal().CopyNothing, Actors?.GetCrystal()));
                 ret.Add((Actions == null ? DefaultOn : !Actions.GetCrystal().CopyNothing, Actions?.GetCrystal()));
-                ret.Add((Unused != null || DefaultOn, Unused?.GetCrystal()));
-                ret.Add((Unused2 != null || DefaultOn, Unused2?.GetCrystal()));
+                ret.Add((Unused != null ? Unused.OnOverall : DefaultOn, Unused?.GetCrystal()));
+                ret.Add((Unused2 != null ? Unused2.OnOverall : DefaultOn, Unused2?.GetCrystal()));
                 ret.Add((Quest, null));
                 ret.Add((LastActionIndex, null));
                 ret.Add((VNAM, null));
@@ -1057,7 +1059,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

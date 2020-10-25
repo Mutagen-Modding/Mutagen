@@ -1316,8 +1316,10 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
-                : base(defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
+                : base(defaultOn, onOverall)
             {
                 this.Name = defaultOn;
                 this.Flags = defaultOn;
@@ -1347,7 +1349,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Name, null));
                 ret.Add((Flags, null));
                 ret.Add((Grid, null));
-                ret.Add((Lighting != null || DefaultOn, Lighting?.GetCrystal()));
+                ret.Add((Lighting != null ? Lighting.OnOverall : DefaultOn, Lighting?.GetCrystal()));
                 ret.Add((Regions, null));
                 ret.Add((MusicType, null));
                 ret.Add((WaterHeight, null));
@@ -1356,8 +1358,8 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Owner, null));
                 ret.Add((FactionRank, null));
                 ret.Add((GlobalVariable, null));
-                ret.Add((PathGrid != null || DefaultOn, PathGrid?.GetCrystal()));
-                ret.Add((Landscape != null || DefaultOn, Landscape?.GetCrystal()));
+                ret.Add((PathGrid != null ? PathGrid.OnOverall : DefaultOn, PathGrid?.GetCrystal()));
+                ret.Add((Landscape != null ? Landscape.OnOverall : DefaultOn, Landscape?.GetCrystal()));
                 ret.Add((Timestamp, null));
                 ret.Add((PersistentTimestamp, null));
                 ret.Add((Persistent, null));
@@ -1369,7 +1371,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

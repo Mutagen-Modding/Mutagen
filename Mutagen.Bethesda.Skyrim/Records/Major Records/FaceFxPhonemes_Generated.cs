@@ -1018,6 +1018,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
+            public bool OnOverall;
             public bool ForceNames;
             public Phoneme.TranslationMask? Aah_LipBigAah;
             public Phoneme.TranslationMask? BigAah_LipDST;
@@ -1038,9 +1039,12 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
             {
                 this.DefaultOn = defaultOn;
+                this.OnOverall = onOverall;
                 this.ForceNames = defaultOn;
             }
 
@@ -1058,27 +1062,27 @@ namespace Mutagen.Bethesda.Skyrim
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((ForceNames, null));
-                ret.Add((Aah_LipBigAah != null || DefaultOn, Aah_LipBigAah?.GetCrystal()));
-                ret.Add((BigAah_LipDST != null || DefaultOn, BigAah_LipDST?.GetCrystal()));
-                ret.Add((BMP_LipEee != null || DefaultOn, BMP_LipEee?.GetCrystal()));
-                ret.Add((ChJSh_LipFV != null || DefaultOn, ChJSh_LipFV?.GetCrystal()));
-                ret.Add((DST_LipK != null || DefaultOn, DST_LipK?.GetCrystal()));
-                ret.Add((Eee_LipL != null || DefaultOn, Eee_LipL?.GetCrystal()));
-                ret.Add((Eh_LipR != null || DefaultOn, Eh_LipR?.GetCrystal()));
-                ret.Add((FV_LipTh != null || DefaultOn, FV_LipTh?.GetCrystal()));
-                ret.Add((I != null || DefaultOn, I?.GetCrystal()));
-                ret.Add((K != null || DefaultOn, K?.GetCrystal()));
-                ret.Add((N != null || DefaultOn, N?.GetCrystal()));
-                ret.Add((Oh != null || DefaultOn, Oh?.GetCrystal()));
-                ret.Add((OohQ != null || DefaultOn, OohQ?.GetCrystal()));
-                ret.Add((R != null || DefaultOn, R?.GetCrystal()));
-                ret.Add((Th != null || DefaultOn, Th?.GetCrystal()));
-                ret.Add((W != null || DefaultOn, W?.GetCrystal()));
+                ret.Add((Aah_LipBigAah != null ? Aah_LipBigAah.OnOverall : DefaultOn, Aah_LipBigAah?.GetCrystal()));
+                ret.Add((BigAah_LipDST != null ? BigAah_LipDST.OnOverall : DefaultOn, BigAah_LipDST?.GetCrystal()));
+                ret.Add((BMP_LipEee != null ? BMP_LipEee.OnOverall : DefaultOn, BMP_LipEee?.GetCrystal()));
+                ret.Add((ChJSh_LipFV != null ? ChJSh_LipFV.OnOverall : DefaultOn, ChJSh_LipFV?.GetCrystal()));
+                ret.Add((DST_LipK != null ? DST_LipK.OnOverall : DefaultOn, DST_LipK?.GetCrystal()));
+                ret.Add((Eee_LipL != null ? Eee_LipL.OnOverall : DefaultOn, Eee_LipL?.GetCrystal()));
+                ret.Add((Eh_LipR != null ? Eh_LipR.OnOverall : DefaultOn, Eh_LipR?.GetCrystal()));
+                ret.Add((FV_LipTh != null ? FV_LipTh.OnOverall : DefaultOn, FV_LipTh?.GetCrystal()));
+                ret.Add((I != null ? I.OnOverall : DefaultOn, I?.GetCrystal()));
+                ret.Add((K != null ? K.OnOverall : DefaultOn, K?.GetCrystal()));
+                ret.Add((N != null ? N.OnOverall : DefaultOn, N?.GetCrystal()));
+                ret.Add((Oh != null ? Oh.OnOverall : DefaultOn, Oh?.GetCrystal()));
+                ret.Add((OohQ != null ? OohQ.OnOverall : DefaultOn, OohQ?.GetCrystal()));
+                ret.Add((R != null ? R.OnOverall : DefaultOn, R?.GetCrystal()));
+                ret.Add((Th != null ? Th.OnOverall : DefaultOn, Th?.GetCrystal()));
+                ret.Add((W != null ? W.OnOverall : DefaultOn, W?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

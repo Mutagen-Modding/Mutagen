@@ -530,8 +530,10 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
-                : base(defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
+                : base(defaultOn, onOverall)
             {
                 this.NavMeshVersion = defaultOn;
                 this.NVSI = defaultOn;
@@ -544,13 +546,13 @@ namespace Mutagen.Bethesda.Skyrim
                 base.GetCrystal(ret);
                 ret.Add((NavMeshVersion, null));
                 ret.Add((MapInfos == null ? DefaultOn : !MapInfos.GetCrystal().CopyNothing, MapInfos?.GetCrystal()));
-                ret.Add((PreferredPathing != null || DefaultOn, PreferredPathing?.GetCrystal()));
+                ret.Add((PreferredPathing != null ? PreferredPathing.OnOverall : DefaultOn, PreferredPathing?.GetCrystal()));
                 ret.Add((NVSI, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

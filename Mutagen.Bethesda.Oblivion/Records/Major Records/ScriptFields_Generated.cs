@@ -611,6 +611,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Members
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
+            public bool OnOverall;
             public ScriptMetaSummary.TranslationMask? MetadataSummary;
             public bool CompiledScript;
             public bool SourceCode;
@@ -619,9 +620,12 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
             {
                 this.DefaultOn = defaultOn;
+                this.OnOverall = onOverall;
                 this.CompiledScript = defaultOn;
                 this.SourceCode = defaultOn;
             }
@@ -639,7 +643,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((MetadataSummary != null || DefaultOn, MetadataSummary?.GetCrystal()));
+                ret.Add((MetadataSummary != null ? MetadataSummary.OnOverall : DefaultOn, MetadataSummary?.GetCrystal()));
                 ret.Add((CompiledScript, null));
                 ret.Add((SourceCode, null));
                 ret.Add((LocalVariables == null ? DefaultOn : !LocalVariables.GetCrystal().CopyNothing, LocalVariables?.GetCrystal()));
@@ -648,7 +652,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

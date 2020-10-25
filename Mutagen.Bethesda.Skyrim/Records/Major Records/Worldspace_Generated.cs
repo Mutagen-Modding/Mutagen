@@ -1524,8 +1524,10 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
-                : base(defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
+                : base(defaultOn, onOverall)
             {
                 this.Name = defaultOn;
                 this.FixedDimensionsCenterCell = defaultOn;
@@ -1556,25 +1558,25 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.GetCrystal(ret);
                 ret.Add((LargeReferences == null ? DefaultOn : !LargeReferences.GetCrystal().CopyNothing, LargeReferences?.GetCrystal()));
-                ret.Add((MaxHeight != null || DefaultOn, MaxHeight?.GetCrystal()));
+                ret.Add((MaxHeight != null ? MaxHeight.OnOverall : DefaultOn, MaxHeight?.GetCrystal()));
                 ret.Add((Name, null));
                 ret.Add((FixedDimensionsCenterCell, null));
                 ret.Add((InteriorLighting, null));
                 ret.Add((EncounterZone, null));
                 ret.Add((Location, null));
-                ret.Add((Parent != null || DefaultOn, Parent?.GetCrystal()));
+                ret.Add((Parent != null ? Parent.OnOverall : DefaultOn, Parent?.GetCrystal()));
                 ret.Add((Climate, null));
                 ret.Add((Water, null));
                 ret.Add((LodWater, null));
                 ret.Add((LodWaterHeight, null));
-                ret.Add((LandDefaults != null || DefaultOn, LandDefaults?.GetCrystal()));
+                ret.Add((LandDefaults != null ? LandDefaults.OnOverall : DefaultOn, LandDefaults?.GetCrystal()));
                 ret.Add((MapImage, null));
-                ret.Add((CloudModel != null || DefaultOn, CloudModel?.GetCrystal()));
-                ret.Add((MapData != null || DefaultOn, MapData?.GetCrystal()));
-                ret.Add((MapOffset != null || DefaultOn, MapOffset?.GetCrystal()));
+                ret.Add((CloudModel != null ? CloudModel.OnOverall : DefaultOn, CloudModel?.GetCrystal()));
+                ret.Add((MapData != null ? MapData.OnOverall : DefaultOn, MapData?.GetCrystal()));
+                ret.Add((MapOffset != null ? MapOffset.OnOverall : DefaultOn, MapOffset?.GetCrystal()));
                 ret.Add((DistantLodMultiplier, null));
                 ret.Add((Flags, null));
-                ret.Add((ObjectBounds != null || DefaultOn, ObjectBounds?.GetCrystal()));
+                ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((Music, null));
                 ret.Add((CanopyShadow, null));
                 ret.Add((WaterNoiseTexture, null));
@@ -1582,7 +1584,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((HdLodNormalTexture, null));
                 ret.Add((WaterEnvironmentMap, null));
                 ret.Add((OffsetData, null));
-                ret.Add((TopCell != null || DefaultOn, TopCell?.GetCrystal()));
+                ret.Add((TopCell != null ? TopCell.OnOverall : DefaultOn, TopCell?.GetCrystal()));
                 ret.Add((SubCellsTimestamp, null));
                 ret.Add((SubCellsUnknown, null));
                 ret.Add((SubCells == null ? DefaultOn : !SubCells.GetCrystal().CopyNothing, SubCells?.GetCrystal()));
@@ -1590,7 +1592,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

@@ -664,8 +664,10 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
-                : base(defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
+                : base(defaultOn, onOverall)
             {
                 this.Diffuse = defaultOn;
                 this.NormalOrGloss = defaultOn;
@@ -683,7 +685,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((ObjectBounds != null || DefaultOn, ObjectBounds?.GetCrystal()));
+                ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((Diffuse, null));
                 ret.Add((NormalOrGloss, null));
                 ret.Add((EnvironmentMaskOrSubsurfaceTint, null));
@@ -692,13 +694,13 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Environment, null));
                 ret.Add((Multilayer, null));
                 ret.Add((BacklightMaskOrSpecular, null));
-                ret.Add((Decal != null || DefaultOn, Decal?.GetCrystal()));
+                ret.Add((Decal != null ? Decal.OnOverall : DefaultOn, Decal?.GetCrystal()));
                 ret.Add((Flags, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

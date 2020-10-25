@@ -2836,8 +2836,10 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
-                : base(defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
+                : base(defaultOn, onOverall)
             {
                 this.Base = defaultOn;
                 this.BoundHalfExtents = defaultOn;
@@ -2885,14 +2887,14 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((VirtualMachineAdapter != null || DefaultOn, VirtualMachineAdapter?.GetCrystal()));
+                ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((Base, null));
                 ret.Add((BoundHalfExtents, null));
-                ret.Add((Primitive != null || DefaultOn, Primitive?.GetCrystal()));
+                ret.Add((Primitive != null ? Primitive.OnOverall : DefaultOn, Primitive?.GetCrystal()));
                 ret.Add((XORD, null));
-                ret.Add((OcclusionPlane != null || DefaultOn, OcclusionPlane?.GetCrystal()));
+                ret.Add((OcclusionPlane != null ? OcclusionPlane.OnOverall : DefaultOn, OcclusionPlane?.GetCrystal()));
                 ret.Add((Portals == null ? DefaultOn : !Portals.GetCrystal().CopyNothing, Portals?.GetCrystal()));
-                ret.Add((RoomPortal != null || DefaultOn, RoomPortal?.GetCrystal()));
+                ret.Add((RoomPortal != null ? RoomPortal.OnOverall : DefaultOn, RoomPortal?.GetCrystal()));
                 ret.Add((Unknown, null));
                 ret.Add((LightingTemplate, null));
                 ret.Add((ImageSpace, null));
@@ -2904,50 +2906,50 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Reflections == null ? DefaultOn : !Reflections.GetCrystal().CopyNothing, Reflections?.GetCrystal()));
                 ret.Add((LitWater, null));
                 ret.Add((Emittance, null));
-                ret.Add((LightData != null || DefaultOn, LightData?.GetCrystal()));
-                ret.Add((Alpha != null || DefaultOn, Alpha?.GetCrystal()));
-                ret.Add((TeleportDestination != null || DefaultOn, TeleportDestination?.GetCrystal()));
+                ret.Add((LightData != null ? LightData.OnOverall : DefaultOn, LightData?.GetCrystal()));
+                ret.Add((Alpha != null ? Alpha.OnOverall : DefaultOn, Alpha?.GetCrystal()));
+                ret.Add((TeleportDestination != null ? TeleportDestination.OnOverall : DefaultOn, TeleportDestination?.GetCrystal()));
                 ret.Add((TeleportMessageBox, null));
                 ret.Add((MultiboundReference, null));
                 ret.Add((XWCN, null));
                 ret.Add((XWCS, null));
-                ret.Add((WaterVelocity != null || DefaultOn, WaterVelocity?.GetCrystal()));
+                ret.Add((WaterVelocity != null ? WaterVelocity.OnOverall : DefaultOn, WaterVelocity?.GetCrystal()));
                 ret.Add((XCVL, null));
                 ret.Add((XCZR, null));
                 ret.Add((XCZA, null));
                 ret.Add((XCZC, null));
                 ret.Add((Scale, null));
                 ret.Add((SpawnContainer, null));
-                ret.Add((ActivateParents != null || DefaultOn, ActivateParents?.GetCrystal()));
+                ret.Add((ActivateParents != null ? ActivateParents.OnOverall : DefaultOn, ActivateParents?.GetCrystal()));
                 ret.Add((LeveledItemBaseObject, null));
                 ret.Add((LevelModifier, null));
                 ret.Add((PersistentLocation, null));
                 ret.Add((CollisionLayer, null));
-                ret.Add((Lock != null || DefaultOn, Lock?.GetCrystal()));
+                ret.Add((Lock != null ? Lock.OnOverall : DefaultOn, Lock?.GetCrystal()));
                 ret.Add((EncounterZone, null));
-                ret.Add((NavigationDoorLink != null || DefaultOn, NavigationDoorLink?.GetCrystal()));
+                ret.Add((NavigationDoorLink != null ? NavigationDoorLink.OnOverall : DefaultOn, NavigationDoorLink?.GetCrystal()));
                 ret.Add((LocationRefTypes, null));
                 ret.Add((IgnoredBySandbox, null));
-                ret.Add((Ownership != null || DefaultOn, Ownership?.GetCrystal()));
+                ret.Add((Ownership != null ? Ownership.OnOverall : DefaultOn, Ownership?.GetCrystal()));
                 ret.Add((ItemCount, null));
                 ret.Add((Charge, null));
                 ret.Add((LocationReference, null));
-                ret.Add((EnableParent != null || DefaultOn, EnableParent?.GetCrystal()));
+                ret.Add((EnableParent != null ? EnableParent.OnOverall : DefaultOn, EnableParent?.GetCrystal()));
                 ret.Add((LinkedReferences == null ? DefaultOn : !LinkedReferences.GetCrystal().CopyNothing, LinkedReferences?.GetCrystal()));
-                ret.Add((Patrol != null || DefaultOn, Patrol?.GetCrystal()));
+                ret.Add((Patrol != null ? Patrol.OnOverall : DefaultOn, Patrol?.GetCrystal()));
                 ret.Add((Action, null));
                 ret.Add((HeadTrackingWeight, null));
                 ret.Add((FavorCost, null));
                 ret.Add((OpenByDefault, null));
-                ret.Add((MapMarker != null || DefaultOn, MapMarker?.GetCrystal()));
+                ret.Add((MapMarker != null ? MapMarker.OnOverall : DefaultOn, MapMarker?.GetCrystal()));
                 ret.Add((AttachRef, null));
                 ret.Add((DistantLodData, null));
-                ret.Add((Placement != null || DefaultOn, Placement?.GetCrystal()));
+                ret.Add((Placement != null ? Placement.OnOverall : DefaultOn, Placement?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }

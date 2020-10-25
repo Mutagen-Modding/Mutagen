@@ -464,6 +464,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
+            public bool OnOverall;
             public bool Enabled;
             public bool XSpeed;
             public bool YSpeed;
@@ -472,9 +473,12 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Ctors
-            public TranslationMask(bool defaultOn)
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
             {
                 this.DefaultOn = defaultOn;
+                this.OnOverall = onOverall;
                 this.Enabled = defaultOn;
                 this.XSpeed = defaultOn;
                 this.YSpeed = defaultOn;
@@ -496,13 +500,13 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Enabled, null));
                 ret.Add((XSpeed, null));
                 ret.Add((YSpeed, null));
-                ret.Add((Colors != null || DefaultOn, Colors?.GetCrystal()));
-                ret.Add((Alphas != null || DefaultOn, Alphas?.GetCrystal()));
+                ret.Add((Colors != null ? Colors.OnOverall : DefaultOn, Colors?.GetCrystal()));
+                ret.Add((Alphas != null ? Alphas.OnOverall : DefaultOn, Alphas?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
-                return new TranslationMask(defaultOn);
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
         }
