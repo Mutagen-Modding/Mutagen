@@ -328,7 +328,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 gameReleaseStr = $"release.ToGameRelease()";
             }
-            fg.AppendLine($"using (var reader = new {nameof(MutagenBinaryReadStream)}(stream, {gameReleaseStr}))");
+            fg.AppendLine($"using (var reader = new {nameof(MutagenBinaryReadStream)}(stream, modKey, {gameReleaseStr}))");
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine("var frame = new MutagenFrame(reader);");
@@ -915,7 +915,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     gameReleaseStr = $"release.ToGameRelease()";
                 }
-                fg.AppendLine($"var meta = new {nameof(ParsingBundle)}({gameReleaseStr});");
+                fg.AppendLine($"var meta = new {nameof(ParsingBundle)}({gameReleaseStr}, new {nameof(MasterReferenceReader)}(modKey));");
                 fg.AppendLine($"meta.{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordInfoCache)}(() => new {nameof(MutagenMemoryReadStream)}(bytes, meta));");
                 if (objData.UsesStringFiles)
                 {
@@ -998,7 +998,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         gameReleaseStr = $"release.ToGameRelease()";
                     }
-                    args.Add($"stream: new {nameof(MutagenBinaryReadStream)}(stream, {gameReleaseStr})");
+                    args.Add($"stream: new {nameof(MutagenBinaryReadStream)}(stream, modKey, {gameReleaseStr})");
                     args.AddPassArg("modKey");
                     if (objData.GameReleaseOptions != null)
                     {
@@ -2351,7 +2351,6 @@ namespace Mutagen.Bethesda.Generation
                         {
                             args.Add($"stream.{nameof(IMutagenReadStream.MetaData)}");
                         }
-                        fg.AppendLine($"this._package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.MasterReferences)} = new {nameof(MasterReferenceReader)}(modKey);");
                         fg.AppendLine("this._shouldDispose = shouldDispose;");
                     }
                     foreach (var field in obj.IterateFields(
@@ -2406,7 +2405,7 @@ namespace Mutagen.Bethesda.Generation
                             using (var args = new ArgsWrapper(fg,
                                 $"return {obj.Name}Factory"))
                             {
-                                fg.AppendLine($"var meta = new {nameof(ParsingBundle)}({gameReleaseStr});");
+                                fg.AppendLine($"var meta = new {nameof(ParsingBundle)}({gameReleaseStr}, new {nameof(MasterReferenceReader)}(modKey));");
                                 fg.AppendLine($"meta.{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordInfoCache)}(() => new {nameof(MutagenMemoryReadStream)}(data, meta));");
                                 if (objData.UsesStringFiles)
                                 {
@@ -2446,7 +2445,7 @@ namespace Mutagen.Bethesda.Generation
                         }
                         using (new BraceWrapper(fg))
                         {
-                            fg.AppendLine($"var meta = new {nameof(ParsingBundle)}({gameReleaseStr})");
+                            fg.AppendLine($"var meta = new {nameof(ParsingBundle)}({gameReleaseStr}, new {nameof(MasterReferenceReader)}(path.ModKey))");
                             using (new BraceWrapper(fg) { AppendSemicolon = true })
                             {
                                 fg.AppendLine($"{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordInfoCache)}(() => new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}))");

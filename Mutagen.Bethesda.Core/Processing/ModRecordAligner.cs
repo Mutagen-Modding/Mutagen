@@ -154,7 +154,7 @@ namespace Mutagen.Bethesda.Processing
             {
                 EmptyMeansInterested = false
             };
-            var parsingBundle = new ParsingBundle(GameConstants.Get(release));
+            var parsingBundle = new ParsingBundle(GameConstants.Get(release), MasterReferenceReader.FromPath(inputPath, release));
             var fileLocs = RecordLocator.GetFileLocations(inputPath.Path, release, interest);
             temp ??= new TempFolder();
             using (temp)

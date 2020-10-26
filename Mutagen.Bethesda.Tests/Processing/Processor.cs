@@ -1,6 +1,7 @@
 using Microsoft.VisualBasic;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Internals;
 using Noggog;
 using Noggog.Utility;
 using System;
@@ -23,6 +24,8 @@ namespace Mutagen.Bethesda.Tests
         protected BinaryFileProcessor.ConfigConstructor _Instructions = new BinaryFileProcessor.ConfigConstructor();
         private Dictionary<long, uint> _lengthTracker = new Dictionary<long, uint>();
         protected byte _NumMasters;
+        protected MasterReferenceReader Masters;
+        protected ParsingBundle Bundle;
         protected ModPath SourcePath;
         protected TempFolder TempFolder;
         public bool DoMultithreading = true;
@@ -61,11 +64,13 @@ namespace Mutagen.Bethesda.Tests
             this.Logging = logging;
             this.TempFolder = tmpFolder;
             this.SourcePath = sourcePath;
+            this.Masters = MasterReferenceReader.FromPath(SourcePath, GameRelease);
+            this.Bundle = new ParsingBundle(GameRelease, Masters);
             this._NumMasters = GetNumMasters();
-            this._AlignedFileLocs = RecordLocator.GetFileLocations(new ModPath(sourcePath.ModKey, preprocessedPath), this.GameRelease);
+            this._AlignedFileLocs = RecordLocator.GetFileLocations(new ModPath(ModKey, preprocessedPath), this.GameRelease);
 
             var preprocessedBytes = File.ReadAllBytes(preprocessedPath);
-            IMutagenReadStream streamGetter() => new MutagenMemoryReadStream(preprocessedBytes, this.GameRelease);
+            IMutagenReadStream streamGetter() => new MutagenMemoryReadStream(preprocessedBytes, Bundle);
             using (var stream = streamGetter())
             {
                 lock (_lengthTracker)

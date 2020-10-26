@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Binary
             : base(path, bufferSize)
         {
             this._path = path;
-            this.MetaData = new ParsingBundle(release)
+            this.MetaData = new ParsingBundle(release, MasterReferenceReader.FromPath(path, release))
             {
                 ModKey = path.ModKey
             };
@@ -85,19 +85,26 @@ namespace Mutagen.Bethesda.Binary
         /// Constructor that wraps an existing stream
         /// </summary>
         /// <param name="stream">Stream to wrap and read from</param>
+        /// <param name="modKey">ModKey</param>
         /// <param name="release">Game Release the stream is for</param>
         /// <param name="bufferSize">Size of internal buffer</param>
         /// <param name="dispose">Whether to dispose the source stream</param>
         /// <param name="offsetReference">Optional offset reference position to use</param>
         public MutagenBinaryReadStream(
             Stream stream,
+            ModKey modKey,
             GameRelease release,
             int bufferSize = 4096,
             bool dispose = true,
             long offsetReference = 0)
             : base(stream, bufferSize, dispose)
         {
-            this.MetaData = new ParsingBundle(release);
+            var startPos = stream.Position;
+            this.MetaData = new ParsingBundle(release, MasterReferenceReader.FromStream(stream, modKey, release))
+            {
+                ModKey = modKey
+            };
+            stream.Position = startPos;
             this.OffsetReference = offsetReference;
         }
 

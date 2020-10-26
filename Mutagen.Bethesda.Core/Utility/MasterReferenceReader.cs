@@ -108,11 +108,25 @@ namespace Mutagen.Bethesda.Internals
 
         public static MasterReferenceReader FromPath(ModPath path, GameRelease release)
         {
-            using var stream = new MutagenBinaryReadStream(path, release);
+            using var stream = new MutagenBinaryReadStream(path, new ParsingBundle(release, masterReferences: null!)
+            {
+                ModKey = path.ModKey
+            });
+            return FromStream(stream);
+        }
+
+        public static MasterReferenceReader FromStream(Stream stream, ModKey modKey, GameRelease release)
+        {
+            using var interf = new MutagenInterfaceReadStream(new BinaryReadStream(stream), new ParsingBundle(release, masterReferences: null!));
+            return FromStream(interf);
+        }
+
+        public static MasterReferenceReader FromStream(IMutagenReadStream stream)
+        {
             var mutaFrame = new MutagenFrame(stream);
             var header = stream.ReadModHeaderFrame(readSafe: true);
             return new MasterReferenceReader(
-                path.ModKey,
+                stream.MetaData.ModKey,
                 header
                     .Masters()
                     .Select(mastPin =>

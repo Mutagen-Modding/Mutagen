@@ -297,7 +297,7 @@ namespace Mutagen.Bethesda
                 nextRecordType: modHeader.RecordType,
                 contentLength: checked((int)modHeader.ContentLength),
                 recordTypeConverter: null);
-            frame.Reader.MetaData.MasterReferences = new MasterReferenceReader(record.ModKey, record.MasterReferences);
+            frame.Reader.MetaData.MasterReferences.SetTo(record.MasterReferences);
             while (!frame.Complete)
             {
                 var groupHeader = frame.GetGroup();

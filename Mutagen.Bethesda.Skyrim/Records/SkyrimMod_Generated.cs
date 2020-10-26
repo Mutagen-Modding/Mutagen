@@ -6903,7 +6903,7 @@ namespace Mutagen.Bethesda.Skyrim
             GroupMask? importMask = null,
             bool parallel = true)
         {
-            using (var reader = new MutagenBinaryReadStream(stream, release.ToGameRelease()))
+            using (var reader = new MutagenBinaryReadStream(stream, modKey, release.ToGameRelease()))
             {
                 var frame = new MutagenFrame(reader);
                 frame.MetaData.RecordInfoCache = infoCache;
@@ -6925,7 +6925,7 @@ namespace Mutagen.Bethesda.Skyrim
             GroupMask? importMask = null,
             bool parallel = true)
         {
-            using (var reader = new MutagenBinaryReadStream(stream, release.ToGameRelease()))
+            using (var reader = new MutagenBinaryReadStream(stream, modKey, release.ToGameRelease()))
             {
                 var frame = new MutagenFrame(reader);
                 frame.MetaData.RecordInfoCache = infoCache;
@@ -6946,7 +6946,7 @@ namespace Mutagen.Bethesda.Skyrim
             ModKey modKey,
             IStringsFolderLookup? stringsLookup = null)
         {
-            var meta = new ParsingBundle(release.ToGameRelease());
+            var meta = new ParsingBundle(release.ToGameRelease(), new MasterReferenceReader(modKey));
             meta.RecordInfoCache = new RecordInfoCache(() => new MutagenMemoryReadStream(bytes, meta));
             meta.StringsLookup = stringsLookup;
             return SkyrimModBinaryOverlay.SkyrimModFactory(
@@ -6975,7 +6975,7 @@ namespace Mutagen.Bethesda.Skyrim
             ModKey modKey)
         {
             return SkyrimModBinaryOverlay.SkyrimModFactory(
-                stream: new MutagenBinaryReadStream(stream, release.ToGameRelease()),
+                stream: new MutagenBinaryReadStream(stream, modKey, release.ToGameRelease()),
                 modKey: modKey,
                 release: release,
                 shouldDispose: false);
@@ -7751,7 +7751,7 @@ namespace Mutagen.Bethesda.Skyrim
             GroupMask? importMask = null,
             bool parallel = true)
         {
-            using (var reader = new MutagenBinaryReadStream(stream, release.ToGameRelease()))
+            using (var reader = new MutagenBinaryReadStream(stream, modKey, release.ToGameRelease()))
             {
                 var frame = new MutagenFrame(reader);
                 frame.MetaData.RecordInfoCache = infoCache;
@@ -22666,7 +22666,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.SkyrimRelease = release;
             this._data = stream;
             this._package = new BinaryOverlayFactoryPackage(stream.MetaData);
-            this._package.MetaData.MasterReferences = new MasterReferenceReader(modKey);
             this._shouldDispose = shouldDispose;
         }
 
@@ -22676,7 +22675,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SkyrimRelease release,
             IStringsFolderLookup? stringsLookup = null)
         {
-            var meta = new ParsingBundle(release.ToGameRelease());
+            var meta = new ParsingBundle(release.ToGameRelease(), new MasterReferenceReader(modKey));
             meta.RecordInfoCache = new RecordInfoCache(() => new MutagenMemoryReadStream(data, meta));
             meta.StringsLookup = stringsLookup;
             return SkyrimModFactory(
@@ -22693,7 +22692,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SkyrimRelease release,
             StringsReadParameters? stringsParam = null)
         {
-            var meta = new ParsingBundle(release.ToGameRelease())
+            var meta = new ParsingBundle(release.ToGameRelease(), new MasterReferenceReader(path.ModKey))
             {
                 RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, release.ToGameRelease()))
             };

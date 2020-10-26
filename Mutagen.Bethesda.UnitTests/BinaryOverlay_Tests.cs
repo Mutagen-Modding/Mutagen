@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.UnitTests
             {
                 RecordTypes.EDID
             };
-            var stream = new OverlayStream(data.ToArray(), new ParsingBundle(GameConstants.Oblivion));
+            var stream = new OverlayStream(data.ToArray(), new ParsingBundle(GameConstants.Oblivion, masterReferences: null!));
             var pos = BinaryOverlay.ParseRecordLocationsByCount(
                 stream,
                 3,
@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.UnitTests
             {
                 RecordTypes.EDID
             };
-            var stream = new OverlayStream(data.ToArray(), new ParsingBundle(GameConstants.Oblivion));
+            var stream = new OverlayStream(data.ToArray(), new ParsingBundle(GameConstants.Oblivion, masterReferences: null!));
             var pos = BinaryOverlay.ParseRecordLocationsByCount(
                 stream,
                 3,
@@ -136,7 +136,7 @@ namespace Mutagen.Bethesda.UnitTests
                 RecordTypes.EDID,
                 RecordTypes.DATA,
             };
-            var stream = new OverlayStream(data.ToArray(), new ParsingBundle(GameConstants.Oblivion));
+            var stream = new OverlayStream(data.ToArray(), new ParsingBundle(GameConstants.Oblivion, masterReferences: null!));
             var pos = BinaryOverlay.ParseRecordLocationsByCount(
                 stream,
                 3,
@@ -193,7 +193,7 @@ namespace Mutagen.Bethesda.UnitTests
                 RecordTypes.EDID,
                 RecordTypes.DATA,
             };
-            var stream = new OverlayStream(data.ToArray(), new ParsingBundle(GameConstants.Oblivion));
+            var stream = new OverlayStream(data.ToArray(), new ParsingBundle(GameConstants.Oblivion, masterReferences: null!));
             var pos = BinaryOverlay.ParseRecordLocationsByCount(
                 stream,
                 3,

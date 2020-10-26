@@ -155,7 +155,11 @@ namespace Mutagen.Bethesda
             GameConstants constants,
             RecordInterest? interest = null)
         {
-            using var stream = new MutagenBinaryReadStream(filePath, new ParsingBundle(constants));
+            using var stream = new MutagenBinaryReadStream(
+                filePath,
+                new ParsingBundle(
+                    constants, 
+                    MasterReferenceReader.FromPath(filePath, constants.Release)));
             return GetFileLocations(stream, interest);
         }
 
