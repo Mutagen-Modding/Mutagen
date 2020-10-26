@@ -151,7 +151,7 @@ namespace Mutagen.Bethesda
         }
 
         public static FileLocations GetFileLocations(
-            string filePath,
+            ModPath filePath,
             GameConstants constants,
             RecordInterest? interest = null)
         {

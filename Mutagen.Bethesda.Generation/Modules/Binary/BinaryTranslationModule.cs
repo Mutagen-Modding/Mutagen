@@ -1385,7 +1385,7 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine($"var gameRelease = release.ToGameRelease();");
                 gameReleaseStr = $"gameRelease";
             }
-            fg.AppendLine($"using (var reader = new {nameof(MutagenBinaryReadStream)}(path.Path, {gameReleaseStr}))");
+            fg.AppendLine($"using (var reader = new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}))");
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine("var modKey = path.ModKey;");
@@ -2449,7 +2449,7 @@ namespace Mutagen.Bethesda.Generation
                             fg.AppendLine($"var meta = new {nameof(ParsingBundle)}({gameReleaseStr})");
                             using (new BraceWrapper(fg) { AppendSemicolon = true })
                             {
-                                fg.AppendLine($"{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordInfoCache)}(() => new {nameof(MutagenBinaryReadStream)}(path.{nameof(ModPath.Path)}, {gameReleaseStr}))");
+                                fg.AppendLine($"{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordInfoCache)}(() => new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}))");
                             }
                             using (var args = new ArgsWrapper(fg,
                                 $"var stream = new {nameof(MutagenBinaryReadStream)}"))

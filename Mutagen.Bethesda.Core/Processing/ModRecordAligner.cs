@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda.Processing
         }
 
         public static void Align(
-            FilePath inputPath,
+            ModPath inputPath,
             FilePath outputPath,
             GameRelease release,
             AlignmentRules alignmentRules,

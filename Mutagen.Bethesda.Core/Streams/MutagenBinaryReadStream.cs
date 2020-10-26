@@ -47,14 +47,17 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="bufferSize">Size of internal buffer</param>
         /// <param name="offsetReference">Optional offset reference position to use</param>
         public MutagenBinaryReadStream(
-            string path,
+            ModPath path,
             GameRelease release,
             int bufferSize = 4096,
             long offsetReference = 0)
             : base(path, bufferSize)
         {
             this._path = path;
-            this.MetaData = new ParsingBundle(release);
+            this.MetaData = new ParsingBundle(release)
+            {
+                ModKey = path.ModKey
+            };
             this.OffsetReference = offsetReference;
         }
 

@@ -6840,7 +6840,7 @@ namespace Mutagen.Bethesda.Skyrim
             bool parallel = true)
         {
             var gameRelease = release.ToGameRelease();
-            using (var reader = new MutagenBinaryReadStream(path.Path, gameRelease))
+            using (var reader = new MutagenBinaryReadStream(path, gameRelease))
             {
                 var modKey = path.ModKey;
                 var frame = new MutagenFrame(reader);
@@ -6872,7 +6872,7 @@ namespace Mutagen.Bethesda.Skyrim
             bool parallel = true)
         {
             var gameRelease = release.ToGameRelease();
-            using (var reader = new MutagenBinaryReadStream(path.Path, gameRelease))
+            using (var reader = new MutagenBinaryReadStream(path, gameRelease))
             {
                 var modKey = path.ModKey;
                 var frame = new MutagenFrame(reader);
@@ -7718,7 +7718,7 @@ namespace Mutagen.Bethesda.Skyrim
             bool parallel = true)
         {
             var gameRelease = release.ToGameRelease();
-            using (var reader = new MutagenBinaryReadStream(path.Path, gameRelease))
+            using (var reader = new MutagenBinaryReadStream(path, gameRelease))
             {
                 var modKey = path.ModKey;
                 var frame = new MutagenFrame(reader);
@@ -22695,7 +22695,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var meta = new ParsingBundle(release.ToGameRelease())
             {
-                RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path.Path, release.ToGameRelease()))
+                RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, release.ToGameRelease()))
             };
             var stream = new MutagenBinaryReadStream(
                 path: path.Path,

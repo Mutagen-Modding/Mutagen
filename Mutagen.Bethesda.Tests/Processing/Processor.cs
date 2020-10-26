@@ -23,10 +23,10 @@ namespace Mutagen.Bethesda.Tests
         protected BinaryFileProcessor.ConfigConstructor _Instructions = new BinaryFileProcessor.ConfigConstructor();
         private Dictionary<long, uint> _lengthTracker = new Dictionary<long, uint>();
         protected byte _NumMasters;
-        protected string SourcePath;
+        protected ModPath SourcePath;
         protected TempFolder TempFolder;
         public bool DoMultithreading = true;
-        public ModKey ModKey => ModKey.FromNameAndExtension(Path.GetFileName(SourcePath));
+        public ModKey ModKey => SourcePath.ModKey;
         public delegate void DynamicProcessor(MajorRecordFrame majorFrame, long fileOffset);
         public delegate void DynamicStreamProcessor(IMutagenReadStream stream, MajorRecordFrame majorFrame, long fileOffset);
         protected Dictionary<RecordType, List<DynamicProcessor>> DynamicProcessors = new Dictionary<RecordType, List<DynamicProcessor>>();
@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Tests
         public async Task Process(
             TempFolder tmpFolder,
             Subject<string> logging,
-            string sourcePath,
+            ModPath sourcePath,
             string preprocessedPath,
             string outputPath)
         {
@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Tests
             this.TempFolder = tmpFolder;
             this.SourcePath = sourcePath;
             this._NumMasters = GetNumMasters();
-            this._AlignedFileLocs = RecordLocator.GetFileLocations(preprocessedPath, this.GameRelease);
+            this._AlignedFileLocs = RecordLocator.GetFileLocations(new ModPath(sourcePath.ModKey, preprocessedPath), this.GameRelease);
 
             var preprocessedBytes = File.ReadAllBytes(preprocessedPath);
             IMutagenReadStream streamGetter() => new MutagenMemoryReadStream(preprocessedBytes, this.GameRelease);
