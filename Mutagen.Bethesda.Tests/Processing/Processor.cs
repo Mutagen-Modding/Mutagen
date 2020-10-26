@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Tests
             long fileOffset)
         {
             if (!majorFrame.TryLocateSubrecordFrame("EDID", out var edidFrame, out var edidLoc)) return;
-            var formKey = ModKeyExt.MakeFormKey(null, majorFrame.FormID.Raw);
+            var formKey = FormKey.Factory(Masters, majorFrame.FormID.Raw);
             ProcessStringTermination(
                 edidFrame,
                 fileOffset + majorFrame.HeaderLength + edidLoc,
@@ -316,7 +316,7 @@ namespace Mutagen.Bethesda.Tests
             long refLoc)
         {
             if (amount == 0) return;
-            var formKey = ModKeyExt.MakeFormKey(null, frame.FormID.Raw);
+            var formKey = FormKey.Factory(Masters, frame.FormID.Raw);
             ModifyParentGroupLengths(amount, formKey);
 
             // Modify Length 
