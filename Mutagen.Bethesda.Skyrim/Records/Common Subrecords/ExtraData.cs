@@ -22,7 +22,8 @@ namespace Mutagen.Bethesda.Skyrim
             public static OwnerTarget GetBinaryOwner(ReadOnlySpan<byte> span, RecordInfoCache cache, MasterReferenceReader masters)
             {
                 FormID form = new FormID(BinaryPrimitives.ReadUInt32LittleEndian(span));
-                if (cache.IsOfRecordType<Npc>(form))
+                FormKey formKey = FormKey.Factory(masters, form.Raw);
+                if (cache.IsOfRecordType<Npc>(formKey))
                 {
                     return new NpcOwner()
                     {
@@ -30,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
                         Global = FormKeyBinaryTranslation.Instance.Parse(span.Slice(4), masters)
                     };
                 }
-                else if (cache.IsOfRecordType<Faction>(form))
+                else if (cache.IsOfRecordType<Faction>(formKey))
                 {
                     return new FactionOwner()
                     {

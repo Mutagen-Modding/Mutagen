@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Processing
 
                     var groupMeta = inputStream.GetGroup();
 
-                    var storage = new Dictionary<FormID, List<ReadOnlyMemorySlice<byte>>>();
+                    var storage = new Dictionary<FormKey, List<ReadOnlyMemorySlice<byte>>>();
                     using (var grupFrame = new MutagenFrame(inputStream).SpawnWithLength(groupMeta.TotalLength))
                     {
                         inputStream.WriteTo(writer.BaseStream, inputStream.MetaData.Constants.GroupConstants.HeaderLength);
@@ -38,15 +38,16 @@ namespace Mutagen.Bethesda.Processing
                         foreach (var rec in RecordLocator.ParseTopLevelGRUP(locatorStream))
                         {
                             MajorRecordHeader majorMeta = inputStream.GetMajorRecord();
-                            storage.GetOrAdd(rec.FormID).Add(inputStream.ReadMemory(checked((int)majorMeta.TotalLength), readSafe: true));
+                            storage.GetOrAdd(rec.FormKey).Add(inputStream.ReadMemory(checked((int)majorMeta.TotalLength), readSafe: true));
                             if (grupFrame.Complete) continue;
                             if (inputStream.TryGetGroup(out var subGroupMeta))
                             {
-                                storage.GetOrAdd(rec.FormID).Add(inputStream.ReadMemory(checked((int)subGroupMeta.TotalLength), readSafe: true));
+                                storage.GetOrAdd(rec.FormKey).Add(inputStream.ReadMemory(checked((int)subGroupMeta.TotalLength), readSafe: true));
                             }
                         }
                     }
 
+                    // Sorts via Record ID (as opposed to just the first 6 bytes)
                     foreach (var item in storage.OrderBy((i) => i.Key.ID))
                     {
                         foreach (var bytes in item.Value)
