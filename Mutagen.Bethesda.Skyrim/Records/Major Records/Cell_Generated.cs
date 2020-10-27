@@ -3777,7 +3777,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 record: CellLandscapeitem,
                                 getter: (m, r) =>
                                 {
-                                    var copy = (Landscape)((ILandscapeGetter)r).DeepCopy();
+                                    var copy = (Landscape)((ILandscapeGetter)r).DeepCopy(ModContextExt.LandscapeCopyMask);
                                     getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Landscape = copy;
                                     return copy;
                                 });

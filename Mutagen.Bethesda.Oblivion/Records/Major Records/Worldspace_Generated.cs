@@ -2564,7 +2564,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 record: WorldspaceRoaditem,
                                 getter: (m, r) =>
                                 {
-                                    var copy = (Road)((IRoadGetter)r).DeepCopy();
+                                    var copy = (Road)((IRoadGetter)r).DeepCopy(ModContextExt.RoadCopyMask);
                                     getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).Road = copy;
                                     return copy;
                                 });
@@ -2583,7 +2583,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 record: WorldspaceTopCellitem,
                                 getter: (m, r) =>
                                 {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
                                     getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
                                     return copy;
                                 });
@@ -2594,7 +2594,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
                                     getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
                                     return copy;
                                 }))
@@ -2640,7 +2640,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
                                     getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
                                     return copy;
                                 }))
@@ -2673,7 +2673,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
                                     getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
                                     return copy;
                                 }))
@@ -2706,7 +2706,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
                                     getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
                                     return copy;
                                 }))
@@ -2739,7 +2739,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
                                     getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
                                     return copy;
                                 }))
@@ -2772,7 +2772,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
                                     getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
                                     return copy;
                                 }))
@@ -2804,7 +2804,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
                                     getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
                                     return copy;
                                 }))

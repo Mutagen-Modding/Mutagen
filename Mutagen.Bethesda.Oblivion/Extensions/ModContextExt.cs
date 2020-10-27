@@ -25,6 +25,10 @@ namespace Mutagen.Bethesda.Oblivion
             Road = false,
         };
 
+        public static readonly Landscape.TranslationMask? LandscapeCopyMask = null;
+        public static readonly Road.TranslationMask? RoadCopyMask = null;
+        public static readonly PathGrid.TranslationMask? PathGridCopyMask = null;
+
         internal static IEnumerable<ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             this IListGroupGetter<ICellBlockGetter> cellBlocks,
             ILinkCache linkCache,

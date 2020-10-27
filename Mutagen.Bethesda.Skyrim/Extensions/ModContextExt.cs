@@ -33,6 +33,8 @@ namespace Mutagen.Bethesda.Skyrim
             SubCellsTimestamp = false,
         };
 
+        public static readonly Landscape.TranslationMask? LandscapeCopyMask = null;
+
         internal static IEnumerable<ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             this IListGroupGetter<ICellBlockGetter> cellBlocks, ILinkCache linkCache, Type type, bool throwIfUnknown)
         {

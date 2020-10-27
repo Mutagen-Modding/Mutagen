@@ -3037,7 +3037,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 record: CellPathGriditem,
                                 getter: (m, r) =>
                                 {
-                                    var copy = (PathGrid)((IPathGridGetter)r).DeepCopy();
+                                    var copy = (PathGrid)((IPathGridGetter)r).DeepCopy(ModContextExt.PathGridCopyMask);
                                     getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).PathGrid = copy;
                                     return copy;
                                 });
@@ -3056,7 +3056,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 record: CellLandscapeitem,
                                 getter: (m, r) =>
                                 {
-                                    var copy = (Landscape)((ILandscapeGetter)r).DeepCopy();
+                                    var copy = (Landscape)((ILandscapeGetter)r).DeepCopy(ModContextExt.LandscapeCopyMask);
                                     getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Landscape = copy;
                                     return copy;
                                 });
