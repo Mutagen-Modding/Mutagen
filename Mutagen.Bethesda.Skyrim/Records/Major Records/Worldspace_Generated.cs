@@ -3729,6 +3729,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceGetter obj,
             ILinkCache linkCache,
             Type type,
+            ModKey modKey,
             bool throwIfUnknown,
             Func<ISkyrimMod, IWorldspaceGetter, IWorldspace> getter)
         {
@@ -3746,7 +3747,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
+                                modKey: modKey,
                                 record: WorldspaceTopCellitem,
                                 getter: (m, r) =>
                                 {
@@ -3758,6 +3759,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 obj: WorldspaceTopCellitem,
                                 linkCache: linkCache,
                                 type: type,
+                                modKey: modKey,
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
@@ -3772,6 +3774,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
@@ -3785,6 +3788,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IWorldspaceBlock":
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
@@ -3804,6 +3808,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 obj: WorldspaceTopCellitem,
                                 linkCache: linkCache,
                                 type: type,
+                                modKey: modKey,
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
@@ -3818,6 +3823,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
@@ -3837,6 +3843,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 obj: WorldspaceTopCellitem,
                                 linkCache: linkCache,
                                 type: type,
+                                modKey: modKey,
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
@@ -3851,6 +3858,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
@@ -3870,6 +3878,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 obj: WorldspaceTopCellitem,
                                 linkCache: linkCache,
                                 type: type,
+                                modKey: modKey,
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
@@ -3884,6 +3893,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
@@ -3903,6 +3913,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 obj: WorldspaceTopCellitem,
                                 linkCache: linkCache,
                                 type: type,
+                                modKey: modKey,
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
@@ -3917,6 +3928,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
@@ -3936,6 +3948,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 obj: WorldspaceTopCellitem,
                                 linkCache: linkCache,
                                 type: type,
+                                modKey: modKey,
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
@@ -3950,6 +3963,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
@@ -3963,6 +3977,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
@@ -3982,6 +3997,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 obj: WorldspaceTopCellitem,
                                 linkCache: linkCache,
                                 type: type,
+                                modKey: modKey,
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
@@ -3996,6 +4012,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
@@ -4015,6 +4032,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 obj: WorldspaceTopCellitem,
                                 linkCache: linkCache,
                                 type: type,
+                                modKey: modKey,
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
@@ -4029,6 +4047,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
@@ -4048,6 +4067,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 obj: WorldspaceTopCellitem,
                                 linkCache: linkCache,
                                 type: type,
+                                modKey: modKey,
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
@@ -4062,6 +4082,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
@@ -4081,6 +4102,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 obj: WorldspaceTopCellitem,
                                 linkCache: linkCache,
                                 type: type,
+                                modKey: modKey,
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
@@ -4095,6 +4117,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
@@ -4114,6 +4137,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 obj: WorldspaceTopCellitem,
                                 linkCache: linkCache,
                                 type: type,
+                                modKey: modKey,
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
@@ -4128,6 +4152,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
@@ -4147,6 +4172,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 obj: WorldspaceTopCellitem,
                                 linkCache: linkCache,
                                 type: type,
+                                modKey: modKey,
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
@@ -4161,6 +4187,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,

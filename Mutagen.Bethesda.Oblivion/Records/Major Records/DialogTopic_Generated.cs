@@ -1727,6 +1727,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDialogTopicGetter obj,
             ILinkCache linkCache,
             Type type,
+            ModKey modKey,
             bool throwIfUnknown,
             Func<IOblivionMod, IDialogTopicGetter, IDialogTopic> getter)
         {
@@ -1741,7 +1742,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
+                                modKey: modKey,
                                 record: subItem,
                                 getter: (m, r) =>
                                 {

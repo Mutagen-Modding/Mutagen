@@ -1929,6 +1929,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IDialogTopicGetter obj,
             ILinkCache linkCache,
             Type type,
+            ModKey modKey,
             bool throwIfUnknown,
             Func<ISkyrimMod, IDialogTopicGetter, IDialogTopic> getter)
         {
@@ -1943,7 +1944,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
+                                modKey: modKey,
                                 record: subItem,
                                 getter: (m, r) =>
                                 {

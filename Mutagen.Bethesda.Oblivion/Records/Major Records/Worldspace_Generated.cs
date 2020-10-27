@@ -2547,6 +2547,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWorldspaceGetter obj,
             ILinkCache linkCache,
             Type type,
+            ModKey modKey,
             bool throwIfUnknown,
             Func<IOblivionMod, IWorldspaceGetter, IWorldspace> getter)
         {
@@ -2560,7 +2561,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         if (obj.Road.TryGet(out var WorldspaceRoaditem))
                         {
                             yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
+                                modKey: modKey,
                                 record: WorldspaceRoaditem,
                                 getter: (m, r) =>
                                 {
@@ -2579,7 +2580,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                         {
                             yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
+                                modKey: modKey,
                                 record: WorldspaceTopCellitem,
                                 getter: (m, r) =>
                                 {
@@ -2591,6 +2592,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 obj: WorldspaceTopCellitem,
                                 linkCache: linkCache,
                                 type: type,
+                                modKey: modKey,
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
@@ -2605,6 +2607,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
@@ -2618,6 +2621,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IWorldspaceBlock":
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
@@ -2637,6 +2641,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 obj: WorldspaceTopCellitem,
                                 linkCache: linkCache,
                                 type: type,
+                                modKey: modKey,
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
@@ -2651,6 +2656,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
@@ -2670,6 +2676,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 obj: WorldspaceTopCellitem,
                                 linkCache: linkCache,
                                 type: type,
+                                modKey: modKey,
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
@@ -2684,6 +2691,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
@@ -2703,6 +2711,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 obj: WorldspaceTopCellitem,
                                 linkCache: linkCache,
                                 type: type,
+                                modKey: modKey,
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
@@ -2717,6 +2726,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
@@ -2736,6 +2746,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 obj: WorldspaceTopCellitem,
                                 linkCache: linkCache,
                                 type: type,
+                                modKey: modKey,
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
@@ -2750,6 +2761,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
@@ -2769,6 +2781,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 obj: WorldspaceTopCellitem,
                                 linkCache: linkCache,
                                 type: type,
+                                modKey: modKey,
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
@@ -2783,6 +2796,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
@@ -2801,6 +2815,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 obj: WorldspaceTopCellitem,
                                 linkCache: linkCache,
                                 type: type,
+                                modKey: modKey,
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
@@ -2815,6 +2830,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,

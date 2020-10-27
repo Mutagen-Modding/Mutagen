@@ -67,27 +67,5 @@ namespace Mutagen.Bethesda
                 throw RecordException.Factory(ex, ModKey, Record);
             }
         }
-
-        internal ModContext<TModSetter, TMajorSetter, TMajorGetter> AddModKey(ModKey modKey)
-        {
-            return new ModContext<TModSetter, TMajorSetter, TMajorGetter>(
-                modKey: modKey,
-                record: Record,
-                getter: _getOrAddAsOverride);
-        }
-    }
-
-    namespace Internals
-    {
-        public static class ModContextExt
-        {
-            public static ModContext<TMod, TMajorSetter, TMajorGetter> AddModKey<TMod, TMajorSetter, TMajorGetter>(ModContext<TMod, TMajorSetter, TMajorGetter> context, ModKey key)
-                where TMod : IModGetter
-                where TMajorSetter : IMajorRecordCommon, TMajorGetter
-                where TMajorGetter : IMajorRecordCommonGetter
-            {
-                return context.AddModKey(key);
-            }
-        }
     }
 }

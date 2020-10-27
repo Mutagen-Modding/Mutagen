@@ -36,7 +36,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Landscape.TranslationMask? LandscapeCopyMask = null;
 
         internal static IEnumerable<ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
-            this IListGroupGetter<ICellBlockGetter> cellBlocks, ILinkCache linkCache, Type type, bool throwIfUnknown)
+            this IListGroupGetter<ICellBlockGetter> cellBlocks, 
+            ILinkCache linkCache, 
+            Type type,
+            ModKey modKey,
+            bool throwIfUnknown)
         {
             foreach (var readOnlyBlock in cellBlocks.Records)
             {
@@ -82,13 +86,13 @@ namespace Mutagen.Bethesda.Skyrim
                             && regis.ClassType == typeof(Cell))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
+                                modKey: modKey,
                                 record: readOnlyCell,
                                 getter: (m, r) => cellGetter(m, (ICellGetter)r));
                         }
                         else
                         {
-                            foreach (var con in CellCommon.Instance.EnumerateMajorRecordContexts(readOnlyCell, linkCache, type, throwIfUnknown, cellGetter))
+                            foreach (var con in CellCommon.Instance.EnumerateMajorRecordContexts(readOnlyCell, linkCache, type, modKey, throwIfUnknown, cellGetter))
                             {
                                 yield return con;
                             }
@@ -102,7 +106,8 @@ namespace Mutagen.Bethesda.Skyrim
             this IReadOnlyList<IWorldspaceBlockGetter> worldspaceBlocks,
             IWorldspaceGetter worldspace,
             ILinkCache linkCache,
-            Type type, 
+            Type type,
+            ModKey modKey,
             bool throwIfUnknown, 
             Func<ISkyrimMod, IWorldspaceGetter, IWorldspace> getter)
         {
@@ -155,13 +160,13 @@ namespace Mutagen.Bethesda.Skyrim
                             && regis.ClassType == typeof(Cell))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
+                                modKey: modKey,
                                 record: readOnlyCell,
                                 getter: (m, r) => cellGetter(m, (ICellGetter)r));
                         }
                         else
                         {
-                            foreach (var con in CellCommon.Instance.EnumerateMajorRecordContexts(readOnlyCell, linkCache, type, throwIfUnknown, cellGetter))
+                            foreach (var con in CellCommon.Instance.EnumerateMajorRecordContexts(readOnlyCell, linkCache, type, modKey, throwIfUnknown, cellGetter))
                             {
                                 yield return con;
                             }

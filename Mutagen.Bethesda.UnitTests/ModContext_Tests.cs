@@ -444,5 +444,39 @@ namespace Mutagen.Bethesda.UnitTests
             var worldspaceOverride = mod4.Worldspaces.First();
             worldspaceOverride.EditorID.Should().BeEquivalentTo(Mod3Name);
         }
+
+        [Fact]
+        public void SetModKeys()
+        {
+            WarmupSkyrim.Init();
+            var mod = new SkyrimMod(Utility.ModKey, SkyrimRelease.SkyrimSE);
+            var worldspace = mod.Worldspaces.AddNew();
+            var block = new WorldspaceBlock()
+            {
+                BlockNumberX = 2,
+                BlockNumberY = 3,
+                GroupType = GroupTypeEnum.ExteriorCellBlock,
+            };
+            var subBlock = new WorldspaceSubBlock()
+            {
+                BlockNumberX = 4,
+                BlockNumberY = 5,
+                GroupType = GroupTypeEnum.ExteriorCellSubBlock,
+            };
+            block.Items.Add(subBlock);
+            worldspace.SubCells.Add(block);
+            var cell = new Cell(mod.GetNextFormKey());
+            subBlock.Items.Add(cell);
+
+            var placedNpc = new PlacedNpc(mod.GetNextFormKey());
+            cell.Persistent.Add(placedNpc);
+            var placedObj = new PlacedObject(mod.GetNextFormKey());
+            cell.Persistent.Add(placedObj);
+
+            var cache = mod.ToImmutableLinkCache();
+            var contexts = mod.EnumerateMajorRecordContexts<IPlacedObject, IPlacedObjectGetter>(linkCache: cache).ToArray();
+            contexts.Should().HaveCount(1);
+            contexts[0].ModKey.Should().BeEquivalentTo(Utility.ModKey);
+        }
     }
 }
