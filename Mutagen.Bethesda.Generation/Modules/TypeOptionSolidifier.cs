@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Generation
                                     $"return new TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>"))
                                 {
                                     args.Add($"(bool includeDeletedRecords) => listings.WinningOverrides<{obj.Interface(getter: true)}>(includeDeletedRecords: includeDeletedRecords)");
-                                    args.Add($"(bool includeDeletedRecords) => listings.WinningOverrideContexts<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>(includeDeletedRecords: includeDeletedRecords)");
+                                    args.Add($"({nameof(ILinkCache)} linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>(linkCache, includeDeletedRecords: includeDeletedRecords)");
                                 }
                             }
                             fg.AppendLine();
@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Generation
                                     $"return new TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>"))
                                 {
                                     args.Add($"(bool includeDeletedRecords) => mods.WinningOverrides<{obj.Interface(getter: true)}>(includeDeletedRecords: includeDeletedRecords)");
-                                    args.Add($"(bool includeDeletedRecords) => mods.WinningOverrideContexts<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>(includeDeletedRecords: includeDeletedRecords)");
+                                    args.Add($"({nameof(ILinkCache)} linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>(linkCache, includeDeletedRecords: includeDeletedRecords)");
                                 }
                             }
                             fg.AppendLine();
@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Generation
                                         $"return new TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, {interf.Key}, {getter}>"))
                                     {
                                         args.Add($"(bool includeDeletedRecords) => listings.WinningOverrides<{getter}>(includeDeletedRecords: includeDeletedRecords)");
-                                        args.Add($"(bool includeDeletedRecords) => listings.WinningOverrideContexts<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {interf.Key}, {getter}>(includeDeletedRecords: includeDeletedRecords)");
+                                        args.Add($"({nameof(ILinkCache)} linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {interf.Key}, {getter}>(linkCache, includeDeletedRecords: includeDeletedRecords)");
                                     }
                                 }
                                 fg.AppendLine();
@@ -137,7 +137,7 @@ namespace Mutagen.Bethesda.Generation
                                         $"return new TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, {interf.Key}, {getter}>"))
                                     {
                                         args.Add($"(bool includeDeletedRecords) => mods.WinningOverrides<{getter}>(includeDeletedRecords: includeDeletedRecords)");
-                                        args.Add($"(bool includeDeletedRecords) => mods.WinningOverrideContexts<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {interf.Key}, {getter}>(includeDeletedRecords: includeDeletedRecords)");
+                                        args.Add($"({nameof(ILinkCache)} linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {interf.Key}, {getter}>(linkCache, includeDeletedRecords: includeDeletedRecords)");
                                     }
                                 }
                                 fg.AppendLine();

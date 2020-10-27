@@ -16,9 +16,9 @@ namespace Mutagen.Bethesda.Binary
         public GameConstants Constants { get; }
 
         /// <summary>
-        /// Optional MasterReferenceReader to reference while reading
+        /// MasterReferenceReader to reference while reading
         /// </summary>
-        public MasterReferenceReader? MasterReferences { get; set; }
+        public MasterReferenceReader MasterReferences { get; }
 
         /// <summary>
         /// Optional RecordInfoCache to reference while reading
@@ -50,19 +50,10 @@ namespace Mutagen.Bethesda.Binary
         /// </summary>
         public ModKey ModKey { get; set; }
 
-        public ParsingBundle(GameConstants constants)
+        public ParsingBundle(GameConstants constants, MasterReferenceReader masterReferences)
         {
             this.Constants = constants;
-        }
-
-        public static implicit operator ParsingBundle(GameRelease release)
-        {
-            return new ParsingBundle(GameConstants.Get(release));
-        }
-
-        public static implicit operator ParsingBundle(GameConstants constants)
-        {
-            return new ParsingBundle(constants);
+            this.MasterReferences = masterReferences;
         }
 
         public static implicit operator GameConstants(ParsingBundle bundle)

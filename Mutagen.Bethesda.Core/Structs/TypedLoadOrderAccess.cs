@@ -10,11 +10,11 @@ namespace Mutagen.Bethesda.Internals
         where TMajorGetter : IMajorRecordCommonGetter
     {
         private Func<bool, IEnumerable<TMajorGetter>> _winningOverrides;
-        private Func<bool, IEnumerable<ModContext<TModSetter, TMajorSetter, TMajorGetter>>> _winningContextOverrides;
+        private Func<ILinkCache, bool, IEnumerable<ModContext<TModSetter, TMajorSetter, TMajorGetter>>> _winningContextOverrides;
 
         public TypedLoadOrderAccess(
             Func<bool, IEnumerable<TMajorGetter>> winningOverrides,
-            Func<bool, IEnumerable<ModContext<TModSetter, TMajorSetter, TMajorGetter>>> winningContextOverrides)
+            Func<ILinkCache, bool, IEnumerable<ModContext<TModSetter, TMajorSetter, TMajorGetter>>> winningContextOverrides)
         {
             _winningOverrides = winningOverrides;
             _winningContextOverrides = winningContextOverrides;
@@ -36,8 +36,9 @@ namespace Mutagen.Bethesda.Internals
         /// <br />
         /// This system is overkill for simpler top-level records.
         /// </summary>
+        /// <param name="linkCache">LinkCache to use when creating parent objects</param> 
         /// <param name="includeDeletedRecords">Whether to include deleted records in the output</param>
         /// <returns>Enumerable of the most overridden version of each record of the given type, optionally including deleted ones</returns>
-        public IEnumerable<ModContext<TModSetter, TMajorSetter, TMajorGetter>> WinningContextOverrides(bool includeDeletedRecords = false) => _winningContextOverrides(includeDeletedRecords);
+        public IEnumerable<ModContext<TModSetter, TMajorSetter, TMajorGetter>> WinningContextOverrides(ILinkCache linkCache, bool includeDeletedRecords = false) => _winningContextOverrides(linkCache, includeDeletedRecords);
     }
 }

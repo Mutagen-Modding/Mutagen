@@ -189,7 +189,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public static void Align(
-            FilePath inputPath,
+            ModPath inputPath,
             FilePath outputPath,
             GameRelease gameMode,
             AlignmentRules alignmentRules,
@@ -202,17 +202,17 @@ namespace Mutagen.Bethesda.Tests
             // Always interested in parent record types
             interest.InterestingTypes.Add("CELL");
             interest.InterestingTypes.Add("WRLD");
-            var fileLocs = RecordLocator.GetFileLocations(inputPath.Path, gameMode, interest);
+            var fileLocs = RecordLocator.GetFileLocations(inputPath, gameMode, interest);
             if (gameMode == GameRelease.Oblivion)
             {
-                var alignedMajorRecordsFile = Path.Combine(temp.Dir.Path, "alignedRules");
-                using (var inputStream = new MutagenBinaryReadStream(inputPath.Path, gameMode))
+                var alignedMajorRecordsFile = new ModPath(inputPath.ModKey, Path.Combine(temp.Dir.Path, "alignedRules"));
+                using (var inputStream = new MutagenBinaryReadStream(inputPath, gameMode))
                 {
                     using var writer = new MutagenWriter(new FileStream(alignedMajorRecordsFile, FileMode.Create), gameMode);
                     AlignMajorRecordsByRules(inputStream, writer, alignmentRules, fileLocs);
                 }
 
-                var alignedGroupsFile = Path.Combine(temp.Dir.Path, "alignedGroups");
+                var alignedGroupsFile = new ModPath(inputPath.ModKey, Path.Combine(temp.Dir.Path, "alignedGroups"));
                 using (var inputStream = new MutagenBinaryReadStream(alignedMajorRecordsFile, gameMode))
                 {
                     using var writer = new MutagenWriter(new FileStream(alignedGroupsFile, FileMode.Create), gameMode);
@@ -220,7 +220,7 @@ namespace Mutagen.Bethesda.Tests
                 }
 
                 fileLocs = RecordLocator.GetFileLocations(alignedGroupsFile, gameMode, interest);
-                var alignedCellsFile = Path.Combine(temp.Dir.Path, "alignedCells");
+                var alignedCellsFile = new ModPath(inputPath.ModKey, Path.Combine(temp.Dir.Path, "alignedCells"));
                 using (var mutaReader = new BinaryReadStream(alignedGroupsFile))
                 {
                     using var writer = new MutagenWriter(alignedCellsFile, gameMode);
@@ -278,8 +278,8 @@ namespace Mutagen.Bethesda.Tests
             }
             else
             {
-                var alignedMajorRecordsFile = Path.Combine(temp.Dir.Path, "alignedRules");
-                using (var inputStream = new MutagenBinaryReadStream(inputPath.Path, gameMode))
+                var alignedMajorRecordsFile = new ModPath(inputPath.ModKey, Path.Combine(temp.Dir.Path, "alignedRules"));
+                using (var inputStream = new MutagenBinaryReadStream(inputPath, gameMode))
                 {
                     using var writer = new MutagenWriter(alignedMajorRecordsFile, gameMode);
                     AlignMajorRecordsByRules(inputStream, writer, alignmentRules, fileLocs);

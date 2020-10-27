@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
                 stream.Position = 0xCF614B;
                 PathGridBytes = stream.ReadBytes(0x14C7);
             }
-            PathGridReader = new MutagenMemoryReadStream(PathGridBytes, new ParsingBundle(GameRelease.Oblivion));
+            PathGridReader = new MutagenMemoryReadStream(PathGridBytes, new ParsingBundle(GameRelease.Oblivion, masterReferences: null));
         }
 
         [GlobalCleanup]

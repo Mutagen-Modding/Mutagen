@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IAClothing, IAClothingGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IAClothingGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IAClothing, IAClothingGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IAClothing, IAClothingGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IAClothing, IAClothingGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IAClothingGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IAClothing, IAClothingGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IAClothing, IAClothingGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IActivator, IActivatorGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IActivatorGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IActivator, IActivatorGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IActivator, IActivatorGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IActivator, IActivatorGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IActivatorGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IActivator, IActivatorGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IActivator, IActivatorGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IAIPackage, IAIPackageGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IAIPackageGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IAIPackage, IAIPackageGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IAIPackage, IAIPackageGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IAIPackage, IAIPackageGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IAIPackageGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IAIPackage, IAIPackageGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IAIPackage, IAIPackageGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IAItem, IAItemGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IAItemGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IAItem, IAItemGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IAItem, IAItemGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IAItem, IAItemGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IAItemGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IAItem, IAItemGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IAItem, IAItemGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IAlchemicalApparatus, IAlchemicalApparatusGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IAlchemicalApparatusGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IAlchemicalApparatus, IAlchemicalApparatusGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IAlchemicalApparatus, IAlchemicalApparatusGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IAlchemicalApparatus, IAlchemicalApparatusGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IAlchemicalApparatusGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IAlchemicalApparatus, IAlchemicalApparatusGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IAlchemicalApparatus, IAlchemicalApparatusGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IAmmunition, IAmmunitionGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IAmmunitionGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IAmmunition, IAmmunitionGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IAmmunition, IAmmunitionGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -147,7 +147,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IAmmunition, IAmmunitionGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IAmmunitionGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IAmmunition, IAmmunitionGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IAmmunition, IAmmunitionGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -159,7 +159,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IAnimatedObject, IAnimatedObjectGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IAnimatedObjectGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IAnimatedObject, IAnimatedObjectGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IAnimatedObject, IAnimatedObjectGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -171,7 +171,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IAnimatedObject, IAnimatedObjectGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IAnimatedObjectGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IAnimatedObject, IAnimatedObjectGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IAnimatedObject, IAnimatedObjectGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -183,7 +183,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IANpc, IANpcGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IANpcGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IANpc, IANpcGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IANpc, IANpcGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -195,7 +195,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IANpc, IANpcGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IANpcGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IANpc, IANpcGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IANpc, IANpcGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -207,7 +207,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IANpcSpawn, IANpcSpawnGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IANpcSpawnGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IANpcSpawn, IANpcSpawnGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IANpcSpawn, IANpcSpawnGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -219,7 +219,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IANpcSpawn, IANpcSpawnGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IANpcSpawnGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IANpcSpawn, IANpcSpawnGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IANpcSpawn, IANpcSpawnGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -231,7 +231,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IArmor, IArmorGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IArmorGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IArmor, IArmorGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IArmor, IArmorGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -243,7 +243,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IArmor, IArmorGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IArmorGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IArmor, IArmorGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IArmor, IArmorGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -255,7 +255,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IASpell, IASpellGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IASpellGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IASpell, IASpellGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IASpell, IASpellGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -267,7 +267,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IASpell, IASpellGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IASpellGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IASpell, IASpellGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IASpell, IASpellGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -279,7 +279,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IBirthsign, IBirthsignGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IBirthsignGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IBirthsign, IBirthsignGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IBirthsign, IBirthsignGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -291,7 +291,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IBirthsign, IBirthsignGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IBirthsignGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IBirthsign, IBirthsignGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IBirthsign, IBirthsignGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -303,7 +303,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IBook, IBookGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IBookGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IBook, IBookGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IBook, IBookGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -315,7 +315,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IBook, IBookGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IBookGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IBook, IBookGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IBook, IBookGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -327,7 +327,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, ICell, ICellGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ICellGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ICell, ICellGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ICell, ICellGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -339,7 +339,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, ICell, ICellGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ICellGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ICell, ICellGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ICell, ICellGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -351,7 +351,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IClass, IClassGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IClassGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IClass, IClassGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IClass, IClassGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -363,7 +363,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IClass, IClassGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IClassGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IClass, IClassGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IClass, IClassGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -375,7 +375,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IClimate, IClimateGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IClimateGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IClimate, IClimateGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IClimate, IClimateGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -387,7 +387,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IClimate, IClimateGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IClimateGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IClimate, IClimateGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IClimate, IClimateGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -399,7 +399,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IClothing, IClothingGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IClothingGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IClothing, IClothingGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IClothing, IClothingGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -411,7 +411,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IClothing, IClothingGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IClothingGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IClothing, IClothingGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IClothing, IClothingGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -423,7 +423,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, ICombatStyle, ICombatStyleGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ICombatStyleGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ICombatStyle, ICombatStyleGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ICombatStyle, ICombatStyleGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -435,7 +435,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, ICombatStyle, ICombatStyleGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ICombatStyleGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ICombatStyle, ICombatStyleGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ICombatStyle, ICombatStyleGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -447,7 +447,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IContainer, IContainerGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IContainerGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IContainer, IContainerGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IContainer, IContainerGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -459,7 +459,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IContainer, IContainerGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IContainerGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IContainer, IContainerGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IContainer, IContainerGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -471,7 +471,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, ICreature, ICreatureGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ICreatureGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ICreature, ICreatureGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ICreature, ICreatureGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -483,7 +483,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, ICreature, ICreatureGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ICreatureGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ICreature, ICreatureGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ICreature, ICreatureGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IDialogItem, IDialogItemGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IDialogItemGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IDialogItem, IDialogItemGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IDialogItem, IDialogItemGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -507,7 +507,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IDialogItem, IDialogItemGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IDialogItemGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IDialogItem, IDialogItemGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IDialogItem, IDialogItemGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -519,7 +519,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IDialogTopic, IDialogTopicGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IDialogTopicGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IDialogTopic, IDialogTopicGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IDialogTopic, IDialogTopicGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -531,7 +531,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IDialogTopic, IDialogTopicGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IDialogTopicGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IDialogTopic, IDialogTopicGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IDialogTopic, IDialogTopicGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -543,7 +543,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IDoor, IDoorGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IDoorGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IDoor, IDoorGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IDoor, IDoorGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -555,7 +555,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IDoor, IDoorGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IDoorGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IDoor, IDoorGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IDoor, IDoorGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -567,7 +567,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IEffectShader, IEffectShaderGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IEffectShaderGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IEffectShader, IEffectShaderGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IEffectShader, IEffectShaderGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -579,7 +579,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IEffectShader, IEffectShaderGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IEffectShaderGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IEffectShader, IEffectShaderGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IEffectShader, IEffectShaderGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -591,7 +591,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IEnchantment, IEnchantmentGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IEnchantmentGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IEnchantment, IEnchantmentGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IEnchantment, IEnchantmentGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -603,7 +603,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IEnchantment, IEnchantmentGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IEnchantmentGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IEnchantment, IEnchantmentGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IEnchantment, IEnchantmentGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -615,7 +615,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IEye, IEyeGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IEyeGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IEye, IEyeGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IEye, IEyeGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IEye, IEyeGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IEyeGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IEye, IEyeGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IEye, IEyeGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -639,7 +639,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IFaction, IFactionGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IFactionGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IFaction, IFactionGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IFaction, IFactionGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -651,7 +651,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IFaction, IFactionGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IFactionGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IFaction, IFactionGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IFaction, IFactionGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -663,7 +663,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IFlora, IFloraGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IFloraGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IFlora, IFloraGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IFlora, IFloraGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -675,7 +675,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IFlora, IFloraGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IFloraGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IFlora, IFloraGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IFlora, IFloraGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -687,7 +687,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IFurniture, IFurnitureGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IFurnitureGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IFurniture, IFurnitureGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IFurniture, IFurnitureGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -699,7 +699,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IFurniture, IFurnitureGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IFurnitureGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IFurniture, IFurnitureGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IFurniture, IFurnitureGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -711,7 +711,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IGameSetting, IGameSettingGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IGameSettingGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IGameSetting, IGameSettingGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IGameSetting, IGameSettingGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -723,7 +723,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IGameSetting, IGameSettingGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IGameSettingGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IGameSetting, IGameSettingGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IGameSetting, IGameSettingGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -735,7 +735,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IGameSettingFloat, IGameSettingFloatGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IGameSettingFloatGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IGameSettingFloat, IGameSettingFloatGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IGameSettingFloat, IGameSettingFloatGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -747,7 +747,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IGameSettingFloat, IGameSettingFloatGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IGameSettingFloatGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IGameSettingFloat, IGameSettingFloatGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IGameSettingFloat, IGameSettingFloatGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -759,7 +759,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IGameSettingInt, IGameSettingIntGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IGameSettingIntGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IGameSettingInt, IGameSettingIntGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IGameSettingInt, IGameSettingIntGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -771,7 +771,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IGameSettingInt, IGameSettingIntGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IGameSettingIntGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IGameSettingInt, IGameSettingIntGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IGameSettingInt, IGameSettingIntGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -783,7 +783,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IGameSettingString, IGameSettingStringGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IGameSettingStringGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IGameSettingString, IGameSettingStringGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IGameSettingString, IGameSettingStringGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -795,7 +795,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IGameSettingString, IGameSettingStringGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IGameSettingStringGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IGameSettingString, IGameSettingStringGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IGameSettingString, IGameSettingStringGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -807,7 +807,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IGlobal, IGlobalGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IGlobalGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IGlobal, IGlobalGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IGlobal, IGlobalGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -819,7 +819,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IGlobal, IGlobalGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IGlobalGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IGlobal, IGlobalGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IGlobal, IGlobalGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -831,7 +831,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IGlobalFloat, IGlobalFloatGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IGlobalFloatGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IGlobalFloat, IGlobalFloatGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IGlobalFloat, IGlobalFloatGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -843,7 +843,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IGlobalFloat, IGlobalFloatGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IGlobalFloatGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IGlobalFloat, IGlobalFloatGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IGlobalFloat, IGlobalFloatGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -855,7 +855,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IGlobalInt, IGlobalIntGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IGlobalIntGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IGlobalInt, IGlobalIntGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IGlobalInt, IGlobalIntGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -867,7 +867,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IGlobalInt, IGlobalIntGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IGlobalIntGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IGlobalInt, IGlobalIntGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IGlobalInt, IGlobalIntGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -879,7 +879,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IGlobalShort, IGlobalShortGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IGlobalShortGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IGlobalShort, IGlobalShortGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IGlobalShort, IGlobalShortGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -891,7 +891,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IGlobalShort, IGlobalShortGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IGlobalShortGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IGlobalShort, IGlobalShortGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IGlobalShort, IGlobalShortGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -903,7 +903,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IGrass, IGrassGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IGrassGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IGrass, IGrassGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IGrass, IGrassGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -915,7 +915,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IGrass, IGrassGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IGrassGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IGrass, IGrassGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IGrass, IGrassGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -927,7 +927,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IHair, IHairGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IHairGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IHair, IHairGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IHair, IHairGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -939,7 +939,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IHair, IHairGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IHairGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IHair, IHairGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IHair, IHairGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -951,7 +951,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IIdleAnimation, IIdleAnimationGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IIdleAnimationGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IIdleAnimation, IIdleAnimationGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IIdleAnimation, IIdleAnimationGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -963,7 +963,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IIdleAnimation, IIdleAnimationGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IIdleAnimationGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IIdleAnimation, IIdleAnimationGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IIdleAnimation, IIdleAnimationGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -975,7 +975,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IIngredient, IIngredientGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IIngredientGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IIngredient, IIngredientGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IIngredient, IIngredientGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -987,7 +987,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IIngredient, IIngredientGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IIngredientGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IIngredient, IIngredientGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IIngredient, IIngredientGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -999,7 +999,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IKey, IKeyGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IKeyGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IKey, IKeyGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IKey, IKeyGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1011,7 +1011,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IKey, IKeyGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IKeyGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IKey, IKeyGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IKey, IKeyGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1023,7 +1023,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, ILandscape, ILandscapeGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ILandscapeGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ILandscape, ILandscapeGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ILandscape, ILandscapeGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1035,7 +1035,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, ILandscape, ILandscapeGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ILandscapeGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ILandscape, ILandscapeGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ILandscape, ILandscapeGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1047,7 +1047,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, ILandTexture, ILandTextureGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ILandTextureGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ILandTexture, ILandTextureGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ILandTexture, ILandTextureGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1059,7 +1059,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, ILandTexture, ILandTextureGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ILandTextureGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ILandTexture, ILandTextureGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ILandTexture, ILandTextureGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1071,7 +1071,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, ILeveledCreature, ILeveledCreatureGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ILeveledCreatureGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ILeveledCreature, ILeveledCreatureGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ILeveledCreature, ILeveledCreatureGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1083,7 +1083,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, ILeveledCreature, ILeveledCreatureGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ILeveledCreatureGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ILeveledCreature, ILeveledCreatureGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ILeveledCreature, ILeveledCreatureGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1095,7 +1095,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, ILeveledItem, ILeveledItemGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ILeveledItemGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ILeveledItem, ILeveledItemGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ILeveledItem, ILeveledItemGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1107,7 +1107,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, ILeveledItem, ILeveledItemGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ILeveledItemGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ILeveledItem, ILeveledItemGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ILeveledItem, ILeveledItemGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1119,7 +1119,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, ILeveledSpell, ILeveledSpellGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ILeveledSpellGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ILeveledSpell, ILeveledSpellGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ILeveledSpell, ILeveledSpellGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1131,7 +1131,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, ILeveledSpell, ILeveledSpellGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ILeveledSpellGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ILeveledSpell, ILeveledSpellGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ILeveledSpell, ILeveledSpellGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1143,7 +1143,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, ILight, ILightGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ILightGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ILight, ILightGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ILight, ILightGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1155,7 +1155,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, ILight, ILightGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ILightGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ILight, ILightGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ILight, ILightGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1167,7 +1167,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, ILoadScreen, ILoadScreenGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ILoadScreenGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ILoadScreen, ILoadScreenGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ILoadScreen, ILoadScreenGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1179,7 +1179,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, ILoadScreen, ILoadScreenGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ILoadScreenGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ILoadScreen, ILoadScreenGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ILoadScreen, ILoadScreenGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1191,7 +1191,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IMagicEffect, IMagicEffectGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IMagicEffectGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IMagicEffect, IMagicEffectGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IMagicEffect, IMagicEffectGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1203,7 +1203,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IMagicEffect, IMagicEffectGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IMagicEffectGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IMagicEffect, IMagicEffectGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IMagicEffect, IMagicEffectGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1215,7 +1215,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IMiscellaneous, IMiscellaneousGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IMiscellaneousGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IMiscellaneous, IMiscellaneousGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IMiscellaneous, IMiscellaneousGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1227,7 +1227,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IMiscellaneous, IMiscellaneousGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IMiscellaneousGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IMiscellaneous, IMiscellaneousGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IMiscellaneous, IMiscellaneousGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1239,7 +1239,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, INpc, INpcGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<INpcGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, INpc, INpcGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, INpc, INpcGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1251,7 +1251,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, INpc, INpcGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<INpcGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, INpc, INpcGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, INpc, INpcGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1263,7 +1263,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IOblivionMajorRecord, IOblivionMajorRecordGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IOblivionMajorRecordGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IOblivionMajorRecord, IOblivionMajorRecordGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IOblivionMajorRecord, IOblivionMajorRecordGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1275,7 +1275,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IOblivionMajorRecord, IOblivionMajorRecordGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IOblivionMajorRecordGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IOblivionMajorRecord, IOblivionMajorRecordGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IOblivionMajorRecord, IOblivionMajorRecordGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1287,7 +1287,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IPathGrid, IPathGridGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IPathGridGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IPathGrid, IPathGridGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IPathGrid, IPathGridGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1299,7 +1299,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IPathGrid, IPathGridGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IPathGridGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IPathGrid, IPathGridGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IPathGrid, IPathGridGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1311,7 +1311,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IPlace, IPlaceGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IPlaceGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IPlace, IPlaceGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IPlace, IPlaceGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1323,7 +1323,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IPlace, IPlaceGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IPlaceGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IPlace, IPlaceGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IPlace, IPlaceGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1335,7 +1335,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IPlacedCreature, IPlacedCreatureGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IPlacedCreatureGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IPlacedCreature, IPlacedCreatureGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IPlacedCreature, IPlacedCreatureGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1347,7 +1347,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IPlacedCreature, IPlacedCreatureGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IPlacedCreatureGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IPlacedCreature, IPlacedCreatureGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IPlacedCreature, IPlacedCreatureGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1359,7 +1359,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IPlacedNpc, IPlacedNpcGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IPlacedNpcGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IPlacedNpc, IPlacedNpcGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IPlacedNpc, IPlacedNpcGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1371,7 +1371,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IPlacedNpc, IPlacedNpcGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IPlacedNpcGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IPlacedNpc, IPlacedNpcGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IPlacedNpc, IPlacedNpcGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1383,7 +1383,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IPlacedObject, IPlacedObjectGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IPlacedObjectGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IPlacedObject, IPlacedObjectGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IPlacedObject, IPlacedObjectGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1395,7 +1395,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IPlacedObject, IPlacedObjectGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IPlacedObjectGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IPlacedObject, IPlacedObjectGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IPlacedObject, IPlacedObjectGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1407,7 +1407,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IPotion, IPotionGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IPotionGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IPotion, IPotionGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IPotion, IPotionGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1419,7 +1419,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IPotion, IPotionGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IPotionGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IPotion, IPotionGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IPotion, IPotionGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1431,7 +1431,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IQuest, IQuestGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IQuestGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IQuest, IQuestGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IQuest, IQuestGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1443,7 +1443,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IQuest, IQuestGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IQuestGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IQuest, IQuestGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IQuest, IQuestGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1455,7 +1455,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IRace, IRaceGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IRaceGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IRace, IRaceGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IRace, IRaceGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1467,7 +1467,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IRace, IRaceGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IRaceGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IRace, IRaceGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IRace, IRaceGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1479,7 +1479,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IRegion, IRegionGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IRegionGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IRegion, IRegionGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IRegion, IRegionGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1491,7 +1491,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IRegion, IRegionGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IRegionGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IRegion, IRegionGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IRegion, IRegionGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1503,7 +1503,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IRoad, IRoadGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IRoadGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IRoad, IRoadGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IRoad, IRoadGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1515,7 +1515,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IRoad, IRoadGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IRoadGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IRoad, IRoadGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IRoad, IRoadGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1527,7 +1527,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IScript, IScriptGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IScriptGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IScript, IScriptGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IScript, IScriptGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1539,7 +1539,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IScript, IScriptGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IScriptGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IScript, IScriptGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IScript, IScriptGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1551,7 +1551,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, ISigilStone, ISigilStoneGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ISigilStoneGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ISigilStone, ISigilStoneGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ISigilStone, ISigilStoneGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1563,7 +1563,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, ISigilStone, ISigilStoneGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ISigilStoneGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ISigilStone, ISigilStoneGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ISigilStone, ISigilStoneGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1575,7 +1575,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, ISkillRecord, ISkillRecordGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ISkillRecordGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ISkillRecord, ISkillRecordGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ISkillRecord, ISkillRecordGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1587,7 +1587,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, ISkillRecord, ISkillRecordGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ISkillRecordGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ISkillRecord, ISkillRecordGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ISkillRecord, ISkillRecordGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1599,7 +1599,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, ISoulGem, ISoulGemGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ISoulGemGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ISoulGem, ISoulGemGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ISoulGem, ISoulGemGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1611,7 +1611,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, ISoulGem, ISoulGemGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ISoulGemGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ISoulGem, ISoulGemGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ISoulGem, ISoulGemGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1623,7 +1623,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, ISound, ISoundGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ISoundGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ISound, ISoundGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ISound, ISoundGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1635,7 +1635,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, ISound, ISoundGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ISoundGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ISound, ISoundGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ISound, ISoundGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1647,7 +1647,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, ISpell, ISpellGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ISpellGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ISpell, ISpellGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ISpell, ISpellGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1659,7 +1659,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, ISpell, ISpellGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ISpellGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ISpell, ISpellGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ISpell, ISpellGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1671,7 +1671,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, ISpellLeveled, ISpellLeveledGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ISpellLeveledGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ISpellLeveled, ISpellLeveledGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ISpellLeveled, ISpellLeveledGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1683,7 +1683,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, ISpellLeveled, ISpellLeveledGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ISpellLeveledGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ISpellLeveled, ISpellLeveledGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ISpellLeveled, ISpellLeveledGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1695,7 +1695,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, ISpellUnleveled, ISpellUnleveledGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ISpellUnleveledGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ISpellUnleveled, ISpellUnleveledGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ISpellUnleveled, ISpellUnleveledGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1707,7 +1707,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, ISpellUnleveled, ISpellUnleveledGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ISpellUnleveledGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ISpellUnleveled, ISpellUnleveledGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ISpellUnleveled, ISpellUnleveledGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1719,7 +1719,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IStatic, IStaticGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IStaticGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IStatic, IStaticGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IStatic, IStaticGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1731,7 +1731,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IStatic, IStaticGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IStaticGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IStatic, IStaticGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IStatic, IStaticGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1743,7 +1743,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, ISubspace, ISubspaceGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ISubspaceGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ISubspace, ISubspaceGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ISubspace, ISubspaceGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1755,7 +1755,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, ISubspace, ISubspaceGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ISubspaceGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ISubspace, ISubspaceGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ISubspace, ISubspaceGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1767,7 +1767,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, ITree, ITreeGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ITreeGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ITree, ITreeGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ITree, ITreeGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1779,7 +1779,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, ITree, ITreeGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ITreeGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ITree, ITreeGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, ITree, ITreeGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1791,7 +1791,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IWater, IWaterGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IWaterGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IWater, IWaterGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IWater, IWaterGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1803,7 +1803,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IWater, IWaterGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IWaterGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IWater, IWaterGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IWater, IWaterGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1815,7 +1815,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IWeapon, IWeaponGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IWeaponGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IWeapon, IWeaponGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IWeapon, IWeaponGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1827,7 +1827,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IWeapon, IWeaponGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IWeaponGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IWeapon, IWeaponGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IWeapon, IWeaponGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1839,7 +1839,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IWeather, IWeatherGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IWeatherGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IWeather, IWeatherGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IWeather, IWeatherGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1851,7 +1851,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IWeather, IWeatherGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IWeatherGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IWeather, IWeatherGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IWeather, IWeatherGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1863,7 +1863,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IWorldspace, IWorldspaceGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IWorldspaceGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IWorldspace, IWorldspaceGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IWorldspace, IWorldspaceGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1875,7 +1875,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IWorldspace, IWorldspaceGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IWorldspaceGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IWorldspace, IWorldspaceGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IWorldspace, IWorldspaceGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         #endregion
@@ -1890,7 +1890,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IOwner, IOwnerGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IOwnerGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IOwner, IOwnerGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IOwner, IOwnerGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1902,7 +1902,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IOwner, IOwnerGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IOwnerGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IOwner, IOwnerGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IOwner, IOwnerGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1914,7 +1914,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IPlaced, IPlacedGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IPlacedGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IPlaced, IPlacedGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IPlaced, IPlacedGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -1926,7 +1926,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new TypedLoadOrderAccess<IOblivionMod, IPlaced, IPlacedGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IPlacedGetter>(includeDeletedRecords: includeDeletedRecords),
-                (bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IPlaced, IPlacedGetter>(includeDeletedRecords: includeDeletedRecords));
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IPlaced, IPlacedGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         #endregion

@@ -3018,6 +3018,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public IEnumerable<ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             ICellGetter obj,
+            ILinkCache linkCache,
             Type type,
             bool throwIfUnknown,
             Func<IOblivionMod, ICellGetter, ICell> getter)
@@ -3036,8 +3037,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 record: CellPathGriditem,
                                 getter: (m, r) =>
                                 {
-                                    var copy = (PathGrid)((IPathGridGetter)r).DeepCopy();
-                                    getter(m, obj).PathGrid = copy;
+                                    var copy = (PathGrid)((IPathGridGetter)r).DeepCopy(ModContextExt.PathGridCopyMask);
+                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).PathGrid = copy;
                                     return copy;
                                 });
                         }
@@ -3055,8 +3056,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 record: CellLandscapeitem,
                                 getter: (m, r) =>
                                 {
-                                    var copy = (Landscape)((ILandscapeGetter)r).DeepCopy();
-                                    getter(m, obj).Landscape = copy;
+                                    var copy = (Landscape)((ILandscapeGetter)r).DeepCopy(ModContextExt.LandscapeCopyMask);
+                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Landscape = copy;
                                     return copy;
                                 });
                         }
@@ -3071,7 +3072,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, obj).Persistent.Add(copy);
+                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
                                     return copy;
                                 });
                         }
@@ -3086,7 +3087,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, obj).Temporary.Add(copy);
+                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
                                     return copy;
                                 });
                         }
@@ -3101,7 +3102,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, obj).VisibleWhenDistant.Add(copy);
+                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).VisibleWhenDistant.Add(copy);
                                     return copy;
                                 });
                         }
@@ -3119,7 +3120,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, obj).Persistent.Add(copy);
+                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
                                     return copy;
                                 });
                         }
@@ -3134,7 +3135,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, obj).Temporary.Add(copy);
+                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
                                     return copy;
                                 });
                         }
@@ -3149,7 +3150,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, obj).VisibleWhenDistant.Add(copy);
+                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).VisibleWhenDistant.Add(copy);
                                     return copy;
                                 });
                         }
@@ -3169,7 +3170,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, obj).Persistent.Add(copy);
+                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
                                     return copy;
                                 });
                         }
@@ -3184,7 +3185,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, obj).Temporary.Add(copy);
+                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
                                     return copy;
                                 });
                         }
@@ -3199,7 +3200,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, obj).VisibleWhenDistant.Add(copy);
+                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).VisibleWhenDistant.Add(copy);
                                     return copy;
                                 });
                         }
@@ -3219,7 +3220,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, obj).Persistent.Add(copy);
+                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
                                     return copy;
                                 });
                         }
@@ -3234,7 +3235,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, obj).Temporary.Add(copy);
+                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
                                     return copy;
                                 });
                         }
@@ -3249,7 +3250,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, obj).VisibleWhenDistant.Add(copy);
+                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).VisibleWhenDistant.Add(copy);
                                     return copy;
                                 });
                         }
@@ -3269,7 +3270,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, obj).Persistent.Add(copy);
+                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
                                     return copy;
                                 });
                         }
@@ -3284,7 +3285,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, obj).Temporary.Add(copy);
+                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
                                     return copy;
                                 });
                         }
@@ -3299,7 +3300,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, obj).VisibleWhenDistant.Add(copy);
+                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).VisibleWhenDistant.Add(copy);
                                     return copy;
                                 });
                         }

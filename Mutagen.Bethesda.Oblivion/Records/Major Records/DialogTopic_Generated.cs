@@ -1725,6 +1725,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public IEnumerable<ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             IDialogTopicGetter obj,
+            ILinkCache linkCache,
             Type type,
             bool throwIfUnknown,
             Func<IOblivionMod, IDialogTopicGetter, IDialogTopic> getter)
@@ -1745,7 +1746,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (DialogItem)((IDialogItemGetter)r).DeepCopy();
-                                    getter(m, obj).Items.Add(copy);
+                                    getter(m, linkCache.Lookup<IDialogTopicGetter>(obj.FormKey)).Items.Add(copy);
                                     return copy;
                                 });
                         }

@@ -34,9 +34,9 @@ namespace Mutagen.Bethesda.Generation
             if (obj.GetObjectType() == ObjectType.Mod)
             {
                 fg.AppendLine("[DebuggerStepThrough]");
-                fg.AppendLine($"IEnumerable<ModContext<{obj.Interface(getter: false)}, TSetter, TGetter>> IMajorRecordContextEnumerable<{obj.Interface(getter: false)}>.EnumerateMajorRecordContexts<TSetter, TGetter>(bool throwIfUnknown) => this.EnumerateMajorRecordContexts{obj.GetGenericTypes(MaskType.Normal, "TSetter".AsEnumerable().And("TGetter").ToArray())}(throwIfUnknown: throwIfUnknown);");
+                fg.AppendLine($"IEnumerable<ModContext<{obj.Interface(getter: false)}, TSetter, TGetter>> IMajorRecordContextEnumerable<{obj.Interface(getter: false)}>.EnumerateMajorRecordContexts<TSetter, TGetter>({nameof(ILinkCache)} linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts{obj.GetGenericTypes(MaskType.Normal, "TSetter".AsEnumerable().And("TGetter").ToArray())}(linkCache, throwIfUnknown: throwIfUnknown);");
                 fg.AppendLine("[DebuggerStepThrough]");
-                fg.AppendLine($"IEnumerable<ModContext<{obj.Interface(getter: false)}, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<{obj.Interface(getter: false)}>.EnumerateMajorRecordContexts(Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(type: type, throwIfUnknown: throwIfUnknown);");
+                fg.AppendLine($"IEnumerable<ModContext<{obj.Interface(getter: false)}, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<{obj.Interface(getter: false)}>.EnumerateMajorRecordContexts({nameof(ILinkCache)} linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);");
             }
         }
 
@@ -55,6 +55,7 @@ namespace Mutagen.Bethesda.Generation
                 args.Wheres.Add($"where TSetter : class, IMajorRecordCommon, TGetter");
                 args.Wheres.Add($"where TGetter : class, IMajorRecordCommonGetter");
                 args.Add($"this {obj.Interface(getter: true, internalInterface: true)} obj");
+                args.Add($"{nameof(ILinkCache)} linkCache");
                 args.Add($"bool throwIfUnknown = true");
             }
             using (new BraceWrapper(fg))
@@ -63,6 +64,7 @@ namespace Mutagen.Bethesda.Generation
                     $"return {obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class)}.EnumerateMajorRecordContexts"))
                 {
                     args.AddPassArg("obj");
+                    args.AddPassArg("linkCache");
                     args.Add("type: typeof(TGetter)");
                     args.AddPassArg("throwIfUnknown");
                 }
@@ -82,6 +84,7 @@ namespace Mutagen.Bethesda.Generation
                 $"public static IEnumerable<ModContext<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts{obj.GetGenericTypes(MaskType.Normal)}"))
             {
                 args.Add($"this {obj.Interface(getter: true, internalInterface: true)} obj");
+                args.Add($"{nameof(ILinkCache)} linkCache");
                 args.Add($"Type type");
                 args.Add($"bool throwIfUnknown = true");
                 args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, obj.Generics));
@@ -92,6 +95,7 @@ namespace Mutagen.Bethesda.Generation
                     $"return {obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class)}.EnumerateMajorRecordContexts"))
                 {
                     args.AddPassArg("obj");
+                    args.AddPassArg("linkCache");
                     args.AddPassArg("type");
                     args.AddPassArg("throwIfUnknown");
                 }
@@ -179,6 +183,7 @@ namespace Mutagen.Bethesda.Generation
                 })
                 {
                     args.Add($"obj: {loquiAccessor}");
+                    args.AddPassArg("linkCache");
                     args.AddPassArg("type");
                     args.Add("throwIfUnknown: false");
                     addGetOrAddArg(args);
@@ -204,6 +209,7 @@ namespace Mutagen.Bethesda.Generation
                 $"public{overrideStr}IEnumerable<ModContext<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts"))
             {
                 args.Add($"{obj.Interface(getter: getter, internalInterface: true)} obj");
+                args.Add($"{nameof(ILinkCache)} linkCache");
                 args.Add($"Type type");
                 args.Add($"bool throwIfUnknown");
                 if (obj.GetObjectType() == ObjectType.Record)
@@ -363,7 +369,7 @@ namespace Mutagen.Bethesda.Generation
 
                                     if (grup != null)
                                     {
-                                        subFg.AppendLine($"foreach (var item in EnumerateMajorRecordContexts({accessor}, typeof({grup.GetGroupTarget().Interface(getter: true)}), throwIfUnknown: throwIfUnknown))");
+                                        subFg.AppendLine($"foreach (var item in EnumerateMajorRecordContexts({accessor}, linkCache, typeof({grup.GetGroupTarget().Interface(getter: true)}), throwIfUnknown: throwIfUnknown))");
                                         using (new BraceWrapper(subFg))
                                         {
                                             subFg.AppendLine("yield return item;");
@@ -455,7 +461,7 @@ namespace Mutagen.Bethesda.Generation
                     fieldGen.AppendLine($"foreach (var groupItem in obj.{field.Name})");
                     using (new BraceWrapper(fieldGen))
                     {
-                        fieldGen.AppendLine($"foreach (var item in {group.GetGroupTarget().CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.EnumerateMajorRecordContexts(groupItem, type, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.{field.Name}.GetOrAddAsOverride(r)))");
+                        fieldGen.AppendLine($"foreach (var item in {group.GetGroupTarget().CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.{field.Name}.GetOrAddAsOverride(linkCache.Lookup<{group.GetGroupTarget().Interface(getter: true, internalInterface: true)}>(r.FormKey))))");
 
                         using (new BraceWrapper(fieldGen))
                         {
@@ -477,7 +483,7 @@ namespace Mutagen.Bethesda.Generation
                 var fieldAccessor = loqui.Nullable ? $"{obj.ObjectName}{loqui.Name}item" : $"{accessor}.{loqui.Name}";
                 if (loqui.TargetObjectGeneration.IsListGroup())
                 { // List groups 
-                    fieldGen.AppendLine($"foreach (var item in obj.{field.Name}.EnumerateMajorRecordContexts(type, throwIfUnknown: throwIfUnknown))");
+                    fieldGen.AppendLine($"foreach (var item in obj.{field.Name}.EnumerateMajorRecordContexts(linkCache, type, throwIfUnknown: throwIfUnknown))");
                     using (new BraceWrapper(fieldGen))
                     {
                         if (obj.GetObjectType() == ObjectType.Mod)
@@ -507,8 +513,8 @@ namespace Mutagen.Bethesda.Generation
                             subFg.AppendLine($"getter: (m, r) =>");
                             using (new BraceWrapper(subFg))
                             {
-                                subFg.AppendLine($"var copy = ({loqui.TypeName()})(({loqui.Interface(getter: true)})r).DeepCopy();");
-                                subFg.AppendLine($"getter(m, obj).{loqui.Name} = copy;");
+                                subFg.AppendLine($"var copy = ({loqui.TypeName()})(({loqui.Interface(getter: true)})r).DeepCopy({nameof(ModContextExt)}.{loqui.TargetObjectGeneration.Name}CopyMask);");
+                                subFg.AppendLine($"getter(m, linkCache.Lookup<{obj.Interface(getter: true)}>(obj.FormKey)).{loqui.Name} = copy;");
                                 subFg.AppendLine($"return copy;");
                             }
                         });
@@ -564,6 +570,7 @@ namespace Mutagen.Bethesda.Generation
                     })
                     {
                         args.AddPassArg("type");
+                        args.AddPassArg("linkCache");
                         args.Add("throwIfUnknown: false");
                         args.Add("worldspace: obj");
                         args.AddPassArg("getter");
@@ -600,7 +607,7 @@ namespace Mutagen.Bethesda.Generation
                                                 using (new BraceWrapper(subFg))
                                                 {
                                                     subFg.AppendLine($"var copy = ({contLoqui.TypeName()})(({contLoqui.Interface(getter: true)})r).DeepCopy();");
-                                                    subFg.AppendLine($"getter(m, obj).{cont.Name}.Add(copy);");
+                                                    subFg.AppendLine($"getter(m, linkCache.Lookup<{obj.Interface(getter: true)}>(obj.FormKey)).{cont.Name}.Add(copy);");
                                                     subFg.AppendLine($"return copy;");
                                                 }
                                             });

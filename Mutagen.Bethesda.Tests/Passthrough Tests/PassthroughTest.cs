@@ -26,16 +26,16 @@ namespace Mutagen.Bethesda.Tests
     public abstract class PassthroughTest
     {
         public string Nickname { get; }
-        public FilePath FilePath { get; set; }
+        public ModPath FilePath { get; set; }
         public PassthroughSettings Settings { get; }
         public Target Target { get; }
-        public string ExportFileName(TempFolder tmp) => Path.Combine(tmp.Dir.Path, $"{this.Nickname}_NormalExport");
-        public string ObservableExportFileName(TempFolder tmp) => Path.Combine(tmp.Dir.Path, $"{this.Nickname}_ObservableExport");
-        public string UncompressedFileName(TempFolder tmp) => Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Uncompressed");
-        public string AlignedFileName(TempFolder tmp) => Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Aligned");
-        public string OrderedFileName(TempFolder tmp) => Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Ordered");
-        public string ProcessedPath(TempFolder tmp) => Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Processed");
-        public ModKey ModKey => ModKey.FromNameAndExtension(this.FilePath.Name);
+        public ModPath ExportFileName(TempFolder tmp) => new ModPath(ModKey, Path.Combine(tmp.Dir.Path, $"{this.Nickname}_NormalExport"));
+        public ModPath ObservableExportFileName(TempFolder tmp) => new ModPath(ModKey, Path.Combine(tmp.Dir.Path, $"{this.Nickname}_ObservableExport"));
+        public ModPath UncompressedFileName(TempFolder tmp) => new ModPath(ModKey, Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Uncompressed"));
+        public ModPath AlignedFileName(TempFolder tmp) => new ModPath(ModKey, Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Aligned"));
+        public ModPath OrderedFileName(TempFolder tmp) => new ModPath(ModKey, Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Ordered"));
+        public ModPath ProcessedPath(TempFolder tmp) => new ModPath(ModKey, Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Processed"));
+        public ModKey ModKey => FilePath.ModKey;
         public abstract GameRelease GameRelease { get; }
         public readonly GameConstants Meta;
         protected abstract Processor ProcessorFactory();
@@ -77,8 +77,7 @@ namespace Mutagen.Bethesda.Tests
                         {
                             using var outStream = new FileStream(decompressedPath, FileMode.Create, FileAccess.Write);
                             ModDecompressor.Decompress(
-                                streamCreator: () => File.OpenRead(this.FilePath.Path),
-                                release: this.GameRelease,
+                                streamCreator: () => new MutagenBinaryReadStream(this.FilePath, this.GameRelease),
                                 outputStream: outStream);
                         }
                         catch (Exception)
@@ -96,7 +95,7 @@ namespace Mutagen.Bethesda.Tests
                     {
                         ModRecordAligner.Align(
                             inputPath: decompressedPath,
-                            outputPath: alignedPath,
+                            outputPath: alignedPath.Path,
                             gameMode: this.GameRelease,
                             alignmentRules: GetAlignmentRules(),
                             temp: tmp);
@@ -114,7 +113,7 @@ namespace Mutagen.Bethesda.Tests
                             await processor.Process(
                                 tmpFolder: tmp,
                                 logging: o,
-                                sourcePath: this.FilePath.Path,
+                                sourcePath: this.FilePath,
                                 preprocessedPath: alignedPath,
                                 outputPath: processedPath);
                         }

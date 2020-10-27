@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));";
+            string testString = "r copy = (Cell)((ICellGetter)r).DeepCopy()";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

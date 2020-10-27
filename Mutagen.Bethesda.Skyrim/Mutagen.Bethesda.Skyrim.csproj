@@ -2110,7 +2110,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Loqui" Version="1.5.11" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.6.0" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.6.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />
