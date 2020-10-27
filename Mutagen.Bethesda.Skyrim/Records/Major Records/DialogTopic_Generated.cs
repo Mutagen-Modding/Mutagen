@@ -1927,6 +1927,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public IEnumerable<ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             IDialogTopicGetter obj,
+            ILinkCache linkCache,
             Type type,
             bool throwIfUnknown,
             Func<ISkyrimMod, IDialogTopicGetter, IDialogTopic> getter)
@@ -1947,7 +1948,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (DialogResponses)((IDialogResponsesGetter)r).DeepCopy();
-                                    getter(m, obj).Responses.Add(copy);
+                                    getter(m, linkCache.Lookup<IDialogTopicGetter>(obj.FormKey)).Responses.Add(copy);
                                     return copy;
                                 });
                         }

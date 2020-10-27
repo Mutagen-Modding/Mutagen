@@ -26,7 +26,10 @@ namespace Mutagen.Bethesda.Oblivion
         };
 
         internal static IEnumerable<ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
-            this IListGroupGetter<ICellBlockGetter> cellBlocks, Type type, bool throwIfUnknown)
+            this IListGroupGetter<ICellBlockGetter> cellBlocks,
+            ILinkCache linkCache,
+            Type type,
+            bool throwIfUnknown)
         {
             foreach (var readOnlyBlock in cellBlocks.Records)
             {
@@ -82,7 +85,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            foreach (var con in CellCommon.Instance.EnumerateMajorRecordContexts(readOnlyCell, type, throwIfUnknown, cellGetter))
+                            foreach (var con in CellCommon.Instance.EnumerateMajorRecordContexts(readOnlyCell, linkCache, type, throwIfUnknown, cellGetter))
                             {
                                 yield return con;
                             }
@@ -95,6 +98,7 @@ namespace Mutagen.Bethesda.Oblivion
         internal static IEnumerable<ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             this IReadOnlyList<IWorldspaceBlockGetter> worldspaceBlocks,
             IWorldspaceGetter worldspace,
+            ILinkCache linkCache,
             Type type,
             bool throwIfUnknown,
             Func<IOblivionMod, IWorldspaceGetter, IWorldspace> getter)
@@ -158,7 +162,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         else
                         {
-                            foreach (var con in CellCommon.Instance.EnumerateMajorRecordContexts(readOnlyCell, type, throwIfUnknown, cellGetter))
+                            foreach (var con in CellCommon.Instance.EnumerateMajorRecordContexts(readOnlyCell, linkCache, type, throwIfUnknown, cellGetter))
                             {
                                 yield return con;
                             }

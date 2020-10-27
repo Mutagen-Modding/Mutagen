@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda.Skyrim
         };
 
         internal static IEnumerable<ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
-            this IListGroupGetter<ICellBlockGetter> cellBlocks, Type type, bool throwIfUnknown)
+            this IListGroupGetter<ICellBlockGetter> cellBlocks, ILinkCache linkCache, Type type, bool throwIfUnknown)
         {
             foreach (var readOnlyBlock in cellBlocks.Records)
             {
@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                         else
                         {
-                            foreach (var con in CellCommon.Instance.EnumerateMajorRecordContexts(readOnlyCell, type, throwIfUnknown, cellGetter))
+                            foreach (var con in CellCommon.Instance.EnumerateMajorRecordContexts(readOnlyCell, linkCache, type, throwIfUnknown, cellGetter))
                             {
                                 yield return con;
                             }
@@ -97,8 +97,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         internal static IEnumerable<ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
-            this IReadOnlyList<IWorldspaceBlockGetter> worldspaceBlocks, 
+            this IReadOnlyList<IWorldspaceBlockGetter> worldspaceBlocks,
             IWorldspaceGetter worldspace,
+            ILinkCache linkCache,
             Type type, 
             bool throwIfUnknown, 
             Func<ISkyrimMod, IWorldspaceGetter, IWorldspace> getter)
@@ -142,7 +143,7 @@ namespace Mutagen.Bethesda.Skyrim
                             var cell = subBlock.Items.FirstOrDefault(cell => cell.FormKey == formKey);
                             if (cell == null)
                             {
-                                cell = readOnlyCell.DeepCopy(CellCopyMask);
+                                cell = r.DeepCopy(CellCopyMask);
                                 subBlock.Items.Add(cell);
                             }
                             return cell;
@@ -158,7 +159,7 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                         else
                         {
-                            foreach (var con in CellCommon.Instance.EnumerateMajorRecordContexts(readOnlyCell, type, throwIfUnknown, cellGetter))
+                            foreach (var con in CellCommon.Instance.EnumerateMajorRecordContexts(readOnlyCell, linkCache, type, throwIfUnknown, cellGetter))
                             {
                                 yield return con;
                             }

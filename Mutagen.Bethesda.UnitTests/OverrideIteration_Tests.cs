@@ -94,9 +94,9 @@ namespace Mutagen.Bethesda.UnitTests
             var placedObj = cell.Persistent.AddReturn(new PlacedObject(mod.GetNextFormKey()));
             worldspace.TopCell = new Cell(mod.GetNextFormKey());
             var placedObj2 = worldspace.TopCell.Persistent.AddReturn(new PlacedObject(mod.GetNextFormKey()));
-            var placedObjs = mod.EnumerateMajorRecordContexts<IPlacedObject, IPlacedObjectGetter>().ToList();
+            var placedObjs = mod.EnumerateMajorRecordContexts<IPlacedObject, IPlacedObjectGetter>(linkCache: null!).ToList();
             placedObjs.Should().HaveCount(2);
-            var placed = mod.EnumerateMajorRecordContexts<IPlaced, IPlacedGetter>().ToList();
+            var placed = mod.EnumerateMajorRecordContexts<IPlaced, IPlacedGetter>(linkCache: null!).ToList();
             placed.Should().HaveCount(2);
         }
     }

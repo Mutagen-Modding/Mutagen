@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "ret.Add((Model != null || DefaultOn, Model?.GetCrystal()));";
+            string testString = "reach (var item in obj.Cells.EnumerateMajorRecordContexts(type, throwIfUnknown: throwIfUnknown))";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>
