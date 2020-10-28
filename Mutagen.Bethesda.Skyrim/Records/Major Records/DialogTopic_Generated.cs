@@ -1930,9 +1930,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILinkCache linkCache,
             Type type,
             ModKey modKey,
+            IModContext? parent,
             bool throwIfUnknown,
             Func<ISkyrimMod, IDialogTopicGetter, IDialogTopic> getter)
         {
+            var curContext = new ModContext<ISkyrimMod, IDialogTopic, IDialogTopicGetter>(
+                modKey,
+                record: obj,
+                getter: getter,
+                parent: parent);
             switch (type.Name)
             {
                 case "DialogResponses":
@@ -1946,6 +1952,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                                 modKey: modKey,
                                 record: subItem,
+                                parent: curContext,
                                 getter: (m, r) =>
                                 {
                                     var copy = (DialogResponses)((IDialogResponsesGetter)r).DeepCopy();

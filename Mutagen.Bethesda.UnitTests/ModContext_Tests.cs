@@ -478,5 +478,48 @@ namespace Mutagen.Bethesda.UnitTests
             contexts.Should().HaveCount(1);
             contexts[0].ModKey.Should().BeEquivalentTo(Utility.ModKey);
         }
+
+        [Fact]
+        public void ParentRefs()
+        {
+            WarmupSkyrim.Init();
+            var mod = new SkyrimMod(Utility.ModKey, SkyrimRelease.SkyrimSE);
+            var worldspace = mod.Worldspaces.AddNew();
+            var block = new WorldspaceBlock()
+            {
+                BlockNumberX = 2,
+                BlockNumberY = 3,
+                GroupType = GroupTypeEnum.ExteriorCellBlock,
+            };
+            var subBlock = new WorldspaceSubBlock()
+            {
+                BlockNumberX = 4,
+                BlockNumberY = 5,
+                GroupType = GroupTypeEnum.ExteriorCellSubBlock,
+            };
+            block.Items.Add(subBlock);
+            worldspace.SubCells.Add(block);
+            var cell = new Cell(mod.GetNextFormKey());
+            subBlock.Items.Add(cell);
+
+            var placedNpc = new PlacedNpc(mod.GetNextFormKey());
+            cell.Persistent.Add(placedNpc);
+            var placedObj = new PlacedObject(mod.GetNextFormKey());
+            cell.Persistent.Add(placedObj);
+
+            var cache = mod.ToImmutableLinkCache();
+            var contexts = mod.EnumerateMajorRecordContexts<IPlacedObject, IPlacedObjectGetter>(linkCache: cache).ToArray();
+            contexts.Should().HaveCount(1);
+            var baseContext = contexts[0];
+            var cellContext = baseContext.Parent;
+            cellContext.Should().BeOfType(typeof(ModContext<ISkyrimMod, ICell, ICellGetter>));
+            cellContext!.Record.Should().Be(cell);
+            var subBlockContext = cellContext.Parent;
+            subBlockContext!.Record.Should().Be(subBlock);
+            var blockContext = subBlockContext.Parent;
+            blockContext!.Record.Should().Be(block);
+            var worldspaceContext = blockContext.Parent;
+            worldspaceContext!.Record.Should().Be(worldspace);
+        }
     }
 }

@@ -34,16 +34,25 @@ namespace Mutagen.Bethesda.Oblivion
             ILinkCache linkCache,
             Type type,
             ModKey modKey,
+            IModContext? parent,
             bool throwIfUnknown)
         {
             foreach (var readOnlyBlock in cellBlocks.Records)
             {
                 var blockNum = readOnlyBlock.BlockNumber;
                 var blockModified = readOnlyBlock.LastModified;
+                var blockContext = new ModContext(
+                    modKey: modKey,
+                    parent: parent,
+                    record: readOnlyBlock);
                 foreach (var readOnlySubBlock in readOnlyBlock.SubBlocks)
                 {
                     var subBlockNum = readOnlySubBlock.BlockNumber;
                     var subBlockModified = readOnlySubBlock.LastModified;
+                    var subBlockContext = new ModContext(
+                        modKey: modKey,
+                        parent: blockContext,
+                        record: readOnlySubBlock);
                     foreach (var readOnlyCell in readOnlySubBlock.Cells)
                     {
                         Func<IOblivionMod, ICellGetter, ICell> cellGetter = (m, r) =>
@@ -86,11 +95,12 @@ namespace Mutagen.Bethesda.Oblivion
                             yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                                 modKey: modKey,
                                 record: readOnlyCell,
-                                getter: (m, r) => cellGetter(m, (ICellGetter)r));
+                                getter: (m, r) => cellGetter(m, (ICellGetter)r),
+                                parent: subBlockContext);
                         }
                         else
                         {
-                            foreach (var con in CellCommon.Instance.EnumerateMajorRecordContexts(readOnlyCell, linkCache, type, modKey, throwIfUnknown, cellGetter))
+                            foreach (var con in CellCommon.Instance.EnumerateMajorRecordContexts(readOnlyCell, linkCache, type, modKey, subBlockContext, throwIfUnknown, cellGetter))
                             {
                                 yield return con;
                             }
@@ -106,6 +116,7 @@ namespace Mutagen.Bethesda.Oblivion
             ILinkCache linkCache,
             Type type,
             ModKey modKey,
+            IModContext? parent,
             bool throwIfUnknown,
             Func<IOblivionMod, IWorldspaceGetter, IWorldspace> getter)
         {
@@ -114,11 +125,19 @@ namespace Mutagen.Bethesda.Oblivion
                 var blockNumX = readOnlyBlock.BlockNumberX;
                 var blockNumY = readOnlyBlock.BlockNumberY;
                 var blockModified = readOnlyBlock.LastModified;
+                var blockContext = new ModContext(
+                    modKey: modKey,
+                    parent: parent,
+                    record: readOnlyBlock);
                 foreach (var readOnlySubBlock in readOnlyBlock.Items)
                 {
                     var subBlockNumY = readOnlySubBlock.BlockNumberY;
                     var subBlockNumX = readOnlySubBlock.BlockNumberX;
                     var subBlockModified = readOnlySubBlock.LastModified;
+                    var subBlockContext = new ModContext(
+                        modKey: modKey,
+                        parent: blockContext,
+                        record: readOnlySubBlock);
                     foreach (var readOnlyCell in readOnlySubBlock.Items)
                     {
                         Func<IOblivionMod, ICellGetter, ICell> cellGetter = (m, r) =>
@@ -164,11 +183,12 @@ namespace Mutagen.Bethesda.Oblivion
                             yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                                 modKey: modKey,
                                 record: readOnlyCell,
-                                getter: (m, r) => cellGetter(m, (ICellGetter)r));
+                                getter: (m, r) => cellGetter(m, (ICellGetter)r),
+                                parent: subBlockContext);
                         }
                         else
                         {
-                            foreach (var con in CellCommon.Instance.EnumerateMajorRecordContexts(readOnlyCell, linkCache, type, modKey, throwIfUnknown, cellGetter))
+                            foreach (var con in CellCommon.Instance.EnumerateMajorRecordContexts(readOnlyCell, linkCache, type, modKey, subBlockContext, throwIfUnknown, cellGetter))
                             {
                                 yield return con;
                             }

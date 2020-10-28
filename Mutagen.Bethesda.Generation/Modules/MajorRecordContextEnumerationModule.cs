@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Generation
                 }
                 using (new DepthWrapper(fg))
                 {
-                    fg.AppendLine($".Select(m => new ModContext<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, TSetter, TGetter>(m.ModKey, (TGetter)m.Record, (mod, rec) => (TSetter)m.GetOrAddAsOverride(mod))){enderSemi}");
+                    fg.AppendLine($".Select(m => m.AsType<TSetter, TGetter>()){enderSemi}");
                     if (needsCatch)
                     {
                         fg.AppendLine($"{catchLine};");
@@ -128,6 +128,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.Add($"modKey: {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
                         args.Add($"record: {loquiAccessor}");
+                        args.Add($"parent: curContext");
                         addGetOrAddArg(args);
                     }
                 }
@@ -149,6 +150,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.Add($"modKey: {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
                         args.Add($"record: {loquiAccessor}");
+                        args.Add($"parent: curContext");
                         addGetOrAddArg(args);
                     }
                 }
@@ -186,6 +188,7 @@ namespace Mutagen.Bethesda.Generation
                     args.AddPassArg("linkCache");
                     args.AddPassArg("type");
                     args.Add($"modKey: {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
+                    args.Add($"parent: {(obj.GetObjectType() == ObjectType.Mod ? "null" : "curContext")}");
                     args.Add("throwIfUnknown: false");
                     addGetOrAddArg(args);
                 }
@@ -215,6 +218,7 @@ namespace Mutagen.Bethesda.Generation
                 if (obj.GetObjectType() != ObjectType.Mod)
                 {
                     args.Add($"{nameof(ModKey)} modKey");
+                    args.Add($"IModContext? parent");
                 }
                 args.Add($"bool throwIfUnknown");
                 if (obj.GetObjectType() == ObjectType.Record)
@@ -224,6 +228,17 @@ namespace Mutagen.Bethesda.Generation
             }
             using (new BraceWrapper(fg))
             {
+                if (obj.GetObjectType() == ObjectType.Record)
+                {
+                    using (var args = new ArgsWrapper(fg,
+                        $"var curContext = new ModContext<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>"))
+                    {
+                        args.Add($"{(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
+                        args.Add("record: obj");
+                        args.AddPassArg("getter");
+                        args.AddPassArg("parent");
+                    }
+                }
                 var fgCount = fg.Count;
                 fg.AppendLine("switch (type.Name)");
                 using (new BraceWrapper(fg))
@@ -466,7 +481,7 @@ namespace Mutagen.Bethesda.Generation
                     fieldGen.AppendLine($"foreach (var groupItem in obj.{field.Name})");
                     using (new BraceWrapper(fieldGen))
                     {
-                        fieldGen.AppendLine($"foreach (var item in {group.GetGroupTarget().CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.{field.Name}.GetOrAddAsOverride(linkCache.Lookup<{group.GetGroupTarget().Interface(getter: true, internalInterface: true)}>(r.FormKey))))");
+                        fieldGen.AppendLine($"foreach (var item in {group.GetGroupTarget().CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}, {(obj.GetObjectType() == ObjectType.Mod ? "parent: null" : "curContext")}, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.{field.Name}.GetOrAddAsOverride(linkCache.Lookup<{group.GetGroupTarget().Interface(getter: true, internalInterface: true)}>(r.FormKey))))");
 
                         using (new BraceWrapper(fieldGen))
                         {
@@ -481,7 +496,7 @@ namespace Mutagen.Bethesda.Generation
                 var fieldAccessor = loqui.Nullable ? $"{obj.ObjectName}{loqui.Name}item" : $"{accessor}.{loqui.Name}";
                 if (loqui.TargetObjectGeneration.IsListGroup())
                 { // List groups 
-                    fieldGen.AppendLine($"foreach (var item in obj.{field.Name}.EnumerateMajorRecordContexts(linkCache, type, {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}, throwIfUnknown: throwIfUnknown))");
+                    fieldGen.AppendLine($"foreach (var item in obj.{field.Name}.EnumerateMajorRecordContexts(linkCache, type, {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}, {(obj.GetObjectType() == ObjectType.Mod ? "parent: null" : "curContext")}, throwIfUnknown: throwIfUnknown))");
                     using (new BraceWrapper(fieldGen))
                     {
                         fieldGen.AppendLine("yield return item;");
@@ -562,6 +577,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.AddPassArg("type");
                         args.Add($"modKey: {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
+                        args.Add($"parent: {(obj.GetObjectType() == ObjectType.Mod ? "null" : "curContext")}");
                         args.AddPassArg("linkCache");
                         args.Add("throwIfUnknown: false");
                         args.Add("worldspace: obj");
