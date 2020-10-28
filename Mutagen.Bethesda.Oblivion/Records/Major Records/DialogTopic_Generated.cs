@@ -1727,9 +1727,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDialogTopicGetter obj,
             ILinkCache linkCache,
             Type type,
+            ModKey modKey,
+            IModContext? parent,
             bool throwIfUnknown,
             Func<IOblivionMod, IDialogTopicGetter, IDialogTopic> getter)
         {
+            var curContext = new ModContext<IOblivionMod, IDialogTopic, IDialogTopicGetter>(
+                modKey,
+                record: obj,
+                getter: getter,
+                parent: parent);
             switch (type.Name)
             {
                 case "DialogItem":
@@ -1741,8 +1748,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
+                                modKey: modKey,
                                 record: subItem,
+                                parent: curContext,
                                 getter: (m, r) =>
                                 {
                                     var copy = (DialogItem)((IDialogItemGetter)r).DeepCopy();

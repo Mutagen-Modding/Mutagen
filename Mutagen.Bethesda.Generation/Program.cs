@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "r copy = (Cell)((ICellGetter)r).DeepCopy()";
+            string testString = "ield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

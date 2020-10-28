@@ -3760,9 +3760,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ICellGetter obj,
             ILinkCache linkCache,
             Type type,
+            ModKey modKey,
+            IModContext? parent,
             bool throwIfUnknown,
             Func<ISkyrimMod, ICellGetter, ICell> getter)
         {
+            var curContext = new ModContext<ISkyrimMod, ICell, ICellGetter>(
+                modKey,
+                record: obj,
+                getter: getter,
+                parent: parent);
             switch (type.Name)
             {
                 case "Landscape":
@@ -3773,8 +3780,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (obj.Landscape.TryGet(out var CellLandscapeitem))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
+                                modKey: modKey,
                                 record: CellLandscapeitem,
+                                parent: curContext,
                                 getter: (m, r) =>
                                 {
                                     var copy = (Landscape)((ILandscapeGetter)r).DeepCopy(ModContextExt.LandscapeCopyMask);
@@ -3793,8 +3801,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
+                                modKey: modKey,
                                 record: subItem,
+                                parent: curContext,
                                 getter: (m, r) =>
                                 {
                                     var copy = (ANavigationMesh)((IANavigationMeshGetter)r).DeepCopy();
@@ -3811,8 +3820,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
+                                modKey: modKey,
                                 record: subItem,
+                                parent: curContext,
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
@@ -3826,8 +3836,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
+                                modKey: modKey,
                                 record: subItem,
+                                parent: curContext,
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
@@ -3846,8 +3857,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
+                                modKey: modKey,
                                 record: subItem,
+                                parent: curContext,
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
@@ -3861,8 +3873,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
+                                modKey: modKey,
                                 record: subItem,
+                                parent: curContext,
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
@@ -3881,8 +3894,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
+                                modKey: modKey,
                                 record: subItem,
+                                parent: curContext,
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
@@ -3896,8 +3910,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
+                                modKey: modKey,
                                 record: subItem,
+                                parent: curContext,
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
@@ -3916,8 +3931,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
+                                modKey: modKey,
                                 record: subItem,
+                                parent: curContext,
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
@@ -3931,8 +3947,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
+                                modKey: modKey,
                                 record: subItem,
+                                parent: curContext,
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
@@ -3950,8 +3967,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
+                                modKey: modKey,
                                 record: subItem,
+                                parent: curContext,
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
@@ -3965,8 +3983,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
+                                modKey: modKey,
                                 record: subItem,
+                                parent: curContext,
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
@@ -3985,8 +4004,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
+                                modKey: modKey,
                                 record: subItem,
+                                parent: curContext,
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
@@ -4000,8 +4020,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
+                                modKey: modKey,
                                 record: subItem,
+                                parent: curContext,
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
@@ -4020,8 +4041,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
+                                modKey: modKey,
                                 record: subItem,
+                                parent: curContext,
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
@@ -4035,8 +4057,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
+                                modKey: modKey,
                                 record: subItem,
+                                parent: curContext,
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
@@ -4055,8 +4078,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
+                                modKey: modKey,
                                 record: subItem,
+                                parent: curContext,
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
@@ -4070,8 +4094,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
+                                modKey: modKey,
                                 record: subItem,
+                                parent: curContext,
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
@@ -4090,8 +4115,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
+                                modKey: modKey,
                                 record: subItem,
+                                parent: curContext,
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
@@ -4105,8 +4131,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
+                                modKey: modKey,
                                 record: subItem,
+                                parent: curContext,
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();

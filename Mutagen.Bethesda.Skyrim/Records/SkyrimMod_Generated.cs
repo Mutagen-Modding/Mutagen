@@ -7677,7 +7677,7 @@ namespace Mutagen.Bethesda.Skyrim
                 linkCache: linkCache,
                 type: typeof(TGetter),
                 throwIfUnknown: throwIfUnknown)
-                .Select(m => new ModContext<ISkyrimMod, TSetter, TGetter>(m.ModKey, (TGetter)m.Record, (mod, rec) => (TSetter)m.GetOrAddAsOverride(mod)))
+                .Select(m => m.AsType<TSetter, TGetter>())
                 .Catch(e => throw RecordException.Factory(e, obj.ModKey));
         }
 
@@ -15768,15 +15768,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ICellGetter":
                 case "ICell":
                 case "ICellInternal":
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
                     {
-                        yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
+                        yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
                         {
-                            yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
+                            yield return item;
                         }
                     }
                     yield break;
@@ -15784,15 +15784,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILandscapeGetter":
                 case "ILandscape":
                 case "ILandscapeInternal":
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
                     {
-                        yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
+                        yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
                         {
-                            yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
+                            yield return item;
                         }
                     }
                     yield break;
@@ -15800,15 +15800,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IANavigationMeshGetter":
                 case "IANavigationMesh":
                 case "IANavigationMeshInternal":
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
                     {
-                        yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
+                        yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
                         {
-                            yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
+                            yield return item;
                         }
                     }
                     yield break;
@@ -15816,15 +15816,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedNpcGetter":
                 case "IPlacedNpc":
                 case "IPlacedNpcInternal":
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
                     {
-                        yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
+                        yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
                         {
-                            yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
+                            yield return item;
                         }
                     }
                     yield break;
@@ -15832,15 +15832,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedObjectGetter":
                 case "IPlacedObject":
                 case "IPlacedObjectInternal":
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
                     {
-                        yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
+                        yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
                         {
-                            yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
+                            yield return item;
                         }
                     }
                     yield break;
@@ -15848,15 +15848,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAPlacedTrapGetter":
                 case "IAPlacedTrap":
                 case "IAPlacedTrapInternal":
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
                     {
-                        yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
+                        yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
                         {
-                            yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
+                            yield return item;
                         }
                     }
                     yield break;
@@ -15866,9 +15866,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IDialogResponsesInternal":
                     foreach (var groupItem in obj.DialogTopics)
                     {
-                        foreach (var item in DialogTopicCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.DialogTopics.GetOrAddAsOverride(linkCache.Lookup<IDialogTopicGetter>(r.FormKey))))
+                        foreach (var item in DialogTopicCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.DialogTopics.GetOrAddAsOverride(linkCache.Lookup<IDialogTopicGetter>(r.FormKey))))
                         {
-                            yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
+                            yield return item;
                         }
                     }
                     yield break;
@@ -16063,9 +16063,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
                     {
-                        yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
+                        yield return item;
                     }
                     yield break;
                 }
@@ -16085,15 +16085,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
                     {
-                        yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
+                        yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
                         {
-                            yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
+                            yield return item;
                         }
                     }
                     yield break;
@@ -16105,15 +16105,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
                     {
-                        yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
+                        yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
                         {
-                            yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
+                            yield return item;
                         }
                     }
                     yield break;
@@ -16293,15 +16293,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILinkedReference":
                 case "ILinkedReferenceGetter":
                 {
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
                     {
-                        yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
+                        yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
                         {
-                            yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
+                            yield return item;
                         }
                     }
                     yield break;
@@ -16309,15 +16309,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlaced":
                 case "IPlacedGetter":
                 {
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
                     {
-                        yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
+                        yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
                         {
-                            yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
+                            yield return item;
                         }
                     }
                     yield break;
@@ -16325,15 +16325,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedSimple":
                 case "IPlacedSimpleGetter":
                 {
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
                     {
-                        yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
+                        yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
                         {
-                            yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
+                            yield return item;
                         }
                     }
                     yield break;
@@ -16341,15 +16341,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedThing":
                 case "IPlacedThingGetter":
                 {
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
                     {
-                        yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
+                        yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
                         {
-                            yield return Mutagen.Bethesda.Internals.ModContextExt.AddModKey(item, obj.ModKey);
+                            yield return item;
                         }
                     }
                     yield break;
