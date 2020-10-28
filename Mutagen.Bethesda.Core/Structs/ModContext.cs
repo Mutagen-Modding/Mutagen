@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace Mutagen.Bethesda
@@ -120,6 +121,30 @@ namespace Mutagen.Bethesda
                 (RMajorGetter)Record,
                 (mod, rec) => (RMajorSetter)this.GetOrAddAsOverride(mod),
                 Parent);
+        }
+    }
+
+    public static class ModContextExt
+    {
+        public static bool IsUnderneath<T>(this IModContext context)
+        {
+            return TryGetParent<T>(context, out _);
+        }
+
+        public static bool TryGetParent<T>(this IModContext context, [MaybeNullWhen(false)] out T item)
+        {
+            var targetContext = context.Parent;
+            while (targetContext != null)
+            {
+                if (targetContext.Record is T t)
+                {
+                    item = t;
+                    return true;
+                }
+                targetContext = targetContext.Parent;
+            }
+            item = default;
+            return false;
         }
     }
 }

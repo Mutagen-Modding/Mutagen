@@ -520,6 +520,9 @@ namespace Mutagen.Bethesda.UnitTests
             blockContext!.Record.Should().Be(block);
             var worldspaceContext = blockContext.Parent;
             worldspaceContext!.Record.Should().Be(worldspace);
+            baseContext.IsUnderneath<IWorldspaceGetter>().Should().BeTrue();
+            baseContext.TryGetParent<IWorldspaceGetter>(out var worldParent).Should().BeTrue();
+            worldParent.Should().Be(worldspace);
         }
     }
 }
