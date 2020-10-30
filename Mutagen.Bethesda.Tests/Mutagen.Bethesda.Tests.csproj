@@ -24,7 +24,7 @@
     </PackageReference>
     <PackageReference Include="Loqui" Version="1.5.11" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.6.1" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.6.2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mutagen.Bethesda\Mutagen.Bethesda.csproj" />
