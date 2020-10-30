@@ -13,8 +13,8 @@
 		  DependsOnTargets="GitVersion"
 		  Returns="$(PackageVersion)">
     <PropertyGroup>
-      <DevLabel Condition="'$(GitCommits)' != '0' or $(GitIsDirty) != ''">.1-dev</DevLabel>
-      <AssemblyDevLabel Condition="'$(GitCommits)' != '0' or $(GitIsDirty) != ''">.1</AssemblyDevLabel>
+      <DevLabel Condition="$(GitCommits) != '0'">.1-dev</DevLabel>
+      <AssemblyDevLabel Condition="$(GitCommits) != '0'">.1</AssemblyDevLabel>
       <AssemblyVersion>$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)$(AssemblyDevLabel)</AssemblyVersion>
       <FileVersion>$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)$(AssemblyDevLabel)</FileVersion>
       <PackageVersion>$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)$(DevLabel)</PackageVersion>
