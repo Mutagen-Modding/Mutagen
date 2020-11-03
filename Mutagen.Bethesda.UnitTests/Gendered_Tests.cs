@@ -38,8 +38,11 @@ namespace Mutagen.Bethesda.UnitTests
                 0x32, 0x07, 0x00, 0x4E, 0x41, 0x4D, 0x30, 0x00, 0x00, 0x46, 0x4E, 0x41, 0x4D, 0x00, 0x00
             };
             var frame = new MutagenFrame(
-                new MutagenMemoryReadStream(bytes, GameRelease.SkyrimSE));
-            frame.Reader.MetaData.MasterReferences = new Internals.MasterReferenceReader(Constants.Skyrim);
+                new MutagenMemoryReadStream(
+                    bytes, 
+                    new ParsingBundle(
+                        GameRelease.SkyrimSE, 
+                        new Internals.MasterReferenceReader(Constants.Skyrim))));
             var headData = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.ParseMarkerPerItem<HeadData>(
                 frame: frame,
                 maleMarker: RecordTypes.MNAM,

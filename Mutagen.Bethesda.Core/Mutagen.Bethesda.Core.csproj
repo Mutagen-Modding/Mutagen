@@ -19,14 +19,18 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Compression.BSA" Version="2.2.1.1" />
-    <PackageReference Include="DotNetZip" Version="1.13.8" />
-    <PackageReference Include="DynamicData" Version="6.17.2" />
+    <PackageReference Include="DotNetZip" Version="1.14.0" />
+    <PackageReference Include="DynamicData" Version="6.17.14" />
     <PackageReference Include="GitInfo" Version="2.1.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Loqui" Version="1.5.11" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.6.0" />
+    <PackageReference Include="Loqui" Version="1.5.12" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.6.3" />
+    <PackageReference Include="NuGetizer" Version="0.4.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
   <PropertyGroup>
     <PackageId>Mutagen.Bethesda.Core</PackageId>
@@ -41,6 +45,7 @@
     <PackageReleaseNotes>Bethesda Modding</PackageReleaseNotes>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Enums\ColorBinaryType.cs" />

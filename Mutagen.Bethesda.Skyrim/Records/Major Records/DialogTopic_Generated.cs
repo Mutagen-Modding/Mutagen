@@ -1927,10 +1927,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public IEnumerable<ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             IDialogTopicGetter obj,
+            ILinkCache linkCache,
             Type type,
+            ModKey modKey,
+            IModContext? parent,
             bool throwIfUnknown,
             Func<ISkyrimMod, IDialogTopicGetter, IDialogTopic> getter)
         {
+            var curContext = new ModContext<ISkyrimMod, IDialogTopic, IDialogTopicGetter>(
+                modKey,
+                record: obj,
+                getter: getter,
+                parent: parent);
             switch (type.Name)
             {
                 case "DialogResponses":
@@ -1942,12 +1950,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
+                                modKey: modKey,
                                 record: subItem,
+                                parent: curContext,
                                 getter: (m, r) =>
                                 {
                                     var copy = (DialogResponses)((IDialogResponsesGetter)r).DeepCopy();
-                                    getter(m, obj).Responses.Add(copy);
+                                    getter(m, linkCache.Lookup<IDialogTopicGetter>(obj.FormKey)).Responses.Add(copy);
                                     return copy;
                                 });
                         }

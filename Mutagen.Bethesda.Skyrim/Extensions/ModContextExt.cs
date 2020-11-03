@@ -33,15 +33,30 @@ namespace Mutagen.Bethesda.Skyrim
             SubCellsTimestamp = false,
         };
 
+        public static readonly Landscape.TranslationMask? LandscapeCopyMask = null;
+
         internal static IEnumerable<ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
-            this IListGroupGetter<ICellBlockGetter> cellBlocks, Type type, bool throwIfUnknown)
+            this IListGroupGetter<ICellBlockGetter> cellBlocks, 
+            ILinkCache linkCache, 
+            Type type,
+            ModKey modKey,
+            IModContext? parent,
+            bool throwIfUnknown)
         {
             foreach (var readOnlyBlock in cellBlocks.Records)
             {
                 var blockNum = readOnlyBlock.BlockNumber;
+                var blockContext = new ModContext(
+                    modKey: modKey,
+                    parent: parent,
+                    record: readOnlyBlock);
                 foreach (var readOnlySubBlock in readOnlyBlock.SubBlocks)
                 {
                     var subBlockNum = readOnlySubBlock.BlockNumber;
+                    var subBlockContext = new ModContext(
+                        modKey: modKey,
+                        parent: blockContext,
+                        record: readOnlySubBlock);
                     foreach (var readOnlyCell in readOnlySubBlock.Cells)
                     {
                         Func<ISkyrimMod, ICellGetter, ICell> cellGetter = (m, r) =>
@@ -80,13 +95,14 @@ namespace Mutagen.Bethesda.Skyrim
                             && regis.ClassType == typeof(Cell))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
+                                modKey: modKey,
                                 record: readOnlyCell,
-                                getter: (m, r) => cellGetter(m, (ICellGetter)r));
+                                getter: (m, r) => cellGetter(m, (ICellGetter)r),
+                                parent: subBlockContext);
                         }
                         else
                         {
-                            foreach (var con in CellCommon.Instance.EnumerateMajorRecordContexts(readOnlyCell, type, throwIfUnknown, cellGetter))
+                            foreach (var con in CellCommon.Instance.EnumerateMajorRecordContexts(readOnlyCell, linkCache, type, modKey, subBlockContext, throwIfUnknown, cellGetter))
                             {
                                 yield return con;
                             }
@@ -97,9 +113,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         internal static IEnumerable<ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
-            this IReadOnlyList<IWorldspaceBlockGetter> worldspaceBlocks, 
+            this IReadOnlyList<IWorldspaceBlockGetter> worldspaceBlocks,
             IWorldspaceGetter worldspace,
-            Type type, 
+            ILinkCache linkCache,
+            Type type,
+            ModKey modKey,
+            IModContext? parent,
             bool throwIfUnknown, 
             Func<ISkyrimMod, IWorldspaceGetter, IWorldspace> getter)
         {
@@ -107,10 +126,18 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 var blockNumX = readOnlyBlock.BlockNumberX;
                 var blockNumY = readOnlyBlock.BlockNumberY;
+                var blockContext = new ModContext(
+                    modKey: modKey,
+                    parent: parent,
+                    record: readOnlyBlock);
                 foreach (var readOnlySubBlock in readOnlyBlock.Items)
                 {
                     var subBlockNumY = readOnlySubBlock.BlockNumberY;
                     var subBlockNumX = readOnlySubBlock.BlockNumberX;
+                    var subBlockContext = new ModContext(
+                        modKey: modKey,
+                        parent: blockContext,
+                        record: readOnlySubBlock);
                     foreach (var readOnlyCell in readOnlySubBlock.Items)
                     {
                         Func<ISkyrimMod, ICellGetter, ICell> cellGetter = (m, r) =>
@@ -142,7 +169,7 @@ namespace Mutagen.Bethesda.Skyrim
                             var cell = subBlock.Items.FirstOrDefault(cell => cell.FormKey == formKey);
                             if (cell == null)
                             {
-                                cell = readOnlyCell.DeepCopy(CellCopyMask);
+                                cell = r.DeepCopy(CellCopyMask);
                                 subBlock.Items.Add(cell);
                             }
                             return cell;
@@ -152,13 +179,14 @@ namespace Mutagen.Bethesda.Skyrim
                             && regis.ClassType == typeof(Cell))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
+                                modKey: modKey,
                                 record: readOnlyCell,
-                                getter: (m, r) => cellGetter(m, (ICellGetter)r));
+                                getter: (m, r) => cellGetter(m, (ICellGetter)r),
+                                parent: subBlockContext);
                         }
                         else
                         {
-                            foreach (var con in CellCommon.Instance.EnumerateMajorRecordContexts(readOnlyCell, type, throwIfUnknown, cellGetter))
+                            foreach (var con in CellCommon.Instance.EnumerateMajorRecordContexts(readOnlyCell, linkCache, type, modKey, subBlockContext, throwIfUnknown, cellGetter))
                             {
                                 yield return con;
                             }

@@ -2545,10 +2545,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public IEnumerable<ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             IWorldspaceGetter obj,
+            ILinkCache linkCache,
             Type type,
+            ModKey modKey,
+            IModContext? parent,
             bool throwIfUnknown,
             Func<IOblivionMod, IWorldspaceGetter, IWorldspace> getter)
         {
+            var curContext = new ModContext<IOblivionMod, IWorldspace, IWorldspaceGetter>(
+                modKey,
+                record: obj,
+                getter: getter,
+                parent: parent);
             switch (type.Name)
             {
                 case "Road":
@@ -2559,12 +2567,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         if (obj.Road.TryGet(out var WorldspaceRoaditem))
                         {
                             yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
+                                modKey: modKey,
                                 record: WorldspaceRoaditem,
+                                parent: curContext,
                                 getter: (m, r) =>
                                 {
-                                    var copy = (Road)((IRoadGetter)r).DeepCopy();
-                                    getter(m, obj).Road = copy;
+                                    var copy = (Road)((IRoadGetter)r).DeepCopy(ModContextExt.RoadCopyMask);
+                                    getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).Road = copy;
                                     return copy;
                                 });
                         }
@@ -2578,22 +2587,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                         {
                             yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
+                                modKey: modKey,
                                 record: WorldspaceTopCellitem,
+                                parent: curContext,
                                 getter: (m, r) =>
                                 {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
-                                    getter(m, obj).TopCell = copy;
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
+                                    getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
                                     return copy;
                                 });
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
+                                linkCache: linkCache,
                                 type: type,
+                                modKey: modKey,
+                                parent: curContext,
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
-                                    getter(m, obj).TopCell = copy;
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
+                                    getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
                                     return copy;
                                 }))
                             {
@@ -2603,6 +2616,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
+                        parent: curContext,
+                        linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
                         getter: getter))
@@ -2615,6 +2631,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IWorldspaceBlock":
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
+                        parent: curContext,
+                        linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
                         getter: getter))
@@ -2631,12 +2650,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         {
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
+                                linkCache: linkCache,
                                 type: type,
+                                modKey: modKey,
+                                parent: curContext,
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
-                                    getter(m, obj).TopCell = copy;
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
+                                    getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
                                     return copy;
                                 }))
                             {
@@ -2646,6 +2668,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
+                        parent: curContext,
+                        linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
                         getter: getter))
@@ -2662,12 +2687,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         {
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
+                                linkCache: linkCache,
                                 type: type,
+                                modKey: modKey,
+                                parent: curContext,
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
-                                    getter(m, obj).TopCell = copy;
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
+                                    getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
                                     return copy;
                                 }))
                             {
@@ -2677,6 +2705,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
+                        parent: curContext,
+                        linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
                         getter: getter))
@@ -2693,12 +2724,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         {
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
+                                linkCache: linkCache,
                                 type: type,
+                                modKey: modKey,
+                                parent: curContext,
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
-                                    getter(m, obj).TopCell = copy;
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
+                                    getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
                                     return copy;
                                 }))
                             {
@@ -2708,6 +2742,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
+                        parent: curContext,
+                        linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
                         getter: getter))
@@ -2724,12 +2761,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         {
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
+                                linkCache: linkCache,
                                 type: type,
+                                modKey: modKey,
+                                parent: curContext,
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
-                                    getter(m, obj).TopCell = copy;
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
+                                    getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
                                     return copy;
                                 }))
                             {
@@ -2739,6 +2779,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
+                        parent: curContext,
+                        linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
                         getter: getter))
@@ -2755,12 +2798,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         {
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
+                                linkCache: linkCache,
                                 type: type,
+                                modKey: modKey,
+                                parent: curContext,
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
-                                    getter(m, obj).TopCell = copy;
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
+                                    getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
                                     return copy;
                                 }))
                             {
@@ -2770,6 +2816,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
+                        parent: curContext,
+                        linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
                         getter: getter))
@@ -2785,12 +2834,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         {
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
+                                linkCache: linkCache,
                                 type: type,
+                                modKey: modKey,
+                                parent: curContext,
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
-                                    getter(m, obj).TopCell = copy;
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
+                                    getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
                                     return copy;
                                 }))
                             {
@@ -2800,6 +2852,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
+                        parent: curContext,
+                        linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
                         getter: getter))

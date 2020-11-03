@@ -3727,10 +3727,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public IEnumerable<ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             IWorldspaceGetter obj,
+            ILinkCache linkCache,
             Type type,
+            ModKey modKey,
+            IModContext? parent,
             bool throwIfUnknown,
             Func<ISkyrimMod, IWorldspaceGetter, IWorldspace> getter)
         {
+            var curContext = new ModContext<ISkyrimMod, IWorldspace, IWorldspaceGetter>(
+                modKey,
+                record: obj,
+                getter: getter,
+                parent: parent);
             switch (type.Name)
             {
                 case "WorldspaceGridReference":
@@ -3745,22 +3753,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                         {
                             yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
-                                modKey: ModKey.Null,
+                                modKey: modKey,
                                 record: WorldspaceTopCellitem,
+                                parent: curContext,
                                 getter: (m, r) =>
                                 {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
-                                    getter(m, obj).TopCell = copy;
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
+                                    getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
                                     return copy;
                                 });
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
+                                linkCache: linkCache,
                                 type: type,
+                                modKey: modKey,
+                                parent: curContext,
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
-                                    getter(m, obj).TopCell = copy;
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
+                                    getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
                                     return copy;
                                 }))
                             {
@@ -3770,6 +3782,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
+                        parent: curContext,
+                        linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
                         getter: getter))
@@ -3782,6 +3797,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IWorldspaceBlock":
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
+                        parent: curContext,
+                        linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
                         getter: getter))
@@ -3798,12 +3816,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         {
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
+                                linkCache: linkCache,
                                 type: type,
+                                modKey: modKey,
+                                parent: curContext,
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
-                                    getter(m, obj).TopCell = copy;
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
+                                    getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
                                     return copy;
                                 }))
                             {
@@ -3813,6 +3834,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
+                        parent: curContext,
+                        linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
                         getter: getter))
@@ -3829,12 +3853,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         {
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
+                                linkCache: linkCache,
                                 type: type,
+                                modKey: modKey,
+                                parent: curContext,
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
-                                    getter(m, obj).TopCell = copy;
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
+                                    getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
                                     return copy;
                                 }))
                             {
@@ -3844,6 +3871,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
+                        parent: curContext,
+                        linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
                         getter: getter))
@@ -3860,12 +3890,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         {
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
+                                linkCache: linkCache,
                                 type: type,
+                                modKey: modKey,
+                                parent: curContext,
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
-                                    getter(m, obj).TopCell = copy;
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
+                                    getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
                                     return copy;
                                 }))
                             {
@@ -3875,6 +3908,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
+                        parent: curContext,
+                        linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
                         getter: getter))
@@ -3891,12 +3927,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         {
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
+                                linkCache: linkCache,
                                 type: type,
+                                modKey: modKey,
+                                parent: curContext,
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
-                                    getter(m, obj).TopCell = copy;
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
+                                    getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
                                     return copy;
                                 }))
                             {
@@ -3906,6 +3945,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
+                        parent: curContext,
+                        linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
                         getter: getter))
@@ -3922,12 +3964,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         {
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
+                                linkCache: linkCache,
                                 type: type,
+                                modKey: modKey,
+                                parent: curContext,
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
-                                    getter(m, obj).TopCell = copy;
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
+                                    getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
                                     return copy;
                                 }))
                             {
@@ -3937,6 +3982,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
+                        parent: curContext,
+                        linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
                         getter: getter))
@@ -3949,6 +3997,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
+                        parent: curContext,
+                        linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
                         getter: getter))
@@ -3965,12 +4016,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         {
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
+                                linkCache: linkCache,
                                 type: type,
+                                modKey: modKey,
+                                parent: curContext,
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
-                                    getter(m, obj).TopCell = copy;
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
+                                    getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
                                     return copy;
                                 }))
                             {
@@ -3980,6 +4034,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
+                        parent: curContext,
+                        linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
                         getter: getter))
@@ -3996,12 +4053,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         {
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
+                                linkCache: linkCache,
                                 type: type,
+                                modKey: modKey,
+                                parent: curContext,
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
-                                    getter(m, obj).TopCell = copy;
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
+                                    getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
                                     return copy;
                                 }))
                             {
@@ -4011,6 +4071,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
+                        parent: curContext,
+                        linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
                         getter: getter))
@@ -4027,12 +4090,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         {
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
+                                linkCache: linkCache,
                                 type: type,
+                                modKey: modKey,
+                                parent: curContext,
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
-                                    getter(m, obj).TopCell = copy;
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
+                                    getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
                                     return copy;
                                 }))
                             {
@@ -4042,6 +4108,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
+                        parent: curContext,
+                        linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
                         getter: getter))
@@ -4058,12 +4127,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         {
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
+                                linkCache: linkCache,
                                 type: type,
+                                modKey: modKey,
+                                parent: curContext,
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
-                                    getter(m, obj).TopCell = copy;
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
+                                    getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
                                     return copy;
                                 }))
                             {
@@ -4073,6 +4145,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
+                        parent: curContext,
+                        linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
                         getter: getter))
@@ -4089,12 +4164,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         {
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
+                                linkCache: linkCache,
                                 type: type,
+                                modKey: modKey,
+                                parent: curContext,
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
-                                    getter(m, obj).TopCell = copy;
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
+                                    getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
                                     return copy;
                                 }))
                             {
@@ -4104,6 +4182,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
+                        parent: curContext,
+                        linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
                         getter: getter))
@@ -4120,12 +4201,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         {
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
                                 obj: WorldspaceTopCellitem,
+                                linkCache: linkCache,
                                 type: type,
+                                modKey: modKey,
+                                parent: curContext,
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
-                                    var copy = (Cell)((ICellGetter)r).DeepCopy();
-                                    getter(m, obj).TopCell = copy;
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
+                                    getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
                                     return copy;
                                 }))
                             {
@@ -4135,6 +4219,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
+                        modKey: modKey,
+                        parent: curContext,
+                        linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
                         getter: getter))

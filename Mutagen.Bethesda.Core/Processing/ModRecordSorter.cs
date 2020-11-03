@@ -1,26 +1,21 @@
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Noggog;
-using Noggog.Utility;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Processing
 {
     public static class ModRecordSorter
     {
         public static void Sort(
-            Func<Stream> streamCreator,
+            Func<IMutagenReadStream> streamCreator,
             Stream outputStream,
             GameRelease release)
         {
-            var meta = new ParsingBundle(GameConstants.Get(release));
-            using var inputStream = new MutagenBinaryReadStream(streamCreator(), meta);
-            using var locatorStream = new MutagenBinaryReadStream(streamCreator(), meta);
+            using var inputStream = streamCreator();
+            using var locatorStream = streamCreator();
             using var writer = new MutagenWriter(outputStream, release, dispose: false);
             while (!inputStream.Complete)
             {
@@ -35,23 +30,24 @@ namespace Mutagen.Bethesda.Processing
 
                     var groupMeta = inputStream.GetGroup();
 
-                    var storage = new Dictionary<FormID, List<ReadOnlyMemorySlice<byte>>>();
+                    var storage = new Dictionary<FormKey, List<ReadOnlyMemorySlice<byte>>>();
                     using (var grupFrame = new MutagenFrame(inputStream).SpawnWithLength(groupMeta.TotalLength))
                     {
-                        inputStream.WriteTo(writer.BaseStream, meta.Constants.GroupConstants.HeaderLength);
+                        inputStream.WriteTo(writer.BaseStream, inputStream.MetaData.Constants.GroupConstants.HeaderLength);
                         locatorStream.Position = grupLoc.Value;
                         foreach (var rec in RecordLocator.ParseTopLevelGRUP(locatorStream))
                         {
                             MajorRecordHeader majorMeta = inputStream.GetMajorRecord();
-                            storage.GetOrAdd(rec.FormID).Add(inputStream.ReadMemory(checked((int)majorMeta.TotalLength), readSafe: true));
+                            storage.GetOrAdd(rec.FormKey).Add(inputStream.ReadMemory(checked((int)majorMeta.TotalLength), readSafe: true));
                             if (grupFrame.Complete) continue;
                             if (inputStream.TryGetGroup(out var subGroupMeta))
                             {
-                                storage.GetOrAdd(rec.FormID).Add(inputStream.ReadMemory(checked((int)subGroupMeta.TotalLength), readSafe: true));
+                                storage.GetOrAdd(rec.FormKey).Add(inputStream.ReadMemory(checked((int)subGroupMeta.TotalLength), readSafe: true));
                             }
                         }
                     }
 
+                    // Sorts via Record ID (as opposed to just the first 6 bytes)
                     foreach (var item in storage.OrderBy((i) => i.Key.ID))
                     {
                         foreach (var bytes in item.Value)

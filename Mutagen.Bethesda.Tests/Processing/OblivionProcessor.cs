@@ -280,9 +280,10 @@ namespace Mutagen.Bethesda.Tests
             MajorRecordFrame majorFrame,
             long fileOffset)
         {
+            var formKey = FormKey.Factory(stream.MetaData.MasterReferences!, majorFrame.FormID.Raw);
             CleanEmptyCellGroups(
                 stream,
-                majorFrame.FormID,
+                formKey,
                 fileOffset,
                 numSubGroups: 3);
         }
@@ -292,9 +293,10 @@ namespace Mutagen.Bethesda.Tests
             MajorRecordFrame majorFrame,
             long fileOffset)
         {
+            var formKey = FormKey.Factory(stream.MetaData.MasterReferences!, majorFrame.FormID.Raw);
             CleanEmptyDialogGroups(
                 stream,
-                majorFrame.FormID,
+                formKey,
                 fileOffset);
         }
 

@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Skyrim
                         frame: frame.SpawnAll(),
                         triggeringRecord: RecordTypes.MAST,
                         transl: MasterReference.TryCreateFromBinary));
-                frame.MetaData.MasterReferences = new MasterReferenceReader(frame.MetaData.ModKey, item.MasterReferences);
+                frame.MetaData.MasterReferences.SetTo(item.MasterReferences);
             }
         }
 

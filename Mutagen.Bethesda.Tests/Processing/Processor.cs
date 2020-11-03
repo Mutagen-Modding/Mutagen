@@ -1,6 +1,7 @@
 using Microsoft.VisualBasic;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Internals;
 using Noggog;
 using Noggog.Utility;
 using System;
@@ -23,10 +24,12 @@ namespace Mutagen.Bethesda.Tests
         protected BinaryFileProcessor.ConfigConstructor _Instructions = new BinaryFileProcessor.ConfigConstructor();
         private Dictionary<long, uint> _lengthTracker = new Dictionary<long, uint>();
         protected byte _NumMasters;
-        protected string SourcePath;
+        protected MasterReferenceReader Masters;
+        protected ParsingBundle Bundle;
+        protected ModPath SourcePath;
         protected TempFolder TempFolder;
         public bool DoMultithreading = true;
-        public ModKey ModKey => ModKey.FromNameAndExtension(Path.GetFileName(SourcePath));
+        public ModKey ModKey => SourcePath.ModKey;
         public delegate void DynamicProcessor(MajorRecordFrame majorFrame, long fileOffset);
         public delegate void DynamicStreamProcessor(IMutagenReadStream stream, MajorRecordFrame majorFrame, long fileOffset);
         protected Dictionary<RecordType, List<DynamicProcessor>> DynamicProcessors = new Dictionary<RecordType, List<DynamicProcessor>>();
@@ -54,18 +57,20 @@ namespace Mutagen.Bethesda.Tests
         public async Task Process(
             TempFolder tmpFolder,
             Subject<string> logging,
-            string sourcePath,
+            ModPath sourcePath,
             string preprocessedPath,
             string outputPath)
         {
             this.Logging = logging;
             this.TempFolder = tmpFolder;
             this.SourcePath = sourcePath;
+            this.Masters = MasterReferenceReader.FromPath(SourcePath, GameRelease);
+            this.Bundle = new ParsingBundle(GameRelease, Masters);
             this._NumMasters = GetNumMasters();
-            this._AlignedFileLocs = RecordLocator.GetFileLocations(preprocessedPath, this.GameRelease);
+            this._AlignedFileLocs = RecordLocator.GetFileLocations(new ModPath(ModKey, preprocessedPath), this.GameRelease);
 
             var preprocessedBytes = File.ReadAllBytes(preprocessedPath);
-            IMutagenReadStream streamGetter() => new MutagenMemoryReadStream(preprocessedBytes, this.GameRelease);
+            IMutagenReadStream streamGetter() => new MutagenMemoryReadStream(preprocessedBytes, Bundle);
             using (var stream = streamGetter())
             {
                 lock (_lengthTracker)
@@ -159,7 +164,7 @@ namespace Mutagen.Bethesda.Tests
 
         protected void ProcessDynamicType(RecordType type, Func<IMutagenReadStream> streamGetter)
         {
-            IEnumerable<KeyValuePair<long, (FormID FormID, RecordType Record)>> locs = _AlignedFileLocs.ListedRecords;
+            IEnumerable<KeyValuePair<long, (FormKey FormKey, RecordType Record)>> locs = _AlignedFileLocs.ListedRecords;
             if (type != RecordType.Null)
             {
                 locs = locs.Where(loc => loc.Value.Record == type);
@@ -203,10 +208,11 @@ namespace Mutagen.Bethesda.Tests
             long fileOffset)
         {
             if (!majorFrame.TryLocateSubrecordFrame("EDID", out var edidFrame, out var edidLoc)) return;
+            var formKey = FormKey.Factory(Masters, majorFrame.FormID.Raw);
             ProcessStringTermination(
                 edidFrame,
                 fileOffset + majorFrame.HeaderLength + edidLoc,
-                majorFrame.FormID);
+                formKey);
         }
 
         public void ProcessMajorRecordFormIDOverflow(
@@ -258,7 +264,7 @@ namespace Mutagen.Bethesda.Tests
         public void ProcessStringTermination(
             SubrecordFrame subFrame,
             long refLoc,
-            FormID formID)
+            FormKey formKey)
         {
             var nullIndex = MemoryExtensions.IndexOf<byte>(subFrame.Content, default(byte));
             if (nullIndex == -1) throw new ArgumentException();
@@ -272,15 +278,15 @@ namespace Mutagen.Bethesda.Tests
                 frame: subFrame,
                 amount: nullIndex + 1,
                 refLoc: refLoc,
-                formID: formID);
+                formKey: formKey);
         }
 
-        public void ModifyParentGroupLengths(int amount, FormID formID)
+        public void ModifyParentGroupLengths(int amount, FormKey formKey)
         {
             if (amount == 0) return;
             lock (_lengthTracker)
             {
-                foreach (var k in this._AlignedFileLocs.GetContainingGroupLocations(formID))
+                foreach (var k in this._AlignedFileLocs.GetContainingGroupLocations(formKey))
                 {
                     this._lengthTracker[k] = (uint)(this._lengthTracker[k] + amount);
                 }
@@ -291,10 +297,10 @@ namespace Mutagen.Bethesda.Tests
             SubrecordFrame frame,
             int amount,
             long refLoc,
-            FormID formID)
+            FormKey formKey)
         {
             if (amount == 0) return;
-            ModifyParentGroupLengths(amount, formID);
+            ModifyParentGroupLengths(amount, formKey);
 
             // Modify Length 
             byte[] lenData = new byte[2];
@@ -310,7 +316,8 @@ namespace Mutagen.Bethesda.Tests
             long refLoc)
         {
             if (amount == 0) return;
-            ModifyParentGroupLengths(amount, frame.FormID);
+            var formKey = FormKey.Factory(Masters, frame.FormID.Raw);
+            ModifyParentGroupLengths(amount, formKey);
 
             // Modify Length 
             byte[] lenData = new byte[4];
@@ -323,14 +330,14 @@ namespace Mutagen.Bethesda.Tests
         public void ModifyLengths(
             IMutagenReadStream stream,
             int amount,
-            FormID formID,
+            FormKey formKey,
             long recordLoc,
             long? subRecordLoc)
         {
             if (amount == 0) return;
             lock (_lengthTracker)
             {
-                foreach (var k in this._AlignedFileLocs.GetContainingGroupLocations(formID))
+                foreach (var k in this._AlignedFileLocs.GetContainingGroupLocations(formKey))
                 {
                     this._lengthTracker[k] = (uint)(this._lengthTracker[k] + amount);
                 }
@@ -681,7 +688,7 @@ namespace Mutagen.Bethesda.Tests
 
         public void CleanEmptyCellGroups(
             IMutagenReadStream stream,
-            FormID formID,
+            FormKey formKey,
             long fileOffset,
             int numSubGroups)
         {
@@ -741,12 +748,12 @@ namespace Mutagen.Bethesda.Tests
                     section: remove);
                 amount -= (int)remove.Width;
             }
-            ModifyParentGroupLengths(amount, formID);
+            ModifyParentGroupLengths(amount, formKey);
         }
 
         public void CleanEmptyDialogGroups(
             IMutagenReadStream stream,
-            FormID formID,
+            FormKey formKey,
             long fileOffset)
         {
             List<RangeInt64> removes = new List<RangeInt64>();
@@ -772,7 +779,7 @@ namespace Mutagen.Bethesda.Tests
                     section: remove);
                 amount -= (int)remove.Width;
             }
-            ModifyParentGroupLengths(amount, formID);
+            ModifyParentGroupLengths(amount, formKey);
         }
 
         protected bool DynamicMove(

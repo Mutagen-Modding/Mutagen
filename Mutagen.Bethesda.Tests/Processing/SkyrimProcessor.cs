@@ -174,9 +174,10 @@ namespace Mutagen.Bethesda.Tests
             MajorRecordFrame majorFrame,
             long fileOffset)
         {
+            var formKey = FormKey.Factory(stream.MetaData.MasterReferences!, majorFrame.FormID.Raw);
             CleanEmptyCellGroups(
                 stream,
-                majorFrame.FormID,
+                formKey,
                 fileOffset,
                 numSubGroups: 2);
 
@@ -207,9 +208,10 @@ namespace Mutagen.Bethesda.Tests
             MajorRecordFrame majorFrame,
             long fileOffset)
         {
+            var formKey = FormKey.Factory(stream.MetaData.MasterReferences!, majorFrame.FormID.Raw);
             CleanEmptyDialogGroups(
                 stream,
-                majorFrame.FormID,
+                formKey,
                 fileOffset);
 
             // Reset misnumbered counter
@@ -299,9 +301,7 @@ namespace Mutagen.Bethesda.Tests
             if (vmadPos != null)
             {
                 var vmadFrame = Meta.SubrecordFrame(majorFrame.Content.Slice(vmadPos.Value));
-                var stream = new MutagenInterfaceReadStream(
-                    new MutagenMemoryReadStream(vmadFrame.Content, new ParsingBundle(GameRelease)),
-                    new ParsingBundle(GameRelease))
+                var stream = new MutagenMemoryReadStream(vmadFrame.Content, Bundle)
                 {
                     Position = processedLen - vmadFrame.HeaderLength
                 };
@@ -352,9 +352,7 @@ namespace Mutagen.Bethesda.Tests
                 objectFormat = 0;
                 return;
             }
-            var stream = new MutagenInterfaceReadStream(
-                new MutagenMemoryReadStream(frame.HeaderAndContentData, new ParsingBundle(GameRelease)),
-                new ParsingBundle(GameRelease))
+            var stream = new MutagenMemoryReadStream(frame.HeaderAndContentData, Bundle)
             {
                 Position = vmadPos.Value + frame.HeaderLength
             };
