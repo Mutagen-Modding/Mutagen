@@ -24,6 +24,7 @@ namespace Mutagen.Bethesda.Tests
         public string Oblivion { get; set; } = string.Empty;
         public string Skyrim { get; set; } = string.Empty;
         public string SkyrimSpecialEdition { get; set; } = string.Empty;
+        public string SkyrimVR { get; set; } = string.Empty;
 
         public string Get(GameRelease mode)
         {

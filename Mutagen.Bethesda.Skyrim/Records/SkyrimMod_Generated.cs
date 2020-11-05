@@ -19008,7 +19008,8 @@ namespace Mutagen.Bethesda.Skyrim
     public enum SkyrimRelease
     {
         SkyrimLE = 1,
-        SkyrimSE = 2
+        SkyrimSE = 2,
+        SkyrimVR = 3
     }
 
     public static class SkyrimReleaseExt
@@ -19019,6 +19020,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 SkyrimRelease.SkyrimLE => GameRelease.SkyrimLE,
                 SkyrimRelease.SkyrimSE => GameRelease.SkyrimSE,
+                SkyrimRelease.SkyrimVR => GameRelease.SkyrimVR,
                 _ => throw new ArgumentException()
             };
         }
@@ -19029,6 +19031,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 GameRelease.SkyrimLE => SkyrimRelease.SkyrimLE,
                 GameRelease.SkyrimSE => SkyrimRelease.SkyrimSE,
+                GameRelease.SkyrimVR => SkyrimRelease.SkyrimVR,
                 _ => throw new ArgumentException()
             };
         }

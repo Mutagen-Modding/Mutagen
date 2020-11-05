@@ -6,50 +6,50 @@ using System.Text;
 
 namespace Mutagen.Bethesda.Binary
 {
-    /// <summary>
-    /// Reference for all the alignment and length constants related to a specific game
-    /// </summary>
+    /// <summary> 
+    /// Reference for all the alignment and length constants related to a specific game 
+    /// </summary> 
     public class GameConstants
     {
-        /// <summary>
-        /// Associated game type
-        /// </summary>
+        /// <summary> 
+        /// Associated game type 
+        /// </summary> 
         public GameRelease Release { get; }
-        
-        /// <summary>
-        /// Length of the Mod header's metadata, excluding content
-        /// </summary>
+
+        /// <summary> 
+        /// Length of the Mod header's metadata, excluding content 
+        /// </summary> 
         public sbyte ModHeaderLength { get; }
-        
-        /// <summary>
-        /// Length of the Mod header's non-fundamental metadata
-        /// </summary>
+
+        /// <summary> 
+        /// Length of the Mod header's non-fundamental metadata 
+        /// </summary> 
         public sbyte ModHeaderFluffLength { get; }
 
-        /// <summary>
-        /// Group constants
-        /// </summary>
+        /// <summary> 
+        /// Group constants 
+        /// </summary> 
         public RecordHeaderConstants GroupConstants { get; }
-        
-        /// <summary>
-        /// Major Record constants
-        /// </summary>
+
+        /// <summary> 
+        /// Major Record constants 
+        /// </summary> 
         public MajorRecordConstants MajorConstants { get; }
-        
-        /// <summary>
-        /// Sub Record constants
-        /// </summary>
+
+        /// <summary> 
+        /// Sub Record constants 
+        /// </summary> 
         public RecordHeaderConstants SubConstants { get; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="release">Game Release to associate with the constants</param>
-        /// <param name="modHeaderLength">Length of the ModHeader</param>
-        /// <param name="modHeaderFluffLength">Length of the ModHeader excluding initial recordtype and length bytes.</param>
-        /// <param name="groupConstants">Constants defining Groups</param>
-        /// <param name="majorConstants">Constants defining Major Records</param>
-        /// <param name="subConstants">Constants defining Sub Records</param>
+        /// <summary> 
+        /// Constructor 
+        /// </summary> 
+        /// <param name="release">Game Release to associate with the constants</param> 
+        /// <param name="modHeaderLength">Length of the ModHeader</param> 
+        /// <param name="modHeaderFluffLength">Length of the ModHeader excluding initial recordtype and length bytes.</param> 
+        /// <param name="groupConstants">Constants defining Groups</param> 
+        /// <param name="majorConstants">Constants defining Major Records</param> 
+        /// <param name="subConstants">Constants defining Sub Records</param> 
         public GameConstants(
             GameRelease release,
             sbyte modHeaderLength,
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public GameConstants(
-            GameConstants rhs, 
+            GameConstants rhs,
             GameRelease releaseOverride)
         {
             Release = releaseOverride;
@@ -78,9 +78,9 @@ namespace Mutagen.Bethesda.Binary
             SubConstants = rhs.SubConstants;
         }
 
-        /// <summary>
-        /// Readonly singleton of Oblivion game constants
-        /// </summary>
+        /// <summary> 
+        /// Readonly singleton of Oblivion game constants 
+        /// </summary> 
         public static readonly GameConstants Oblivion = new GameConstants(
             release: GameRelease.Oblivion,
             modHeaderLength: 20,
@@ -100,9 +100,9 @@ namespace Mutagen.Bethesda.Binary
                 headerLength: 6,
                 lengthLength: 2));
 
-        /// <summary>
-        /// Readonly singleton of Skyrim LE game constants
-        /// </summary>
+        /// <summary> 
+        /// Readonly singleton of Skyrim LE game constants 
+        /// </summary> 
         public static readonly GameConstants SkyrimLE = new GameConstants(
             release: GameRelease.SkyrimLE,
             modHeaderLength: 24,
@@ -122,12 +122,17 @@ namespace Mutagen.Bethesda.Binary
                 headerLength: 6,
                 lengthLength: 2));
 
-        /// <summary>
-        /// Readonly singleton of Skyrim SE game constants
-        /// </summary>
+        /// <summary> 
+        /// Readonly singleton of Skyrim SE game constants 
+        /// </summary> 
         public static readonly GameConstants SkyrimSE = new GameConstants(SkyrimLE, GameRelease.SkyrimSE);
 
-        #region Header Factories
+        /// <summary> 
+        /// Readonly singleton of Skyrim SE game constants 
+        /// </summary> 
+        public static readonly GameConstants SkyrimVR = new GameConstants(SkyrimLE, GameRelease.SkyrimVR);
+
+        #region Header Factories 
         public ModHeader ModHeader(ReadOnlyMemorySlice<byte> span) => new ModHeader(this, span);
 
         public GroupHeader Group(ReadOnlyMemorySlice<byte> span) => new GroupHeader(this, span);
@@ -211,11 +216,11 @@ namespace Mutagen.Bethesda.Binary
         }
         #endregion
 
-        /// <summary>
-        /// Returns record constants related to a certain ObjectType
-        /// </summary>
-        /// <param name="type">ObjectType to query</param>
-        /// <returns>Record Constants associated with type</returns>
+        /// <summary> 
+        /// Returns record constants related to a certain ObjectType 
+        /// </summary> 
+        /// <param name="type">ObjectType to query</param> 
+        /// <returns>Record Constants associated with type</returns> 
         public RecordHeaderConstants Constants(ObjectType type)
         {
             return type switch
@@ -227,11 +232,11 @@ namespace Mutagen.Bethesda.Binary
             };
         }
 
-        /// <summary>
-        /// Returns GameConstant readonly singleton associated with a game release 
-        /// </summary>
-        /// <param name="release">Game Release to query</param>
-        /// <returns>GameConstant readonly singleton associated with mode</returns>
+        /// <summary> 
+        /// Returns GameConstant readonly singleton associated with a game release  
+        /// </summary> 
+        /// <param name="release">Game Release to query</param> 
+        /// <returns>GameConstant readonly singleton associated with mode</returns> 
         public static GameConstants Get(GameRelease release)
         {
             switch (release)
@@ -242,6 +247,8 @@ namespace Mutagen.Bethesda.Binary
                     return SkyrimLE;
                 case GameRelease.SkyrimSE:
                     return SkyrimSE;
+                case GameRelease.SkyrimVR:
+                    return SkyrimVR;
                 default:
                     throw new NotImplementedException();
             }

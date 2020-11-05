@@ -28,6 +28,7 @@ namespace Mutagen.Bethesda
                 GameRelease.Oblivion => "Oblivion/Plugins.txt",
                 GameRelease.SkyrimLE => "Skyrim/Plugins.txt",
                 GameRelease.SkyrimSE => "Skyrim Special Edition/Plugins.txt",
+                GameRelease.SkyrimVR => "Skyrim VR/Plugins.txt",
                 _ => throw new NotImplementedException()
             };
         }
@@ -281,6 +282,7 @@ namespace Mutagen.Bethesda
             return release switch
             {
                 GameRelease.SkyrimSE => _sseImplicitMods,
+                GameRelease.SkyrimVR => _sseImplicitMods,
                 _ => Enumerable.Empty<ModKey>(),
             };
         }
@@ -303,6 +305,7 @@ namespace Mutagen.Bethesda
             return game switch
             {
                 GameRelease.SkyrimSE => true,
+                GameRelease.SkyrimVR => true,
                 GameRelease.SkyrimLE => false,
                 GameRelease.Oblivion => false,
                 _ => throw new NotImplementedException(),

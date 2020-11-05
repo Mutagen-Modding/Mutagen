@@ -15,6 +15,8 @@ namespace Mutagen.Bethesda
         [Description("Skyrim Legendary Edition")]
         SkyrimLE = 1,
         [Description("Skyrim Special Edition")]
-        SkyrimSE = 2
+        SkyrimSE = 2,
+        [Description("Skyrim VR")]
+        SkyrimVR = 3
     }
 }
