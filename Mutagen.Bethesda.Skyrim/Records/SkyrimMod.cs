@@ -25,6 +25,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 SkyrimRelease.SkyrimLE => 43,
                 SkyrimRelease.SkyrimSE => 44,
+                SkyrimRelease.SkyrimVR => 44,
                 _ => throw new NotImplementedException()
             };
         }

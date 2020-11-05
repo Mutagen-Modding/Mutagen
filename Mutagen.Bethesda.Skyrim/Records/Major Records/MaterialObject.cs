@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Binary;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             static partial void FillBinaryFlagsCustom(MutagenFrame frame, IMaterialObjectInternal item)
             {
-                if (item.FormVersion >= 44)
+                if (item.FormVersion >= 44 || (frame.Remaining >= 8 && item.FormVersion == 43 && frame.MetaData.Constants.Release == GameRelease.SkyrimVR))
                 {
                     item.Flags = (MaterialObject.Flag)frame.ReadUInt64();
                 }
@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             static partial void WriteBinaryFlagsCustom(MutagenWriter writer, IMaterialObjectGetter item)
             {
-                if (item.FormVersion >= 44)
+                if (item.FormVersion >= 44 || (item.FormVersion == 43 && writer.MetaData.Constants.Release == GameRelease.SkyrimVR))
                 {
                     writer.Write((ulong)item.Flags);
                 }
@@ -62,13 +62,14 @@ namespace Mutagen.Bethesda.Skyrim
         {
             public MaterialObject.Flag GetFlagsCustom()
             {
-                if (this.FormVersion >= 44)
+                var slice = _data.Slice(_FlagsLocation);
+                if (this.FormVersion >= 44 || (slice.Length >= 8 && this.FormVersion == 43 && this._package.MetaData.Constants.Release == GameRelease.SkyrimVR))
                 {
-                    return (MaterialObject.Flag)BinaryPrimitives.ReadUInt64LittleEndian(_data.Slice(_FlagsLocation));
+                    return (MaterialObject.Flag)BinaryPrimitives.ReadUInt64LittleEndian(slice);
                 }
                 else
                 {
-                    return (MaterialObject.Flag)BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_FlagsLocation));
+                    return (MaterialObject.Flag)BinaryPrimitives.ReadUInt32LittleEndian(slice);
                 }
             }
         }

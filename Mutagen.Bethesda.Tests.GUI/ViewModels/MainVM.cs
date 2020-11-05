@@ -201,6 +201,11 @@ namespace Mutagen.Bethesda.Tests.GUI
             {
                 df.DataFolder.TargetPath = settings.DataFolderLocations.SkyrimSpecialEdition;
             }
+
+            if (DataFolders.TryGetValue(GameRelease.SkyrimVR, out df))
+            {
+                df.DataFolder.TargetPath = settings.DataFolderLocations.SkyrimVR;
+            }
         }
 
         public void SaveToSettings(TestingSettings settings)
@@ -237,6 +242,7 @@ namespace Mutagen.Bethesda.Tests.GUI
             settings.DataFolderLocations.Oblivion = DataFolders.Get(GameRelease.Oblivion).DataFolder.TargetPath;
             settings.DataFolderLocations.Skyrim = DataFolders.Get(GameRelease.SkyrimLE).DataFolder.TargetPath;
             settings.DataFolderLocations.SkyrimSpecialEdition = DataFolders.Get(GameRelease.SkyrimSE).DataFolder.TargetPath;
+            settings.DataFolderLocations.SkyrimVR = DataFolders.Get(GameRelease.SkyrimVR).DataFolder.TargetPath;
         }
 
         public PassthroughSettings GetPassthroughSettings()

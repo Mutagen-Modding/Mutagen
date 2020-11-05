@@ -4687,12 +4687,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item: item.SpecularSunSparklePower);
                 if (!item.DNAMDataTypeState.HasFlag(Water.DNAMDataType.Break0))
                 {
-                    if (writer.MetaData.FormVersion!.Value >= 44)
-                    {
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.NoiseFlowmapScale);
-                    }
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.NoiseFlowmapScale);
                 }
             }
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
@@ -4722,14 +4719,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.NoiseLayerThreeTexture,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM4),
                 binaryType: StringBinaryType.NullTerminate);
-            if (writer.MetaData.FormVersion!.Value >= 44)
-            {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
-                    writer: writer,
-                    item: item.FlowNormalsNoiseTexture,
-                    header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM5),
-                    binaryType: StringBinaryType.NullTerminate);
-            }
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.FlowNormalsNoiseTexture,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM5),
+                binaryType: StringBinaryType.NullTerminate);
         }
 
         public void Write(
@@ -4946,10 +4940,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item.DNAMDataTypeState |= Water.DNAMDataType.Break0;
                         return (int)Water_FieldIndex.SpecularSunSparklePower;
                     }
-                    if (frame.MetaData.FormVersion!.Value >= 44)
-                    {
-                        item.NoiseFlowmapScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    }
+                    item.NoiseFlowmapScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     return (int)Water_FieldIndex.NoiseFlowmapScale;
                 }
                 case RecordTypeInts.GNAM:
@@ -4996,13 +4987,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.NAM5:
                 {
-                    if (frame.MetaData.FormVersion!.Value >= 44)
-                    {
-                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.FlowNormalsNoiseTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            stringBinaryType: StringBinaryType.NullTerminate);
-                    }
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FlowNormalsNoiseTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Water_FieldIndex.FlowNormalsNoiseTexture;
                 }
                 default:
@@ -5349,9 +5337,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region NoiseFlowmapScale
         private int _NoiseFlowmapScaleLocation => _DNAMLocation!.Value + 0xE4;
-        private bool _NoiseFlowmapScale_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Water.DNAMDataType.Break0) && _package.FormVersion!.FormVersion!.Value >= 44;
+        private bool _NoiseFlowmapScale_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Water.DNAMDataType.Break0);
         public Single NoiseFlowmapScale => _NoiseFlowmapScale_IsSet ? _data.Slice(_NoiseFlowmapScaleLocation, 4).Float() : default;
-        int NoiseFlowmapScaleVersioningOffset => _package.FormVersion!.FormVersion!.Value < 44 ? -4 : 0;
         #endregion
         #region GNAM
         private int? _GNAMLocation;

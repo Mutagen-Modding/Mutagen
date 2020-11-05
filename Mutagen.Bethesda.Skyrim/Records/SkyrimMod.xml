@@ -123,5 +123,6 @@
     </Fields>
     <GameReleaseOptions>SkyrimLE</GameReleaseOptions>
     <GameReleaseOptions>SkyrimSE</GameReleaseOptions>
+    <GameReleaseOptions>SkyrimVR</GameReleaseOptions>
   </Object>
 </Loqui>
