@@ -67,12 +67,9 @@ namespace Mutagen.Bethesda
         }
 
         #region Comparers
-        public static IEqualityComparer<IMajorRecordCommonGetter> FormKeyComparer()
-        {
-            return MajorRecordKeyComparer;
-        }
+        public static IEqualityComparer<IMajorRecordCommonGetter> FormKeyEqualityComparer => _formKeyEqualityComparer;
 
-        static readonly MajorRecordFormKeyComparer MajorRecordKeyComparer = new MajorRecordFormKeyComparer();
+        static readonly MajorRecordFormKeyComparer _formKeyEqualityComparer = new MajorRecordFormKeyComparer();
 
         class MajorRecordFormKeyComparer : IEqualityComparer<IMajorRecordCommonGetter>
         {
