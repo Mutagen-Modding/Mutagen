@@ -65,6 +65,28 @@ namespace Mutagen.Bethesda
         {
             return this.Duplicate(getNextFormKey, duplicatedRecordTracker);
         }
+
+        #region Comparers
+        public static IEqualityComparer<IMajorRecordCommonGetter> FormKeyComparer()
+        {
+            return MajorRecordKeyComparer;
+        }
+
+        static readonly MajorRecordFormKeyComparer MajorRecordKeyComparer = new MajorRecordFormKeyComparer();
+
+        class MajorRecordFormKeyComparer : IEqualityComparer<IMajorRecordCommonGetter>
+        {
+            public bool Equals(IMajorRecordCommonGetter x, IMajorRecordCommonGetter y)
+            {
+                return x.FormKey == y.FormKey;
+            }
+
+            public int GetHashCode(IMajorRecordCommonGetter obj)
+            {
+                return obj.FormKey.GetHashCode();
+            }
+        }
+        #endregion
     }
 }
 
