@@ -24,7 +24,7 @@
   <Object name="ScriptObjectProperty" objType="Subrecord" baseClass="ScriptProperty" GUID="2e12e8d5-7b18-4bc5-8e43-602766b864cb" ID="94">
     <Fields>
       <FormLink name="Object" refName="SkyrimMajorRecord" />
-      <Int16 name="Alias" />
+      <Int16 name="Alias" default="-1" />
       <UInt16 name="Unused" />
     </Fields>
   </Object>
