@@ -65,7 +65,8 @@ namespace Mutagen.Bethesda.Skyrim
         public Byte Priority { get; set; } = default;
         #endregion
         #region QuestFormVersion
-        public Byte QuestFormVersion { get; set; } = default;
+        public readonly static Byte _QuestFormVersion_Default = byte.MaxValue;
+        public Byte QuestFormVersion { get; set; } = _QuestFormVersion_Default;
         #endregion
         #region Unknown
         public Int32 Unknown { get; set; } = default;
@@ -1787,7 +1788,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Name = default;
             item.Flags = default;
             item.Priority = default;
-            item.QuestFormVersion = default;
+            item.QuestFormVersion = Quest._QuestFormVersion_Default;
             item.Unknown = default;
             item.Type = default;
             item.Event = default;

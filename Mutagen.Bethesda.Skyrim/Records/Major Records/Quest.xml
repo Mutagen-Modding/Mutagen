@@ -9,7 +9,7 @@
         <Fields>
           <Enum name="Flags" enumName="Quest.Flag" byteLength="2" />
           <UInt8 name="Priority" />
-          <UInt8 name="QuestFormVersion" />
+          <UInt8 name="QuestFormVersion" default="byte.MaxValue" />
           <Int32 name="Unknown" />
           <Enum name="Type" enumName="Quest.TypeEnum" byteLength="4" />
         </Fields>
