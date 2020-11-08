@@ -396,12 +396,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public WordOfPower(IMod mod)
+        public WordOfPower(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public WordOfPower(IMod mod, string editorID)
+        public WordOfPower(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

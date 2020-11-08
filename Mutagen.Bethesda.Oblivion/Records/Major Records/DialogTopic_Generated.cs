@@ -664,12 +664,12 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        public DialogTopic(IMod mod)
+        public DialogTopic(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public DialogTopic(IMod mod, string editorID)
+        public DialogTopic(IOblivionMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

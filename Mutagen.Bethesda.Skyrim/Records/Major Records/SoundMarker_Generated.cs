@@ -486,12 +486,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public SoundMarker(IMod mod)
+        public SoundMarker(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public SoundMarker(IMod mod, string editorID)
+        public SoundMarker(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

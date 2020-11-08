@@ -485,12 +485,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public EquipType(IMod mod)
+        public EquipType(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public EquipType(IMod mod, string editorID)
+        public EquipType(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

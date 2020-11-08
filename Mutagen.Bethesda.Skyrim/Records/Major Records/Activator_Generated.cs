@@ -891,12 +891,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public Activator(IMod mod)
+        public Activator(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Activator(IMod mod, string editorID)
+        public Activator(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

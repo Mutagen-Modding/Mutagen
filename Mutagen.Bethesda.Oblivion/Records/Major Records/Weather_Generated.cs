@@ -819,12 +819,12 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        public Weather(IMod mod)
+        public Weather(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Weather(IMod mod, string editorID)
+        public Weather(IOblivionMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

@@ -804,12 +804,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public Tree(IMod mod)
+        public Tree(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Tree(IMod mod, string editorID)
+        public Tree(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

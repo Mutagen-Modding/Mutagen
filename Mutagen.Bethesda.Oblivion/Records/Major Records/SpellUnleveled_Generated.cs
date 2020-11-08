@@ -500,12 +500,12 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        public SpellUnleveled(IMod mod)
+        public SpellUnleveled(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public SpellUnleveled(IMod mod, string editorID)
+        public SpellUnleveled(IOblivionMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

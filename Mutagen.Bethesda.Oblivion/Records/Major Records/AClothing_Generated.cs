@@ -758,12 +758,12 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        public AClothing(IMod mod)
+        public AClothing(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public AClothing(IMod mod, string editorID)
+        public AClothing(IOblivionMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

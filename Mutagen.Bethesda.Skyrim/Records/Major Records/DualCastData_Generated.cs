@@ -594,12 +594,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public DualCastData(IMod mod)
+        public DualCastData(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public DualCastData(IMod mod, string editorID)
+        public DualCastData(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

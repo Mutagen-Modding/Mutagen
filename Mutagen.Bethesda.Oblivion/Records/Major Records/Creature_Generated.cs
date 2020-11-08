@@ -1724,12 +1724,12 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        public Creature(IMod mod)
+        public Creature(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Creature(IMod mod, string editorID)
+        public Creature(IOblivionMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

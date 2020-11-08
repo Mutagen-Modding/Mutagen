@@ -1295,12 +1295,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public Armor(IMod mod)
+        public Armor(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Armor(IMod mod, string editorID)
+        public Armor(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

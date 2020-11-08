@@ -606,12 +606,12 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        public SkillRecord(IMod mod)
+        public SkillRecord(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public SkillRecord(IMod mod, string editorID)
+        public SkillRecord(IOblivionMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

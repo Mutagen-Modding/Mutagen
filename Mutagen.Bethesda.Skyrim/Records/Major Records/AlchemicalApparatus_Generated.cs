@@ -815,12 +815,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public AlchemicalApparatus(IMod mod)
+        public AlchemicalApparatus(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public AlchemicalApparatus(IMod mod, string editorID)
+        public AlchemicalApparatus(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

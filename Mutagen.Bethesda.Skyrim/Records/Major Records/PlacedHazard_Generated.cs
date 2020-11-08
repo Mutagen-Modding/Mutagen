@@ -402,12 +402,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public PlacedHazard(IMod mod)
+        public PlacedHazard(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public PlacedHazard(IMod mod, string editorID)
+        public PlacedHazard(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

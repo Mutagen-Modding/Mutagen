@@ -364,12 +364,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public GameSettingString(IMod mod)
+        public GameSettingString(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public GameSettingString(IMod mod, string editorID)
+        public GameSettingString(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

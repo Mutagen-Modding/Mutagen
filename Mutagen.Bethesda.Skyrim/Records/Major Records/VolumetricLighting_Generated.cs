@@ -731,12 +731,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public VolumetricLighting(IMod mod)
+        public VolumetricLighting(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public VolumetricLighting(IMod mod, string editorID)
+        public VolumetricLighting(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

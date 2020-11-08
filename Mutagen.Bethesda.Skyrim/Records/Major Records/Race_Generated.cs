@@ -3742,12 +3742,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public Race(IMod mod)
+        public Race(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Race(IMod mod, string editorID)
+        public Race(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

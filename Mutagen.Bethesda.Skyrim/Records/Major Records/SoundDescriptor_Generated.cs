@@ -966,12 +966,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public SoundDescriptor(IMod mod)
+        public SoundDescriptor(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public SoundDescriptor(IMod mod, string editorID)
+        public SoundDescriptor(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

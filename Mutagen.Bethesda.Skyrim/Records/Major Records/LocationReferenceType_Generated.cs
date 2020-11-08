@@ -365,12 +365,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public LocationReferenceType(IMod mod)
+        public LocationReferenceType(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public LocationReferenceType(IMod mod, string editorID)
+        public LocationReferenceType(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

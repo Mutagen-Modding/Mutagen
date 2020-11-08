@@ -725,12 +725,12 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        public PathGrid(IMod mod)
+        public PathGrid(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public PathGrid(IMod mod, string editorID)
+        public PathGrid(IOblivionMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

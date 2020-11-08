@@ -815,12 +815,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public Climate(IMod mod)
+        public Climate(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Climate(IMod mod, string editorID)
+        public Climate(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

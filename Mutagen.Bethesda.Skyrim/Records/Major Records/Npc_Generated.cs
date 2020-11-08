@@ -2627,12 +2627,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public Npc(IMod mod)
+        public Npc(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Npc(IMod mod, string editorID)
+        public Npc(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

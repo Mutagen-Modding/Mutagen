@@ -470,12 +470,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public AcousticSpace(IMod mod)
+        public AcousticSpace(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public AcousticSpace(IMod mod, string editorID)
+        public AcousticSpace(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

@@ -865,12 +865,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public Grass(IMod mod)
+        public Grass(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Grass(IMod mod, string editorID)
+        public Grass(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

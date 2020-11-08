@@ -587,12 +587,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public LeveledItem(IMod mod)
+        public LeveledItem(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public LeveledItem(IMod mod, string editorID)
+        public LeveledItem(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Generation
             }
             fg.AppendLine();
 
-            fg.AppendLine($"public {obj.Name}(IMod mod)");
+            fg.AppendLine($"public {obj.Name}(I{obj.GetObjectData().GameCategory}Mod mod)");
             using (new DepthWrapper(fg))
             {
                 fg.AppendLine($": this(mod.{nameof(IMod.GetNextFormKey)}())");
@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Generation
             }
             fg.AppendLine();
 
-            fg.AppendLine($"public {obj.Name}(IMod mod, string editorID)");
+            fg.AppendLine($"public {obj.Name}(I{obj.GetObjectData().GameCategory}Mod mod, string editorID)");
             using (new DepthWrapper(fg))
             {
                 fg.AppendLine($": this(mod.{nameof(IMod.GetNextFormKey)}(editorID))");

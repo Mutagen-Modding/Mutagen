@@ -734,12 +734,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public ReverbParameters(IMod mod)
+        public ReverbParameters(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public ReverbParameters(IMod mod, string editorID)
+        public ReverbParameters(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

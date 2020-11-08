@@ -320,12 +320,12 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        public ANpcSpawn(IMod mod)
+        public ANpcSpawn(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public ANpcSpawn(IMod mod, string editorID)
+        public ANpcSpawn(IOblivionMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

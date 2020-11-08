@@ -997,12 +997,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public CombatStyle(IMod mod)
+        public CombatStyle(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public CombatStyle(IMod mod, string editorID)
+        public CombatStyle(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

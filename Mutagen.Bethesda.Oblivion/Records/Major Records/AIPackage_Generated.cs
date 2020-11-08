@@ -636,12 +636,12 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        public AIPackage(IMod mod)
+        public AIPackage(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public AIPackage(IMod mod, string editorID)
+        public AIPackage(IOblivionMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

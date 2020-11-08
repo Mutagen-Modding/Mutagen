@@ -522,12 +522,12 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        public Flora(IMod mod)
+        public Flora(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Flora(IMod mod, string editorID)
+        public Flora(IOblivionMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

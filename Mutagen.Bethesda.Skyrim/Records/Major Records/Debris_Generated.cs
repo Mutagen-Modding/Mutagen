@@ -448,12 +448,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public Debris(IMod mod)
+        public Debris(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Debris(IMod mod, string editorID)
+        public Debris(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

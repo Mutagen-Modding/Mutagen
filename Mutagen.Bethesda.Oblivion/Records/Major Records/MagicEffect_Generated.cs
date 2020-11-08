@@ -641,12 +641,12 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        public MagicEffect(IMod mod)
+        public MagicEffect(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public MagicEffect(IMod mod, string editorID)
+        public MagicEffect(IOblivionMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

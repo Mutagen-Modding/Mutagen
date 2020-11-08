@@ -609,12 +609,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public CollisionLayer(IMod mod)
+        public CollisionLayer(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public CollisionLayer(IMod mod, string editorID)
+        public CollisionLayer(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

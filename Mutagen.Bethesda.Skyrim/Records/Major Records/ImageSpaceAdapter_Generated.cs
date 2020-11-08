@@ -6952,12 +6952,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public ImageSpaceAdapter(IMod mod)
+        public ImageSpaceAdapter(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public ImageSpaceAdapter(IMod mod, string editorID)
+        public ImageSpaceAdapter(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

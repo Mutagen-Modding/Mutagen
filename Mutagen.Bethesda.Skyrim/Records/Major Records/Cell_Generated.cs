@@ -1860,12 +1860,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public Cell(IMod mod)
+        public Cell(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Cell(IMod mod, string editorID)
+        public Cell(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

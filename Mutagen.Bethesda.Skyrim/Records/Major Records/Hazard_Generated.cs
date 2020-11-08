@@ -828,12 +828,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public Hazard(IMod mod)
+        public Hazard(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Hazard(IMod mod, string editorID)
+        public Hazard(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

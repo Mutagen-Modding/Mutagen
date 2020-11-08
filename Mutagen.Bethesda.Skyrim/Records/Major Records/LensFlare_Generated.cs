@@ -317,12 +317,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public LensFlare(IMod mod)
+        public LensFlare(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public LensFlare(IMod mod, string editorID)
+        public LensFlare(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

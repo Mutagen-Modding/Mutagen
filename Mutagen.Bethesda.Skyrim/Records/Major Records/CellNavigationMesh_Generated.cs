@@ -389,12 +389,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public CellNavigationMesh(IMod mod)
+        public CellNavigationMesh(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public CellNavigationMesh(IMod mod, string editorID)
+        public CellNavigationMesh(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

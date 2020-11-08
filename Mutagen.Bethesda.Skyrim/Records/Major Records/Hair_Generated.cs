@@ -317,12 +317,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public Hair(IMod mod)
+        public Hair(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Hair(IMod mod, string editorID)
+        public Hair(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

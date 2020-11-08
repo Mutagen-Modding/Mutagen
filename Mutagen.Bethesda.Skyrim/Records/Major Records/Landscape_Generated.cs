@@ -725,12 +725,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public Landscape(IMod mod)
+        public Landscape(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Landscape(IMod mod, string editorID)
+        public Landscape(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

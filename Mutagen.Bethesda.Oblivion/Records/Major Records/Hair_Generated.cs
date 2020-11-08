@@ -474,12 +474,12 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        public Hair(IMod mod)
+        public Hair(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Hair(IMod mod, string editorID)
+        public Hair(IOblivionMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

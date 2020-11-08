@@ -532,12 +532,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public MaterialType(IMod mod)
+        public MaterialType(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public MaterialType(IMod mod, string editorID)
+        public MaterialType(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

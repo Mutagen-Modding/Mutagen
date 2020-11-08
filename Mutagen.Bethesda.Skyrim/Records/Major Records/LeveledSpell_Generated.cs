@@ -558,12 +558,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public LeveledSpell(IMod mod)
+        public LeveledSpell(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public LeveledSpell(IMod mod, string editorID)
+        public LeveledSpell(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

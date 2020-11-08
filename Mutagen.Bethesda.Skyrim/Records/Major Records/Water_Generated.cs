@@ -2598,12 +2598,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public Water(IMod mod)
+        public Water(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Water(IMod mod, string editorID)
+        public Water(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

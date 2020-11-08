@@ -1370,12 +1370,12 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        public Race(IMod mod)
+        public Race(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Race(IMod mod, string editorID)
+        public Race(IOblivionMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

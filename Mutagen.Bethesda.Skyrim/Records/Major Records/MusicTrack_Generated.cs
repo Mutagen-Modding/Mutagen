@@ -893,12 +893,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public MusicTrack(IMod mod)
+        public MusicTrack(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public MusicTrack(IMod mod, string editorID)
+        public MusicTrack(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

@@ -442,12 +442,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public StoryManagerEventNode(IMod mod)
+        public StoryManagerEventNode(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public StoryManagerEventNode(IMod mod, string editorID)
+        public StoryManagerEventNode(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

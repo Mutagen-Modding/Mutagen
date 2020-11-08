@@ -921,12 +921,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public SoulGem(IMod mod)
+        public SoulGem(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public SoulGem(IMod mod, string editorID)
+        public SoulGem(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

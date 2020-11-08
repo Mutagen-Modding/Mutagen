@@ -1292,12 +1292,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public APlacedTrap(IMod mod)
+        public APlacedTrap(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public APlacedTrap(IMod mod, string editorID)
+        public APlacedTrap(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

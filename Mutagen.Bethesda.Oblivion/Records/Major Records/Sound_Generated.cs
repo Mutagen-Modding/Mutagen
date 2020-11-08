@@ -408,12 +408,12 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        public Sound(IMod mod)
+        public Sound(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Sound(IMod mod, string editorID)
+        public Sound(IOblivionMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

@@ -714,12 +714,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public TextureSet(IMod mod)
+        public TextureSet(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public TextureSet(IMod mod, string editorID)
+        public TextureSet(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

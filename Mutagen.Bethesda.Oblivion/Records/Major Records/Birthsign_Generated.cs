@@ -549,12 +549,12 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        public Birthsign(IMod mod)
+        public Birthsign(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Birthsign(IMod mod, string editorID)
+        public Birthsign(IOblivionMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

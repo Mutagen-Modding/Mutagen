@@ -427,12 +427,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public ColorRecord(IMod mod)
+        public ColorRecord(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public ColorRecord(IMod mod, string editorID)
+        public ColorRecord(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

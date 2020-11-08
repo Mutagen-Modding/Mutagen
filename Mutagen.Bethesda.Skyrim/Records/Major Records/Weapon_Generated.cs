@@ -1531,12 +1531,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public Weapon(IMod mod)
+        public Weapon(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Weapon(IMod mod, string editorID)
+        public Weapon(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

@@ -500,12 +500,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public SoundCategory(IMod mod)
+        public SoundCategory(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public SoundCategory(IMod mod, string editorID)
+        public SoundCategory(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

@@ -787,12 +787,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public ShaderParticleGeometry(IMod mod)
+        public ShaderParticleGeometry(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public ShaderParticleGeometry(IMod mod, string editorID)
+        public ShaderParticleGeometry(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

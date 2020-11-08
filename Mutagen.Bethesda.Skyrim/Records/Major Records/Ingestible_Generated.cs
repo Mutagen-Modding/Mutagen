@@ -1127,12 +1127,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public Ingestible(IMod mod)
+        public Ingestible(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Ingestible(IMod mod, string editorID)
+        public Ingestible(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

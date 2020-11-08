@@ -885,12 +885,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public Flora(IMod mod)
+        public Flora(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Flora(IMod mod, string editorID)
+        public Flora(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

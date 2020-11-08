@@ -676,12 +676,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public DialogView(IMod mod)
+        public DialogView(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public DialogView(IMod mod, string editorID)
+        public DialogView(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

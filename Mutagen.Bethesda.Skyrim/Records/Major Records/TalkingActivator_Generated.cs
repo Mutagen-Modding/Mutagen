@@ -795,12 +795,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public TalkingActivator(IMod mod)
+        public TalkingActivator(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public TalkingActivator(IMod mod, string editorID)
+        public TalkingActivator(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

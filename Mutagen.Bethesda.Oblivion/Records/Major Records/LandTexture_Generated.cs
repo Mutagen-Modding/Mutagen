@@ -562,12 +562,12 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        public LandTexture(IMod mod)
+        public LandTexture(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public LandTexture(IMod mod, string editorID)
+        public LandTexture(IOblivionMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

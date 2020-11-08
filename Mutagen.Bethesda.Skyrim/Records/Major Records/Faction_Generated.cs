@@ -1138,12 +1138,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public Faction(IMod mod)
+        public Faction(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Faction(IMod mod, string editorID)
+        public Faction(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

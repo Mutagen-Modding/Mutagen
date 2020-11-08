@@ -518,12 +518,12 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        public LeveledSpell(IMod mod)
+        public LeveledSpell(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public LeveledSpell(IMod mod, string editorID)
+        public LeveledSpell(IOblivionMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

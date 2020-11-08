@@ -3899,12 +3899,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public EffectShader(IMod mod)
+        public EffectShader(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public EffectShader(IMod mod, string editorID)
+        public EffectShader(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

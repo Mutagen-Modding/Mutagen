@@ -2911,12 +2911,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public Weather(IMod mod)
+        public Weather(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Weather(IMod mod, string editorID)
+        public Weather(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

@@ -641,12 +641,12 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        public SigilStone(IMod mod)
+        public SigilStone(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public SigilStone(IMod mod, string editorID)
+        public SigilStone(IOblivionMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

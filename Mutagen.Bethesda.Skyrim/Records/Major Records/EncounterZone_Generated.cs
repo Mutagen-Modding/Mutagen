@@ -594,12 +594,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public EncounterZone(IMod mod)
+        public EncounterZone(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public EncounterZone(IMod mod, string editorID)
+        public EncounterZone(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

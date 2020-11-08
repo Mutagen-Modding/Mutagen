@@ -604,12 +604,12 @@ namespace Mutagen.Bethesda.Skyrim
             CustomCtor();
         }
 
-        public IdleMarker(IMod mod)
+        public IdleMarker(ISkyrimMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public IdleMarker(IMod mod, string editorID)
+        public IdleMarker(ISkyrimMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
