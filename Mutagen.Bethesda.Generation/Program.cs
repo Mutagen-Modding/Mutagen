@@ -1,13 +1,9 @@
 using Loqui;
 using Loqui.Generation;
 using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Generation
 {
@@ -17,7 +13,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "ield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter";
+            string testString = "r ret = new VoiceType(getNextFormKey())";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

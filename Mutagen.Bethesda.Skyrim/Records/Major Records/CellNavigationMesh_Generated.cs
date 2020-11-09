@@ -383,19 +383,44 @@ namespace Mutagen.Bethesda.Skyrim
         IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => CellNavigationMeshCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellNavigationMeshCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellNavigationMeshCommon.Instance.RemapLinks(this, mapping);
-        public CellNavigationMesh(FormKey formKey)
+        public CellNavigationMesh(
+            FormKey formKey,
+            SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
+            CustomCtor();
+        }
+
+        private CellNavigationMesh(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            CustomCtor();
+        }
+
+        internal CellNavigationMesh(
+            FormKey formKey,
+            ushort formVersion)
+        {
+            this.FormKey = formKey;
+            this.FormVersion = formVersion;
             CustomCtor();
         }
 
         public CellNavigationMesh(ISkyrimMod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.SkyrimRelease)
         {
         }
 
         public CellNavigationMesh(ISkyrimMod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.SkyrimRelease)
         {
             this.EditorID = editorID;
         }
@@ -1037,7 +1062,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
-            var ret = new CellNavigationMesh(getNextFormKey());
+            var ret = new CellNavigationMesh(getNextFormKey(), ((ICellNavigationMeshGetter)item).FormVersion);
             ret.DeepCopyIn((CellNavigationMesh)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (CellNavigationMesh)item, getNextFormKey, duplicatedRecords);

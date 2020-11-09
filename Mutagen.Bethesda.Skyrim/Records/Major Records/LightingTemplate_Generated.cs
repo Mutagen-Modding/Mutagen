@@ -1191,19 +1191,44 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = LightingTemplate_Registration.TriggeringRecordType;
-        public LightingTemplate(FormKey formKey)
+        public LightingTemplate(
+            FormKey formKey,
+            SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
+            CustomCtor();
+        }
+
+        private LightingTemplate(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            CustomCtor();
+        }
+
+        internal LightingTemplate(
+            FormKey formKey,
+            ushort formVersion)
+        {
+            this.FormKey = formKey;
+            this.FormVersion = formVersion;
             CustomCtor();
         }
 
         public LightingTemplate(ISkyrimMod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.SkyrimRelease)
         {
         }
 
         public LightingTemplate(ISkyrimMod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.SkyrimRelease)
         {
             this.EditorID = editorID;
         }
@@ -2048,7 +2073,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
-            var ret = new LightingTemplate(getNextFormKey());
+            var ret = new LightingTemplate(getNextFormKey(), ((ILightingTemplateGetter)item).FormVersion);
             ret.DeepCopyIn((LightingTemplate)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (LightingTemplate)item, getNextFormKey, duplicatedRecords);

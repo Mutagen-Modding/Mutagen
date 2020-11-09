@@ -606,6 +606,14 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
+        private SkillRecord(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            CustomCtor();
+        }
+
         public SkillRecord(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {

@@ -6946,19 +6946,44 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = ImageSpaceAdapter_Registration.TriggeringRecordType;
-        public ImageSpaceAdapter(FormKey formKey)
+        public ImageSpaceAdapter(
+            FormKey formKey,
+            SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
+            CustomCtor();
+        }
+
+        private ImageSpaceAdapter(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            CustomCtor();
+        }
+
+        internal ImageSpaceAdapter(
+            FormKey formKey,
+            ushort formVersion)
+        {
+            this.FormKey = formKey;
+            this.FormVersion = formVersion;
             CustomCtor();
         }
 
         public ImageSpaceAdapter(ISkyrimMod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.SkyrimRelease)
         {
         }
 
         public ImageSpaceAdapter(ISkyrimMod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.SkyrimRelease)
         {
             this.EditorID = editorID;
         }
@@ -9177,7 +9202,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
-            var ret = new ImageSpaceAdapter(getNextFormKey());
+            var ret = new ImageSpaceAdapter(getNextFormKey(), ((IImageSpaceAdapterGetter)item).FormVersion);
             ret.DeepCopyIn((ImageSpaceAdapter)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (ImageSpaceAdapter)item, getNextFormKey, duplicatedRecords);

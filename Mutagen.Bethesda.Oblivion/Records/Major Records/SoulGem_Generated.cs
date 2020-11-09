@@ -590,6 +590,14 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
+        private SoulGem(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            CustomCtor();
+        }
+
         public SoulGem(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {

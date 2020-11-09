@@ -42,8 +42,8 @@ namespace Mutagen.Bethesda.UnitTests
             };
             block.SubBlocks.Add(subBlock);
             mod.Cells.Records.Add(block);
-            var cell1 = new Cell(mod.GetNextFormKey());
-            var cell2 = new Cell(mod.GetNextFormKey());
+            var cell1 = new Cell(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE);
+            var cell2 = new Cell(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE);
             subBlock.Cells.Add(cell1);
             subBlock.Cells.Add(cell2);
             var block2 = new CellBlock()
@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.UnitTests
             };
             block2.SubBlocks.Add(subBlock2);
             mod.Cells.Records.Add(block2);
-            var cell3 = new Cell(mod.GetNextFormKey());
+            var cell3 = new Cell(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE);
             subBlock2.Cells.Add(cell3);
 
             var mod2 = new SkyrimMod(Utility.ModKey2, SkyrimRelease.SkyrimSE);
@@ -90,8 +90,8 @@ namespace Mutagen.Bethesda.UnitTests
             };
             block.SubBlocks.Add(subBlock);
             mod.Cells.Records.Add(block);
-            var cell1 = new Cell(mod.GetNextFormKey());
-            var cell2 = new Cell(mod.GetNextFormKey());
+            var cell1 = new Cell(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE);
+            var cell2 = new Cell(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE);
             subBlock.Cells.Add(cell1);
             subBlock.Cells.Add(cell2);
             var block2 = new CellBlock()
@@ -106,12 +106,12 @@ namespace Mutagen.Bethesda.UnitTests
             };
             block2.SubBlocks.Add(subBlock2);
             mod.Cells.Records.Add(block2);
-            var cell3 = new Cell(mod.GetNextFormKey());
+            var cell3 = new Cell(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE);
             subBlock2.Cells.Add(cell3);
 
-            var placedNpc = new PlacedNpc(mod.GetNextFormKey());
+            var placedNpc = new PlacedNpc(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE);
             cell2.Persistent.Add(placedNpc);
-            var placedObj = new PlacedObject(mod.GetNextFormKey());
+            var placedObj = new PlacedObject(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE);
             cell2.Persistent.Add(placedObj);
 
             var cache = mod.ToImmutableLinkCache();
@@ -144,8 +144,8 @@ namespace Mutagen.Bethesda.UnitTests
             };
             block.SubBlocks.Add(subBlock);
             mod.Cells.Records.Add(block);
-            var cell1 = new Cell(mod.GetNextFormKey());
-            var cell2 = new Cell(mod.GetNextFormKey());
+            var cell1 = new Cell(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE);
+            var cell2 = new Cell(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE);
             subBlock.Cells.Add(cell1);
             subBlock.Cells.Add(cell2);
             var block2 = new CellBlock()
@@ -160,12 +160,12 @@ namespace Mutagen.Bethesda.UnitTests
             };
             block2.SubBlocks.Add(subBlock2);
             mod.Cells.Records.Add(block2);
-            var cell3 = new Cell(mod.GetNextFormKey());
+            var cell3 = new Cell(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE);
             subBlock2.Cells.Add(cell3);
 
-            var placedNpc = new PlacedNpc(mod.GetNextFormKey());
+            var placedNpc = new PlacedNpc(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE);
             cell2.Persistent.Add(placedNpc);
-            var placedObj = new PlacedObject(mod.GetNextFormKey());
+            var placedObj = new PlacedObject(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE);
             cell2.Persistent.Add(placedObj);
 
             var cache = mod.ToImmutableLinkCache();
@@ -204,8 +204,8 @@ namespace Mutagen.Bethesda.UnitTests
             };
             block.Items.Add(subBlock);
             worldspace.SubCells.Add(block);
-            var cell1 = new Cell(mod.GetNextFormKey());
-            var cell2 = new Cell(mod.GetNextFormKey());
+            var cell1 = new Cell(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE);
+            var cell2 = new Cell(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE);
             subBlock.Items.Add(cell1);
             subBlock.Items.Add(cell2);
             var block2 = new WorldspaceBlock()
@@ -222,7 +222,7 @@ namespace Mutagen.Bethesda.UnitTests
             };
             block2.Items.Add(subBlock2);
             worldspace.SubCells.Add(block2);
-            var cell3 = new Cell(mod.GetNextFormKey());
+            var cell3 = new Cell(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE);
             subBlock2.Items.Add(cell3);
 
             var cache = mod.ToImmutableLinkCache();
@@ -262,8 +262,8 @@ namespace Mutagen.Bethesda.UnitTests
             };
             block.Items.Add(subBlock);
             worldspace.SubCells.Add(block);
-            var cell1 = new Cell(mod.GetNextFormKey());
-            var cell2 = new Cell(mod.GetNextFormKey());
+            var cell1 = new Cell(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE);
+            var cell2 = new Cell(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE);
             subBlock.Items.Add(cell1);
             subBlock.Items.Add(cell2);
             var block2 = new WorldspaceBlock()
@@ -280,12 +280,12 @@ namespace Mutagen.Bethesda.UnitTests
             };
             block2.Items.Add(subBlock2);
             worldspace.SubCells.Add(block2);
-            var cell3 = new Cell(mod.GetNextFormKey());
+            var cell3 = new Cell(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE);
             subBlock2.Items.Add(cell3);
 
-            var placedNpc = new PlacedNpc(mod.GetNextFormKey());
+            var placedNpc = new PlacedNpc(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE);
             cell2.Persistent.Add(placedNpc);
-            var placedObj = new PlacedObject(mod.GetNextFormKey());
+            var placedObj = new PlacedObject(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE);
             cell2.Persistent.Add(placedObj);
 
             var cache = mod.ToImmutableLinkCache();
@@ -323,8 +323,8 @@ namespace Mutagen.Bethesda.UnitTests
             };
             block.Items.Add(subBlock);
             worldspace.SubCells.Add(block);
-            var cell1 = new Cell(mod.GetNextFormKey());
-            var cell2 = new Cell(mod.GetNextFormKey());
+            var cell1 = new Cell(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE);
+            var cell2 = new Cell(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE);
             subBlock.Items.Add(cell1);
             subBlock.Items.Add(cell2);
             var block2 = new WorldspaceBlock()
@@ -341,12 +341,12 @@ namespace Mutagen.Bethesda.UnitTests
             };
             block2.Items.Add(subBlock2);
             worldspace.SubCells.Add(block2);
-            var cell3 = new Cell(mod.GetNextFormKey());
+            var cell3 = new Cell(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE);
             subBlock2.Items.Add(cell3);
 
-            var placedNpc = new PlacedNpc(mod.GetNextFormKey());
+            var placedNpc = new PlacedNpc(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE);
             cell2.Persistent.Add(placedNpc);
-            var placedObj = new PlacedObject(mod.GetNextFormKey());
+            var placedObj = new PlacedObject(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE);
             cell2.Persistent.Add(placedObj);
 
             var cache = mod.ToImmutableLinkCache();
@@ -390,18 +390,18 @@ namespace Mutagen.Bethesda.UnitTests
             };
             block.Items.Add(subBlock);
             worldspace.SubCells.Add(block);
-            var cell = new Cell(mod.GetNextFormKey());
+            var cell = new Cell(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE);
             cell.EditorID = Mod1Name;
             subBlock.Items.Add(cell);
 
-            var placedObj = new PlacedObject(mod.GetNextFormKey());
+            var placedObj = new PlacedObject(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE);
             placedObj.EditorID = Mod1Name;
             cell.Persistent.Add(placedObj);
 
             // Override cell in 2nd mod
             const string Mod2Name = "Mod2";
             var mod2 = new SkyrimMod(Utility.ModKey2, SkyrimRelease.SkyrimSE);
-            var worldspace2 = new Worldspace(worldspace.FormKey);
+            var worldspace2 = new Worldspace(worldspace.FormKey, SkyrimRelease.SkyrimSE);
             worldspace2.EditorID = Mod2Name;
             mod2.Worldspaces.Add(worldspace2);
             var block2 = new WorldspaceBlock()
@@ -418,14 +418,14 @@ namespace Mutagen.Bethesda.UnitTests
             };
             block2.Items.Add(subBlock2);
             worldspace2.SubCells.Add(block2);
-            var cell2 = new Cell(cell.FormKey);
+            var cell2 = new Cell(cell.FormKey, SkyrimRelease.SkyrimSE);
             cell2.EditorID = Mod2Name;
             subBlock2.Items.Add(cell2);
 
             // Override worldspace in 3rd mod
             const string Mod3Name = "Mod3";
             var mod3 = new SkyrimMod(Utility.ModKey3, SkyrimRelease.SkyrimSE);
-            var worldspace3 = new Worldspace(worldspace.FormKey);
+            var worldspace3 = new Worldspace(worldspace.FormKey, SkyrimRelease.SkyrimSE);
             worldspace3.EditorID = Mod3Name;
             mod3.Worldspaces.Add(worldspace3);
 
@@ -465,12 +465,12 @@ namespace Mutagen.Bethesda.UnitTests
             };
             block.Items.Add(subBlock);
             worldspace.SubCells.Add(block);
-            var cell = new Cell(mod.GetNextFormKey());
+            var cell = new Cell(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE);
             subBlock.Items.Add(cell);
 
-            var placedNpc = new PlacedNpc(mod.GetNextFormKey());
+            var placedNpc = new PlacedNpc(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE);
             cell.Persistent.Add(placedNpc);
-            var placedObj = new PlacedObject(mod.GetNextFormKey());
+            var placedObj = new PlacedObject(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE);
             cell.Persistent.Add(placedObj);
 
             var cache = mod.ToImmutableLinkCache();
@@ -499,12 +499,12 @@ namespace Mutagen.Bethesda.UnitTests
             };
             block.Items.Add(subBlock);
             worldspace.SubCells.Add(block);
-            var cell = new Cell(mod.GetNextFormKey());
+            var cell = new Cell(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE);
             subBlock.Items.Add(cell);
 
-            var placedNpc = new PlacedNpc(mod.GetNextFormKey());
+            var placedNpc = new PlacedNpc(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE);
             cell.Persistent.Add(placedNpc);
-            var placedObj = new PlacedObject(mod.GetNextFormKey());
+            var placedObj = new PlacedObject(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE);
             cell.Persistent.Add(placedObj);
 
             var cache = mod.ToImmutableLinkCache();

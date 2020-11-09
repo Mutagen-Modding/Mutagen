@@ -562,6 +562,14 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
+        private LandTexture(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            CustomCtor();
+        }
+
         public LandTexture(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {

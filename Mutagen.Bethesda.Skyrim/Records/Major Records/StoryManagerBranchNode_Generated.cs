@@ -403,19 +403,44 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = StoryManagerBranchNode_Registration.TriggeringRecordType;
-        public StoryManagerBranchNode(FormKey formKey)
+        public StoryManagerBranchNode(
+            FormKey formKey,
+            SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
+            CustomCtor();
+        }
+
+        private StoryManagerBranchNode(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            CustomCtor();
+        }
+
+        internal StoryManagerBranchNode(
+            FormKey formKey,
+            ushort formVersion)
+        {
+            this.FormKey = formKey;
+            this.FormVersion = formVersion;
             CustomCtor();
         }
 
         public StoryManagerBranchNode(ISkyrimMod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.SkyrimRelease)
         {
         }
 
         public StoryManagerBranchNode(ISkyrimMod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.SkyrimRelease)
         {
             this.EditorID = editorID;
         }
@@ -1059,7 +1084,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
-            var ret = new StoryManagerBranchNode(getNextFormKey());
+            var ret = new StoryManagerBranchNode(getNextFormKey(), ((IStoryManagerBranchNodeGetter)item).FormVersion);
             ret.DeepCopyIn((StoryManagerBranchNode)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (StoryManagerBranchNode)item, getNextFormKey, duplicatedRecords);

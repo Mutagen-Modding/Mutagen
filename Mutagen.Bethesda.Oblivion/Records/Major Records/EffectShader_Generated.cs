@@ -441,6 +441,14 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
+        private EffectShader(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            CustomCtor();
+        }
+
         public EffectShader(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {

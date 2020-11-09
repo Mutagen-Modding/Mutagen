@@ -580,6 +580,14 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
+        private LeveledCreature(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            CustomCtor();
+        }
+
         public LeveledCreature(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {

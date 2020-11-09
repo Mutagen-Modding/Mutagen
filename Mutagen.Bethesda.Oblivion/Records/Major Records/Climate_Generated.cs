@@ -610,6 +610,14 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
+        private Climate(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            CustomCtor();
+        }
+
         public Climate(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {

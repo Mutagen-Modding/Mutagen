@@ -1064,6 +1064,14 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
+        private DialogItem(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            CustomCtor();
+        }
+
         public DialogItem(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {

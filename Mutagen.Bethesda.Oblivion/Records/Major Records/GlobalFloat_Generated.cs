@@ -362,6 +362,14 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
+        private GlobalFloat(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            CustomCtor();
+        }
+
         public GlobalFloat(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {

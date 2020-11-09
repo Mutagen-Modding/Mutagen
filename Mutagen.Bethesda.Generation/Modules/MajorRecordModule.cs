@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.Generation
                 }
                 else
                 {
-                    fg.AppendLine($"var ret = new {obj.Name}(getNextFormKey());");
+                    fg.AppendLine($"var ret = new {obj.Name}(getNextFormKey(){((obj.GetObjectData().GameCategory?.HasFormVersion() ?? false) ? $", (({obj.Interface(getter: true)})item).FormVersion" : string.Empty)});");
                     //ToDo
                     // Modify to getter interface after copy is refactored
                     fg.AppendLine($"ret.DeepCopyIn(({obj.ObjectName})item);");
@@ -54,18 +54,72 @@ namespace Mutagen.Bethesda.Generation
         {
             await base.GenerateInClass(obj, fg);
             if (!await obj.IsMajorRecord()) return;
-            fg.AppendLine($"public {obj.Name}(FormKey formKey)");
+            using (var args = new FunctionWrapper(fg,
+                $"public {obj.Name}"))
+            {
+                args.Add($"{nameof(FormKey)} formKey");
+                if (obj.GetObjectData().GameCategory?.HasFormVersion() ?? false)
+                {
+                    args.Add($"{obj.GetObjectData().GameCategory}Release gameRelease");
+                }
+            }
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine("this.FormKey = formKey;");
+                if (obj.GetObjectData().GameCategory?.HasFormVersion() ?? false)
+                {
+                    fg.AppendLine("this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;");
+                }
                 fg.AppendLine("CustomCtor();");
             }
             fg.AppendLine();
 
+            // Used for reflection based construction
+            using (var args = new FunctionWrapper(fg,
+                $"private {obj.Name}"))
+            {
+                args.Add($"{nameof(FormKey)} formKey");
+                args.Add($"{nameof(GameRelease)} gameRelease");
+            }
+            using (new BraceWrapper(fg))
+            {
+                fg.AppendLine("this.FormKey = formKey;");
+                if (obj.GetObjectData().GameCategory?.HasFormVersion() ?? false)
+                {
+                    fg.AppendLine("this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;");
+                }
+                fg.AppendLine("CustomCtor();");
+            }
+            fg.AppendLine();
+
+            if (obj.GetObjectData().GameCategory?.HasFormVersion() ?? false)
+            {
+                using (var args = new FunctionWrapper(fg,
+                    $"internal {obj.Name}"))
+                {
+                    args.Add($"{nameof(FormKey)} formKey");
+                    args.Add($"ushort formVersion");
+                }
+                using (new BraceWrapper(fg))
+                {
+                    fg.AppendLine("this.FormKey = formKey;");
+                    fg.AppendLine("this.FormVersion = formVersion;");
+                    fg.AppendLine("CustomCtor();");
+                }
+                fg.AppendLine();
+            }
+
             fg.AppendLine($"public {obj.Name}(I{obj.GetObjectData().GameCategory}Mod mod)");
             using (new DepthWrapper(fg))
             {
-                fg.AppendLine($": this(mod.{nameof(IMod.GetNextFormKey)}())");
+                using (var args = new FunctionWrapper(fg, ": this"))
+                {
+                    args.Add($"mod.{nameof(IMod.GetNextFormKey)}()");
+                    if (obj.GetObjectData().GameCategory?.HasFormVersion() ?? false)
+                    {
+                        args.Add($"mod.{obj.GetObjectData().GameCategory}Release");
+                    }
+                }
             }
             using (new BraceWrapper(fg))
             {
@@ -75,7 +129,14 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"public {obj.Name}(I{obj.GetObjectData().GameCategory}Mod mod, string editorID)");
             using (new DepthWrapper(fg))
             {
-                fg.AppendLine($": this(mod.{nameof(IMod.GetNextFormKey)}(editorID))");
+                using (var args = new FunctionWrapper(fg, ": this"))
+                {
+                    args.Add($"mod.{nameof(IMod.GetNextFormKey)}(editorID)");
+                    if (obj.GetObjectData().GameCategory?.HasFormVersion() ?? false)
+                    {
+                        args.Add($"mod.{obj.GetObjectData().GameCategory}Release");
+                    }
+                }
             }
             using (new BraceWrapper(fg))
             {

@@ -725,6 +725,14 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
+        private PathGrid(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            CustomCtor();
+        }
+
         public PathGrid(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {

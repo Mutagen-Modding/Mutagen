@@ -1655,6 +1655,14 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
+        private Npc(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            CustomCtor();
+        }
+
         public Npc(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {

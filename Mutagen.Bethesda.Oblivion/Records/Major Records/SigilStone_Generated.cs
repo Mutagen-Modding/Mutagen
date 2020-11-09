@@ -641,6 +641,14 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
+        private SigilStone(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            CustomCtor();
+        }
+
         public SigilStone(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {

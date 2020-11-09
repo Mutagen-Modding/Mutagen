@@ -1,11 +1,5 @@
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
-using Mutagen.Bethesda.Oblivion.Internals;
-using Mutagen.Bethesda.Skyrim;
-using Mutagen.Bethesda.Skyrim.Internals;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests
@@ -17,7 +11,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             WarmupOblivion.Init();
             var form = new FormKey(Mutagen.Bethesda.Oblivion.Constants.Oblivion, 0x123456);
-            var ret = MajorRecordInstantiator<Oblivion.Ammunition>.Activator(form);
+            var ret = MajorRecordInstantiator<Oblivion.Ammunition>.Activator(form, GameRelease.Oblivion);
             Assert.IsType<Oblivion.Ammunition>(ret);
             Assert.Equal(form, ret.FormKey);
         }
@@ -27,7 +21,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             WarmupOblivion.Init();
             var form = new FormKey(Mutagen.Bethesda.Oblivion.Constants.Oblivion, 0x123456);
-            var ret = MajorRecordInstantiator<Oblivion.IAmmunition>.Activator(form);
+            var ret = MajorRecordInstantiator<Oblivion.IAmmunition>.Activator(form, GameRelease.Oblivion);
             Assert.IsType<Oblivion.Ammunition>(ret);
             Assert.Equal(form, ret.FormKey);
         }
@@ -37,7 +31,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             WarmupOblivion.Init();
             var form = new FormKey(Mutagen.Bethesda.Oblivion.Constants.Oblivion, 0x123456);
-            var ret = MajorRecordInstantiator<Oblivion.IAmmunitionGetter>.Activator(form);
+            var ret = MajorRecordInstantiator<Oblivion.IAmmunitionGetter>.Activator(form, GameRelease.Oblivion);
             Assert.IsType<Oblivion.Ammunition>(ret);
             Assert.Equal(form, ret.FormKey);
         }

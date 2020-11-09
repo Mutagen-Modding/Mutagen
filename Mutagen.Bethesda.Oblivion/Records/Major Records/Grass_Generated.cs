@@ -421,6 +421,14 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
+        private Grass(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            CustomCtor();
+        }
+
         public Grass(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {

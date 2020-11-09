@@ -12,8 +12,8 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void FalseLoquiSpecification()
         {
-            ICell cell = new Cell(Utility.Form1);
-            cell.Landscape = new Landscape(Utility.Form2);
+            ICell cell = new Cell(Utility.Form1, SkyrimRelease.SkyrimLE);
+            cell.Landscape = new Landscape(Utility.Form2, SkyrimRelease.SkyrimLE);
             var copy = (Cell)cell.DeepCopy(new Cell.TranslationMask(true)
             {
                 Landscape = false

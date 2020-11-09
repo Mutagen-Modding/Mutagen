@@ -518,6 +518,14 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
+        private LeveledSpell(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            CustomCtor();
+        }
+
         public LeveledSpell(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {

@@ -500,6 +500,14 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
+        private SpellUnleveled(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            CustomCtor();
+        }
+
         public SpellUnleveled(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {

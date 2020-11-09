@@ -459,6 +459,14 @@ namespace Mutagen.Bethesda
             CustomCtor();
         }
 
+        private MajorRecord(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            CustomCtor();
+        }
+
         public MajorRecord(IMod mod)
             : this(mod.GetNextFormKey())
         {

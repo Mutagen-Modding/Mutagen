@@ -408,6 +408,14 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
+        private Sound(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            CustomCtor();
+        }
+
         public Sound(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {

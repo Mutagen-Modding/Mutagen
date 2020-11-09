@@ -478,6 +478,14 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
+        private Furniture(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            CustomCtor();
+        }
+
         public Furniture(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {

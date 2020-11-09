@@ -421,6 +421,14 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
+        private CombatStyle(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            CustomCtor();
+        }
+
         public CombatStyle(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {
