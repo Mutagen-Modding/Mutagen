@@ -2774,6 +2774,10 @@ namespace Mutagen.Bethesda.Generation
                             using (var args = new ArgsWrapper(fg,
                                 $"{call}"))
                             {
+                                if (await obj.IsMajorRecord())
+                                {
+                                    args.Add("majorReference: ret");
+                                }
                                 args.Add($"stream: stream");
                                 if (obj.GetObjectType() != ObjectType.Mod)
                                 {

@@ -85,9 +85,11 @@ namespace Mutagen.Bethesda
                 record: record,
                 frame: frame);
             if (fillTyped == null) return record;
-            MutagenFrame targetFrame = frame;
-            if (record.IsCompressed)
+            try
             {
+                MutagenFrame targetFrame = frame;
+                if (record.IsCompressed)
+                {
                 targetFrame = frame.Decompress();
             }
             Dictionary<RecordType, int>? recordParseCount = null;
@@ -131,8 +133,13 @@ namespace Mutagen.Bethesda
                 }
             }
             frame.SetToFinalPosition();
-            frame.MetaData.FormVersion = null;
-            return record;
+                frame.MetaData.FormVersion = null;
+                return record;
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Factory(ex, record);
+            }
         }
 
         public static M RecordParse<M>(
