@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             bool squashedRepeatedList) => true;
 
-        public abstract void GenerateWrite(
+        public abstract Task GenerateWrite(
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,

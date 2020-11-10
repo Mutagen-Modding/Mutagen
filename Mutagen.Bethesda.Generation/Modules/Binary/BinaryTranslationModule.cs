@@ -1824,7 +1824,7 @@ namespace Mutagen.Bethesda.Generation
                             }
                             using (new BraceWrapper(fg, doIt: fieldData.HasVersioning))
                             {
-                                generator.GenerateWrite(
+                                await generator.GenerateWrite(
                                     fg: fg,
                                     objGen: obj,
                                     typeGen: field,

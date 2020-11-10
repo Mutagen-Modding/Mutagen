@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"{readerAccessor}.SetPosition({readerAccessor}.Position + {zero.Length});");
         }
 
-        public override void GenerateWrite(
+        public override async Task GenerateWrite(
             FileGeneration fg,
             ObjectGeneration objGen, 
             TypeGeneration typeGen,

@@ -1,4 +1,4 @@
-﻿using Loqui;
+using Loqui;
 using Loqui.Generation;
 using System;
 using System.Collections.Generic;
@@ -27,7 +27,7 @@ namespace Mutagen.Bethesda.Generation
             throw new NotImplementedException();
         }
 
-        public override void GenerateWrite(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, Accessor writerAccessor, Accessor itemAccessor, Accessor errorMaskAccessor, Accessor translationAccessor, Accessor converterAccessor)
+        public override async Task GenerateWrite(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, Accessor writerAccessor, Accessor itemAccessor, Accessor errorMaskAccessor, Accessor translationAccessor, Accessor converterAccessor)
         {
             fg.AppendLine($"using (HeaderExport.Subrecord(writer, RecordTypes.{typeGen.GetFieldData().RecordType.Value})) {{ }}");
         }
