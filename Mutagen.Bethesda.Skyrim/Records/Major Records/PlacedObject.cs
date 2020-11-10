@@ -174,20 +174,18 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     throw new ArgumentException($"Unexpected data header length: {header.Content.Length} != 4");
                 }
-                var roomCount = header.Content[0];
-                var flags = header.Content[1];
                 item.Unknown = BinaryPrimitives.ReadInt16LittleEndian(header.Content.Slice(2));
                 while (frame.Reader.TryReadSubrecord(out var subHeader))
                 {
                     switch (subHeader.RecordTypeInt)
                     {
-                        case 0x4D414E4C: // LNAM
+                        case RecordTypeInts.LNAM:
                             item.LightingTemplate = FormKeyBinaryTranslation.Instance.Parse(frame);
                             break;
-                        case 0x4D414E49: // INAM
+                        case RecordTypeInts.INAM:
                             item.ImageSpace = FormKeyBinaryTranslation.Instance.Parse(frame);
                             break;
-                        case 0x4D524C58: // XLRM
+                        case RecordTypeInts.XLRM:
                             item.LinkedRooms.Add(new FormLink<PlacedObject>(FormKeyBinaryTranslation.Instance.Parse(frame)));
                             break;
                         default:
@@ -271,23 +269,15 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     switch (subHeader.RecordTypeInt)
                     {
-                        case 0x4D414E4C: // LNAM
+                        case RecordTypeInts.LNAM:
                             _lightingTemplateLoc = stream.Position - offset;
-                            if (!EnumExt.HasFlag(flags, PlacedObjectBinaryCreateTranslation.HasLightingTemplateFlag))
-                            {
-                                throw new ArgumentException($"Lighting template presence did not match flag specification");
-                            }
                             stream.Position += subHeader.TotalLength;
                             break;
-                        case 0x4D414E49: // INAM
+                        case RecordTypeInts.INAM:
                             _imageSpaceLoc = stream.Position - offset;
-                            if (!EnumExt.HasFlag(flags, PlacedObjectBinaryCreateTranslation.HasImageSpaceFlag))
-                            {
-                                throw new ArgumentException($"Image space presence did not match flag specification");
-                            }
                             stream.Position += subHeader.TotalLength;
                             break;
-                        case 0x4D524C58: // XLRM
+                        case RecordTypeInts.XLRM:
                             LinkedRooms = BinaryOverlayList.FactoryByArray<IFormLink<IPlacedObjectGetter>>(
                                 stream.RemainingMemory,
                                 _package,
@@ -297,10 +287,6 @@ namespace Mutagen.Bethesda.Skyrim
                                     constants: _package.MetaData.Constants.SubConstants,
                                     trigger: subHeader.RecordType,
                                     skipHeader: true));
-                            if (roomCount != LinkedRooms.Count)
-                            {
-                                throw new ArgumentException($"Unexpected room count: {LinkedRooms.Count} != {roomCount}");
-                            }
                             break;
                         default:
                             return;
