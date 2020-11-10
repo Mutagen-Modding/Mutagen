@@ -1224,7 +1224,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Mutagen
         public IEnumerable<FormKey> GetLinkFormKeys(IScriptFieldsGetter obj)
         {
-            foreach (var item in obj.References.WhereCastable<IAScriptReferenceGetter, ILinkedFormKeyContainerGetter> ()
+            foreach (var item in obj.References.WhereCastable<IAScriptReferenceGetter, ILinkedFormKeyContainerGetter>()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;

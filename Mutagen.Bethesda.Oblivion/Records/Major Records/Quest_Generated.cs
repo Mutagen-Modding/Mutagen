@@ -1538,7 +1538,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return ScriptKey;
             }
-            foreach (var item in obj.Stages.WhereCastable<IQuestStageGetter, ILinkedFormKeyContainerGetter> ()
+            foreach (var item in obj.Stages.WhereCastable<IQuestStageGetter, ILinkedFormKeyContainerGetter>()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;

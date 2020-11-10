@@ -2765,17 +2765,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     yield return item;
                 }
             }
-            foreach (var item in obj.Persistent.WhereCastable<IPlacedGetter, ILinkedFormKeyContainerGetter> ()
+            foreach (var item in obj.Persistent.WhereCastable<IPlacedGetter, ILinkedFormKeyContainerGetter>()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
             }
-            foreach (var item in obj.Temporary.WhereCastable<IPlacedGetter, ILinkedFormKeyContainerGetter> ()
+            foreach (var item in obj.Temporary.WhereCastable<IPlacedGetter, ILinkedFormKeyContainerGetter>()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
             }
-            foreach (var item in obj.VisibleWhenDistant.WhereCastable<IPlacedGetter, ILinkedFormKeyContainerGetter> ()
+            foreach (var item in obj.VisibleWhenDistant.WhereCastable<IPlacedGetter, ILinkedFormKeyContainerGetter>()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;

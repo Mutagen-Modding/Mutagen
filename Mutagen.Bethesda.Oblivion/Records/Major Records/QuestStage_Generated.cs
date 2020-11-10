@@ -968,7 +968,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Mutagen
         public IEnumerable<FormKey> GetLinkFormKeys(IQuestStageGetter obj)
         {
-            foreach (var item in obj.LogEntries.WhereCastable<ILogEntryGetter, ILinkedFormKeyContainerGetter> ()
+            foreach (var item in obj.LogEntries.WhereCastable<ILogEntryGetter, ILinkedFormKeyContainerGetter>()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;

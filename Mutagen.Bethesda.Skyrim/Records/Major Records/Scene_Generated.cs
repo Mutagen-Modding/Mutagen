@@ -1890,7 +1890,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            foreach (var item in obj.Phases.WhereCastable<IScenePhaseGetter, ILinkedFormKeyContainerGetter> ()
+            foreach (var item in obj.Phases.WhereCastable<IScenePhaseGetter, ILinkedFormKeyContainerGetter>()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
@@ -1903,7 +1903,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return QuestKey;
             }
-            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter> ()
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter>()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;

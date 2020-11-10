@@ -1227,7 +1227,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            foreach (var item in obj.Aliases.WhereCastable<IQuestFragmentAliasGetter, ILinkedFormKeyContainerGetter> ()
+            foreach (var item in obj.Aliases.WhereCastable<IQuestFragmentAliasGetter, ILinkedFormKeyContainerGetter>()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;

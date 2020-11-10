@@ -1340,7 +1340,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return QuestKey;
             }
-            foreach (var item in obj.MenuButtons.WhereCastable<IMessageButtonGetter, ILinkedFormKeyContainerGetter> ()
+            foreach (var item in obj.MenuButtons.WhereCastable<IMessageButtonGetter, ILinkedFormKeyContainerGetter>()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;

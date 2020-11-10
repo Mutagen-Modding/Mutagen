@@ -1260,7 +1260,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (obj.Entries.TryGet(out var EntriesItem))
             {
-                foreach (var item in EntriesItem.WhereCastable<ILeveledSpellEntryGetter, ILinkedFormKeyContainerGetter> ()
+                foreach (var item in EntriesItem.WhereCastable<ILeveledSpellEntryGetter, ILinkedFormKeyContainerGetter>()
                     .SelectMany((f) => f.LinkFormKeys))
                 {
                     yield return item;

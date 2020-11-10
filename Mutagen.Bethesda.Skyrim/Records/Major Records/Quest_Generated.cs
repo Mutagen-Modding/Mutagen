@@ -2311,12 +2311,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            foreach (var item in obj.DialogConditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter> ()
+            foreach (var item in obj.DialogConditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter>()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
             }
-            foreach (var item in obj.UnusedConditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter> ()
+            foreach (var item in obj.UnusedConditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter>()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
@@ -2325,7 +2325,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            foreach (var item in obj.Objectives.WhereCastable<IQuestObjectiveGetter, ILinkedFormKeyContainerGetter> ()
+            foreach (var item in obj.Objectives.WhereCastable<IQuestObjectiveGetter, ILinkedFormKeyContainerGetter>()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;

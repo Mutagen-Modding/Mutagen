@@ -5452,7 +5452,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (obj.SkeletalModel.TryGet(out var SkeletalModelItem))
             {
-                foreach (var item in SkeletalModelItem.NotNull().WhereCastable<ISimpleModelGetter, ILinkedFormKeyContainerGetter> ()
+                foreach (var item in SkeletalModelItem.NotNull().WhereCastable<ISimpleModelGetter, ILinkedFormKeyContainerGetter>()
                     .SelectMany((f) => f.LinkFormKeys))
                 {
                     yield return item;

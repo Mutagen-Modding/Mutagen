@@ -1297,12 +1297,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<FormKey> GetLinkFormKeys(IScenePhaseGetter obj)
         {
-            foreach (var item in obj.StartConditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter> ()
+            foreach (var item in obj.StartConditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter>()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
             }
-            foreach (var item in obj.CompletionConditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter> ()
+            foreach (var item in obj.CompletionConditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter>()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
